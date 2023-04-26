@@ -201,7 +201,7 @@ async function main(option = 0) {
       const chainScan = explorers?.length ? explorers[0].url : undefined;
       const eventsApi = isXNetwork ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2096`
 
-      await ChainModel.findOrCreate({
+      const [chain, created] = await ChainModel.findOrCreate({
         where: {
           chainId: chainId
         },
@@ -220,6 +220,12 @@ async function main(option = 0) {
           color: "#29b6af"
         }
       });
+
+      if (!created) {
+        chain.registryAddress = registry;
+
+        await chain.save();
+      }
 
       const saveToken = async ({ address, name, symbol, isTransactional, isReward }) => {
         const [token, ] = await TokensModel.findOrCreate({
