@@ -171,7 +171,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     if (await DAOService.hasNetworkRegistered(creator))
       return resJsonMessage("Already exists a network registered for this wallet", res, 403);
     
-    if (tokens?.settler) {
+    if (tokens?.settler && tokens?.settlerTokenMinAmount) {
       handleCreateSettlerToken(tokens?.settler,
                                tokens?.settlerTokenMinAmount,
                                chain.chainRpc,
