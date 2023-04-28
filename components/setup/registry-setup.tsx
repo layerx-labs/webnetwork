@@ -458,8 +458,6 @@ export function RegistrySetup({
           readOnly={hasRegistryAddress}
         />
 
-        {console.log('networkCreationFeePercentage a', networkCreationFeePercentage)}
-
         <FormGroup
           label={t("registry.fields.close-bounty-fee.label")}
           placeholder="0"
