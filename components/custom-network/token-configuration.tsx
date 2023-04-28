@@ -124,6 +124,7 @@ export default function TokenConfiguration({
     >
       <NetworkTokenConfig
         onChange={fields.settlerToken.setter}
+        onChangeMinAmount={fields.settlerTokenMinAmount.setter}
         registryToken={registryToken}
         settlerToken={tokens?.settler}
       />
