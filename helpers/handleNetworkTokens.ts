@@ -52,26 +52,31 @@ async function handleCreateSettlerToken(address: string,
                                         chainRpc: string,
                                         chain_id: number) {
 
-  const web3Connection = new Web3Connection({
-    web3Host: chainRpc,
-    skipWindowAssignment: true,
-  });
+  const token = await Database.tokens.findOne({ where: {
+    address: address,
+    chain_id,
+  }})
 
-  web3Connection.start()
-
-  const erc20 = new ERC20(web3Connection, address);
-
-  await erc20.loadContract();
-
-  const name = await erc20.name();
-  const symbol = await erc20.symbol();
+  if(token){
+    token.minimum = minAmount
+    await token.save()
+    return token
+  } else {
+    const web3Connection = new Web3Connection({
+      web3Host: chainRpc,
+      skipWindowAssignment: true,
+    });
   
-  await Database.tokens.findOrCreate({
-    where: {
-      address: address,
-      chain_id,
-    },
-    defaults: {
+    web3Connection.start()
+  
+    const erc20 = new ERC20(web3Connection, address);
+  
+    await erc20.loadContract();
+  
+    const name = await erc20.name();
+    const symbol = await erc20.symbol();
+
+    const newToken = await Database.tokens.create({
       address,
       name,
       symbol,
@@ -79,8 +84,10 @@ async function handleCreateSettlerToken(address: string,
       minimum: minAmount,
       isTransactional: false,
       isReward: false
-    },
-  });
+    })
+
+    return newToken
+  } 
 }
 
 export {
