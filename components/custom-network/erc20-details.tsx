@@ -19,6 +19,7 @@ interface ERC20DetailsProps {
   address?: string;
   readOnly?: boolean;
   deployer?: boolean;
+  minimum?: boolean;
   adressPlaceholder?: string;
   onChange?: (value: string) => void;
   onChangeMinAmount?: (value: string) => void;
@@ -28,6 +29,7 @@ export function ERC20Details({
   address,
   readOnly,
   deployer,
+  minimum,
   adressPlaceholder,
   onChange,
   onChangeMinAmount,
@@ -164,7 +166,7 @@ export function ERC20Details({
           error={hasTotalSupplyError && numberError(tokenInfo.totalSupply) || ""}
         />
 
-      {deployer && (
+      {minimum && (
           <FormGroup
             label={"Minimum Token value"}
             value={tokenInfo.minimumValue}

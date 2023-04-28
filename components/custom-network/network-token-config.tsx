@@ -60,6 +60,7 @@ export function NetworkTokenConfig({
           onChangeMinAmount={onChangeMinAmount}
           address={deployedTokenAddress}
           deployer
+          minimum
         />
       )
     }
