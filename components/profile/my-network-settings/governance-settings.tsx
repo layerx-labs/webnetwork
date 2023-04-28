@@ -4,6 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "next-i18next";
 
 import ContractButton from "components/contract-button";
+import AmountCard from "components/custom-network/amount-card";
 import NetworkContractSettings from "components/custom-network/network-contract-settings";
 import TokensSettings from "components/profile/my-network-settings/tokens-settings";
 
@@ -52,6 +53,30 @@ export default function GovernanceSettings({
     isAbleToClosed,
     forcedNetwork,
   } = useNetworkSettings();
+
+  const tvl = (+forcedNetwork?.tokensStaked || 0) + (+forcedNetwork?.tokensLocked || 0);
+
+  const NetworkAmount = (title, description, amount) => ({
+    title,
+    description,
+    amount,
+  });
+
+  const networkAmounts = [
+    NetworkAmount(t("custom-network:tokens-staked", {
+        symbol: forcedNetwork?.networkToken?.symbol,
+    }),
+                  t("custom-network:tokens-staked-description"),
+                  forcedNetwork?.tokensStaked || 0),
+    NetworkAmount(t("custom-network:oracles-staked", {
+        symbol: forcedNetwork?.networkToken?.symbol,
+    }),
+                  t("custom-network:oracles-staked-description"),
+                  forcedNetwork?.tokensLocked || 0),
+    NetworkAmount(t("custom-network:tvl"),
+                  t("custom-network:tvl-description"),
+                  tvl),
+  ];
 
   const isCurrentNetwork = (!!network &&
     !!state.Service?.network?.active &&
@@ -233,7 +258,19 @@ export default function GovernanceSettings({
 
   return (
     <>
-      <Row className="mt-4">
+      <Row className="mt-4 mb-3">
+        <span className="caption-medium text-white mb-3">
+          {t("custom-network:network-info")}
+        </span>
+
+        {networkAmounts.map((amount) => (
+          <Col key={amount.title}>
+            <AmountCard {...amount} />
+          </Col>
+        ))}
+      </Row>
+
+      <Row>
         <Col>
           <span className="caption-large text-white text-capitalize font-weight-medium mb-3">
             {t("custom-network:network-info")}
@@ -275,9 +312,11 @@ export default function GovernanceSettings({
           </ContractButton>
         </Col>
       </Row>
+      
       <Row className="mt-4">
        <TokensSettings defaultSelectedTokens={networkToken} />
       </Row>
+
       <Row className="mt-4">
         <span className="caption-medium text-white mb-3">
           {t("custom-network:steps.network-settings.fields.other-settings.title")}
