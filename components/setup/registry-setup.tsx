@@ -132,7 +132,7 @@ export function RegistrySetup({
     handleDeployRegistry( erc20.value,
                           lockAmountForNetworkCreation,
                           treasury,
-                          `${+networkCreationFeePercentage / 100}`, // TO NORMALIZE INPUT BETWEEN 0 AND 100
+                          networkCreationFeePercentage,
                           closeFeePercentage,
                           cancelFeePercentage,
                           bountyToken.value )
@@ -186,7 +186,7 @@ export function RegistrySetup({
       .then(parameters => {
         setTreasury(parameters[0].toString());
         setLockAmountForNetworkCreation(parameters[1].toString());
-        setNetworkCreationFeePercentage((+parameters[2] * 100).toString()); // networkCreationFeePercentage is aready dived per divisor on sdk
+        setNetworkCreationFeePercentage((+parameters[2]).toString());
         setCloseFeePercentage((+parameters[3]/+parameters[6]).toString());
         setCancelFeePercentage((+parameters[4]/+parameters[6]).toString());
         setBountyTokenDispatcher(parameters[5].toString().toLowerCase());
@@ -457,6 +457,8 @@ export function RegistrySetup({
           error={exceedsFeesLimitsError(networkCreationFeePercentage)}
           readOnly={hasRegistryAddress}
         />
+
+        {console.log('networkCreationFeePercentage a', networkCreationFeePercentage)}
 
         <FormGroup
           label={t("registry.fields.close-bounty-fee.label")}
