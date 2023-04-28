@@ -79,7 +79,7 @@ export default function MainNav() {
       return isOnAvailableChain.chainShortName;
     }
 
-    if (availableChains) return availableChains[0].chainShortName;
+    if (availableChains) return availableChains[0]?.chainShortName;
 
     return null;
   }
