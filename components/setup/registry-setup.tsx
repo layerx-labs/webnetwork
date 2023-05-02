@@ -25,6 +25,7 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import useApi from "x-hooks/use-api";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import useChain from "x-hooks/use-chain";
 import {useSettings} from "x-hooks/use-settings";
 
 interface RegistrySetupProps { 
@@ -71,6 +72,7 @@ export function RegistrySetup({
   const [registrySaveCTA, setRegistrySaveCTA] = useState(false);
 
   const { loadSettings } = useSettings();
+  const { findSupportedChain } = useChain();
   const { signMessage } = useAuthentication();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { patchSupportedChain, processEvent, updateChainRegistry, getSupportedChains, createToken } = useApi();
@@ -148,7 +150,7 @@ export function RegistrySetup({
         return setChainRegistry(contractAddress);
       })
       .then(() => {
-        const chain = supportedChains?.find(({chainId}) => chainId === +connectedChain?.id);
+        const chain = findSupportedChain({ chainId: +connectedChain?.id, chainShortName: connectedChain?.shortName});
         if (chain) createToken({address: erc20.value, minAmount: erc20MinAmount, chainId: chain?.chainId}) 
 
         loadSettings(true);
