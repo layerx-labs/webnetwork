@@ -54,28 +54,27 @@ export default function GovernanceSettings({
     forcedNetwork,
   } = useNetworkSettings();
 
-  const tvl = (+forcedNetwork?.tokensStaked || 0) + (+forcedNetwork?.tokensLocked || 0);
+  const networkTokenSymbol = forcedNetwork?.networkToken?.symbol;
 
-  const NetworkAmount = (title, description, amount) => ({
+  const NetworkAmount = (title, description, amount, fixed = undefined) => ({
     title,
     description,
     amount,
+    fixed
   });
 
   const networkAmounts = [
-    NetworkAmount(t("custom-network:tokens-staked", {
-        symbol: forcedNetwork?.networkToken?.symbol,
-    }),
-                  t("custom-network:tokens-staked-description"),
-                  forcedNetwork?.tokensStaked || 0),
-    NetworkAmount(t("custom-network:oracles-staked", {
-        symbol: forcedNetwork?.networkToken?.symbol,
-    }),
+    NetworkAmount(t("custom-network:oracles-staked", { symbol: networkTokenSymbol, }),
                   t("custom-network:oracles-staked-description"),
                   forcedNetwork?.tokensLocked || 0),
-    NetworkAmount(t("custom-network:tvl"),
-                  t("custom-network:tvl-description"),
-                  tvl),
+    NetworkAmount("Open bounties",
+                  "Total of bounties available to work",
+                  state.Service?.network?.active?.totalOpenIssues || 0,
+                  0),
+    NetworkAmount("Total bounties",
+                  "Total of bounties in the network",
+                  state.Service?.network?.active?.totalIssues || 0,
+                  0),
   ];
 
   const isCurrentNetwork = (!!network &&
@@ -255,6 +254,10 @@ export default function GovernanceSettings({
       isTransactional: !!token.network_tokens.isTransactional
     })));
   }, [tokens]);
+
+  useEffect(() => {
+    updateActiveNetwork(true);
+  }, []);
 
   return (
     <>
