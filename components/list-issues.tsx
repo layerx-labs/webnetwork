@@ -413,8 +413,7 @@ export default function ListIssues({
           ))}
         </div>
       )}
-      {issuesPages.every((el) => el.issues?.length === 0) &&
-      !appState.loading?.isLoading ? (
+      {isNotFound ? (
         <div className="pt-4">
           <NothingFound description={emptyMessage || filterByState.emptyState}>
             {(appState.currentUser?.walletAddress && !isBountyHall) && (
