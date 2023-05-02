@@ -136,7 +136,7 @@ export function RegistrySetup({
     handleDeployRegistry( erc20.value,
                           lockAmountForNetworkCreation,
                           treasury,
-                          (+networkCreationFeePercentage*100).toString(),
+                          networkCreationFeePercentage,
                           closeFeePercentage,
                           cancelFeePercentage,
                           bountyToken.value )
