@@ -18,9 +18,12 @@ import {useAppState} from "contexts/app-state";
 import {toastError, toastInfo, toastSuccess} from "contexts/reducers/change-toaster";
 
 import { DAPPKIT_LINK } from "helpers/constants";
+import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
 
 import {RegistryEvents} from "interfaces/enums/events";
 import {SupportedChainData} from "interfaces/supported-chain-data";
+
+import { RegistryParameters } from "types/dappkit";
 
 import useApi from "x-hooks/use-api";
 import {useAuthentication} from "x-hooks/use-authentication";
@@ -88,9 +91,9 @@ export function RegistrySetup({
     treasury.trim() === "",
     hasRegistryAddress,
     !Service?.active?.isAddress(treasury),
-    !!exceedsFeesLimitsError(closeFeePercentage, 'closeFeePercentage'),
-    !!exceedsFeesLimitsError(cancelFeePercentage, 'cancelFeePercentage'),
-    !!exceedsFeesLimitsError(networkCreationFeePercentage, 'networkCreationFeePercentage'),
+    !!exceedsFeesLimitsError(closeFeePercentage, "closeFeePercentage"),
+    !!exceedsFeesLimitsError(cancelFeePercentage, "cancelFeePercentage"),
+    !!exceedsFeesLimitsError(networkCreationFeePercentage, "networkCreationFeePercentage"),
     erc20.validated !== true,
     bountyToken.validated !== true,
     isEmpty(closeFeePercentage),
@@ -102,7 +105,7 @@ export function RegistrySetup({
   function exceedsFeesLimitsError(fee, type: RegistryParameters) {
     const { min, max } = REGISTRY_LIMITS[type] || {};
 
-    if (+fee < min || +fee > max)
+    if (!isEmpty(fee) && !RegistryValidator(type, fee))
       return t("registry.errors.exceeds-limit", { min, max });
 
     return undefined;
@@ -458,7 +461,7 @@ export function RegistrySetup({
           variant="numberFormat"
           decimalScale={7}
           description={t("registry.fields.network-creation-fee.description")}
-          error={exceedsFeesLimitsError(networkCreationFeePercentage, 'networkCreationFeePercentage')}
+          error={exceedsFeesLimitsError(networkCreationFeePercentage, "networkCreationFeePercentage")}
           readOnly={hasRegistryAddress}
         />
 
@@ -471,7 +474,7 @@ export function RegistrySetup({
           variant="numberFormat"
           decimalScale={7}
           description={t("registry.fields.close-bounty-fee.description")}
-          error={exceedsFeesLimitsError(closeFeePercentage, 'closeFeePercentage')}
+          error={exceedsFeesLimitsError(closeFeePercentage, "closeFeePercentage")}
           readOnly={hasRegistryAddress}
         />
 
@@ -484,7 +487,7 @@ export function RegistrySetup({
           variant="numberFormat"
           decimalScale={7}
           description={t("registry.fields.cancel-bounty-fee.description")}
-          error={exceedsFeesLimitsError(cancelFeePercentage, 'cancelFeePercentage')}
+          error={exceedsFeesLimitsError(cancelFeePercentage, "cancelFeePercentage")}
           readOnly={hasRegistryAddress}
         />
       </Row>
