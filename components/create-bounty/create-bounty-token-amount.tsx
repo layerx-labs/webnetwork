@@ -48,10 +48,10 @@ export default function CreateBountyTokenAmount({
       setIssueAmount({ formattedValue: "" });
     } else if (
       values.floatValue !== 0 &&
-      BigNumber(values.floatValue).isLessThan(BigNumber(state.Settings?.minBountyValue))
+      BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: state.Settings?.minBountyValue,
+          amount: currentToken?.minimum,
       }));
     } else {
       setIssueAmount(values);
