@@ -7,7 +7,6 @@ import TabbedNavigation from "components/tabbed-navigation";
 
 export function NetworkTokenConfig({
   onChange,
-  onChangeMinAmount,
   registryToken,
   settlerToken
 }) {
@@ -57,10 +56,8 @@ export function NetworkTokenConfig({
         <ERC20Details
           key="deployedToken"
           onChange={handleDeployedTokenAddressChange}
-          onChangeMinAmount={onChangeMinAmount}
           address={deployedTokenAddress}
           deployer
-          minimum
         />
       )
     }
