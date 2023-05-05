@@ -29,8 +29,6 @@ import useApi from "x-hooks/use-api";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import {useSettings} from "x-hooks/use-settings";
-import { RegistryParameters } from "types/dappkit";
-import { REGISTRY_LIMITS } from "helpers/registry";
 
 interface RegistrySetupProps { 
   isVisible?: boolean;
