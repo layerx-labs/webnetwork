@@ -240,10 +240,11 @@ export function useAuthentication() {
         update({oracles, bepro, staked});
         updateNetwork({isCouncil, isGovernor});
       })
+      .catch(error => console.debug("Failed to updateWalletBalance", error))
       .finally(() => {
         dispatch(changeSpinners.update({balance: false}));
         console.debug(`should have updated state`, state.currentUser.balance)
-      })
+      });
 
     loadNetworkAmounts();
   }
