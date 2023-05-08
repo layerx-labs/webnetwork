@@ -129,10 +129,7 @@ export default function CreateBountyTokenAmount({
   } 
 
   function handleUpdateToken() {
-    if (
-      issueAmount.floatValue !== 0 &&
-      BigNumber(issueAmount.floatValue).isLessThan(BigNumber(currentToken?.minimum))
-    ) {
+    if (BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))) {
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
       }));
