@@ -566,8 +566,9 @@ export default function CreateBountyPage() {
               setIsFundingType(e);
             }}
           >
-            {renderBountyToken("bounty")}
-            {isFundingType && (
+            {isFundingType ? (
+              <>
+              {renderBountyToken("bounty")}
               <div className="col-md-12 my-4">
                 <FormCheck
                   className="form-control-md pb-0"
@@ -580,7 +581,8 @@ export default function CreateBountyPage() {
                 {t("bounty:reward-funders-description")}
                 </p>
               </div>
-            )}
+              </>
+            ): renderBountyToken("bounty")}
             {rewardChecked && isFundingType && renderBountyToken("reward")}
           </CreateBountyRewardInfo>
         </>
