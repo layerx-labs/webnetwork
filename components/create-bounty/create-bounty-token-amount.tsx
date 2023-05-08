@@ -118,9 +118,8 @@ export default function CreateBountyTokenAmount({
       decimalScale={decimals}
       onValueChange={handleIssueAmountOnValueChange}
       onBlur={handleIssueAmountBlurChange}
-      error={isFunding ? null : !!inputError}
+      error={!!inputError}
       helperText={
-        isFunding ? null :
         <>
           {inputError && <p className="p-small my-2">{inputError}</p>}
         </>
