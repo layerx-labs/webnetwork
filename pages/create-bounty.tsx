@@ -163,10 +163,17 @@ export default function CreateBountyPage() {
     const section = newSection || currentSection
     if (isLoadingCreateBounty) return true;
 
+    const handleIsLessThan = (v: number, min: string) =>
+      BigNumber(v).isLessThan(BigNumber(min));
+
     const isIssueAmount =
-      issueAmount.floatValue <= 0 || issueAmount.floatValue === undefined;
+      issueAmount.floatValue <= 0 ||
+      issueAmount.floatValue === undefined ||
+      handleIsLessThan(issueAmount.floatValue, transactionalToken?.minimum);
     const isRewardAmount =
-      rewardAmount.floatValue <= 0 || rewardAmount.floatValue === undefined;
+      rewardAmount.floatValue <= 0 ||
+      rewardAmount.floatValue === undefined ||
+      handleIsLessThan(rewardAmount.floatValue, rewardToken?.minimum);
 
     if (section === 0 && !currentNetwork) return true;
 

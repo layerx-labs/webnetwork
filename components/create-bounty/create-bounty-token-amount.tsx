@@ -50,6 +50,7 @@ export default function CreateBountyTokenAmount({
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
+      setIssueAmount(values);
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
       }));
@@ -129,6 +130,8 @@ export default function CreateBountyTokenAmount({
   } 
 
   function handleUpdateToken() {
+    if(issueAmount?.floatValue === 0) return;
+
     if (BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))) {
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
@@ -137,7 +140,7 @@ export default function CreateBountyTokenAmount({
   }
 
   useEffect(updateConversion, [issueAmount.value]);
-  useEffect(handleUpdateToken, [currentToken]);
+  useEffect(handleUpdateToken, [currentToken?.minimum]);
 
   return (
     <div className="mt-4">
