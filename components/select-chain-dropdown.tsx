@@ -1,5 +1,6 @@
 import React, {useEffect, useState, ReactNode} from "react";
 
+import axios from "axios";
 import {useTranslation} from "next-i18next";
 
 import IconOption from "components/icon-option";
@@ -10,6 +11,8 @@ import ReactSelect from "components/react-select";
 import {useAppState} from "contexts/app-state";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
+
+import { getChainIcon } from "services/chain-id";
 
 interface SelectChainDropdownProps {
   onSelect: (chain: SupportedChainData) => void;
@@ -93,6 +96,9 @@ export default function SelectChainDropdown({
     if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains)) return;
 
     const configuredChains = supportedChains.filter(isChainConfigured);
+
+    Promise.all(configuredChains.map(chain => getChainIcon(chain.icon)))
+      .then(console.log);
 
     if (isOnNetwork)
       setOptions(configuredChains.map(chain =>
