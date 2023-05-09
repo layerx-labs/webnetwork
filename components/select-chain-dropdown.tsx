@@ -1,5 +1,6 @@
 import React, {useEffect, useState, ReactNode} from "react";
 
+import axios from "axios";
 import {useTranslation} from "next-i18next";
 
 import ChainIcon from "components/chain-icon";
