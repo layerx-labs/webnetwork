@@ -3,6 +3,7 @@ import {
   CIRCLE_FUNDING_COLOR,
   CIRCLE_OPEN_COLOR,
 } from "helpers/constants";
+import { IssueState } from "interfaces/issue-data";
 import { SVGProps } from "react";
 
 export default function CircleIcon({
@@ -10,7 +11,7 @@ export default function CircleIcon({
   type,
 }: {
   props?: SVGProps<SVGSVGElement>;
-  type: "draft" | "funding" | "funded" | "open" | "ready" | "proposal";
+  type: IssueState;
 }) {
   function getColor() {
     if (["ready", "proposal", "open"].includes(type)) return CIRCLE_OPEN_COLOR;
