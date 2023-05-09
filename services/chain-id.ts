@@ -1,6 +1,9 @@
 import axios from "axios";
+import getConfig from "next/config";
 
 import { WinStorage } from "services/win-storage";
+
+const { publicRuntimeConfig } = getConfig();
 
 async function getChainIconsList() {
   const storage = new WinStorage('chainIconsList', 3600 * 24 * 1000);
@@ -24,8 +27,13 @@ async function getChainIcon(iconName: string) {
 
   const found = icons.find(({ name }) => name === iconName);
 
-  if (found && found.icons.length)
-    return found.icons[0].url.replace("ipfs://", "");
+  const ipfsUrl = publicRuntimeConfig?.urls?.ipfs;
+
+  if (found && found.icons.length) {
+    const urlWithoutProtocol = found.icons[0].url.replace("ipfs://", "");
+
+    return new URL(`/ipfs/${urlWithoutProtocol}`, ipfsUrl).href;
+  }
 
   return undefined;
 }
