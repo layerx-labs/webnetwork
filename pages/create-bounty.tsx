@@ -127,6 +127,9 @@ export default function CreateBountyPage() {
   const isAmountApproved = (tokenAllowance: BigNumber, amount: BigNumber) =>
     !tokenAllowance.lt(amount);
 
+  const handleIsLessThan = (v: number, min: string) =>
+    BigNumber(v).isLessThan(BigNumber(min));
+
   async function addToken(newToken: Token) {
     await getCoinInfoByContract(newToken?.symbol)
       .then((tokenInfo) => {
@@ -162,9 +165,6 @@ export default function CreateBountyPage() {
   function verifyNextStepAndCreate(newSection?: number) {
     const section = newSection || currentSection
     if (isLoadingCreateBounty) return true;
-
-    const handleIsLessThan = (v: number, min: string) =>
-      BigNumber(v).isLessThan(BigNumber(min));
 
     const isIssueAmount =
       issueAmount.floatValue <= 0 ||
@@ -405,6 +405,18 @@ export default function CreateBountyPage() {
     transactionalERC20.setAddress(undefined);
   }
 
+  function handleMinAmount(type: "reward" | "transactional") {
+    if(currentSection === 3){
+      const amount = type === "reward" ? rewardAmount : issueAmount 
+      const isAmount =
+      amount.floatValue <= 0 ||
+      amount.floatValue === undefined ||
+      handleIsLessThan(amount.floatValue, transactionalToken?.minimum);
+
+      if(isAmount) setCurrentSection(2)
+    }
+  }
+
   useEffect(() => {
     if(!connectedChain) return;
 
@@ -497,6 +509,9 @@ export default function CreateBountyPage() {
     handleCustomTokens(tokens)
 
   }, [currentNetwork, connectedChain]);
+
+  useEffect(() => handleMinAmount('transactional'), [issueAmount])
+  useEffect(() => handleMinAmount('reward'), [rewardAmount])
 
   useEffect(() => {
     cleanFields();
