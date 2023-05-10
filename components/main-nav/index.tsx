@@ -1,24 +1,16 @@
 import {ReactElement, ReactNode, useEffect, useState} from "react";
 
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
 import {useRouter} from "next/router";
 
-import HelpIcon from "assets/icons/help-icon";
 import PlusIcon from "assets/icons/plus-icon";
 
-import Button from "components/button";
 import ClosedNetworkAlert from "components/closed-network-alert";
-import ConnectWalletButton from "components/connect-wallet-button";
-import ContractButton from "components/contract-button";
 import HelpModal from "components/help-modal";
-import InternalLink from "components/internal-link";
 import BrandLogo from "components/main-nav/brand-logo";
+import NavActions from "components/main-nav/nav-actions";
 import NavLinks from "components/main-nav/nav-links";
-import NavAvatar from "components/nav-avatar";
-import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
-import TransactionsStateIndicator from "components/transactions-state-indicator";
 import Translation from "components/translation";
 
 import {useAppState} from "contexts/app-state";
@@ -27,19 +19,17 @@ import { changeCurrentUserHasRegisteredNetwork } from "contexts/reducers/change-
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import useApi from "x-hooks/use-api";
-import useChain from "x-hooks/use-chain";
 import { useDao } from "x-hooks/use-dao";
 import { useNetwork } from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 
-interface MyNetworkLink {
+export interface MyNetworkLink {
   href: string;
   label: string | ReactElement;
   icon?: ReactNode;
 }
 
 export default function MainNav() {
-  const { t } = useTranslation("common");
   const { pathname, query, asPath, push } = useRouter();
 
   const newNetworkObj = {
@@ -52,7 +42,6 @@ export default function MainNav() {
   const [myNetwork, setMyNetwork] = useState<MyNetworkLink>(newNetworkObj);
 
   const { connect } = useDao();
-  const { chain } = useChain();
   const { state } = useAppState();
   const { dispatch } = useAppState();
   const { searchNetworks } = useApi();
@@ -66,52 +55,6 @@ export default function MainNav() {
   const brandHref = noNeedNetworkInstance ? "/" : getURLWithNetwork("/", {
     network: state.Service?.network?.active?.name,
   });
-
-
-  function getChainShortName() {
-    const availableChains = state.Service?.network?.availableChains;
-    const isOnAvailableChain = availableChains?.find(({ chainId }) => +chainId === +state.connectedChain?.id);
-
-    if (chain) return chain.chainShortName;
-
-    if (isOnAvailableChain) {
-      return isOnAvailableChain.chainShortName;
-    }
-
-    if (availableChains?.length) return availableChains[0].chainShortName;
-
-    return null;
-  }
-
-  const links = [
-    {
-      href: getURLWithNetwork("/", {
-        chain: getChainShortName()
-      }),
-      label: t("main-nav.nav-avatar.bounties"),
-      isVisible: !noNeedNetworkInstance
-    },
-    {
-      href: getURLWithNetwork("/curators"),
-      label: t("main-nav.council"),
-      isVisible: !noNeedNetworkInstance && pathname !== "/[network]"
-    },
-    {
-      href: "/networks",
-      label: t("main-nav.networks"),
-      isVisible: true
-    },
-    {
-      href: "/leaderboard",
-      label: t("main-nav.leaderboard"),
-      isVisible: true
-    },
-    {
-      href: "/explore",
-      label: t("main-nav.explore"),
-      isVisible: true
-    }
-  ];
 
   useEffect(() => {
     if (!state.currentUser?.walletAddress || !state.connectedChain?.id)
@@ -146,6 +89,10 @@ export default function MainNav() {
 
   function handleNewBounty () {
     push('/create-bounty')
+  }
+
+  function handleShowHelpModal() {
+    setShowHelp(true);
   }
 
   async function handleNetworkSelected(chain: SupportedChainData) {
@@ -185,61 +132,30 @@ export default function MainNav() {
             state.currentUser?.walletAddress ? "py-0" : "py-3"
           ])}
         >
-          <div className="d-flex gap-4">
-            <BrandLogo
-              href={brandHref}
-              logoUrl={fullLogoUrl}
-              showDefaultBepro={noNeedNetworkInstance}
-            />
+          <div className="d-flex align-items-center gap-4">
+            <div className="d-flex gap-3">
+              <BrandLogo
+                href={brandHref}
+                logoUrl={fullLogoUrl}
+                showDefaultBepro={noNeedNetworkInstance}
+              />
 
-            <SelectChainDropdown
-              onSelect={(chain) => handleNetworkSelected(chain)}
-              isOnNetwork={!noNeedNetworkInstance}
-              className="select-network-dropdown"
-            />
+              <SelectChainDropdown
+                onSelect={(chain) => handleNetworkSelected(chain)}
+                isOnNetwork={!noNeedNetworkInstance}
+                className="select-network-dropdown"
+              />
+            </div>
 
-            <NavLinks
-              links={links}
-            />
+            <NavLinks />
           </div>
 
-          <div className="d-flex flex-row align-items-center gap-3">
-              <ReadOnlyButtonWrapper>
-                <ContractButton
-                  outline
-                  onClick={handleNewBounty}
-                  textClass="text-white"
-                  className="read-only-button"
-                >
-                  <PlusIcon />
-                  <span>{t("main-nav.new-bounty")}</span>
-                </ContractButton>
-              </ReadOnlyButtonWrapper>
-              {noNeedNetworkInstance && (
-                <InternalLink
-                  href={myNetwork.href}
-                  icon={myNetwork.icon}
-                  label={myNetwork.label}
-                  iconBefore
-                  uppercase
-                  outline
-                />
-              )}
-
-            <Button
-              onClick={() => setShowHelp(true)}
-              className="bg-gray-850 border-gray-850 rounded p-2"
-              transparent
-            >
-              <HelpIcon />
-            </Button>
-
-            <ConnectWalletButton>
-              <TransactionsStateIndicator />
-
-              <NavAvatar />
-            </ConnectWalletButton>
-          </div>
+          <NavActions
+            onClickCreateBounty={handleNewBounty}
+            isOnNetwork={!noNeedNetworkInstance}
+            onClickShowHelp={handleShowHelpModal}
+            myNetworkLink={myNetwork}
+          />
 
           <HelpModal show={showHelp} onCloseClick={() => setShowHelp(false)} />
         </div>
