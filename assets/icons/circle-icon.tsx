@@ -1,8 +1,3 @@
-import {
-  CIRCLE_DRAFT_COLOR,
-  CIRCLE_FUNDING_COLOR,
-  CIRCLE_OPEN_COLOR,
-} from "helpers/constants";
 import { IssueState } from "interfaces/issue-data";
 import { SVGProps } from "react";
 
@@ -13,15 +8,20 @@ export default function CircleIcon({
   props?: SVGProps<SVGSVGElement>;
   type: IssueState;
 }) {
+  const CIRCLE_FUNDING_COLOR = "#FFD646";
+  const CIRCLE_OPEN_COLOR = "#35E0AD";
+  const CIRCLE_DRAFT_COLOR = "#D5D6DC";
+  
   function getColor() {
     if (["ready", "proposal", "open"].includes(type)) return CIRCLE_OPEN_COLOR;
-    else if (["funded", "funding"].includes(type)) return CIRCLE_FUNDING_COLOR;
+    else if (["partial-funded", "funding"].includes(type))
+      return CIRCLE_FUNDING_COLOR;
 
     return CIRCLE_DRAFT_COLOR;
   }
 
   function renderCircle() {
-    const isRect = ["ready", "proposal", "funded"].includes(type);
+    const isRect = ["ready", "proposal", "partial-funded"].includes(type);
     const isDraft = type === "draft";
     const circleProps = {
       cx: "8",
@@ -62,7 +62,7 @@ export default function CircleIcon({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-    {renderCircle()}
+      {renderCircle()}
     </svg>
   );
 }
