@@ -1,13 +1,12 @@
 import { useTranslation } from "next-i18next";
 
+import HamburgerIcon from "assets/icons/hamburger-icon";
 import HelpIcon from "assets/icons/help-icon";
 import PlusIcon from "assets/icons/plus-icon";
 
 import Button from "components/button";
 import ConnectWalletButton from "components/connect-wallet-button";
-import ContractButton from "components/contract-button";
 import InternalLink from "components/internal-link";
-import { MyNetworkLink } from "components/main-nav";
 import MultiActionButton from "components/multi-action-button";
 import NavAvatar from "components/nav-avatar";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
@@ -15,17 +14,13 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
 interface NavActionsProps {
-  onClickCreateBounty: () => void;
   onClickShowHelp: () => void;
   isOnNetwork: boolean;
-  myNetworkLink: MyNetworkLink;
 }
 
 export default function NavActions({
-  onClickCreateBounty,
   isOnNetwork,
   onClickShowHelp,
-  myNetworkLink
 } : NavActionsProps) {
   const { t } = useTranslation("common");
 
@@ -72,7 +67,7 @@ export default function NavActions({
           </div>
         </ResponsiveWrapper>
 
-        {/* <ConnectWalletButton>
+        <ConnectWalletButton>
           <ResponsiveWrapper
             xs={false}
             xl={true}
@@ -88,10 +83,18 @@ export default function NavActions({
             xs={true}
             xl={false}
           >
-            <CreateBtn />
+            <div className="d-flex gap-3 align-items-center">
+              <CreateBtn />
+
+              <Button 
+                className="p-0 not-svg"
+                transparent
+              >
+                <HamburgerIcon />
+              </Button>
+            </div>
           </ResponsiveWrapper>
-        </ConnectWalletButton> */}
-        <CreateBtn />
+        </ConnectWalletButton>
       </div>
     </>
   );

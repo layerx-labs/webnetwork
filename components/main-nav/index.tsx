@@ -3,15 +3,12 @@ import {ReactElement, ReactNode, useEffect, useState} from "react";
 import clsx from "clsx";
 import {useRouter} from "next/router";
 
-import PlusIcon from "assets/icons/plus-icon";
-
 import ClosedNetworkAlert from "components/closed-network-alert";
 import HelpModal from "components/help-modal";
 import BrandLogo from "components/main-nav/brand-logo";
 import NavActions from "components/main-nav/nav-actions";
 import NavLinks from "components/main-nav/nav-links";
 import SelectChainDropdown from "components/select-chain-dropdown";
-import Translation from "components/translation";
 
 import {useAppState} from "contexts/app-state";
 import { changeCurrentUserHasRegisteredNetwork } from "contexts/reducers/change-current-user";
@@ -32,14 +29,7 @@ export interface MyNetworkLink {
 export default function MainNav() {
   const { pathname, query, asPath, push } = useRouter();
 
-  const newNetworkObj = {
-    label: <Translation label={"main-nav.new-network"} />,
-    href: "/new-network",
-    icon: <PlusIcon />
-  };
-
   const [showHelp, setShowHelp] = useState(false);
-  const [myNetwork, setMyNetwork] = useState<MyNetworkLink>(newNetworkObj);
 
   const { connect } = useDao();
   const { state } = useAppState();
@@ -69,27 +59,11 @@ export default function MainNav() {
         const changeIfDifferent = (has: boolean) => state.currentUser?.hasRegisteredNetwork !== has &&
           dispatch(changeCurrentUserHasRegisteredNetwork(has));
 
-        if (count === 0) {
-          setMyNetwork(newNetworkObj);
-          changeIfDifferent(false);
-        } else {
-          const networkName = rows[0]?.name?.toLowerCase();
-          const chainShortName = rows[0]?.chain?.chainShortName?.toLowerCase();
-
-          changeIfDifferent(!!rows[0]?.isRegistered);
-
-          setMyNetwork({
-            label: <Translation label={"main-nav.my-network"} />,
-            href: `/${networkName}/${chainShortName}${rows[0]?.isRegistered ? "" : "/profile/my-network"}`
-          });
-        }
+        if (count === 0) changeIfDifferent(false);
+        else changeIfDifferent(!!rows[0]?.isRegistered);
       })
       .catch(error => console.debug("Failed to get network address by wallet", error));
   }, [state.currentUser?.walletAddress, state.connectedChain]);
-
-  function handleNewBounty () {
-    push('/create-bounty')
-  }
 
   function handleShowHelpModal() {
     setShowHelp(true);
@@ -151,10 +125,8 @@ export default function MainNav() {
           </div>
 
           <NavActions
-            onClickCreateBounty={handleNewBounty}
             isOnNetwork={!noNeedNetworkInstance}
             onClickShowHelp={handleShowHelpModal}
-            myNetworkLink={myNetwork}
           />
 
           <HelpModal show={showHelp} onCloseClick={() => setShowHelp(false)} />

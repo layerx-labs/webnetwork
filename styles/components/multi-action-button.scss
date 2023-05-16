@@ -1,12 +1,36 @@
 .multi-action-button {
-  select {
+  position: relative;
+
+  .native-select {
     @extend .bg-gray-900;
     @extend .border-gray-800;
     @extend .p-2;
     @extend .text-gray-300;
 
     position: absolute;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+    padding: 15px;
 
     border-radius: 20px;
+
+    option {
+      @extend .family-Regular;
+      
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.1rem;
+      line-height: 71%;
+      font-size: 12px;
+    }
+
+    option:hover,
+    option:focus,
+    option:active,
+    option:checked,
+    option:selected {
+      background: $gray-900;
+    }
   }
 }
