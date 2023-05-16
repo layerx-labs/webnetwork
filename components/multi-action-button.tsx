@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
+import { isMobile } from 'react-device-detect';
 
 import Button, { ButtonProps } from "components/button";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface Action {
   onClick: () => void;
@@ -37,10 +37,7 @@ export default function MultiActionButton({
 
   return(
     <div className="multi-action-button">
-      <ResponsiveWrapper
-        xs={true}
-        xl={false}
-      >
+      { isMobile &&
         <div className="select-container">
           <Button
             {...rest}
@@ -55,13 +52,7 @@ export default function MultiActionButton({
           >
             {actions.map(({ label }, i) => <option value={i}>{label}</option>)}
           </select>
-        </div>
-      </ResponsiveWrapper>
-
-      <ResponsiveWrapper
-        xs={false}
-        xl={true}
-      >
+        </div> ||
         <ReactSelect
           options={actionsToOptions(actions)}
           value={defaultOption}
@@ -74,7 +65,7 @@ export default function MultiActionButton({
           name="multiAction"
           id="multiAction"
         />
-      </ResponsiveWrapper>
+      }
     </div>
   );
 }
