@@ -35,6 +35,18 @@ export default function MultiActionButton({
     }));
   }
 
+  function executeAction(actionIndex) {
+    actions[actionIndex]?.onClick();
+  }
+
+  function onNativeChange(evt) {
+    executeAction(evt.target.value);
+  }
+
+  function onRSChange(newValue) {
+    executeAction(newValue.value);
+  }
+
   return(
     <div className="multi-action-button">
       { isMobile &&
@@ -49,7 +61,9 @@ export default function MultiActionButton({
             className="native-select"
             name="multiAction"
             id="multiAction"
+            onChange={onNativeChange}
           >
+            <option value="" selected disabled hidden>Choose one</option>
             {actions.map(({ label }, i) => <option value={i}>{label}</option>)}
           </select>
         </div> ||
@@ -57,6 +71,7 @@ export default function MultiActionButton({
           options={actionsToOptions(actions)}
           value={defaultOption}
           isSearchable={false}
+          onChange={onRSChange}
           components={{
             DropdownIndicator:() => null, 
             IndicatorSeparator:() => null,

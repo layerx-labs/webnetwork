@@ -1,4 +1,5 @@
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import HamburgerIcon from "assets/icons/hamburger-icon";
 import HelpIcon from "assets/icons/help-icon";
@@ -22,6 +23,7 @@ export default function NavActions({
   isOnNetwork,
   onClickShowHelp,
 } : NavActionsProps) {
+  const { push } = useRouter();
   const { t } = useTranslation("common");
 
   const CreateBtn = () => 
@@ -40,8 +42,8 @@ export default function NavActions({
           className="read-only-button"
           icon={<PlusIcon />}
           actions={[
-            { label: "Bounty", onClick: () => console.log("Create Bounty") },
-            { label: "Network", onClick: () => console.log("Create Network") },
+            { label: "Bounty", onClick: () => push("/create-bounty") },
+            { label: "Network", onClick: () => push("/new-network") },
           ]}
         />
     }
