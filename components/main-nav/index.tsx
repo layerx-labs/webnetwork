@@ -64,10 +64,6 @@ export default function MainNav() {
     setShowHelp(true);
   }
 
-  function handleShowHelpModal() {
-    setShowHelp(true);
-  }
-
   async function handleNetworkSelected(chain: SupportedChainData) {
     if (noNeedNetworkInstance) {
       handleAddNetwork(chain)

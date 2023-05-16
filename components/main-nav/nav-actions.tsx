@@ -69,7 +69,7 @@ export default function NavActions({
           </div>
         </ResponsiveWrapper>
 
-        {/* <ConnectWalletButton>
+        <ConnectWalletButton>
           <ResponsiveWrapper
             xs={false}
             xl={true}
@@ -96,8 +96,7 @@ export default function NavActions({
               </Button>
             </div>
           </ResponsiveWrapper>
-        </ConnectWalletButton> */}
-        <CreateBtn />
+        </ConnectWalletButton>
       </div>
     </>
   );
