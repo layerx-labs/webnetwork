@@ -28,11 +28,9 @@ export default function MultiActionButton({
     preIcon: icon
   }
 
-  function actionsToOptions(_actions) {
-    return _actions.map((action, index) => ({
-      value: index,
-      label: action.label
-    }));
+  function onBtnClick() {
+    if (selectRef.current)
+      selectRef.current.click();
   }
 
   function executeAction(actionIndex) {
