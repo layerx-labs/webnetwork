@@ -204,7 +204,8 @@
     "branch": "Branch",
     "opened-on": "Opened on",
     "owner": "Owner",
-    "apply": "apply"
+    "apply": "apply",
+    "create": "Create"
   },
   "modals": {
     "help-modal": {

@@ -1,0 +1,12 @@
+.multi-action-button {
+  select {
+    @extend .bg-gray-900;
+    @extend .border-gray-800;
+    @extend .p-2;
+    @extend .text-gray-300;
+
+    position: absolute;
+
+    border-radius: 20px;
+  }
+}

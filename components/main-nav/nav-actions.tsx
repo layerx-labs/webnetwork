@@ -29,64 +29,69 @@ export default function NavActions({
 } : NavActionsProps) {
   const { t } = useTranslation("common");
 
+  const CreateBtn = () => 
+  <ReadOnlyButtonWrapper>
+    {
+      isOnNetwork ?
+        <InternalLink
+          href={"/create-bounty"}
+          icon={<PlusIcon />}
+          label={t("main-nav.new-bounty") as string}
+          iconBefore
+          uppercase
+        /> :
+        <MultiActionButton
+          label="Create"
+          className="read-only-button"
+          icon={<PlusIcon />}
+          actions={[
+            { label: "Bounty", onClick: () => console.log("Create Bounty") },
+            { label: "Network", onClick: () => console.log("Create Network") },
+          ]}
+        />
+    }
+  </ReadOnlyButtonWrapper>;
+
   return(
     <>
-      <ResponsiveWrapper
-        xs={false}
-        xl={true}
-      >
-        <div className="flex-row align-items-center gap-3">
-          <ReadOnlyButtonWrapper>
-            <ContractButton
-              onClick={onClickCreateBounty}
-              textClass="text-white"
-              className="read-only-button"
+      <div className="d-flex flex-row align-items-center gap-3">
+        <ResponsiveWrapper
+          xs={false}
+          xl={true}
+        >
+          <div className="d-flex gap-3">
+            <CreateBtn />
+
+            <Button
+              onClick={onClickShowHelp}
+              className="bg-gray-850 border-gray-850 rounded p-2"
+              transparent
             >
-              <PlusIcon />
-              <span>{t("main-nav.new-bounty")}</span>
-            </ContractButton>
-          </ReadOnlyButtonWrapper>
-          
-          {/* {!isOnNetwork && (
-            <InternalLink
-              href={myNetworkLink.href}
-              icon={myNetworkLink.icon}
-              label={myNetworkLink.label}
-              iconBefore
-              uppercase
-              outline
-            />
-          )} */}
+              <HelpIcon />
+            </Button>
+          </div>
+        </ResponsiveWrapper>
 
-          <Button
-            onClick={onClickShowHelp}
-            className="bg-gray-850 border-gray-850 rounded p-2"
-            transparent
+        <ConnectWalletButton>
+          <ResponsiveWrapper
+            xs={false}
+            xl={true}
           >
-            <HelpIcon />
-          </Button>
+            <div className="d-flex gap-3">
+              <TransactionsStateIndicator />
 
-          <ConnectWalletButton>
-            <TransactionsStateIndicator />
+              <NavAvatar />
+            </div>
+          </ResponsiveWrapper>
 
-            <NavAvatar />
-          </ConnectWalletButton>
-        </div>
-      </ResponsiveWrapper>
-
-      <ResponsiveWrapper
-        xl={false}
-      >
-        <div className="d-flex align-items-center d-xl-none">
-          <MultiActionButton
-            label="Create"
-            actions={[
-              { label: "Bounty", onClick: () => console.log("Create Bounty") },
-              { label: "Network", onClick: () => console.log("Create Network") },
-            ]}
-          />
-        </div>
-      </ResponsiveWrapper>
+          <ResponsiveWrapper
+            xs={true}
+            xl={false}
+          >
+            <CreateBtn />
+          </ResponsiveWrapper>
+        </ConnectWalletButton>
+      </div>
     </>
   );
 }
