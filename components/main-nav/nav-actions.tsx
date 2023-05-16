@@ -54,7 +54,7 @@ export default function NavActions({
           xs={false}
           xl={true}
         >
-          <div className="d-flex gap-3">
+          <div className="d-flex gap-3 align-items-center">
             <CreateBtn />
 
             <Button
@@ -72,7 +72,7 @@ export default function NavActions({
             xs={false}
             xl={true}
           >
-            <div className="d-flex gap-3">
+            <div className="d-flex gap-3 align-items-center">
               <TransactionsStateIndicator />
 
               <NavAvatar />
