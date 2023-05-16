@@ -6,6 +6,13 @@
   }
 
   .native-select {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    padding: 15px;
+  }
+
+  .native-select {
     @extend .bg-gray-900;
     @extend .border-gray-800;
     @extend .p-2;
