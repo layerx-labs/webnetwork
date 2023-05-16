@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 
-import { ButtonProps } from "components/button";
-import IconSingleValue from "components/icon-single-value";
-import ReactSelect from "components/react-select";
+import Button, { ButtonProps } from "components/button";
 
 interface Action {
   onClick: () => void;
@@ -21,29 +19,30 @@ export default function MultiActionButton({
   label,
   ...rest
 }: MultiActionButtonProps & ButtonProps) {
-  const defaultOption = {
-    value: label,
-    label: label,
-    preIcon: icon
-  };
+  const selectRef = useRef<HTMLSelectElement>(null);
 
-  function actionsToOptions(_actions) {
-    return _actions.map((action, index) => ({
-      value: index,
-      label: action.label
-    }));
+  function onBtnClick() {
+    if (selectRef.current)
+      selectRef.current.click();
   }
 
   return(
     <div className="multi-action-button">
-      <ReactSelect
-        value={defaultOption}
-        options={actionsToOptions(actions)}
-        // onChange={onSelectedBranch}
-        components={{
-          SingleValue: IconSingleValue
-        }}
-      />
+      <Button
+        {...rest}
+        onClick={onBtnClick}
+      >
+        {icon}
+        <span>{label}</span>
+      </Button>
+
+      <select
+        name="multiAction"
+        id="multiAction"
+        ref={selectRef}
+      >
+        {actions.map(({ label }, i) => <option value={i}>{label}</option>)}
+      </select>
     </div>
   );
 }
