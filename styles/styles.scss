@@ -394,6 +394,13 @@ li {
   min-height: $navbar-height;
   background-color: var(--bs-dark);
 
+  border-bottom: 1px solid $dark-gray;
+
+  .btn:not(.brand, .not-svg) svg:only-child {
+    width: 16px;
+    height: 16px;
+  }
+
   .brand {
     padding: 0;
   }
@@ -1298,15 +1305,6 @@ $c_props: (
 
 .w-65 {
   width: 65%;
-}
-
-.main-nav {
-  border-bottom: 1px solid $dark-gray;
-
-  .btn:not(.brand) svg:only-child {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 svg {

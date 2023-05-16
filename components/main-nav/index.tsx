@@ -8,6 +8,7 @@ import HelpModal from "components/help-modal";
 import BrandLogo from "components/main-nav/brand-logo";
 import NavActions from "components/main-nav/nav-actions";
 import NavLinks from "components/main-nav/nav-links";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
@@ -114,11 +115,15 @@ export default function MainNav() {
                 showDefaultBepro={noNeedNetworkInstance}
               />
 
-              <SelectChainDropdown
-                onSelect={(chain) => handleNetworkSelected(chain)}
-                isOnNetwork={!noNeedNetworkInstance}
-                className="select-network-dropdown"
-              />
+              {!noNeedNetworkInstance &&
+                <ResponsiveWrapper xs={false} xl={true}>
+                  <SelectChainDropdown
+                    onSelect={(chain) => handleNetworkSelected(chain)}
+                    isOnNetwork={!noNeedNetworkInstance}
+                    className="select-network-dropdown"
+                  />
+                </ResponsiveWrapper>
+              }
             </div>
 
             <NavLinks />
