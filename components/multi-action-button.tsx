@@ -45,6 +45,18 @@ export default function MultiActionButton({
     executeAction(newValue.value);
   }
 
+  function executeAction(actionIndex) {
+    actions[actionIndex]?.onClick();
+  }
+
+  function onNativeChange(evt) {
+    executeAction(evt.target.value);
+  }
+
+  function onRSChange(newValue) {
+    executeAction(newValue.value);
+  }
+
   return(
     <div className="multi-action-button">
       { isMobile &&
