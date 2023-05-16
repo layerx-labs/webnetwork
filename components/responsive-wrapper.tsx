@@ -32,11 +32,11 @@ export default function ResponsiveWrapper({
     <div 
       className={clsx([
         getClass(xs, "d-flex", "d-none"),
-        getClass(sm, "d-flex", "d-sm-none"),
-        getClass(md, "d-flex", "d-md-none"),
-        getClass(lg, "d-flex", "d-lg-none"),
-        getClass(xl, "d-flex", "d-xl-none"),
-        getClass(xxl, "d-flex", "d-xxl-none"),
+        getClass(sm, "d-sm-flex", "d-sm-none"),
+        getClass(md, "d-md-flex", "d-md-none"),
+        getClass(lg, "d-lg-flex", "d-lg-none"),
+        getClass(xl, "d-xl-flex", "d-xl-none"),
+        getClass(xxl, "d-xxl-flex", "d-xxl-none"),
       ])}
     >
       {children}
