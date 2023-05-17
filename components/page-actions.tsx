@@ -85,10 +85,6 @@ export default function PageActions({
   const hasPullRequests =
     !!state.currentBounty?.data?.pullRequests?.filter(pullRequest => pullRequest?.status !== "canceled")?.length;
 
-  const hasOpenPullRequest = 
-    !!state.currentBounty?.data?.pullRequests?.find(pullRequest => 
-      pullRequest?.githubLogin === state.currentUser?.login && pullRequest?.status !== "canceled");
-
   async function handlePullrequest({
     title: prTitle,
     description: prDescription,
@@ -280,22 +276,6 @@ export default function PageActions({
           amountTotal={state.currentBounty?.data?.amount}
           pullRequests={state.currentBounty?.data?.pullRequests}
         />
-      );
-  }
-
-  function renderViewPullRequestLink() {
-    if (isWalletConnected && 
-        isGithubConnected &&
-        !isBountyInDraft &&
-        hasOpenPullRequest)
-      return (
-        <GithubLink
-          forcePath={state.currentBounty?.data?.repository?.githubPath}
-          hrefPath={`pull?q=base:${state.currentBounty?.data?.branch}`}
-          color="primary"
-        >
-          <Translation ns="pull-request" label="actions.view"/>
-        </GithubLink>
       );
   }
 
