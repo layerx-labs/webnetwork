@@ -79,11 +79,11 @@ export default function Modal({
         className={`relative d-flex w-100 flex-column justify-content-${titlePosition} `}
       >
         <ModalBootstrap.Title
-          className={`pt-3 text-white ${titleClass || ""} ${
+          className={`text-white ${titleClass || ""} ${
             centerTitle ? "text-center w-100" : ""
           }`}
         >
-          <h3>{titleComponent || title}</h3>
+          <h4>{titleComponent || title}</h4>
         </ModalBootstrap.Title>
 
         {subTitle || subTitleComponent && <p className="text-white caption-small">{subTitleComponent || subTitle }</p>}
@@ -91,7 +91,7 @@ export default function Modal({
         {onCloseClick && (
           <Button
             transparent
-            className="close-button p-1 position-absolute end-94 text-gray"
+            className="close-button p-0 position-absolute text-gray not-svg"
             onClick={onCloseClick}
             disabled={isExecuting||onCloseDisabled}
           >

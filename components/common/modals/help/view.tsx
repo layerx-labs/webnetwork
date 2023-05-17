@@ -1,4 +1,5 @@
 import React from "react";
+import { isMobile } from "react-device-detect";
 
 import { useTranslation } from "next-i18next";
 
@@ -6,10 +7,11 @@ import ChatIcon from "assets/icons/chat-icon";
 import FeedbackIcon from "assets/icons/feedback-icon";
 import HelpIcon from "assets/icons/help-icon";
 import PageIcon from "assets/icons/page-icon";
+import ShieldIcon from "assets/icons/shield-icon";
 
 import Modal from "components/modal";
 
-import { DISCORD_LINK, DAPPKIT_LINK, SUPPORT_LINK } from "helpers/constants";
+import { DISCORD_LINK, DAPPKIT_LINK, SUPPORT_LINK, TERMS_AND_CONDITIONS_LINK } from "helpers/constants";
 
 export default function HelpModal({ show = false, onCloseClick }: { show: boolean; onCloseClick: () => void }) {
   const { t } = useTranslation("common");
@@ -36,7 +38,11 @@ export default function HelpModal({ show = false, onCloseClick }: { show: boolea
     helpItem("modals.help-modal.provide-feedback.title",
              "modals.help-modal.provide-feedback.content",
              <FeedbackIcon />,
-             DISCORD_LINK)
+             DISCORD_LINK),
+    helpItem("modals.help-modal.terms-and-conditions.title",
+             "",
+             <ShieldIcon />,
+             TERMS_AND_CONDITIONS_LINK),
   ];
 
   function HelpItemRow(item) {
@@ -72,7 +78,9 @@ export default function HelpModal({ show = false, onCloseClick }: { show: boolea
         title={String(t("modals.help-modal.title"))}
         titlePosition="center"
         onCloseClick={onCloseClick}
-        backdrop={true} >
+        backdrop
+        fullscreen={isMobile as string | true}
+      >
         {helpItems.map(HelpItemRow)}
       </Modal>
     </>
