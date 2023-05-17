@@ -2,6 +2,8 @@ import CookieConsent from "react-cookie-consent";
 
 import { useTranslation } from "next-i18next";
 
+import { TERMS_AND_CONDITIONS_LINK } from "helpers/constants";
+
 export default function ConsentCookie() {
   const { t } = useTranslation("common");
 
@@ -13,7 +15,10 @@ export default function ConsentCookie() {
       expires={150}
       disableStyles
     >
-      {t("cookie-consent.message")}
+      {t("cookie-consent.message")}{" "}
+      <a href={TERMS_AND_CONDITIONS_LINK} className="text-decoration-none text-blue-400"> 
+        Terms and Conditions
+      </a> apply.
     </CookieConsent>
   );
 }
