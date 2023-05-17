@@ -309,10 +309,6 @@ export default function PageActions({
             </h4>
 
             <div className="d-flex flex-row align-items-center gap-20">
-              {!isMobile &&
-                <ForksAvatars forks={state.Service?.network?.repos?.active?.forks || []}
-                              repositoryPath={state.currentBounty?.data?.repository?.githubPath}/>}
-
               {renderForkRepositoryLink()}
 
               {renderStartWorkingButton()}
