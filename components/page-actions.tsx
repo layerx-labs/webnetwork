@@ -343,21 +343,10 @@ export default function PageActions({
 
               {renderCreateProposalButton()}
 
-              {renderViewPullRequestLink()}
-
               {renderEditButton()}
 
               {!isGithubConnected && isWalletConnected && <ConnectGithub size="sm"/>}
 
-              <GithubLink
-                onClick={!state.Service?.network?.repos?.active?.ghVisibility ? () => setShowGHModal(true) : null}
-                forcePath={state.currentBounty?.data?.repository?.githubPath}
-                hrefPath={`${(state.currentBounty?.data?.state?.toLowerCase() === "pull request" && "pull") ||
-                "issues"
-                }/${issueGithubID || ""}`}
-              >
-                {t("actions.view-on-github")}
-              </GithubLink>
             </div>
           </div>
         </div>
