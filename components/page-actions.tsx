@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
+import {Button} from "react-bootstrap";
 import {isMobile} from "react-device-detect";
 
 import {useTranslation} from "next-i18next";
@@ -27,11 +28,9 @@ import {getIssueState} from "helpers/handleTypeIssue";
 import {NetworkEvents} from "interfaces/enums/events";
 
 import useApi from "x-hooks/use-api";
-import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import {useBounty} from "x-hooks/use-bounty";
 import {useNetwork} from "x-hooks/use-network";
-import {Button} from "react-bootstrap";
 
 interface PageActionsProps {
   isRepoForked?: boolean;
@@ -53,15 +52,11 @@ export default function PageActions({
   const [isExecuting, setIsExecuting] = useState(false);
   const [showPRModal, setShowPRModal] = useState(false);
   const [showGHModal, setShowGHModal] = useState(false);
-  const [showHardCancelModal, setShowHardCancelModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
-
-  const [isCancelable, setIsCancelable] = useState(false);
 
   const { state, dispatch } = useAppState();
   const { getDatabaseBounty } = useBounty();
-  const { updateWalletBalance } = useAuthentication();
-  const { handleReedemIssue, handleHardCancelBounty, handleCreatePullRequest } = useBepro();
+  const { handleCreatePullRequest } = useBepro();
   const { createPrePullRequest, cancelPrePullRequest, startWorking, processEvent } = useApi();
   const { goToProfilePage } = useNetwork();
 
@@ -80,7 +75,6 @@ export default function PageActions({
     amount: state.currentBounty?.data?.amount,
     fundingAmount: state.currentBounty?.data?.fundingAmount
   })
-  const isBountyFunded = state.currentBounty?.data?.fundedAmount?.isEqualTo(state.currentBounty?.data?.fundingAmount)
   const isStateToWorking = ["proposal", "open", "ready"].some(value => value === issueState);
 
   const isBountyOwner =
@@ -94,36 +88,6 @@ export default function PageActions({
   const hasOpenPullRequest = 
     !!state.currentBounty?.data?.pullRequests?.find(pullRequest => 
       pullRequest?.githubLogin === state.currentUser?.login && pullRequest?.status !== "canceled");
-
-  async function handleRedeem() {
-    handleReedemIssue(getIssueState({
-      state: state.currentBounty?.data?.state,
-      amount: state.currentBounty?.data?.amount,
-      fundingAmount: state.currentBounty?.data?.fundingAmount
-    }) === "funding")
-      .then(() => {
-        updateWalletBalance(true);
-        getDatabaseBounty(true);
-      });
-  }
-
-  async function handleHardCancel() {
-    setShowHardCancelModal(false);
-    handleHardCancelBounty()
-      .then(() => {
-        updateWalletBalance();
-        getDatabaseBounty(true);
-      });
-  }
-
-  useEffect(() => {
-    if (state.Service?.active && state.currentBounty?.data)
-      (async () => {
-        const cancelableTime = await state.Service?.active.getCancelableTime();
-        const canceable = +new Date() >= +new Date(+state.currentBounty?.data.createdAt + cancelableTime)
-        setIsCancelable(canceable)
-      })()
-  }, [state.Service?.active, state.currentBounty?.data])
 
   async function handlePullrequest({
     title: prTitle,
@@ -295,37 +259,6 @@ export default function PageActions({
       );
   }
 
-  function renderHardCancelButton() {
-    if (state.Service?.network?.active?.isGovernor && isCancelable)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            color="danger"
-            className="read-only-button me-1"
-            onClick={() => setShowHardCancelModal(true)}
-          >
-            <Translation ns="common" label="actions.cancel"/>
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
-  function renderCancelButton() {
-    const isDraftOrNotFunded = isFundingRequest ? !isBountyFunded : isBountyInDraft;
-
-    if (isWalletConnected && isBountyOpen && isBountyOwner && isDraftOrNotFunded && !isEditIssue)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            className="read-only-button me-1"
-            onClick={handleRedeem}
-          > 
-            <Translation ns="common" label="actions.cancel"/>
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
   function renderUpdateAmountButton() {
     if (isWalletConnected && isBountyOpen && isBountyOwner && isBountyInDraft && !isFundingRequest && !isEditIssue)
       return (
@@ -400,15 +333,11 @@ export default function PageActions({
                 <ForksAvatars forks={state.Service?.network?.repos?.active?.forks || []}
                               repositoryPath={state.currentBounty?.data?.repository?.githubPath}/>}
 
-              {renderHardCancelButton()}
-
               {renderForkRepositoryLink()}
 
               {renderStartWorkingButton()}
 
               {renderCreatePullRequestButton()}
-
-              {renderCancelButton()}
 
               {renderUpdateAmountButton()}
 
@@ -467,18 +396,6 @@ export default function PageActions({
         onOkClick={() => setShowGHModal(false)}
       >
         <h5 className="text-center"><Translation ns="common" label="modals.gh-access.content"/></h5>
-      </Modal>
-
-      <Modal
-        title={t("modals.hard-cancel.title")}
-        centerTitle
-        show={showHardCancelModal}
-        onCloseClick={() => setShowHardCancelModal(false)}
-        cancelLabel={t("actions.close")}
-        okLabel={t("actions.continue")}
-        onOkClick={handleHardCancel}
-      >
-        <h5 className="text-center"><Translation ns="common" label="modals.hard-cancel.content"/></h5>
       </Modal>
     </div>
   );
