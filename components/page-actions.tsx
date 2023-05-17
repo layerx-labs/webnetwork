@@ -1,6 +1,5 @@
 import React, { useState} from "react";
 import {Button} from "react-bootstrap";
-import {isMobile} from "react-device-detect";
 
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
@@ -12,7 +11,6 @@ import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/contract-button";
 import NewProposal from "components/create-proposal";
 import CreatePullRequestModal from "components/create-pull-request-modal";
-import ForksAvatars from "components/forks-avatars";
 import GithubLink from "components/github-link";
 import Modal from "components/modal";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
