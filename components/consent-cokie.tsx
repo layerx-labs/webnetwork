@@ -16,9 +16,14 @@ export default function ConsentCookie() {
       disableStyles
     >
       {t("cookie-consent.message")}{" "}
-      <a href={TERMS_AND_CONDITIONS_LINK} className="text-decoration-none text-blue-400"> 
-        Terms and Conditions
-      </a> apply.
+      <a 
+        href={TERMS_AND_CONDITIONS_LINK}
+        className="text-decoration-none text-blue-400"
+        target="_blank"
+        rel="noreferrer"
+      > 
+        {t("status.terms-and-conditions")}
+      </a> {t("misc.apply")}.
     </CookieConsent>
   );
 }
