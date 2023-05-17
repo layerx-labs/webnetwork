@@ -37,29 +37,48 @@ export default function NetworkListItem({
 
   return (
     <div 
-      className="list-item p-20 d-flex flex-row border-radius-8 border border-gray-800 bg-gray-900 cursor-pointer" 
+      className="list-item p-3 d-flex flex-row border-radius-8 border border-gray-850 bg-gray-900 cursor-pointer" 
       onClick={onClick}
     >
-      <div className="col-3">
-        <div className="d-flex flex-row align-items-center gap-20">
-          <NetworkLogo
-            src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
-            alt={`${network?.name} logo`}
-            isBepro={network?.name.toLowerCase() === 'bepro'}
-          />
+      <div className="col-2">
+        <div className="row row align-items-center">
+          <div className="col-auto">
+            <NetworkLogo
+              src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
+              alt={`${network?.name} logo`}
+              isBepro={network?.name.toLowerCase() === 'bepro'}
+              noBg
+            />
+          </div>
 
-          <span className="caption-medium text-white">{network?.name}</span>
+          <div className="col px-0">
+            <div className="row align-items-center">
+              <div className="col-auto">
+                <span className="caption-small font-weight-medium text-white">{network?.name}</span>
+              </div>
 
-          <ChainBadge chain={network?.chain} />
+              {network?.isClosed && 
+                <div className="col px-0">
+                  <PullRequestLabels label="closed" />
+                </div>
+              }
+            </div>
 
-          {(network?.isClosed && <PullRequestLabels label="closed" />) || ""}
+            <ChainBadge chain={network?.chain} transparent />
+          </div>
         </div>
       </div>
 
       <div className="col-3 d-flex flex-row align-items-center justify-content-center">
-        <span className="caption-medium text-white">
-          {isNotUndefined(network?.totalIssues) ? formatNumberToNScale(network?.totalIssues, 0) : <Spinner />}
-        </span>
+        <div className="bg-gray-950 py-1 px-2 border-radius-4 border border-gray-800">
+          <span className="caption-small font-weight-medium text-white mr-1">
+            {isNotUndefined(network?.totalIssues) ? formatNumberToNScale(network?.totalIssues, 0) : <Spinner />}
+          </span>
+
+          <span className="caption-small font-weight-medium text-gray-500">
+            Bounties
+          </span>
+        </div>
       </div>
 
       <div className="col-3 d-flex flex-row align-items-center justify-content-center">
