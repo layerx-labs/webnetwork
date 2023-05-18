@@ -14,7 +14,7 @@ export default function NetworkListBar({ hideOrder = false, order, setOrder }) {
   }
 
   return (
-    <div className="row py-0 mx-0 mb-2 svg-with-text-color">
+    <div className="row py-0 mx-0 mb-2 svg-with-text-color d-none d-xl-flex">
       <NetworkListBarColumn
         label={t("steps.network-information.fields.name.default")}
         hideOrder={hideOrder}
@@ -40,7 +40,6 @@ export default function NetworkListBar({ hideOrder = false, order, setOrder }) {
       />
 
       <NetworkListBarColumn
-        col={2}
         hideOrder={hideOrder}
         label={t("network-list-bar.token-locked")}
         columnOrder={order[1]}
