@@ -197,7 +197,11 @@
     "unsupported": "Unsupported",
     "votes": "Votes",
     "changing": "Changing",
-    "save-changes": "Save Changes"
+    "save-changes": "Save Changes",
+    "repository": "Repository",
+    "branch": "Branch",
+    "opened-on": "Opened on",
+    "owner": "Owner"
   },
   "modals": {
     "help-modal": {
