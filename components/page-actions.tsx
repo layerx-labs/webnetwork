@@ -189,7 +189,8 @@ export default function PageActions({
         <GithubLink
           forcePath={state.currentBounty?.data?.repository?.githubPath}
           hrefPath="fork"
-          color="primary">
+          className="btn btn-primary bounty-outline-button"
+          >
           <Translation label="actions.fork-repository"/>
         </GithubLink>);
   }
@@ -219,7 +220,7 @@ export default function PageActions({
               <ContractButton
                 color="primary"
                 onClick={handleStartWorking}
-                className="read-only-button"
+                className="read-only-button bounty-outline-button"
                 disabled={isExecuting}
                 isLoading={isExecuting}
               >
@@ -243,7 +244,7 @@ export default function PageActions({
       return (
         <ReadOnlyButtonWrapper>
           <ContractButton
-            className="read-only-button"
+            className="read-only-button bounty-outline-button"
             onClick={() => setShowPRModal(true)}
             disabled={!state.currentUser?.login || !isWalletConnected}
           >
@@ -258,7 +259,7 @@ export default function PageActions({
       return (
         <ReadOnlyButtonWrapper>
           <ContractButton
-            className="read-only-button me-1"
+            className="read-only-button bounty-outline-button me-1"
             onClick={() => setShowUpdateAmount(true)}
           >
             <Translation ns="bounty" label="actions.update-amount"/>
@@ -282,7 +283,7 @@ export default function PageActions({
       return (
         <ReadOnlyButtonWrapper>
           <ContractButton
-            className="read-only-button me-1"
+            className="read-only-button bounty-outline-button me-1"
             onClick={handleEditIssue}
           >
             <EditIcon className="me-1"/>
