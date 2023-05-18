@@ -67,6 +67,7 @@ export default function BountyHero({
                     amount: state.currentBounty?.data?.amount,
                     fundingAmount: state.currentBounty?.data?.fundingAmount,
                   })}
+                  fundedAmount={state.currentBounty?.data?.fundedAmount}
                 />
                 {!state.currentBounty?.data?.isKyc ? (
                   <Badge
@@ -83,16 +84,13 @@ export default function BountyHero({
             <If condition={!!state.currentBounty?.data?.tags?.length}>
               <div className="mt-3 border-bottom border-gray-850 pb-4">
                 <BountyTags
-                  tags={state.currentBounty?.data?.tags}
-                  color={state?.Service?.network?.active?.colors?.primary}
+                      tags={state.currentBounty?.data?.tags}
                   />
               </div>
             </If>
             {!isMobile && (
               <>
                 <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-20">
-
-
 
                   <div className="d-flex align-items-center">
                     <Avatar
