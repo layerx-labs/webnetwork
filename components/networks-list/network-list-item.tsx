@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { useTranslation } from "next-i18next";
 
 import ChainBadge from "components/chain-badge";
 import NetworkLogo from "components/network-logo";
@@ -24,8 +25,13 @@ export default function NetworkListItem({
   tokenSymbolDefault,
   handleRedirect
 }: NetworkListItemProps) {
+  const { t } = useTranslation(["bounty", "common"]);
+
   const { findSupportedChain } = useChain();
   const { state: { Settings: settings } } = useAppState();
+
+  const totalBounties = +(network?.totalIssues || 0);
+  const openBounties = +(network?.totalOpenIssues || 0);
 
   function onClick() {
     const chainName = findSupportedChain({ chainId: +network?.chain_id})?.chainShortName?.toLowerCase();
@@ -66,8 +72,8 @@ export default function NetworkListItem({
 
             <div className="col-auto d-flex flex-row align-items-center d-md-none mt-1">
               <ItemAmount
-                label="Bounties"
-                amount={formatNumberToNScale(network?.totalIssues || 0, 0)}
+                label={t("label", { count: totalBounties })}
+                amount={formatNumberToNScale(totalBounties, 0)}
               />
             </div>
           </div>
@@ -76,21 +82,21 @@ export default function NetworkListItem({
 
       <div className="col-sm-12 col-md d-flex flex-row align-items-center d-none d-md-flex">
         <ItemAmount
-          label="Bounties"
-          amount={formatNumberToNScale(network?.totalIssues || 0, 0)}
+          label={t("label", { count: totalBounties })}
+          amount={formatNumberToNScale(totalBounties, 0)}
         />
       </div>
 
       <div className="col d-flex flex-row align-items-center d-none d-md-flex">
         <ItemAmount
-          label="Open Bounties"
-          amount={formatNumberToNScale(network?.totalOpenIssues || 0, 0)}
+          label={`${t("status.open")} ${t("label", { count: openBounties })}`}
+          amount={formatNumberToNScale(openBounties || 0, 0)}
         />
       </div>
 
       <div className="col d-flex flex-row align-items-center d-none d-xl-flex">
         <ItemAmount
-          label="Tokens Locked"
+          label={t("common:tokens-locked")}
           amount={formatNumberToNScale(BigNumber(network?.tokensLocked || 0).toFixed())}
           currency={network?.networkToken?.symbol || tokenSymbolDefault}
         />
