@@ -5,8 +5,8 @@ import {useRouter} from "next/router";
 
 import CustomContainer from "components/custom-container";
 import InternalLink from "components/internal-link";
-import NetworkListBar from "components/network-list-bar";
-import NetworkListItem from "components/network-list-item";
+import NetworkListBar from "components/networks-list/network-list-bar";
+import NetworkListItem from "components/networks-list/network-list-item";
 import NothingFound from "components/nothing-found";
 
 import {useAppState} from "contexts/app-state";

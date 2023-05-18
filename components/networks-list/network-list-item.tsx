@@ -10,6 +10,8 @@ import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {Network} from "interfaces/network";
 
+import ItemAmount from "./item-amount";
+
 interface NetworkListItemProps {
   network: Network;
   tokenSymbolDefault: string;
@@ -37,11 +39,11 @@ export default function NetworkListItem({
 
   return (
     <div 
-      className="list-item p-3 d-flex flex-row border-radius-8 border border-gray-850 bg-gray-900 cursor-pointer" 
+      className="list-item p-3 row border-radius-8 border border-gray-850 bg-gray-900 cursor-pointer" 
       onClick={onClick}
     >
-      <div className="col-2">
-        <div className="row row align-items-center">
+      <div className="col-3">
+        <div className="row align-items-center">
           <div className="col-auto">
             <NetworkLogo
               src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
@@ -51,14 +53,14 @@ export default function NetworkListItem({
             />
           </div>
 
-          <div className="col px-0">
+          <div className="col-auto px-0">
             <div className="row align-items-center">
               <div className="col-auto">
                 <span className="caption-small font-weight-medium text-white">{network?.name}</span>
               </div>
 
               {network?.isClosed && 
-                <div className="col px-0">
+                <div className="col-auto px-0">
                   <PullRequestLabels label="closed" />
                 </div>
               }
@@ -69,38 +71,26 @@ export default function NetworkListItem({
         </div>
       </div>
 
-      <div className="col-3 d-flex flex-row align-items-center justify-content-center">
-        <div className="bg-gray-950 py-1 px-2 border-radius-4 border border-gray-800">
-          <span className="caption-small font-weight-medium text-white mr-1">
-            {isNotUndefined(network?.totalIssues) ? formatNumberToNScale(network?.totalIssues, 0) : <Spinner />}
-          </span>
-
-          <span className="caption-small font-weight-medium text-gray-500">
-            Bounties
-          </span>
-        </div>
+      <div className="col px-0 d-flex flex-row align-items-center">
+        <ItemAmount
+          label="Bounties"
+          amount={formatNumberToNScale(network?.totalIssues || 0, 0)}
+        />
       </div>
 
-      <div className="col-3 d-flex flex-row align-items-center justify-content-center">
-        <span className="caption-medium text-white">
-          {isNotUndefined(network?.totalOpenIssues) ? formatNumberToNScale(network?.totalOpenIssues, 0) : <Spinner />}
-        </span>
+      <div className="col px-0 d-flex flex-row align-items-center">
+        <ItemAmount
+          label="Open Bounties"
+          amount={formatNumberToNScale(network?.totalOpenIssues || 0, 0)}
+        />
       </div>
 
-      <div className="col-2 d-flex flex-row align-items-center justify-content-center">
-        <span className="caption-medium text-white ml-3">
-        {isNotUndefined(network?.tokensLocked) ? (
-            formatNumberToNScale(BigNumber(network?.tokensLocked || 0).toFixed())
-          ) : (
-            <Spinner />
-          )}
-        </span>
-      </div>
-
-      <div className="col-1 d-flex flex-row align-items-center justify-content-start">
-        <span className="caption-medium mr-2 text-blue">
-          {network?.networkToken?.symbol || tokenSymbolDefault}
-        </span>
+      <div className="col px-0 d-flex flex-row align-items-center">
+        <ItemAmount
+          label="Tokens Locked"
+          amount={formatNumberToNScale(BigNumber(network?.tokensLocked || 0).toFixed())}
+          currency={network?.networkToken?.symbol || tokenSymbolDefault}
+        />
       </div>
     </div>
   );
