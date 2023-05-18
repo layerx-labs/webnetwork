@@ -80,7 +80,7 @@ export default function NetworkListItem({
         </div>
       </div>
 
-      <div className="col-sm-12 col-md d-flex flex-row align-items-center d-none d-md-flex">
+      <div className="col-xs-12 col-md d-flex flex-row align-items-center d-none d-md-flex">
         <ItemAmount
           label={t("label", { count: totalBounties })}
           amount={formatNumberToNScale(totalBounties, 0)}
@@ -94,7 +94,7 @@ export default function NetworkListItem({
         />
       </div>
 
-      <div className="col d-flex flex-row align-items-center d-none d-xl-flex">
+      <div className="col d-flex flex-row align-items-center d-none d-lg-flex">
         <ItemAmount
           label={t("common:tokens-locked")}
           amount={formatNumberToNScale(BigNumber(network?.tokensLocked || 0).toFixed())}
