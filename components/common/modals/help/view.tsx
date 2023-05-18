@@ -1,5 +1,4 @@
 import React from "react";
-import { isMobile } from "react-device-detect";
 
 import { useTranslation } from "next-i18next";
 
@@ -79,7 +78,6 @@ export default function HelpModal({ show = false, onCloseClick }: { show: boolea
         titlePosition="center"
         onCloseClick={onCloseClick}
         backdrop
-        fullscreen={isMobile as string | true}
       >
         {helpItems.map(HelpItemRow)}
       </Modal>

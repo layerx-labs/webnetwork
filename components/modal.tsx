@@ -1,4 +1,5 @@
 import { Modal as ModalBootstrap } from "react-bootstrap";
+import { isMobile } from "react-device-detect";
 
 import { kebabCase } from "lodash";
 
@@ -73,6 +74,7 @@ export default function Modal({
       aria-describedby={modalTitle}
       id={modalTitle}
       backdrop={backdrop}
+      fullscreen={isMobile as string | true}
       {...params}
     >
       <ModalBootstrap.Header
