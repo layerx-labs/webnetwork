@@ -27,16 +27,16 @@ export default function NetworkListBar({ hideOrder = false, order, setOrder }) {
         hideOrder={hideOrder}
         columnOrder={order[1]}
         label={t("network-list-bar.number-of-bounties")}
-        isColumnActive={order[0] === "totalBounties"}
-        onClick={() => handleSetOrder("totalBounties")}
+        isColumnActive={order[0] === "totalIssues"}
+        onClick={() => handleSetOrder("totalIssues")}
       />
 
       <NetworkListBarColumn
         hideOrder={hideOrder}
         label={t("network-list-bar.open-bounties")}
         columnOrder={order[1]}
-        isColumnActive={order[0] === "openBounties"}
-        onClick={() => handleSetOrder("openBounties")}
+        isColumnActive={order[0] === "totalOpenIssues"}
+        onClick={() => handleSetOrder("totalOpenIssues")}
       />
 
       <NetworkListBarColumn
