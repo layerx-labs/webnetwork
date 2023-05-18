@@ -1,18 +1,16 @@
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { isMobile } from "react-device-detect";
 
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import Avatar from "components/avatar";
-import CountInfo from "components/bounty-hero/count-info";
+import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
 import CustomContainer from "components/custom-container";
-import DateLabel from "components/date-label";
-import GithubInfo from "components/github-info";
 import If from "components/If";
 import PriceConversor from "components/price-conversor";
-import Translation from "components/translation";
 
 import { useAppState } from "contexts/app-state";
 
@@ -85,16 +83,28 @@ export default function BountyHero({
                     />
                   </div>
                   <span className="ms-1 text-white">
-                    {currentState.charAt(0).toUpperCase() +
-                      currentState.slice(1)}
+                    {currentState?.charAt(0)?.toUpperCase() +
+                      currentState?.slice(1)}
                   </span>
                 </div>
-                {state.currentBounty?.data?.isKyc ? (
-                  <div
-                    className={`ms-3 d-flex py-1 px-2 bg-transparent border border-gray-700 text-white border-radius-4`}
+
+                {!state.currentBounty?.data?.isKyc ? (
+                  <OverlayTrigger
+                    key="bottom-githubPath"
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id={"tooltip-bottom"}>
+                        {t("bounty:kyc.bounty-tool-tip")}
+                      </Tooltip>
+                    }
                   >
-                    {t("bounty:kyc.label")}
-                  </div>
+                    <div
+                      className={`ms-3 d-flex py-1 px-2 bg-transparent border 
+                                  border-gray-700 text-white border-radius-4`}
+                    >
+                      {t("bounty:kyc.label")}
+                    </div>
+                  </OverlayTrigger>
                 ) : null}
               </div>
               <div>{renderPriceConversor()}</div>
@@ -110,66 +120,57 @@ export default function BountyHero({
             {!isMobile && (
               <>
                 <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-20">
-                  <div className="d-flex align-items-center">
-                    <Avatar
-                      className="me-2"
-                      userLogin={state.currentBounty?.data?.creatorGithub}
-                    />{" "}
-                    <GithubInfo
-                      parent="hero"
-                      variant="user"
-                      label={
-                        state.currentBounty?.data?.creatorGithub
-                          ? [
-                              "@",
-                              state.currentBounty?.data?.creatorGithub,
-                          ].join("")
-                          : truncateAddress(state.currentBounty?.data?.creatorAddress)
-                      }
-                    />
-                  </div>
-
-                  <span className="caption-small">
-                    <If condition={!!state.currentBounty?.data?.repository}>
-                      <GithubInfo
-                        parent="list"
-                        variant="repository"
-                        label={
-                          state.currentBounty?.data?.repository?.githubPath
+                  <If condition={!!state.currentBounty?.data?.repository}>
+                    <BountyItemLabel label={t("common:misc.repository")}>
+                      <span className={`text-gray me-2 text-truncate`}>
+                        {
+                          state.currentBounty?.data?.repository?.githubPath.split("/")?.[0]
                         }
-                      />
-                    </If>
-                  </span>
+                      </span>
+                    </BountyItemLabel>
+                  </If>
 
-                  <span className="caption-small text-light-gray text-uppercase">
-                    <Translation label={"branch"} />
-                    <span className="text-primary">
-                      :{state.currentBounty?.data?.branch}
+                  <BountyItemLabel label={t("common:misc.branch")}>
+                    <span className={`text-gray me-2 text-truncate`}>
+                      {state.currentBounty?.data?.branch}
                     </span>
-                  </span>
+                  </BountyItemLabel>
+
+                  <BountyItemLabel label={t("info.working")}>
+                    <span className={`text-gray me-2 text-truncate`}>
+                      {state.currentBounty?.data?.working?.length}
+                    </span>
+                  </BountyItemLabel>
                 </div>
 
                 <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-20">
-                  <CountInfo
-                    type="working"
-                    count={state.currentBounty?.data?.working?.length}
-                  />
-
-                  <CountInfo
-                    type="pull-requests"
-                    count={state.currentBounty?.data?.pullRequests?.length}
-                  />
-
-                  <CountInfo
-                    type="proposals"
-                    count={state.currentBounty?.data?.mergeProposals?.length}
-                  />
-
+                  <div className="d-flex align-items-center">
+                    <BountyItemLabel label={t("common:misc.owner")}>
+                      <>
+                        <div className="d-flex flex-column justify-content-center">
+                          <Avatar
+                            size="xsm"
+                            className="me-2"
+                            userLogin={state.currentBounty?.data?.creatorGithub}
+                          />{" "}
+                        </div>
+                        <span>
+                          {state.currentBounty?.data?.creatorGithub
+                            ? state.currentBounty?.data?.creatorGithub
+                            : truncateAddress(state.currentBounty?.data?.creatorAddress)}
+                        </span>
+                      </>
+                    </BountyItemLabel>
+                  </div>
                   <If condition={!!state.currentBounty?.data?.createdAt}>
-                    <DateLabel
-                      date={state.currentBounty?.data?.createdAt}
-                      className="text-white"
-                    />
+                    <BountyItemLabel
+                      label={t("common:misc.opened-on")}
+                      className=".d-md-none .d-lg-block"
+                    >
+                      <span className="text-gray text-truncate">
+                        {state.currentBounty?.data?.createdAt?.toLocaleDateString("PT")}
+                      </span>
+                    </BountyItemLabel>
                   </If>
                 </div>
               </>
