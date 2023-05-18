@@ -2028,3 +2028,14 @@ input[type="color"] {
 .modal-md {
   max-width: 500px;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.overflow-noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.overflow-noscrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
