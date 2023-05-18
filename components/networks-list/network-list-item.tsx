@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 
 import ChainBadge from "components/chain-badge";
 import NetworkLogo from "components/network-logo";
+import ItemAmount from "components/networks-list/item-amount";
 import PullRequestLabels from "components/pull-request-labels";
 
 import {useAppState} from "contexts/app-state";
@@ -10,7 +11,7 @@ import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {Network} from "interfaces/network";
 
-import ItemAmount from "./item-amount";
+import useChain from "x-hooks/use-chain";
 
 interface NetworkListItemProps {
   network: Network;
@@ -23,16 +24,11 @@ export default function NetworkListItem({
   tokenSymbolDefault,
   handleRedirect
 }: NetworkListItemProps) {
-  const { state: { supportedChains, Settings: settings } } = useAppState();
-
-  const Spinner = () => <span className="spinner-border spinner-border-xs ml-1" />;
-  const isNotUndefined = value => value !== undefined;
+  const { findSupportedChain } = useChain();
+  const { state: { Settings: settings } } = useAppState();
 
   function onClick() {
-    const chainName = 
-      supportedChains?.
-        find(({ chainId }) => +chainId === +network?.chain_id)?.chainShortName?.
-        toLowerCase();
+    const chainName = findSupportedChain({ chainId: +network?.chain_id})?.chainShortName?.toLowerCase();
 
     handleRedirect(network?.name, chainName);
   }
