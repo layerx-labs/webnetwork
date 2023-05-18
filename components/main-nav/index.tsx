@@ -1,4 +1,4 @@
-import {ReactElement, ReactNode, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 
 import clsx from "clsx";
 import {useRouter} from "next/router";
@@ -20,12 +20,6 @@ import useApi from "x-hooks/use-api";
 import { useDao } from "x-hooks/use-dao";
 import { useNetwork } from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
-
-export interface MyNetworkLink {
-  href: string;
-  label: string | ReactElement;
-  icon?: ReactNode;
-}
 
 export default function MainNav() {
   const { pathname, query, asPath, push } = useRouter();
