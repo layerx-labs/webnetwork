@@ -12,7 +12,7 @@ export default function ItemAmount({
   currency
 } : ItemAmountProps) {
   return(
-    <div className="bg-gray-950 py-0 px-2 border-radius-4 border border-gray-800">
+    <div className="bg-gray-950 text-nowrap py-0 px-2 border-radius-4 border border-gray-800">
       <span className="caption-small font-weight-medium text-white mr-1">
         {amount}
       </span>
