@@ -1,10 +1,9 @@
-import {isMobile} from "react-device-detect";
+import { isMobile } from "react-device-detect";
 
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import Avatar from "components/avatar";
-import Badge from "components/badge";
 import CountInfo from "components/bounty-hero/count-info";
 import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
@@ -15,10 +14,10 @@ import If from "components/If";
 import PriceConversor from "components/price-conversor";
 import Translation from "components/translation";
 
-import {useAppState} from "contexts/app-state";
+import { useAppState } from "contexts/app-state";
 
-import {getIssueState} from "helpers/handleTypeIssue";
-import {truncateAddress} from "helpers/truncate-address";
+import { getIssueState } from "helpers/handleTypeIssue";
+import { truncateAddress } from "helpers/truncate-address";
 
 import BountySettings from "./bounty-settings";
 
@@ -30,18 +29,26 @@ export default function BountyHero({
   isEditIssue?: boolean;
 }) {
   const router = useRouter();
-  const {t} = useTranslation(["bounty", "common"]);
+  const { t } = useTranslation(["bounty", "common"]);
 
-  const {state} = useAppState();
+  const { state } = useAppState();
   const { network } = router.query;
+  const currentState = getIssueState({
+    state: state.currentBounty?.data?.state,
+    amount: state.currentBounty?.data?.amount,
+    fundingAmount: state.currentBounty?.data?.fundingAmount,
+  });
 
   function renderPriceConversor() {
     return (
       <PriceConversor
         currentValue={state.currentBounty?.data?.amount?.toFixed() || "0"}
-        currency={state.currentBounty?.data?.transactionalToken?.symbol || t("common:misc.token")}
+        currency={
+          state.currentBounty?.data?.transactionalToken?.symbol ||
+          t("common:misc.token")
+        }
       />
-    )
+    );
   }
 
   return (
@@ -50,30 +57,44 @@ export default function BountyHero({
         <div className="d-flex flex-row">
           <div className="col-12">
             <div className="d-flex justify-content-between">
-              <div>       
-                <span className="me-1 text-white-30 text-uppercase">{network} /</span>
-                <span className="text-break">{state.currentBounty?.data?.githubId}</span>
+              <div>
+                <span className="me-1 text-white-30 text-uppercase">
+                  {network} /
+                </span>
+                <span className="text-break">
+                  {state.currentBounty?.data?.githubId}
+                </span>
               </div>
               <div className="">
-                <BountySettings handleEditIssue={handleEditIssue} isEditIssue={isEditIssue} />
+                <BountySettings
+                  handleEditIssue={handleEditIssue}
+                  isEditIssue={isEditIssue}
+                />
               </div>
             </div>
 
             <div className="d-flex justify-content-between border-top border-gray-850 mt-3">
               <div className="d-flex d-inline-flex align-items-center mt-3">
-                <BountyStatusInfo
-                  issueState={getIssueState({
-                    state: state.currentBounty?.data?.state,
-                    amount: state.currentBounty?.data?.amount,
-                    fundingAmount: state.currentBounty?.data?.fundingAmount,
-                  })}
-                  fundedAmount={state.currentBounty?.data?.fundedAmount}
-                />
-                {!state.currentBounty?.data?.isKyc ? (
-                  <Badge
-                    className={`ms-3 d-flex py-1 px-2 bg-transparent border border-gray-700 text-gray-300`}
-                    label={t("bounty:kyc.label")}
-                  />
+                <div
+                  className={`d-flex py-1 px-2 bg-transparent border border-gray-700 text-gray-300 border-radius-4`}
+                >
+                  <div className="d-flex flex-column justify-content-center">
+                    <BountyStatusInfo
+                      issueState={currentState}
+                      fundedAmount={state.currentBounty?.data?.fundedAmount}
+                    />
+                  </div>
+                  <span className="ms-1 text-white">
+                    {currentState.charAt(0).toUpperCase() +
+                      currentState.slice(1)}
+                  </span>
+                </div>
+                {state.currentBounty?.data?.isKyc ? (
+                  <div
+                    className={`ms-3 d-flex py-1 px-2 bg-transparent border border-gray-700 text-white border-radius-4`}
+                  >
+                    {t("bounty:kyc.label")}
+                  </div>
                 ) : null}
               </div>
               <div>{renderPriceConversor()}</div>
@@ -83,15 +104,12 @@ export default function BountyHero({
             </h5>
             <If condition={!!state.currentBounty?.data?.tags?.length}>
               <div className="mt-3 border-bottom border-gray-850 pb-4">
-                <BountyTags
-                      tags={state.currentBounty?.data?.tags}
-                  />
+                <BountyTags tags={state.currentBounty?.data?.tags} />
               </div>
             </If>
             {!isMobile && (
               <>
                 <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-20">
-
                   <div className="d-flex align-items-center">
                     <Avatar
                       className="me-2"
@@ -100,10 +118,13 @@ export default function BountyHero({
                     <GithubInfo
                       parent="hero"
                       variant="user"
-                      label={state.currentBounty?.data?.creatorGithub ?
-                        ["@", state.currentBounty?.data?.creatorGithub].join("")
-                        :
-                        truncateAddress(state.currentBounty?.data?.creatorAddress)
+                      label={
+                        state.currentBounty?.data?.creatorGithub
+                          ? [
+                              "@",
+                              state.currentBounty?.data?.creatorGithub,
+                          ].join("")
+                          : truncateAddress(state.currentBounty?.data?.creatorAddress)
                       }
                     />
                   </div>
@@ -113,29 +134,33 @@ export default function BountyHero({
                       <GithubInfo
                         parent="list"
                         variant="repository"
-                        label={state.currentBounty?.data?.repository?.githubPath}
+                        label={
+                          state.currentBounty?.data?.repository?.githubPath
+                        }
                       />
                     </If>
                   </span>
 
                   <span className="caption-small text-light-gray text-uppercase">
                     <Translation label={"branch"} />
-                    <span className="text-primary">:{state.currentBounty?.data?.branch}</span>
+                    <span className="text-primary">
+                      :{state.currentBounty?.data?.branch}
+                    </span>
                   </span>
                 </div>
 
                 <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-20">
-                  <CountInfo 
+                  <CountInfo
                     type="working"
                     count={state.currentBounty?.data?.working?.length}
                   />
 
-                  <CountInfo 
+                  <CountInfo
                     type="pull-requests"
                     count={state.currentBounty?.data?.pullRequests?.length}
                   />
 
-                  <CountInfo 
+                  <CountInfo
                     type="proposals"
                     count={state.currentBounty?.data?.mergeProposals?.length}
                   />
@@ -144,10 +169,9 @@ export default function BountyHero({
                     <DateLabel
                       date={state.currentBounty?.data?.createdAt}
                       className="text-white"
-                      />
+                    />
                   </If>
                 </div>
-
               </>
             )}
           </div>
