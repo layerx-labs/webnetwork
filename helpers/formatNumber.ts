@@ -25,8 +25,8 @@ export const formatNumberToNScale = (number: number | string, fixed = 2, spacer 
   return `${retNumber}${spacer}${unit}`;
 };
 
-export const formatNumberToCurrency = (number: number | string, options = { maximumFractionDigits: 2 }) =>
-  new Intl.NumberFormat("en", options).format(Number(number));
+export const formatNumberToCurrency = (number: number | string, maximumFractionDigits = 2) =>
+  new Intl.NumberFormat("en", { maximumFractionDigits }).format(Number(number));
 
 export const formatStringToCurrency = (numStr: string) => {
   if (numStr?.toString()?.trim() === "" || numStr === undefined || !numStr) return "0";

@@ -260,9 +260,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
                           <div className="d-flex align-items-center">
                             <span className="text-gray">
-                              {formatNumberToCurrency(balance?.beproAvailable?.toNumber() || 0, {
-                                maximumFractionDigits: 18
-                              })}
+                              {formatNumberToCurrency(balance?.beproAvailable?.toNumber() || 0, 18)}
                             </span>
 
                             {amount?.gt(0) && (
@@ -310,9 +308,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                             </span>
 
                             <span className="text-gray">
-                              {formatNumberToCurrency(balance?.oraclesAvailable?.toNumber() || 0, {
-                                maximumFractionDigits: 18
-                              })}
+                              {formatNumberToCurrency(balance?.oraclesAvailable?.toNumber() || 0, 18)}
                             </span>
                           </div>
                         </div>

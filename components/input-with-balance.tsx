@@ -60,9 +60,7 @@ export default function InputWithBalance({
 
         <div className="d-flex align-items-center">
           <span className="text-gray">
-            {formatNumberToCurrency(balance.toFixed(), {
-              maximumFractionDigits: decimals
-            })}
+            {formatNumberToCurrency(balance.toFixed(), decimals)}
           </span>
 
           { value?.gt(0) &&
@@ -72,9 +70,7 @@ export default function InputWithBalance({
               </span>
 
               <span className="text-white ml-1">
-                {formatNumberToCurrency(balance.minus(value).toFixed(), {
-                  maximumFractionDigits: decimals
-                })}
+                {formatNumberToCurrency(balance.minus(value).toFixed(), decimals)}
               </span>
             </>
           }
