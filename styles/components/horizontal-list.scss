@@ -1,0 +1,12 @@
+.horizontal-list {
+  position: relative;
+
+  .leftButton, .rightButton {
+    position: absolute;
+    top: 0;
+  }
+
+  .rightButton {
+    right: 0;
+  }
+}
