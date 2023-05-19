@@ -22,55 +22,47 @@ export default function HorizontalList({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const CLICK_STEP = 100;
   const HOLD_STEP = 2;
 
-  function handleScroll(direction: "left" | "right", isClick) {
+  function updateCanScroll() {
     if (divRef.current) {
-      const step = isClick ? CLICK_STEP : HOLD_STEP;
-
-      const newScrollValue = divRef.current.scrollLeft + (direction === "left" ? -step : step);
+      const scrollValue = divRef.current.scrollLeft;
       const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
 
-      if (direction === "left" && newScrollValue >= 0 || direction === "right" && newScrollValue <= maxScroll) {
-        divRef.current.scrollLeft = newScrollValue;
-
-        setCanScrollLeft(newScrollValue > 0);
-        setCanScrollRight(newScrollValue < maxScroll);
-      }
+      setCanScrollLeft(scrollValue > 0);
+      setCanScrollRight(scrollValue < maxScroll);
     }
   }
 
-  function clickRight() {
-    handleScroll("right", true);
+  function handleScroll(direction: "left" | "right") {
+    return(() => {
+      if (divRef.current) {
+        const newScrollValue = divRef.current.scrollLeft + (direction === "left" ? -HOLD_STEP : HOLD_STEP);
+        const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
+
+        console.log({ newScrollValue, maxScroll, direction, scrollLeft: divRef.current.scrollLeft })
+  
+        if (direction === "left" && newScrollValue >= 0 || direction === "right" && newScrollValue <= maxScroll)
+          divRef.current.scrollLeft = newScrollValue;
+
+        updateCanScroll();
+      }
+    });
   }
 
-  function scrollRight() {
-    handleScroll("right", false);
-  }
-
-  function clickLeft() {
-    handleScroll("left", true);
-  }
-
-  function scrollLeft() {
-    handleScroll("left", false);
-  }
-
-  const eventsLeft = useMouseHold(scrollLeft);
-  const eventsRight = useMouseHold(scrollRight);
+  const mouseEventsLeft = useMouseHold(handleScroll("left"), { forceStop: !canScrollLeft });
+  const mouseEventsRight = useMouseHold(handleScroll("right"), { forceStop: !canScrollRight });
 
   return(
-    <div className="horizontal-list">
-      <If condition={canScrollLeft}>
+    <div className="horizontal-list" onTouchMove={updateCanScroll}>
+      {canScrollLeft &&
         <Button 
-          className="leftButton p-0 rounded-0 h-100 border-0 d-xl-none" 
-          onClick={clickLeft}
-          {...eventsLeft}
+          className="leftButton p-0 rounded-0 h-100 border-0 d-xl-none"
+          {...mouseEventsLeft}
         >
           <ChevronLeftIcon />
         </Button>
-      </If>
+      }
       
       <div className={`d-flex flex-nowrap overflow-auto ${className} overflow-noscrollbar`} ref={divRef}>
         {children}
@@ -78,9 +70,8 @@ export default function HorizontalList({
 
       <If condition={canScrollRight}>
         <Button 
-          className="rightButton p-0 rounded-0 h-100 border-0 d-xl-none" 
-          onClick={clickRight}
-          {...eventsRight}
+          className="rightButton p-0 rounded-0 h-100 border-0 d-xl-none"
+          {...mouseEventsRight}
         >
           <ChevronRightIcon />
         </Button>
