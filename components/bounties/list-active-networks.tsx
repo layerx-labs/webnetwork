@@ -65,6 +65,12 @@ export default function ListActiveNetworks() {
 
             {networks.map((network) => 
               <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
+
+            {networks.map((network) => 
+              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
+
+            {networks.map((network) => 
+              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
           </HorizontalList>
         </If>
       </div>
