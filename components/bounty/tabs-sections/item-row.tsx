@@ -40,7 +40,7 @@ function ItemRow({ id, githubLogin, creator, status, children, href, reviewers, 
           href ? "cursor-pointer" : ""
         }`}
       >
-        <div className="col d-flex flex-row align-items-center gap-3">
+        <div className="col-md-8 d-flex flex-row align-items-center gap-3">
           <RenderId className="col-1 d-none d-xl-block" />
           <div className="col-md-5 col-xl-4 d-flex align-items-center gap-2">
           {githubLogin ? (
