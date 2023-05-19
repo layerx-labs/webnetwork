@@ -62,15 +62,6 @@ export default function ListActiveNetworks() {
           <HorizontalList className="gap-3">
             {networks.map((network) => 
               <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
-
-            {networks.map((network) => 
-              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
-
-            {networks.map((network) => 
-              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
-
-            {networks.map((network) => 
-              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
           </HorizontalList>
         </If>
       </div>
