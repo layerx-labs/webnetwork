@@ -4,9 +4,15 @@
   .leftButton, .rightButton {
     position: absolute;
     top: 0;
+    width: 25px;
   }
 
   .rightButton {
     right: 0;
+    background: linear-gradient(270deg, #0C0C0E 0%, rgba(12, 12, 14, 0.4) 100%);
+  }
+
+  .leftButton {
+    background: linear-gradient(270deg, rgba(12, 12, 14, 0.4) 100%, #0C0C0E 0%);
   }
 }

@@ -55,7 +55,7 @@ export default function HorizontalList({
   return(
     <div className="horizontal-list">
       <Button 
-        className="leftButton p-0 rounded-0 h-100" 
+        className="leftButton p-0 rounded-0 h-100 border-0" 
         onClick={clickLeft}
         {...eventsLeft}
       >
@@ -67,7 +67,7 @@ export default function HorizontalList({
       </div>
 
       <Button 
-        className="rightButton p-0 rounded-0 h-100" 
+        className="rightButton p-0 rounded-0 h-100 border-0" 
         onClick={clickRight}
         {...eventsRight}
       >
