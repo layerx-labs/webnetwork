@@ -22,9 +22,9 @@ export default function HorizontalList({
   const HOLD_STEP = 2;
 
   function handleScroll(direction: "left" | "right", isClick) {
-    const step = isClick ? CLICK_STEP : HOLD_STEP;
-
     if (divRef.current) {
+      const step = isClick ? divRef.current.firstChild?.clientWidth || CLICK_STEP : HOLD_STEP;
+
       const newScrollValue = divRef.current.scrollLeft + (direction === "left" ? -step : step);
       const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
 
