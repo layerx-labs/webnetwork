@@ -8,6 +8,7 @@ import PlusIcon from "assets/icons/plus-icon";
 import LoadingList from "components/bounties/loading-list";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
+import HorizontalList from "components/horizontal-list";
 import IssueListItem from "components/issue-list-item";
 import NothingFound from "components/nothing-found";
 
@@ -73,15 +74,12 @@ export default function ListRecentIssues() {
 
   function renderNothingFound(type: "open" | "funding") {
     const isOpen = type === "open";
-    const lenBounties = isOpen
-      ? bounties.openBounties?.length
-      : bounties.fundingBounties?.length || 0;
 
     const goToPage = 
       () => type === "open" ? push("/create-bounty") : push("/create-bounty?type=funding", "/create-bounty", )
 
     return (
-      <div className={`col-md-${numberOfColumns(lenBounties)}`}>
+      <div className="col-12 col-sm-6 col-md-4">
         <NothingFound
           description={isOpen ? t("not-found-bounty") : t("not-found-funding")}
           type="dashed"
@@ -121,15 +119,17 @@ export default function ListRecentIssues() {
 
         <LoadingList loading={loadingState} />
         <div className="row gy-3 mb-3 mt-1">
+          <HorizontalList className="gap-3">
           {currentBounties &&
             currentBounties?.map((bounty) => (
-              <div className="col-md-4 col" key={bounty.id}>
+              <div className="col-12 col-sm-6 col-md-4" key={bounty.id}>
                 <IssueListItem issue={bounty} key={bounty.id} size="sm" />
               </div>
             ))}
           {currentBounties?.length < 3 &&
             !loadingState &&
             renderNothingFound(isOpen ? "open" : "funding")}
+          </HorizontalList>
         </div>
       </CustomContainer>
     );

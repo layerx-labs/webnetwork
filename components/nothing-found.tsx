@@ -16,9 +16,9 @@ export default function NothingFound({
   const divClass = `d-flex flex-column ${
     type === "default"
       ? "align-items-center gap-4 mt-3"
-      : "justify-content-center p-3 border-dashed bg-gray-900 border-radius-8 min-h-card"
+      : "justify-content-center p-3 border-dashed bg-gray-900 border-radius-8 h-100"
   }`;
-  const descriptionClass = `mb-0 text-center ${
+  const descriptionClass = `mb-0 text-center text-truncate ${
     type === "default" ? "caption-small text-gray" : "text-white-50"
   } `;
   

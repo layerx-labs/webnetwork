@@ -26,6 +26,7 @@ import {useAppState} from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { IM_AM_CREATOR_NETWORK } from "helpers/constants";
+import { formatNumberToCurrency } from "helpers/formatNumber";
 import {getIssueState} from "helpers/handleTypeIssue";
 
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
@@ -201,12 +202,14 @@ export default function IssueListItem({
   }
 
   if (size === "sm") {
+    const isSeekingFund = ["funding", "partial-funded"].includes(issueState);
+
     return (
       <CardItem onClick={handleClickCard} key="sm-card">
         <>
           <div className="d-flex flex-row align-items-center justify-content-between">
-            <div className="d-flex flex-row align-items-center gap-3">
-              <div className="network-name bg-dark-gray p-1 border-radius-8">
+            <div className="d-flex flex-row align-items-center gap-3 d-none d-md-flex">
+              <div className="network-name bg-gray-850 p-1 border-radius-8 border border-gray-800">
                 {issue?.network?.logoIcon && (
                   <img
                     src={`${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
@@ -219,18 +222,54 @@ export default function IssueListItem({
                   {issue?.network?.name}
                 </span>
               </div>
-
-              <ChainBadge chain={issue?.network?.chain} />
             </div>
 
-            <BountyStatusInfo issueState={issueState} />
+            <div className="d-none d-md-flex">
+              <Badge
+                color="transparent"
+                className={`d-flex align-items-center gap-1 border border-gray-800 caption-medium 
+                  font-weight-normal text-capitalize border-radius-8`}
+              >
+                <>
+                  <BountyStatusInfo issueState={issueState} />
+                  <span>{isSeekingFund ? "Seeking funding" : issueState}</span>
+                </>
+              </Badge>
+            </div>
           </div>
-          <div className="text-truncate mb-2 mt-4">{issue?.title}</div>
-          <div className="issue-body text-white-40 text-break text-truncate mb-3" >
-            {issue?.body}
+
+          <div className="d-flex d-md-none align-items-center gap-2 mb-3">
+            <BountyStatusInfo issueState={issueState} />
+            <span className="text-truncate">{issue?.title}</span>
+          </div>
+          
+          <div className="mt-3 d-none d-md-flex">
+            <span className="text-truncate">
+              {issue?.title}
+            </span>
           </div>
           <div className={!issue?.isFundingRequest && 'mt-4' || ""}>
             <BountyAmountController bounty={issue} size={size} />
+          </div>
+
+          <div className="row align-items-center">
+            <div className="col caption-medium font-weight-normal text-capitalize">
+              <div className="d-none d-md-flex">
+                <If condition={isSeekingFund}>
+                  <span className="mr-1">Funded</span>
+                  <span className="text-yellow-500">{formatNumberToCurrency(issue?.fundedPercent)}%</span>
+                </If>
+              </div>
+
+              <div className="d-flex d-md-none">
+                <span className="caption-small me-1 text-uppercase">
+                  {issue?.network?.name}
+                </span>
+              </div>
+            </div>
+            <div className="col">
+              <IssueAmountInfo issue={issue} size={size} />
+            </div>
           </div>
         </>
       </CardItem>
