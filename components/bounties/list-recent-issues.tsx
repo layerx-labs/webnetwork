@@ -79,16 +79,26 @@ export default function ListRecentIssues() {
       () => type === "open" ? push("/create-bounty") : push("/create-bounty?type=funding", "/create-bounty", )
 
     return (
-      <div className="col-12 col-sm-6 col-md-4">
+      <div className="col-12 col-sm-6 col-md">
         <NothingFound
-          description={isOpen ? t("not-found-bounty") : t("not-found-funding")}
+          description={
+          <>
+            <span className="d-none d-md-flex justify-content-center">
+              {isOpen ? t("not-found-bounty") : t("not-found-funding")}
+            </span>
+
+            <span className="d-flex d-md-none text-truncate">
+              {isOpen ? t("not-found-bounty") : t("not-found-funding")}
+            </span>
+          </>
+        }
           type="dashed"
         >
           <div className="d-flex justify-content-center">
             <ContractButton
               onClick={goToPage}
               textClass="text-white-50"
-              className="read-only-button bg-gray-850 border-gray-850 mt-3"
+              className="read-only-button bg-gray-850 border-gray-850 mt-3 text-nowrap"
             >
               <PlusIcon className="text-gray-400" />
               <span>{isOpen ? t("create-bounty") : t("create-funding")}</span>
