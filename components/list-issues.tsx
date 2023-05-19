@@ -335,7 +335,7 @@ export default function ListIssues({
             </InputGroup>
           </div>
 
-          <div className="col-auto">
+          <div className="col-auto d-none d-md-flex">
             <div className="d-flex align-items-center">
               <span className="caption text-gray-500 text-nowrap mr-1 font-weight-normal">
                 {t("sort.label")}
@@ -372,7 +372,7 @@ export default function ListIssues({
             </div>
           </div>
 
-          <div className="col-auto">
+          <div className="col-auto d-none d-md-flex">
             {(!filterState && !isProfile && !isManagement) && <IssueFilters />}
 
             {(!filterState && isProfile) && <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />}
