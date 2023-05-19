@@ -21,6 +21,8 @@ import { Proposal } from "interfaces/proposal";
 
 import { useNetwork } from "x-hooks/use-network";
 
+import ReviewsNumber from "./reviews-number";
+
 interface ItemProps {
   data: Proposal[] | pullRequest[],
   isProposal: boolean,
@@ -39,7 +41,7 @@ function ItemSections({ data, isProposal }: ItemProps) {
   const canUserApprove = state.Service?.network?.repos?.active?.viewerPermission !== "READ";
 
   return (
-    <section className="content-wrapper border-top-0 p-20 d-flex flex-column gap-2 bg-gray-900">
+    <section className="content-wrapper border-top-0 p-20 d-flex flex-column gap-2 bg-gray-850">
       {
         data.length ?
           React.Children.toArray(data.map((item) => {
@@ -91,6 +93,8 @@ function ItemSections({ data, isProposal }: ItemProps) {
                 href={getURLWithNetwork(pathRedirect, valueRedirect)} 
                 githubLogin={item?.githubLogin}
                 creator={item?.creator} 
+                reviewers={((item as pullRequest)?.reviewers?.length || 0)}
+                isProposal={isProposal}
                 status={status}>
                 {(isProposal && proposal) ? (
                   <>
@@ -103,23 +107,14 @@ function ItemSections({ data, isProposal }: ItemProps) {
                     </div>
                   </>
                 ) : (
-                  <>
-                    <div className="d-flex align-items-center text-center">
-                      <span className="label-m text-white">{(item as pullRequest)?.reviewers?.length || 0}</span>
-
-                      <span className="label-m text-uppercase text-gray-500 ml-1">
-                        <Translation
-                          ns="pull-request"
-                          label="review"
-                          params={{ count: (item as pullRequest)?.reviewers?.length || 0 }}
-                        />
-                      </span>
-                    </div>
-                  </>
+                  <ReviewsNumber 
+                      className="d-none d-xl-block" 
+                      reviewers={(item as pullRequest)?.reviewers?.length || 0}
+                  />
                 )}
 
                 <ReadOnlyButtonWrapper>
-                  <div className="row align-items-center">
+                  <div className="row align-items-center d-none d-xl-block">
                     <div className="col">
                       <Button
                         className="read-only-button text-truncate"
