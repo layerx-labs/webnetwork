@@ -17,10 +17,18 @@ type FilterStateUpdater = (
   multi?: boolean
 ) => void;
 
+interface updateMultipleProps {
+  repository?: IssueFilterBoxOption;
+  state?: IssueFilterBoxOption;
+  time?: IssueFilterBoxOption;
+}
+
 export default function useFilters(): [
   IssueFilterBoxOption[][],
   FilterStateUpdater,
-  () => void
+  () => void,
+  ({ repository, state, time }: updateMultipleProps) => void,
+  () => void,
 ] {
   const router = useRouter();
 
@@ -122,6 +130,19 @@ export default function useFilters(): [
     updateRouterQuery();
   }
 
+  function checkOption({ repository, state, time }: updateMultipleProps) {
+    if (!repository && !state && !time) return;
+
+    const updateChecked = (newChecked, options) => options.map(o => ({
+      ...o,
+      checked: o.value === newChecked.value ? true : false
+    }));
+
+    if (repository) setRepoFilters(updateChecked(repository, repoFilters));
+    if (state) setStateFilters(updateChecked(state, stateFilters));
+    if (time) setTimeFilters(updateChecked(time, timeFilters));
+  }
+
   function clearFilters() {
     const query = {
       ...(router.query.sortBy ? { sortBy: router.query.sortBy } : { sortBy: undefined }),
@@ -134,5 +155,5 @@ export default function useFilters(): [
     router.push({ pathname: router.pathname, query }, router.asPath);
   }
 
-  return [[repoFilters, stateFilters, timeFilters], updateOpt, clearFilters];
+  return [[repoFilters, stateFilters, timeFilters], updateOpt, clearFilters, checkOption, updateRouterQuery];
 }
