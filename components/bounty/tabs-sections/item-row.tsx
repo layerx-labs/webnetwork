@@ -73,9 +73,9 @@ function ItemRow({ id, githubLogin, creator, status, children, href, reviewers, 
           <RenderLabels className="d-none d-sm-block"/>
 
         </div>
-        <div className="col-1 d-block d-sm-none">
+        <div className="col-1 d-block d-sm-none ms-2">
           <div className="d-flex flex-row justify-content-end">
-            <RenderId className="" />
+            <RenderId />
           </div>
         </div>
 
