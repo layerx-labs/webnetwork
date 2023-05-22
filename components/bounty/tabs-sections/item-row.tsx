@@ -32,6 +32,16 @@ function ItemRow({ id, githubLogin, creator, status, children, href, reviewers, 
     );
   }
 
+  function RenderLabels({ className, classLabels }: { className?: string, classLabels?: string}) {
+    return (
+      <div className={`${className} col-md-4 d-flex gap-2`}>
+        {status?.length
+          ? status.map((st) => <PullRequestLabels {...st} className={classLabels}/>)
+          : null}
+      </div>
+    )
+  }
+
 
   return (
     <Link passHref key={`${githubLogin}-${id}`} href={href || "#"}>
@@ -40,13 +50,13 @@ function ItemRow({ id, githubLogin, creator, status, children, href, reviewers, 
           href ? "cursor-pointer" : ""
         }`}
       >
-        <div className="col-md-8 d-flex flex-row align-items-center gap-3">
+        <div className="col-10 col-md-8 d-flex flex-row align-items-center gap-3">
           <RenderId className="col-1 d-none d-xl-block" />
-          <div className="col-md-5 col-xl-4 d-flex align-items-center gap-2">
+          <div className="text-truncate col-md-5 col-xl-4 d-flex align-items-center gap-2">
           {githubLogin ? (
               <>
                 <Avatar userLogin={githubLogin} size="sm"/>
-                <span className={`text-uppercase text-white caption ${status?.length && 'text-truncate'}`}>
+                <span className={`text-uppercase text-white caption text-truncate`}>
                   {githubLogin}
                 </span>
               </>
@@ -59,16 +69,29 @@ function ItemRow({ id, githubLogin, creator, status, children, href, reviewers, 
               </>
             )}
           </div>
-          {!isProposal && <ReviewsNumber reviewers={reviewers} className="d-xl-none"/>}
-          <div className="col-4 d-flex gap-2">
-            {status?.length
-              ? status.map((st) => <PullRequestLabels {...st} />)
-              : null}
+          {!isProposal && <ReviewsNumber reviewers={reviewers} className="col-xs-12 d-xl-none d-none d-sm-block" />}
+          <RenderLabels className="d-none d-sm-block"/>
+
+        </div>
+        <div className="col-1 d-block d-sm-none">
+          <div className="d-flex flex-row justify-content-end">
+            <RenderId className="" />
           </div>
         </div>
-        <div className="col d-flex flex-row gap-3 justify-content-end align-items-center">
-          {children}
-          <RenderId className="d-xl-none" />
+
+        {!isProposal && <ReviewsNumber reviewers={reviewers} className="d-block d-sm-none mb-2 mt-4" />} 
+
+        {status?.length ? (
+          <RenderLabels className="d-block d-sm-none mt-2" classLabels="p-2" />
+        ) : (
+          <div className="d-block d-sm-none mt-3">{children}</div>
+        )}
+
+        <div className="col-md d-none d-sm-block">
+          <div className=" d-flex flex-row gap-3 justify-content-end align-items-center">
+            {children}
+            <RenderId className="d-none d-xl-none d-sm-none d-md-block" />
+          </div>
         </div>
       </div>
     </Link>
