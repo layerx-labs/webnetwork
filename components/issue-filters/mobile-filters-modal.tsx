@@ -23,7 +23,7 @@ export default function MobileFiltersModal({
 
   function handleChange(type) {
     return (value) => {
-      checkOption({ [type]: value });
+      checkOption(value, type);
     };
   }
 
@@ -55,7 +55,7 @@ export default function MobileFiltersModal({
       onOkClick={handleApply}
     >
       <If condition={!onlyTimeFrame}>
-        {FilterComponent("Repository", repoOptions, "repository")}
+        {FilterComponent("Repository", repoOptions, "repo")}
         {FilterComponent("Bounty State", stateOptions, "state")}
       </If>
       

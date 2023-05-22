@@ -9,25 +9,21 @@ import {RepoInfo} from "interfaces/repos-list";
 
 import useApi from "x-hooks/use-api";
 
+type FiltersTypes = "time" | "repo" | "state";
+
 type FilterStateUpdater = (
   opts: IssueFilterBoxOption[],
   opt: IssueFilterBoxOption,
   checked: boolean,
-  type: "time" | "repo" | "state",
+  type: FiltersTypes,
   multi?: boolean
 ) => void;
-
-interface updateMultipleProps {
-  repository?: IssueFilterBoxOption;
-  state?: IssueFilterBoxOption;
-  time?: IssueFilterBoxOption;
-}
 
 export default function useFilters(): [
   IssueFilterBoxOption[][],
   FilterStateUpdater,
   () => void,
-  ({ repository, state, time }: updateMultipleProps) => void,
+  (option: IssueFilterBoxOption, type: FiltersTypes) => void,
   () => void,
 ] {
   const router = useRouter();
@@ -130,17 +126,21 @@ export default function useFilters(): [
     updateRouterQuery();
   }
 
-  function checkOption({ repository, state, time }: updateMultipleProps) {
-    if (!repository && !state && !time) return;
+  function checkOption(option: IssueFilterBoxOption, type: FiltersTypes) {
+    if (!option || !type) return;
 
     const updateChecked = (newChecked, options) => options.map(o => ({
       ...o,
       checked: o.value === newChecked.value ? true : false
     }));
 
-    if (repository) setRepoFilters(updateChecked(repository, repoFilters));
-    if (state) setStateFilters(updateChecked(state, stateFilters));
-    if (time) setTimeFilters(updateChecked(time, timeFilters));
+    const checker = {
+      repo: () => setRepoFilters(updateChecked(option, repoFilters)),
+      time: () => setTimeFilters(updateChecked(option, timeFilters)),
+      state: () => setStateFilters(updateChecked(option, stateFilters)),
+    }
+
+    checker[type]();
   }
 
   function clearFilters() {
