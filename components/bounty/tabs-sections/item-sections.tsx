@@ -98,7 +98,7 @@ function ItemSections({ data, isProposal }: ItemProps) {
                 status={status}>
                 {(isProposal && proposal) ? (
                   <>
-                    <div className="d-flex align-items-center text-center col-4">
+                    <div className="d-flex align-items-center text-center col-md-8">
                       <ProposalProgressSmall
                         color={isDisputed ? 'danger' : isMerged ? 'success' : 'purple'}
                         value={proposal?.disputeWeight}
