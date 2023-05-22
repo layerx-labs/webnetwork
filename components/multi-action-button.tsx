@@ -25,7 +25,8 @@ export default function MultiActionButton({
   const defaultOption = {
     value: label,
     label: label,
-    preIcon: icon
+    preIcon: icon,
+    justify: "center"
   }
 
   function onBtnClick() {
