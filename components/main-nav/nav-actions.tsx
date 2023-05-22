@@ -1,54 +1,12 @@
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-
-import HamburgerIcon from "assets/icons/hamburger-icon";
-import HelpIcon from "assets/icons/help-icon";
-import PlusIcon from "assets/icons/plus-icon";
-
-import Button from "components/button";
 import ConnectWalletButton from "components/connect-wallet-button";
-import InternalLink from "components/internal-link";
-import MultiActionButton from "components/multi-action-button";
+import CreateNetworkBountyButton from "components/main-nav/create-network-bounty-button";
+import HelpButton from "components/main-nav/help-button";
+import MobileMenu from "components/mobile-menu";
 import NavAvatar from "components/nav-avatar";
-import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
-interface NavActionsProps {
-  onClickShowHelp: () => void;
-  isOnNetwork: boolean;
-}
-
-export default function NavActions({
-  isOnNetwork,
-  onClickShowHelp,
-} : NavActionsProps) {
-  const { push } = useRouter();
-  const { t } = useTranslation("common");
-
-  const CreateBtn = () => 
-  <ReadOnlyButtonWrapper>
-    {
-      isOnNetwork ?
-        <InternalLink
-          href={"/create-bounty"}
-          icon={<PlusIcon />}
-          label={t("main-nav.new-bounty") as string}
-          iconBefore
-          uppercase
-        /> :
-        <MultiActionButton
-          label="Create"
-          className="read-only-button"
-          icon={<PlusIcon />}
-          actions={[
-            { label: "Bounty", onClick: () => push("/create-bounty") },
-            { label: "Network", onClick: () => push("/new-network") },
-          ]}
-        />
-    }
-  </ReadOnlyButtonWrapper>;
-
+export default function NavActions() {
   return(
     <>
       <div className="d-flex flex-row align-items-center gap-3">
@@ -57,15 +15,9 @@ export default function NavActions({
           xl={true}
         >
           <div className="d-flex gap-3 align-items-center">
-            <CreateBtn />
+            <CreateNetworkBountyButton />
 
-            <Button
-              onClick={onClickShowHelp}
-              className="bg-gray-850 border-gray-850 rounded p-2"
-              transparent
-            >
-              <HelpIcon />
-            </Button>
+            <HelpButton />
           </div>
         </ResponsiveWrapper>
 
@@ -86,14 +38,9 @@ export default function NavActions({
             xl={false}
           >
             <div className="d-flex gap-3 align-items-center">
-              <CreateBtn />
+              <CreateNetworkBountyButton />
 
-              <Button 
-                className="p-0 not-svg"
-                transparent
-              >
-                <HamburgerIcon />
-              </Button>
+              <MobileMenu />
             </div>
           </ResponsiveWrapper>
         </ConnectWalletButton>

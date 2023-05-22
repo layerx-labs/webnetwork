@@ -1,37 +1,28 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 
 import clsx from "clsx";
 import {useRouter} from "next/router";
 
 import ClosedNetworkAlert from "components/closed-network-alert";
-import HelpModal from "components/help-modal";
 import BrandLogo from "components/main-nav/brand-logo";
+import ChainSelector from "components/main-nav/chain-selector";
 import NavActions from "components/main-nav/nav-actions";
 import NavLinks from "components/main-nav/nav-links";
 import ResponsiveWrapper from "components/responsive-wrapper";
-import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
 import { changeCurrentUserHasRegisteredNetwork } from "contexts/reducers/change-current-user";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
-
 import useApi from "x-hooks/use-api";
-import { useDao } from "x-hooks/use-dao";
 import { useNetwork } from "x-hooks/use-network";
-import useNetworkChange from "x-hooks/use-network-change";
 
 export default function MainNav() {
-  const { pathname, query, asPath, push } = useRouter();
+  const { query } = useRouter();
 
-  const [showHelp, setShowHelp] = useState(false);
-
-  const { connect } = useDao();
   const { state } = useAppState();
   const { dispatch } = useAppState();
   const { searchNetworks } = useApi();
   const { getURLWithNetwork } = useNetwork();
-  const { handleAddNetwork } = useNetworkChange();
 
   const noNeedNetworkInstance = !query?.network;
 
@@ -60,34 +51,6 @@ export default function MainNav() {
       .catch(error => console.debug("Failed to get network address by wallet", error));
   }, [state.currentUser?.walletAddress, state.connectedChain]);
 
-  function handleShowHelpModal() {
-    setShowHelp(true);
-  }
-
-  async function handleNetworkSelected(chain: SupportedChainData) {
-    if (noNeedNetworkInstance) {
-      handleAddNetwork(chain)
-        .then(() => {
-          if (state.currentUser?.walletAddress) return;
-
-          connect();
-        })
-        .catch(() => null);
-
-      return;
-    }
-
-    const needsRedirect = ["bounty", "pull-request", "proposal"].includes(pathname.replace("/[network]/[chain]/", ""));
-    const newPath = needsRedirect ? "/" : pathname;
-    const newAsPath = needsRedirect ? `/${query.network}/${chain.chainShortName}` :
-      asPath.replace(query.chain.toString(), chain.chainShortName);
-
-    push(getURLWithNetwork(newPath, {
-      ... needsRedirect ? {} : query,
-      chain: chain.chainShortName
-    }), newAsPath);
-  }
-
   return (
     <div className="nav-container">
       <ClosedNetworkAlert
@@ -109,26 +72,15 @@ export default function MainNav() {
                 showDefaultBepro={noNeedNetworkInstance}
               />
 
-              {!noNeedNetworkInstance &&
-                <ResponsiveWrapper xs={false} xl={true}>
-                  <SelectChainDropdown
-                    onSelect={(chain) => handleNetworkSelected(chain)}
-                    isOnNetwork={!noNeedNetworkInstance}
-                    className="select-network-dropdown"
-                  />
-                </ResponsiveWrapper>
-              }
+              <ResponsiveWrapper xs={false} xl={true}>
+                <ChainSelector />
+              </ResponsiveWrapper>
             </div>
 
             <NavLinks />
           </div>
 
-          <NavActions
-            isOnNetwork={!noNeedNetworkInstance}
-            onClickShowHelp={handleShowHelpModal}
-          />
-
-          <HelpModal show={showHelp} onCloseClick={() => setShowHelp(false)} />
+          <NavActions />
         </div>
       </div>
     </div>
