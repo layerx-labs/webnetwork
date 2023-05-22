@@ -24,13 +24,13 @@ function renderDescription(description: string) {
   );
 
   return (
-    <>
+    <div className="d-none d-xl-block">
       <OverlayTrigger placement="bottom" overlay={popover}>
-        <span className="text-gray-500">
-          <InfoIconEmpty width={14} height={14} color="text-gray-500" />
-        </span>
+          <span className="text-gray-500">
+              <InfoIconEmpty width={14} height={14} color="text-gray-500" />
+          </span>
       </OverlayTrigger>
-    </>
+    </div>
   );
 }
 
@@ -78,7 +78,7 @@ export default function TabbedNavigation({
               {tabs.map((tab) => (
                 <Nav.Item key={`${tab.eventKey}`} className="cursor-pointer">
                   <Nav.Link eventKey={tab.eventKey}>
-                    <div className="col">
+                    <div className="col d-flex">
                       <span className="mr-2">{tab.title}</span>
                       {renderDescription(tab?.description)}
                     </div>
@@ -89,7 +89,7 @@ export default function TabbedNavigation({
           </div>
 
           {(collapsable && (
-            <div className="col-1 d-flex justify-content-center">
+            <div className="col-1 d-flex justify-content-center .d-none .d-sm-block">
               <Button onClick={toggleOnClick} transparent>
                 {(collapsed && <ArrowDown />) || <ArrowUp />}
               </Button>
