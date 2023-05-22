@@ -39,8 +39,6 @@ export default function HorizontalList({
       if (divRef.current) {
         const newScrollValue = divRef.current.scrollLeft + (direction === "left" ? -HOLD_STEP : HOLD_STEP);
         const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
-
-        console.log({ newScrollValue, maxScroll, direction, scrollLeft: divRef.current.scrollLeft })
   
         if (direction === "left" && newScrollValue >= 0 || direction === "right" && newScrollValue <= maxScroll)
           divRef.current.scrollLeft = newScrollValue;
@@ -55,14 +53,14 @@ export default function HorizontalList({
 
   return(
     <div className="horizontal-list" onTouchMove={updateCanScroll}>
-      {canScrollLeft &&
+      <If condition={canScrollLeft}>
         <Button 
           className="leftButton p-0 rounded-0 h-100 border-0 d-xl-none"
           {...mouseEventsLeft}
         >
           <ChevronLeftIcon />
         </Button>
-      }
+      </If>
       
       <div className={`d-flex flex-nowrap overflow-auto ${className} overflow-noscrollbar`} ref={divRef}>
         {children}
