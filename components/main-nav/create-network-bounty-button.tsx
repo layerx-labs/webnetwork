@@ -26,7 +26,7 @@ export default function CreateNetworkBountyButton() {
         /> :
         <MultiActionButton
           label="Create"
-          className="read-only-button"
+          className="read-only-button w-100"
           icon={<PlusIcon />}
           actions={[
             { label: "Bounty", onClick: () => push("/create-bounty") },

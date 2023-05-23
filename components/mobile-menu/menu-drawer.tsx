@@ -36,6 +36,7 @@ export default function MenuDrawer({
   const { disconnectWallet } = useAuthentication();
 
   const displayName = state.currentUser?.login || truncateAddress(state.currentUser?.walletAddress);
+  const isConnected = !!state.currentUser?.walletAddress;
 
   function handleDisconnect() {
     setIsProfileLinksVisible(false);
@@ -115,21 +116,23 @@ export default function MenuDrawer({
         <Offcanvas.Body>
           <div className="h-100 px-2 d-flex flex-column">
             <If condition={!isProfileLinksVisible}>
-              <div className="row border-bottom border-gray-800 pb-3 mx-0">
-                <div className="col-auto">
-                  <AvatarOrIdenticon
-                    user={state.currentUser?.login}
-                    address={state.currentUser?.walletAddress}
-                  />
-                </div>
+              <If condition={isConnected}>
+                <div className="row border-bottom border-gray-800 pb-3 mx-0">
+                  <div className="col-auto">
+                    <AvatarOrIdenticon
+                      user={state.currentUser?.login}
+                      address={state.currentUser?.walletAddress}
+                    />
+                  </div>
 
-                <div className="col">
-                  <span>{displayName}</span>
-                  <MyProfileBtn
-                    onClick={handleShowProfileLinks}
-                  />
+                  <div className="col">
+                    <span>{displayName}</span>
+                    <MyProfileBtn
+                      onClick={handleShowProfileLinks}
+                    />
+                  </div>
                 </div>
-              </div>
+              </If>
 
               <div className="d-flex flex-column gap-4 py-3">
                 <CreateNetworkBountyButton />
@@ -143,8 +146,10 @@ export default function MenuDrawer({
             </If>
 
 
-            <div className="col border-top border-gray-800">
-              <DisconnectWalletButton onClick={handleDisconnect} />
+            <div className={`col ${ isConnected ? "border-top border-gray-800" : ""}`}>
+              <If condition={isConnected}>
+                <DisconnectWalletButton onClick={handleDisconnect} />
+              </If>
             </div>
 
             <div className="d-flex justify-content-end">

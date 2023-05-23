@@ -37,13 +37,16 @@ export default function NavActions() {
             xs={true}
             xl={false}
           >
-            <div className="d-flex gap-3 align-items-center">
-              <CreateNetworkBountyButton />
-
-              <MobileMenu />
-            </div>
+            <CreateNetworkBountyButton />
           </ResponsiveWrapper>
         </ConnectWalletButton>
+
+        <ResponsiveWrapper
+            xs={true}
+            xl={false}
+          >
+            <MobileMenu />
+          </ResponsiveWrapper>
       </div>
     </>
   );
