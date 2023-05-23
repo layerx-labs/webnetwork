@@ -201,7 +201,7 @@
     "repository": "Repository",
     "branch": "Branch",
     "opened-on": "Opened on",
-    "owner": "Owner"
+    "owner": "Owner",
     "apply": "apply"
   },
   "modals": {
