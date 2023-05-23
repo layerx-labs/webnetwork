@@ -103,7 +103,7 @@
     "operational": "operational",
     "network-congestion": "network congestion",
     "tagline": "Bepro Network Services and BEPRO Token are not available in Excluded Jurisdictions. By accessing and using the interface you agree with our",
-    "terms-and-conditions": "Terms & Conditions",
+    "terms-and-conditions": "Terms and Conditions",
     "support": "support"
   },
   "actions": {
@@ -202,6 +202,7 @@
     "branch": "Branch",
     "opened-on": "Opened on",
     "owner": "Owner"
+    "apply": "apply"
   },
   "modals": {
     "help-modal": {
