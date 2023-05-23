@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {components as RSComponents ,SingleValueProps } from "react-select";
 
+import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import TransactionIcon from "assets/icons/transaction";
@@ -18,6 +19,7 @@ import {getCoinInfoByContract} from "services/coingecko";
 interface IPriceConversiorModalProps {
   show: boolean;
   onClose: ()=> void;
+  value?: BigNumber;
 }
 interface Options {
   value: string;
@@ -28,12 +30,13 @@ const defaultValue = [{value: "usd", label: "US Dollar"}, {value: "eur", label: 
 
 export default function PriceConversorModal({
   show,
-  onClose
+  onClose,
+  value
 }:IPriceConversiorModalProps) {
   const { t } = useTranslation("common");
   
   const [options, setOptions] = useState([]);
-  const [currentValue, setValue] = useState<number>(1);
+  const [currentValue, setValue] = useState<number>(0);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentToken, setCurrentToken] = useState<string>();
   const [errorCoinInfo, setErrorCoinInfo] = useState<boolean>(false);
@@ -42,7 +45,7 @@ export default function PriceConversorModal({
   const {state} = useAppState();
 
   async function handlerChange({value, label}: Options){
-    if (!state.Service?.network?.active?.networkToken?.address) return;
+    if (!state.Service?.network?.active?.networkToken?.symbol) return;
 
     const data = 
       await getCoinInfoByContract(state.Service?.network?.active?.networkToken.symbol)
@@ -58,15 +61,21 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
+    if (!state.Service?.network?.active?.networkToken?.symbol) return;
+
     const currencyList = state.Settings?.currency?.conversionList || defaultValue;
-    
+
     if(currencyList.length){
       const opt = currencyList.map(currency=>({value: currency?.value, label: currency?.label}))
       setOptions(opt)
       handlerChange(opt[0])
     }
     
-  },[])
+  },[state.Service?.network?.active?.networkToken.symbol])
+
+  useEffect(() => {
+    setValue(value?.toNumber())
+  },[value])
 
   const SingleValue = ({children, ...props}: SingleValueProps<any>) => {
 
