@@ -24,10 +24,10 @@ export default function ConnectWalletButton({children = null, asModal = false, f
 
   async function handleLogin()  {
 
-    if(!window?.ethereum) {
-      dispatch(changeShowWeb3(true))
-      return;
-    }
+    // if(!window?.ethereum) {
+    //   dispatch(changeShowWeb3(true))
+    //   return;
+    // }
 
     connectWallet();
   }

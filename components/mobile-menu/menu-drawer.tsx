@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 
+import ArrowLeft from "assets/icons/arrow-left";
 import ArrowRight from "assets/icons/arrow-right";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
@@ -11,6 +12,7 @@ import ChainSelector from "components/main-nav/chain-selector";
 import CreateNetworkBountyButton from "components/main-nav/create-network-bounty-button";
 import DisconnectWalletButton from "components/main-nav/disconnect-wallet-button";
 import HelpButton from "components/main-nav/help-button";
+import ProfileLinks from "components/profile/profile-links";
 
 import { useAppState } from "contexts/app-state";
 
@@ -45,6 +47,16 @@ export default function MenuDrawer({
     setIsProfileLinksVisible(true);
   }
 
+  function handleHideProfileLinks() {
+    setIsProfileLinksVisible(false);
+  }
+
+  function handleHideDrawer() {
+    handleHideProfileLinks();
+    onHide();
+  }
+
+
   function GlobalLink({ label, href }) {
     return(
       <InternalLink
@@ -56,18 +68,48 @@ export default function MenuDrawer({
     );
   }
 
+  function MyProfileBtn({ onClick, isBack = false }) {
+    return(
+      <Button
+        transparent
+        className="font-weight-medium text-capitalize p-0 mt-1 not-svg gap-1"
+        textClass="text-gray-500"
+        onClick={onClick}
+      >
+        <If condition={isBack}>
+          <div className="mr-1">
+            <ArrowLeft height={16} width={16} />
+          </div>
+        </If>
+        <span>
+          My profile
+        </span>
+        <If condition={!isBack}>
+          <ArrowRight height={9} />
+        </If>
+      </Button>
+    );
+  }
+
   return(
     <Offcanvas 
       className="bg-gray-950"
       show={show}
-      onHide={onHide}
+      onHide={handleHideDrawer}
       placement="end"
     >
         <Offcanvas.Header 
           closeButton  
           closeVariant="white"
         >
-          <Offcanvas.Title></Offcanvas.Title>
+          <Offcanvas.Title>
+            <If condition={isProfileLinksVisible}>
+              <MyProfileBtn
+                onClick={handleHideProfileLinks}
+                isBack
+              />
+            </If>
+          </Offcanvas.Title>
         </Offcanvas.Header>
 
         <Offcanvas.Body>
@@ -83,29 +125,25 @@ export default function MenuDrawer({
 
                 <div className="col">
                   <span>{displayName}</span>
-                  <Button
-                    transparent
-                    className="font-weight-medium text-capitalize p-0 mt-1 not-svg gap-1"
-                    textClass="text-gray-500"
+                  <MyProfileBtn
                     onClick={handleShowProfileLinks}
-                  >
-                    <span>
-                      My profile
-                    </span>
-                    <ArrowRight height={9} />
-                  </Button>
+                  />
                 </div>
               </div>
 
-              <div className="d-flex flex-column gap-4 border-bottom border-gray-800 py-3">
+              <div className="d-flex flex-column gap-4 py-3">
                 <CreateNetworkBountyButton />
 
                 {NAVIGATION_LINKS.global.map(GlobalLink)}
               </div>
             </If>
 
+            <If condition={isProfileLinksVisible}>
+              <ProfileLinks />
+            </If>
 
-            <div className="col">
+
+            <div className="col border-top border-gray-800">
               <DisconnectWalletButton onClick={handleDisconnect} />
             </div>
 
