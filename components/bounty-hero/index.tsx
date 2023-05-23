@@ -28,7 +28,7 @@ export default function BountyHero() {
     return (
     <div className={`${isMobile ? 'col-12 mt-2' : 'col-1' } d-flex align-items-center justify-content-center`}>
       <PriceConversor
-        currentValue={state.currentBounty?.data?.amount?.toFixed() || "0"}
+        currentValue={state.currentBounty?.data?.amount}
         currency={state.currentBounty?.data?.transactionalToken?.symbol || t("common:misc.token")}
       />
     </div>
