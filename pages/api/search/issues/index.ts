@@ -212,7 +212,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         [title, body, ...(tags || [])].some((text) =>
           searchPatternInText(text || "", String(search)))));
 
-      const paginatedData = paginateArray(result, 10, page || 1);
+      const paginatedData = paginateArray(result, 10, Number(page) || 1);
 
       return res.status(200).json({
         count: result.length,
