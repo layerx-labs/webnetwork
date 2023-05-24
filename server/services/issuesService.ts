@@ -36,7 +36,7 @@ const filterMappings: Record<string, (value) => WhereOptions> = {
 
 /**
  * @dev Get issues from the database with the given filters and pagination options
- * @param quer
+ * @param query object with the filters and pagination options
  * @returns object with the issues and pagination data
  */
 export async function getIssuesService(query): Promise<IssueResponse> {
