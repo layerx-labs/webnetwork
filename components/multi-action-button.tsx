@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { isMobile } from 'react-device-detect';
 
 import Button, { ButtonProps } from "components/button";
@@ -22,6 +22,8 @@ export default function MultiActionButton({
   label,
   ...rest
 }: MultiActionButtonProps & ButtonProps) {
+  const [mobile, setMobile] = useState(false);
+
   const defaultOption = {
     value: label,
     label: label,
@@ -58,9 +60,13 @@ export default function MultiActionButton({
     executeAction(newValue.value);
   }
 
+  useEffect(() => {
+    setMobile(isMobile);
+  }, []);
+
   return(
     <div className="multi-action-button">
-      { isMobile &&
+      { mobile &&
         <div className="select-container">
           <Button
             {...rest}
@@ -73,9 +79,10 @@ export default function MultiActionButton({
             name="multiAction"
             id="multiAction"
             onChange={onNativeChange}
+            value="choose"
           >
-            <option value="" selected disabled hidden>Choose one</option>
-            {actions.map(({ label }, i) => <option value={i}>{label}</option>)}
+            <option value="choose" disabled hidden>Choose one</option>
+            {actions.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}
           </select>
         </div> ||
         <ReactSelect
