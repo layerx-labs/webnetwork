@@ -54,7 +54,8 @@ export default function GovernanceSettings({
     forcedNetwork,
   } = useNetworkSettings();
 
-  const networkTokenSymbol = forcedNetwork?.networkToken?.symbol;
+  const symbol = forcedNetwork?.networkToken?.symbol
+  const networkTokenSymbol = symbol?.length > 12 ? symbol.slice(0, 12)+"..." : symbol
 
   const NetworkAmount = (title, description, amount, fixed = undefined) => ({
     title,
