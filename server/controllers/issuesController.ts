@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getIssuesService } from "server/services/issuesService";
 
+import { LogAccess } from "middleware/log-access";
+import { WithValidChainId } from "middleware/with-valid-chain-id";
+import WithCors from "middleware/withCors";
+
 /**
  * @dev Issues Controller
  */
@@ -13,4 +17,6 @@ export async function getIssues(req: NextApiRequest, res: NextApiResponse) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+export default LogAccess(WithCors(WithValidChainId(getIssues)));
 
