@@ -62,9 +62,8 @@ export default function HorizontalList({
     const leftObserver = getObserver(updateCanScroll("left"));
     const rightObserver = getObserver(updateCanScroll("right"));
 
-    const childs = divRef.current ? [...divRef.current.children] : [];
-    const firstChild = childs.length ? childs.shift() : null;
-    const lastChild = childs.length ? childs.pop() : null;
+    const firstChild = divRef.current?.firstChild;
+    const lastChild = divRef.current?.lastChild;
 
     if (firstChild) leftObserver.observe(firstChild);
     if (lastChild) rightObserver.observe(lastChild);
