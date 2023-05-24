@@ -45,10 +45,10 @@ export default function PriceConversorModal({
   const {state} = useAppState();
 
   async function handlerChange({value, label}: Options){
-    if (!state.Service?.network?.active?.networkToken?.symbol) return;
+    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
 
     const data = 
-      await getCoinInfoByContract(state.Service?.network?.active?.networkToken.symbol)
+      await getCoinInfoByContract(state.currentBounty?.data?.transactionalToken?.symbol)
         .catch((err) => {
           if(err) setErrorCoinInfo(true)
           return ({ prices: { [value]: 0 } })
@@ -61,7 +61,7 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-    if (!state.Service?.network?.active?.networkToken?.symbol) return;
+    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
 
     const currencyList = state.Settings?.currency?.conversionList || defaultValue;
 
@@ -71,7 +71,7 @@ export default function PriceConversorModal({
       handlerChange(opt[0])
     }
     
-  },[state.Service?.network?.active?.networkToken.symbol])
+  },[state.currentBounty?.data?.transactionalToken?.symbol])
 
   useEffect(() => {
     setValue(value?.toNumber())
