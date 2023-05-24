@@ -242,7 +242,7 @@ export default function ProposalActionCard({
             </div>
           )}
 
-          {!chainDisputable &&
+          { chainDisputable &&
             <div className="row mt-2 ms-1">
               <ContextualSpan context="warning" icon={false}>
                 {t('proposal:messages.in-disputable-time', {time: missingDisputableTime})}
@@ -266,7 +266,7 @@ export default function ProposalActionCard({
             </div>
           )}
 
-          { !allowMergeCommit === false &&
+          { allowMergeCommit === false &&
             <div className="row mt-2 ms-1">
               <ContextualSpan context="warning" icon={false}>
                 {t("pull-request:errors.merge-commit")}
@@ -274,7 +274,7 @@ export default function ProposalActionCard({
             </div>
           }
 
-          { !prsNeedsApproval &&
+          { prsNeedsApproval &&
             <div className="row mt-2 ms-1">
               <ContextualSpan context="warning" icon={false}>
                 {t("pull-request:errors.approval")}
