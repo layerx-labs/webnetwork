@@ -16,6 +16,7 @@ import {formatNumberToNScale, formatStringToCurrency} from "helpers/formatNumber
 import {Transaction} from "interfaces/transaction";
 
 import { useTransactions } from "x-hooks/use-transactions";
+import Symbol from "./symbol";
 
 interface TransactionListProps {
   onActiveTransactionChange: (transaction: Transaction) => void
@@ -52,8 +53,8 @@ export default function TransactionsList({onActiveTransactionChange}: Transactio
             <TransactionType type={item.type} />
 
             {(+item.amount > 0 && (
-              <span className="caption-medium text-gray text-uppercase">
-                {formatStringToCurrency(amount)} {item.currency}
+              <span className="d-flex caption-medium text-gray text-uppercase">
+                {formatStringToCurrency(amount)} <Symbol name={item.currency} className="ms-1"/> 
               </span>
             )) ||
               ""}
