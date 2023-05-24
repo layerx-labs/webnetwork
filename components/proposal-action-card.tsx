@@ -179,7 +179,7 @@ export default function ProposalActionCard({
             refused={proposal?.refusedByBountyOwner}
           />
         </div>
-        <div className="mt-2 py-2 text-center">
+        <div className="mt-2 py-2 ">
           {!currentPullRequest?.isMergeable && !proposal?.isMerged && (
             <span className="text-uppercase text-danger caption-small">
               {t("pull-request:errors.merge-conflicts")}
@@ -244,7 +244,7 @@ export default function ProposalActionCard({
 
           {!chainDisputable &&
             <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false} classNameChildren="ms-2">
+              <ContextualSpan context="warning" icon={false}>
                 {t('proposal:messages.in-disputable-time', {time: missingDisputableTime})}
               </ContextualSpan>
             </div> || ""
@@ -252,7 +252,7 @@ export default function ProposalActionCard({
 
           {(isPrOwner && !chainDisputable && !proposalCanBeDisputed()) && (
             <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false} classNameChildren="ms-2">
+              <ContextualSpan context="warning" icon={false}>
                 {t("proposal:messages.owner-pull-request")}
               </ContextualSpan>
             </div>
@@ -260,7 +260,7 @@ export default function ProposalActionCard({
 
           {(isProposalOwner && !chainDisputable && !proposalCanBeDisputed()) && (
             <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false} classNameChildren="ms-2">
+              <ContextualSpan context="warning" icon={false}>
                 {t("proposal:messages.owner-proposal")}
               </ContextualSpan>
             </div>
