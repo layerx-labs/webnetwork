@@ -1,30 +1,36 @@
-const LIMIT = 10;
+const ITEMS_PER_PAGE = 10;
 
-export function calculateTotalPages(count) {
-  return Math.ceil(count / LIMIT);
+export function calculateTotalPages(count: number): number {
+  return Math.ceil(count / ITEMS_PER_PAGE);
 }
 
-function paginate(query = {}, { page = 1 } = { page: 1 }, order = []) {
+function paginate(
+  query: any = {},
+  { page = 1 }: { page?: number } = { page: 1 },
+  order: any[] = []
+) {
   page = Math.ceil(page);
-  if (page < 1) page = 1;
-  const offset = (page - 1) * LIMIT;
+  if (page < 1) {
+    page = 1;
+  }
+  const offset = (page - 1) * ITEMS_PER_PAGE;
   return {
     ...query,
     distinct: true,
     offset,
-    limit: LIMIT,
-    order
+    limit: ITEMS_PER_PAGE,
+    order,
   };
 }
 
-export function paginateArray(items, itemsPerPage, page) {
+export function paginateArray(items: any[], itemsPerPage: number, page: number) {
   const pages = Math.ceil(items.length / itemsPerPage);
   const data = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   return {
     pages,
     page,
-    data
+    data,
   };
 }
 

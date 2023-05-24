@@ -22,6 +22,7 @@ async function getAllRepos(req, res) {
   ] : [];
 
   const where: WhereOptions = {};
+  
 
   if (networkName) {
     const network = await models.network.findOne({

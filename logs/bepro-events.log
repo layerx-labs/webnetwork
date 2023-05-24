@@ -1,0 +1,70 @@
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.145Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/settings"},"pid":54876,"timestamp":"2023-05-24T18:21:06.146Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.147Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/total"},"pid":54876,"timestamp":"2023-05-24T18:21:06.147Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.147Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/total","payload":{"query":{"networkName":"","state":""}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.148Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.148Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/networks/total"},"pid":54876,"timestamp":"2023-05-24T18:21:06.148Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.148Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/networks/total","payload":{"query":{"creatorAddress":"","isClosed":"false","isRegistered":"true","name":""}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.148Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.152Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues"},"pid":54876,"timestamp":"2023-05-24T18:21:06.152Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.152Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues","payload":{"query":{"address":"","allNetworks":"true","chainId":"","creator":"","networkName":"","order":"DESC","page":"1","proposer":"","pullRequesterAddress":"","pullRequesterLogin":"","repoId":"","search":"","sortBy":"createdAt","state":"","time":"","tokenAddress":"","visible":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.152Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.385Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/networks/active"},"pid":54876,"timestamp":"2023-05-24T18:21:06.385Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.385Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/networks/active","payload":{"query":{"creatorAddress":"","isClosed":"false","isRegistered":"true","name":"","order":"DESC","page":"1","sortBy":"updatedAt"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.385Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.437Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/settings","pid":54876,"timestamp":"2023-05-24T18:21:06.437Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.438Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/networks/total","pid":54876,"timestamp":"2023-05-24T18:21:06.438Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.443Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/issues/total","pid":54876,"timestamp":"2023-05-24T18:21:06.443Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.493Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.497Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/networks/active","pid":54876,"timestamp":"2023-05-24T18:21:06.494Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/issues","pid":54876,"timestamp":"2023-05-24T18:21:06.497Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.561Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues"},"pid":54876,"timestamp":"2023-05-24T18:21:06.561Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.562Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues","payload":{"query":{"address":"","allNetworks":"true","chainId":"","creator":"","networkName":"","order":"DESC","page":"1","proposer":"","pullRequesterAddress":"","pullRequesterLogin":"","repoId":"","search":"","sortBy":"createdAt","state":"","time":"","tokenAddress":"","visible":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.562Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.612Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/issues","pid":54876,"timestamp":"2023-05-24T18:21:06.612Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.831Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/recent"},"pid":54876,"timestamp":"2023-05-24T18:21:06.831Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.831Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/recent","payload":{"query":{"address":"","creator":"","networkName":"","order":"DESC","repoId":"","sortBy":"updatedAt","state":"open","visible":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/recent"},"pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/search/issues/recent","payload":{"query":{"address":"","creator":"","networkName":"","order":"DESC","repoId":"","sortBy":"updatedAt","state":"funding","visible":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos"},"pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos","payload":{"query":{"withBounties":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.832Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.912Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/repos","pid":54876,"timestamp":"2023-05-24T18:21:06.912Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.917Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos"},"pid":54876,"timestamp":"2023-05-24T18:21:06.917Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.917Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos","payload":{"query":{"withBounties":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.917Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.919Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/issues/recent","pid":54876,"timestamp":"2023-05-24T18:21:06.919Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.930Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/repos","pid":54876,"timestamp":"2023-05-24T18:21:06.930Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.930Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/search/issues/recent","pid":54876,"timestamp":"2023-05-24T18:21:06.930Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.944Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos"},"pid":54876,"timestamp":"2023-05-24T18:21:06.944Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.944Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos","payload":{"query":{"withBounties":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.944Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.951Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/repos","pid":54876,"timestamp":"2023-05-24T18:21:06.951Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access","pid":54876,"timestamp":"2023-05-24T18:21:06.955Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos"},"pid":54876,"timestamp":"2023-05-24T18:21:06.955Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"access-payload","pid":54876,"timestamp":"2023-05-24T18:21:06.955Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":{"method":"GET","pathname":"/repos","payload":{"query":{"withBounties":"true"}}},"pid":54876,"timestamp":"2023-05-24T18:21:06.955Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"GET access-end","pid":54876,"timestamp":"2023-05-24T18:21:06.959Z","version":"*"}
+{"application":"bepro-events","hostname":"localhost","level":"debug","message":"/repos","pid":54876,"timestamp":"2023-05-24T18:21:06.959Z","version":"*"}
