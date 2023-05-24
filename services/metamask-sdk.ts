@@ -5,5 +5,10 @@ export const instantiateSdk = () => {
     return null;
   }
 
-  return new MetaMaskSDK();
+  return new MetaMaskSDK({
+    dappMetadata: {
+      name: "BEPRO - Seneca",
+      url: "https://seneca.taikai.network"
+    }
+  });
 };
