@@ -31,7 +31,10 @@ export default function ListActiveNetworksItem({
         chain: network.chain.chainShortName
       })}
     >
-      <div className="col-12 col-sm-6 col-md-4 cursor-pointer border border-gray-800 border-radius-8 bg-gray-900 p-3">
+      <div 
+        className={`col-12 col-sm-6 col-md-5 col-lg-4 cursor-pointer 
+          border border-gray-800 border-radius-8 bg-gray-900 p-3`}
+      >
         <div className="row align-items-center gap-2">
             <div className="col-2">
               <If condition={!!network?.logoIcon}>

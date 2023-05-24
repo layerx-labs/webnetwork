@@ -41,13 +41,6 @@ export default function ListRecentIssues() {
   const { networkName } = useNetwork();
   const { searchRecentIssues } = useApi();
 
-  function numberOfColumns(numberBounties: number) {
-    if (numberBounties === 1) return 8;
-    if (numberBounties === 2) return 4;
-
-    return 12;
-  }
-
   async function handleSearchRecentIssues(type: "open" | "funding") {
     const isOpen = type === "open";
     const setLoading = (state: boolean) =>
@@ -128,11 +121,12 @@ export default function ListRecentIssues() {
         </div>
 
         <LoadingList loading={loadingState} />
-        <div className="row gy-3 mb-3 mt-1">
+
+        <div className="mb-3 mt-1">
           <HorizontalList className="gap-3">
           {currentBounties &&
             currentBounties?.map((bounty) => (
-              <div className="col-12 col-sm-6 col-md-4" key={bounty.id}>
+              <div className="col-12 col-sm-6 col-md-5 col-lg-4" key={bounty.id}>
                 <IssueListItem issue={bounty} key={bounty.id} size="sm" />
               </div>
             ))}
