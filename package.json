@@ -112,10 +112,5 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
     "typescript": "^4.6.2"
-  },
-  "overrides": {
-    "@types/react": {
-      "version": "17.0.2"
-    }
   }
 }
