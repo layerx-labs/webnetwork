@@ -1,8 +1,17 @@
+import { CSSProperties } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-export default function Symbol({ name, className }: { name: string, className?: string }) {
+export default function Symbol({
+  name,
+  className,
+  style,
+}: {
+  name: string;
+  className?: string;
+  style?: CSSProperties;
+}) {
   const { t } = useTranslation(["common"]);
 
   return (
@@ -11,7 +20,7 @@ export default function Symbol({ name, className }: { name: string, className?: 
       placement="bottom"
       overlay={<Tooltip id={"tooltip-bottom"}>{name}</Tooltip>}
     >
-      <span className={`${className} symbol text-truncate`}>
+      <span className={`${className} symbol text-truncate`} style={style}>
         <>{name || t("common:misc.token")}</>
       </span>
     </OverlayTrigger>
