@@ -65,6 +65,7 @@ export default function MenuDrawer({
         href={href}
         className="caption-medium font-weight-medium text-white text-capitalize max-width-content m-0 p-0 mt-2"
         transparent
+        key={label}
       />
     );
   }
