@@ -30,6 +30,8 @@ Please explain what needs to be tested in order to verify your changes.
 - [ ] My changes generate no new warnings (If do please explain)
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
+- [ ] Jenkins build passed
+- [ ] Tested solution on staging vm
 
 ## (Optional) Image and/or Video
 
@@ -40,5 +42,3 @@ Please include below the changes visually
 | <img src="image" alt="Image sample"> | <video src=""> |
 
 ---
-
-###### © BePro - All rights reserved.
