@@ -23,7 +23,7 @@ function paginate(
   };
 }
 
-export function paginateArray(items: any[], itemsPerPage: number, page: number) {
+export function paginateArray(items, itemsPerPage: number, page) {
   const pages = Math.ceil(items.length / itemsPerPage);
   const data = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
