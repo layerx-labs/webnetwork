@@ -65,14 +65,14 @@ export function ContextualSpan({
   return(
     <FlexRow className={CLASSES}>
       <FlexColumn>
-        <FlexRow className={`align-items-center`}>
+        <FlexRow className={`${icon ? 'align-items-center': 'align-items-start'}`}>
           <div>
             {icon ? (
               <span className={`mr-1 svg-${contextColor} ${classNameIcon}`}>
                 <Icon width={12} height={12} />
               </span>
             ) : (
-              <div className="ball-sm bg-warning" />
+              <div className="ball-sm bg-warning me-2 mt-2" />
             )}
           </div>
           <div className={`col-12 ${classNameChildren}`}>
