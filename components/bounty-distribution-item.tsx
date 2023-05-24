@@ -64,9 +64,7 @@ export default function BountyDistributionItem({
             <div className="d-flex justify-content-end">
               <span className="caption-small text-light-gray">
                 {amounts[1]}{" "}
-                <label className="ps-1 caption-small text-uppercase text-light-gray">
-                  {symbols[1]}
-                </label>
+                <Symbol name={symbols[1]} className="ps-1 caption-small text-uppercase text-light-gray"/>
               </span>
             </div>
           )}
