@@ -82,7 +82,7 @@
     "react-select": "^5.6.0",
     "sanitize-html": "^2.7.0",
     "sass": "^1.49.9",
-    "sequelize": "6.17.0",
+    "sequelize": "6.31.1",
     "sequelize-cli": "^6.4.1",
     "swagger-ui-react": "^4.15.5",
     "tiny-emitter": "^2.1.0",
