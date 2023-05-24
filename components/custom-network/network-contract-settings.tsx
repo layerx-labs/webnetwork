@@ -87,7 +87,7 @@ export default function NetworkContractSettings() {
       disabled: totalNetworkToken.gt(0),
       helperText: totalNetworkToken.gt(0) ? t("custom-network:oracle-exchange-rate.unable-to-change", {
         amount: formatNumberToNScale(totalNetworkToken.toFixed()),
-        symbol: networkTokenSymbol?.length > 6 ? networkTokenSymbol.slice(0, 6)+"..." : networkTokenSymbol
+        symbol: networkTokenSymbol?.length > 6 ? `${networkTokenSymbol.slice(0, 6)}...` : networkTokenSymbol
       }) : ""
     },
     { 
