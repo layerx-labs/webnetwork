@@ -100,9 +100,9 @@ export default function IssueBody({
   if (state.currentUser?.walletAddress)
     return (
       <div className="container mb-1">
-        <div className="d-flex bd-highlight justify-content-center mx-2 px-4">
-          <div className="ps-3 pe-0 ms-0 me-2 w-65 bd-highlight">
-            <div className="content-wrapper mb-3">
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="border-radius-8 p-3 bg-gray-850 mb-3">
               {isEditIssue && (
                 <div className="d-flex justify-content-center">
                   <span className="p family-Regular font-weight-medium mt-1 text-info">
@@ -116,7 +116,7 @@ export default function IssueBody({
                 setSelectedTags={setSelectedTags}
                 preview={isPreview}
               />
-              <div className="container">
+              <>
                 <IssueDescription
                   body={isPreview ? addFilesInDescription(body) : body}
                   setBody={setBody}
@@ -126,7 +126,7 @@ export default function IssueBody({
                   files={files}
                   preview={isPreview}
                 />
-              </div>
+              </>
               {isEditIssue && (
                 <>
                   <div className="d-flex flex-row justify-content-between my-3">
@@ -160,20 +160,22 @@ export default function IssueBody({
               )}
             </div>
           </div>
-          <div className="p-0 me-3 flex-shrink-0 w-25 bd-highlight">
-            <div className="sticky-bounty">
+          <div className="col-md-4 px-0">
               <IssueProposalProgressBar />
-            </div>
           </div>
         </div>
       </div>
     );
   else
     return (
-      <CustomContainer>
-        <div className="content-wrapper mb-3">
-          <IssueDescription body={body || ""} />
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-12">
+            <div className="border-radius-8 p-3 bg-gray-850 mb-3">
+              <IssueDescription body={body || ""} />
+            </div>
+          </div>
         </div>
-      </CustomContainer>
+      </div>
     );
 }
