@@ -26,13 +26,13 @@ export default function HorizontalList({
 
   const HOLD_STEP = 2;
 
-  function updateCanScroll(direction: Direction) {
-    return((entries) => {
-      const { isIntersecting } = entries.shift();
-      
-      if (direction === "left") setCanScrollLeft(!isIntersecting);
-      else setCanScrollRight(!isIntersecting);
-    });
+  function updateCanScroll(entries) {
+    const { isIntersecting, target } = entries.shift();
+
+    const isFirstChild = target === target.parentNode?.firstChild;
+
+    if (isFirstChild) setCanScrollLeft(!isIntersecting);
+    else setCanScrollRight(!isIntersecting);
   }
 
   function handleScroll(direction: Direction) {
@@ -47,30 +47,22 @@ export default function HorizontalList({
     });
   }
 
-  function getObserver(cb) {
-    return new IntersectionObserver(cb, {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1.0
-    });
-  }
-
   const mouseEventsLeft = useMouseHold(handleScroll("left"), { forceStop: !canScrollLeft });
   const mouseEventsRight = useMouseHold(handleScroll("right"), { forceStop: !canScrollRight });
 
   useEffect(() => {
-    const leftObserver = getObserver(updateCanScroll("left"));
-    const rightObserver = getObserver(updateCanScroll("right"));
+    const observer = new IntersectionObserver(updateCanScroll, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0
+    });
 
-    const firstChild = divRef.current?.firstChild;
-    const lastChild = divRef.current?.lastChild;
-
-    if (firstChild) leftObserver.observe(firstChild);
-    if (lastChild) rightObserver.observe(lastChild);
+    observer.observe(divRef.current?.firstChild);
+    observer.observe(divRef.current?.lastChild);
 
     return () => {
-      if (firstChild) leftObserver.unobserve(firstChild);
-      if (lastChild) rightObserver.unobserve(lastChild);
+      observer.unobserve(divRef.current?.firstChild);
+      observer.unobserve(divRef.current?.lastChild);
     };
   }, []);
 
