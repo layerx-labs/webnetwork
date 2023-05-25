@@ -116,7 +116,7 @@ export default function PriceConversorModal({
         <div className="col">
           <InputNumber
             className="caption-large"
-            symbol={state.Service?.network?.active?.networkToken?.symbol || t("common:misc.$token")}
+            symbol={state.currentBounty?.data?.transactionalToken?.symbol || t("common:misc.$token")}
             value={currentValue}
             onValueChange={(e) => setValue(e.floatValue)}
           />
