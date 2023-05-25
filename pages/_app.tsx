@@ -12,11 +12,11 @@ import ConsentCookie from "components/consent-cokie";
 import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import Loading from "components/loading";
 import MainNav from "components/main-nav";
+import NoMetamaskModal from "components/no-metamask-modal";
 import ReadOnlyContainer from "components/read-only-container";
 import ReAuthorizeGithubModal from "components/reauthorize-github-modal";
 import Seo from "components/seo";
 import Toaster from "components/toaster";
-import WebThreeDialog from "components/web3-dialog";
 import WrongNetworkModal from "components/wrong-network-modal";
 
 import RootProviders from "contexts";
@@ -39,7 +39,7 @@ function App({ Component, pageProps: { session, currentIssue, ...pageProps } }: 
         <RootProviders>
           <Seo  issueMeta={currentIssue} />
           <ReadOnlyContainer>
-            <WebThreeDialog />
+            <NoMetamaskModal />
             <InvalidAccountWalletModal/>
             <ReAuthorizeGithubModal />
             <MainNav />
