@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Offcanvas } from "react-bootstrap";
+
+import { useRouter } from "next/router";
 
 import ArrowLeft from "assets/icons/arrow-left";
 import ArrowRight from "assets/icons/arrow-right";
@@ -30,6 +32,7 @@ export default function MenuDrawer({
   show,
   onHide
 }: MenuDrawerProps) {
+  const { pathname, query } = useRouter();
   const [isProfileLinksVisible, setIsProfileLinksVisible] = useState(false);
   
   const { state } = useAppState();
@@ -57,6 +60,7 @@ export default function MenuDrawer({
     onHide();
   }
 
+  useEffect(handleHideDrawer, [pathname, query]);
 
   function GlobalLink({ label, href }) {
     return(
