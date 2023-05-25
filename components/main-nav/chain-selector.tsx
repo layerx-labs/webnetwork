@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 
-import ResponsiveWrapper from "components/responsive-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import { useAppState } from "contexts/app-state";
