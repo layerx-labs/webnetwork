@@ -8,7 +8,7 @@ import MultiActionButton from "components/multi-action-button";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 export default function CreateNetworkBountyButton() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
   const { pathname, push } = useRouter();
 
   const isOnNetwork = pathname?.includes("[network]");
@@ -20,17 +20,17 @@ export default function CreateNetworkBountyButton() {
         <InternalLink
           href={"/create-bounty"}
           icon={<PlusIcon />}
-          label={t("main-nav.new-bounty") as string}
+          label={t("main-nav.new-bounty")}
           iconBefore
           uppercase
         /> :
         <MultiActionButton
-          label="Create"
+          label={t("misc.create")}
           className="read-only-button w-100"
           icon={<PlusIcon />}
           actions={[
-            { label: "Bounty", onClick: () => push("/create-bounty") },
-            { label: "Network", onClick: () => push("/new-network") },
+            { label: t("misc.bounty"), onClick: () => push("/create-bounty") },
+            { label: t("misc.network"), onClick: () => push("/new-network") },
           ]}
         />
     }

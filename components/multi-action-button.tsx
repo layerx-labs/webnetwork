@@ -1,6 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { isMobile } from 'react-device-detect';
 
+import { useTranslation } from "next-i18next";
+
 import Button, { ButtonProps } from "components/button";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
@@ -22,6 +24,8 @@ export default function MultiActionButton({
   label,
   ...rest
 }: MultiActionButtonProps & ButtonProps) {
+  const { t } = useTranslation("common");
+  
   const [mobile, setMobile] = useState(false);
 
   const defaultOption = {
@@ -81,7 +85,7 @@ export default function MultiActionButton({
             onChange={onNativeChange}
             value="choose"
           >
-            <option value="choose" disabled hidden>Choose one</option>
+            <option value="choose" disabled hidden>{t("misc.choose-one")}</option>
             {actions.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}
           </select>
         </div> ||

@@ -117,7 +117,7 @@ export default function NavAvatar() {
               <div className="d-flex flex-row justify-content-left">
                 <ProfileInternalLink
                   href="profile"
-                  label={t("main-nav.nav-avatar.view-profile")}
+                  label={t("main-nav.nav-avatar.my-profile")}
                   className="text-gray p family-Regular"
                 />
               </div>

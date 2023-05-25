@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import ArrowLeft from "assets/icons/arrow-left";
@@ -32,6 +33,7 @@ export default function MenuDrawer({
   show,
   onHide
 }: MenuDrawerProps) {
+  const { t } = useTranslation("common");
   const { pathname, query } = useRouter();
   const [isProfileLinksVisible, setIsProfileLinksVisible] = useState(false);
   
@@ -65,7 +67,7 @@ export default function MenuDrawer({
   function GlobalLink({ label, href }) {
     return(
       <InternalLink
-        label={label}
+        label={t(`main-nav.${label}`)}
         href={href}
         className="caption-medium font-weight-medium text-white text-capitalize max-width-content m-0 p-0 mt-2"
         transparent
@@ -88,7 +90,7 @@ export default function MenuDrawer({
           </div>
         </If>
         <span>
-          My profile
+          {t("main-nav.nav-avatar.my-profile")}
         </span>
         <If condition={!isBack}>
           <ArrowRight height={9} />
