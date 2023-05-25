@@ -48,8 +48,8 @@ export default function NavLinks() {
       isVisible: isOnNetwork
     },
     {
-      href: "/bounty-hall",
-      label: t("main-nav.bounty-hall"),
+      href: "/explore",
+      label: t("main-nav.explore"),
       isVisible: true
     },
     {
