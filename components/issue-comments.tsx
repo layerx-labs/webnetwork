@@ -14,12 +14,12 @@ export default function IssueComments({ comments = [], repo, issueId }) {
   return (
     <div className="container mb-5">
       <div className="row justify-content-center">
-        <div className="col-md-10">
-          <div className="content-wrapper">
+        <div className="col-md-12">
+          <div className="content-wrapper bg-gray-850">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h3 className="caption-large mb-0">
+              <h5 className="caption-small mb-0">
                 {t("misc.comments", { count: comments?.length || 0 })}
-              </h3>
+              </h5>
               <a
                 href={replyRef}
                 className="text-decoration-none"
