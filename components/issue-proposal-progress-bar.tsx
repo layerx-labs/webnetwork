@@ -111,13 +111,15 @@ export default function IssueProposalProgressBar() {
 
     if (currentValue)
       return (
-        <span
-          className={`white-space text-${
-            currentValue.color && currentValue.color
-          } text-uppercase caption-small secondary-text`}
-        >
-          {currentValue.text}
-        </span>
+        <div className="d-none d-lg-block">
+          <span
+            className={`white-space text-${
+              currentValue.color && currentValue.color
+            } text-uppercase caption-small secondary-text `}
+          >
+            {currentValue.text}
+          </span>
+        </div>
       );
   }
 
@@ -202,12 +204,16 @@ export default function IssueProposalProgressBar() {
   }, [isClosed, isDraft, isCanceled, isInValidation, isFundingRequest, isFunded]);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="ps-0 col-md-12">
-          <div className="content-wrapper mb-4 pb-0 pt-0 issue-proposal-progress">
+    <div className="container sticky-bounty">
+      <div className="row justify-content-center">
+        <div className="px-0 col-12">
+          <div
+              className={`content-wrapper bg-gray-850 mb-4 ${
+                isFundingRequest ? "pb-5" : "pb-0"
+              } pt-0 issue-proposal-progress`}
+            >
             <div className="d-flex justify-content-start mb-3 pt-4">
-              <span className="caption-large">{t("bounty:steps.title")}</span>
+              <span className="caption-medium">{t("bounty:steps.title")}</span>
             </div>
             <div className="row">
               <div className="position-relative">
