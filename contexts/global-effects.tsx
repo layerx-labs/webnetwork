@@ -7,8 +7,6 @@ import {useRouter} from "next/router";
 import {useAppState} from "contexts/app-state";
 import { changeWeb3Connection } from "contexts/reducers/change-service";
 
-import { instantiateSdk } from "services/metamask-sdk";
-
 import {useAuthentication} from "x-hooks/use-authentication";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
@@ -37,20 +35,11 @@ export const GlobalEffectsProvider = ({children}) => {
   const { connectedChain, currentUser, Service, supportedChains } = state;
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const metamaskSDK = instantiateSdk();
+    const web3Connection = new Web3Connection({
+      skipWindowAssignment: true
+    });
 
-      if (metamaskSDK) {
-        const ethereum = metamaskSDK.getProvider();
-    
-        const web3Connection = new Web3Connection({
-          web3CustomProvider: ethereum,
-          skipWindowAssignment: true
-        });
-    
-        dispatch(changeWeb3Connection(web3Connection));
-      }
-    }
+    dispatch(changeWeb3Connection(web3Connection));
   }, []);
 
   useEffect(dao.listenChainChanged, [
