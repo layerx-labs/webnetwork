@@ -20,7 +20,7 @@ export default function CreateNetworkBountyButton() {
         <InternalLink
           href={"/create-bounty"}
           icon={<PlusIcon />}
-          label={t("main-nav.new-bounty")}
+          label={t("main-nav.new-bounty") as string}
           iconBefore
           uppercase
         /> :

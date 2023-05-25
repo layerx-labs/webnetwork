@@ -67,7 +67,7 @@ export default function MenuDrawer({
   function GlobalLink({ label, href }) {
     return(
       <InternalLink
-        label={t(`main-nav.${label}`)}
+        label={t(`main-nav.${label}`) as string}
         href={href}
         className="caption-medium font-weight-medium text-white text-capitalize max-width-content m-0 p-0 mt-2"
         transparent
