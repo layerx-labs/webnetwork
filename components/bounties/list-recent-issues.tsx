@@ -67,6 +67,7 @@ export default function ListRecentIssues() {
 
   function renderNothingFound(type: "open" | "funding") {
     const isOpen = type === "open";
+    const notFoundLabel = isOpen ? t("not-found-bounty") : t("not-found-funding");
 
     const goToPage = 
       () => type === "open" ? push("/create-bounty") : push("/create-bounty?type=funding", "/create-bounty", )
@@ -77,11 +78,11 @@ export default function ListRecentIssues() {
           description={
           <>
             <span className="d-none d-md-flex justify-content-center">
-              {isOpen ? t("not-found-bounty") : t("not-found-funding")}
+              {notFoundLabel}
             </span>
 
             <span className="d-flex d-md-none text-truncate">
-              {isOpen ? t("not-found-bounty") : t("not-found-funding")}
+              {notFoundLabel}
             </span>
           </>
         }
