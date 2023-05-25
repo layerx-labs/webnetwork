@@ -67,8 +67,8 @@ export default function IssueDescription({
 
   return (
     <>
-      <h3 className="caption-large mb-3">{t("misc.description")}</h3>
-      <div className="bg-dark-gray p-3 rounded">
+      <h3 className="caption-medium mb-3">{t("misc.description")}</h3>
+      <div className="bg-gray-900 p-3 rounded border border-gray-800">
         <div className="p p-1">
           {isEdit && !preview ? (
             <>
