@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { BOOTSTRAP_BREAKPOINTS } from "helpers/constants"
 
+import useDebouncedCallback from "x-hooks/use-debounced-callback";
+
 const getCurrentBreakPoint = (currentWidth: number) => {
   if (currentWidth < BOOTSTRAP_BREAKPOINTS.sm) return "xs";
   else if (currentWidth < BOOTSTRAP_BREAKPOINTS.md) return "sm";
@@ -13,16 +15,18 @@ const getCurrentBreakPoint = (currentWidth: number) => {
 }
 
 export default function useBreakPoint() {
-  const [currentBreakPoint, setCurrentBreakpoint] = useState<string>(getCurrentBreakPoint(window.innerWidth));
+  const [currentBreakPoint, setCurrentBreakpoint] = useState<string>();
+
+  const handler = () => setCurrentBreakpoint(getCurrentBreakPoint(window.innerWidth));
+  const debouncedHandler = useDebouncedCallback(handler, 300);
 
   const isMobileView = ["xs", "sm", "md"].includes(currentBreakPoint);
-
   const isTabletView = currentBreakPoint === "lg";
-
   const isDesktopView = ["xl", "xxl"].includes(currentBreakPoint);
 
   useEffect(() => {
-    const observer = new ResizeObserver(() => setCurrentBreakpoint(getCurrentBreakPoint(window.innerWidth)));
+    handler();
+    const observer = new ResizeObserver(debouncedHandler);
     
     observer.observe(document.documentElement);
     

@@ -12,6 +12,7 @@ import PageHero, { InfosHero } from "components/page-hero";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import useApi from "x-hooks/use-api";
+import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 export default function ExplorePage() {
@@ -22,6 +23,7 @@ export default function ExplorePage() {
 
   const { networkName } = useNetwork();
   const { getTotalNetworks, getTotalBounties } = useApi();
+  const breakpoints = useBreakPoint();
 
   const [infos, setInfos] = useState<InfosHero[]>([
     {
