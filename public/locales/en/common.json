@@ -270,7 +270,7 @@
     },
     "mobile-information": {
       "title": "MetaMask Mobile",
-      "description": "MetaMask is not available on mobile browsers. In order to interact with this DApp on mobile you need to access using Metamask app built in browser.",
+      "description": "MetaMask is not available on this mobile browser. In order to interact with this DApp on a mobile you need to access using Metamask app built-in browser.",
       "open-in-metamask": "Open in MetaMask"
     },
     "web3-dialog": {
