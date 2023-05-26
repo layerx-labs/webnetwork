@@ -10,7 +10,7 @@ export default function BountyTags({
   if (!tags) return <></>;
 
   return (
-    <div className="d-flex gap-1">
+    <div className="d-flex flex-wrap gap-1">
       {tags.map((tag) => (
         <Badge
           key={tag}
