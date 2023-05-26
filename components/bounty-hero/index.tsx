@@ -8,7 +8,6 @@ import BountySettings from "components/bounty-hero/bounty-settings";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
-import CustomContainer from "components/custom-container";
 import If from "components/If";
 import PriceConversor from "components/price-conversor";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -48,10 +47,10 @@ export default function BountyHero({
   }
 
   return (
-    <div className="banner-shadow">
-      <CustomContainer>
-        <div className="d-flex flex-row">
-          <div className="col-12">
+    <div className="mt-2 border-bottom border-gray-850 pb">
+    <div className="container">
+        <div className="row d-flex flex-row justify-content-center">
+          <div className="col-md-12 banner-shadow justify-content-center">
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center">
                 <span className="me-1 text-white-30 text-uppercase">
@@ -69,7 +68,7 @@ export default function BountyHero({
               </div>
             </div>
 
-            <div className="d-flex justify-content-between border-top border-gray-850 mt-3">
+            <div className="d-flex flex-wrap justify-content-between border-top border-gray-850 mt-3">
               <div className="d-flex d-inline-flex align-items-center mt-3">
                 <div
                   className={`d-flex py-1 px-2 bg-transparent border border-gray-700 text-gray-300 border-radius-4`}
@@ -171,7 +170,7 @@ export default function BountyHero({
             </ResponsiveWrapper>
           </div>
         </div>
-      </CustomContainer>
+    </div>
     </div>
   );
 }
