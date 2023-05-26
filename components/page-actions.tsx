@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Button} from "react-bootstrap";
+import { isMobile, isTablet } from "react-device-detect";
 
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
@@ -220,7 +221,7 @@ export default function PageActions({
               <ContractButton
                 color="primary"
                 onClick={handleStartWorking}
-                className="read-only-button bounty-outline-button"
+                className={`read-only-button ${isTablet || isMobile ? 'col-12' : 'bounty-outline-button'}`}
                 disabled={isExecuting}
                 isLoading={isExecuting}
               >
@@ -296,18 +297,18 @@ export default function PageActions({
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
-        <div className="col-md-10">
+        <div className="col-md-12">
           {(!isGithubConnected && isWalletConnected) && 
           <ContextualSpan context="info" className="mb-2" isAlert>
             {t("actions.connect-github-to-work")}
           </ContextualSpan>}
 
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h4 className="h4 d-flex align-items-center">
+            <h4 className="h4 d-flex align-items-center d-none d-lg-block">
               {t("misc.details")}
             </h4>
 
-            <div className="d-flex flex-row align-items-center gap-20">
+            <div className="d-flex flex-row align-items-center gap-20 d-none d-lg-block">
               {renderForkRepositoryLink()}
 
               {renderStartWorkingButton()}
@@ -322,6 +323,13 @@ export default function PageActions({
 
               {!isGithubConnected && isWalletConnected && <ConnectGithub size="sm"/>}
 
+            </div>
+            <div className="col-12 d-lg-none"> 
+              {!isGithubConnected && isWalletConnected ? (
+                <ConnectGithub size="lg" />
+              ) : (
+                renderStartWorkingButton()
+              )}
             </div>
           </div>
         </div>
