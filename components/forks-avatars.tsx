@@ -1,4 +1,4 @@
-import IssueAvatars from "components/issue-avatars";
+import IssueAvatars from "components/bounty/issue-avatars";
 import Translation from "components/translation";
 
 import { ForkInfo } from "interfaces/repos-list";

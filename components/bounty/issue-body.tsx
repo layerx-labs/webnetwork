@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
+import IssueDescription from "components/bounty/issue-description";
 import IssueEditTag from "components/bounty/issue-edit-tag";
+import IssueProposalProgressBar from "components/bounty/issue-proposal-progress-bar";
 import Button from "components/button";
-import CustomContainer from "components/custom-container";
 import { IFilesProps } from "components/drag-and-drop";
-import IssueDescription from "components/issue-description";
-import IssueProposalProgressBar from "components/issue-proposal-progress-bar";
 
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
