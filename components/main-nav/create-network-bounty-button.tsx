@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 
 import PlusIcon from "assets/icons/plus-icon";
 
+import MultiActionButton from "components/common/multi-action-button";
 import InternalLink from "components/internal-link";
-import MultiActionButton from "components/multi-action-button";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 export default function CreateNetworkBountyButton() {
