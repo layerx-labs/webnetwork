@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 import InfoTooltip from "components/info-tooltip";
 import NetworkItem from "components/profile/network-item";
 import { FlexRow } from "components/profile/wallet-balance";
-import Symbol from "components/symbol";
+import Symbol from "components/token-symbol";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 

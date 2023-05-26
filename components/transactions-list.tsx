@@ -16,7 +16,8 @@ import {formatNumberToNScale, formatStringToCurrency} from "helpers/formatNumber
 import {Transaction} from "interfaces/transaction";
 
 import { useTransactions } from "x-hooks/use-transactions";
-import Symbol from "./symbol";
+
+import Symbol from "./token-symbol";
 
 interface TransactionListProps {
   onActiveTransactionChange: (transaction: Transaction) => void

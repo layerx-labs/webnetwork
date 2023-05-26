@@ -6,7 +6,7 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
 
-import Symbol from "./symbol";
+import Symbol from "./token-symbol";
 
 export default function ProposalProgressBar({
   isDisputed = null,

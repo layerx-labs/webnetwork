@@ -9,7 +9,7 @@ import InfoTooltip from "components/info-tooltip";
 
 import { InputNumber as InputNumberProps } from "types/input-number";
 
-import Symbol from "./symbol";
+import Symbol from "./token-symbol";
 
 
 export default function InputNumber({

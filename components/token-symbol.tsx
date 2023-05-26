@@ -3,7 +3,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-export default function Symbol({
+export default function TokenSymbol({
   name,
   className,
   style,
@@ -20,7 +20,7 @@ export default function Symbol({
       placement="bottom"
       overlay={<Tooltip id={"tooltip-bottom"}>{name}</Tooltip>}
     >
-      <span className={`${className} symbol text-truncate`} style={style}>
+      <span className={`${className} token-symbol text-truncate`} style={style}>
         <>{name || t("common:misc.token")}</>
       </span>
     </OverlayTrigger>

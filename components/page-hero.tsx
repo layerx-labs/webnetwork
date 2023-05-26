@@ -10,7 +10,7 @@ import {highlightText} from "helpers/string";
 
 import {Currency} from "interfaces/currency";
 
-import Symbol from "./symbol";
+import Symbol from "./token-symbol";
 
 export interface InfosHero {
   value: number | string;

@@ -14,7 +14,7 @@ import {formatStringToCurrency} from "helpers/formatNumber";
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
-import Symbol from "./symbol";
+import Symbol from "./token-symbol";
 
 interface DelegationsProps {
   type?: "toMe" | "toOthers";

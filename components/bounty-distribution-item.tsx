@@ -8,7 +8,7 @@ import { BountyDistribution } from "interfaces/bounty-distribution";
 
 import Avatar from "./avatar";
 import InfoTooltip from "./info-tooltip";
-import Symbol from "./symbol";
+import Symbol from "./token-symbol";
 
 export default function BountyDistributionItem({
   percentage = "0",

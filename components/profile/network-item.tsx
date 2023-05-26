@@ -8,7 +8,7 @@ import ArrowUpRight from "assets/icons/arrow-up-right";
 
 import Button from "components/button";
 import NetworkLogo from "components/network-logo";
-import Symbol from "components/symbol";
+import Symbol from "components/token-symbol";
 
 import { useAppState } from "contexts/app-state";
 
