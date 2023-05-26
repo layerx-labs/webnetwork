@@ -57,14 +57,17 @@ export default function HorizontalList({
       threshold: 1.0
     });
 
-    observer.observe(divRef.current?.firstChild);
-    observer.observe(divRef.current?.lastChild);
+    const firstChild = divRef.current?.firstChild;
+    const lastChild = divRef.current?.lastChild;
+
+    if (firstChild) observer.observe(firstChild);
+    if (lastChild) observer.observe(lastChild);
 
     return () => {
-      observer.unobserve(divRef.current?.firstChild);
-      observer.unobserve(divRef.current?.lastChild);
+      if (firstChild) observer.unobserve(firstChild);
+      if (lastChild) observer.unobserve(lastChild);
     };
-  }, []);
+  }, [children]);
 
   return(
     <div className="horizontal-list">
