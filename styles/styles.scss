@@ -453,6 +453,14 @@ li {
 }
 
 .banner-shadow {
+  width: 100%;
+  min-height: 164px;
+  color: $white;
+  padding: $m + 4;
+  border-bottom: 1px solid $dark-gray;
+}
+
+.min-w-bounty-hero {
   min-height: 164px;
 }
 
