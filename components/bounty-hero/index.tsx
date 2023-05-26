@@ -48,9 +48,9 @@ export default function BountyHero({
 
   return (
     <div className="mt-2 border-bottom border-gray-850 pb">
-    <div className="container">
+      <div className="container">
         <div className="row d-flex flex-row justify-content-center">
-          <div className="col-md-12 banner-shadow justify-content-center">
+          <div className="col-md-12 min-w-bounty-hero justify-content-center">
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center">
                 <span className="me-1 text-white-30 text-uppercase">
@@ -170,7 +170,7 @@ export default function BountyHero({
             </ResponsiveWrapper>
           </div>
         </div>
-    </div>
+      </div>
     </div>
   );
 }
