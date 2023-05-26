@@ -9,10 +9,10 @@ import ArrowRight from "assets/icons/arrow-right";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
+import CreateNetworkBountyButton from "components/common/buttons/create-network-bounty/create-network-bounty.controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
 import ChainSelector from "components/main-nav/chain-selector";
-import CreateNetworkBountyButton from "components/main-nav/create-network-bounty-button";
 import DisconnectWalletButton from "components/main-nav/disconnect-wallet-button";
 import HelpButton from "components/main-nav/help-button";
 import ProfileLinks from "components/profile/profile-links";

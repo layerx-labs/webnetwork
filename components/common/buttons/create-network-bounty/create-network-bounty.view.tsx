@@ -1,17 +1,26 @@
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import PlusIcon from "assets/icons/plus-icon";
 
-import MultiActionButton from "components/common/multi-action-button";
+import MultiActionButton from "components/common/buttons/multi-action/multi-action.view";
 import InternalLink from "components/internal-link";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
-export default function CreateNetworkBountyButton() {
-  const { t } = useTranslation("common");
-  const { pathname, push } = useRouter();
+interface Action {
+  label: string;
+  onClick: () => void;
+}
 
-  const isOnNetwork = pathname?.includes("[network]");
+interface CreateNetworkBountyButtonViewProps {
+  isOnNetwork: boolean;
+  actions: Action[];
+}
+
+export default function CreateNetworkBountyButtonView({
+  isOnNetwork,
+  actions
+}: CreateNetworkBountyButtonViewProps) {
+  const { t } = useTranslation("common");
 
   return(
     <ReadOnlyButtonWrapper>
@@ -28,10 +37,7 @@ export default function CreateNetworkBountyButton() {
           label={t("misc.create")}
           className="read-only-button w-100"
           icon={<PlusIcon />}
-          actions={[
-            { label: t("misc.bounty"), onClick: () => push("/create-bounty") },
-            { label: t("misc.network"), onClick: () => push("/new-network") },
-          ]}
+          actions={actions}
         />
     }
   </ReadOnlyButtonWrapper>
