@@ -6,7 +6,7 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
 
-import Symbol from "./token-symbol";
+import TokenSymbol from "./token-symbol";
 
 export default function ProposalProgressBar({
   isDisputed = null,
@@ -132,7 +132,7 @@ export default function ProposalProgressBar({
               {formatNumberToNScale(issueDisputeAmount)}{" "}
             </span>{" "}
             <span className="me-1">/{formatNumberToNScale(totalNetworkToken || 0)}{" "}</span>
-            <Symbol name={t("common:$oracles", { token: state.Service?.network?.active?.networkToken?.symbol })}/>
+            <TokenSymbol name={t("common:$oracles", { token: state.Service?.network?.active?.networkToken?.symbol })}/>
              {" "}
             <span className={`text-${issueColor}`}> ({percentage}%)</span>
           </div>

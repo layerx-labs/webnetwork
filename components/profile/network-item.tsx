@@ -8,7 +8,7 @@ import ArrowUpRight from "assets/icons/arrow-up-right";
 
 import Button from "components/button";
 import NetworkLogo from "components/network-logo";
-import Symbol from "components/token-symbol";
+import TokenSymbol from "components/token-symbol";
 
 import { useAppState } from "contexts/app-state";
 
@@ -64,7 +64,7 @@ export default function NetworkItem({
         <span className="text-white mr-1">
           {formatNumberToCurrency(amount)}
         </span>
-        <Symbol
+        <TokenSymbol
           name={symbol}
           className={`${isNetworkVariant ? "text-primary" : ""} text-uppercase`}
           style={{ color: primaryColor }}

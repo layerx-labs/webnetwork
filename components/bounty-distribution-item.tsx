@@ -8,7 +8,7 @@ import { BountyDistribution } from "interfaces/bounty-distribution";
 
 import Avatar from "./avatar";
 import InfoTooltip from "./info-tooltip";
-import Symbol from "./token-symbol";
+import TokenSymbol from "./token-symbol";
 
 export default function BountyDistributionItem({
   percentage = "0",
@@ -55,7 +55,7 @@ export default function BountyDistributionItem({
             <span className="caption-medium text-white text-truncate">
               {formatNumberToNScale(amounts[0])}{" "}
 
-              <Symbol name={symbols[0]} className="ps-1 pt-1 caption-small text-uppercase text-primary"/>
+              <TokenSymbol name={symbols[0]} className="ps-1 pt-1 caption-small text-uppercase text-primary"/>
             </span>
             
           </div>
@@ -64,7 +64,7 @@ export default function BountyDistributionItem({
             <div className="d-flex justify-content-end">
               <span className="caption-small text-light-gray">
                 {amounts[1]}{" "}
-                <Symbol name={symbols[1]} className="ps-1 caption-small text-uppercase text-light-gray"/>
+                <TokenSymbol name={symbols[1]} className="ps-1 caption-small text-uppercase text-light-gray"/>
               </span>
             </div>
           )}

@@ -1,4 +1,5 @@
 import If from "components/If";
+import TokenSymbol from "components/token-symbol";
 
 interface ItemAmountProps {
   amount: string | number;
@@ -18,9 +19,10 @@ export default function ItemAmount({
       </span>
 
       <If condition={!!currency}>
-        <span className="caption-small font-weight-medium text-primary mr-1">
-          {currency}
-        </span>
+        <TokenSymbol
+            name={currency}
+            className="caption-small font-weight-medium text-primary mr-1"
+        />
       </If>
 
       <span className="caption-small font-weight-medium text-gray-500">

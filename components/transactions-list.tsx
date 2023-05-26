@@ -17,7 +17,7 @@ import {Transaction} from "interfaces/transaction";
 
 import { useTransactions } from "x-hooks/use-transactions";
 
-import Symbol from "./token-symbol";
+import TokenSymbol from "./token-symbol";
 
 interface TransactionListProps {
   onActiveTransactionChange: (transaction: Transaction) => void
@@ -55,7 +55,7 @@ export default function TransactionsList({onActiveTransactionChange}: Transactio
 
             {(+item.amount > 0 && (
               <span className="d-flex caption-medium text-gray text-uppercase">
-                {formatStringToCurrency(amount)} <Symbol name={item.currency} className="ms-1"/> 
+                {formatStringToCurrency(amount)} <TokenSymbol name={item.currency} className="ms-1"/> 
               </span>
             )) ||
               ""}
