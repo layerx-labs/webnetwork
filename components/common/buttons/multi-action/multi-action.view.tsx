@@ -35,21 +35,11 @@ export default function MultiActionButton({
     justify: "center"
   }
 
-  function onBtnClick() {
-    if (selectRef.current)
-      selectRef.current.click();
-  }
-
-  function executeAction(actionIndex) {
-    actions[actionIndex]?.onClick();
-  }
-
-  function onNativeChange(evt) {
-    executeAction(evt.target.value);
-  }
-
-  function onRSChange(newValue) {
-    executeAction(newValue.value);
+  function actionsToOptions(_actions) {
+    return _actions.map((action, index) => ({
+      value: index,
+      label: action.label
+    }));
   }
 
   function executeAction(actionIndex) {
