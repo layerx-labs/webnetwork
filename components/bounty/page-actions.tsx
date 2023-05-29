@@ -10,10 +10,11 @@ import EditIcon from "assets/icons/transactions/edit";
 import ConnectGithub from "components/connect-github";
 import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/contract-button";
-import NewProposal from "components/create-proposal";
 import CreatePullRequestModal from "components/create-pull-request-modal";
 import GithubLink from "components/github-link";
 import Modal from "components/modal";
+import MultiActionButton, { Action } from "components/multi-action-button";
+import ProposalModal from "components/proposal/create-proposal-modal";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
@@ -44,12 +45,13 @@ export default function PageActions({
                                       handleEditIssue,
                                       isEditIssue
                                     }: PageActionsProps) {
-  const {t} = useTranslation(["common", "pull-request", "bounty"]);
+  const {t} = useTranslation(["common", "pull-request", "bounty", "proposal"]);
 
   const { query: { repoId } } = useRouter();
 
   const [isExecuting, setIsExecuting] = useState(false);
   const [showPRModal, setShowPRModal] = useState(false);
+  const [showPRProposal, setShowPRProposal] = useState(false);
   const [showGHModal, setShowGHModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
 
@@ -83,6 +85,20 @@ export default function PageActions({
 
   const hasPullRequests =
     !!state.currentBounty?.data?.pullRequests?.filter(pullRequest => pullRequest?.status !== "canceled")?.length;
+
+  const isCreatePr = isWalletConnected && 
+    isGithubConnected &&
+    isBountyOpen &&
+    !isBountyInDraft &&
+    isWorkingOnBounty &&
+    isRepoForked
+  
+  const isCreateProposal =
+    isWalletConnected &&
+    isCouncilMember &&
+    isBountyOpen &&
+    isBountyReadyToPropose &&
+    hasPullRequests;
 
   async function handlePullrequest({
     title: prTitle,
@@ -236,12 +252,7 @@ export default function PageActions({
   }
 
   function renderCreatePullRequestButton() {
-    if (isWalletConnected && 
-        isGithubConnected &&
-        isBountyOpen &&
-        !isBountyInDraft &&
-        isWorkingOnBounty &&
-        isRepoForked)
+    if (isCreatePr)
       return (
         <ReadOnlyButtonWrapper>
           <ContractButton
@@ -270,12 +281,17 @@ export default function PageActions({
   }
 
   function renderCreateProposalButton() {
-    if (isWalletConnected && isCouncilMember && isBountyOpen && isBountyReadyToPropose && hasPullRequests)
+    if (isCreateProposal)
       return (
-        <NewProposal 
-          amountTotal={state.currentBounty?.data?.amount}
-          pullRequests={state.currentBounty?.data?.pullRequests}
-        />
+        <ReadOnlyButtonWrapper>
+          <ContractButton
+            className="read-only-button bounty-outline-button"
+            onClick={() => setShowPRModal(true)}
+            disabled={!state.currentUser?.login || !isWalletConnected}
+          >
+            <Translation ns="proposal" label="actions.create.title"/>
+          </ContractButton>
+        </ReadOnlyButtonWrapper>
       );
   }
 
@@ -292,6 +308,36 @@ export default function PageActions({
           </ContractButton>
         </ReadOnlyButtonWrapper>
       );
+  }
+
+  function renderTableAndMobileButton() {
+    const actions: Action[] = []
+
+    if (isCreatePr)
+      actions.push({
+        label: "Pull Request",
+        onClick: () => setShowPRModal(true),
+      });
+      
+    if (isCreateProposal)
+      actions.push({
+        label: "Proposal",
+        onClick: () => setShowPRProposal(true),
+      });
+
+    if (!isGithubConnected && isWalletConnected)
+      return <ConnectGithub size="lg" />;
+
+    if (isCreatePr || isCreateProposal)
+      return (
+          <MultiActionButton
+            label="Create"
+            className="col-12"
+            actions={actions}
+          />
+      );
+
+    return renderStartWorkingButton();
   }
 
   return (
@@ -325,11 +371,7 @@ export default function PageActions({
 
             </div>
             <div className="col-12 d-lg-none"> 
-              {!isGithubConnected && isWalletConnected ? (
-                <ConnectGithub size="lg" />
-              ) : (
-                renderStartWorkingButton()
-              )}
+              {renderTableAndMobileButton()}
             </div>
           </div>
         </div>
@@ -356,6 +398,13 @@ export default function PageActions({
             transactionalAddress={state.currentBounty?.data?.transactionalToken?.address}
             bountyId={state.currentBounty?.data?.contractId}
             handleClose={() => setShowUpdateAmount(false)}
+          />
+
+          <ProposalModal 
+            amountTotal={state.currentBounty?.data?.amount}
+            pullRequests={state.currentBounty?.data?.pullRequests}
+            show={showPRProposal}
+            onCloseClick={() => setShowPRProposal(false)}
           />
         </>
       </BountyEffectsProvider>
