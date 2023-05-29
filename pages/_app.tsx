@@ -11,7 +11,7 @@ import {GoogleAnalytics} from "nextjs-google-analytics";
 import ConsentCookie from "components/consent-cokie";
 import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import Loading from "components/loading";
-import MainNav from "components/main-nav";
+import NavBar from "components/navigation/navbar/controller";
 import NoMetamaskModal from "components/no-metamask-modal";
 import ReadOnlyContainer from "components/read-only-container";
 import ReAuthorizeGithubModal from "components/reauthorize-github-modal";
@@ -42,7 +42,7 @@ function App({ Component, pageProps: { session, currentIssue, ...pageProps } }: 
             <NoMetamaskModal />
             <InvalidAccountWalletModal/>
             <ReAuthorizeGithubModal />
-            <MainNav />
+            <NavBar />
             <div id="root-container">
               <Component {...pageProps} />
             </div>
