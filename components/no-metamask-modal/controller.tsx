@@ -5,7 +5,7 @@ import getConfig from "next/config";
 import { useRouter } from "next/router";
 
 import Button from "components/button";
-import MetamaskModalTemplate from "components/no-metamask-modal/modal-template";
+import NoMetamaskModalView from "components/no-metamask-modal/view";
 
 import { useAppState } from "contexts/app-state";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
@@ -71,7 +71,7 @@ export default function NoMetamaskModal() {
   }
 
   return (
-    <MetamaskModalTemplate
+    <NoMetamaskModalView
       show={web3Dialog}
       onCloseClick={handleCloseModal()}
       {...modalProps[isMobile.toString()]}

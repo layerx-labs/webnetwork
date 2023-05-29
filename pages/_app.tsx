@@ -12,7 +12,7 @@ import ConsentCookie from "components/consent-cokie";
 import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import Loading from "components/loading";
 import NavBar from "components/navigation/navbar/controller";
-import NoMetamaskModal from "components/no-metamask-modal";
+import NoMetamaskModal from "components/no-metamask-modal/controller";
 import ReadOnlyContainer from "components/read-only-container";
 import ReAuthorizeGithubModal from "components/reauthorize-github-modal";
 import Seo from "components/seo";

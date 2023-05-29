@@ -9,21 +9,21 @@ import Modal from "components/modal";
 
 import { Modal as ModalProps } from "types/modal";
 
-interface MetamaskModalTemplateProps {
+interface NoMetamaskModalViewProps {
   title: string;
   warning?: string;
   description: string;
   actions?: ReactElement[];
 }
 
-export default function MetamaskModalTemplate({
+export default function NoMetamaskModalView({
   show,
   onCloseClick,
   title,
   actions,
   warning,
   description,
-}: Partial<ModalProps> & MetamaskModalTemplateProps) {
+}: Partial<ModalProps> & NoMetamaskModalViewProps) {
   function ModalFooter() {
     const justify = actions?.length ? "around" : "center";
 
