@@ -6,7 +6,7 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { useNetwork } from "x-hooks/use-network";
 
-export default function NavLinks() {
+export default function NavBarLinks() {
   const { pathname } = useRouter();
   const { t } = useTranslation("common");
 

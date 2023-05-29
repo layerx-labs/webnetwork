@@ -3,9 +3,9 @@ import { UrlObject } from "url";
 
 import ClosedNetworkAlert from "components/closed-network-alert";
 import BrandLogo from "components/common/brand-logo/view";
-import NavActions from "components/main-nav/nav-actions";
-import NavLinks from "components/main-nav/nav-links";
 import ChainSelector from "components/navigation/chain-selector/controller";
+import NavBarActions from "components/navigation/navbar/actions/view";
+import NavBarLinks from "components/navigation/navbar/links/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface NavBarViewProps {
@@ -52,10 +52,10 @@ export default function NavBarView({
               </ResponsiveWrapper>
             </div>
 
-            <NavLinks />
+            <NavBarLinks />
           </div>
 
-          <NavActions />
+          <NavBarActions />
         </div>
       </div>
     </div>

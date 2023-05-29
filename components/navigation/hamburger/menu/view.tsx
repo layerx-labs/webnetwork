@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
@@ -8,57 +7,43 @@ import ArrowRight from "assets/icons/arrow-right";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
+import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
+import HelpButton from "components/common/buttons/help/view";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
-import ChainSelector from "components/main-nav/chain-selector";
-import DisconnectWalletButton from "components/main-nav/disconnect-wallet-button";
-import HelpButton from "components/main-nav/help-button";
+import ChainSelector from "components/navigation/chain-selector/controller";
 import ProfileLinks from "components/profile/profile-links";
-
-import { useAppState } from "contexts/app-state";
 
 import { NAVIGATION_LINKS } from "helpers/navigation-links";
 import { truncateAddress } from "helpers/truncate-address";
 
-import { useAuthentication } from "x-hooks/use-authentication";
-
-interface MenuDrawerProps {
+interface HamburgerMenuViewProps {
   show: boolean;
-  onHide: () => void;
+  userLogin: string;
+  userAddress: string;
+  isConnected: boolean;
+  isProfileLinksVisible: boolean;
+  onDisconnect: () => void;
+  onShowProfileLinks: () => void;
+  onHideProfileLinks: () => void;
+  onHideHamburger: () => void;
 }
 
-export default function MenuDrawer({
+export default function HamburgerMenuView({
   show,
-  onHide
-}: MenuDrawerProps) {
+  userLogin,
+  userAddress,
+  isConnected,
+  isProfileLinksVisible,
+  onDisconnect,
+  onShowProfileLinks,
+  onHideProfileLinks,
+  onHideHamburger,
+}: HamburgerMenuViewProps) {
   const { t } = useTranslation("common");
-  const [isProfileLinksVisible, setIsProfileLinksVisible] = useState(false);
-  
-  const { state } = useAppState();
-  const { disconnectWallet } = useAuthentication();
 
-  const displayName = state.currentUser?.login || truncateAddress(state.currentUser?.walletAddress);
-  const isConnected = !!state.currentUser?.walletAddress;
-
-  function handleDisconnect() {
-    setIsProfileLinksVisible(false);
-    onHide();
-    disconnectWallet();
-  }
-
-  function handleShowProfileLinks() {
-    setIsProfileLinksVisible(true);
-  }
-
-  function handleHideProfileLinks() {
-    setIsProfileLinksVisible(false);
-  }
-
-  function handleHideDrawer() {
-    handleHideProfileLinks();
-    onHide();
-  }
+  const displayName = userLogin || truncateAddress(userAddress);
 
   function GlobalLink({ label, href }) {
     return(
@@ -68,7 +53,7 @@ export default function MenuDrawer({
         className="caption-medium font-weight-medium text-white text-capitalize max-width-content m-0 p-0 mt-2"
         transparent
         key={label}
-        onClick={handleHideDrawer}
+        onClick={onHideHamburger}
       />
     );
   }
@@ -100,7 +85,7 @@ export default function MenuDrawer({
     <Offcanvas 
       className="bg-gray-950"
       show={show}
-      onHide={handleHideDrawer}
+      onHide={onHideHamburger}
       placement="end"
     >
         <Offcanvas.Header 
@@ -110,7 +95,7 @@ export default function MenuDrawer({
           <Offcanvas.Title>
             <If condition={isProfileLinksVisible}>
               <MyProfileBtn
-                onClick={handleHideProfileLinks}
+                onClick={onHideProfileLinks}
                 isBack
               />
             </If>
@@ -124,15 +109,15 @@ export default function MenuDrawer({
                 <div className="row border-bottom border-gray-800 pb-3 mx-0">
                   <div className="col-auto">
                     <AvatarOrIdenticon
-                      user={state.currentUser?.login}
-                      address={state.currentUser?.walletAddress}
+                      user={userLogin}
+                      address={userAddress}
                     />
                   </div>
 
                   <div className="col">
                     <span>{displayName}</span>
                     <MyProfileBtn
-                      onClick={handleShowProfileLinks}
+                      onClick={onShowProfileLinks}
                     />
                   </div>
                 </div>
@@ -146,13 +131,13 @@ export default function MenuDrawer({
             </If>
 
             <If condition={isProfileLinksVisible}>
-              <ProfileLinks onClick={handleHideDrawer} />
+              <ProfileLinks onClick={onHideHamburger} />
             </If>
 
 
             <div className={`col ${ isConnected ? "border-top border-gray-800" : ""}`}>
               <If condition={isConnected}>
-                <DisconnectWalletButton onClick={handleDisconnect} />
+                <DisconnectWalletButton onClick={onDisconnect} />
               </If>
             </div>
 

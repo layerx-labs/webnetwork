@@ -1,12 +1,12 @@
+import HelpButton from "components/common/buttons/help/view";
 import ConnectWalletButton from "components/connect-wallet-button";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
-import HelpButton from "components/main-nav/help-button";
-import MobileMenu from "components/mobile-menu";
 import NavAvatar from "components/nav-avatar";
+import HamburgerButton from "components/navigation/hamburger/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
-export default function NavActions() {
+export default function NavBarActions() {
   return(
     <>
       <div className="d-flex flex-row align-items-center gap-3">
@@ -45,7 +45,7 @@ export default function NavActions() {
             xs={true}
             xl={false}
           >
-            <MobileMenu />
+            <HamburgerButton />
           </ResponsiveWrapper>
       </div>
     </>

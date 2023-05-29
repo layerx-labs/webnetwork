@@ -3,7 +3,7 @@ import { useState } from "react";
 import HelpIcon from "assets/icons/help-icon";
 
 import Button from "components/button";
-import HelpModal from "components/help-modal";
+import HelpModal from "components/common/modals/help/view";
 
 export default function HelpButton() {
   const [showHelp, setShowHelp] = useState(false);

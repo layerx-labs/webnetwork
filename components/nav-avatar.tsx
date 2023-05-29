@@ -7,6 +7,7 @@ import ExternalLinkIcon from "assets/icons/external-link-icon";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
+import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
 
 import {useAppState} from "contexts/app-state";
 
@@ -17,8 +18,6 @@ import { ProfilePages } from "interfaces/utils";
 
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useNetwork} from "x-hooks/use-network";
-
-import DisconnectWalletButton from "./main-nav/disconnect-wallet-button";
 
 export default function NavAvatar() {
   const { t } = useTranslation("common");
