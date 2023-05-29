@@ -1,7 +1,6 @@
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import Avatar from "components/avatar";
 import BountySettings from "components/bounty-hero/bounty-settings";
@@ -10,38 +9,36 @@ import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
 import If from "components/If";
 import PriceConversor from "components/price-conversor";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { useAppState } from "contexts/app-state";
-
-import { getIssueState } from "helpers/handleTypeIssue";
 import { truncateAddress } from "helpers/truncate-address";
 
-export default function BountyHero({
-  handleEditIssue,
-  isEditIssue,
-}: {
+import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
+
+interface BountyHeroProps {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
-}) {
-  const router = useRouter();
+  bounty: IssueBigNumberData;
+  network: string | string[];
+  currentState: IssueState;
+}
+
+export default function BountyHeroView({
+  handleEditIssue,
+  isEditIssue,
+  bounty,
+  network,
+  currentState
+}: BountyHeroProps) {
   const { t } = useTranslation(["bounty", "common"]);
-
-  const { state } = useAppState();
-
-  const { network } = router.query;
-  
-  const currentState = getIssueState({
-    state: state.currentBounty?.data?.state,
-    amount: state.currentBounty?.data?.amount,
-    fundingAmount: state.currentBounty?.data?.fundingAmount,
-  });
 
   function renderPriceConversor() {
     return (
       <PriceConversor
-        currentValue={state.currentBounty?.data?.amount}
-        currency={state.currentBounty?.data?.transactionalToken?.symbol || t("common:misc.token")}
+        currentValue={bounty.amount}
+        currency={
+          bounty.transactionalToken?.symbol ||
+          t("common:misc.token")
+        }
       />
     );
   }
@@ -57,7 +54,7 @@ export default function BountyHero({
                   {network} /
                 </span>
                 <span className="text-break">
-                  {state.currentBounty?.data?.githubId}
+                  {bounty.githubId}
                 </span>
               </div>
               <div className="">
@@ -76,7 +73,7 @@ export default function BountyHero({
                   <div className="d-flex flex-column justify-content-center">
                     <BountyStatusInfo
                       issueState={currentState}
-                      fundedAmount={state.currentBounty?.data?.fundedAmount}
+                      fundedAmount={bounty.fundedAmount}
                     />
                   </div>
                   <span className="ms-1 text-white">
@@ -85,7 +82,7 @@ export default function BountyHero({
                   </span>
                 </div>
 
-                {!state.currentBounty?.data?.isKyc ? (
+                {bounty.isKyc ? (
                   <OverlayTrigger
                     key="bottom-githubPath"
                     placement="bottom"
@@ -106,68 +103,76 @@ export default function BountyHero({
               </div>
               <div>{renderPriceConversor()}</div>
             </div>
-            <h5 className="mt-4 break-title">
-              {state.currentBounty?.data?.title}
+            <h5 className="mt-3 break-title">
+              {bounty.title}
             </h5>
-            <If condition={!!state.currentBounty?.data?.tags?.length}>
+            <If condition={!!bounty.tags?.length}>
               <div className="mt-3 border-bottom border-gray-850 pb-4">
-                <BountyTags tags={state.currentBounty?.data?.tags} />
+                <BountyTags tags={bounty.tags} />
               </div>
             </If>
-            
-            <ResponsiveWrapper xs={false} lg={true}>
-              <div className="row mt-3 align-items-center justify-content-md-start gap-20">
-                <If condition={!!state.currentBounty?.data?.repository}>
-                  <BountyItemLabel label={t("common:misc.repository")} className="col-auto">
-                    <span className={`text-gray me-2 text-truncate`}>
-                      {
-                        state.currentBounty?.data?.repository?.githubPath.split("/")?.[0]
-                      }
-                    </span>
-                  </BountyItemLabel>
-                </If>
-
-                <BountyItemLabel label={t("common:misc.branch")} className="col-auto">
+            <div className="my-3 pt-1 flex-wrap d-inline-flex align-items-center justify-content-md-start gap-20">
+              <If condition={!!bounty.repository}>
+                <BountyItemLabel label={t("common:misc.repository")}>
                   <span className={`text-gray me-2 text-truncate`}>
-                    {state.currentBounty?.data?.branch}
+                    {
+                      bounty.repository?.githubPath.split("/")?.[0]
+                    }
                   </span>
                 </BountyItemLabel>
+              </If>
+              <BountyItemLabel label={t("common:misc.branch")}>
+                <span className={`text-gray me-2 text-truncate`}>
+                  {bounty.branch}
+                </span>
+              </BountyItemLabel>
 
-                <BountyItemLabel label={t("info.working")} className="col-auto">
-                  <span className={`text-gray me-2 text-truncate`}>
-                    {state.currentBounty?.data?.working?.length}
-                  </span>
-                </BountyItemLabel>
+              <BountyItemLabel label={t("info.working")}>
+                <span className={`text-gray me-2 text-truncate`}>
+                  {bounty.working?.length}
+                </span>
+              </BountyItemLabel>
 
-                <BountyItemLabel label={t("common:misc.owner")} className="col-auto">
+              <div className="d-flex align-items-center">
+                <BountyItemLabel label={t("common:misc.owner")}>
                   <>
                     <div className="d-flex flex-column justify-content-center">
                       <Avatar
                         size="xsm"
                         className="me-2"
-                        userLogin={state.currentBounty?.data?.creatorGithub}
+                        userLogin={bounty.creatorGithub}
                       />{" "}
                     </div>
                     <span>
-                      {state.currentBounty?.data?.creatorGithub
-                        ? state.currentBounty?.data?.creatorGithub
-                        : truncateAddress(state.currentBounty?.data?.creatorAddress)}
+                      {bounty.creatorGithub
+                        ? bounty.creatorGithub
+                        : truncateAddress(bounty.creatorAddress)}
                     </span>
                   </>
                 </BountyItemLabel>
 
-                <If condition={!!state.currentBounty?.data?.createdAt}>
+                <If condition={!!bounty?.createdAt}>
                   <BountyItemLabel
                     label={t("common:misc.opened-on")}
                     className="col-auto"
                   >
                     <span className="text-gray text-truncate">
-                      {state.currentBounty?.data?.createdAt?.toLocaleDateString("PT")}
+                      {bounty?.createdAt?.toLocaleDateString("PT")}
                     </span>
                   </BountyItemLabel>
                 </If>
               </div>
-            </ResponsiveWrapper>
+              <If condition={!!bounty.createdAt}>
+                <BountyItemLabel
+                  label={t("common:misc.opened-on")}
+                  className=".d-md-none .d-lg-block"
+                >
+                  <span className="text-gray text-truncate">
+                    {bounty.createdAt?.toLocaleDateString("PT")}
+                  </span>
+                </BountyItemLabel>
+              </If>
+            </div>
           </div>
         </div>
       </div>
