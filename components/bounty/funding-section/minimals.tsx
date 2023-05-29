@@ -42,21 +42,22 @@ export const Amount = ({
     }
   </span>;
 
-export const RowWithTwoColumns = ({ col1, col2 = undefined, filler = false, className = "" }) => 
+export const RowWithTwoColumns = ({
+  col1,
+  col2 = undefined,
+  filler = false,
+  className = "",
+  classNameCol2 = undefined,
+}) => (
   <RowCenterBetween className={className}>
-    <ColAuto>
-      {col1}
-    </ColAuto>
+    <ColAuto>{col1}</ColAuto>
 
-    { filler &&
+    {filler && (
       <ColAuto className="flex-grow-1">
         <div className="border-bottom-dashed border-disabled"></div>
       </ColAuto>
-    }
+    )}
 
-    { col2 && 
-      <ColAuto>
-        {col2}
-      </ColAuto>
-    }
-  </RowCenterBetween>;
+    {col2 && <ColAuto className={classNameCol2}>{col2}</ColAuto>}
+  </RowCenterBetween>
+);
