@@ -14,7 +14,13 @@ import WalletIcon from "assets/icons/wallet-icon";
 
 import { useNetwork } from "x-hooks/use-network";
 
-export default function ProfileLinks() {
+interface ProfileLinksProps {
+  onClick?: () => void;
+}
+
+export default function ProfileLinks({
+  onClick
+}: ProfileLinksProps) {
   const { query, asPath } = useRouter();
   const { t } = useTranslation("common");
 
@@ -36,6 +42,7 @@ export default function ProfileLinks() {
             "text-gray-150 border-radius-1 p-2 text-white-hover",
             isActive(href) ? "profile-side-link-active" : ""
           ])}
+          onClick={onClick}
         >
           {icon}
           <span>{getTranslation(label)}</span>
