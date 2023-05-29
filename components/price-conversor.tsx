@@ -32,7 +32,7 @@ export default function PriceConversor({
       <span className="text-white caption-large">
         {formatStringToCurrency(currentValue?.toFixed() || "0")}
       </span>
-      <span className="text-primary ms-2 caption-medium">{currency}</span>
+      <span className="text-white-30 ms-2">{currency}</span>
     </div>
     <PriceConversorModal value={currentValue} show={isVisible} onClose={() => setIsVisible(false)}/>
     </>
