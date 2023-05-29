@@ -9,7 +9,7 @@ import ArrowRight from "assets/icons/arrow-right";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
-import CreateNetworkBountyButton from "components/create-network-bounty-button/create-network-bounty-button.controller";
+import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
 import ChainSelector from "components/main-nav/chain-selector";

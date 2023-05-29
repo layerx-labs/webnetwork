@@ -1,5 +1,5 @@
 import ConnectWalletButton from "components/connect-wallet-button";
-import CreateNetworkBountyButton from "components/create-network-bounty-button/create-network-bounty-button.controller";
+import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import HelpButton from "components/main-nav/help-button";
 import MobileMenu from "components/mobile-menu";
 import NavAvatar from "components/nav-avatar";
