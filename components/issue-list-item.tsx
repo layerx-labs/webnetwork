@@ -149,7 +149,7 @@ export default function IssueListItem({
     const id = issue?.githubId;
 
     return (
-      <span className={`${(tag && uppercase) && 'text-uppercase'} text-gray me-2`}>
+      <span className={`${(tag && uppercase) && 'text-uppercase' || ""} text-gray me-2`}>
         {tag ? `${tag}-${id}` : `#${id}`}
       </span>
     );
@@ -223,7 +223,7 @@ export default function IssueListItem({
           <div className="issue-body text-white-40 text-break text-truncate mb-3" >
             {issue?.body}
           </div>
-          <div className={!issue?.isFundingRequest && 'mt-4'}>
+          <div className={!issue?.isFundingRequest && 'mt-4' || ""}>
             <IssueAmountInfo issue={issue} size={size} />
           </div>
         </>
