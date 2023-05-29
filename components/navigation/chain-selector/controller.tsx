@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import SelectChainDropdown from "components/select-chain-dropdown";
+import ChainSelectorView from "components/navigation/chain-selector/view";
 
 import { useAppState } from "contexts/app-state";
 
@@ -44,13 +44,10 @@ export default function ChainSelector() {
     }), newAsPath);
   }
 
-  if (!isOnNetwork) return <></>;
-
   return(
-    <SelectChainDropdown
-      onSelect={(chain) => handleNetworkSelected(chain)}
+    <ChainSelectorView
+      onSelect={handleNetworkSelected}
       isOnNetwork={isOnNetwork}
-      className="select-network-dropdown"
     />
   );
 }

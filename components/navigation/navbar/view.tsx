@@ -2,10 +2,10 @@ import clsx from "clsx";
 import { UrlObject } from "url";
 
 import ClosedNetworkAlert from "components/closed-network-alert";
-import BrandLogo from "components/main-nav/brand-logo";
-import ChainSelector from "components/main-nav/chain-selector";
+import BrandLogo from "components/common/brand-logo/view";
 import NavActions from "components/main-nav/nav-actions";
 import NavLinks from "components/main-nav/nav-links";
+import ChainSelector from "components/navigation/chain-selector/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface NavBarViewProps {
