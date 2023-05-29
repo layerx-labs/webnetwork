@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
 
 import BountyHero from "components/bounty-hero";
+import BountyHeroController from "components/bounty-hero/controller";
 import FundingSection from "components/bounty/funding-section";
 import IssueBody from "components/bounty/issue-body";
 import IssueComments from "components/bounty/issue-comments";
@@ -97,7 +98,7 @@ export default function PageIssue() {
 
   return (
     <BountyEffectsProvider>
-      <BountyHero 
+      <BountyHeroController 
         handleEditIssue={handleEditIssue}
         isEditIssue={isEditIssue}
       />
