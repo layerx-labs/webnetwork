@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import CreateNetworkBountyButtonView from "components/create-network-bounty-button/create-network-bounty-button.view";
+import CreateNetworkBountyButtonView from "components/create-network-bounty-button/view";
 
 export default function CreateNetworkBountyButton() {
   const { t } = useTranslation("common");
