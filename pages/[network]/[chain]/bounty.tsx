@@ -4,8 +4,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
 
-import BountyHero from "components/bounty-hero";
-import BountyHeroController from "components/bounty-hero/controller";
+import BountyHeroController from "components/bounty/bounty-hero/controller";
 import FundingSection from "components/bounty/funding-section";
 import IssueBody from "components/bounty/issue-body";
 import IssueComments from "components/bounty/issue-comments";
