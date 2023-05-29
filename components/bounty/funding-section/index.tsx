@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
+import { isMobile, isTablet } from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -13,7 +14,6 @@ import RetractOrWithdrawModal from "components/bounty/funding-section/retract-or
 import Collapsable from "components/collapsable";
 import ConnectWalletButton from "components/connect-wallet-button";
 import ContractButton from "components/contract-button";
-import CustomContainer from "components/custom-container";
 
 import {useAppState} from "contexts/app-state";
 
@@ -67,7 +67,7 @@ export default function FundingSection() {
   if (isBountyFunded && !walletFunds?.length) return <></>;
 
   return(
-    <CustomContainer className="mt-3">
+    <div className="container mt-3">
       { (!isConnected && showFundModal) && <ConnectWalletButton asModal={true} />}
 
       <FundModal 
@@ -82,14 +82,15 @@ export default function FundingSection() {
       />
 
       <RowWithTwoColumns
-        col1={<h4 className="family-Regular">{t("funding:title")}</h4>}
+        col1={<h4 className="family-Regular d-none d-lg-block">{t("funding:title")}</h4>}
         col2={isBountyFunded || isCanceled ? <></> : 
-          <ContractButton onClick={handleShowFundModal}>
+          <ContractButton onClick={handleShowFundModal} className="col-12">
             {t("funding:actions.fund-bounty")}
           </ContractButton>}
+        classNameCol2={(isTablet || isMobile) && 'col-12'}
       />
       
-      <Row className="border-radius-8 bg-shadow mt-3 mx-0 p-2 border border-disabled">
+      <Row className="border-radius-8 bg-gray-850 mt-3 mx-0 p-2">
         <Col className="d-grid gap-2">
           <RowWithTwoColumns
             col1={<CaptionMedium text={t("funding:current-funding")} />}
@@ -220,6 +221,6 @@ export default function FundingSection() {
           }
         </Col>
       </Row>
-    </CustomContainer>
+    </div>
   );
 }
