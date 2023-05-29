@@ -5,13 +5,14 @@ import { useTranslation } from "next-i18next";
 
 import { PROGRAMMING_LANGUAGES } from "assets/bounty-labels";
 
-import BountyTags from "components/bounty/bounty-tags";
 import { ContextualSpan } from "components/contextual-span";
 import ReactSelect from "components/react-select";
 
 import { useAppState } from "contexts/app-state";
 
 import { MAX_TAGS } from "helpers/constants";
+
+import BountyTagsView from "./bounty-tags/view";
 
 interface IssueEditTagProps {
   isEdit: boolean;
@@ -50,7 +51,7 @@ export default function IssueEditTag({
         <Row className="justify-content-center p-0 m-0 form-group">
           {preview ? (
             <Col className="col-12">
-              <BountyTags tags={selectedTags} />
+              <BountyTagsView tags={selectedTags} />
             </Col>
           ): (
             <>

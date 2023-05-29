@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import Avatar from "components/avatar";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
-import BountyTags from "components/bounty/bounty-tags";
 import If from "components/If";
 import PriceConversor from "components/price-conversor";
 
@@ -13,6 +12,7 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
 
+import BountyTagsView from "../bounty-tags/view";
 import BountySettingsController from "./bounty-settings/controller";
 
 
@@ -110,7 +110,7 @@ export default function BountyHeroView({
             </h5>
             <If condition={!!bounty?.tags?.length}>
               <div className="mt-3 border-bottom border-gray-850 pb-4">
-                <BountyTags tags={bounty?.tags} />
+                <BountyTagsView tags={bounty?.tags} />
               </div>
             </If>
             <div className="my-3 pt-1 flex-wrap d-inline-flex align-items-center justify-content-md-start gap-20">

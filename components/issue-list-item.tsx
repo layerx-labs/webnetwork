@@ -13,7 +13,6 @@ import TrashIcon from "assets/icons/trash-icon";
 import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
-import BountyTags from "components/bounty/bounty-tags";
 import IssueAmountInfo from "components/bounty/issue-amount-info";
 import CardItem from "components/card-item";
 import ChainBadge from "components/chain-badge";
@@ -35,6 +34,9 @@ import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
+
+import BountyTagsView from "./bounty/bounty-tags/view";
+import {isMobile} from "react-device-detect";
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -344,7 +346,7 @@ export default function IssueListItem({
           
           <ResponsiveWrapper xs={false} xl={true}>
             <div className="d-flex justify-content-md-start mb-3">
-              <BountyTags tags={issue?.tags} />
+              <BountyTagsView tags={issue?.tags} />
 
               <If condition={issue?.isKyc}>
                 <Badge
@@ -401,19 +403,16 @@ export default function IssueListItem({
                 </div>
               </div>
             </ResponsiveWrapper>
-
-            <ResponsiveWrapper xs={true} xl={false}>
-              <div className="row w-100 justify-content-between">
-                <div className="col">
-                  <BountyTags tags={[issue?.network?.name]} />
-                </div>
-                
-                <div className="col-auto px-0">
-                  <IssueAmountInfo issue={issue} size={size} />
-                </div>
-              </div>
-            </ResponsiveWrapper>
+            <div
+              className={`d-flex col-md-2 mt-3 ${
+                isMobile ? "justify-content-between" : "justify-content-end"
+              }`}
+            >
+              {isMobile && <BountyTagsView tags={[issue?.network?.name]} />}
+              <IssueAmountInfo issue={issue} size={size} />
+            </div>
           </div>
+
         </div>
       </div>
     </CardItem>

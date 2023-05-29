@@ -4,7 +4,7 @@ interface BountyTagsProps {
   tags: string[];
 }
 
-export default function BountyTags({
+export default function BountyTagsView({
   tags
 }: BountyTagsProps) {
   if (!tags) return <></>;
