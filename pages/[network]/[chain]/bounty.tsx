@@ -8,9 +8,9 @@ import BountyHero from "components/bounty-hero";
 import FundingSection from "components/bounty/funding-section";
 import IssueBody from "components/bounty/issue-body";
 import IssueComments from "components/bounty/issue-comments";
+import PageActions from "components/bounty/page-actions";
 import TabSections from "components/bounty/tabs-sections";
 import If from "components/If";
-import PageActions from "components/page-actions";
 
 import {useAppState} from "contexts/app-state";
 import {BountyEffectsProvider} from "contexts/bounty-effects";
