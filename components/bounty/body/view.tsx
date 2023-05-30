@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 
 import BountyDescriptionController from "components/bounty/description/controller";
-import IssueEditTag from "components/bounty/edit-tag/issue-edit-tag";
+import BountyEditTagController from "components/bounty/edit-tag/controller";
 import IssueProposalProgressBar from "components/bounty/proposal-progress-bar/issue-proposal-progress-bar";
 import Button from "components/button";
 import { IFilesProps } from "components/drag-and-drop";
@@ -59,7 +59,7 @@ export default function BountyBodyView({
                   </span>
                 </div>
               )}
-              <IssueEditTag
+              <BountyEditTagController
                 isEdit={isEditIssue}
                 selectedTags={selectedTags}
                 setSelectedTags={handleSelectedTags}
