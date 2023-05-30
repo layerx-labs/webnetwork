@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import FundingProgress from "components/bounty/funding-section/funding-progress/funding-progress";
+import FundingProgressController from "components/bounty/funding-section/funding-progress/controller";
 import {Amount, CaptionMedium, RowWithTwoColumns} from "components/bounty/funding-section/minimals/minimals";
 import Button from "components/button";
 import ContractButton from "components/contract-button";
@@ -62,7 +62,7 @@ export default function FundModalView({
       onCloseDisabled={isExecuting}
     >
       <div className="mt-2 px-2 d-grid gap-4">
-        <FundingProgress
+        <FundingProgressController
           fundedAmount={bounty?.fundedAmount?.toFixed()}
           fundingAmount={bounty?.fundingAmount?.toFixed()}
           fundingTokenSymbol={transactionalToken?.symbol}
