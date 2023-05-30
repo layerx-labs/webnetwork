@@ -3,7 +3,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-export default function TokenSymbol({
+export default function TokenSymbolView({
   name,
   className,
   style,

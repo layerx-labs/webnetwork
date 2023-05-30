@@ -9,7 +9,7 @@ import InfoTooltip from "components/info-tooltip";
 
 import { InputNumber as InputNumberProps } from "types/input-number";
 
-import TokenSymbol from "./token-symbol";
+import TokenSymbolView from "./common/token-symbol/view";
 
 
 export default function InputNumber({
@@ -102,7 +102,7 @@ export default function InputNumber({
                 ...errorStyle
                             })}
           >
-            <TokenSymbol name={symbol} />
+            <TokenSymbolView name={symbol} />
           </div>
         )}
         {setMaxValue && (

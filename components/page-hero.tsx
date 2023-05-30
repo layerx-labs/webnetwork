@@ -10,7 +10,7 @@ import {highlightText} from "helpers/string";
 
 import {Currency} from "interfaces/currency";
 
-import TokenSymbol from "./token-symbol";
+import TokenSymbolView from "./common/token-symbol/view";
 
 export interface InfosHero {
   value: number | string;
@@ -37,7 +37,7 @@ function InfoComponent(info: InfosHero) {
             {formatNumberToNScale(info.value)}
           </span>
           
-          <TokenSymbol name={info.currency} className="caption-medium text-white-70 ml-1 mt-1" />
+          <TokenSymbolView name={info.currency} className="caption-medium text-white-70 ml-1 mt-1" />
 
           { info.hasConvertedTokens && 
             <Button transparent className="p-0 ml-1" onClick={() => info?.setListedModalVisibility?.(true)}>

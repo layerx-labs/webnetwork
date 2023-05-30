@@ -14,7 +14,7 @@ import {formatStringToCurrency} from "helpers/formatNumber";
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
-import TokenSymbol from "./token-symbol";
+import TokenSymbolView from "./common/token-symbol/view";
 
 interface DelegationsProps {
   type?: "toMe" | "toOthers";
@@ -99,7 +99,7 @@ export default function Delegations({
             {formatStringToCurrency(renderInfo[type].total)}
           </span>
 
-          <TokenSymbol name={votesSymbol} {...getTextColorProps()} />
+          <TokenSymbolView name={votesSymbol} {...getTextColorProps()} />
 
           <InfoTooltip
             description={renderInfo[type].description}
