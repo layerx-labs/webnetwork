@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import { isMobile } from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -17,9 +16,11 @@ import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
 import CardItem from "components/card-item";
 import ChainBadge from "components/chain-badge";
+import If from "components/If";
 import IssueAmountInfo from "components/issue-amount-info";
 import Modal from "components/modal";
 import { FlexColumn } from "components/profile/wallet-balance";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
 
 import {useAppState} from "contexts/app-state";
@@ -33,12 +34,7 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
-
-import If from "./If";
-import ResponsiveWrapper from "./responsive-wrapper";
-
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -64,7 +60,6 @@ export default function IssueListItem({
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
   
   const { updateVisibleBounty } = useApi();
-  const { isMobileView } = useBreakPoint();
   const { getURLWithNetwork } = useNetwork();
   const { signMessage } = useAuthentication();
   const { handleHardCancelBounty } = useBepro();
@@ -186,17 +181,18 @@ export default function IssueListItem({
       },
     };
 
-    if (["open", "ready", "proposal", "funding"].includes(state?.toLowerCase())) {
-      const isFunding = state?.toLowerCase() === 'funding'
-      const { value, translation } = types[state?.toLowerCase()];
+    const lowerState = state?.toLowerCase();
+
+    if (["open", "ready", "proposal", "funding"].includes(lowerState)) {
+      const isFunding = lowerState === 'funding';
+      const { value, translation } = types[lowerState];
+
       return (
-        <div className="hide-bounty-item-lg">
-          <BountyItemLabel label={translation} key={issue.githubId}>
-            <span className={`${ isFunding ? 'text-light-warning': "text-gray"}`}>
-              {value || 0}{isFunding && '%'}
-            </span>
-          </BountyItemLabel>
-        </div>
+        <BountyItemLabel label={translation} key={issue.githubId} className="col-auto">
+          <span className={`${ isFunding ? 'text-light-warning': "text-gray"}`}>
+            {value || 0}{isFunding && '%'}
+          </span>
+        </BountyItemLabel>
       );
     } else return <></>;
   }
@@ -306,8 +302,8 @@ export default function IssueListItem({
 
   return (
     <CardItem onClick={handleClickCard} key="default-card">
-      <div className="row align-center">
-        <div className="col-md-12 mb-3 mb-md-0">
+      <div className="row align-items-center">
+        <div className="col-md-12 mb-3">
           <div className="d-flex">
             <div className="d-flex col-md-10 text-truncate">
               <div className="me-2">
@@ -360,55 +356,63 @@ export default function IssueListItem({
             </div>
           </ResponsiveWrapper>
 
-          <div
-            className="d-flex border-top-xl border-gray-850"
-          >
-            {!isMobile && (
-              <div className="col-md-10 mt-3 
-              d-flex align-center flex-wrap align-items-center justify-content-md-start gap-20">
-                <div className="d-flex">
-                  <BountyItemLabel label="ID">
-                    <IssueTag />
-                  </BountyItemLabel>
-                  <div className="d-sm-none d-md-block d-none d-sm-block">
-                    <BountyItemLabel label="Repository">
-                      <OverlayTrigger
-                        key="bottom-githubPath"
-                        placement="bottom"
-                        overlay={
-                          <Tooltip id={"tooltip-bottom"}>
-                            {issue?.repository?.githubPath}
-                          </Tooltip>
-                        }
-                      >
-                        <span className={`text-gray me-2 text-truncate`}>
-                          {issue?.repository?.githubPath.split("/")?.[1]}
-                        </span>
-                      </OverlayTrigger>
-                    </BountyItemLabel>
-                  </div>
+          <ResponsiveWrapper xs={false} xl={true}>
+            <div className="w-100 border-top border-gray-850"></div>
+          </ResponsiveWrapper>
+
+          <div className="row mt-3 align-items-center">
+            <ResponsiveWrapper xs={false} xl={true}>
+              <div className="row w-100 align-items-center justify-content-md-start">
+                <BountyItemLabel label="ID" className="col-auto">
+                  <IssueTag />
+                </BountyItemLabel>
+
+                <BountyItemLabel label="Repository" className="col-auto">
+                  <OverlayTrigger
+                    key="bottom-githubPath"
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id={"tooltip-bottom"}>
+                        {issue?.repository?.githubPath}
+                      </Tooltip>
+                    }
+                  >
+                    <span className={`text-gray me-2 text-truncate`}>
+                      {issue?.repository?.githubPath.split("/")?.[1]}
+                    </span>
+                  </OverlayTrigger>
+                </BountyItemLabel>
+
+                <ResponsiveWrapper xs={false} xxl={true} className="col-auto">
                   <RenderIssueData state={issueState} />
-                  <div className="hide-bounty-item-md">
-                    <BountyItemLabel
-                      label="Opened on"
-                      className=".d-md-none .d-lg-block"
-                    >
-                      <span className="text-gray text-truncate">
-                        {issue?.createdAt?.toLocaleDateString("PT")}
-                      </span>
-                    </BountyItemLabel>
-                  </div>
+                </ResponsiveWrapper>
+
+                <BountyItemLabel
+                  label="Opened on"
+                  className="col-auto"
+                >
+                  <span className="text-gray text-truncate">
+                    {issue?.createdAt?.toLocaleDateString("PT")}
+                  </span>
+                </BountyItemLabel>
+
+                <div className="col d-flex justify-content-end px-0">
+                  <IssueAmountInfo issue={issue} size={size} />
                 </div>
               </div>
-            )}
-            <div
-              className={`d-flex col-md-2 mt-3 ${
-                isMobile ? "justify-content-between" : "justify-content-end"
-              }`}
-            >
-              {isMobile && <BountyTags tags={[issue?.network?.name]} />}
-              <IssueAmountInfo issue={issue} size={size} />
-            </div>
+            </ResponsiveWrapper>
+
+            <ResponsiveWrapper xs={true} xl={false}>
+              <div className="row w-100 justify-content-between">
+                <div className="col">
+                  <BountyTags tags={[issue?.network?.name]} />
+                </div>
+                
+                <div className="col-auto px-0">
+                  <IssueAmountInfo issue={issue} size={size} />
+                </div>
+              </div>
+            </ResponsiveWrapper>
           </div>
         </div>
       </div>
