@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import {isMobile} from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -13,7 +14,7 @@ import TrashIcon from "assets/icons/trash-icon";
 import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
-import IssueAmountInfo from "components/bounty/issue-amount-info";
+import BountyAmountController from "components/bounty/amount-info/controller";
 import CardItem from "components/card-item";
 import ChainBadge from "components/chain-badge";
 import If from "components/If";
@@ -36,7 +37,6 @@ import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
-import {isMobile} from "react-device-detect";
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -229,7 +229,7 @@ export default function IssueListItem({
             {issue?.body}
           </div>
           <div className={!issue?.isFundingRequest && 'mt-4' || ""}>
-            <IssueAmountInfo issue={issue} size={size} />
+            <BountyAmountController bounty={issue} size={size} />
           </div>
         </>
       </CardItem>
@@ -399,7 +399,7 @@ export default function IssueListItem({
                 </BountyItemLabel>
 
                 <div className="col d-flex justify-content-end px-0">
-                  <IssueAmountInfo issue={issue} size={size} />
+                  <BountyAmountController bounty={issue} size={size} />
                 </div>
               </div>
             </ResponsiveWrapper>
@@ -409,7 +409,7 @@ export default function IssueListItem({
               }`}
             >
               {isMobile && <BountyTagsView tags={[issue?.network?.name]} />}
-              <IssueAmountInfo issue={issue} size={size} />
+              <BountyAmountController bounty={issue} size={size} />
             </div>
           </div>
 
