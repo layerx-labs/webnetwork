@@ -1,4 +1,4 @@
-export default function IssueAvatars({ users }) {
+export default function BountyAvatarsView({ users }) {
   return (
     <div className="avatar-list mr-1">
       {users.slice(0, 3).map(user=> {
