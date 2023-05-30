@@ -38,3 +38,5 @@ export const SUPPORT_LINK = "https://support.bepro.network/en/";
 export const DOCS_LINK = "https://docs.bepro.network/";
 export const TWITTER_LINK = "https://twitter.com/bepronet";
 export const TERMS_AND_CONDITIONS_LINK = "https://www.bepro.network/terms";
+export const SMALL_TOKEN_SYMBOL_LENGTH = 6
+export const LARGE_TOKEN_SYMBOL_LENGTH = 12
