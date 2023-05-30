@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 import {useTranslation} from "next-i18next";
 import getConfig from "next/config";
-import {useDebounce} from "use-debounce";
 
 import ImageUploader from "components/image-uploader";
 import Step from "components/step";
@@ -13,16 +12,19 @@ import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import {StepWrapperProps} from "interfaces/stepper";
 
+import useDebouncedCallback from "x-hooks/use-debounced-callback";
+
 const { publicRuntimeConfig } = getConfig();
 
 export default function NetworkInformationStep({ activeStep, index, validated, handleClick } : StepWrapperProps) {
   const { t } = useTranslation(["common", "custom-network"]);
 
-  const { details, fields } = useNetworkSettings();
   const [nameInput, setNameInput] = useState("")
   const [descriptionInput, setDescriptionInput] = useState("")
-  const [dName] = useDebounce(nameInput, 100);
-  const [dDescription] = useDebounce(descriptionInput, 100);
+  
+  const { details, fields } = useNetworkSettings();
+  const debouncedNameUpdate = useDebouncedCallback((value) => fields.name.setter(value), 400);
+  const debouncedDescriptionUpdate = useDebouncedCallback((value) => fields.description.setter(value), 400);
 
   const name = details.name;
   const nameInputClass = name.validated !== undefined ? (name.validated === true && "is-valid") || "is-invalid" : "";
@@ -43,8 +45,24 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
     fields.logo.setter(value, "full");
   }
 
-  useEffect(() => { fields.name.setter(dName); }, [dName])
-  useEffect(() => { fields.description.setter(dDescription); }, [dDescription])
+  function handleFieldChange(field) {
+    const handlers = {
+      name: {
+        stateUpdater: setNameInput,
+        debouncedUpdater: debouncedNameUpdate
+      },
+      description: {
+        stateUpdater: setDescriptionInput,
+        debouncedUpdater: debouncedDescriptionUpdate
+      }
+
+    };
+
+    return (e) => {
+      handlers[field].stateUpdater(e.target.value);
+      handlers[field].debouncedUpdater(e.target.value);
+    };
+  }
 
   return (
     <Step
@@ -119,7 +137,7 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
             placeholder={t("custom-network:steps.network-information.fields.name.default")}
             className={`form-control ${nameInputClass}`}
             defaultValue={nameInput}
-            onChange={(e) => { setNameInput(e?.target?.value || '') }}
+            onChange={handleFieldChange("name")}
             onBlur={handleBlur}
           />
 
@@ -154,7 +172,7 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
             rows={5}
             className="form-control"
             defaultValue={descriptionInput}
-            onChange={(e) => { setDescriptionInput(e?.target?.value || ``)} }
+            onChange={handleFieldChange("description")}
           ></textarea>
         </div>
       </div>
