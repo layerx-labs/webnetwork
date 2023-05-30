@@ -110,7 +110,7 @@ export default function ListRecentIssues() {
     const loadingState = isOpen ? bounties.loadingOpenBounties : bounties.loadingFundingBounties;
 
     return (
-      <CustomContainer>
+      <CustomContainer className="px-xl-0">
         <div className="d-flex mt-2 p-1">
           <h4 className="mt-1">
             {isOpen ? t("recent-bounties") : t("recent-funding")}
@@ -120,7 +120,7 @@ export default function ListRecentIssues() {
         <LoadingList loading={loadingState} />
 
         <div className="row mb-3 mt-1">
-          <HorizontalList className="gap-3">
+          <HorizontalList>
             {currentBounties && currentBounties?.map((bounty) => (
                 <div className="col-12 col-sm-6 col-md-5 col-lg-4" key={bounty.id}>
                   <IssueListItem issue={bounty} key={bounty.id} size="sm" />

@@ -80,7 +80,7 @@ export default function HorizontalList({
         </Button>
       </If>
       
-      <div className={`d-flex flex-nowrap overflow-auto ${className} overflow-noscrollbar`} ref={divRef}>
+      <div className={`row flex-nowrap overflow-auto ${className} overflow-noscrollbar`} ref={divRef}>
         {children}
       </div>
 

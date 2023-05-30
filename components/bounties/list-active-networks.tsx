@@ -39,7 +39,7 @@ export default function ListActiveNetworks() {
   }, [router.query?.network]);
 
   return (
-    <CustomContainer className="mb-3">
+    <CustomContainer className="mb-3 px-xl-0">
       <div className="d-flex mt-2 p-1 justify-content-between">
         <h4 className="mt-1">{t("most-active-networks")}</h4>
         <Link href={"/networks"}>
@@ -59,9 +59,11 @@ export default function ListActiveNetworks() {
           condition={!!networks.length}
           otherwise={<NothingFound description={t("most-active-network-empty")} />}
         >
-          <HorizontalList className="gap-3">
+          <HorizontalList>
             {networks.map((network) => 
-              <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />)}
+              <div className="col-12 col-sm-6 col-md-5 col-lg-4">
+                <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />
+              </div>)}
           </HorizontalList>
         </If>
       </div>
