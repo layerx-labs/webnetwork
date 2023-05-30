@@ -1,5 +1,3 @@
-import { isMobile } from "react-device-detect";
-
 import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
@@ -10,12 +8,15 @@ import NoMetamaskModalView from "components/no-metamask-modal/view";
 import { useAppState } from "contexts/app-state";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 const { publicRuntimeConfig } = getConfig();
 
 export default function NoMetamaskModal() {
   const { pathname } = useRouter();
   const { t } = useTranslation("common");
 
+  const { isMobileView } = useBreakPoint(true);
   const {
     state: { show: { web3Dialog } },
     dispatch
@@ -34,7 +35,7 @@ export default function NoMetamaskModal() {
     "true": {
       title: t("modals.mobile-information.title"),
       description: t("modals.mobile-information.description"),
-      actions: [
+      actions: <>
         <a
           className="text-decoration-none"
           href={`https://metamask.app.link/dapp/${publicRuntimeConfig?.urls?.home}`} 
@@ -42,13 +43,13 @@ export default function NoMetamaskModal() {
         >
           <Button>{t("modals.mobile-information.open-in-metamask")}</Button>
         </a>
-      ]
+      </>
     },
     "false": {
       title: t("modals.web3-dialog.title"),
       description: t("modals.web3-dialog.message"),
       warning: t("modals.web3-dialog.eth-not-available"),
-      actions: [
+      actions: <>
         <a
           className="text-decoration-none"
           href="https://metamask.io/download.html"
@@ -56,11 +57,11 @@ export default function NoMetamaskModal() {
           target="_blank"
         >
           <Button color="dark-gray">{t("actions.install")}</Button>
-        </a>,
+        </a>
         <Button onClick={handleClickTryAgain}>
           {t("actions.try-again")}
         </Button>
-      ]
+      </>
     }
   };
 
@@ -74,7 +75,7 @@ export default function NoMetamaskModal() {
     <NoMetamaskModalView
       show={web3Dialog}
       onCloseClick={handleCloseModal()}
-      {...modalProps[isMobile.toString()]}
+      {...modalProps[isMobileView.toString()]}
     />
   );
 }

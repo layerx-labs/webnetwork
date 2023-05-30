@@ -25,10 +25,8 @@ export default function NoMetamaskModalView({
   description,
 }: Partial<ModalProps> & NoMetamaskModalViewProps) {
   function ModalFooter() {
-    const justify = actions?.length ? "around" : "center";
-
     return(
-      <div className={`mb-2 d-flex flex-row justify-content-${justify}`}>
+      <div className="mb-2 d-flex flex-row justify-content-around">
         {actions}
       </div>
     );
