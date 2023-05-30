@@ -1,6 +1,6 @@
 import { useTranslation } from "next-i18next";
 
-import IssueDescription from "components/bounty/description/issue-description";
+import BountyDescriptionController from "components/bounty/description/controller";
 import IssueEditTag from "components/bounty/edit-tag/issue-edit-tag";
 import IssueProposalProgressBar from "components/bounty/proposal-progress-bar/issue-proposal-progress-bar";
 import Button from "components/button";
@@ -66,7 +66,7 @@ export default function BountyBodyView({
                 preview={isPreview}
               />
               <>
-                <IssueDescription
+                <BountyDescriptionController
                   body={isPreview ? addFilesInDescription(body) : body}
                   setBody={handleBody}
                   isEdit={isEditIssue}
@@ -121,7 +121,7 @@ export default function BountyBodyView({
         <div className="row justify-content-center">
           <div className="col-md-12">
             <div className="border-radius-8 p-3 bg-gray-850 mb-3">
-              <IssueDescription body={body || ""} />
+              <BountyDescriptionController body={body || ""} />
             </div>
           </div>
         </div>
