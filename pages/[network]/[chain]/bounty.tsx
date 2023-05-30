@@ -4,11 +4,11 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
 
+import BountyBodyController from "components/bounty/body/controller";
 import BountyHeroController from "components/bounty/bounty-hero/controller";
+import IssueComments from "components/bounty/comments/issue-comments";
 import FundingSection from "components/bounty/funding-section";
-import IssueBody from "components/bounty/issue-body";
-import IssueComments from "components/bounty/issue-comments";
-import PageActions from "components/bounty/page-actions";
+import PageActions from "components/bounty/page-actions/page-actions";
 import TabSections from "components/bounty/tabs-sections";
 import If from "components/If";
 
@@ -117,7 +117,7 @@ export default function PageIssue() {
         <TabSections/>
       </If>
 
-      <IssueBody 
+      <BountyBodyController 
         isEditIssue={isEditIssue} 
         cancelEditIssue={handleCancelEditIssue}
         />

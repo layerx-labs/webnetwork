@@ -1,0 +1,130 @@
+import { useTranslation } from "next-i18next";
+
+import IssueDescription from "components/bounty/description/issue-description";
+import IssueEditTag from "components/bounty/edit-tag/issue-edit-tag";
+import IssueProposalProgressBar from "components/bounty/proposal-progress-bar/issue-proposal-progress-bar";
+import Button from "components/button";
+import { IFilesProps } from "components/drag-and-drop";
+
+interface BountyBodyProps {
+  isEditIssue: boolean;
+  body: string;
+  handleBody: (v: string) => void;
+  files: IFilesProps[];
+  handleFiles: (v: IFilesProps[]) => void;
+  isPreview: boolean;
+  handleIsPreview: (v: boolean) => void;
+  selectedTags: string[];
+  handleSelectedTags: (v: string[]) => void;
+  isUploading: boolean;
+  handleIsUploading: (v: boolean) => void;
+  handleCancelEdit: () => void;
+  addFilesInDescription: (str: string) => string;
+  handleUpdateBounty: () => void;
+  isDisableUpdateIssue: () => boolean;
+  walletAddress?: string;
+}
+
+export default function BountyBodyView({
+  isEditIssue,
+  body,
+  handleBody,
+  files,
+  handleFiles,
+  isPreview,
+  handleIsPreview,
+  selectedTags,
+  handleSelectedTags,
+  isUploading,
+  handleIsUploading,
+  handleCancelEdit,
+  addFilesInDescription,
+  handleUpdateBounty,
+  isDisableUpdateIssue,
+  walletAddress
+}: BountyBodyProps) {
+  const { t } = useTranslation(["common", "bounty"]);
+
+
+  if (walletAddress)
+    return (
+      <div className="container mb-1">
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="border-radius-8 p-3 bg-gray-850 mb-3">
+              {isEditIssue && (
+                <div className="d-flex justify-content-center">
+                  <span className="p family-Regular font-weight-medium mt-1 text-info">
+                    {t("bounty:edit-text")}
+                  </span>
+                </div>
+              )}
+              <IssueEditTag
+                isEdit={isEditIssue}
+                selectedTags={selectedTags}
+                setSelectedTags={handleSelectedTags}
+                preview={isPreview}
+              />
+              <>
+                <IssueDescription
+                  body={isPreview ? addFilesInDescription(body) : body}
+                  setBody={handleBody}
+                  isEdit={isEditIssue}
+                  onUpdateFiles={handleFiles}
+                  onUploading={handleIsUploading}
+                  files={files}
+                  preview={isPreview}
+                />
+              </>
+              {isEditIssue && (
+                <>
+                  <div className="d-flex flex-row justify-content-between my-3">
+                    <Button
+                      color="danger"
+                      onClick={handleCancelEdit}
+                      disabled={false}
+                    >
+                      {t("bounty:cancel-changes")}
+                    </Button>
+                    <div className="d-flex">
+                      <Button
+                        outline={true}
+                        className="d-flex flex-shrink-0 w-40 btn-block"
+                        onClick={() => handleIsPreview(!isPreview)}
+                        disabled={isUploading}
+                      >
+                        {!isPreview ? t("bounty:preview") : t("bounty:edit")}
+                      </Button>
+                      <Button
+                        className="d-flex flex-shrink-0 w-40 btn-block"
+                        onClick={handleUpdateBounty}
+                        disabled={isDisableUpdateIssue()}
+                        isLoading={isUploading}
+                      >
+                        {t("bounty:save-changes")}
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="col-md-4 px-0">
+              <IssueProposalProgressBar />
+          </div>
+        </div>
+      </div>
+    );
+  else
+    return (
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-12">
+            <div className="border-radius-8 p-3 bg-gray-850 mb-3">
+              <IssueDescription body={body || ""} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+}
