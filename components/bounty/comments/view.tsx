@@ -2,13 +2,10 @@ import { useTranslation } from "next-i18next";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
-import Button from "../button";
-import Comment from "../comment";
+import Button from "../../button";
+import Comment from "../../comment";
 
-export default function IssueComments({ comments = [], repo, issueId }) {
-  const replyRef =
-    (comments?.length > 0 && comments[0]?.html_url) ||
-    `https://github.com/${repo}/issues/${issueId}`;
+export default function BountyCommentsView({ comments = [], replyRef }) {
   const { t } = useTranslation("common");
 
   return (
