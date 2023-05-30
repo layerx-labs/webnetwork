@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import {isMobile} from "react-device-detect";
+import { isMobile } from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -12,11 +12,14 @@ import EyeSlashIcon from "assets/icons/eye-slash-icon";
 import TrashIcon from "assets/icons/trash-icon";
 
 import Badge from "components/badge";
+import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import BountyTags from "components/bounty/bounty-tags";
 import CardItem from "components/card-item";
 import ChainBadge from "components/chain-badge";
 import IssueAmountInfo from "components/issue-amount-info";
+import Modal from "components/modal";
+import { FlexColumn } from "components/profile/wallet-balance";
 import Translation from "components/translation";
 
 import {useAppState} from "contexts/app-state";
@@ -30,11 +33,12 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
-import BountyItemLabel from "./bounty-item-label";
-import Modal from "./modal";
-import { FlexColumn } from "./profile/wallet-balance";
+import If from "./If";
+import ResponsiveWrapper from "./responsive-wrapper";
+
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -51,18 +55,21 @@ export default function IssueListItem({
 }: IssueListItemProps) {
   const router = useRouter();
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
-  const [visible, setVisible] = useState<boolean>();
+  
   const {state,dispatch} = useAppState();
-  const { signMessage } = useAuthentication();
+  const [visible, setVisible] = useState<boolean>();
   const [isCancelable, setIsCancelable] = useState(false);
   const [hideTrashIcon, setHideTrashIcon] = useState<boolean>();
   const [showHardCancelModal, setShowHardCancelModal] = useState(false);
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
-  const {updateVisibleBounty} = useApi();
+  
+  const { updateVisibleBounty } = useApi();
+  const { isMobileView } = useBreakPoint();
   const { getURLWithNetwork } = useNetwork();
+  const { signMessage } = useAuthentication();
   const { handleHardCancelBounty } = useBepro();
 
-  const isVisible = visible !== undefined ? visible : issue?.visible
+  const isVisible = visible !== undefined ? visible : issue?.visible;
 
   const issueState = getIssueState({
     state: issue?.state,
@@ -317,11 +324,11 @@ export default function IssueListItem({
             </div>
             <div className="d-flex d-none d-lg-block justify-content-end col-md-2">
               <div className="d-flex justify-content-end">
-                {variant === "multi-network" && !isMobile && (
-                  <div>
+                <If condition={variant === "multi-network"}>
+                  <ResponsiveWrapper xs={false} xl={true}>
                     <div
                       className={`d-flex py-1 pe-2 justify-content-center text-truncate border border-gray-800
-            border-radius-4 text-white-40 bg-gray-850`}
+                        border-radius-4 text-white-40 bg-gray-850 text-uppercase`}
                     >
                       <div className="d-flex flex-column justify-content-center">
                         <div
@@ -333,26 +340,28 @@ export default function IssueListItem({
                       </div>
                       {issue?.network?.chain?.chainShortName}
                     </div>
-                  </div>
-                )}
+                  </ResponsiveWrapper>
+                </If>
               </div>
             </div>
           </div>
-          {!isMobile && (
+          
+          <ResponsiveWrapper xs={false} xl={true}>
             <div className="d-flex justify-content-md-start mb-3">
               <BountyTags tags={issue?.tags} />
-              {issue?.isKyc ? (
+
+              <If condition={issue?.isKyc}>
                 <Badge
                   className={`d-flex status caption-medium py-1 px-3 
                   ms-2 bg-transparent border border-gray-700 text-gray-300`}
                   label={t("bounty:kyc.label")}
                 />
-              ) : null}
+              </If>
             </div>
-          )}
+          </ResponsiveWrapper>
 
           <div
-            className={`${isMobile ? "" : "d-flex border-top border-gray-850"}`}
+            className="d-flex border-top-xl border-gray-850"
           >
             {!isMobile && (
               <div className="col-md-10 mt-3 
