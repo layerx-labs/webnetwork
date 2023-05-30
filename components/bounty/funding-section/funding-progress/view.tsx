@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import { Amount, ColAuto, RowCenterBetween, RowWithTwoColumns } from "components/bounty/funding-section/minimals/minimals";
+import { Amount, ColAuto, RowCenterBetween, RowWithTwoColumns } from "components/bounty/funding-section/minimals.view";
 
 interface FundingProgressViewProps {
   fundedAmount: string;

@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import FundingProgressController from "components/bounty/funding-section/funding-progress/controller";
-import {Amount, CaptionMedium, RowWithTwoColumns} from "components/bounty/funding-section/minimals/minimals";
+import {Amount, CaptionMedium, RowWithTwoColumns} from "components/bounty/funding-section/minimals.view";
 import Button from "components/button";
 import ContractButton from "components/contract-button";
 import InputWithBalance from "components/input-with-balance";
