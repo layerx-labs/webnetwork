@@ -2,7 +2,7 @@ import { useTranslation } from "next-i18next";
 
 import BountyDescriptionController from "components/bounty/description/controller";
 import BountyEditTagController from "components/bounty/edit-tag/controller";
-import IssueProposalProgressBar from "components/bounty/proposal-progress-bar/issue-proposal-progress-bar";
+import BountyStatusProgressController from "components/bounty/status-progress/controller";
 import Button from "components/button";
 import { IFilesProps } from "components/drag-and-drop";
 
@@ -110,7 +110,7 @@ export default function BountyBodyView({
             </div>
           </div>
           <div className="col-md-4 px-0">
-              <IssueProposalProgressBar />
+              <BountyStatusProgressController />
           </div>
         </div>
       </div>
