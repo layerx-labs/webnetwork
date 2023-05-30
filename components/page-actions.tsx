@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button} from "react-bootstrap";
-import {isMobile} from "react-device-detect";
 
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
