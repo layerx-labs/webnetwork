@@ -49,15 +49,15 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
     if(visible) whereCondition.visible = visible;
 
-    if (state === 'funding'){
+    if (['open', 'ready', 'proposal'].includes(state?.toString())){
+      whereCondition.state = {
+        [Op.in]: ['open', 'ready', 'proposal']
+      };
+      whereCondition.fundingAmount = isZero
+    } else if(state === 'funding'){
       whereCondition.fundingAmount = {
         [Op.not]: "0"
       };
-    } else if(state === 'open'){
-      whereCondition.state = {
-        [Op.in]: ['open', 'ready']
-      };
-      whereCondition.fundingAmount = isZero
     } else if(state) {
       whereCondition.state = state
       whereCondition.fundingAmount = isZero
