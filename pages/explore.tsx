@@ -11,10 +11,12 @@ import PageHero, { InfosHero } from "components/page-hero";
 
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
+import { api } from "services/api";
+
 import useApi from "x-hooks/use-api";
 import { useNetwork } from "x-hooks/use-network";
 
-export default function ExplorePage() {
+export default function ExplorePage(props) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
 
   const [numberOfNetworks, setNumberOfNetworks] = useState(0);
@@ -69,6 +71,7 @@ export default function ExplorePage() {
         subtitle={heroSubTitle}
         infos={infos}
       />
+      {console.log("totalNetworks", props)}
       <ListActiveNetworks />
       <ListRecentIssues />
       <ListIssues variant="bounty-hall" />
@@ -76,9 +79,20 @@ export default function ExplorePage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+  const { network } = query;
+
+  console.log("############################## network", network)
+
+  const totalNetworks = await api.get("/search/networks/total", { 
+    params: {
+      name: network
+    }
+  });
+
   return {
     props: {
+      totalNetworks,
       ...(await serverSideTranslations(locale, [
         "common",
         "custom-network",
