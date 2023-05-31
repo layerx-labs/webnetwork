@@ -86,7 +86,6 @@ export default function useFilters(): [
     setStateFilters([
       makeFilterOption("All", "allstates", !state),
       makeFilterOption("Open Bounties", "open", state === "open"),
-      makeFilterOption("Proposal Bounties", "proposal", state === "proposal"),
       makeFilterOption("Funding Bounties", "funding", state === "funding"),
       makeFilterOption("Draft Bounties", "draft", state === "draft"),
       makeFilterOption("Closed Bounties", "closed", state === "closed")
