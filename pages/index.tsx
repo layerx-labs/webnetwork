@@ -3,7 +3,9 @@
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {GetServerSideProps} from "next/types";
 
-import { ExplorePage, getExplorePageData } from "components/pages/explore/controller";
+import ExplorePage from "components/pages/explore/controller";
+
+import getExplorePageData from "x-hooks/api/get-explore-page-data";
 
 export default ExplorePage;
 

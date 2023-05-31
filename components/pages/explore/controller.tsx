@@ -1,7 +1,5 @@
 import ExplorePageView from "components/pages/explore/view";
 
-import { api } from "services/api";
-
 import { useNetwork } from "x-hooks/use-network";
 
 interface ExplorePageProps {
@@ -9,7 +7,7 @@ interface ExplorePageProps {
   numberOfBounties: number;
 }
 
-function ExplorePage({
+export default function ExplorePage({
   numberOfNetworks,
   numberOfBounties,
 }: ExplorePageProps) {
@@ -23,19 +21,3 @@ function ExplorePage({
     />
   );
 }
-
-async function getExplorePageData(query) {
-  const { network } = query;
-
-  const { data } = await api.get("/search/networks/total", { 
-    params: {
-      name: network
-    }
-  });
-
-  return {
-    numberOfNetworks: data
-  };
-}
-
-export { ExplorePage, getExplorePageData };
