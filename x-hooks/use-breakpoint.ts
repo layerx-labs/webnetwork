@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 
+import { useDebouncedCallback } from "use-debounce";
+
 import { BOOTSTRAP_BREAKPOINTS } from "helpers/constants"
 
-import useDebouncedCallback from "x-hooks/use-debounced-callback";
+const isWindowUndefined = () => typeof window === "undefined";
 
-const getCurrentBreakPoint = (currentWidth: number) => {
+const getCurrentBreakPoint = () => {
+  if (isWindowUndefined()) return "xl";
+
+  const currentWidth = window.innerWidth;
+
   if (currentWidth < BOOTSTRAP_BREAKPOINTS.sm) return "xs";
   else if (currentWidth < BOOTSTRAP_BREAKPOINTS.md) return "sm";
   else if (currentWidth < BOOTSTRAP_BREAKPOINTS.lg) return "md";
@@ -15,38 +21,27 @@ const getCurrentBreakPoint = (currentWidth: number) => {
 }
 
 const isMobileUserAgent = () => {
-  if (!window) return false;
+  if (isWindowUndefined()) return false;
+
+  const mobileUserAgents = [/Android/i, /webOS/i, /iPhone/i,/iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
 
   const userAgentMatch = agent => !!navigator.userAgent.match(agent);
 
-  if (userAgentMatch(/Android/i) ||
-      userAgentMatch(/webOS/i) ||
-      userAgentMatch(/iPhone/i) ||
-      userAgentMatch(/iPad/i) ||
-      userAgentMatch(/iPod/i) ||
-      userAgentMatch(/BlackBerry/i) ||
-      userAgentMatch(/Windows Phone/i))
-    return true;
-
-  return false;
+  return mobileUserAgents.some(userAgentMatch);
 }
 
 export default function useBreakPoint(validateAgent = false) {
-  const [currentBreakPoint, setCurrentBreakpoint] = useState<string>();
-  const [userAgentCheck, setUserAgentCheck] = useState(false);
+  const [currentBreakPoint, setCurrentBreakpoint] = useState<string>(getCurrentBreakPoint());
+  const [userAgentCheck] = useState(validateAgent ? isMobileUserAgent() : true);
 
-  const handler = () => setCurrentBreakpoint(getCurrentBreakPoint(window.innerWidth));
-  const debouncedHandler = useDebouncedCallback(handler, 300);
+  const updateCurrentBreakpoint = () => setCurrentBreakpoint(getCurrentBreakPoint());
+  const debouncedHandler = useDebouncedCallback(updateCurrentBreakpoint, 300);
 
   const isMobileView = ["xs", "sm", "md"].includes(currentBreakPoint) && userAgentCheck;
   const isTabletView = currentBreakPoint === "lg" && userAgentCheck;
   const isDesktopView = ["xl", "xxl"].includes(currentBreakPoint) && userAgentCheck;
 
   useEffect(() => {
-    setUserAgentCheck(validateAgent ? isMobileUserAgent() : true);
-
-    handler();
-
     const observer = new ResizeObserver(debouncedHandler);
     
     observer.observe(document.documentElement);
