@@ -1,5 +1,3 @@
-
-
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {GetServerSideProps} from "next/types";
 
