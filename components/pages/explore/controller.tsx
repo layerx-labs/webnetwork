@@ -1,11 +1,8 @@
 import ExplorePageView from "components/pages/explore/view";
 
-import { useNetwork } from "x-hooks/use-network";
+import { ExplorePageProps } from "types/pages";
 
-interface ExplorePageProps {
-  numberOfNetworks: number;
-  numberOfBounties: number;
-}
+import { useNetwork } from "x-hooks/use-network";
 
 export default function ExplorePage({
   numberOfNetworks,
