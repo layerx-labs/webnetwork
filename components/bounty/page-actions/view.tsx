@@ -20,7 +20,7 @@ import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
 import {BountyEffectsProvider} from "contexts/bounty-effects";
 
-import { PageActionsViewProps } from "./interfaces";
+import { PageActionsViewProps } from "./page-actions";
 
 export default function PageActionsView({
     bounty,
