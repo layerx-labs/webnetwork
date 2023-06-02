@@ -8,7 +8,7 @@ import BountyBodyController from "components/bounty/body/controller";
 import BountyHeroController from "components/bounty/bounty-hero/controller";
 import BountyCommentsController from "components/bounty/comments/controller";
 import FundingSectionController from "components/bounty/funding-section/controller";
-import PageActionsController from "components/bounty/page-actions/controller";
+import PageActions from "components/bounty/page-actions/controller";
 import TabSections from "components/bounty/tabs-sections";
 import If from "components/If";
 
@@ -106,7 +106,7 @@ export default function PageIssue() {
         <FundingSectionController /> 
       </If>
 
-      <PageActionsController
+      <PageActions
         isRepoForked={!!isRepoForked}
         addNewComment={addNewComment}
         handleEditIssue={handleEditIssue}

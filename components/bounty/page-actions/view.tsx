@@ -1,190 +1,173 @@
-import React, { useState} from "react";
-import {Button} from "react-bootstrap";
+import React, { useState } from "react";
 import { isMobile, isTablet } from "react-device-detect";
 
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import EditIcon from "assets/icons/transactions/edit";
 
 import ConnectGithub from "components/connect-github";
-import {ContextualSpan} from "components/contextual-span";
-import ContractButton from "components/contract-button";
+import { ContextualSpan } from "components/contextual-span";
 import CreatePullRequestModal from "components/create-pull-request-modal";
-import GithubLink from "components/github-link";
+import If from "components/If";
 import Modal from "components/modal";
 import MultiActionButton, { Action } from "components/multi-action-button";
 import ProposalModal from "components/proposal/create-proposal-modal";
-import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
-import {BountyEffectsProvider} from "contexts/bounty-effects";
+import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import { PageActionsViewProps } from "./page-actions";
+import PageActionsButton from "./page-actions-button/view";
 
 export default function PageActionsView({
-    bounty,
-    currentUser,
-    isKycEnabled,
-    isRepoForked,
-    handleEditIssue,
-    handlePullrequest,
-    handleStartWorking,
-    isEditIssue,
-    isBountyInDraft,
-    isWalletConnected,
-    isKycVerified,
-    isGithubConnected,
-    isFundingRequest,
-    isWorkingOnBounty,
-    isBountyOpen,
-    isStateToWorking,
-    isBountyOwner,
-    isCreatePr,
-    isCreateProposal,
-    isExecuting,
-    showPRModal,
-    handleShowPRModal,
-    ghVisibility,
-    handleClickKyc,
-  }: PageActionsViewProps) {
-  const {t} = useTranslation(["common", "pull-request", "bounty", "proposal"]);
+  bounty,
+  currentUser,
+  handleEditIssue,
+  handlePullrequest,
+  handleStartWorking,
+  isWalletConnected,
+  isGithubConnected,
+  isCreatePr,
+  isCreateProposal,
+  isExecuting,
+  showPRModal,
+  handleShowPRModal,
+  ghVisibility,
+  handleClickKyc,
+  isUpdateAmountButton,
+  isStartWorkingButton,
+  isKycButton,
+  isForkRepositoryLink,
+  isEditButton,
+}: PageActionsViewProps) {
+  const { t } = useTranslation([
+    "common",
+    "pull-request",
+    "bounty",
+    "proposal",
+  ]);
 
   const [showPRProposal, setShowPRProposal] = useState(false);
   const [showGHModal, setShowGHModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
 
-  function handleActionPr(arg: { title:string , description:string , branch:string }): Promise<void> {
-    if(!ghVisibility) return new Promise((resolve,) => resolve(setShowGHModal(true)))
-      
-    return handlePullrequest(arg)
+  function handleActionPr(arg: {
+    title: string;
+    description: string;
+    branch: string;
+  }): Promise<void> {
+    if (!ghVisibility)
+      return new Promise((resolve) => resolve(setShowGHModal(true)));
+
+    return handlePullrequest(arg);
   }
 
   function handleActionWorking() {
-    if (!ghVisibility) return setShowGHModal(true)
-    handleStartWorking()
+    if (!ghVisibility) return setShowGHModal(true);
+    handleStartWorking();
   }
 
-
-  function renderForkRepositoryLink() {
-    if (isGithubConnected && !isBountyInDraft && isBountyOpen && !isRepoForked)
-      return (
-        <GithubLink
-          forcePath={bounty?.repository?.githubPath}
-          hrefPath="fork"
-          className="btn btn-primary bounty-outline-button"
-          >
-          <Translation label="actions.fork-repository"/>
-        </GithubLink>);
+  function ForkRepositoryLink() {
+    return (
+      <PageActionsButton
+        forcePath={bounty?.repository?.githubPath}
+        className="btn btn-primary bounty-outline-button"
+      >
+        <Translation label="actions.fork-repository" />
+      </PageActionsButton>
+    );
   }
 
-  function renderStartWorkingButton() {
-    if (isWalletConnected && 
-        isGithubConnected &&
-        !isBountyInDraft &&
-        isBountyOpen &&
-        !isWorkingOnBounty &&
-        isRepoForked &&
-        isStateToWorking &&
-        currentUser?.accessToken
-        ){
+  function KycButton() {
+    return (
+      <PageActionsButton
+        buttonType="normal"
+        onClick={handleClickKyc}
+        className="bounty-outline-button"
+      >
+        <Translation ns="bounty" label="kyc.identify-to-start" />
+      </PageActionsButton>
+    );
+  }
 
-      if (isKycEnabled && bounty?.isKyc && !isKycVerified){
-        return <>
-          <Button onClick={handleClickKyc}>
-            <Translation ns="bounty" label="kyc.identify-to-start" />
-          </Button>
+  function StartWorkingButton() {
+    return (
+      <PageActionsButton
+        onClick={handleActionWorking}
+        className={`read-only-button ${
+          isTablet || isMobile ? "col-12" : "bounty-outline-button"
+        }`}
+        disabled={isExecuting}
+        isLoading={isExecuting}
+      >
+        <span>
+          <Translation ns="bounty" label="actions.start-working.title" />
+        </span>
+      </PageActionsButton>
+    );
+  }
+
+  function CreatePullRequestButton() {
+    return (
+      <PageActionsButton
+        onClick={() => handleShowPRModal(true)}
+        className={"read-only-button bounty-outline-button"}
+        disabled={!currentUser?.login || !isWalletConnected}
+      >
+        <span>
+          <Translation ns="pull-request" label="actions.create.title" />
+        </span>
+      </PageActionsButton>
+    );
+  }
+
+  function UpdateAmountButton() {
+    return (
+      <PageActionsButton
+        className="read-only-button bounty-outline-button me-1"
+        onClick={() => setShowUpdateAmount(true)}
+      >
+        <Translation ns="bounty" label="actions.update-amount" />
+      </PageActionsButton>
+    );
+  }
+
+  function CreateProposalButton() {
+    return (
+      <PageActionsButton
+        className="read-only-button bounty-outline-button"
+        onClick={() => handleShowPRModal(true)}
+        disabled={!currentUser?.login || !isWalletConnected}
+      >
+        <Translation ns="proposal" label="actions.create.title" />
+      </PageActionsButton>
+    );
+  }
+
+  function EditButton() {
+    return (
+      <PageActionsButton
+        className="read-only-button bounty-outline-button me-1"
+        onClick={handleEditIssue}
+      >
+        <>
+          <EditIcon className="me-1" />
+          <Translation ns="bounty" label="actions.edit-bounty" />
         </>
-      }
-
-      else{
-        return (
-            <ReadOnlyButtonWrapper>
-              <ContractButton
-                color="primary"
-                onClick={handleActionWorking}
-                className={`read-only-button ${isTablet || isMobile ? 'col-12' : 'bounty-outline-button'}`}
-                disabled={isExecuting}
-                isLoading={isExecuting}
-              >
-                <span>
-                  <Translation ns="bounty" label="actions.start-working.title"/>
-                </span>
-              </ContractButton>
-            </ReadOnlyButtonWrapper>
-        );
-      }
-    }
+      </PageActionsButton>
+    );
   }
 
-  function renderCreatePullRequestButton() {
-    if (isCreatePr)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            className="read-only-button bounty-outline-button"
-            onClick={() => handleShowPRModal(true)}
-            disabled={!currentUser?.login || !isWalletConnected}
-          >
-            <Translation ns="pull-request" label="actions.create.title"/>
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
-  function renderUpdateAmountButton() {
-    if (isWalletConnected && isBountyOpen && isBountyOwner && isBountyInDraft && !isFundingRequest && !isEditIssue)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            className="read-only-button bounty-outline-button me-1"
-            onClick={() => setShowUpdateAmount(true)}
-          >
-            <Translation ns="bounty" label="actions.update-amount"/>
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
-  function renderCreateProposalButton() {
-    if (isCreateProposal)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            className="read-only-button bounty-outline-button"
-            onClick={() => handleShowPRModal(true)}
-            disabled={!currentUser?.login || !isWalletConnected}
-          >
-            <Translation ns="proposal" label="actions.create.title"/>
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
-  function renderEditButton() {
-    if (isWalletConnected && isBountyInDraft && isBountyOwner)
-      return (
-        <ReadOnlyButtonWrapper>
-          <ContractButton
-            className="read-only-button bounty-outline-button me-1"
-            onClick={handleEditIssue}
-          >
-            <EditIcon className="me-1"/>
-            <Translation ns="bounty" label="actions.edit-bounty" />
-          </ContractButton>
-        </ReadOnlyButtonWrapper>
-      );
-  }
-
-  function renderTableAndMobileButton() {
-    const actions: Action[] = []
+  function TabletAndMobileButton() {
+    const actions: Action[] = [];
 
     if (isCreatePr)
       actions.push({
         label: "Pull Request",
         onClick: () => handleShowPRModal(true),
       });
-      
+
     if (isCreateProposal)
       actions.push({
         label: "Proposal",
@@ -196,24 +179,25 @@ export default function PageActionsView({
 
     if (isCreatePr || isCreateProposal)
       return (
-          <MultiActionButton
-            label="Create"
-            className="col-12"
-            actions={actions}
-          />
+        <MultiActionButton
+          label="Create"
+          className="col-12"
+          actions={actions}
+        />
       );
 
-    return renderStartWorkingButton();
+    return <StartWorkingButton />;
   }
 
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
         <div className="col-md-12">
-          {(!isGithubConnected && isWalletConnected) && 
-          <ContextualSpan context="info" className="mb-2" isAlert>
-            {t("actions.connect-github-to-work")}
-          </ContextualSpan>}
+          {!isGithubConnected && isWalletConnected && (
+            <ContextualSpan context="info" className="mb-2" isAlert>
+              {t("actions.connect-github-to-work")}
+            </ContextualSpan>
+          )}
 
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h4 className="h4 d-flex align-items-center d-none d-lg-block">
@@ -221,23 +205,33 @@ export default function PageActionsView({
             </h4>
 
             <div className="d-flex flex-row align-items-center gap-20 d-none d-lg-block">
-              {renderForkRepositoryLink()}
-
-              {renderStartWorkingButton()}
-
-              {renderCreatePullRequestButton()}
-
-              {renderUpdateAmountButton()}
-
-              {renderCreateProposalButton()}
-
-              {renderEditButton()}
-
-              {!isGithubConnected && isWalletConnected && <ConnectGithub size="sm"/>}
-
+              <If condition={isForkRepositoryLink}>
+                <ForkRepositoryLink />
+              </If>
+              <If condition={isStartWorkingButton && isKycButton}>
+                <KycButton />
+              </If>
+              <If condition={isStartWorkingButton && !isKycButton}>
+                <StartWorkingButton />
+              </If>
+              <If condition={isCreatePr}>
+                <CreatePullRequestButton />
+              </If>
+              <If condition={isUpdateAmountButton}>
+                <UpdateAmountButton />
+              </If>
+              <If condition={isCreateProposal}>
+                <CreateProposalButton />
+              </If>
+              <If condition={isEditButton}>
+                <EditButton />
+              </If>
+              <If condition={!isGithubConnected && isWalletConnected}>
+                <ConnectGithub size="sm" />
+              </If>
             </div>
-            <div className="col-12 d-lg-none"> 
-              {renderTableAndMobileButton()}
+            <div className="col-12 d-lg-none">
+              <TabletAndMobileButton />
             </div>
           </div>
         </div>
@@ -252,8 +246,8 @@ export default function PageActionsView({
             onConfirm={handleActionPr}
             repo={
               (currentUser?.login &&
-                bounty?.repository?.githubPath) &&
-              bounty?.repository?.githubPath ||
+                bounty?.repository?.githubPath &&
+                bounty?.repository?.githubPath) ||
               ""
             }
             onCloseClick={() => handleShowPRModal(false)}
@@ -266,7 +260,7 @@ export default function PageActionsView({
             handleClose={() => setShowUpdateAmount(false)}
           />
 
-          <ProposalModal 
+          <ProposalModal
             amountTotal={bounty?.amount}
             pullRequests={bounty?.pullRequests}
             show={showPRProposal}
@@ -282,7 +276,9 @@ export default function PageActionsView({
         okLabel={t("actions.close")}
         onOkClick={() => setShowGHModal(false)}
       >
-        <h5 className="text-center"><Translation ns="common" label="modals.gh-access.content"/></h5>
+        <h5 className="text-center">
+          <Translation ns="common" label="modals.gh-access.content" />
+        </h5>
       </Modal>
     </div>
   );

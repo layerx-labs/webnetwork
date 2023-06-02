@@ -18,7 +18,7 @@ import { useNetwork } from "x-hooks/use-network";
 import { PageActionsControllerProps } from "./page-actions";
 import PageActionsView from "./view";
 
-export default function PageActionsController({
+export default function PageActions({
   isRepoForked = false,
   addNewComment,
   handleEditIssue,
@@ -66,21 +66,46 @@ export default function PageActionsController({
     state.currentBounty?.data?.isCanceled === false;
   const isBountyInDraft = !!state.currentBounty?.data?.isDraft;
   const isWorkingOnBounty = !!state.currentBounty?.data?.working?.find((login) => login === state.currentUser?.login);
+  const isBountyOwner =
+  isWalletConnected &&
+  state.currentBounty?.data?.creatorAddress &&
+  state.currentBounty?.data?.creatorAddress ===
+    state.currentUser?.walletAddress
+  const isFundingRequest = !!state.currentBounty?.data?.isFundingRequest
+  const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
+  const isKycVerified = state?.currentUser?.kycSession?.status === "VERIFIED"
+  const isUpdateAmountButton =
+    isWalletConnected &&
+    isBountyOpen &&
+    isBountyOwner &&
+    isBountyInDraft &&
+    !isFundingRequest &&
+    !isEditIssue;
+  const isStartWorkingButton =
+    isWalletConnected &&
+    isGithubConnected &&
+    !isBountyInDraft &&
+    isBountyOpen &&
+    !isWorkingOnBounty &&
+    isRepoForked &&
+    isStateToWorking &&
+    !!state.currentUser?.accessToken
+  const isKycButton = state.Settings?.kyc?.isKycEnabled && state.currentBounty?.data?.isKyc && !isKycVerified;
+  const isForkRepositoryLink =
+    isGithubConnected && !isBountyInDraft && isBountyOpen && !isRepoForked;
+  const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
 
   const rest = {
+    isUpdateAmountButton,
+    isStartWorkingButton,
+    isKycButton,
+    isForkRepositoryLink,
+    isEditButton,
     isBountyInDraft,
     isWalletConnected,
-    isKycVerified: state?.currentUser?.kycSession?.status === "VERIFIED",
     isGithubConnected,
-    isFundingRequest: !!state.currentBounty?.data?.isFundingRequest,
     isWorkingOnBounty,
     isBountyOpen,
-    isStateToWorking: ["proposal", "open", "ready"].some((value) => value === bountyState),
-    isBountyOwner:
-      isWalletConnected &&
-      state.currentBounty?.data?.creatorAddress &&
-      state.currentBounty?.data?.creatorAddress ===
-        state.currentUser?.walletAddress,
     isCreatePr:
       isWalletConnected &&
       isGithubConnected &&
@@ -219,9 +244,6 @@ export default function PageActionsController({
       handlePullrequest={handlePullrequest}
       handleStartWorking={handleStartWorking}
       handleEditIssue={handleEditIssue}
-      isEditIssue={isEditIssue}
-      isRepoForked={isRepoForked}
-      isKycEnabled={state.Settings?.kyc?.isKycEnabled}
       currentUser={state.currentUser}
       bounty={state.currentBounty?.data}
       {...rest}

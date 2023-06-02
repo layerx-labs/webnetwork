@@ -2,7 +2,6 @@ import { CurrentUserState } from "interfaces/application-state";
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 export interface PageActionsViewProps {
-  isRepoForked: boolean;
   handleEditIssue: () => void;
   handlePullrequest: (arg: {
     title: string;
@@ -10,19 +9,10 @@ export interface PageActionsViewProps {
     branch: string;
   }) => Promise<void>;
   handleStartWorking: () => Promise<void>;
-  isEditIssue: boolean;
-  isKycEnabled: boolean;
   currentUser: CurrentUserState;
   bounty: IssueBigNumberData;
-  isBountyInDraft: boolean;
   isWalletConnected: boolean;
-  isKycVerified: boolean;
   isGithubConnected: boolean;
-  isFundingRequest: boolean;
-  isWorkingOnBounty: boolean;
-  isBountyOpen: boolean;
-  isStateToWorking: boolean;
-  isBountyOwner: boolean;
   isCreatePr: boolean;
   isCreateProposal: boolean;
   isExecuting: boolean;
@@ -30,6 +20,11 @@ export interface PageActionsViewProps {
   handleShowPRModal: (v: boolean) => void;
   ghVisibility: boolean;
   handleClickKyc: () => void;
+  isUpdateAmountButton: boolean;
+  isStartWorkingButton: boolean;
+  isKycButton: boolean;
+  isForkRepositoryLink: boolean;
+  isEditButton: boolean;
 }
 
 export interface PageActionsControllerProps {
