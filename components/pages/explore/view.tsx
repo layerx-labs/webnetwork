@@ -7,15 +7,17 @@ import PageHero from "components/page-hero";
 
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
-interface ExplorePageViewProps {
-  numberOfNetworks: number;
-  numberOfBounties: number;
+import { ExplorePageProps } from "types/pages";
+
+interface ExplorePageViewProps extends ExplorePageProps {
   networkName?: string;
 }
 
 export default function ExplorePageView({
   numberOfNetworks,
   numberOfBounties,
+  recentBounties,
+  recentFunding,
   networkName,
 }: ExplorePageViewProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
@@ -46,7 +48,14 @@ export default function ExplorePageView({
 
       <ListActiveNetworks />
 
-      <ListRecentIssues />
+      <ListRecentIssues
+        recentBounties={recentBounties}
+      />
+
+      <ListRecentIssues
+        type="funding"
+        recentBounties={recentFunding}
+      />
 
       <ListIssues variant="bounty-hall" />
     </BountyEffectsProvider>

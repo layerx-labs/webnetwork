@@ -1,6 +1,6 @@
 import { subHours, subMonths, subWeeks, subYears } from "date-fns";
 import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import { Op, Sequelize, WhereOptions, where } from "sequelize";
 
 import models from "db/models";
 
@@ -37,12 +37,15 @@ export default async function get(query: ParsedUrlQuery) {
   };
 
   if (state) {
-    if (state === "funding") {
+    if (state === "funding")
       whereCondition.fundingAmount = {
         [Op.ne]: "0",
         [Op.ne]: Sequelize.literal('"issue"."fundedAmount"'),
       };
-    }
+    else if (state === "open")
+      whereCondition.state[Op.in] = ["open", "ready", "proposal"];
+    else
+      whereCondition.state[Op.eq] = state;
   }
 
   if (issueId) 
@@ -105,7 +108,8 @@ export default async function get(query: ParsedUrlQuery) {
     getAssociation( "network", 
                     ["colors", "name", "networkAddress"], 
                     false, 
-                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {});
+                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
+                    [getAssociation("chain", ["chainId", "chainShortName", "color"])]);
 
   const repositoryAssociation = 
     getAssociation( "repository", 
