@@ -14,10 +14,13 @@ import getBountiesListData from "x-hooks/api/get-bounties-list-data";
 export default async function getExplorePageData(query: ParsedUrlQuery): Promise<ExplorePageProps> {
   const { network } = query;
 
-  const [ numberOfNetworks, recentBounties, recentFunding ] = await Promise.all([
+  const [ numberOfNetworks, bounties, recentBounties, recentFunding ] = await Promise.all([
     api.get("/search/networks/total", { params: { name: network } })
       .then(({ data }) => data)
       .catch(() => 0),
+    getBountiesListData(query)
+      .then(({ data }) => data)
+      .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1 })),
     getBountiesListData({ count: "3", state: "open" })
       .then(({ data }) => data.rows)
       .catch(() => []),
@@ -29,6 +32,7 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
   return {
     numberOfNetworks,
     numberOfBounties: 0,
+    bounties,
     recentBounties,
     recentFunding,
   };

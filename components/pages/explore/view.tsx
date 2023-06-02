@@ -16,6 +16,7 @@ interface ExplorePageViewProps extends ExplorePageProps {
 export default function ExplorePageView({
   numberOfNetworks,
   numberOfBounties,
+  bounties,
   recentBounties,
   recentFunding,
   networkName,
@@ -57,7 +58,10 @@ export default function ExplorePageView({
         recentBounties={recentFunding}
       />
 
-      <ListIssues variant="bounty-hall" />
+      <ListIssues 
+        bounties={bounties}
+        variant="bounty-hall"
+      />
     </BountyEffectsProvider>
   );
 }

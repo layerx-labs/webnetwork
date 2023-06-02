@@ -4,12 +4,12 @@ import {FormControl, InputGroup} from "react-bootstrap";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
-import Button from "components/button";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import InfiniteScroll from "components/infinite-scroll";
@@ -23,14 +23,19 @@ import ScrollTopButton from "components/scroll-top-button";
 import {useAppState} from "contexts/app-state";
 import {changeLoadState} from "contexts/reducers/change-load";
 
+import { issueParser } from "helpers/issue";
 import {isProposalDisputable} from "helpers/proposal";
 
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
+
+import { SearchBountiesPaginated } from "types/api";
 
 import useApi from "x-hooks/use-api";
 import useChain from "x-hooks/use-chain";
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
+
+import If from "./If";
 
 type Filter = {
   label: string;
@@ -41,6 +46,7 @@ type Filter = {
 type FiltersByIssueState = Filter[];
 
 interface ListIssuesProps {
+  bounties?: SearchBountiesPaginated;
   creator?: string;
   redirect?: string | UrlObject;
   filterState?: IssueState;
@@ -54,11 +60,6 @@ interface ListIssuesProps {
   variant?: "bounty-hall" | "profile" | "network" | "management"
 }
 
-interface IssuesPage {
-  page: number;
-  issues: IssueBigNumberData[];
-}
-
 export default function ListIssues({
   creator,
   filterState,
@@ -70,32 +71,30 @@ export default function ListIssues({
   redirect,
   disputableFilter,
   inView,
-  variant = "network"
+  variant = "network",
+  bounties
 }: ListIssuesProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "bounty", "pull-request", "proposal"]);
 
-  const [hasMore, setHasMore] = useState(false);
-  const [truncatedData, setTruncatedData] = useState(false);
-  const [issuesPages, setIssuesPages] = useState<IssuesPage[]>([]);
-  const [totalBounties, setTotalBounties] = useState<number>(0);
+  const [searchState, setSearchState] = useState("");
+  const [bountiesList, setBountiesList] = useState<SearchBountiesPaginated>();
 
-  const searchTimeout = useRef(null);
+  const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { chain } = useChain();
   const { searchIssues } = useApi();
   const { dispatch, state: appState } = useAppState();
-  const { page, nextPage, goToFirstPage } = usePage();
+  const { page, nextPage } = usePage();
   const { search, setSearch, clearSearch } = useSearch();
 
-  const [searchState, setSearchState] = useState(search);
-
+  const hasMorePages = bountiesList?.currentPage < bountiesList?.pages;
+  const hasIssues = !!bountiesList?.rows?.length;
   const isManagement = variant === 'management';
   const isProfile = variant === "profile";
   const isBountyHall = variant === "bounty-hall";
   const isOnNetwork = !!router?.query?.network;
   const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network"
-  const isNotFound = issuesPages.every((el) => el.issues?.length === 0) && !appState.loading?.isLoading
   const columns = [
     t("bounty:management.name"),
     t("bounty:management.link"),
@@ -143,16 +142,17 @@ export default function ListIssues({
 
   const [filterByState,] = useState<Filter>(filtersByIssueState[0]);
 
-  function isListEmpy(): boolean {
-    return issuesPages.every((el) => el.issues?.length === 0);
-  }
-
   function hasFilter(): boolean {
     return !!(state || time || repoId || search);
   }
 
   function showClearButton(): boolean {
     return search.trim() !== "";
+  }
+
+  function handleSearchChange(e) {
+    setSearchState(e.target.value);
+    debouncedSearchUpdater(e.target.value);
   }
 
   function handleClearSearch(): void {
@@ -208,26 +208,26 @@ export default function ListIssues({
       chainId: chain?.chainId?.toString(),
     })
       .then(async ({ count, rows, pages, currentPage }) => {
-        setTotalBounties(count);
+        // setTotalBounties(count);
         const issues = disputableFilter ? await disputableFilterFn(rows) : rows;
 
         if (currentPage > 1) {
-          if (issuesPages.find((el) => el.page === currentPage)) return;
+          // if (issuesPages.find((el) => el.page === currentPage)) return;
 
-          const tmp = [...issuesPages, { page: currentPage, issues }];
+          // const tmp = [...issuesPages, { page: currentPage, issues }];
 
-          tmp.sort((pageA, pageB) => {
-            if (pageA.page < pageB.page) return -1;
-            if (pageA.page > pageB.page) return 1;
+          // tmp.sort((pageA, pageB) => {
+          //   if (pageA.page < pageB.page) return -1;
+          //   if (pageA.page > pageB.page) return 1;
 
-            return 0;
-          });
-          setIssuesPages(tmp);
+          //   return 0;
+          // });
+          // setIssuesPages(tmp);
         } else {
-          setIssuesPages([{ page: currentPage, issues }]);
+          // setIssuesPages([{ page: currentPage, issues }]);
         }
 
-        setHasMore(currentPage < pages);
+        // setHasMore(currentPage < pages);
       })
       .catch((error) => {
         console.debug("Error fetching issues", error);
@@ -249,46 +249,21 @@ export default function ListIssues({
     router.push(redirect);
   }
 
-  useEffect(() => {
-    if (page && !!issuesPages.length) {
-      const pagesToValidate = [...Array(+page).keys()].map((i) => i + 1);
-
-      setTruncatedData(!pagesToValidate.every((pageV) =>
-          issuesPages.find((el) => el.page === pageV)));
-    }
-  }, [page, issuesPages]);
-
-  useEffect(handlerSearch, [
-    page,
-    search,
-    repoId,
-    time,
-    state,
-    sortBy,
-    order,
-    chain,
-    creator,
-    proposer,
-    appState.Service?.network?.active?.name,
-    inView,
-    appState.supportedChains,
-    networkName
-  ]);
-
-  useEffect(() => {
-    clearTimeout(searchTimeout.current);
-
-    searchTimeout.current =  setTimeout(() => {
-      setSearch(searchState);
-    }, 1000);
-
-    return () => clearTimeout(searchTimeout.current);
-  }, [searchState]);
-
-
   function isRenderFilter() {
-    return (!isListEmpy() || (isListEmpy() && hasFilter()));
+    return (hasIssues || (!hasIssues && hasFilter()));
   }
+
+  useEffect(() => {
+    setBountiesList(previous => {
+      if (!previous || bounties.currentPage === 1) return bounties;
+
+      return {
+        ...previous,
+        ...bounties,
+        rows: previous.rows.concat(bounties.rows)
+      };
+    });
+  }, [bounties]);
 
   if(inView !== null && inView === false) return null;
 
@@ -298,11 +273,12 @@ export default function ListIssues({
       childWrapperClassName={isProfile && "justify-content-left" || ""}
       col={isProfile || isManagement ? "col-12" : undefined}
     >
+      {console.log("### list-issues", router)}
       {(isBountyHall || isProfile) && (
         <div className="d-flex flex-row align-items-center mb-2">
           <h3 className="text-capitalize font-weight-medium">{listTitle}</h3>
           <div className="ms-2">
-            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">{totalBounties}</span>
+            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">{bountiesList?.count || 0}</span>
           </div>
         </div>
       )}
@@ -318,7 +294,7 @@ export default function ListIssues({
 
               <FormControl
                 value={searchState}
-                onChange={(e) => setSearchState(e.target.value)}
+                onChange={handleSearchChange}
                 className="p-2"
                 placeholder={t("bounty:search")}
                 onKeyDown={handleSearch}
@@ -384,17 +360,7 @@ export default function ListIssues({
         ""
       )}
 
-      {(truncatedData && (
-        <div className="row justify-content-center mb-3 pt-5">
-          <div className="d-flex col-6 align-items-center justify-content-center">
-            <span className="caption-small mr-1">
-              {t("errors.results-truncated")}
-            </span>
-            <Button onClick={goToFirstPage}>{t("actions.back-to-top")}</Button>
-          </div>
-        </div>
-      )) || <></>}
-      {isManagement && !isNotFound && (
+      {isManagement && !hasIssues && (
         <div className="row row align-center mb-2 px-3">
           {columns?.map((item) => (
             <div
@@ -408,36 +374,36 @@ export default function ListIssues({
           ))}
         </div>
       )}
-      {isNotFound ? (
-        <div className="pt-4">
-          <NothingFound description={emptyMessage || filterByState.emptyState}>
-            {(appState.currentUser?.walletAddress && !isBountyHall) && (
-              <ReadOnlyButtonWrapper>
-                <ContractButton onClick={handleNotFoundClick}>
-                  {buttonMessage || String(t("actions.create-one"))}
-                </ContractButton>
-                </ReadOnlyButtonWrapper>
-              )}
-          </NothingFound>
-        </div>
-      ) : null}
-      {(issuesPages.some((el) => el.issues?.length > 0) && (
+
+      <If 
+        condition={hasIssues}
+        otherwise={
+          <div className="pt-4">
+            <NothingFound description={emptyMessage || filterByState.emptyState}>
+              {(appState.currentUser?.walletAddress && !isBountyHall) && (
+                <ReadOnlyButtonWrapper>
+                  <ContractButton onClick={handleNotFoundClick}>
+                    {buttonMessage || String(t("actions.create-one"))}
+                  </ContractButton>
+                  </ReadOnlyButtonWrapper>
+                )}
+            </NothingFound>
+          </div>
+        }
+      >
         <InfiniteScroll
           handleNewPage={nextPage}
           isLoading={appState.loading?.isLoading}
-          hasMore={hasMore}>
-          {issuesPages.map(({ issues }) => {
-            return issues?.map((issue) => (
+          hasMore={hasMorePages}
+        >
+          {bountiesList?.rows?.map(issue => 
               <IssueListItem
-                issue={issue}
+                issue={issueParser(issue)}
                 key={`${issue.repository_id}/${issue.githubId}`}
                 variant={variantIssueItem}
-              />
-            ));
-          })}
+              />)}
         </InfiniteScroll>
-      )) || <></>}
-
+      </If>
       <ScrollTopButton />
     </CustomContainer>
   );

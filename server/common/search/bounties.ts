@@ -125,8 +125,26 @@ export default async function get(query: ParsedUrlQuery) {
                     !!transactionalTokenAddress, 
                     transactionalTokenAddress ? { address: { [Op.iLike]: transactionalTokenAddress.toString() } } : {});
 
+  const COLS_TO_CAST = ["amount", "fundingAmount"];
   const RESULTS_LIMIT = count ? +count : undefined;
   const PAGE = +(page || 1);
+  const sort = [];
+  
+  if (sortBy) {
+    const columns = sortBy
+      .toString()
+      .replaceAll(",", ",+,")
+      .split(",")
+      .map(column => {
+        if (column === "+") return Sequelize.literal("+");
+        if (COLS_TO_CAST.includes(column)) return Sequelize.cast(Sequelize.col(column), "DECIMAL");
+
+        return column;
+      });
+
+    sort.push(...columns);
+  } else
+    sort.push("updatedAt");
 
   const issues = await models.issue.findAndCountAll(paginate({
     logging: console.log,
@@ -138,7 +156,7 @@ export default async function get(query: ParsedUrlQuery) {
       repositoryAssociation,
       transactionalTokenAssociation,
     ]
-  }, { page: PAGE }, [[sortBy || "updatedAt", order || "DESC"]], RESULTS_LIMIT));
+  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
 
   return {
     ...issues,
