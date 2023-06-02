@@ -124,7 +124,9 @@ export default function HamburgerMenuView({
               </If>
 
               <div className="d-flex flex-column gap-4 py-3">
-                <CreateNetworkBountyButton />
+                <CreateNetworkBountyButton
+                  actionCallBack={onHideHamburger}
+                />
 
                 {NAVIGATION_LINKS.global.map(GlobalLink)}
               </div>

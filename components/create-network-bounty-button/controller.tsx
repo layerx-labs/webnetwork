@@ -3,15 +3,28 @@ import { useRouter } from "next/router";
 
 import CreateNetworkBountyButtonView from "components/create-network-bounty-button/view";
 
-export default function CreateNetworkBountyButton() {
+interface CreateNetworkBountyButtonProps {
+  actionCallBack?: () => void;
+}
+
+export default function CreateNetworkBountyButton({
+  actionCallBack
+}: CreateNetworkBountyButtonProps) {
   const { t } = useTranslation("common");
   const { pathname, push } = useRouter();
 
   const isOnNetwork = pathname?.includes("[network]");
 
+  function onClick(url) {
+    return () => {
+      push(url);
+      actionCallBack?.();
+    }
+  }
+
   const actions = [
-    { label: t("misc.bounty"), onClick: () => push("/create-bounty") },
-    { label: t("misc.network"), onClick: () => push("/new-network") },
+    { label: t("misc.bounty"), onClick: onClick("/create-bounty") },
+    { label: t("misc.network"), onClick: onClick("/new-network") },
   ];
 
   return <CreateNetworkBountyButtonView
