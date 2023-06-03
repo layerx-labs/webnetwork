@@ -57,7 +57,7 @@ export default function useFilters(): [
       page: "1"
     };
 
-    router.push({ pathname: router.pathname, query }, router.asPath);
+    router.push({ pathname: router.pathname, query }, router.asPath, { shallow: false, scroll: false });
   }
 
   function makeFilterOption(label, value, checked = false) {
@@ -152,7 +152,7 @@ export default function useFilters(): [
       page: "1"
     };
 
-    router.push({ pathname: router.pathname, query }, router.asPath);
+    router.push({ pathname: router.pathname, query }, router.asPath, { shallow: false, scroll: false });
   }
 
   return [[repoFilters, stateFilters, timeFilters], updateOpt, clearFilters, checkOption, updateRouterQuery];
