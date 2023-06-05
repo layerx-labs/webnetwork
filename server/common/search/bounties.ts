@@ -87,11 +87,38 @@ export default async function get(query: ParsedUrlQuery) {
   }
 
   // Associations
+  const networkAssociation = 
+    getAssociation( "network", 
+                    ["colors", "name", "networkAddress"], 
+                    true, 
+                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
+                    [getAssociation("chain", ["chainId", "chainShortName", "color"])]);
+
+  const isMergeableState = state === "mergeable";
+  const isDisputableState = state === "disputable";
   const proposalAssociation = 
     getAssociation( "mergeProposals", 
                     undefined, 
-                    !!proposer, 
-                    proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {});
+                    !!proposer || isMergeableState || isDisputableState, 
+                    {
+                      ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
+                      ... isMergeableState || isDisputableState ? {
+                        isDisputed: false,
+                        refusedByBountyOwner: false,
+                        ... isDisputableState ? { 
+                          createdAt: { 
+                            [Op.lte]: Sequelize.literal(`"mergeProposals"."createdAt" + interval '1 second' * "network"."disputableTime" / 1000`)
+                          }
+                        } : {}
+                      } : {}
+                    },
+                    isMergeableState || isDisputableState ? [
+                      {
+                        association: "network",
+                        required: true,
+                        attributes: ["disputableTime"]
+                      }
+                    ] : []);
 
   const isProposableState = state === "proposable";
   const pullRequestAssociation = 
@@ -105,13 +132,6 @@ export default async function get(query: ParsedUrlQuery) {
                       },
                       ... pullRequester ? { userAddress: { [Op.iLike]: pullRequester.toString() } } : {}
                     });
-
-  const networkAssociation = 
-    getAssociation( "network", 
-                    ["colors", "name", "networkAddress"], 
-                    false, 
-                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
-                    [getAssociation("chain", ["chainId", "chainShortName", "color"])]);
 
   const repositoryAssociation = 
     getAssociation( "repository", 
