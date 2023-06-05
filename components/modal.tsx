@@ -1,13 +1,14 @@
 import { Modal as ModalBootstrap } from "react-bootstrap";
-import { isMobile } from "react-device-detect";
 
 import { kebabCase } from "lodash";
 
 import CloseIcon from "assets/icons/close-icon";
 
+import Button from "components/button";
+
 import { Modal as ModalProps } from "types/modal";
 
-import Button from "./button";
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 export default function Modal({
   title = "",
@@ -31,9 +32,10 @@ export default function Modal({
   isExecuting = false,
   ...params
 }: ModalProps) {
+  const { isMobileView } = useBreakPoint();
 
   if (!params.show)
-    return <></>
+    return <></>;
 
   const modalTitle = `${kebabCase(key || title)}-modal`;
 
@@ -74,7 +76,7 @@ export default function Modal({
       aria-describedby={modalTitle}
       id={modalTitle}
       backdrop={backdrop}
-      fullscreen={isMobile as string | true}
+      fullscreen={isMobileView as string | true}
       {...params}
     >
       <ModalBootstrap.Header
