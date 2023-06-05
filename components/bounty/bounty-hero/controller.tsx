@@ -1,31 +1,32 @@
 import { useRouter } from "next/router";
 
-import { useAppState } from "contexts/app-state";
-
 import { getIssueState } from "helpers/handleTypeIssue";
+
+import { IssueBigNumberData } from "interfaces/issue-data";
 
 import BountyHeroView from "./view";
 
 export default function BountyHeroController({
   handleEditIssue,
   isEditIssue,
+  currentBounty
 }: {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
+  currentBounty: IssueBigNumberData
 }) {
   const router = useRouter();
 
-  const { state } = useAppState();
   const { network } = router.query;
   const currentState = getIssueState({
-    state: state.currentBounty?.data?.state,
-    amount: state.currentBounty?.data?.amount,
-    fundingAmount: state.currentBounty?.data?.fundingAmount,
+    state: currentBounty?.state,
+    amount: currentBounty?.amount,
+    fundingAmount: currentBounty?.fundingAmount,
   });
 
   return (
     <BountyHeroView
-      bounty={state.currentBounty?.data}
+      bounty={currentBounty}
       network={network}
       currentState={currentState}
       handleEditIssue={handleEditIssue}

@@ -119,6 +119,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   return (
     <BountyEffectsProvider>
       <BountyHeroController 
+        currentBounty={currentBounty?.data}
         handleEditIssue={handleEditIssue}
         isEditIssue={isEditIssue}
       />
