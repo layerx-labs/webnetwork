@@ -19,7 +19,7 @@ export default async function get(query: ParsedUrlQuery) {
     proposer,
     pullRequester,
     networkName,
-    repositoryPath,
+    repoId,
     transactionalTokenAddress,
     time,
     search,
@@ -132,9 +132,9 @@ export default async function get(query: ParsedUrlQuery) {
   const repositoryAssociation = 
     getAssociation( "repository", 
                     ["id", "githubPath"], 
-                    false, 
-                    repositoryPath ? { 
-                      githubPath: caseInsensitiveEqual("repository.githubPath", repositoryPath.toString()) 
+                    !!repoId, 
+                    repoId ? { 
+                      id: +repoId
                     } : {});
 
   const transactionalTokenAssociation = 
