@@ -36,7 +36,7 @@ export default async function get(query: ParsedUrlQuery) {
     [Op.notIn]: ["pending", "canceled"]
   };
 
-  if (state && !["proposable", "disputable", "mergeable"].includes(state.toString())) {
+  if (state && !["disputable", "mergeable"].includes(state.toString())) {
     if (state === "funding")
       whereCondition.fundingAmount = {
         [Op.ne]: "0",
@@ -44,6 +44,8 @@ export default async function get(query: ParsedUrlQuery) {
       };
     else if (state === "open")
       whereCondition.state[Op.in] = ["open", "ready", "proposal"];
+    else if (state === "proposable")
+      whereCondition.state[Op.eq] = "ready";
     else
       whereCondition.state[Op.eq] = state;
   }
@@ -87,15 +89,11 @@ export default async function get(query: ParsedUrlQuery) {
   }
 
   // Associations
-  const networkAssociation = 
-    getAssociation( "network", 
-                    ["colors", "name", "networkAddress"], 
-                    true, 
-                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
-                    [getAssociation("chain", ["chainId", "chainShortName", "color"])]);
-
   const isMergeableState = state === "mergeable";
   const isDisputableState = state === "disputable";
+  const operator = isMergeableState ? Op.gte : Op.lte;
+  const disputableTimeCalc = `"mergeProposals"."createdAt" + interval '1 second' * "network"."disputableTime" / 1000`;
+  
   const proposalAssociation = 
     getAssociation( "mergeProposals", 
                     undefined, 
@@ -103,35 +101,33 @@ export default async function get(query: ParsedUrlQuery) {
                     {
                       ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
                       ... isMergeableState || isDisputableState ? {
-                        isDisputed: false,
-                        refusedByBountyOwner: false,
-                        ... isDisputableState ? { 
-                          createdAt: { 
-                            [Op.lte]: Sequelize.literal(`"mergeProposals"."createdAt" + interval '1 second' * "network"."disputableTime" / 1000`)
-                          }
-                        } : {}
+                        [Op.and]: [
+                          { isDisputed: false },
+                          { refusedByBountyOwner: false },
+                          Sequelize.where(Sequelize.fn("now"),
+                                          operator,
+                                          Sequelize.literal(disputableTimeCalc))
+                        ]
                       } : {}
-                    },
-                    isMergeableState || isDisputableState ? [
-                      {
-                        association: "network",
-                        required: true,
-                        attributes: ["disputableTime"]
-                      }
-                    ] : []);
+                    });
 
-  const isProposableState = state === "proposable";
   const pullRequestAssociation = 
     getAssociation( "pullRequests", 
                     undefined, 
-                    !!pullRequester || isProposableState, 
+                    !!pullRequester, 
                     {
                       status: {
                         [Op.not]: "canceled",
-                        ... isProposableState ? { [Op.eq]: "ready" } : {}
                       },
                       ... pullRequester ? { userAddress: { [Op.iLike]: pullRequester.toString() } } : {}
                     });
+
+  const networkAssociation = 
+    getAssociation( "network", 
+                    ["colors", "name", "networkAddress", "disputableTime"], 
+                    true, 
+                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
+                    [getAssociation("chain", ["chainId", "chainShortName", "color"], true)]);
 
   const repositoryAssociation = 
     getAssociation( "repository", 
@@ -169,11 +165,13 @@ export default async function get(query: ParsedUrlQuery) {
     sort.push("updatedAt");
 
   const issues = await models.issue.findAndCountAll(paginate({
+    logging: console.log,
     where: whereCondition,
+    subQuery: false,
     include: [
+      networkAssociation,
       proposalAssociation,
       pullRequestAssociation,
-      networkAssociation,
       repositoryAssociation,
       transactionalTokenAssociation,
     ]

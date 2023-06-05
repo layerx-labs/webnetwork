@@ -33,6 +33,7 @@ export default function PageCouncil({
         emptyMessage={t("council:empty")}
         disputableFilter="merge"
         inView={type === 'ready-to-close'}
+        bounties={bounties}
       />
     ),
     "ready-to-dispute": (
@@ -42,6 +43,7 @@ export default function PageCouncil({
         emptyMessage={t("council:empty")}
         disputableFilter="dispute"
         inView={type === 'ready-to-dispute'}
+        bounties={bounties}
       />
     ),
     "ready-to-propose": (
@@ -72,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
     const state = {
       "ready-to-propose": "proposable",
       "ready-to-dispute": "disputable",
-      "ready-to-merge": "mergeable",
+      "ready-to-close": "mergeable",
     }[type.toString()];
 
     const bountiesPaginated = await getBountiesListData({ ...query, state })
