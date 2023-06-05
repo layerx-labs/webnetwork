@@ -95,7 +95,7 @@ export default function PageActionsView({
     return (
       <PageActionsButton
         onClick={handleActionWorking}
-        className={`read-only-button ${
+        className={`d-none d-lg-block read-only-button ${
           isTablet || isMobile ? "col-12" : "bounty-outline-button"
         }`}
         disabled={isExecuting}
@@ -185,6 +185,8 @@ export default function PageActionsView({
           actions={actions}
         />
       );
+    
+    if (isStartWorkingButton && isKycButton) return  <KycButton />
 
     return <StartWorkingButton />;
   }
@@ -203,33 +205,35 @@ export default function PageActionsView({
             <h4 className="h4 d-flex align-items-center d-none d-lg-block">
               {t("misc.details")}
             </h4>
-
-            <div className="d-flex flex-row align-items-center gap-20 d-none d-lg-block">
-              <If condition={isForkRepositoryLink}>
-                <ForkRepositoryLink />
-              </If>
-              <If condition={isStartWorkingButton && isKycButton}>
-                <KycButton />
-              </If>
-              <If condition={isStartWorkingButton && !isKycButton}>
-                <StartWorkingButton />
-              </If>
-              <If condition={isCreatePr}>
-                <CreatePullRequestButton />
-              </If>
-              <If condition={isUpdateAmountButton}>
-                <UpdateAmountButton />
-              </If>
-              <If condition={isCreateProposal}>
-                <CreateProposalButton />
-              </If>
-              <If condition={isEditButton}>
-                <EditButton />
-              </If>
-              <If condition={!isGithubConnected && isWalletConnected}>
-                <ConnectGithub size="sm" />
-              </If>
+            <div className="d-none d-lg-block">
+              <div className="d-flex align-items-center gap-20">
+                <If condition={isForkRepositoryLink}>
+                  <ForkRepositoryLink />
+                </If>
+                <If condition={isStartWorkingButton && isKycButton}>
+                  <KycButton />
+                </If>
+                <If condition={isStartWorkingButton && !isKycButton}>
+                  <StartWorkingButton />
+                </If>
+                <If condition={isCreatePr}>
+                  <CreatePullRequestButton />
+                </If>
+                <If condition={isUpdateAmountButton}>
+                  <UpdateAmountButton />
+                </If>
+                <If condition={isCreateProposal}>
+                  <CreateProposalButton />
+                </If>
+                <If condition={isEditButton}>
+                  <EditButton />
+                </If>
+                <If condition={!isGithubConnected && isWalletConnected}>
+                  <ConnectGithub size="sm" />
+                </If>
+              </div>
             </div>
+            
             <div className="col-12 d-lg-none">
               <TabletAndMobileButton />
             </div>
