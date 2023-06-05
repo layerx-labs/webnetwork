@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 interface InfiniteScrollProps {
   handleNewPage: () => void;
   isLoading: boolean;
@@ -12,6 +12,8 @@ export default function InfiniteScroll({
   isLoading,
   children
 }: InfiniteScrollProps) {
+  const divRef = useRef(null);
+
   function handleScrolling(entries, observer) {
     if (!hasMore || isLoading) return;
 
@@ -31,15 +33,14 @@ export default function InfiniteScroll({
   });
 
   useEffect(() => {
-    const childs = document.getElementById("infinite-scroll").children;
+    const lastChild = divRef.current?.lastChild
 
-    if (childs.length) observer.observe(childs[childs.length - 1]);
+    if (lastChild) observer.observe(lastChild);
 
     return () => {
-      if (childs.length)
-        observer.unobserve(childs[childs.length - 1]);
+      if (lastChild) observer.unobserve(lastChild);
     };
-  }, [hasMore, isLoading]);
+  }, [hasMore, isLoading, children]);
 
-  return <div id="infinite-scroll">{children}</div>;
+  return <div id="infinite-scroll" ref={divRef}>{children}</div>;
 }
