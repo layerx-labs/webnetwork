@@ -6,7 +6,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 
 import BountyHeroView from "./view";
 
-export default function BountyHeroController({
+export default function BountyHero({
   handleEditIssue,
   isEditIssue,
   currentBounty
