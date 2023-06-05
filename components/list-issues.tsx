@@ -273,12 +273,13 @@ export default function ListIssues({
       childWrapperClassName={isProfile && "justify-content-left" || ""}
       col={isProfile || isManagement ? "col-12" : undefined}
     >
-      {console.log("### list-issues", router)}
       {(isBountyHall || isProfile) && (
         <div className="d-flex flex-row align-items-center mb-2">
           <h3 className="text-capitalize font-weight-medium">{listTitle}</h3>
           <div className="ms-2">
-            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">{bountiesList?.count || 0}</span>
+            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
+              {bountiesList?.count || 0}
+            </span>
           </div>
         </div>
       )}
