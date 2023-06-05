@@ -59,7 +59,6 @@ export default function PageCouncil({
 
   return (
     <CouncilLayout>
-      {console.log("pagecouncil", bounties)}
       {types[type?.toString()]}
     </CouncilLayout>
   );
