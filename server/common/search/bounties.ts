@@ -1,6 +1,6 @@
 import { subHours, subMonths, subWeeks, subYears } from "date-fns";
 import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions, where } from "sequelize";
+import { Op, Sequelize, WhereOptions } from "sequelize";
 
 import models from "db/models";
 
@@ -36,7 +36,7 @@ export default async function get(query: ParsedUrlQuery) {
     [Op.notIn]: ["pending", "canceled"]
   };
 
-  if (state) {
+  if (state && !["proposable", "disputable", "mergeable"].includes(state.toString())) {
     if (state === "funding")
       whereCondition.fundingAmount = {
         [Op.ne]: "0",
@@ -93,13 +93,15 @@ export default async function get(query: ParsedUrlQuery) {
                     !!proposer, 
                     proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {});
 
+  const isProposableState = state === "proposable";
   const pullRequestAssociation = 
     getAssociation( "pullRequests", 
                     undefined, 
-                    !!pullRequester, 
+                    !!pullRequester || isProposableState, 
                     {
                       status: {
-                        [Op.not]: "canceled"
+                        [Op.not]: "canceled",
+                        ... isProposableState ? { [Op.eq]: "ready" } : {}
                       },
                       ... pullRequester ? { userAddress: { [Op.iLike]: pullRequester.toString() } } : {}
                     });

@@ -9,7 +9,17 @@ import CouncilLayout from "components/council-layout";
 import CuratorsList from "components/curators-list";
 import ListIssues from "components/list-issues";
 
-export default function PageCouncil() {
+import { SearchBountiesPaginated } from "types/api";
+
+import getBountiesListData from "x-hooks/api/get-bounties-list-data";
+
+interface PageCouncilProps {
+  bounties: SearchBountiesPaginated;
+}
+
+export default function PageCouncil({
+  bounties
+}: PageCouncilProps) {
   const { t } = useTranslation(["council"]);
   const router = useRouter();
   const { type } = router.query;
@@ -40,20 +50,41 @@ export default function PageCouncil() {
         filterState="ready"
         emptyMessage={t("council:empty")}
         inView={!type || type === 'ready-to-propose'}
+        bounties={bounties}
       />
     ),
   };
 
   return (
     <CouncilLayout>
+      {console.log("pagecouncil", bounties)}
       {types[type?.toString()]}
     </CouncilLayout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+  const { type } = query;
+
+  const bounties = {};
+
+  if (type && type !== "curators-list") {
+    const state = {
+      "ready-to-propose": "proposable",
+      "ready-to-dispute": "disputable",
+      "ready-to-merge": "mergeable",
+    }[type.toString()];
+
+    const bountiesPaginated = await getBountiesListData({ ...query, state })
+      .then(({ data }) => data)
+      .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1 }));
+
+    Object.assign(bounties, bountiesPaginated);
+  }
+
   return {
     props: {
+      bounties,
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",

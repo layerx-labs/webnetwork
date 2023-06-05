@@ -1,10 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FormControl, InputGroup} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
@@ -12,6 +12,7 @@ import SearchIcon from "assets/icons/search-icon";
 import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
+import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
 import IssueListItem from "components/issue-list-item";
@@ -35,7 +36,6 @@ import useChain from "x-hooks/use-chain";
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
 
-import If from "./If";
 
 type Filter = {
   label: string;

@@ -48,7 +48,7 @@ export default function CouncilLayout({ children }) {
   function handleUrlCurators (type: string) {
     return push(getURLWithNetwork("/curators", {
       type
-    }), asPath, { shallow: true  });
+    }), asPath, { shallow: false, scroll: false });
   }
 
   const internalLinks = [
