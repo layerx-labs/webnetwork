@@ -7,11 +7,11 @@ import { useAppState } from "contexts/app-state";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
-import { fundingBenefactor } from "interfaces/issue-data";
+import { IssueBigNumberData, fundingBenefactor } from "interfaces/issue-data";
 
 import FundingSectionView from "./view";
 
-export default function FundingSectionController() {
+export default function FundingSection({ currentBounty }: { currentBounty: IssueBigNumberData}) {
   const { t } = useTranslation(["common", "funding"]);
 
   const [walletFunds, setWalletFunds] = useState<fundingBenefactor[]>();
@@ -19,21 +19,21 @@ export default function FundingSectionController() {
   const { state } = useAppState();
 
   const isConnected = !!state.currentUser?.walletAddress;
-  const hasReward = state.currentBounty?.data?.hasReward;
-  const isBountyClosed = !!state.currentBounty?.data?.isClosed;
-  const isBountyFunded = !!state.currentBounty?.data?.isFunded;
-  const isBountyInDraft = !!state.currentBounty?.data?.isDraft;
+  const hasReward = currentBounty?.hasReward;
+  const isBountyClosed = !!currentBounty?.isClosed;
+  const isBountyFunded = !!currentBounty?.isFunded;
+  const isBountyInDraft = !!currentBounty?.isDraft;
   const transactionalSymbol =
-    state.currentBounty?.data?.transactionalToken?.symbol;
-  const rewardTokenSymbol = state.currentBounty?.data?.rewardToken?.symbol;
+    currentBounty?.transactionalToken?.symbol;
+  const rewardTokenSymbol = currentBounty?.rewardToken?.symbol;
 
   const fundsGiven =
     walletFunds?.reduce((acc, fund) => fund.amount.plus(acc), BigNumber(0)) ||
     BigNumber(0);
 
   const futureRewards = fundsGiven
-    .multipliedBy(state.currentBounty?.data?.rewardAmount)
-    .dividedBy(state.currentBounty?.data?.fundingAmount)
+    .multipliedBy(currentBounty?.rewardAmount)
+    .dividedBy(currentBounty?.fundingAmount)
     .toFixed();
 
   const collapseAction = isBountyClosed
@@ -42,19 +42,19 @@ export default function FundingSectionController() {
 
   const isCanceled =
     getIssueState({
-      state: state.currentBounty?.data?.state,
-      amount: state.currentBounty?.data?.amount,
-      fundingAmount: state.currentBounty?.data?.fundingAmount,
+      state: currentBounty?.state,
+      amount: currentBounty?.amount,
+      fundingAmount: currentBounty?.fundingAmount,
     }) === "canceled";
 
   useEffect(() => {
-    if (!state.currentUser?.walletAddress || !state.currentBounty?.data) return;
+    if (!state.currentUser?.walletAddress || !currentBounty) return;
 
     const funds = 
-      state.currentBounty?.data?.benefactors.filter((fund) => fund.address === state.currentUser.walletAddress);
+      currentBounty?.benefactors.filter((fund) => fund.address === state.currentUser.walletAddress);
 
     setWalletFunds(funds);
-  }, [state.currentUser, state.currentBounty?.data, state.currentBounty?.data]);
+  }, [state.currentUser, currentBounty, currentBounty]);
 
   if (isBountyFunded && !walletFunds?.length) return <></>;
 
@@ -65,7 +65,7 @@ export default function FundingSectionController() {
       isConnected={isConnected}
       isCanceled={isCanceled}
       transactionalSymbol={transactionalSymbol}
-      bounty={state.currentBounty?.data}
+      bounty={currentBounty}
       hasReward={hasReward}
       fundsGiven={fundsGiven}
       futureRewards={futureRewards}

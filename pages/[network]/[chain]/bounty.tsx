@@ -8,7 +8,7 @@ import {GetServerSideProps} from "next/types";
 import BountyBodyController from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
 import BountyCommentsController from "components/bounty/comments/controller";
-import FundingSectionController from "components/bounty/funding-section/controller";
+import FundingSection from "components/bounty/funding-section/controller";
 import PageActions from "components/bounty/page-actions/controller";
 import TabSections from "components/bounty/tabs-sections";
 import If from "components/If";
@@ -125,7 +125,9 @@ export default function PageIssue({ bounty }: PageBountyProps) {
       />
 
       <If condition={!!currentBounty?.data?.isFundingRequest}>
-        <FundingSectionController /> 
+        <FundingSection 
+          currentBounty={currentBounty?.data}
+        /> 
       </If>
 
       <PageActions
