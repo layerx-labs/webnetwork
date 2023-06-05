@@ -118,7 +118,7 @@ export default function BountyHeroView({
                 <BountyItemLabel label={t("common:misc.repository")}>
                   <span className={`text-gray me-2 text-truncate`}>
                     {
-                      bounty?.repository?.githubPath.split("/")?.[0]
+                      bounty?.repository?.githubPath.split("/")?.[1]
                     }
                   </span>
                 </BountyItemLabel>
