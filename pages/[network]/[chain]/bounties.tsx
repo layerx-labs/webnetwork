@@ -13,11 +13,20 @@ import {BountyEffectsProvider} from "contexts/bounty-effects";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
+import { SearchBountiesPaginated } from "types/api";
+
+import getBountiesListData from "x-hooks/api/get-bounties-list-data";
 import useApi from "x-hooks/use-api";
 import {useBounty} from "x-hooks/use-bounty";
 import useChain from "x-hooks/use-chain";
 
-export default function BountiesPage() {
+interface BountiesPageProps {
+  bounties: SearchBountiesPaginated;
+}
+
+export default function BountiesPage({
+  bounties
+}: BountiesPageProps) {
   useBounty();
   const { t } = useTranslation(["common"]);
   const { query } = useRouter();
@@ -102,14 +111,22 @@ export default function BountiesPage() {
         infos={infos}
       />
 
-      <ListIssues variant="network" />
+      <ListIssues
+        bounties={bounties}
+        variant="network"
+      />
     </BountyEffectsProvider>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+  const bounties = await getBountiesListData(query)
+    .then(({ data }) => data)
+    .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1 }));
+
   return {
     props: {
+      bounties,
       ...(await serverSideTranslations(locale, ["common", "bounty", "connect-wallet-button"]))
     }
   };
