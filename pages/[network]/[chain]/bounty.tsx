@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 
+import { SSRConfig } from "next-i18next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
@@ -16,19 +17,29 @@ import {useAppState} from "contexts/app-state";
 import {BountyEffectsProvider} from "contexts/bounty-effects";
 
 import {IM_AM_CREATOR_ISSUE} from "helpers/constants";
+import { issueParser } from "helpers/issue";
 
+import { CurrentBounty } from "interfaces/application-state";
 import { IssueData } from "interfaces/issue-data";
 
 import { api } from "services/api";
 
+import { getBountyData, getBountyComments, getPullRequestsDetails } from "x-hooks/api/get-bounty-data";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useOctokit from "x-hooks/use-octokit";
 
+interface PageBountyProps {
+  bounty: {
+    comments: any[]; //eslint-disable-line
+    data: IssueData;
+}
+  _nextI18Next?: SSRConfig;
+}
 
-export default function PageIssue() {
+export default function PageIssue({ bounty }: PageBountyProps) {
   // useBounty();
   const router = useRouter();
-
+  const [currentBounty, setCurrentBounty] = useState<CurrentBounty>();
   const [commentsIssue, setCommentsIssue] = useState([]);
   const [isRepoForked, setIsRepoForked] = useState<boolean>();
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
@@ -38,6 +49,16 @@ export default function PageIssue() {
   const { signMessage } = useAuthentication();
 
   const { id } = router.query;
+
+  useEffect(() => {
+    if (!bounty) return;
+    
+    setCurrentBounty({
+      data: issueParser(bounty?.data),
+      comments: bounty?.comments,
+      lastUpdated: 0,
+    });
+  }, [bounty]);
 
   async function handleEditIssue() {
     signMessage(IM_AM_CREATOR_ISSUE)
@@ -54,7 +75,7 @@ export default function PageIssue() {
   function checkForks(){
     if (!state.Service?.network?.repos?.active?.githubPath || isRepoForked !== undefined) return;
 
-    if (state.currentBounty?.data?.working?.includes(state.currentUser?.login))
+    if (bounty?.data?.working?.includes(state.currentUser?.login))
       return setIsRepoForked(true);
 
     const [, activeName] = state.Service.network.repos.active.githubPath.split("/");
@@ -77,20 +98,20 @@ export default function PageIssue() {
   }
 
   useEffect(() => {
-    if (state.currentBounty?.comments) setCommentsIssue([...state.currentBounty?.comments || []]);
-  }, [ state.currentBounty?.data, state.Service?.network?.repos?.active ]);
+    if (currentBounty?.comments) setCommentsIssue([...currentBounty?.comments || []]);
+  }, [ currentBounty?.data, state.Service?.network?.repos?.active ]);
 
   useEffect(() => {
     if (!state.currentUser?.login ||
         !state.currentUser?.walletAddress ||
         !state.Service?.network?.repos?.active ||
-        !state.currentBounty?.data ||
+        !currentBounty?.data ||
         isRepoForked !== undefined) 
       return;
     checkForks();
   },[
     state.currentUser?.login, 
-    state.currentBounty?.data?.working, 
+    currentBounty?.data?.working, 
     state.Service?.network?.repos?.active,
     !state.currentUser?.walletAddress
   ]);
@@ -102,7 +123,7 @@ export default function PageIssue() {
         isEditIssue={isEditIssue}
       />
 
-      <If condition={!!state.currentBounty?.data?.isFundingRequest}>
+      <If condition={!!currentBounty?.data?.isFundingRequest}>
         <FundingSectionController /> 
       </If>
 
@@ -116,7 +137,7 @@ export default function PageIssue() {
       <If condition={!!state.currentUser?.walletAddress}>
         <TabSections/>
       </If>
-
+      {console.log('current', currentBounty)}
       <BountyBodyController 
         isEditIssue={isEditIssue} 
         cancelEditIssue={handleCancelEditIssue}
@@ -124,7 +145,7 @@ export default function PageIssue() {
 
       <BountyCommentsController
         comments={commentsIssue}
-        repo={state.currentBounty?.data?.repository?.githubPath}
+        repo={currentBounty?.data?.repository?.githubPath}
         issueId={id}
       />
     </BountyEffectsProvider>
@@ -133,15 +154,25 @@ export default function PageIssue() {
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const { id, repoId, network, chain } = query;
-  
-  const currentIssue = await api
-    .get<IssueData>(`/issue/seo/${repoId}/${id}/${network}/${chain}`)
-    .then(({ data }) => data)
-    .catch(() => null);
 
+  api.get<IssueData>(`/issue/seo/${repoId}/${id}/${network}/${chain}`)
+
+  const bountyDatabase = await getBountyData(query)
+
+  const githubComments = await getBountyComments(bountyDatabase?.repository?.githubPath, +bountyDatabase?.githubId)
+
+  const pullRequestsDetails = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
+                                                           bountyDatabase?.pullRequests);
+
+  
+  const bounty = {
+    comments: githubComments,
+    data: {...bountyDatabase, pullRequests: pullRequestsDetails}
+  }
+  
   return {
     props: {
-      currentIssue,
+      bounty,
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",
