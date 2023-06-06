@@ -4,78 +4,82 @@ import { useAppState } from "contexts/app-state";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
+import { IssueBigNumberData } from "interfaces/issue-data";
+
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import { useBounty } from "x-hooks/use-bounty";
 
 import BountySettingsView from "./view";
 
-export default function BountySettingsController({
+export default function BountySettings({
   handleEditIssue,
   isEditIssue,
+  currentBounty,
+  updateBountyData
 }: {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
+  currentBounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
 }) {
   const [isCancelable, setIsCancelable] = useState(false);
   const { state } = useAppState();
   const { handleReedemIssue, handleHardCancelBounty } = useBepro();
   const { updateWalletBalance } = useAuthentication();
-  const { getDatabaseBounty } = useBounty();
 
   const objViewProps = {
     isWalletConnected: !!state.currentUser?.walletAddress,
     isGithubConnected: !!state.currentUser?.login,
-    isBountyInDraft: !!state.currentBounty?.data?.isDraft,
-    hasOpenPullRequest: !!state.currentBounty?.data?.pullRequests?.find((pullRequest) =>
+    isBountyInDraft: !!currentBounty?.isDraft,
+    hasOpenPullRequest: !!currentBounty?.pullRequests?.find((pullRequest) =>
         pullRequest?.githubLogin === state.currentUser?.login &&
         pullRequest?.status !== "canceled"),
     isBountyOwner:
       !!state.currentUser?.walletAddress &&
-      state.currentBounty?.data?.creatorAddress &&
-      state.currentBounty?.data?.creatorAddress ===
+      currentBounty?.creatorAddress &&
+      currentBounty?.creatorAddress ===
         state.currentUser?.walletAddress,
 
-    isFundingRequest: !!state.currentBounty?.data?.isFundingRequest,
-    isBountyFunded: state.currentBounty?.data?.fundedAmount?.isEqualTo(state.currentBounty?.data?.fundingAmount),
+    isFundingRequest: !!currentBounty?.isFundingRequest,
+    isBountyFunded: currentBounty?.fundedAmount?.isEqualTo(currentBounty?.fundingAmount),
     isBountyOpen:
-      state.currentBounty?.data?.isClosed === false &&
-      state.currentBounty?.data?.isCanceled === false,
+      currentBounty?.isClosed === false &&
+      currentBounty?.isCanceled === false,
   };
 
   async function handleHardCancel() {
     handleHardCancelBounty().then(() => {
       updateWalletBalance();
-      getDatabaseBounty(true);
+      updateBountyData();
     });
   }
 
   async function handleRedeem() {
     handleReedemIssue(getIssueState({
-        state: state.currentBounty?.data?.state,
-        amount: state.currentBounty?.data?.amount,
-        fundingAmount: state.currentBounty?.data?.fundingAmount,
+        state: currentBounty?.state,
+        amount: currentBounty?.amount,
+        fundingAmount: currentBounty?.fundingAmount,
     }) === "funding").then(() => {
       updateWalletBalance(true);
-      getDatabaseBounty(true);
+      updateBountyData();
     });
   }
 
   useEffect(() => {
-    if (state.Service?.active && state.currentBounty?.data)
+    if (state.Service?.active && currentBounty)
       (async () => {
         const cancelableTime = await state.Service?.active.getCancelableTime();
         const canceable =
           +new Date() >=
-          +new Date(+state.currentBounty?.data.createdAt + cancelableTime);
+          +new Date(+currentBounty.createdAt + cancelableTime);
         setIsCancelable(canceable);
       })();
-  }, [state.Service?.active, state.currentBounty?.data]);
+  }, [state.Service?.active, currentBounty]);
 
   return (
     <BountySettingsView
       isCancelable={isCancelable}
-      bounty={state.currentBounty?.data}
+      bounty={currentBounty}
       network={state.Service?.network}
       handleEditIssue={handleEditIssue}
       handleHardCancel={handleHardCancel}

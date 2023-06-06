@@ -9,11 +9,13 @@ import BountyHeroView from "./view";
 export default function BountyHero({
   handleEditIssue,
   isEditIssue,
-  currentBounty
+  currentBounty,
+  updateBountyData
 }: {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
-  currentBounty: IssueBigNumberData
+  currentBounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
 }) {
   const router = useRouter();
 
@@ -27,6 +29,7 @@ export default function BountyHero({
   return (
     <BountyHeroView
       bounty={currentBounty}
+      updateBountyData={updateBountyData}
       network={network}
       currentState={currentState}
       handleEditIssue={handleEditIssue}

@@ -13,13 +13,12 @@ import { truncateAddress } from "helpers/truncate-address";
 import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
 
 import BountyTagsView from "../bounty-tags/view";
-import BountySettingsController from "./bounty-settings/controller";
-
-
+import BountySettings from "./bounty-settings/controller";
 interface BountyHeroProps {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
   bounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
   network: string | string[];
   currentState: IssueState;
 }
@@ -28,6 +27,7 @@ export default function BountyHeroView({
   handleEditIssue,
   isEditIssue,
   bounty,
+  updateBountyData,
   network,
   currentState
 }: BountyHeroProps) {
@@ -60,7 +60,9 @@ export default function BountyHeroView({
                 </span>
               </div>
               <div className="">
-                <BountySettingsController
+                <BountySettings
+                  currentBounty={bounty}
+                  updateBountyData={updateBountyData}
                   handleEditIssue={handleEditIssue}
                   isEditIssue={isEditIssue}
                 />

@@ -14,7 +14,6 @@ import TabSections from "components/bounty/tabs-sections";
 import If from "components/If";
 
 import {useAppState} from "contexts/app-state";
-import {BountyEffectsProvider} from "contexts/bounty-effects";
 
 import {IM_AM_CREATOR_ISSUE} from "helpers/constants";
 import { issueParser } from "helpers/issue";
@@ -135,9 +134,10 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   ]);
 
   return (
-    <BountyEffectsProvider>
+    <>
       <BountyHero 
         currentBounty={currentBounty?.data}
+        updateBountyData={updateBountyData}
         handleEditIssue={handleEditIssue}
         isEditIssue={isEditIssue}
       />
@@ -174,7 +174,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         repo={currentBounty?.data?.repository?.githubPath}
         issueId={id}
       />
-    </BountyEffectsProvider>
+    </>
   );
 }
 
@@ -189,7 +189,6 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
 
   const pullRequestsDetails = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                            bountyDatabase?.pullRequests);
-
   
   const bounty = {
     comments: githubComments,
