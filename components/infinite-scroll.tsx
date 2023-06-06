@@ -26,13 +26,13 @@ export default function InfiniteScroll({
     });
   }
 
-  const observer = new IntersectionObserver(handleScrolling, {
-    root: null,
-    rootMargin: "0px",
-    threshold: 1.0
-  });
-
   useEffect(() => {
+    const observer = new IntersectionObserver(handleScrolling, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0
+    });
+
     const lastChild = divRef.current?.lastChild
 
     if (lastChild) observer.observe(lastChild);
