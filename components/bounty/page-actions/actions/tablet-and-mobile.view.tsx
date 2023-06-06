@@ -1,5 +1,5 @@
+import MultiActionButton, { Action } from "components/common/buttons/multi-action/view";
 import ConnectGithub from "components/connect-github";
-import MultiActionButton, { Action } from "components/multi-action-button";
 
 import StartWorkingButton from "./start-working.view";
 
