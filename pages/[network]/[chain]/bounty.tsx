@@ -60,12 +60,14 @@ export default function PageIssue({ bounty }: PageBountyProps) {
                                                         bountyDatabase?.pullRequests);
       setCurrentBounty({
         data: { ...issueParser(bountyDatabase), pullRequests},
-        ...currentBounty
+        comments: commentsIssue,
+        lastUpdated: 0
       })
     } else {
       setCurrentBounty({
-        data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
-        ...currentBounty
+        data: { ...issueParser(bountyDatabase, false), pullRequests: currentBounty?.data?.pullRequests },
+        comments: commentsIssue,
+        lastUpdated: 0
       })
     }
   }
@@ -163,6 +165,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         repo={currentBounty?.data?.repository?.githubPath}
         issueId={id}
       />
+      {console.log('currentBounty', currentBounty)}
     </>
   );
 }
