@@ -5,4 +5,5 @@ export interface SearchBountiesPaginated {
   rows: IssueData[];
   currentPage: number;
   pages: number;
+  totalBounties: number;
 }

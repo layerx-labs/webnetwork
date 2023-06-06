@@ -177,9 +177,18 @@ export default async function get(query: ParsedUrlQuery) {
     ]
   }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
 
+  const totalBounties = await models.issue.count({
+    where: {
+      state: {
+        [Op.notIn]: ["pending", "canceled"]
+      }
+    }
+  });
+
   return {
     ...issues,
     currentPage: PAGE,
-    pages: calculateTotalPages(issues.count, RESULTS_LIMIT)
+    pages: calculateTotalPages(issues.count, RESULTS_LIMIT),
+    totalBounties
   };
 }

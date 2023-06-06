@@ -20,7 +20,7 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
       .catch(() => 0),
     getBountiesListData(query)
       .then(({ data }) => data)
-      .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1 })),
+      .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),
     getBountiesListData({ count: "3", state: "open" })
       .then(({ data }) => data.rows)
       .catch(() => []),
@@ -31,7 +31,6 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
 
   return {
     numberOfNetworks,
-    numberOfBounties: 0,
     bounties,
     recentBounties,
     recentFunding,

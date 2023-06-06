@@ -15,7 +15,6 @@ interface ExplorePageViewProps extends ExplorePageProps {
 
 export default function ExplorePageView({
   numberOfNetworks,
-  numberOfBounties,
   bounties,
   recentBounties,
   recentFunding,
@@ -29,7 +28,7 @@ export default function ExplorePageView({
       label: t("custom-network:hero.number-of-networks")
     },
     {
-      value: numberOfBounties,
+      value: bounties?.totalBounties || 0,
       label: t("custom-network:hero.number-of-bounties")
     }
   ];
