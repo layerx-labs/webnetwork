@@ -7,7 +7,7 @@ import {GetServerSideProps} from "next/types";
 
 import BountyBody from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
-import BountyCommentsController from "components/bounty/comments/controller";
+import BountyComments from "components/bounty/comments/controller";
 import FundingSection from "components/bounty/funding-section/controller";
 import PageActions from "components/bounty/page-actions/controller";
 import TabSections from "components/bounty/tabs-sections";
@@ -169,7 +169,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         cancelEditIssue={handleCancelEditIssue}
       />
 
-      <BountyCommentsController
+      <BountyComments
         comments={commentsIssue}
         repo={currentBounty?.data?.repository?.githubPath}
         issueId={id}

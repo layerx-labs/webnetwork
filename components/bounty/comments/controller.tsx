@@ -1,6 +1,6 @@
 import BountyCommentsView from "./view";
 
-export default function BountyCommentsController({
+export default function BountyComments({
   comments = [],
   repo,
   issueId,
