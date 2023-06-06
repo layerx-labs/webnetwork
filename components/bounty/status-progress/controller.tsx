@@ -4,9 +4,11 @@ import { useTranslation } from "next-i18next";
 
 import { useAppState } from "contexts/app-state";
 
+import { IssueBigNumberData } from "interfaces/issue-data";
+
 import BountyStatusProgressView from "./view";
 
-export default function BountyStatusProgressController() {
+export default function BountyStatusProgress({ currentBounty }: { currentBounty: IssueBigNumberData}) {
   const { t } = useTranslation(["common", "bounty"]);
 
   const [stepColor, setStepColor] = useState<string>("");
@@ -29,15 +31,15 @@ export default function BountyStatusProgressController() {
       .catch(console.log);
 
   const { isClosed, isCanceled, isDraft, isFundingRequest, isFunded } =
-    state.currentBounty?.data || {};
+    currentBounty || {};
 
-  const isInValidation = !!(state.currentBounty?.data?.state === "proposal");
-  const creationDate = state.currentBounty?.data?.createdAt;
-  const fundedDate = state.currentBounty?.data?.fundedAt;
+  const isInValidation = !!(currentBounty?.state === "proposal");
+  const creationDate = currentBounty?.createdAt;
+  const fundedDate = currentBounty?.fundedAt;
   const closedDate = isClosed
-    ? state.currentBounty?.data?.updatedAt
+    ? currentBounty?.updatedAt
     : undefined;
-  const lastProposalCreationDate = state.currentBounty?.data?.mergeProposals
+  const lastProposalCreationDate = currentBounty?.mergeProposals
     ?.filter((proposal) => !proposal.refusedByBountyOwner && !proposal.isDisputed)
     .reduce((acc, curr) =>
         +curr.contractCreationDate > +acc

@@ -2,9 +2,11 @@ import { useTranslation } from "next-i18next";
 
 import BountyDescription from "components/bounty/description/controller";
 import BountyEditTag from "components/bounty/edit-tag/controller";
-import BountyStatusProgressController from "components/bounty/status-progress/controller";
+import BountyStatusProgress from "components/bounty/status-progress/controller";
 import Button from "components/button";
 import { IFilesProps } from "components/drag-and-drop";
+
+import { IssueBigNumberData } from "interfaces/issue-data";
 
 interface BountyBodyProps {
   isEditIssue: boolean;
@@ -23,6 +25,7 @@ interface BountyBodyProps {
   handleUpdateBounty: () => void;
   isDisableUpdateIssue: () => boolean;
   walletAddress?: string;
+  bounty: IssueBigNumberData;
 }
 
 export default function BountyBodyView({
@@ -41,7 +44,8 @@ export default function BountyBodyView({
   addFilesInDescription,
   handleUpdateBounty,
   isDisableUpdateIssue,
-  walletAddress
+  walletAddress,
+  bounty
 }: BountyBodyProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -110,7 +114,7 @@ export default function BountyBodyView({
             </div>
           </div>
           <div className="col-md-4 px-0">
-              <BountyStatusProgressController />
+              <BountyStatusProgress currentBounty={bounty}/>
           </div>
         </div>
       </div>

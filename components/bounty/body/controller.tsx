@@ -70,7 +70,7 @@ export default function BountyBody({
     if (
       (addFilesInDescription(body) === currentBounty?.body &&
         selectedTags === currentBounty?.tags) ||
-      !state.currentBounty.data
+      !currentBounty
     )
       return;
     setIsUploading(true);
@@ -126,6 +126,7 @@ export default function BountyBody({
       isUploading={isUploading}
       handleIsUploading={setIsUploading}
       addFilesInDescription={addFilesInDescription}
+      bounty={currentBounty}
     />
   );
 }
