@@ -192,7 +192,7 @@ export default function BountiesListView({
       </If>
 
       <If 
-        condition={!hasIssues}
+        condition={hasIssues}
         otherwise={
           <div className="pt-4">
             <NothingFound description={emptyMessage}>
