@@ -5,9 +5,9 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
+import BountiesList from "components/bounty/bounties-list/controller";
 import CouncilLayout from "components/council-layout";
 import CuratorsList from "components/curators-list";
-import ListIssues from "components/list-issues";
 
 import { SearchBountiesPaginated } from "types/api";
 
@@ -27,7 +27,7 @@ export default function PageCouncil({
   const types = {
     "curators-list": <CuratorsList key={"curators-list"} inView={type === 'curators-list'} />,
     "ready-to-close": (
-      <ListIssues
+      <BountiesList
         key={"ready-to-close"}
         emptyMessage={t("council:empty")}
         inView={type === 'ready-to-close'}
@@ -35,7 +35,7 @@ export default function PageCouncil({
       />
     ),
     "ready-to-dispute": (
-      <ListIssues
+      <BountiesList
         key={"ready-to-dispute"}
         emptyMessage={t("council:empty")}
         inView={type === 'ready-to-dispute'}
@@ -43,7 +43,7 @@ export default function PageCouncil({
       />
     ),
     "ready-to-propose": (
-      <ListIssues
+      <BountiesList
         key={"ready-to-propose"}
         emptyMessage={t("council:empty")}
         inView={!type || type === 'ready-to-propose'}

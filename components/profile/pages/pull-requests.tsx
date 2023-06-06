@@ -1,6 +1,6 @@
 import {useTranslation} from "next-i18next";
 
-import ListIssues from "components/list-issues";
+import BountiesList from "components/bounty/bounties-list/controller";
 import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -11,7 +11,6 @@ interface PullRequestsPageProps {
   bounties: SearchBountiesPaginated;
 }
 
-
 export default function PullRequestsPage({
   bounties
 }: PullRequestsPageProps) {
@@ -21,7 +20,7 @@ export default function PullRequestsPage({
 
   return(
     <ProfileLayout>
-      <ListIssues
+      <BountiesList
         bounties={bounties}
         redirect={getURLWithNetwork("/bounties")}
         buttonMessage={t('bounty:label_other')}

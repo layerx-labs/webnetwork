@@ -1,4 +1,4 @@
-import ListIssues from "components/list-issues";
+import BountiesList from "components/bounty/bounties-list/controller";
 import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -12,7 +12,7 @@ export default function BountiesPage({
 }: BountiesPageProps) {
   return(
     <ProfileLayout>
-      <ListIssues 
+      <BountiesList 
         bounties={bounties}
         variant="profile"
       />

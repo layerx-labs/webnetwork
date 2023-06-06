@@ -1,6 +1,6 @@
 import {useTranslation} from "next-i18next";
 
-import ListIssues from "components/list-issues";
+import BountiesList from "components/bounty/bounties-list/controller";
 import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -20,7 +20,7 @@ export default function ProposalsPage({
 
   return(
     <ProfileLayout>
-      <ListIssues
+      <BountiesList
         bounties={bounties}
         redirect={getURLWithNetwork("/curators")}
         buttonMessage={t('bounty:label_other')}

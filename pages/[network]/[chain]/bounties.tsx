@@ -5,7 +5,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/dist/client/router";
 import {GetServerSideProps} from "next/types";
 
-import ListIssues from "components/list-issues";
+import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero, {InfosHero} from "components/page-hero";
 
 import {useAppState} from "contexts/app-state";
@@ -111,7 +111,7 @@ export default function BountiesPage({
         infos={infos}
       />
 
-      <ListIssues
+      <BountiesList
         bounties={bounties}
         variant="network"
       />

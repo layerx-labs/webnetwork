@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 interface InfiniteScrollProps {
   handleNewPage: () => void;
-  isLoading: boolean;
+  isLoading?: boolean;
   hasMore: boolean;
   children: ReactNode | ReactNode[];
 }

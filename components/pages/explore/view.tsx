@@ -2,7 +2,7 @@ import { useTranslation } from "next-i18next";
 
 import ListActiveNetworks from "components/bounties/list-active-networks";
 import ListRecentIssues from "components/bounties/list-recent-issues";
-import ListIssues from "components/list-issues";
+import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero from "components/page-hero";
 
 import { BountyEffectsProvider } from "contexts/bounty-effects";
@@ -58,7 +58,7 @@ export default function ExplorePageView({
         recentBounties={recentFunding}
       />
 
-      <ListIssues 
+      <BountiesList 
         bounties={bounties}
         variant="bounty-hall"
       />
