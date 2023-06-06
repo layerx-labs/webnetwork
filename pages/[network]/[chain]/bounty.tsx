@@ -171,10 +171,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
-  const { id, repoId, network, chain } = query;
-
-  api.get<IssueData>(`/issue/seo/${repoId}/${id}/${network}/${chain}`)
-
   const bountyDatabase = await getBountyData(query)
 
   const githubComments = await getBountyComments(bountyDatabase?.repository?.githubPath, +bountyDatabase?.githubId)
