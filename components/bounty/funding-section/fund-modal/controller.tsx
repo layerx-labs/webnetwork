@@ -116,21 +116,18 @@ export default function FundModal({
   }
 
   function handleSetAmountToFund(value) {
-    setAmountToFund(BigNumber(value));
-  }
+    const newAmountToFund = BigNumber(value);
 
-  useEffect(() => {
-    if (!currentBounty?.fundingAmount || !currentBounty?.rewardAmount) return;
-
-    if (amountToFund?.lte(amountNotFunded)) {
-      const preview = amountToFund
+    if (newAmountToFund?.lte(amountNotFunded)) {
+      const preview = newAmountToFund
         .multipliedBy(currentBounty?.rewardAmount)
         .dividedBy(currentBounty.fundingAmount);
 
       setRewardPreview(preview.toFixed());
-    } else
-      setRewardPreview("0");
-  }, [currentBounty?.fundingAmount, currentBounty?.rewardAmount, amountToFund]);
+    } else setRewardPreview("0");
+
+    setAmountToFund(newAmountToFund);
+  }
 
   useEffect(() => {
     if (transactionalToken?.address)
