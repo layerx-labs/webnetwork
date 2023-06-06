@@ -8,7 +8,7 @@ import { useTranslation } from "next-i18next";
 import ArrowRight from "assets/icons/arrow-right";
 
 import FundModal from "components/bounty/funding-section/fund-modal/controller";
-import FundingProgressController from "components/bounty/funding-section/funding-progress/controller";
+import FundingProgress from "components/bounty/funding-section/funding-progress/controller";
 import {
   Amount,
   CaptionLarge,
@@ -104,7 +104,7 @@ export default function FundingSectionView({
             col2={<CaptionMedium text={t("funding:total-amount")} />}
           />
 
-          <FundingProgressController
+          <FundingProgress
             fundedAmount={bounty?.fundedAmount?.toFixed()}
             fundingAmount={bounty?.fundingAmount?.toFixed()}
             fundingTokenSymbol={transactionalSymbol}

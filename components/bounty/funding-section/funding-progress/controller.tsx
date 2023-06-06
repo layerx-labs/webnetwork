@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 
 import FundingProgressView from "./view";
 
-interface FundingProgressControllerProps {
+interface FundingProgressProps {
   fundedAmount: string;
   fundingAmount: string;
   fundedPercent: string;
@@ -10,13 +10,13 @@ interface FundingProgressControllerProps {
   amountToFund?: string;
 }
 
-export default function FundingProgressController({
+export default function FundingProgress({
   fundedAmount,
   fundingAmount,
   fundedPercent,
   fundingTokenSymbol,
   amountToFund = "0",
-}: FundingProgressControllerProps) {
+}: FundingProgressProps) {
   const fundingPercent = BigNumber(BigNumber(amountToFund).multipliedBy(100).toFixed(2, 1)).dividedBy(fundingAmount);
   const maxPercent = BigNumber(100).minus(fundedPercent);
   const totalPercent = fundingPercent.plus(fundedPercent);
