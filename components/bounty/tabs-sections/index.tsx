@@ -4,8 +4,6 @@ import ItemSections from "components/bounty/tabs-sections/item-sections";
 import CustomContainer from "components/custom-container";
 import TabbedNavigation from "components/tabbed-navigation";
 
-import { useAppState } from "contexts/app-state";
-
 import { IssueBigNumberData } from "interfaces/issue-data";
 import { TabbedNavigationItem } from "interfaces/tabbed-navigation";
 
@@ -13,11 +11,9 @@ function TabSections({
   currentBounty
 }: { currentBounty: IssueBigNumberData }){
   const { t } = useTranslation("bounty");
-
-  const {state} = useAppState();
   
   const pullRequests = currentBounty?.pullRequests
-  const proposals = state.currentBounty?.data?.mergeProposals
+  const proposals = currentBounty?.mergeProposals
 
   const tabs: TabbedNavigationItem[] = [
     {
