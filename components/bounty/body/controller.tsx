@@ -8,20 +8,26 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
+import { TAGS_OPTIONS } from "helpers/tags-options";
+
+import { IssueBigNumberData } from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
-import { useBounty } from "x-hooks/use-bounty";
 
 import BountyBodyView from "./view";
 
 interface BountyBodyControllerProps {
   isEditIssue: boolean;
   cancelEditIssue: () => void;
+  currentBounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
 }
 
-export default function BountyBodyController({
+export default function BountyBody({
   isEditIssue,
   cancelEditIssue,
+  currentBounty,
+  updateBountyData
 }: BountyBodyControllerProps) {
   const { t } = useTranslation(["common", "bounty"]);
   const [body, setBody] = useState<string>();
@@ -29,16 +35,20 @@ export default function BountyBodyController({
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [selectedTags, setSelectedTags] = useState<string[]>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const { getDatabaseBounty } = useBounty();
   const { state, dispatch } = useAppState();
 
   const { updateIssue } = useApi();
 
   useEffect(() => {
-    if (!state.currentBounty?.data?.body) return;
+    if (!currentBounty?.body) return;
 
-    setBody(state.currentBounty?.data?.body);
-  }, [state.currentBounty?.data]);
+    setBody(currentBounty?.body);
+  }, [currentBounty]);
+
+  useEffect(() => {
+    setSelectedTags(TAGS_OPTIONS.filter((tag) =>
+        currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
+  }, [currentBounty?.tags]);
 
   function onUpdateFiles(files: IFilesProps[]) {
     return setFiles(files);
@@ -58,15 +68,15 @@ export default function BountyBodyController({
 
   function handleUpdateBounty() {
     if (
-      (addFilesInDescription(body) === state.currentBounty?.data?.body &&
-        selectedTags === state.currentBounty?.data?.tags) ||
+      (addFilesInDescription(body) === currentBounty?.body &&
+        selectedTags === currentBounty?.tags) ||
       !state.currentBounty.data
     )
       return;
     setIsUploading(true);
     updateIssue({
-      repoId: state.currentBounty?.data?.repository_id,
-      ghId: state.currentBounty?.data?.githubId,
+      repoId: currentBounty?.repository_id,
+      ghId: currentBounty?.githubId,
       networkName: state.Service?.network?.active?.name,
       body: addFilesInDescription(body),
       tags: selectedTags,
@@ -77,7 +87,7 @@ export default function BountyBodyController({
             title: t("actions.success"),
             content: t("bounty:actions.edit-bounty"),
         }));
-        getDatabaseBounty(true);
+        updateBountyData();
         cancelEditIssue();
         setIsPreview(false);
       })

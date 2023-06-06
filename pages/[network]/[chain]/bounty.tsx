@@ -5,7 +5,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
 
-import BountyBodyController from "components/bounty/body/controller";
+import BountyBody from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
 import BountyCommentsController from "components/bounty/comments/controller";
 import FundingSection from "components/bounty/funding-section/controller";
@@ -162,11 +162,12 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         <TabSections currentBounty={currentBounty?.data} />
       </If>
 
-      {console.log('current', currentBounty)}
-      <BountyBodyController 
+      <BountyBody 
+        currentBounty={currentBounty?.data}
+        updateBountyData={updateBountyData}
         isEditIssue={isEditIssue} 
         cancelEditIssue={handleCancelEditIssue}
-        />
+      />
 
       <BountyCommentsController
         comments={commentsIssue}

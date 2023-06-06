@@ -6,7 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import BountyDescriptionView from "./view";
 
-interface DescriptionControllerProps {
+interface DescriptionProps {
   body: string;
   setBody?: (v: string) => void;
   onUpdateFiles?: (files: IFilesProps[]) => void;
@@ -16,7 +16,7 @@ interface DescriptionControllerProps {
   preview?: boolean;
 }
 
-export default function BountyDescriptionController({
+export default function BountyDescription({
   body,
   setBody,
   onUpdateFiles,
@@ -24,7 +24,7 @@ export default function BountyDescriptionController({
   files,
   isEdit = false,
   preview = false,
-}: DescriptionControllerProps) {
+}: DescriptionProps) {
   const [bodyLength, setBodyLength] = useState<number>(0);
   const [strFiles, setStrFiles] = useState<string[]>();
 

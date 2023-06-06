@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 
-import BountyDescriptionController from "components/bounty/description/controller";
-import BountyEditTagController from "components/bounty/edit-tag/controller";
+import BountyDescription from "components/bounty/description/controller";
+import BountyEditTag from "components/bounty/edit-tag/controller";
 import BountyStatusProgressController from "components/bounty/status-progress/controller";
 import Button from "components/button";
 import { IFilesProps } from "components/drag-and-drop";
@@ -59,14 +59,14 @@ export default function BountyBodyView({
                   </span>
                 </div>
               )}
-              <BountyEditTagController
+              <BountyEditTag
                 isEdit={isEditIssue}
                 selectedTags={selectedTags}
                 setSelectedTags={handleSelectedTags}
                 preview={isPreview}
               />
               <>
-                <BountyDescriptionController
+                <BountyDescription
                   body={isPreview ? addFilesInDescription(body) : body}
                   setBody={handleBody}
                   isEdit={isEditIssue}
@@ -121,7 +121,7 @@ export default function BountyBodyView({
         <div className="row justify-content-center">
           <div className="col-md-12">
             <div className="border-radius-8 p-3 bg-gray-850 mb-3">
-              <BountyDescriptionController body={body || ""} />
+              <BountyDescription body={body || ""} />
             </div>
           </div>
         </div>
