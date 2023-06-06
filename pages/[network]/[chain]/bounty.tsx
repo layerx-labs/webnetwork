@@ -19,7 +19,7 @@ import {IM_AM_CREATOR_ISSUE} from "helpers/constants";
 import { issueParser } from "helpers/issue";
 
 import { CurrentBounty } from "interfaces/application-state";
-import { IssueData } from "interfaces/issue-data";
+import { IssueData, IssueDataComment } from "interfaces/issue-data";
 
 import { api } from "services/api";
 
@@ -29,35 +29,28 @@ import useOctokit from "x-hooks/use-octokit";
 
 interface PageBountyProps {
   bounty: {
-    comments: any[]; //eslint-disable-line
+    comments: IssueDataComment[];
     data: IssueData;
 }
   _nextI18Next?: SSRConfig;
 }
 
 export default function PageIssue({ bounty }: PageBountyProps) {
-  // useBounty();
-  const router = useRouter();
-  const [currentBounty, setCurrentBounty] = useState<CurrentBounty>();
-  const [commentsIssue, setCommentsIssue] = useState([]);
+  const [currentBounty, setCurrentBounty] = useState<CurrentBounty>({
+    data: issueParser(bounty?.data),
+    comments: bounty?.comments,
+    lastUpdated: 0,
+  });
+  const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isRepoForked, setIsRepoForked] = useState<boolean>();
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
   const {state} = useAppState();
   const { getUserRepository } = useOctokit();
   const { signMessage } = useAuthentication();
+  const router = useRouter();
 
   const { id } = router.query;
-
-  useEffect(() => {
-    if (!bounty) return;
-    
-    setCurrentBounty({
-      data: issueParser(bounty?.data),
-      comments: bounty?.comments,
-      lastUpdated: 0,
-    });
-  }, [bounty]);
 
   async function updateBountyData(updatePrData = false) {
     const bountyDatabase = await getBountyData(router.query)
@@ -113,11 +106,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   function addNewComment(comment) {
     setCommentsIssue([...commentsIssue, comment]);
   }
-
-  useEffect(() => {
-    if (currentBounty?.comments) setCommentsIssue([...currentBounty?.comments || []]);
-  }, [ currentBounty?.data, state.Service?.network?.repos?.active ]);
-
+  
   useEffect(() => {
     if (!state.currentUser?.login ||
         !state.currentUser?.walletAddress ||
