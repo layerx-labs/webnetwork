@@ -12,7 +12,6 @@ import { NetworkEvents } from "interfaces/enums/events";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
 
 import { PageActionsControllerProps } from "./page-actions";
 import PageActionsView from "./view";
@@ -47,7 +46,6 @@ export default function PageActions({
     startWorking,
     processEvent,
   } = useApi();
-  const { goToProfilePage } = useNetwork();
 
   const issueGithubID = currentBounty?.githubId;
   const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
@@ -73,7 +71,6 @@ export default function PageActions({
     state.currentUser?.walletAddress
   const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
-  const isKycVerified = state?.currentUser?.kycSession?.status === "VERIFIED"
   const isUpdateAmountButton =
     isWalletConnected &&
     isBountyOpen &&
@@ -90,7 +87,6 @@ export default function PageActions({
     isRepoForked &&
     isStateToWorking &&
     !!state.currentUser?.accessToken
-  const isKycButton = state.Settings?.kyc?.isKycEnabled && currentBounty?.isKyc && !isKycVerified;
   const isForkRepositoryLink =
     isGithubConnected && !isBountyInDraft && isBountyOpen && !isRepoForked;
   const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
@@ -98,7 +94,6 @@ export default function PageActions({
   const rest = {
     isUpdateAmountButton,
     isStartWorkingButton,
-    isKycButton,
     isForkRepositoryLink,
     isEditButton,
     isBountyInDraft,
@@ -240,7 +235,6 @@ export default function PageActions({
       showPRModal={showPRModal}
       handleShowPRModal={setShowPRModal}
       isExecuting={isExecuting}
-      handleClickKyc={() => goToProfilePage("profile")}
       handlePullrequest={handlePullrequest}
       handleStartWorking={handleStartWorking}
       handleEditIssue={handleEditIssue}

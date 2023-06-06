@@ -19,10 +19,8 @@ export interface PageActionsViewProps {
   showPRModal: boolean;
   handleShowPRModal: (v: boolean) => void;
   ghVisibility: boolean;
-  handleClickKyc: () => void;
   isUpdateAmountButton: boolean;
   isStartWorkingButton: boolean;
-  isKycButton: boolean;
   isForkRepositoryLink: boolean;
   isEditButton: boolean;
   updateBountyData: (updatePrData?: boolean) => void;
