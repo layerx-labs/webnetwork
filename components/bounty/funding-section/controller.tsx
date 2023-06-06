@@ -59,7 +59,7 @@ export default function FundingSection({ currentBounty, updateBountyData }: Fund
       currentBounty?.benefactors.filter((fund) => fund.address === state.currentUser.walletAddress);
 
     setWalletFunds(funds);
-  }, [state.currentUser, currentBounty, currentBounty]);
+  }, [state.currentUser, currentBounty]);
 
   if (isBountyFunded && !walletFunds?.length) return <></>;
 
