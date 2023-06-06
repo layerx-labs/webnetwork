@@ -15,7 +15,7 @@ export default function CreateProposalButton({
       onClick={onClick}
       disabled={disabled}
     >
-      <Translation ns="proposal" label="actions.create.title" />
+      <Translation ns="proposal" label="actions.create" />
     </PageActionsButton>
   );
 }

@@ -103,7 +103,7 @@ export default function PageActionsView({
                 </If>
                 <If condition={isCreateProposal}>
                   <CreateProposalButton 
-                    onClick={() => handleShowPRModal(true)}
+                    onClick={() => setShowPRProposal(true)}
                     disabled={!currentUser?.login || !isWalletConnected}
                   />
                 </If>
