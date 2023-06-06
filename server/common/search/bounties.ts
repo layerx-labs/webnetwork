@@ -14,10 +14,12 @@ export default async function get(query: ParsedUrlQuery) {
     state,
     issueId,
     chainId,
+    chain,
     visible,
     creator,
     proposer,
     pullRequester,
+    network,
     networkName,
     repoId,
     transactionalTokenAddress,
@@ -126,8 +128,12 @@ export default async function get(query: ParsedUrlQuery) {
     getAssociation( "network", 
                     ["colors", "name", "networkAddress", "disputableTime"], 
                     true, 
-                    networkName ? { networkName: caseInsensitiveEqual("network.name", networkName.toString()) } : {},
-                    [getAssociation("chain", ["chainId", "chainShortName", "color"], true)]);
+                    networkName || network ? { 
+                      networkName: caseInsensitiveEqual("network.name", (networkName || network).toString())
+                    } : {},
+                    [getAssociation("chain", ["chainId", "chainShortName", "color"], true, chain ? {
+                      chainShortName: { [Op.iLike]: chain.toString()}
+                    } : {})]);
 
   const repositoryAssociation = 
     getAssociation( "repository", 
