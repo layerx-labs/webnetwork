@@ -38,6 +38,7 @@ export default function PageActionsView({
   isKycButton,
   isForkRepositoryLink,
   isEditButton,
+  updateBountyData
 }: PageActionsViewProps) {
   const { t } = useTranslation([
     "common",
@@ -252,6 +253,7 @@ export default function PageActionsView({
               ""
             }
             onCloseClick={() => handleShowPRModal(false)}
+            currentBounty={bounty}
           />
 
           <UpdateBountyAmountModal
@@ -259,6 +261,7 @@ export default function PageActionsView({
             transactionalAddress={bounty?.transactionalToken?.address}
             bountyId={bounty?.contractId}
             handleClose={() => setShowUpdateAmount(false)}
+            updateBountyData={updateBountyData}
           />
 
           <ProposalModal
@@ -266,6 +269,8 @@ export default function PageActionsView({
             pullRequests={bounty?.pullRequests}
             show={showPRProposal}
             onCloseClick={() => setShowPRProposal(false)}
+            currentBounty={bounty}
+            updateBountyData={updateBountyData}
           />
         </>
 

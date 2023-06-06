@@ -25,6 +25,7 @@ export interface PageActionsViewProps {
   isKycButton: boolean;
   isForkRepositoryLink: boolean;
   isEditButton: boolean;
+  updateBountyData: (updatePrData?: boolean) => void;
 }
 
 export interface PageActionsControllerProps {

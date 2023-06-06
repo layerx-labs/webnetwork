@@ -21,11 +21,10 @@ import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import sumObj from "helpers/sumObj";
 
 import {NetworkEvents} from "interfaces/enums/events";
-import {pullRequest} from "interfaces/issue-data";
+import {IssueBigNumberData, pullRequest} from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import {useBounty} from "x-hooks/use-bounty";
 import useOctokit from "x-hooks/use-octokit";
 
 interface participants {
@@ -86,7 +85,23 @@ function SelectOptionComponent({ innerProps, innerRef, data }) {
   );
 }
 
-export default function ProposalModal({amountTotal, pullRequests = [], show, onCloseClick}) {
+interface ProposalModalProps {
+  amountTotal: BigNumber | string | number;
+  pullRequests: pullRequest[];
+  show: boolean;
+  onCloseClick: () => void;
+  currentBounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
+}
+
+export default function ProposalModal({
+  amountTotal,
+  pullRequests = [],
+  show,
+  onCloseClick,
+  currentBounty,
+  updateBountyData
+}: ProposalModalProps) {
   const { t } = useTranslation([
     "common",
     "bounty",
@@ -113,7 +128,6 @@ export default function ProposalModal({amountTotal, pullRequests = [], show, onC
   const { getPullRequestParticipants } = useOctokit();
   const { getUserWith, processEvent } = useApi();
 
-  const currentBounty = useBounty();
   const bountyAmount = BigNumber(amountTotal);
   const proposerFeeShare = state.Service?.network?.amounts?.proposerFeeShare || 0;
   const mergeCreator = state.Service?.network?.amounts?.mergeCreatorFeeShare || 0;
@@ -165,7 +179,7 @@ export default function ProposalModal({amountTotal, pullRequests = [], show, onC
         }))
       };
 
-      const currentProposals = state.currentBounty?.data?.mergeProposals?.map((item) => {
+      const currentProposals = currentBounty?.mergeProposals?.map((item) => {
         return {
           currentPrId: item.pullRequestId,
           prAddressAmount: item.distributions.map(distribution => ({
@@ -273,7 +287,7 @@ export default function ProposalModal({amountTotal, pullRequests = [], show, onC
 
     setExecuting(true);
 
-    handleProposeMerge(+state.currentBounty?.data.contractId, +currentPullRequest.contractId, prAddresses, prAmounts)
+    handleProposeMerge(+currentBounty.contractId, +currentPullRequest.contractId, prAddresses, prAmounts)
     .then(txInfo => {
       const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
 
@@ -282,7 +296,7 @@ export default function ProposalModal({amountTotal, pullRequests = [], show, onC
     .then(() => {
       handleClose();
       setExecuting(false);
-      currentBounty.getDatabaseBounty(true);
+      updateBountyData();
     })
   }
 
