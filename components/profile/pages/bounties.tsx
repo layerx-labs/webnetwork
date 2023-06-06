@@ -1,15 +1,19 @@
 import ListIssues from "components/list-issues";
 import ProfileLayout from "components/profile/profile-layout";
 
-import {useAppState} from "contexts/app-state";
+import { SearchBountiesPaginated } from "types/api";
 
-export default function BountiesPage() {
-  const {state} = useAppState();
+interface BountiesPageProps {
+  bounties: SearchBountiesPaginated;
+}
 
+export default function BountiesPage({
+  bounties
+}: BountiesPageProps) {
   return(
     <ProfileLayout>
       <ListIssues 
-        creator={state.currentUser?.walletAddress || "not-connected"}
+        bounties={bounties}
         variant="profile"
       />
     </ProfileLayout>

@@ -29,9 +29,7 @@ export default function PageCouncil({
     "ready-to-close": (
       <ListIssues
         key={"ready-to-close"}
-        filterState="proposal"
         emptyMessage={t("council:empty")}
-        disputableFilter="merge"
         inView={type === 'ready-to-close'}
         bounties={bounties}
       />
@@ -39,9 +37,7 @@ export default function PageCouncil({
     "ready-to-dispute": (
       <ListIssues
         key={"ready-to-dispute"}
-        filterState="proposal"
         emptyMessage={t("council:empty")}
-        disputableFilter="dispute"
         inView={type === 'ready-to-dispute'}
         bounties={bounties}
       />
@@ -49,7 +45,6 @@ export default function PageCouncil({
     "ready-to-propose": (
       <ListIssues
         key={"ready-to-propose"}
-        filterState="ready"
         emptyMessage={t("council:empty")}
         inView={!type || type === 'ready-to-propose'}
         bounties={bounties}
