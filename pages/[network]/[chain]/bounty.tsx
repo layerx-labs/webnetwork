@@ -154,6 +154,8 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         addNewComment={addNewComment}
         handleEditIssue={handleEditIssue}
         isEditIssue={isEditIssue}
+        currentBounty={currentBounty?.data}
+        updateBountyData={updateBountyData}
       />
 
       <If condition={!!state.currentUser?.walletAddress}>

@@ -15,8 +15,6 @@ import ProposalModal from "components/proposal/create-proposal-modal";
 import Translation from "components/translation";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
-import { BountyEffectsProvider } from "contexts/bounty-effects";
-
 import { PageActionsViewProps } from "./page-actions";
 import PageActionsButton from "./page-actions-button/view";
 
@@ -240,8 +238,7 @@ export default function PageActionsView({
           </div>
         </div>
       </div>
-
-      <BountyEffectsProvider>
+   
         <>
           <CreatePullRequestModal
             show={showPRModal}
@@ -271,7 +268,6 @@ export default function PageActionsView({
             onCloseClick={() => setShowPRProposal(false)}
           />
         </>
-      </BountyEffectsProvider>
 
       <Modal
         title={t("modals.gh-access.title")}

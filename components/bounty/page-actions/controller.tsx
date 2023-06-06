@@ -12,7 +12,6 @@ import { NetworkEvents } from "interfaces/enums/events";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import { useBounty } from "x-hooks/use-bounty";
 import { useNetwork } from "x-hooks/use-network";
 
 import { PageActionsControllerProps } from "./page-actions";
@@ -23,6 +22,8 @@ export default function PageActions({
   addNewComment,
   handleEditIssue,
   isEditIssue,
+  currentBounty,
+  updateBountyData
 }: PageActionsControllerProps) {
   const { t } = useTranslation([
     "common",
@@ -39,7 +40,6 @@ export default function PageActions({
   const [showPRModal, setShowPRModal] = useState(false);
 
   const { state, dispatch } = useAppState();
-  const { getDatabaseBounty } = useBounty();
   const { handleCreatePullRequest } = useBepro();
   const {
     createPrePullRequest,
@@ -49,29 +49,29 @@ export default function PageActions({
   } = useApi();
   const { goToProfilePage } = useNetwork();
 
-  const issueGithubID = state.currentBounty?.data?.githubId;
+  const issueGithubID = currentBounty?.githubId;
   const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
-  const isBountyReadyToPropose = !!state.currentBounty?.data?.isReady;
+  const isBountyReadyToPropose = !!currentBounty?.isReady;
   const bountyState = getIssueState({
-    state: state.currentBounty?.data?.state,
-    amount: state.currentBounty?.data?.amount,
-    fundingAmount: state.currentBounty?.data?.fundingAmount,
+    state: currentBounty?.state,
+    amount: currentBounty?.amount,
+    fundingAmount: currentBounty?.fundingAmount,
   });
   const hasPullRequests = 
-    !!state.currentBounty?.data?.pullRequests?.filter((pullRequest) => pullRequest?.status !== "canceled")?.length;
+    !!currentBounty?.pullRequests?.filter((pullRequest) => pullRequest?.status !== "canceled")?.length;
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isGithubConnected = !!state.currentUser?.login;
   const isBountyOpen =
-    state.currentBounty?.data?.isClosed === false &&
-    state.currentBounty?.data?.isCanceled === false;
-  const isBountyInDraft = !!state.currentBounty?.data?.isDraft;
-  const isWorkingOnBounty = !!state.currentBounty?.data?.working?.find((login) => login === state.currentUser?.login);
+    currentBounty?.isClosed === false &&
+    currentBounty?.isCanceled === false;
+  const isBountyInDraft = !!currentBounty?.isDraft;
+  const isWorkingOnBounty = !!currentBounty?.working?.find((login) => login === state.currentUser?.login);
   const isBountyOwner =
   isWalletConnected &&
-  state.currentBounty?.data?.creatorAddress &&
-  state.currentBounty?.data?.creatorAddress ===
+  currentBounty?.creatorAddress &&
+  currentBounty?.creatorAddress ===
     state.currentUser?.walletAddress
-  const isFundingRequest = !!state.currentBounty?.data?.isFundingRequest
+  const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
   const isKycVerified = state?.currentUser?.kycSession?.status === "VERIFIED"
   const isUpdateAmountButton =
@@ -90,7 +90,7 @@ export default function PageActions({
     isRepoForked &&
     isStateToWorking &&
     !!state.currentUser?.accessToken
-  const isKycButton = state.Settings?.kyc?.isKycEnabled && state.currentBounty?.data?.isKyc && !isKycVerified;
+  const isKycButton = state.Settings?.kyc?.isKycEnabled && currentBounty?.isKyc && !isKycVerified;
   const isForkRepositoryLink =
     isGithubConnected && !isBountyInDraft && isBountyOpen && !isRepoForked;
   const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
@@ -180,7 +180,7 @@ export default function PageActions({
             content: t("pull-request:actions.create.success"),
         }));
 
-        return getDatabaseBounty(true);
+        return updateBountyData(true);
       })
       .catch((err) => {
         if (pullRequestPayload) cancelPrePullRequest(pullRequestPayload);
@@ -206,7 +206,7 @@ export default function PageActions({
     setIsExecuting(true);
 
     startWorking({
-      issueId: state.currentBounty?.data?.issueId,
+      issueId: currentBounty?.issueId,
       githubLogin: state.currentUser?.login,
       networkName: state.Service?.network?.active?.name,
       wallet: state.currentUser.walletAddress,
@@ -219,7 +219,7 @@ export default function PageActions({
         }));
 
         addNewComment(response.data);
-        return getDatabaseBounty(true);
+        return updateBountyData();
       })
       .then(() => setIsExecuting(false))
       .catch((error) => {
@@ -245,7 +245,7 @@ export default function PageActions({
       handleStartWorking={handleStartWorking}
       handleEditIssue={handleEditIssue}
       currentUser={state.currentUser}
-      bounty={state.currentBounty?.data}
+      bounty={currentBounty}
       {...rest}
     />
   );
