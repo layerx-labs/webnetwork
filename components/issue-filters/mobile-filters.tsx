@@ -1,15 +1,11 @@
 import { useState } from "react";
 
-import { useTranslation } from "next-i18next";
-
 import FilterIcon from "assets/icons/filter-icon";
 
 import Button from "components/button";
 import MobileFiltersModal from "components/issue-filters/mobile-filters-modal";
 
 export default function IssueMobileFilters({ onlyTimeFrame = false }) {
-  const { t } = useTranslation("common");
-
   const [showModal, setShowModal] = useState(false);
 
   function handleShowModal() {
