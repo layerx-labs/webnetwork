@@ -60,6 +60,24 @@ export default function PageIssue({ bounty }: PageBountyProps) {
     });
   }, [bounty]);
 
+  async function updateBountyData(updatePrData = false) {
+    const bountyDatabase = await getBountyData(router.query)
+
+    if(updatePrData) {
+      const pullRequests = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
+                                                        bountyDatabase?.pullRequests);
+      setCurrentBounty({
+        data: { ...issueParser(bountyDatabase), pullRequests},
+        ...currentBounty
+      })
+    } else {
+      setCurrentBounty({
+        data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
+        ...currentBounty
+      })
+    }
+  }
+
   async function handleEditIssue() {
     signMessage(IM_AM_CREATOR_ISSUE)
       .then(() => {
@@ -127,6 +145,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
       <If condition={!!currentBounty?.data?.isFundingRequest}>
         <FundingSection 
           currentBounty={currentBounty?.data}
+          updateBountyData={updateBountyData}
         /> 
       </If>
 
