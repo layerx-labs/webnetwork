@@ -159,8 +159,9 @@ export default function PageIssue({ bounty }: PageBountyProps) {
       />
 
       <If condition={!!state.currentUser?.walletAddress}>
-        <TabSections/>
+        <TabSections currentBounty={currentBounty?.data} />
       </If>
+
       {console.log('current', currentBounty)}
       <BountyBodyController 
         isEditIssue={isEditIssue} 
