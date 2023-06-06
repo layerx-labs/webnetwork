@@ -42,8 +42,8 @@ function ItemSections({ data, isProposal, currentBounty }: ItemProps) {
   return (
     <section className="content-wrapper border-top-0 p-20 d-flex flex-column gap-2 bg-gray-900">
       {
-        data.length ?
-          React.Children.toArray(data.map((item) => {
+        data?.length ?
+          React.Children.toArray(data?.map((item) => {
             const pathRedirect = isProposal ? '/proposal' : '/pull-request';
             const valueRedirect = {
               id: currentBounty?.githubId,
