@@ -6,52 +6,54 @@ import { useAppState } from "contexts/app-state";
 import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
 import { NetworkEvents, StandAloneEvents } from "interfaces/enums/events";
-import { fundingBenefactor } from "interfaces/issue-data";
+import { IssueBigNumberData, fundingBenefactor } from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import { useBounty } from "x-hooks/use-bounty";
 
 import RetractOrWithdrawModalView from "./view";
 
-interface RetractOrWithdrawModalControllerProps {
+interface RetractOrWithdrawModalProps {
   show?: boolean;
   onCloseClick: () => void;
   funding: fundingBenefactor;
+  currentBounty: IssueBigNumberData;
+  updateBountyData: (updatePrData?: boolean) => void;
 }
 
-export default function RetractOrWithdrawModalController({
+export default function RetractOrWithdrawModal({
   show = false,
   onCloseClick,
   funding,
-}: RetractOrWithdrawModalControllerProps) {
+  currentBounty,
+  updateBountyData
+}: RetractOrWithdrawModalProps) {
   const { t } = useTranslation(["common", "funding", "bounty"]);
 
   const [isExecuting, setIsExecuting] = useState(false);
 
   const { processEvent } = useApi();
-  const { getDatabaseBounty } = useBounty();
   const { handleRetractFundBounty, handleWithdrawFundRewardBounty } =
     useBepro();
 
-  const { dispatch, state } = useAppState();
+  const { dispatch } = useAppState();
 
-  const isBountyClosed = !!state.currentBounty?.data?.isClosed;
-  const tokenSymbol = state.currentBounty?.data?.transactionalToken?.symbol;
-  const rewardTokenSymbol = state.currentBounty?.data?.rewardToken?.symbol;
+  const isBountyClosed = !!currentBounty?.isClosed;
+  const tokenSymbol = currentBounty?.transactionalToken?.symbol;
+  const rewardTokenSymbol = currentBounty?.rewardToken?.symbol;
   const retractOrWithdrawAmount = isBountyClosed
     ? funding?.amount
-        ?.dividedBy(state.currentBounty?.data?.fundingAmount)
-        .multipliedBy(state.currentBounty?.data?.rewardAmount)
+        ?.dividedBy(currentBounty?.fundingAmount)
+        .multipliedBy(currentBounty?.rewardAmount)
         ?.toFixed()
     : funding?.amount?.toFixed();
 
   function handleRetractOrWithdraw() {
-    if (!state.currentBounty?.data || !funding) return;
+    if (!currentBounty || !funding) return;
 
     setIsExecuting(true);
     if (isBountyClosed) {
-      handleWithdrawFundRewardBounty(state.currentBounty?.data?.contractId,
+      handleWithdrawFundRewardBounty(currentBounty?.contractId,
                                      funding.contractId,
                                      retractOrWithdrawAmount,
                                      rewardTokenSymbol)
@@ -59,11 +61,11 @@ export default function RetractOrWithdrawModalController({
           return processEvent(StandAloneEvents.BountyWithdrawReward,
                               undefined,
                               {
-              issueId: state.currentBounty?.data?.issueId,
+              issueId: currentBounty?.issueId,
                               });
         })
         .then(() => {
-          getDatabaseBounty(true);
+          updateBountyData();
           onCloseClick();
           dispatch(toastSuccess(t("funding:modals.reward.withdraw-x-symbol", {
                 amount: retractOrWithdrawAmount,
@@ -78,12 +80,12 @@ export default function RetractOrWithdrawModalController({
         })
         .finally(() => setIsExecuting(false));
     } else {
-      handleRetractFundBounty(state.currentBounty?.data?.contractId,
+      handleRetractFundBounty(currentBounty?.contractId,
                               funding.contractId)
         .then((txInfo) => {
           const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
 
-          getDatabaseBounty(true);
+          updateBountyData();
 
           return processEvent(NetworkEvents.BountyFunded, undefined, {
             fromBlock,
@@ -91,7 +93,7 @@ export default function RetractOrWithdrawModalController({
         })
         .then(async () => {
           onCloseClick();
-          await getDatabaseBounty(true);
+          await updateBountyData();
 
           dispatch(toastSuccess(t("funding:modals.retract.retract-x-symbol", {
                 amount: retractOrWithdrawAmount,
@@ -118,7 +120,7 @@ export default function RetractOrWithdrawModalController({
       rewardTokenSymbol={rewardTokenSymbol}
       tokenSymbol={tokenSymbol}
       handleRetractOrWithdraw={handleRetractOrWithdraw}
-      contractId={state.currentBounty?.data?.contractId}
+      contractId={currentBounty?.contractId}
     />
   );
 }

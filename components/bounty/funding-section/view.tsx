@@ -15,7 +15,7 @@ import {
   CaptionMedium,
   RowWithTwoColumns,
 } from "components/bounty/funding-section/minimals.view";
-import RetractOrWithdrawModalController from "components/bounty/funding-section/retract-or-withdraw-modal/controller";
+import RetractOrWithdrawModal from "components/bounty/funding-section/retract-or-withdraw-modal/controller";
 import Collapsable from "components/collapsable";
 import ConnectWalletButton from "components/connect-wallet-button";
 import ContractButton from "components/contract-button";
@@ -37,7 +37,7 @@ interface FundingSectionViewProps {
     isBountyClosed: boolean;
     isBountyInDraft: boolean;
     rewardTokenSymbol: string;
-    updateBountyData: () => void;
+    updateBountyData: (updatePrData?: boolean) => void;
 }
 
 export default function FundingSectionView({
@@ -80,7 +80,9 @@ export default function FundingSectionView({
         currentBounty={bounty}
       />
 
-      <RetractOrWithdrawModalController
+      <RetractOrWithdrawModal
+        updateBountyData={updateBountyData}
+        currentBounty={bounty}
         show={!!fundingToRetractOrWithdraw}
         funding={fundingToRetractOrWithdraw}
         onCloseClick={handleCloseRetractOrWithdrawModal}
