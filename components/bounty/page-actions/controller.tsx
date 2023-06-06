@@ -246,6 +246,7 @@ export default function PageActions({
       handleEditIssue={handleEditIssue}
       currentUser={state.currentUser}
       bounty={currentBounty}
+      updateBountyData={updateBountyData}
       {...rest}
     />
   );
