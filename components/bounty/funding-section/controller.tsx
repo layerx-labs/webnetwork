@@ -11,7 +11,12 @@ import { IssueBigNumberData, fundingBenefactor } from "interfaces/issue-data";
 
 import FundingSectionView from "./view";
 
-export default function FundingSection({ currentBounty }: { currentBounty: IssueBigNumberData}) {
+interface FundingSectionProps {
+  currentBounty: IssueBigNumberData;
+  updateBountyData: () => void;
+}
+
+export default function FundingSection({ currentBounty, updateBountyData }: FundingSectionProps) {
   const { t } = useTranslation(["common", "funding"]);
 
   const [walletFunds, setWalletFunds] = useState<fundingBenefactor[]>();
@@ -61,6 +66,7 @@ export default function FundingSection({ currentBounty }: { currentBounty: Issue
   return (
     <FundingSectionView
       walletFunds={walletFunds}
+      updateBountyData={updateBountyData}
       isBountyFunded={isBountyFunded}
       isConnected={isConnected}
       isCanceled={isCanceled}

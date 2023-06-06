@@ -10,20 +10,29 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 
 import {MetamaskErrors} from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
+import { IssueBigNumberData } from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import {useBounty} from "x-hooks/use-bounty";
 import useERC20 from "x-hooks/use-erc20";
 
 import FundModalView from "./view";
 
-export default function FundModalController({
+interface FundModalProps {
+  show?: boolean,
+  onCloseClick?: () => void;
+  currentBounty: IssueBigNumberData;
+  updateBountyData: () => void;
+}
+
+export default function FundModal({
   show = false,
   onCloseClick,
-}) {
+  currentBounty,
+  updateBountyData
+}: FundModalProps) {
   const {t} = useTranslation(["common", "funding", "bounty"]);
-  const {state, dispatch} = useAppState();
+  const {dispatch} = useAppState();
 
   const [isExecuting, setIsExecuting] = useState(false);
   const [rewardPreview, setRewardPreview] = useState("0");
@@ -31,22 +40,21 @@ export default function FundModalController({
 
   const { processEvent } = useApi();
   const { handleFundBounty } = useBepro();
-  const { getDatabaseBounty } = useBounty();
   const { allowance, balance, decimals, setAddress, approve, updateAllowanceAndBalance } = useERC20();
 
-  const rewardToken = state.currentBounty?.data?.rewardToken;
-  const transactionalToken = state.currentBounty?.data?.transactionalToken;
+  const rewardToken = currentBounty?.rewardToken;
+  const transactionalToken = currentBounty?.transactionalToken;
 
   const fundBtnDisabled = [
     isExecuting,
     amountToFund?.isNaN(),
     amountToFund?.isZero(),
-    amountToFund?.plus(state.currentBounty?.data?.fundedAmount).gt(state.currentBounty?.data?.fundingAmount),
+    amountToFund?.plus(currentBounty?.fundedAmount).gt(currentBounty?.fundingAmount),
     amountToFund === undefined
   ].some(c => c);
   const needsApproval = amountToFund?.gt(allowance);
   const amountNotFunded = 
-    state.currentBounty?.data?.fundingAmount?.minus(state.currentBounty?.data?.fundedAmount) || BigNumber(0);
+    currentBounty?.fundingAmount?.minus(currentBounty?.fundedAmount) || BigNumber(0);
 
   const ConfirmBtn = {
     label: needsApproval ? t("actions.approve") : t("funding:actions.fund-bounty"),
@@ -65,11 +73,11 @@ export default function FundModalController({
   }
 
   function fundBounty() {
-    if (state.currentBounty?.data?.contractId === undefined || !amountToFund) return;
+    if (currentBounty?.contractId === undefined || !amountToFund) return;
 
     setIsExecuting(true);
 
-    handleFundBounty(state.currentBounty?.data.contractId, amountToFund.toFixed(), transactionalToken?.symbol, decimals)
+    handleFundBounty(currentBounty.contractId, amountToFund.toFixed(), transactionalToken?.symbol, decimals)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
         
@@ -79,7 +87,7 @@ export default function FundModalController({
         const amountFormatted = formatNumberToCurrency(amountToFund.toFixed());
         
         updateAllowanceAndBalance();
-        getDatabaseBounty(true);
+        updateBountyData();
         handleClose();
 
         dispatch(toastSuccess(t("funding:modals.fund.funded-x-symbol", {
@@ -112,17 +120,17 @@ export default function FundModalController({
   }
 
   useEffect(() => {
-    if (!state.currentBounty?.data?.fundingAmount || !state.currentBounty?.data?.rewardAmount) return;
+    if (!currentBounty?.fundingAmount || !currentBounty?.rewardAmount) return;
 
     if (amountToFund?.lte(amountNotFunded)) {
       const preview = amountToFund
-        .multipliedBy(state.currentBounty?.data?.rewardAmount)
-        .dividedBy(state.currentBounty?.data.fundingAmount);
+        .multipliedBy(currentBounty?.rewardAmount)
+        .dividedBy(currentBounty.fundingAmount);
 
       setRewardPreview(preview.toFixed());
     } else
       setRewardPreview("0");
-  }, [state.currentBounty?.data?.fundingAmount, state.currentBounty?.data?.rewardAmount, amountToFund]);
+  }, [currentBounty?.fundingAmount, currentBounty?.rewardAmount, amountToFund]);
 
   useEffect(() => {
     if (transactionalToken?.address)
@@ -133,7 +141,7 @@ export default function FundModalController({
     <FundModalView
       show={show}
       handleClose={handleClose}
-      bounty={state.currentBounty?.data}
+      bounty={currentBounty}
       transactionalToken={transactionalToken}
       rewardToken={rewardToken}
       handleSetAmountToFund={handleSetAmountToFund}

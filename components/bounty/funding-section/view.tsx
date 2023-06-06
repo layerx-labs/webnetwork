@@ -7,7 +7,7 @@ import { useTranslation } from "next-i18next";
 
 import ArrowRight from "assets/icons/arrow-right";
 
-import FundModalController from "components/bounty/funding-section/fund-modal/controller";
+import FundModal from "components/bounty/funding-section/fund-modal/controller";
 import FundingProgressController from "components/bounty/funding-section/funding-progress/controller";
 import {
   Amount,
@@ -37,6 +37,7 @@ interface FundingSectionViewProps {
     isBountyClosed: boolean;
     isBountyInDraft: boolean;
     rewardTokenSymbol: string;
+    updateBountyData: () => void;
 }
 
 export default function FundingSectionView({
@@ -52,7 +53,8 @@ export default function FundingSectionView({
     collapseAction,
     isBountyClosed,
     isBountyInDraft,
-    rewardTokenSymbol
+    rewardTokenSymbol,
+    updateBountyData
 }: FundingSectionViewProps) {
   const { t } = useTranslation(["common", "funding"]);
 
@@ -71,9 +73,11 @@ export default function FundingSectionView({
     <div className="container mt-3">
       { (!isConnected && showFundModal) && <ConnectWalletButton asModal={true} />}
 
-      <FundModalController 
+      <FundModal 
         show={isConnected && showFundModal} 
         onCloseClick={handleCloseFundModal}
+        updateBountyData={updateBountyData}
+        currentBounty={bounty}
       />
 
       <RetractOrWithdrawModalController
