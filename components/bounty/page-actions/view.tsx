@@ -11,6 +11,8 @@ import ProposalModal from "components/proposal/create-proposal-modal";
 import Translation from "components/translation";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import CreateProposalButton from "./actions/create-proposal.view";
 import CreatePullRequestButton from "./actions/create-pull-request.view";
 import EditBountyButton from "./actions/edit-bounty.view";
@@ -46,7 +48,8 @@ export default function PageActionsView({
     "bounty",
     "proposal",
   ]);
-
+  
+  const { isMobileView, isTabletView } = useBreakPoint();
   const [showPRProposal, setShowPRProposal] = useState(false);
   const [showGHModal, setShowGHModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
@@ -115,18 +118,19 @@ export default function PageActionsView({
                 </If>
               </div>
             </div>
-            
-            <div className="col-12 d-lg-none">
-              <TabletAndMobileButton 
-                isConnectGithub={!isGithubConnected && isWalletConnected}
-                isCreatePr={isCreatePr}
-                isCreateProposal={isCreateProposal}
-                isExecuting={isExecuting}
-                handleShowPRModal={handleShowPRModal}
-                handleShowPRProposal={setShowPRProposal}
-                handleActionWorking={handleActionWorking}
-              />
-            </div>
+            <If condition={isMobileView || isTabletView}>
+              <div className="col-12 d-lg-none">
+                <TabletAndMobileButton 
+                  isConnectGithub={!isGithubConnected && isWalletConnected}
+                  isCreatePr={isCreatePr}
+                  isCreateProposal={isCreateProposal}
+                  isExecuting={isExecuting}
+                  handleShowPRModal={handleShowPRModal}
+                  handleShowPRProposal={setShowPRProposal}
+                  handleActionWorking={handleActionWorking}
+                />
+              </div>
+            </If>
           </div>
         </div>
       </div>

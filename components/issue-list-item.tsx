@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import {isMobile} from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -34,6 +33,7 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
@@ -54,6 +54,7 @@ export default function IssueListItem({
   const router = useRouter();
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
   
+  const { isMobileView } = useBreakPoint();
   const {state,dispatch} = useAppState();
   const [visible, setVisible] = useState<boolean>();
   const [isCancelable, setIsCancelable] = useState(false);
@@ -405,10 +406,10 @@ export default function IssueListItem({
             </ResponsiveWrapper>
             <div
               className={`d-flex col-md-2 mt-3 ${
-                isMobile ? "justify-content-between" : "justify-content-end"
+                isMobileView ? "justify-content-between" : "justify-content-end"
               }`}
             >
-              {isMobile && <BountyTagsView tags={[issue?.network?.name]} />}
+              {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
               <BountyAmountController bounty={issue} size={size} />
             </div>
           </div>

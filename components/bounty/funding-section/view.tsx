@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import { isMobile, isTablet } from "react-device-detect";
 
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
@@ -22,6 +21,8 @@ import ContractButton from "components/contract-button";
 
 
 import {IssueBigNumberData, fundingBenefactor} from "interfaces/issue-data";
+
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface FundingSectionViewProps {
     walletFunds: fundingBenefactor[];
@@ -57,6 +58,8 @@ export default function FundingSectionView({
     updateBountyData
 }: FundingSectionViewProps) {
   const { t } = useTranslation(["common", "funding"]);
+
+  const { isMobileView, isTabletView } = useBreakPoint();
 
   const [showFundModal, setShowFundModal] = useState(false);
   const [fundingToRetractOrWithdraw, setFundingToRetractOrWithdraw] = useState<fundingBenefactor>();
@@ -94,7 +97,7 @@ export default function FundingSectionView({
           <ContractButton onClick={handleShowFundModal} className="col-12">
             {t("funding:actions.fund-bounty")}
           </ContractButton>}
-        classNameCol2={(isTablet || isMobile) && 'col-12'}
+        classNameCol2={(isTabletView || isMobileView) && 'col-12'}
       />
       
       <Row className="border-radius-8 bg-gray-850 mt-3 mx-0 p-2">

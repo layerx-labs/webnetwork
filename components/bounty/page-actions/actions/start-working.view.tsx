@@ -1,6 +1,6 @@
-import { isMobile, isTablet } from "react-device-detect";
-
 import Translation from "components/translation";
+
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 import PageActionsButton from "../action-button/view";
 
@@ -12,11 +12,13 @@ export default function StartWorkingButton({
     onClick: () => void;
     isExecuting?: boolean;
 }) {
+  const { isMobileView, isTabletView } = useBreakPoint();
+  
   return (
     <PageActionsButton
       onClick={onClick}
       className={`d-none d-lg-block read-only-button ${
-        isTablet || isMobile ? "col-12" : "bounty-outline-button"
+        isTabletView || isMobileView ? "col-12" : "bounty-outline-button"
       }`}
       disabled={isExecuting}
       isLoading={isExecuting}
