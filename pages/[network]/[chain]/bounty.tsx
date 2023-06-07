@@ -183,8 +183,15 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
     data: {...bountyDatabase, pullRequests: pullRequestsDetails}
   }
   
+  const seoData: Partial<IssueData> = {
+    title: bountyDatabase?.title,
+    body: bountyDatabase?.body,
+    issueId: bountyDatabase?.issueId
+  }
+
   return {
     props: {
+      seoData,
       bounty,
       ...(await serverSideTranslations(locale, [
         "common",
