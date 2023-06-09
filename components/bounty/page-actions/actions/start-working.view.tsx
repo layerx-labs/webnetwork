@@ -17,8 +17,8 @@ export default function StartWorkingButton({
   return (
     <PageActionsButton
       onClick={onClick}
-      className={`d-none d-lg-block read-only-button ${
-        isTabletView || isMobileView ? "col-12" : "bounty-outline-button"
+      className={`read-only-button ${
+        (isTabletView || isMobileView) ? "col-12" : "bounty-outline-button"
       }`}
       disabled={isExecuting}
       isLoading={isExecuting}
