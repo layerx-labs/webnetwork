@@ -154,17 +154,6 @@ export default function BountyHeroView({
                     </span>
                   </>
                 </BountyItemLabel>
-
-                <If condition={!!bounty?.createdAt}>
-                  <BountyItemLabel
-                    label={t("common:misc.opened-on")}
-                    className="col-auto"
-                  >
-                    <span className="text-gray text-truncate">
-                      {bounty?.createdAt?.toLocaleDateString("PT")}
-                    </span>
-                  </BountyItemLabel>
-                </If>
               </div>
               <If condition={!!bounty?.createdAt}>
                 <BountyItemLabel
