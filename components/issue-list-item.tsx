@@ -344,7 +344,7 @@ export default function IssueListItem({
   return (
     <CardItem onClick={handleClickCard} key="default-card">
       <div className="row align-items-center">
-        <div className="col-md-12 mb-3">
+        <div className="col-md-12">
           <div className="d-flex">
             <div className="d-flex col-md-10 text-truncate">
               <div className="me-2">
@@ -397,11 +397,7 @@ export default function IssueListItem({
             </div>
           </ResponsiveWrapper>
 
-          <ResponsiveWrapper xs={false} xl={true}>
-            <div className="w-100 border-top border-gray-850"></div>
-          </ResponsiveWrapper>
-
-          <div className="row mt-3 align-items-center">
+          <div className="row align-items-center border-xl-top border-gray-850 pt-3">
             <ResponsiveWrapper xs={false} xl={true}>
               <div className="row w-100 align-items-center justify-content-md-start">
                 <BountyItemLabel label="ID" className="col-auto">
