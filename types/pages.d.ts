@@ -8,3 +8,8 @@ export interface ExplorePageProps {
   recentBounties: IssueData[];
   recentFunding: IssueData[];
 }
+
+export interface NetworkCuratorsPageProps {
+  bounties: SearchBountiesPaginated;
+  totalReadyBounties: number;
+}
