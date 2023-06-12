@@ -8,11 +8,9 @@ import getExplorePageData from "x-hooks/api/get-explore-page-data";
 export default ExplorePage;
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
-  const data = await getExplorePageData(query);
-
   return {
     props: {
-      ...data,
+      ...(await getExplorePageData(query)),
       ...(await serverSideTranslations(locale, ["common", "custom-network", "bounty", "connect-wallet-button"]))
     }
   };
