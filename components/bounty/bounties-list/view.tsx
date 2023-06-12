@@ -33,6 +33,8 @@ interface BountiesListViewProps {
   onNotFoundClick: () => void;
   onNextPage: () => void;
   onSearchInputChange: (event) => void;
+  onSearchClick: () => void;
+  onEnterPressed: (event) => void;
 }
 
 export default function BountiesListView({
@@ -49,6 +51,8 @@ export default function BountiesListView({
   onNotFoundClick,
   onNextPage,
   onSearchInputChange,
+  onSearchClick,
+  onEnterPressed,
 }: BountiesListViewProps) {
   const { t } = useTranslation(["common", "bounty", "pull-request", "proposal"]);
 
@@ -124,7 +128,7 @@ export default function BountiesListView({
         >
           <div className="col">
             <InputGroup className="border-radius-8">
-              <InputGroup.Text className="cursor-pointer">
+              <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
                 <SearchIcon />
               </InputGroup.Text>
 
@@ -133,6 +137,7 @@ export default function BountiesListView({
                 onChange={onSearchInputChange}
                 className="p-2"
                 placeholder={t("bounty:search")}
+                onKeyDown={onEnterPressed}
               />
 
               <If condition={showClearButton}>

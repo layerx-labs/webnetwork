@@ -35,18 +35,41 @@ export default function BountiesList({
 }: BountiesListProps) {
   const router = useRouter();
   
+  const [searchState, setSearchState] = useState("");
   const [bountiesList, setBountiesList] = useState<SearchBountiesPaginatedBigNumber>();
+
+  const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { nextPage } = usePage();
   const { state: appState } = useAppState();
   const { search, setSearch, clearSearch } = useSearch();
 
-  const debouncedSearchUpdater = useDebouncedCallback((e) => setSearch(e.target.value), 500);
-
   const { state, time, repoId } = router.query;
 
   const hasFilter = !!(state || time || repoId || search);
   const isOnNetwork = !!router?.query?.network;
+
+  function handleSearchChange(e) {
+    setSearchState(e.target.value);
+    debouncedSearchUpdater(e.target.value);
+  }
+
+  function handleClearSearch(): void {
+    setSearchState("");
+    clearSearch();
+  }
+
+  function updateSearch() {
+    setSearch(searchState);
+  }
+
+  function handleSearch(event) {
+    if (event.key !== "Enter") return;
+
+    updateSearch();
+  }
+
+
 
   function handleNotFoundClick() {
     if (!redirect) return router.push('/create-bounty');
@@ -77,14 +100,16 @@ export default function BountiesList({
       variant={variant}
       bounties={bountiesList}
       type={type}
-      searchString={search}
+      searchString={searchState}
       isOnNetwork={isOnNetwork}
       isConnected={!!appState.currentUser?.walletAddress}
       hasFilter={hasFilter}
-      onClearSearch={clearSearch}
+      onSearchClick={updateSearch}
+      onClearSearch={handleClearSearch}
       onNotFoundClick={handleNotFoundClick}
       onNextPage={nextPage}
-      onSearchInputChange={debouncedSearchUpdater}
+      onEnterPressed={handleSearch}
+      onSearchInputChange={handleSearchChange}
     />
   );
 }
