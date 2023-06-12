@@ -15,7 +15,6 @@ import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import BountyAmountController from "components/bounty/amount-info/controller";
 import CardItem from "components/card-item";
-import ChainBadge from "components/chain-badge";
 import If from "components/If";
 import Modal from "components/modal";
 import { FlexColumn } from "components/profile/wallet-balance";

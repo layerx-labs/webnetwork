@@ -1,5 +1,4 @@
 import { Modal as ModalBootstrap } from "react-bootstrap";
-import { isMobile } from "react-device-detect";
 
 import { kebabCase } from "lodash";
 
