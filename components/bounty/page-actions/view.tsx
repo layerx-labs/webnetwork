@@ -121,7 +121,7 @@ export default function PageActionsView({
             <If condition={isMobileView || isTabletView}>
               <div className="col-12 d-lg-none">
                 <TabletAndMobileButton 
-                  isWalletConnected={isWalletConnected}
+                  isStartWorkingButton={isStartWorkingButton}
                   isConnectGithub={!isGithubConnected && isWalletConnected}
                   isCreatePr={isCreatePr}
                   isCreateProposal={isCreateProposal}

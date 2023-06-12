@@ -8,7 +8,7 @@ interface TabletAndMobileButtonProps {
   isCreateProposal: boolean;
   isExecuting: boolean;
   isConnectGithub: boolean;
-  isWalletConnected: boolean;
+  isStartWorkingButton: boolean;
   handleActionWorking: () => void;
   handleShowPRModal: (b: boolean) => void;
   handleShowPRProposal: (b: boolean) => void;
@@ -19,7 +19,7 @@ export default function TabletAndMobileButton({
   isCreateProposal,
   isExecuting,
   isConnectGithub,
-  isWalletConnected,
+  isStartWorkingButton,
   handleActionWorking,
   handleShowPRModal,
   handleShowPRProposal,
@@ -46,7 +46,7 @@ export default function TabletAndMobileButton({
       <MultiActionButton label="Create" className="col-12" actions={actions} />
     );
 
-  if(isWalletConnected){
+  if(isStartWorkingButton){
     return (
       <StartWorkingButton
         onClick={handleActionWorking}
