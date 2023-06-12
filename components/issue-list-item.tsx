@@ -232,7 +232,7 @@ export default function IssueListItem({
               >
                 <>
                   <BountyStatusInfo issueState={issueState} />
-                  <span>{isSeekingFund ? "Seeking funding" : issueState}</span>
+                  <span>{isSeekingFund ? t("seeking-funding") : issueState}</span>
                 </>
               </Badge>
             </div>
