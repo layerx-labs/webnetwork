@@ -392,11 +392,12 @@ li {
 }
 
 .main-nav {
+  @extend .border-xl-bottom;
+  @extend .border-dark-gray;
+  
   width: 100%;
   min-height: $navbar-height;
   background-color: var(--bs-dark);
-
-  border-bottom: 1px solid $dark-gray;
 
   .btn:not(.brand, .not-svg) svg:only-child {
     width: 16px;
