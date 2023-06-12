@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next/types";
 import BountiesList from "components/bounty/bounties-list/controller";
 import CouncilLayout from "components/council-layout";
 import CuratorsList from "components/curators-list";
+import If from "components/If";
 
 import { emptyBountiesPaginated } from "helpers/api";
 
@@ -22,41 +23,28 @@ interface PageCouncilProps {
 export default function PageCouncil({
   bounties
 }: PageCouncilProps) {
-  const { t } = useTranslation(["council"]);
   const router = useRouter();
+  const { t } = useTranslation(["council"]);
+  
   const { type } = router.query;
-
-  const types = {
-    "curators-list": <CuratorsList key={"curators-list"} inView={type === 'curators-list'} />,
-    "ready-to-close": (
-      <BountiesList
-        key={"ready-to-close"}
-        emptyMessage={t("council:empty")}
-        inView={type === 'ready-to-close'}
-        bounties={bounties}
-      />
-    ),
-    "ready-to-dispute": (
-      <BountiesList
-        key={"ready-to-dispute"}
-        emptyMessage={t("council:empty")}
-        inView={type === 'ready-to-dispute'}
-        bounties={bounties}
-      />
-    ),
-    "ready-to-propose": (
-      <BountiesList
-        key={"ready-to-propose"}
-        emptyMessage={t("council:empty")}
-        inView={!type || type === 'ready-to-propose'}
-        bounties={bounties}
-      />
-    ),
-  };
 
   return (
     <CouncilLayout>
-      {types[type?.toString()]}
+      <If 
+        condition={type === "curators-list"}
+        otherwise={
+          <BountiesList
+            key={type?.toString()}
+            emptyMessage={t("council:empty")}
+            bounties={bounties}
+          />
+        }
+      >
+        <CuratorsList 
+          key={"curators-list"} 
+          inView={type === "curators-list"}
+        />
+      </If>
     </CouncilLayout>
   );
 }

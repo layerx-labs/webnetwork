@@ -21,7 +21,6 @@ interface BountiesListProps {
   redirect?: string | UrlObject;
   emptyMessage?: string;
   buttonMessage?: string;
-  inView?: boolean;
   variant?: "bounty-hall" | "profile" | "network" | "management"
   type?: "bounties" | "pull-requests" | "proposals";
 }
@@ -30,7 +29,6 @@ export default function BountiesList({
   emptyMessage,
   buttonMessage,
   redirect,
-  inView,
   variant = "network",
   bounties,
   type = "bounties"
@@ -71,8 +69,6 @@ export default function BountiesList({
       };
     });
   }, [bounties]);
-
-  if(inView !== null && inView === false) return null;
 
   return (
     <BountiesListView
