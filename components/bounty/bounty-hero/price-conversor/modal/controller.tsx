@@ -29,7 +29,7 @@ export default function PriceConversorModal({
 }:IPriceConversiorModalProps) {
 
   const [options, setOptions] = useState<Options[]>([]);
-  const [currentValue, setValue] = useState<number>(0);
+  const [currentValue, setValue] = useState<number>(value?.toNumber() || 0);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentToken, setCurrentToken] = useState<string>();
   const [errorCoinInfo, setErrorCoinInfo] = useState<boolean>(false);
@@ -38,10 +38,10 @@ export default function PriceConversorModal({
   const {state} = useAppState();
 
   async function handlerChange({value, label}: Options){
-    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
+    if (!symbol) return;
 
     const data = 
-      await getCoinInfoByContract(state.currentBounty?.data?.transactionalToken?.symbol)
+      await getCoinInfoByContract(symbol)
         .catch((err) => {
           if(err) setErrorCoinInfo(true)
           return ({ prices: { [value]: 0 } })
@@ -54,7 +54,7 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
+    if (!symbol) return;
 
     const currencyList = state.Settings?.currency?.conversionList || defaultValue;
 
@@ -64,12 +64,7 @@ export default function PriceConversorModal({
       handlerChange(opt[0])
     }
     
-  },[state.currentBounty?.data?.transactionalToken?.symbol])
-
-  useEffect(() => {
-    setValue(value?.toNumber())
-  },[value])
-
+  },[symbol])
 
   return (
     <PriceConversorModalView 
