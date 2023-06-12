@@ -29,12 +29,10 @@ interface BountiesListViewProps {
   isOnNetwork?: boolean;
   isConnected?: boolean;
   hasFilter?: boolean;
-  onSearchClick: () => void;
   onClearSearch: () => void;
   onNotFoundClick: () => void;
   onNextPage: () => void;
   onSearchInputChange: (event) => void;
-  onEnterPressed: (event) => void;
 }
 
 export default function BountiesListView({
@@ -47,12 +45,10 @@ export default function BountiesListView({
   isOnNetwork,
   isConnected,
   hasFilter,
-  onSearchClick,
   onClearSearch,
   onNotFoundClick,
   onNextPage,
   onSearchInputChange,
-  onEnterPressed,
 }: BountiesListViewProps) {
   const { t } = useTranslation(["common", "bounty", "pull-request", "proposal"]);
 
@@ -128,7 +124,7 @@ export default function BountiesListView({
         >
           <div className="col">
             <InputGroup className="border-radius-8">
-              <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
+              <InputGroup.Text className="cursor-pointer">
                 <SearchIcon />
               </InputGroup.Text>
 
@@ -137,7 +133,6 @@ export default function BountiesListView({
                 onChange={onSearchInputChange}
                 className="p-2"
                 placeholder={t("bounty:search")}
-                onKeyDown={onEnterPressed}
               />
 
               <If condition={showClearButton}>
