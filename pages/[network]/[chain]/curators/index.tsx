@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
     "ready-to-propose": "proposable",
     "ready-to-dispute": "disputable",
     "ready-to-close": "mergeable",
-  }[type?.toString()] || "invalid";
+  }[type?.toString()];
 
   const getBountiesList = (filters) => getBountiesListData(filters)
     .then(({ data }) => data)
