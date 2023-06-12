@@ -5,8 +5,8 @@ import { useTranslation } from "next-i18next";
 import Avatar from "components/avatar";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
+import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
 import If from "components/If";
-import PriceConversor from "components/price-conversor";
 
 import { truncateAddress } from "helpers/truncate-address";
 

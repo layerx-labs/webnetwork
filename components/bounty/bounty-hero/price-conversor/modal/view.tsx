@@ -1,7 +1,5 @@
-import {useEffect, useState} from "react";
 import {components as RSComponents ,SingleValueProps } from "react-select";
 
-import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import TransactionIcon from "assets/icons/transaction";
@@ -10,72 +8,41 @@ import InputNumber from "components/input-number";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
-import {useAppState} from "contexts/app-state";
-
 import {formatNumberToNScale} from "helpers/formatNumber";
-
-import {getCoinInfoByContract} from "services/coingecko";
 
 interface IPriceConversiorModalProps {
   show: boolean;
   onClose: ()=> void;
-  value?: BigNumber;
+  symbol: string;
+  currentValue: number;
+  handleCurrentValue: (v: number) => void;
+  currentPrice: number;
+  currentToken: string;
+  errorCoinInfo: boolean;
+  currentCurrency: Options;
+  options: Options[];
+  handleSelectChange: ({value, label}: Options) => void;
 }
+
 interface Options {
   value: string;
   label: string;
 }
 
-const defaultValue = [{value: "usd", label: "US Dollar"}, {value: "eur", label: "Euro"}]
-
-export default function PriceConversorModal({
+export default function PriceConversorModalView({
   show,
   onClose,
-  value
-}:IPriceConversiorModalProps) {
+  symbol,
+  currentValue,
+  handleCurrentValue,
+  currentPrice,
+  currentToken,
+  errorCoinInfo,
+  currentCurrency,
+  options,
+  handleSelectChange
+}: IPriceConversiorModalProps) {
   const { t } = useTranslation("common");
-  
-  const [options, setOptions] = useState([]);
-  const [currentValue, setValue] = useState<number>(0);
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [currentToken, setCurrentToken] = useState<string>();
-  const [errorCoinInfo, setErrorCoinInfo] = useState<boolean>(false);
-  const [currentCurrency, setCurrentCurrency] = useState<{label: string, value: string}>(null);
-
-  const {state} = useAppState();
-
-  async function handlerChange({value, label}: Options){
-    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
-
-    const data = 
-      await getCoinInfoByContract(state.currentBounty?.data?.transactionalToken?.symbol)
-        .catch((err) => {
-          if(err) setErrorCoinInfo(true)
-          return ({ prices: { [value]: 0 } })
-        });
-
-    if(data.prices[value] > 0) setErrorCoinInfo(false)
-    setCurrentCurrency({value, label});
-    setCurrentToken(value.toUpperCase())
-    setCurrentPrice(data.prices[value]);
-  }
-
-  useEffect(()=>{
-    if (!state.currentBounty?.data?.transactionalToken?.symbol) return;
-
-    const currencyList = state.Settings?.currency?.conversionList || defaultValue;
-
-    if(currencyList.length){
-      const opt = currencyList.map(currency=>({value: currency?.value, label: currency?.label}))
-      setOptions(opt)
-      handlerChange(opt[0])
-    }
-    
-  },[state.currentBounty?.data?.transactionalToken?.symbol])
-
-  useEffect(() => {
-    setValue(value?.toNumber())
-  },[value])
 
   const SingleValue = ({children, ...props}: SingleValueProps) => {
 
@@ -116,9 +83,9 @@ export default function PriceConversorModal({
         <div className="col">
           <InputNumber
             className="caption-large"
-            symbol={state.currentBounty?.data?.transactionalToken?.symbol || t("common:misc.$token")}
+            symbol={symbol || t("common:misc.$token")}
             value={currentValue}
-            onValueChange={(e) => setValue(e.floatValue)}
+            onValueChange={(e) => handleCurrentValue(e.floatValue)}
           />
         </div>
         <div className="d-flex justify-center align-items-center bg-dark-gray circle-2 p-2">
@@ -137,7 +104,7 @@ export default function PriceConversorModal({
               label: options[0]?.label,
             }}
             options={options}
-            onChange={handlerChange}
+            onChange={handleSelectChange}
           />
           {errorCoinInfo && (
             <p className="p-small text-danger ms-1">

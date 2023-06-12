@@ -1,9 +1,7 @@
-import { useState } from "react";
-
 import BigNumber from "bignumber.js";
 import getConfig from "next/config";
 
-import PriceConversorModal from "components/price-conversor-modal";
+import PriceConversorModal from "components/bounty/bounty-hero/price-conversor/modal/controller";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
@@ -14,21 +12,23 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 interface IPriceConversorProps {
   currentValue: BigNumber;
   currency: Currency | string;
+  isVisible: boolean;
+  handleIsVisible: (v: boolean) => void;
 }
 
 const { publicRuntimeConfig } = getConfig();
 
-export default function PriceConversor({
+export default function PriceConversorView({
   currentValue,
-  currency
+  currency,
+  isVisible,
+  handleIsVisible
 }: IPriceConversorProps) {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-
   const { isDesktopView } = useBreakPoint();
 
   return (
     <>
-    <div onClick={()=> setIsVisible(publicRuntimeConfig?.enableCoinGecko && true)}
+    <div onClick={()=> handleIsVisible(publicRuntimeConfig?.enableCoinGecko && true)}
         className={
           `${(!isDesktopView || !publicRuntimeConfig?.enableCoinGecko) && 
             'read-only-button-mobile'} price-conversor rounded-5 py-2 px-3 bg-black 
@@ -38,7 +38,12 @@ export default function PriceConversor({
       </span>
       <span className="text-white-30 ms-2">{currency}</span>
     </div>
-    <PriceConversorModal value={currentValue} show={isVisible} onClose={() => setIsVisible(false)}/>
+    <PriceConversorModal
+        value={currentValue}
+        symbol={currency}
+        show={isVisible}
+        onClose={() => handleIsVisible(false)}
+      />
     </>
   );
 }
