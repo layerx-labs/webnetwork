@@ -404,14 +404,12 @@ export default function IssueListItem({
                 </div>
               </div>
             </ResponsiveWrapper>
-            <div
-              className={`d-flex col-md-2 mt-3 ${
-                isMobileView ? "justify-content-between" : "justify-content-end"
-              }`}
-            >
-              {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
-              <BountyAmountController bounty={issue} size={size} />
-            </div>
+            <ResponsiveWrapper md={true} sm={true} xs={true} lg={false}>
+              <div className={`col d-flex justify-content-between`} >
+                {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
+                <BountyAmountController bounty={issue} size={size} />
+              </div>
+            </ResponsiveWrapper>
           </div>
 
         </div>
