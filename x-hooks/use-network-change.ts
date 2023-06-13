@@ -13,38 +13,44 @@ export default function useNetworkChange() {
 
     dispatch(changeSpinners.update({ switchingChain: true }));
 
-    return window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [
-        {
-          chainId: chainId,
-        },
-      ],
-    })
-      .catch(error => {
-        return window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: chainId,
-                chainName: chosenSupportedChain.chainName,
-                nativeCurrency: {
-                  name: chosenSupportedChain.chainCurrencyName,
-                  symbol: chosenSupportedChain.chainCurrencySymbol,
-                  decimals: chosenSupportedChain.chainCurrencyDecimals,
-                },
-                rpcUrls: [chosenSupportedChain.chainRpc],
-                blockExplorerUrls: [chosenSupportedChain.blockScanner],
-              },
-            ],
-        }).catch(e => {
-          throw new Error(e);
-        })
-      
-
-        throw new Error(error);
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: chainId,
+          },
+        ],
       })
-      .finally(() => dispatch(changeSpinners.update({ switchingChain: false })))
+      return true
+    } catch (switchError) {
+      if (switchError?.code === 4902 || switchError?.code === -32603) {
+        try {
+          await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: chainId,
+                  chainName: chosenSupportedChain.chainName,
+                  nativeCurrency: {
+                    name: chosenSupportedChain.chainCurrencyName,
+                    symbol: chosenSupportedChain.chainCurrencySymbol,
+                    decimals: chosenSupportedChain.chainCurrencyDecimals,
+                  },
+                  rpcUrls: [chosenSupportedChain.chainRpc],
+                  blockExplorerUrls: [chosenSupportedChain.blockScanner],
+                },
+              ],
+          })
+        } catch (addError) {
+          return addError
+        }
+      }
+      return switchError
+    } finally {
+      dispatch(changeSpinners.update({ switchingChain: false }))
+    }
+
   }
 
   return {

@@ -540,9 +540,9 @@ export default function CreateBountyPage() {
             />
             <p>message:{JSON?.stringify(err?.message)}</p>
             <p>code:{JSON?.stringify(err?.code)}</p>
-            <p>m-all:{JSON?.stringify(JSON?.parse(err?.message))}</p>
-            <p>m-code:{JSON?.stringify(JSON?.parse(err?.code))}</p>
-            <p>allt:{JSON?.stringify(JSON?.parse(err))}</p>
+            <p>m-all:{err?.message}</p>
+            <p>m-code:{err?.code}</p>
+            <p>allt:{JSON?.stringify(err)}</p>
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
