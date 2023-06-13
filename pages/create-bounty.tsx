@@ -538,8 +538,11 @@ export default function CreateBountyPage() {
               isOnNetwork={false}
               className="select-network-dropdown w-max-none mb-4"
             />
-            {JSON?.stringify(err?.message)}
-            {JSON?.stringify(err?.code )}
+            <p>message:{JSON?.stringify(err?.message)}</p>
+            <p>code:{JSON?.stringify(err?.code)}</p>
+            <p>m-all:{JSON.parse(JSON.stringify(err?.message))}</p>
+            <p>m-code:{JSON.parse(JSON.stringify(err?.code))}</p>
+            <p>allt:{JSON.parse(JSON.stringify(err))}</p>
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
