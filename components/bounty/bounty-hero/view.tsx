@@ -105,7 +105,7 @@ export default function BountyHeroView({
                   </OverlayTrigger>
                 ) : null}
               </div>
-              <div>{renderPriceConversor()}</div>
+              <div className="mt-3">{renderPriceConversor()}</div>
             </div>
             <h5 className="mt-3 break-title">
               {bounty?.title}
