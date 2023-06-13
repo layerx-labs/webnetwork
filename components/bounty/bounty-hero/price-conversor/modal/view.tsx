@@ -99,10 +99,7 @@ export default function PriceConversorModalView({
               Option: SelectOptionComponent,
               SingleValue
             }}
-            defaultValue={{
-              value: options[0]?.value,
-              label: options[0]?.label,
-            }}
+            value={currentCurrency}
             options={options}
             onChange={handleSelectChange}
           />

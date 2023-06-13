@@ -19,7 +19,7 @@ interface Options {
   label: string;
 }
 
-const defaultValue = [{value: "usd", label: "US Dollar"}, {value: "eur", label: "Euro"}]
+const defaultValue: Options[] = [{value: "usd", label: "US Dollar"}, {value: "eur", label: "Euro"}]
 
 export default function PriceConversorModal({
   show,
@@ -28,12 +28,12 @@ export default function PriceConversorModal({
   symbol
 }:IPriceConversiorModalProps) {
 
-  const [options, setOptions] = useState<Options[]>([]);
+  const [options, setOptions] = useState<Options[]>(defaultValue);
   const [currentValue, setValue] = useState<number>(value?.toNumber() || 0);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [currentToken, setCurrentToken] = useState<string>();
   const [errorCoinInfo, setErrorCoinInfo] = useState<boolean>(false);
-  const [currentCurrency, setCurrentCurrency] = useState<{label: string, value: string}>(null);
+  const [currentCurrency, setCurrentCurrency] = useState<{label: string, value: string}>(defaultValue[0]);
 
   const {state} = useAppState();
 
@@ -54,17 +54,16 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-    if (!symbol) return;
+    if (!state.Settings?.currency?.conversionList) return;
 
-    const currencyList = state.Settings?.currency?.conversionList || defaultValue;
+    const { conversionList } = state.Settings.currency
 
-    if(currencyList.length){
-      const opt = currencyList.map(currency=>({value: currency?.value, label: currency?.label}))
-      setOptions(opt)
-      handlerChange(opt[0])
-    }
+    const opt = conversionList.map(currency=>({value: currency?.value, label: currency?.label}))
+    setOptions(opt)
+    handlerChange(opt[0])
     
-  },[symbol])
+  },[state.Settings?.currency?.conversionList])
+
 
   return (
     <PriceConversorModalView 
