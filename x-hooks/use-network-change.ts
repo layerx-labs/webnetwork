@@ -22,8 +22,7 @@ export default function useNetworkChange() {
       ],
     })
       .catch(error => {
-        if ((error as any)?.message?.indexOf('wallet_addEthereumChain') > -1) {
-          return window.ethereum.request({
+        return window.ethereum.request({
             method: "wallet_addEthereumChain",
             params: [
               {
@@ -38,10 +37,10 @@ export default function useNetworkChange() {
                 blockExplorerUrls: [chosenSupportedChain.blockScanner],
               },
             ],
-          }).catch(e => {
-            throw new Error(e);
-          })
-        }
+        }).catch(e => {
+          throw new Error(e);
+        })
+      
 
         throw new Error(error);
       })
