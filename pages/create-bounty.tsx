@@ -93,7 +93,7 @@ export default function CreateBountyPage() {
   const [notFoundNetworks, setNotFoundNetwork] = useState<boolean>(false);
   const [showModalSuccess, setShowModalSuccess] = useState<boolean>(false);
   const [currentCid, setCurrentCid] = useState<string>("");
-  const [err, setErr] = useState();
+  const [err, setErr] = useState<any>();
 
   const { query } = useRouter();
 
@@ -538,7 +538,8 @@ export default function CreateBountyPage() {
               isOnNetwork={false}
               className="select-network-dropdown w-max-none mb-4"
             />
-            {JSON?.stringify(err)}
+            {JSON?.stringify(err?.message)}
+            {JSON?.stringify(err?.code )}
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
