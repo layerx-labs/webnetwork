@@ -93,6 +93,7 @@ export default function CreateBountyPage() {
   const [notFoundNetworks, setNotFoundNetwork] = useState<boolean>(false);
   const [showModalSuccess, setShowModalSuccess] = useState<boolean>(false);
   const [currentCid, setCurrentCid] = useState<string>("");
+  const [err, setErr] = useState();
 
   const { query } = useRouter();
 
@@ -525,7 +526,7 @@ export default function CreateBountyPage() {
 
   async function handleNetworkSelected(chain: SupportedChainData) {
     setCurrentNetwork(undefined)
-    handleAddNetwork(chain).catch((err) => console.log('handle Add Network error', err));
+    handleAddNetwork(chain).catch((err) => setErr(err));
   }
 
   function section() {
@@ -537,6 +538,7 @@ export default function CreateBountyPage() {
               isOnNetwork={false}
               className="select-network-dropdown w-max-none mb-4"
             />
+            {JSON?.stringify(err)}
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
