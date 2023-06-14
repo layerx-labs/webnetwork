@@ -13,7 +13,7 @@ import TrashIcon from "assets/icons/trash-icon";
 import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
-import BountyAmountController from "components/bounty/amount-info/controller";
+import BountyAmount from "components/bounty/amount-info/controller";
 import CardItem from "components/card-item";
 import ChainBadge from "components/chain-badge";
 import If from "components/If";
@@ -230,7 +230,7 @@ export default function IssueListItem({
             {issue?.body}
           </div>
           <div className={!issue?.isFundingRequest && 'mt-4' || ""}>
-            <BountyAmountController bounty={issue} size={size} />
+            <BountyAmount bounty={issue} size={size} />
           </div>
         </>
       </CardItem>
@@ -400,14 +400,14 @@ export default function IssueListItem({
                 </BountyItemLabel>
 
                 <div className="col d-flex justify-content-end px-0">
-                  <BountyAmountController bounty={issue} size={size} />
+                  <BountyAmount bounty={issue} size={size} />
                 </div>
               </div>
             </ResponsiveWrapper>
             <ResponsiveWrapper md={true} sm={true} xs={true} lg={false}>
               <div className={`col d-flex justify-content-between`} >
                 {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
-                <BountyAmountController bounty={issue} size={size} />
+                <BountyAmount bounty={issue} size={size} />
               </div>
             </ResponsiveWrapper>
           </div>
