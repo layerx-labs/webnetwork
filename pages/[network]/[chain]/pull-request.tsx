@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-import {useTranslation} from "next-i18next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
-import {useRouter} from "next/router";
-import {GetServerSideProps} from "next/types";
+import { SSRConfig, useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next/types";
 
 import Comment from "components/comment";
 import ConnectWalletButton from "components/connect-wallet-button";
@@ -15,56 +15,73 @@ import NothingFound from "components/nothing-found";
 import PullRequestHero from "components/pull-request-hero";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
-import {useAppState} from "contexts/app-state";
-import {BountyEffectsProvider} from "contexts/bounty-effects";
-import {changeCurrentBountyComments, changeCurrentBountyData} from "contexts/reducers/change-current-bounty";
-import {changeLoadState} from "contexts/reducers/change-load";
-import {changeSpinners} from "contexts/reducers/change-spinners";
-import {addToast} from "contexts/reducers/change-toaster";
+import { useAppState } from "contexts/app-state";
+import { BountyEffectsProvider } from "contexts/bounty-effects";
+import { changeCurrentBountyComments } from "contexts/reducers/change-current-bounty";
+import { addToast } from "contexts/reducers/change-toaster";
 
-import {MetamaskErrors} from "interfaces/enums/Errors";
+import { issueParser } from "helpers/issue";
+
+import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
-import {pullRequest} from "interfaces/issue-data";
+import {
+  IssueBigNumberData,
+  IssueData,
+  pullRequest,
+} from "interfaces/issue-data";
 
+import {
+  getBountyData,
+  getBountyOrPullRequestComments,
+  getPullRequestReviews,
+  getPullRequestsDetails,
+} from "x-hooks/api/get-bounty-data";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import {useBounty} from "x-hooks/use-bounty";
-import {useNetwork} from "x-hooks/use-network";
+import { useBounty } from "x-hooks/use-bounty";
+import { useNetwork } from "x-hooks/use-network";
 
-export default function PullRequestPage() {
-  const router = useRouter();
+interface PagePullRequestProps {
+  bounty: IssueData;
+  pullRequest: pullRequest;
+  _nextI18Next?: SSRConfig;
+}
 
+export default function PullRequestPage({ pullRequest, bounty }: PagePullRequestProps) {
   const { t } = useTranslation(["common", "pull-request"]);
 
   const [showModal, setShowModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isMakingReady, setIsMakingReady] = useState(false);
-  const [pullRequest, setPullRequest] = useState<pullRequest>();
+  const [currentPullRequest, setCurrentPullRequest] = useState<pullRequest>({
+    ...pullRequest,
+    createdAt: new Date(pullRequest.createdAt),
+  });
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
+  const currentBounty: IssueBigNumberData = issueParser(bounty);
   const { state, dispatch } = useAppState();
-
+  const router = useRouter();
   const { getDatabaseBounty } = useBounty();
   const { getURLWithNetwork } = useNetwork();
   const { createReviewForPR, processEvent } = useApi();
-  const { getExtendedPullRequestsForCurrentBounty } = useBounty();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
   const { prId, review } = router.query;
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isGithubConnected = !!state.currentUser?.login;
-  const isPullRequestOpen = pullRequest?.state?.toLowerCase() === "open";
-  const isPullRequestReady = !!pullRequest?.isReady;
-  const isPullRequestCanceled = !!pullRequest?.isCanceled;
-  const isPullRequestCancelable = !!pullRequest?.isCancelable;
-  const isPullRequestCreator = pullRequest?.userAddress === state.currentUser?.walletAddress;
+  const isPullRequestOpen = currentPullRequest?.state?.toLowerCase() === "open";
+  const isPullRequestReady = !!currentPullRequest?.isReady;
+  const isPullRequestCanceled = !!currentPullRequest?.isCanceled;
+  const isPullRequestCancelable = !!currentPullRequest?.isCancelable;
+  const isPullRequestCreator = currentPullRequest?.userAddress === state.currentUser?.walletAddress;
   const branchProtectionRules = state.Service?.network?.repos?.active?.branchProtectionRules;
   const approvalsRequired =
     branchProtectionRules ?
-      branchProtectionRules[state.currentBounty?.data?.branch]?.requiredApprovingReviewCount || 0 : 0;
+      branchProtectionRules[currentBounty?.branch]?.requiredApprovingReviewCount || 0 : 0;
   const canUserApprove = state.Service?.network?.repos?.active?.viewerPermission !== "READ";
-  const approvalsCurrentPr = pullRequest?.approvals?.total || 0;
+  const approvalsCurrentPr = currentPullRequest?.approvals?.total || 0;
   const prsNeedsApproval = approvalsCurrentPr < approvalsRequired;
 
   function handleCreateReview(body: string) {
@@ -73,7 +90,7 @@ export default function PullRequestPage() {
     setIsCreatingReview(true);
 
     createReviewForPR({
-      issueId: String(state.currentBounty?.data?.issueId),
+      issueId: String(currentBounty?.issueId),
       pullRequestId: String(prId),
       githubLogin: state.currentUser?.login,
       body,
@@ -87,9 +104,9 @@ export default function PullRequestPage() {
           content: t("pull-request:actions.review.success"),
         }));
 
-        setPullRequest({
-          ...pullRequest,
-          comments: [...pullRequest.comments, response.data],
+        setCurrentPullRequest({
+          ...currentPullRequest,
+          comments: [...currentPullRequest.comments, response.data],
         });
 
         dispatch(changeCurrentBountyComments([...state.currentBounty?.comments || [], response.data]))
@@ -109,11 +126,11 @@ export default function PullRequestPage() {
   }
 
   function handleMakeReady() {
-    if (!state.currentBounty?.data || !pullRequest) return;
+    if (!currentBounty || !currentPullRequest) return;
 
     setIsMakingReady(true);
 
-    handleMakePullRequestReady(state.currentBounty?.data.contractId, pullRequest.contractId)
+    handleMakePullRequestReady(currentBounty.contractId, currentPullRequest.contractId)
       .then(txInfo => {
         const {blockNumber: fromBlock} = txInfo as { blockNumber: number };
         return processEvent(NetworkEvents.PullRequestReady, undefined, {fromBlock});
@@ -145,7 +162,7 @@ export default function PullRequestPage() {
   function handleCancel() {
     setIsCancelling(true);
 
-    handleCancelPullRequest(state.currentBounty?.data?.contractId, pullRequest?.contractId)
+    handleCancelPullRequest(currentBounty?.contractId, currentPullRequest?.contractId)
       .then(txInfo => {
         const {blockNumber: fromBlock} = txInfo as { blockNumber: number };
         return processEvent(NetworkEvents.PullRequestCanceled, undefined, {fromBlock});
@@ -160,8 +177,8 @@ export default function PullRequestPage() {
         }));
 
         router.push(getURLWithNetwork('/bounty', {
-          id: state.currentBounty?.data.githubId,
-          repoId: state.currentBounty?.data.repository_id
+          id: currentBounty.githubId,
+          repoId: currentBounty.repository_id
         }));
       })
       .catch(error => {
@@ -186,48 +203,13 @@ export default function PullRequestPage() {
   }
 
   useEffect(() => {
-    if (!state.currentBounty?.data ||
-        !prId ||
-        state?.spinners?.pullRequests) return;
-
-    if (pullRequest) {
-      const currentPr = state.currentBounty?.data?.pullRequests?.find((pr) => +pr.githubId === +prId);
-
-      if (pullRequest.isReady !== currentPr.isReady || pullRequest.status !== currentPr.status)
-        setPullRequest(previous => ({
-          ...previous,
-          isReady: currentPr.isReady,
-          status: currentPr.status
-        }));
-
-      return;
-    }
-
-    dispatch(changeLoadState(true));
-    dispatch(changeSpinners.update({pullRequests: true}));
-
-    getExtendedPullRequestsForCurrentBounty()
-      .then(pullRequests => {
-        dispatch(changeCurrentBountyData(Object.assign(state.currentBounty.data, { pullRequests })));
-
-        return pullRequests.find((pr) => +pr.githubId === +prId);
-      })
-      .then(setPullRequest)
-      .finally(() => {
-        dispatch(changeLoadState(false))
-        dispatch(changeSpinners.update({pullRequests: false}));
-      });
-
-  }, [state.currentBounty?.data, prId]);
-
-  useEffect(() => {
-    if (review && pullRequest && state.currentUser?.login && state.connectedChain?.matchWithNetworkChain)
+    if (review && currentPullRequest && state.currentUser?.login && state.connectedChain?.matchWithNetworkChain)
       setShowModal(true);
-  }, [review, pullRequest, state.currentUser, state.connectedChain?.matchWithNetworkChain]);
+  }, [review, currentPullRequest, state.currentUser, state.connectedChain?.matchWithNetworkChain]);
 
   return (
     <BountyEffectsProvider>
-      <PullRequestHero currentPullRequest={pullRequest}/>
+      <PullRequestHero currentPullRequest={currentPullRequest}/>
 
       <CustomContainer>
         <div className="mt-3">
@@ -236,7 +218,7 @@ export default function PullRequestPage() {
               <div className="col-8">
                 <span className="caption-large text-uppercase">
                   {t("pull-request:review", {
-                    count: pullRequest?.comments?.length,
+                    count: currentPullRequest?.comments?.length,
                   })}
                 </span>
               </div>
@@ -303,7 +285,7 @@ export default function PullRequestPage() {
                    !isPullRequestCanceled) &&
                   <GithubLink
                     forcePath={state.Service?.network?.repos?.active?.githubPath}
-                    hrefPath={`pull/${pullRequest?.githubId || ""}/files`}
+                    hrefPath={`pull/${currentPullRequest?.githubId || ""}/files`}
                     color="primary"
                   >
                     {t("actions.approve")}
@@ -312,24 +294,24 @@ export default function PullRequestPage() {
 
                 <GithubLink
                   forcePath={state.Service?.network?.repos?.active?.githubPath}
-                  hrefPath={`pull/${pullRequest?.githubId || ""}`}>
+                  hrefPath={`pull/${currentPullRequest?.githubId || ""}`}>
                   {t("actions.view-on-github")}
                 </GithubLink>
               </div>
             </div>
 
             <div className="col-12 mt-4">
-              {!!pullRequest?.comments?.length &&
-                React.Children.toArray(pullRequest?.comments?.map((comment, index) => (
+              {!!currentPullRequest?.comments?.length &&
+                React.Children.toArray(currentPullRequest?.comments?.map((comment, index) => (
                   <Comment comment={comment} key={index}/>
                 )))}
 
-              {!!pullRequest?.reviews?.length &&
-                React.Children.toArray(pullRequest?.reviews?.map((comment, index) => (
+              {!!currentPullRequest?.reviews?.length &&
+                React.Children.toArray(currentPullRequest?.reviews?.map((comment, index) => (
                   <Comment comment={comment} key={index}/>
                 )))}
 
-              {(!pullRequest?.comments?.length && !pullRequest?.reviews?.length) &&
+              {(!currentPullRequest?.comments?.length && !currentPullRequest?.reviews?.length) &&
                 <NothingFound
                   description={t("pull-request:errors.no-reviews-found")}
                 />
@@ -341,7 +323,7 @@ export default function PullRequestPage() {
 
       <CreateReviewModal
         show={showModal && isPullRequestReady}
-        pullRequest={pullRequest}
+        pullRequest={currentPullRequest}
         isExecuting={isCreatingReview}
         onConfirm={handleCreateReview}
         onCloseClick={handleCloseModal}
@@ -352,15 +334,43 @@ export default function PullRequestPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({locale}) => {
+export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
+  const { prId } = query;
+
+  const bountyDatabase = await getBountyData(query)
+
+  const pullRequestDatabase = bountyDatabase?.pullRequests?.find((pr) => +pr.githubId === +prId)
+
+  const pullRequestDetail = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
+                                                         [pullRequestDatabase]);
+
+  const pullRequestComments = await getBountyOrPullRequestComments(bountyDatabase?.repository?.githubPath, 
+                                                                   +prId);
+  
+  const pullRequestReviews = await getPullRequestReviews(bountyDatabase?.repository?.githubPath, 
+                                                         +prId);
+
+  const pullRequest: pullRequest = {
+    ...pullRequestDatabase,
+    isMergeable: pullRequestDetail[0]?.isMergeable,
+    merged: pullRequestDetail[0]?.merged,
+    state: pullRequestDetail[0]?.state,
+    comments: pullRequestComments,
+    reviews: pullRequestReviews
+  }
+                                                           
   return {
     props: {
+      bounty: bountyDatabase,
+      pullRequest,
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",
+        "proposal",
         "pull-request",
         "connect-wallet-button",
-      ])),
-    },
+        "funding"
+      ]))
+    }
   };
 };
