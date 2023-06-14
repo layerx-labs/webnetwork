@@ -38,7 +38,6 @@ import {
 } from "x-hooks/api/get-bounty-data";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import { useBounty } from "x-hooks/use-bounty";
 import { useNetwork } from "x-hooks/use-network";
 
 interface PagePullRequestProps {
@@ -53,16 +52,15 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   const [showModal, setShowModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isMakingReady, setIsMakingReady] = useState(false);
+  const [currentBounty, setCurrentBounty] = useState<IssueBigNumberData>(issueParser(bounty));
   const [currentPullRequest, setCurrentPullRequest] = useState<pullRequest>({
     ...pullRequest,
     createdAt: new Date(pullRequest.createdAt),
   });
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
-  const currentBounty: IssueBigNumberData = issueParser(bounty);
   const { state, dispatch } = useAppState();
   const router = useRouter();
-  const { getDatabaseBounty } = useBounty();
   const { getURLWithNetwork } = useNetwork();
   const { createReviewForPR, processEvent } = useApi();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
@@ -83,6 +81,64 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   const canUserApprove = state.Service?.network?.repos?.active?.viewerPermission !== "READ";
   const approvalsCurrentPr = currentPullRequest?.approvals?.total || 0;
   const prsNeedsApproval = approvalsCurrentPr < approvalsRequired;
+
+  async function updateBountyAndPullRequestData({ comments = false, reviews = false, details = false }) {
+    const bountyDatabase = await getBountyData(router.query)
+
+    setCurrentBounty(issueParser(bountyDatabase))
+
+    const pullRequestDatabase = bountyDatabase?.pullRequests?.find((pr) => +pr.githubId === +prId)
+
+    if([comments, reviews, details].every(v => v === false))
+      setCurrentPullRequest({
+        ...pullRequestDatabase,
+        isMergeable: currentPullRequest?.isMergeable,
+        merged: currentPullRequest?.merged,
+        state: currentPullRequest?.state,
+        comments: currentPullRequest.comments,
+        reviews: currentPullRequest.reviews
+      })
+
+    if(details) {
+      const pullRequestDetail = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
+        [pullRequestDatabase]);
+
+      setCurrentPullRequest({
+        ...pullRequestDatabase,
+        comments: currentPullRequest.comments,
+        reviews: currentPullRequest.reviews,
+        isMergeable: pullRequestDetail[0]?.isMergeable,
+        merged: pullRequestDetail[0]?.merged,
+        state: pullRequestDetail[0]?.state
+      })
+    }
+
+    if(comments) {
+      const pullRequestComments = await getBountyOrPullRequestComments(bountyDatabase?.repository?.githubPath, 
+                                                                       +prId);
+      setCurrentPullRequest({
+        ...pullRequestDatabase,
+        comments: pullRequestComments,
+        isMergeable: currentPullRequest.isMergeable,
+        merged: currentPullRequest.merged,
+        state: currentPullRequest.state,
+        reviews: currentPullRequest.reviews
+      })
+    }
+
+    if(reviews) {
+      const pullRequestReviews = await getPullRequestReviews(bountyDatabase?.repository?.githubPath, 
+                                                             +prId);
+      setCurrentPullRequest({
+        ...pullRequestDatabase,
+        reviews: pullRequestReviews,
+        isMergeable: currentPullRequest.isMergeable,
+        merged: currentPullRequest.merged,
+        state: currentPullRequest.state,
+        comments: currentPullRequest.comments
+      })
+    }
+  }
 
   function handleCreateReview(body: string) {
     if (!state.currentUser?.login) return;
@@ -136,7 +192,7 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
         return processEvent(NetworkEvents.PullRequestReady, undefined, {fromBlock});
       })
       .then(() => {
-        return getDatabaseBounty(true);
+        return updateBountyAndPullRequestData({});
       })
       .then(() => {
         setIsMakingReady(false);
@@ -168,8 +224,7 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
         return processEvent(NetworkEvents.PullRequestCanceled, undefined, {fromBlock});
       })
       .then(() => {
-        getDatabaseBounty(true);
-
+        updateBountyAndPullRequestData({details: true})
         dispatch(addToast({
           type: "success",
           title: t("actions.success"),
