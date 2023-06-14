@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useDebouncedCallback } from "use-debounce";
 
-import LeaderBoardListView from "components/leaderboard-list/view";
+import LeaderBoardListView from "components/lists/leaderboard/view";
 
 import { LeaderBoardPaginated } from "types/api";
 import { LeaderBoardPageProps } from "types/pages";

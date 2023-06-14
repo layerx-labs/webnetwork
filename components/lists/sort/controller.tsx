@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import ReactSelect from "components/react-select";
+import ListSortView from "components/lists/sort/view";
 
 import { SortOption } from "types/components";
 
@@ -24,7 +24,7 @@ export default function ListSort({
       page: "1"
     };
 
-    router.push({ pathname: router.pathname, query }, router.asPath, { shallow: false, scroll: false });
+    router.push({ pathname: `${router.pathname}`, query }, router.asPath, { shallow: false, scroll: false });
   }
 
   function getDefaultValue(): SortOption {
@@ -39,10 +39,9 @@ export default function ListSort({
 
 
   return (
-    <ReactSelect
-      defaultValue={getDefaultValue()}
+    <ListSortView
+      defaultOption={getDefaultValue()}
       options={options}
-      isSearchable={false}
       onChange={handleSelectChange}
     />
   );

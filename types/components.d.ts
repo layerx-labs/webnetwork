@@ -19,3 +19,10 @@ export interface CopyButtonProps {
   value: string;
   popOverLabel?: string;
 }
+
+export interface SortOption {
+  value: string;
+  label: string;
+  sortBy: string;
+  order: string;
+}

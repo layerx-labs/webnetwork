@@ -1,17 +1,11 @@
-import { FormControl, InputGroup } from "react-bootstrap";
-
 import { useTranslation } from "next-i18next";
 
-import CloseIcon from "assets/icons/close-icon";
-import SearchIcon from "assets/icons/search-icon";
-
-import Button from "components/button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
-import LeaderBoardListItem from "components/leaderboard-list/item/view";
-import LeaderBoardListBar from "components/leaderboard-list/leaderboard-list-bar";
-import ListSort from "components/list-sort";
+import LeaderBoardListHeader from "components/lists/leaderboard/header/view";
+import LeaderBoardListItem from "components/lists/leaderboard/item/view";
+import ListSearchAndFilters from "components/lists/search-and-filters/view";
 import NothingFound from "components/nothing-found";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import ScrollTopButton from "components/scroll-top-button";
@@ -61,42 +55,16 @@ export default function LeaderBoardListView({
   return (
     <CustomContainer>
       <If condition={showSearchFilter}>
-        <div
-          className={"row w-100 align-items-center list-actions sticky-top bg-dark"}
-        >
-          <div className="col">
-            <InputGroup className="border-radius-8">
-              <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
-                <SearchIcon />
-              </InputGroup.Text>
-
-              <FormControl
-                value={searchString}
-                onChange={onSearchInputChange}
-                className="p-2"
-                placeholder={t("leaderboard:search")}
-                onKeyDown={onEnterPressed}
-              />
-
-              <If condition={hasFilter}>
-                <Button
-                  className="bg-gray-900 border-0 py-0 px-3 rounded-0"
-                  onClick={onClearSearch}
-                >
-                  <CloseIcon width={10} height={10} />
-                </Button>
-              </If>
-            </InputGroup>
-          </div>
-
-          <div className="col-auto d-flex align-items-center px-0">
-            <span className="caption-small text-white-50 text-nowrap mr-1">
-              {t("sort.label")}
-            </span>
-
-            <ListSort options={sortOptions} />
-          </div>
-        </div>
+        <ListSearchAndFilters
+          searchString={searchString}
+          placeholder={t("leaderboard:search")}
+          sortOptions={sortOptions}
+          hasFilter={hasFilter}
+          onSearchClick={onSearchClick}
+          onSearchInputChange={onSearchInputChange}
+          onEnterPressed={onEnterPressed}
+          onClearSearch={onClearSearch}
+        />
       </If>
       
       <ResponsiveWrapper
@@ -104,7 +72,7 @@ export default function LeaderBoardListView({
         xl={true}
         className="row"
       >
-        <LeaderBoardListBar />
+        <LeaderBoardListHeader />
       </ResponsiveWrapper>
 
       <If
