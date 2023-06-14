@@ -5,6 +5,7 @@
   "$bepro": "BEPRO",
   "bepro": "BEPRO",
   "token-votes": "{{token}} Votes",
+  "tokens-locked": "Tokens Locked",
   "please-wait": "Please wait",
   "close": "Close",
   "currencies": {
@@ -62,15 +63,16 @@
     "council": "Curators",
     "leaderboard": "Leaderboard",
     "Oracle": "bv{{token}}",
-    "new-bounty": "New bounty",
+    "new-bounty": "Create bounty",
     "explore": "Explore",
+    "bounty-hall": "Bounty Hall",
     "get-started": "Get Started",
     "connect": "Connect Wallet",
     "new-network": "New Network",
     "my-network": "My Network",
     "networks": "Networks",
     "nav-avatar": {
-      "view-profile": "View profile",
+      "my-profile": "My profile",
       "profile": "Profile",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
@@ -103,7 +105,7 @@
     "operational": "operational",
     "network-congestion": "network congestion",
     "tagline": "Bepro Network Services and BEPRO Token are not available in Excluded Jurisdictions. By accessing and using the interface you agree with our",
-    "terms-and-conditions": "Terms & Conditions",
+    "terms-and-conditions": "Terms and Conditions",
     "support": "support"
   },
   "actions": {
@@ -197,7 +199,15 @@
     "unsupported": "Unsupported",
     "votes": "Votes",
     "changing": "Changing",
-    "save-changes": "Save Changes"
+    "save-changes": "Save Changes",
+    "repository": "Repository",
+    "branch": "Branch",
+    "opened-on": "Opened on",
+    "owner": "Owner",
+    "apply": "apply",
+    "create": "Create",
+    "bounty": "Bounty",
+    "choose-one": "Choose one"
   },
   "modals": {
     "help-modal": {
@@ -216,6 +226,10 @@
       },
       "provide-feedback": {
         "title": "provide feedback",
+        "content": "Product feedback and requests."
+      },
+      "terms-and-conditions": {
+        "title": "Terms and Conditions",
         "content": "Product feedback and requests."
       }
     },
@@ -259,12 +273,12 @@
       "title": "Set bounty as draft"
     },
     "mobile-information": {
-      "our-web-application": "Our web application currently does not support a mobile version.",
-      "if-you-want": "If you want to use it you must connect to our web application via desktop.",
-      "stay-updated": "Stay updated on"
+      "title": "MetaMask Mobile",
+      "description": "MetaMask is not available on this mobile browser. In order to interact with this DApp on a mobile you need to access using Metamask app built-in browser.",
+      "open-in-metamask": "Open in MetaMask"
     },
     "web3-dialog": {
-      "title": "MetaMask not detected.",
+      "title": "MetaMask not Detected",
       "eth-not-available": "No ETH account available",
       "message": "It seems that you don't have a MetaMask account selected. If using MetaMask, please make sure that your wallet is unlocked and that you have at least one account in your accounts list."
     },

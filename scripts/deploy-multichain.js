@@ -56,7 +56,7 @@ async function main(option = 0) {
     return;
   }
 
-  const web3Host = chainData.rpc[0];
+  const web3Host = chainData.rpc.length > 1 ? chainData.rpc[1] : chainData.rpc[0];
   const env = require('dotenv').config({path: options.envFile[option]}).parsed;
   const privateKey = options.privateKey;
 
@@ -352,7 +352,12 @@ async function main(option = 0) {
 
 (async () => {
   for (let index = 0; index < options.network.length; index++)
+    try  {
     await main(index);
+    } catch (e) {
+      console.error(e);
+      process.exit(1);
+    }
 
   process.exit(0);
 })();

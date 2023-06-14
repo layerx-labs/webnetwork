@@ -28,6 +28,7 @@ $gray-850: #23232A;
 $gray-900: #17171C;
 $gray-950: #0B0C0E;
 $blue-200: #B3B9F4;
+$blue-400: #6873E9;
 $light-gray: #434758;
 $blue: #4250e4;
 $blue-dark: #283089;
@@ -99,6 +100,7 @@ $more-bg: (
   "gray-900": $gray-900,
   "gray-950": $gray-950,
   "blue-200": $blue-200,
+  "blue-400": $blue-400,
   "orange-500": $orange-500,
   "orange-800": rgba($orange-500, 0.8),
   "light-warning-30": rgba($light-warning, 0.3),
@@ -125,6 +127,7 @@ $more-colors: (
   "gray-900": $gray-900,
   "gray-950": $gray-950,
   "blue-200": $blue-200,
+  "blue-400": $blue-400,
   "dark-gray": $dark-gray,
   "light-gray": $light-gray,
   "black": $black,
@@ -194,6 +197,24 @@ $tooltip-bg: $white;
 $tooltip-color: $light-gray;
 $tooltip-arrow-color: $white;
 
+// Breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1238px,
+  xxl: 1400px
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 1024px,
+  xl: 1140px,
+  xxl: 1320px
+);
+
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/utilities";
 
@@ -213,21 +234,24 @@ $utilities: map-merge(
       map-merge(
         map-get($utilities, "border"),
         (
-          state: hover
+          state: hover,
+          responsive: true
         )
       ),
     "border-bottom":
       map-merge(
         map-get($utilities, "border-bottom"),
         (
-          state: hover
+          state: hover,
+          responsive: true
         )
       ),
     "border-top":
       map-merge(
         map-get($utilities, "border-top"),
         (
-          state: hover
+          state: hover,
+          responsive: true
         )
       ),
     "border-color":

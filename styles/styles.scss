@@ -24,6 +24,7 @@
 @import "components/mini-tabs";
 @import "components/nav-avatar";
 @import "components/cookie-consent";
+@import "components/multi-action-button";
 
 @import "components/swagger-ui";
 
@@ -143,7 +144,7 @@ li {
     padding-bottom: 0;
   }
   &-content {
-    background-color: $bg-shadow;
+    background-color: $gray-900;
   }
   &-header,
   &-footer {
@@ -151,8 +152,9 @@ li {
     border: 0;
   }
   .close-button {
-    width: 20px;
-    top: 1.5%;
+    width: 24px;
+    top: 16px;
+    right: 16px;
   }
 
   .close-icon-search {
@@ -214,8 +216,9 @@ li {
       color: $gray-500;
     }
     &__single-value {
-      @extend .p-small;
-      color: $white;
+      @extend .caption-small;
+      @extend .font-weight-medium;
+      color: $gray-300;
     }
     &__control--is-focused &__single-value {
       color: transparentize($white, 0.4);
@@ -248,7 +251,8 @@ li {
       }
     }
     &__option {
-      @extend .p;
+      @extend .caption-small;
+      @extend .font-weight-medium;
       background-color: transparent;
       color: $gray-500;
 
@@ -391,6 +395,13 @@ li {
   min-height: $navbar-height;
   background-color: var(--bs-dark);
 
+  border-bottom: 1px solid $dark-gray;
+
+  .btn:not(.brand, .not-svg) svg:only-child {
+    width: 16px;
+    height: 16px;
+  }
+
   .brand {
     padding: 0;
   }
@@ -405,16 +416,15 @@ li {
     margin: 0px;
     padding: 0px;
     list-style: none;
-    li {
-      margin-left: $m * 2;
-    }
+    gap: 44px;
+
     a:not(.brand) {
-      color: rgba($white, 0.7);
+      color: $gray-500;
       padding: math.div($m, 4) 0px;
       transition: 0.2s ease-in-out;
       &:hover,
       &.active {
-        color: $white;
+        color: $gray-50;
         text-decoration: none;
       }
     }
@@ -448,6 +458,10 @@ li {
   color: $white;
   padding: $m + 4;
   border-bottom: 1px solid $dark-gray;
+}
+
+.min-w-bounty-hero {
+  min-height: 164px;
 }
 
 // Todo: check if can move to boostrap
@@ -782,6 +796,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   &.tag {
     background-color:#B3B9F4;
   }
+  &-sm {
+    width: 4px !important;
+    height: 4px !important;
+    border-radius: 50% !important;
+  }
 }
 
 .active-description-button {
@@ -887,6 +906,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .font-weight-500 {
   font-weight: 500 !important;
+}
+
+.font-weight-400 {
+  font-weight: 400 !important;
 }
 
 .font-weight-medium {
@@ -1298,15 +1321,6 @@ $c_props: (
   width: 65%;
 }
 
-.main-nav {
-  border-bottom: 1px solid $dark-gray;
-
-  .btn:not(.brand) svg:only-child {
-    width: 16px;
-    height: 16px;
-  }
-}
-
 svg {
   &:not([height]) {
     width: 14px;
@@ -1318,7 +1332,7 @@ a.row-button svg {
   height: 24px;
 }
 
-.text-white:hover, .text-gray-150:hover {
+.text-white:hover:not(.btn), .text-gray-150:hover {
   svg path {
     fill: white;
   }
@@ -1431,6 +1445,16 @@ textarea.form-control {
   img {
     max-width: 100%;
   }
+}
+
+.break-title {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.bounty-settings {
+  width: 180px;
 }
 
 .comment {
@@ -1981,6 +2005,10 @@ input[type="color"] {
 
 .w-max-none {
   max-width: none !important;
+}
+
+.token-symbol {
+  max-width: 120px;
 }
 
 .kyc-modal-body{

@@ -198,7 +198,8 @@ function OraclesActions({
     setIsApproving(true);
 
     networkTokenERC20.approve(tokenAmount)
-     .finally(() => setIsApproving(false));
+      .catch(error => console.debug("Failed to approve", error))
+      .finally(() => setIsApproving(false));
   }
 
   function getCurrentLabel() {
@@ -369,10 +370,10 @@ function OraclesActions({
           </div>
         }
       >
-        <p className="caption-small text-uppercase text-center mb-2">
+        <p className="text-truncate caption-small text-uppercase text-center mb-2">
           {renderInfo?.caption}
         </p>
-        <p className="text-center h4">
+        <p className="text-truncate text-center h4">
           {renderInfo?.body?.split("/").map((sentence: string) => {
             const Component =
               ((sentence.startsWith("oracles") ||
