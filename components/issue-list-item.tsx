@@ -33,7 +33,6 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
@@ -54,7 +53,6 @@ export default function IssueListItem({
   const router = useRouter();
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
   
-  const { isMobileView } = useBreakPoint();
   const {state,dispatch} = useAppState();
   const [visible, setVisible] = useState<boolean>();
   const [isCancelable, setIsCancelable] = useState(false);
@@ -247,15 +245,13 @@ export default function IssueListItem({
               {issue?.title}
             </span>
           </div>
-          <div className={!issue?.isFundingRequest && 'mt-4' || ""}>
-            <BountyAmountController bounty={issue} size={size} />
-          </div>
 
-          <div className="row align-items-center">
+
+          <div className="row align-items-center mt-2">
             <div className="col caption-medium font-weight-normal text-capitalize">
               <div className="d-none d-md-flex">
                 <If condition={isSeekingFund}>
-                  <span className="mr-1">Funded</span>
+                  <span className="mr-1">{t("info.funded")}</span>
                   <span className="text-yellow-500">{formatNumberToCurrency(issue?.fundedPercent)}%</span>
                 </If>
               </div>
@@ -267,7 +263,7 @@ export default function IssueListItem({
               </div>
             </div>
             <div className="col">
-              <IssueAmountInfo issue={issue} size={size} />
+              <BountyAmountController bounty={issue} size={size} />
             </div>
           </div>
         </>
@@ -425,7 +421,7 @@ export default function IssueListItem({
                 </ResponsiveWrapper>
 
                 <BountyItemLabel
-                  label="Opened on"
+                  label={t("info.opened-on")}
                   className="col-auto"
                 >
                   <span className="text-gray text-truncate">
@@ -438,9 +434,9 @@ export default function IssueListItem({
                 </div>
               </div>
             </ResponsiveWrapper>
-            <ResponsiveWrapper md={true} sm={true} xs={true} lg={false}>
+            <ResponsiveWrapper xs={true} xl={false}>
               <div className={`col d-flex justify-content-between`} >
-                {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
+                <BountyTagsView tags={[issue?.network?.name]} />
                 <BountyAmountController bounty={issue} size={size} />
               </div>
             </ResponsiveWrapper>

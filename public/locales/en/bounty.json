@@ -18,7 +18,8 @@
     "proposals_one": "proposal",
     "proposals_other": "proposals",
     "reviews_one": "review",
-    "reviews_other": "reviews"
+    "reviews_other": "reviews",
+    "opened-on": "Opened on"
   },
   "steps": {
     "title": "Bounty State",
