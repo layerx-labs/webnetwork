@@ -1,6 +1,6 @@
 import Translation from "components/translation";
 
-export default function ReviewsNumber({ reviewers, className }: { reviewers: number; className?: string}) {
+export default function ReviewsNumberView({ reviewers, className }: { reviewers: number; className?: string}) {
   return (
     <div className={`d-flex align-items-center text-center ${className}`}>
       <span className="label-m text-white">
