@@ -1,6 +1,11 @@
+import { useTranslation } from "next-i18next";
+
+import CustomDropdown from "components/common/custom-dropdown/view";
 import ReactSelect from "components/react-select";
 
 import { SortOption } from "types/components";
+
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface ListSortProps {
   defaultOption?: SortOption;
@@ -13,13 +18,28 @@ export default function ListSortView({
   options,
   onChange
 }: ListSortProps) {
+  const { t } = useTranslation("common");
+  
+  const { isDesktopView } = useBreakPoint();
+
+  if (isDesktopView)
+    return (
+      <>
+        <span className="caption-small text-white-50 text-nowrap mr-1">
+          {t("sort.label")}
+        </span>
+
+        <ReactSelect
+          defaultValue={defaultOption}
+          options={options}
+          isSearchable={false}
+          onChange={onChange}
+        />
+      </>
+    );
 
   return (
-    <ReactSelect
-      defaultValue={defaultOption}
-      options={options}
-      isSearchable={false}
-      onChange={onChange}
+    <CustomDropdown
     />
   );
 }

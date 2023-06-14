@@ -7,7 +7,7 @@ import SearchIcon from "assets/icons/search-icon";
 
 import Button from "components/button";
 import If from "components/If";
-import ListSort from "components/list-sort";
+import ListSort from "components/lists/sort/controller";
 
 import { SortOption } from "types/components";
 
@@ -65,10 +65,6 @@ export default function ListSearchAndFilters({
 
       <If condition={!!sortOptions}>
         <div className="col-auto d-flex align-items-center px-0">
-          <span className="caption-small text-white-50 text-nowrap mr-1">
-            {t("sort.label")}
-          </span>
-
           <ListSort options={sortOptions} />
         </div>
       </If>
