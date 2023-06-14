@@ -103,7 +103,7 @@ export default function ItemRowView({
               className="col-xs-12 d-xl-none d-none d-sm-block"
             />
           )}
-          <ItemRowLabelsView status={status} className="d-none d-sm-block" />
+          <ItemRowLabelsView key='label-normal-screen' status={status} className="d-none d-sm-block" />
         </div>
         <div className="col-1 d-block d-sm-none ms-2">
           <div className="d-flex flex-row justify-content-end">
@@ -120,6 +120,7 @@ export default function ItemRowView({
 
         {status?.length ? (
           <ItemRowLabelsView
+            key='label-tablet-mobile'
             status={status}
             className="d-block d-sm-none mt-2"
             classLabels="p-2"
