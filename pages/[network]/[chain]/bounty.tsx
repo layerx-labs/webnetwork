@@ -165,7 +165,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         repo={currentBounty?.data?.repository?.githubPath}
         issueId={id}
       />
-      {console.log('currentBounty', currentBounty)}
     </>
   );
 }
