@@ -2,7 +2,11 @@ import { useRouter } from "next/router";
 
 import ListSortView from "components/lists/sort/view";
 
+<<<<<<<< HEAD:components/lists/sort/controller.tsx
 import { CustomDropdownItem, SortOption } from "types/components";
+========
+import { SortOption } from "types/components";
+>>>>>>>> 853189a5 (refactoring components):components/list-sort.tsx
 
 interface ListSortProps {
   defaultOptionIndex?: number;
