@@ -78,7 +78,7 @@ export default function ResponsiveListItem({
         </div>
       </div>
 
-      {columns?.map(ResponsiveListItemColumn)}
+      {columns?.map((column, index) => <ResponsiveListItemColumn key={`list-item-${index}`} {...column} />)}
 
       <If condition={!!action}>
         <ResponsiveWrapper
