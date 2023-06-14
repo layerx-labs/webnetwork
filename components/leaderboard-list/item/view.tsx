@@ -8,22 +8,18 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { LeaderBoard } from "interfaces/leaderboard";
 
-interface LeaderBoardListItemProps {
-  user: LeaderBoard;
-}
-
-export default function LeaderBoardListItem({ user }: LeaderBoardListItemProps) {
-  const { t } = useTranslation(["common", "council"]);
+export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
+  const { t } = useTranslation("leaderboard");
 
   const columns = [
     {
-      secondaryLabel: user?.githubLogin || "-",
+      secondaryLabel: leaderboard?.user?.githubLogin || "-",
       breakpoints: { xs: false, md: true },
       justify: "center",
     },
     {
-      label: "NFTs",
-      secondaryLabel: `${user?.numberNfts || 0}`,
+      label: t("nfts"),
+      secondaryLabel: `${leaderboard?.numberNfts || 0}`,
       breakpoints: { xs: false, md: true },
       justify: "center"
     }
@@ -34,16 +30,16 @@ export default function LeaderBoardListItem({ user }: LeaderBoardListItemProps) 
       icon={
         <Identicon 
           size="sm"
-          address={user?.address}
+          address={leaderboard?.address}
         />
       }
-      label={truncateAddress(user?.address)}
+      label={truncateAddress(leaderboard?.address)}
       columns={columns}
       mobileColumnIndex={1}
       action={
         <CopyButton
-          value={user?.address}
-          popOverLabel="Address copied"
+          value={leaderboard?.address}
+          popOverLabel={t("address-copied")}
         />
       }
     />
