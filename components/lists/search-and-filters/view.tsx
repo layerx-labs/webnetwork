@@ -1,3 +1,4 @@
+import { ChangeEvent, KeyboardEvent } from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
 
 import CloseIcon from "assets/icons/close-icon";
@@ -15,8 +16,8 @@ interface ListSearchAndFiltersProps {
   sortOptions?: SortOption[];
   hasFilter: boolean;
   onSearchClick: () => void;
-  onSearchInputChange: (e) => void;
-  onEnterPressed: (e) => void;
+  onSearchInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onEnterPressed: (e: KeyboardEvent) => void;
   onClearSearch: () => void;
 }
 
