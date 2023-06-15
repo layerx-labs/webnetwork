@@ -44,6 +44,8 @@ export default function LeaderBoardList({
   }
 
   useEffect(() => {
+    if (!leaderboard) return;
+    
     setLeaderBoardData(previous => {
       if (!previous || leaderboard.currentPage === 1) 
         return {
