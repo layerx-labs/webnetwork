@@ -1,5 +1,4 @@
 import {useTranslation} from "next-i18next";
-import {useRouter} from "next/router";
 
 import ArrowLeft from "assets/icons/arrow-left";
 
@@ -9,23 +8,16 @@ import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
 import GithubInfo from "components/github-info";
 
-import {useAppState} from "contexts/app-state";
+import {IssueBigNumberData, pullRequest} from "interfaces/issue-data";
 
-import {pullRequest} from "interfaces/issue-data";
-
-import { useNetwork } from "x-hooks/use-network";
-
-interface IPullRequestHeroProps {
+interface PullRequestHeroViewProps {
   currentPullRequest: pullRequest;
+  currentBounty: IssueBigNumberData;
+  handleBack: () => void;
 }
 
-export default function PullRequestHero({currentPullRequest}: IPullRequestHeroProps) {
+export default function PullRequestHeroView({currentPullRequest, currentBounty, handleBack}: PullRequestHeroViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
-  
-  const router = useRouter();
-  
-  const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
 
   return (
     <div className="banner-shadow">
@@ -35,10 +27,7 @@ export default function PullRequestHero({currentPullRequest}: IPullRequestHeroPr
             <div className="d-flex flex-row">
               <div
                 className="me-2 cursor-pointer"
-                onClick={() => router.push(getURLWithNetwork("/bounty", {
-                  id: state.currentBounty?.data?.githubId,
-                  repoId: state.currentBounty?.data?.repository_id,
-                }))}
+                onClick={handleBack}
               >
                 <ArrowLeft
                   width={16}
@@ -48,10 +37,10 @@ export default function PullRequestHero({currentPullRequest}: IPullRequestHeroPr
               </div>
               <div>
                 <span className="me-2 text-white-40 caption-large">
-                  #{state.currentBounty?.data?.githubId}
+                  #{currentBounty?.githubId}
                 </span>
                 <span className="text-gray caption-medium">
-                  {state.currentBounty?.data?.title}
+                  {currentBounty?.title}
                 </span>
               </div>
             </div>
@@ -85,8 +74,8 @@ export default function PullRequestHero({currentPullRequest}: IPullRequestHeroPr
 
           <div className="col-2 d-flex align-items-center justify-content-center">
             <PriceConversor
-              currentValue={state.currentBounty?.data?.amount}
-              currency={state.currentBounty?.data?.transactionalToken?.symbol || t("misc.token")}
+              currentValue={currentBounty?.amount}
+              currency={currentBounty?.transactionalToken?.symbol || t("misc.token")}
             />
           </div>
         </div>
