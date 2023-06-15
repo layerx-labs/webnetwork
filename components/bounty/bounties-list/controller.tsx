@@ -69,8 +69,6 @@ export default function BountiesList({
     updateSearch();
   }
 
-
-
   function handleNotFoundClick() {
     if (!redirect) return router.push('/create-bounty');
 
@@ -78,6 +76,8 @@ export default function BountiesList({
   }
 
   useEffect(() => {
+    if (!bounties) return;
+
     setBountiesList(previous => {
       if (!previous || bounties.currentPage === 1) 
         return {

@@ -176,7 +176,7 @@ export default function BountiesListView({
         </div>
       </If>
 
-      <If condition={isManagement && !hasIssues}>
+      <If condition={isManagement && hasIssues}>
         <div className="row row align-center mb-2 px-3">
           {columns?.map((item) => (
             <div
@@ -195,8 +195,8 @@ export default function BountiesListView({
         condition={hasIssues}
         otherwise={
           <div className="pt-4">
-            <NothingFound description={emptyMessage}>
-              {(isConnected && !isBountyHall) && (
+            <NothingFound description={emptyMessage || t("filters.bounties.not-found")}>
+              {(isConnected && !isBountyHall && !isManagement) && (
                 <ReadOnlyButtonWrapper>
                   <ContractButton onClick={onNotFoundClick}>
                     {buttonMessage || String(t("actions.create-one"))}
