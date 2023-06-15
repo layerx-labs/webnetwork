@@ -27,6 +27,7 @@ export default function ListRecentIssues({
   const { t } = useTranslation(["bounty"]);
 
   const isBountyType = type === "bounty";
+  const MIN_COLS = 3;
 
   const LABELS = {
     bounty: {
@@ -94,7 +95,7 @@ export default function ListRecentIssues({
               </div>
           ))}
             
-          <If condition={!!recentBounties?.length}>
+          <If condition={recentBounties?.length < MIN_COLS}>
             {renderNothingFound()}
           </If>
         </HorizontalList>
