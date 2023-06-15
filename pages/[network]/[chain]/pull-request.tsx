@@ -39,8 +39,11 @@ interface PagePullRequestProps {
 
 export default function PullRequestPage({ pullRequest, bounty }: PagePullRequestProps) {
   const { t } = useTranslation(["common", "pull-request"]);
+  const router = useRouter();
 
-  const [showModal, setShowModal] = useState(false);
+  const { prId, review } = router.query;
+
+  const [showModal, setShowModal] = useState(!!review);
   const [currentBounty, setCurrentBounty] = useState<IssueBigNumberData>(issueParser(bounty));
   const [currentPullRequest, setCurrentPullRequest] = useState<pullRequest>({
     ...pullRequest,
@@ -49,10 +52,8 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   const { state, dispatch } = useAppState();
-  const router = useRouter();
-  const { createReviewForPR } = useApi();
 
-  const { prId, review } = router.query;
+  const { createReviewForPR } = useApi();
 
   const isPullRequestReady = !!currentPullRequest?.isReady;
 
@@ -166,11 +167,6 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   function handleCloseModal() {
     setShowModal(false);
   }
-
-  useEffect(() => {
-    if (review && currentPullRequest && state.currentUser?.login && state.connectedChain?.matchWithNetworkChain)
-      setShowModal(true);
-  }, [review, currentPullRequest, state.currentUser, state.connectedChain?.matchWithNetworkChain]);
 
   return (
     <BountyEffectsProvider>
