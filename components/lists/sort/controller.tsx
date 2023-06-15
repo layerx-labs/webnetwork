@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 
 import ListSortView from "components/lists/sort/view";
 
-import { SortOption } from "types/components";
+import { CustomDropdownItem, SortOption } from "types/components";
 
 interface ListSortProps {
   defaultOptionIndex?: number;
@@ -37,12 +37,20 @@ export default function ListSort({
     return options[defaultOptionIndex];
   }
 
+  function optionsToDropdownItems(): CustomDropdownItem[] {
+    return options?.map(option => ({
+      content: option?.label,
+      onClick: () => handleSelectChange(option)
+    }));
+  }
+
 
   return (
     <ListSortView
       defaultOption={getDefaultValue()}
       options={options}
       onChange={handleSelectChange}
+      dropdownItems={optionsToDropdownItems()}
     />
   );
 }

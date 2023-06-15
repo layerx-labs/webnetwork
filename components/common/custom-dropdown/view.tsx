@@ -1,16 +1,34 @@
+import { ReactNode } from "react";
 import { Dropdown } from "react-bootstrap";
 
-export default function CustomDropdown() {
+import ArrowDown from "assets/icons/arrow-down";
+
+import { CustomDropdownItem } from "types/components";
+
+interface CustomDropdownProps {
+  btnContent: ReactNode;
+  items: CustomDropdownItem[];
+}
+
+export default function CustomDropdown({
+  btnContent,
+  items,
+}: CustomDropdownProps) {
   return(
     <Dropdown className="custom-dropdown">
-      <Dropdown.Toggle className="rounded-0 bg-gray-900 border-radius-4 border-gray-800 p-3">
-        Dropdown Button
+      <Dropdown.Toggle className="not-svg">
+        {btnContent}
+        <ArrowDown />
       </Dropdown.Toggle>
 
-      <Dropdown.Menu variant="dark">
-        <Dropdown.Item onClick={() => alert("alo")}>Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+      <Dropdown.Menu>
+        {items?.map(({ content, onClick }, index) => 
+          <Dropdown.Item 
+            key={`c-drop-${index}`} 
+            onClick={onClick}
+          >
+            {content}
+          </Dropdown.Item>)}
       </Dropdown.Menu>
     </Dropdown>
   );

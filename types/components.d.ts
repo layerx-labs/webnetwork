@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -25,4 +27,9 @@ export interface SortOption {
   label: string;
   sortBy: string;
   order: string;
+}
+
+export interface CustomDropdownItem {
+  content: ReactNode;
+  onClick?: () => void;
 }

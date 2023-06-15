@@ -1,7 +1,5 @@
 import { FormControl, InputGroup } from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
-
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
@@ -32,8 +30,6 @@ export default function ListSearchAndFilters({
   onEnterPressed,
   onClearSearch,
 }: ListSearchAndFiltersProps) {
-  const { t } = useTranslation("common");
-
   return( 
     <div
       className={"row w-100 align-items-center list-actions sticky-top bg-dark"}

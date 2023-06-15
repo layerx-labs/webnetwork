@@ -1,22 +1,26 @@
 import { useTranslation } from "next-i18next";
 
+import FilterIcon from "assets/icons/filter-icon";
+
 import CustomDropdown from "components/common/custom-dropdown/view";
 import ReactSelect from "components/react-select";
 
-import { SortOption } from "types/components";
+import { CustomDropdownItem, SortOption } from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface ListSortProps {
   defaultOption?: SortOption;
   options: SortOption[];
+  dropdownItems: CustomDropdownItem[];
   onChange: (newValue: SortOption) => void;
 }
 
 export default function ListSortView({
   defaultOption,
   options,
-  onChange
+  dropdownItems,
+  onChange,
 }: ListSortProps) {
   const { t } = useTranslation("common");
   
@@ -40,6 +44,8 @@ export default function ListSortView({
 
   return (
     <CustomDropdown
+      btnContent={<FilterIcon width={16} height={16} />}
+      items={dropdownItems}
     />
   );
 }
