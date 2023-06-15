@@ -71,8 +71,11 @@ export default function IssueListItem({
     state: issue?.state,
     amount: issue?.amount,
     fundingAmount: issue?.fundingAmount,
-  })
-  const fundedAmount = issue?.fundedAmount.isNaN() ? BigNumber(0) : issue?.fundedAmount
+  });
+  
+  const fundedAmount = issue?.fundedAmount?.isNaN() ? BigNumber(0) : issue?.fundedAmount;
+  const fundingAmount = issue?.fundingAmount?.isNaN() ? BigNumber(0) : issue?.fundingAmount;
+
   const percentage =
   BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
     .dividedBy(issue?.fundingAmount)
@@ -347,6 +350,7 @@ export default function IssueListItem({
                 <BountyStatusInfo
                   issueState={issueState}
                   fundedAmount={fundedAmount}
+                  fundingAmount={fundingAmount}
                 />
               </div>
               <span className="span text-truncate mb-3">
