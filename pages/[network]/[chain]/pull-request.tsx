@@ -56,62 +56,66 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
 
   const isPullRequestReady = !!currentPullRequest?.isReady;
 
-  async function updateBountyAndPullRequestData({ comments = false, reviews = false, details = false }) {
-    const bountyDatabase = await getBountyData(router.query)
+  function updateBountyData() {
+    getBountyData(router.query)
+      .then(issueParser)
+      .then((bounty) => {
+        const pullRequestDatabase = bounty?.pullRequests?.find((pr) => +pr.githubId === +prId);
 
-    setCurrentBounty(issueParser(bountyDatabase))
+        setCurrentBounty(bounty);
+        setCurrentPullRequest({
+          ...pullRequestDatabase,
+          isMergeable: currentPullRequest?.isMergeable,
+          merged: currentPullRequest?.merged,
+          state: currentPullRequest?.state,
+          comments: currentPullRequest.comments,
+          reviews: currentPullRequest.reviews,
+        });
+      });
+  }
 
-    const pullRequestDatabase = bountyDatabase?.pullRequests?.find((pr) => +pr.githubId === +prId)
+  function updatePrDetails() {
+    getPullRequestsDetails(currentBounty?.repository?.githubPath, [
+      currentPullRequest,
+    ]).then((details) => {
+      if (details?.length > 0)
+        setCurrentPullRequest({
+          ...currentPullRequest,
+          comments: currentPullRequest.comments,
+          reviews: currentPullRequest.reviews,
+          isMergeable: details[0]?.isMergeable,
+          merged: details[0]?.merged,
+          state: details[0]?.state,
+        });
+    });
+  }
 
-    if([comments, reviews, details].every(v => v === false))
-      setCurrentPullRequest({
-        ...pullRequestDatabase,
-        isMergeable: currentPullRequest?.isMergeable,
-        merged: currentPullRequest?.merged,
-        state: currentPullRequest?.state,
-        comments: currentPullRequest.comments,
-        reviews: currentPullRequest.reviews
-      })
-
-    if(details) {
-      const pullRequestDetail = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
-        [pullRequestDatabase]);
-
-      setCurrentPullRequest({
-        ...pullRequestDatabase,
-        comments: currentPullRequest.comments,
+  function updatedPrComments() {
+    getBountyOrPullRequestComments(currentBounty?.repository?.githubPath, +prId)
+      .then((prComments) => {
+        setCurrentPullRequest({
+        ...currentPullRequest,
+        comments: prComments,
+        isMergeable: currentPullRequest.isMergeable,
+        merged: currentPullRequest.merged,
+        state: currentPullRequest.state,
         reviews: currentPullRequest.reviews,
-        isMergeable: pullRequestDetail[0]?.isMergeable,
-        merged: pullRequestDetail[0]?.merged,
-        state: pullRequestDetail[0]?.state
-      })
-    }
+        });
+      });
+  }
 
-    if(comments) {
-      const pullRequestComments = await getBountyOrPullRequestComments(bountyDatabase?.repository?.githubPath, 
-                                                                       +prId);
-      setCurrentPullRequest({
-        ...pullRequestDatabase,
-        comments: pullRequestComments,
-        isMergeable: currentPullRequest.isMergeable,
-        merged: currentPullRequest.merged,
-        state: currentPullRequest.state,
-        reviews: currentPullRequest.reviews
+  function updatePrReviews() {
+    getPullRequestReviews(currentBounty?.repository?.githubPath, +prId)
+      .then((prReviews) => {
+        setCurrentPullRequest({
+          ...currentPullRequest,
+          reviews: prReviews,
+          isMergeable: currentPullRequest.isMergeable,
+          merged: currentPullRequest.merged,
+          state: currentPullRequest.state,
+          comments: currentPullRequest.comments
+        })
       })
-    }
-
-    if(reviews) {
-      const pullRequestReviews = await getPullRequestReviews(bountyDatabase?.repository?.githubPath, 
-                                                             +prId);
-      setCurrentPullRequest({
-        ...pullRequestDatabase,
-        reviews: pullRequestReviews,
-        isMergeable: currentPullRequest.isMergeable,
-        merged: currentPullRequest.merged,
-        state: currentPullRequest.state,
-        comments: currentPullRequest.comments
-      })
-    }
   }
 
   function handleCreateReview(body: string) {
@@ -176,7 +180,8 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
         currentPullRequest={currentPullRequest} 
         currentBounty={currentBounty} 
         isCreatingReview={isCreatingReview} 
-        updateBountyAndPullRequestData={updateBountyAndPullRequestData} 
+        updateBountyData={updateBountyData}
+        updatePrDetails={updatePrDetails}
         handleShowModal={handleShowModal}      
       />
 

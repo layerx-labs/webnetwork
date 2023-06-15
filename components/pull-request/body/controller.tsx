@@ -20,7 +20,8 @@ interface PullRequestBodyControllerProps {
   currentPullRequest: pullRequest;
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
-  updateBountyAndPullRequestData: (e: { details?: boolean }) => void;
+  updateBountyData: () => void;
+  updatePrDetails: () => void;
   handleShowModal: () => void;
 }
 
@@ -28,7 +29,8 @@ export default function PullRequestBody({
   currentPullRequest,
   currentBounty,
   isCreatingReview,
-  updateBountyAndPullRequestData,
+  updateBountyData,
+  updatePrDetails,
   handleShowModal,
 }: PullRequestBodyControllerProps) {
   const { t } = useTranslation(["common", "pull-request"]);
@@ -104,7 +106,7 @@ export default function PullRequestBody({
         });
       })
       .then(() => {
-        return updateBountyAndPullRequestData({});
+        return updateBountyData();
       })
       .then(() => {
         setIsMakingReady(false);
@@ -139,7 +141,8 @@ export default function PullRequestBody({
         });
       })
       .then(() => {
-        updateBountyAndPullRequestData({ details: true });
+        updateBountyData();
+        updatePrDetails();
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
