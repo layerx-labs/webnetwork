@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { SearchBountiesPaginated } from "types/api";
-import { BreakpointOptions } from "types/utils";
+import { BreakpointOptions, SelectOption } from "types/utils";
 
 export interface SearchBountiesPaginatedBigNumber extends Omit<SearchBountiesPaginated, "rows"> {
   rows: IssueBigNumberData[];
@@ -22,9 +22,8 @@ export interface CopyButtonProps {
   popOverLabel?: string;
 }
 
-export interface SortOption {
+export interface SortOption extends Omit<SelectOption, "value"> {
   value: string;
-  label: string;
   sortBy: string;
   order: string;
 }

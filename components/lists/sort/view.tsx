@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import FilterIcon from "assets/icons/filter-icon";
 
 import CustomDropdown from "components/common/custom-dropdown/view";
+import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import ReactSelect from "components/react-select";
 
 import { CustomDropdownItem, SortOption } from "types/components";
@@ -43,9 +44,14 @@ export default function ListSortView({
     );
 
   return (
-    <CustomDropdown
-      btnContent={<FilterIcon width={16} height={16} />}
-      items={dropdownItems}
-    />
+    <NativeSelectWrapper
+      options={options}
+      onChange={onChange}
+    >
+      <CustomDropdown
+        btnContent={<FilterIcon width={16} height={16} />}
+        items={dropdownItems}
+      />
+    </NativeSelectWrapper>
   );
 }

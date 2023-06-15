@@ -6,3 +6,8 @@ export interface BreakpointOptions {
   xl?: boolean;
   xxl?: boolean;
 }
+
+export interface SelectOption {
+  label: string;
+  value: string | number;
+}
