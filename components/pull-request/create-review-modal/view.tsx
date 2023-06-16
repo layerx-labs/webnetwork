@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 
 import { useTranslation } from "next-i18next";
 
@@ -7,48 +7,38 @@ import Button from "components/button";
 import GithubInfo from "components/github-info";
 import Modal from "components/modal";
 
-import { useAppState } from "contexts/app-state";
-
 import { formatDate } from "helpers/formatDate";
 
-import { pullRequest } from "interfaces/issue-data";
+import { IssueBigNumberData, pullRequest } from "interfaces/issue-data";
 
-import ContractButton from "./contract-button";
+import ContractButton from "../../contract-button";
 
-interface CreateReviewModalModalProps {
-  show: boolean,
-  isExecuting: boolean,
-  onConfirm: (body: string) => void,
-  onCloseClick: () => void,
-  pullRequest: pullRequest
+interface CreateReviewModalViewProps {
+  show: boolean;
+  isExecuting: boolean;
+  onCloseClick: () => void;
+  pullRequest: pullRequest;
+  currentBounty: IssueBigNumberData;
+  githubPath: string;
+  body: string;
+  handleChangeBody: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  isButtonDisabled: () => boolean;
+  handleConfirm: () => void;
 }
 
-export default function CreateReviewModal({
+export default function CreateReviewModalView({
   show = false,
   isExecuting = false,
-  onConfirm,
   onCloseClick,
-  pullRequest
-}: CreateReviewModalModalProps) {
+  pullRequest,
+  currentBounty,
+  githubPath,
+  body,
+  handleChangeBody,
+  isButtonDisabled,
+  handleConfirm
+}: CreateReviewModalViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
-
-  const [body, setBody] = useState("");
-
-  const { state } = useAppState();
-
-  function isButtonDisabled(): boolean {
-    return body.trim() === "" || isExecuting;
-  }
-
-  function setDefaults() {
-    setBody("");
-  }
-
-  function handleConfirm() {
-    onConfirm(body);
-  }
-
-  useEffect(setDefaults, [show]);
 
   return (
     <Modal
@@ -60,7 +50,7 @@ export default function CreateReviewModal({
       <div className="container">
         <div className="mb-2">
           <p className="caption-small trans mb-2">
-            #{state.currentBounty?.data?.githubId} {state.currentBounty?.data?.title}
+            #{currentBounty?.githubId} {currentBounty?.title}
           </p>
 
           <p className="h4 mb-2">
@@ -76,7 +66,7 @@ export default function CreateReviewModal({
             <GithubInfo
               parent="modal"
               variant="repository"
-              label={state.Service?.network?.repos?.active?.githubPath?.split("/")[1]}
+              label={githubPath}
             />
 
             <span className="caption-small text-gray ml-2 mr-2">
@@ -101,7 +91,7 @@ export default function CreateReviewModal({
           <textarea
             value={body}
             rows={5}
-            onChange={(e) => setBody(e.target.value)}
+            onChange={handleChangeBody}
             className="form-control"
             placeholder={t("modals.create-review.fields.review.placeholder")}
           />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { SSRConfig, useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -7,11 +7,10 @@ import { GetServerSideProps } from "next/types";
 
 import ConnectWalletButton from "components/connect-wallet-button";
 import PullRequestBody from "components/pull-request/body/controller";
-import CreateReviewModal from "components/pull-request/create-review-modal";
+import CreateReviewModal from "components/pull-request/create-review-modal/controller";
 import PullRequestHero from "components/pull-request/hero/controller";
 
 import { useAppState } from "contexts/app-state";
-import { BountyEffectsProvider } from "contexts/bounty-effects";
 import { changeCurrentBountyComments } from "contexts/reducers/change-current-bounty";
 import { addToast } from "contexts/reducers/change-toaster";
 
@@ -169,7 +168,7 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   }
 
   return (
-    <BountyEffectsProvider>
+    <>
       <PullRequestHero currentPullRequest={currentPullRequest} currentBounty={currentBounty} />
 
       <PullRequestBody 
@@ -183,6 +182,7 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
 
       <CreateReviewModal
         show={showModal && isPullRequestReady}
+        currentBounty={currentBounty} 
         pullRequest={currentPullRequest}
         isExecuting={isCreatingReview}
         onConfirm={handleCreateReview}
@@ -190,7 +190,7 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
       />
 
       <ConnectWalletButton asModal={true}/>
-    </BountyEffectsProvider>
+    </>
   );
 }
 
