@@ -53,7 +53,6 @@ export default function CreateReviewModal({
       onCloseClick={onCloseClick} 
       pullRequest={pullRequest} 
       currentBounty={currentBounty} 
-      githubPath={state.Service?.network?.repos?.active?.githubPath?.split("/")[1]} 
       body={body} 
       handleChangeBody={handleChangeBody} 
       isButtonDisabled={isButtonDisabled} 
