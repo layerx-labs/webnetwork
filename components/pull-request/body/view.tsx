@@ -101,10 +101,11 @@ export default function PullRequestBodyView({
     return null;
   }
 
-  function RenderApproveButton() {
+  function RenderApproveButton({ className = ""}) {
     if(isApproveLink)
       return (
         <ApproveLink
+          className={className}
           forcePath={githubPath}
           hrefPath={`pull/${currentPullRequest?.githubId || ""}/files`}
         />
@@ -121,12 +122,13 @@ export default function PullRequestBodyView({
             <RenderMakeReviewButton className="col-12 mb-3"/>
             <RenderMakeReadyReviewButton className="col-12 mb-3"/>
             <RenderCancelButton className="col-12 text-white border-gray-500 "/>
+            <RenderApproveButton className="btn btn-primary text-uppercase d-flex justify-content-center col-12"/>
           </div>
         )}
         <div className="">
-          <div className="row align-items-center bg-shadow border-radius-8 px-3 py-4">
+          <div className="row align-items-center bg-gray-900 border-radius-8 px-3 py-4">
             <div className="row">
-              <div className="col-8">
+              <div className="col">
                 <span className="caption-large text-uppercase">
                   {t("pull-request:review", {
                     count: currentPullRequest?.comments?.length,
@@ -134,17 +136,17 @@ export default function PullRequestBodyView({
                 </span>
               </div>
 
-              <div className="col-4 gap-20 p-0 d-flex justify-content-end">
+              <div className={`col gap-20 p-0 d-flex flex-wrap justify-content-end`}>
                 {!(isMobileView || isTabletView) && (
                   <>
                   <RenderMakeReviewButton />
                   <RenderMakeReadyReviewButton />
                   <RenderCancelButton />
+                  <RenderApproveButton />
                   </>
                 )}
-
-                <RenderApproveButton />
                 <GithubLink
+                  className={(isMobileView || isTabletView) ? "text-primary caption-small" : null}
                   forcePath={githubPath}
                   hrefPath={`pull/${currentPullRequest?.githubId || ""}`}
                 >
