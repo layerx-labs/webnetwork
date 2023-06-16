@@ -1,7 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
-import { useAppState } from "contexts/app-state";
-
 import { IssueBigNumberData, pullRequest } from "interfaces/issue-data";
 
 import CreateReviewModalView from "./view";
@@ -25,8 +23,6 @@ export default function CreateReviewModal({
 }: CreateReviewModalModalProps) {
 
   const [body, setBody] = useState("");
-
-  const { state } = useAppState();
 
   function isButtonDisabled(): boolean {
     return body.trim() === "" || isExecuting;
