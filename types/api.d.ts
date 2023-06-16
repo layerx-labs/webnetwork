@@ -1,3 +1,4 @@
+import { Curator } from "interfaces/curators";
 import { IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
 
@@ -13,3 +14,7 @@ export interface SearchBountiesPaginated extends PaginatedData<IssueData> {
 }
 
 export type LeaderBoardPaginated = PaginatedData<LeaderBoard>;
+
+export interface CuratorsListPaginated extends PaginatedData<Curator> {
+  totalCurators: number;
+}
