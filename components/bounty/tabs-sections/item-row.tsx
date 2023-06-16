@@ -5,7 +5,7 @@ import { UrlObject } from "url";
 
 import Avatar from "components/avatar";
 import Identicon from "components/identicon";
-import PullRequestLabels, { IPRLabel } from "components/pull-request-labels";
+import PullRequestLabels, { IPRLabel } from "components/pull-request/labels/controller";
 
 import { truncateAddress } from "helpers/truncate-address";
 

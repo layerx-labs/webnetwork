@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import ChainBadge from "components/chain-badge";
 import NetworkLogo from "components/network-logo";
 import ItemAmount from "components/networks-list/item-amount";
-import PullRequestLabels from "components/pull-request-labels";
+import PullRequestLabels from "components/pull-request/labels/controller";
 
 import {useAppState} from "contexts/app-state";
 
