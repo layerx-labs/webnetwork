@@ -1,4 +1,4 @@
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import ArrowLeft from "assets/icons/arrow-left";
 
@@ -8,7 +8,7 @@ import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
 import GithubInfo from "components/github-info";
 
-import {IssueBigNumberData, pullRequest} from "interfaces/issue-data";
+import { IssueBigNumberData, pullRequest } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -20,28 +20,32 @@ interface PullRequestHeroViewProps {
   handleBack: () => void;
 }
 
-export default function PullRequestHeroView({currentPullRequest, currentBounty, handleBack}: PullRequestHeroViewProps) {
+export default function PullRequestHeroView({
+  currentPullRequest,
+  currentBounty,
+  handleBack,
+}: PullRequestHeroViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
 
   const { isMobileView, isTabletView } = useBreakPoint();
 
   return (
     <>
-      <CustomContainer className="banner-shadow" col={(isTabletView || isMobileView) ? 'col-12' : 'col-10'} >
-        <div className="d-flex flex-row">
-          <div className="col-10 row">
-            <div className="d-flex flex-row">
-              <div
-                className="me-2 cursor-pointer"
-                onClick={handleBack}
-              >
+      <CustomContainer
+        className="banner-shadow"
+        col={isTabletView || isMobileView ? "col-12" : "col-10"}
+      >
+        <div className="d-flex flex-row flex-column">
+          <div className="col">
+            <div className="d-flex">
+              <div className="me-2 cursor-pointer" onClick={handleBack}>
                 <ArrowLeft
                   width={16}
                   height={16}
                   className="border rounded-circle border-primary p-1"
                 />
               </div>
-              <div>
+              <div className="text-truncate">
                 <span className="me-2 text-white-40 caption-large">
                   #{currentBounty?.githubId}
                 </span>
@@ -50,24 +54,42 @@ export default function PullRequestHeroView({currentPullRequest, currentBounty, 
                 </span>
               </div>
             </div>
+          </div>
 
-            <div className="d-flex align-items-center mt-3 ">
-              <div className="d-inline-flex align-items-center justify-content-md-start gap-2">
-                <h4>{t("pull-request:title")}</h4>
-                <h4 className="text-white-40">#{currentPullRequest?.githubId}</h4>
+          <div className="col row">
+            <div className="row d-flex flex-wrap justify-content-between">
+              <div className="col d-flex flex-wrap align-items-center mt-3">
+                <div className="d-inline-flex align-items-center justify-content-md-start gap-2 me-2">
+                  <h4>{t("pull-request:title")}</h4>
+                  <h4 className="text-white-40">
+                    #{currentPullRequest?.githubId}
+                  </h4>
+                </div>
+                <div className="my-2">
+                  <PullRequestLabels
+                    merged={currentPullRequest?.merged}
+                    isMergeable={currentPullRequest?.isMergeable}
+                    isDraft={currentPullRequest?.status === "draft"}
+                  />
+                </div>
               </div>
-              <div className="ms-5">
-                <PullRequestLabels  
-                  merged={currentPullRequest?.merged}
-                  isMergeable={currentPullRequest?.isMergeable}
-                  isDraft={currentPullRequest?.status === 'draft'}
-                /> 
+              <div className="col-6">
+                <div className="d-flex flex-wrap justify-content-end">
+                  <PriceConversor
+                    currentValue={currentBounty?.amount}
+                    currency={
+                      currentBounty?.transactionalToken?.symbol ||
+                      t("misc.token")
+                    }
+                  />
+                </div>
               </div>
             </div>
+          </div>
 
-
-            <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-2">
-              <div className="d-flex align-items-center">
+          <div className="col row">
+            <div className="d-flex flex-wrap-reverse justify-content-start align-items-center mt-2">
+              <div className="d-flex align-items-center my-2 me-2">
                 <Avatar
                   className="me-2"
                   userLogin={currentPullRequest?.githubLogin}
@@ -86,13 +108,6 @@ export default function PullRequestHeroView({currentPullRequest, currentBounty, 
                 />
               )}
             </div>
-          </div>
-
-          <div className="col-2 d-flex align-items-center justify-content-center">
-            <PriceConversor
-              currentValue={currentBounty?.amount}
-              currency={currentBounty?.transactionalToken?.symbol || t("misc.token")}
-            />
           </div>
         </div>
       </CustomContainer>
