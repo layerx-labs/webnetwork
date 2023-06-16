@@ -9,6 +9,8 @@ import Button from "components/button";
 
 import {TabbedNavigationProps} from "interfaces/tabbed-navigation";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 function renderDescription(description: string) {
   if (!description) return <></>;
 
@@ -45,6 +47,8 @@ export default function TabbedNavigation({
   const [collapsed, setCollapsed] = useState(false);
   const [activeKey, setActiveKey] = useState<string>();
 
+  const { isMobileView } = useBreakPoint();
+
   const toggleOnClick = useAccordionButton(String(!collapsed), () =>
     setCollapsed(!collapsed));
 
@@ -69,7 +73,7 @@ export default function TabbedNavigation({
     <Tab.Container defaultActiveKey={defaultActiveKey} activeKey={activeKey} onSelect={handleTransition}>
       <Accordion defaultActiveKey="false">
         <div
-          className={`row ${props.className} align-items-center m-0 ${
+          className={`row ${props.className} align-items-center pe-1 m-0 ${
             (collapsable && collapsed && "collapsed") || ""
           }`}
         >
@@ -77,9 +81,9 @@ export default function TabbedNavigation({
             <Nav>
               {tabs.map((tab) => (
                 <Nav.Item key={`${tab.eventKey}`} className="cursor-pointer">
-                  <Nav.Link eventKey={tab.eventKey}>
+                  <Nav.Link eventKey={tab.eventKey} className={isMobileView ? "py-3" : null}>
                     <div className="col d-flex">
-                      <span className="mr-2">{tab.title}</span>
+                      <span className={!isMobileView ? "mr-2" : "fs-smallest"}>{tab.title}</span>
                       {renderDescription(tab?.description)}
                     </div>
                   </Nav.Link>
