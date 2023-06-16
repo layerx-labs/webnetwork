@@ -11,6 +11,8 @@ import { formatDate } from "helpers/formatDate";
 
 import { IssueBigNumberData, pullRequest } from "interfaces/issue-data";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import ContractButton from "../../contract-button";
 
 interface CreateReviewModalViewProps {
@@ -19,7 +21,6 @@ interface CreateReviewModalViewProps {
   onCloseClick: () => void;
   pullRequest: pullRequest;
   currentBounty: IssueBigNumberData;
-  githubPath: string;
   body: string;
   handleChangeBody: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   isButtonDisabled: () => boolean;
@@ -32,21 +33,46 @@ export default function CreateReviewModalView({
   onCloseClick,
   pullRequest,
   currentBounty,
-  githubPath,
   body,
   handleChangeBody,
   isButtonDisabled,
-  handleConfirm
+  handleConfirm,
 }: CreateReviewModalViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
 
+  const { isMobileView } = useBreakPoint();
+
   return (
     <Modal
-      size="lg"
+      size={isMobileView ? "sm" : "lg"}
       show={show}
       onCloseClick={onCloseClick}
       title={t("modals.create-review.title")}
-      titlePosition="center">
+      titlePosition="center"
+      footer={
+        <>
+          <div className="d-flex pt-2 justify-content-between">
+            <Button
+              color="dark-gray"
+              onClick={onCloseClick}
+              disabled={isExecuting}
+              withLockIcon={isExecuting}
+            >
+              {t("actions.cancel")}
+            </Button>
+
+            <ContractButton
+              disabled={isButtonDisabled()}
+              onClick={handleConfirm}
+              isLoading={isExecuting}
+              withLockIcon={isMobileView ? false : (isButtonDisabled() && !isExecuting)}
+            >
+              <span>{t("modals.create-review.create-review")}</span>
+            </ContractButton>
+          </div>
+        </>
+      }
+    >
       <div className="container">
         <div className="mb-2">
           <p className="caption-small trans mb-2">
@@ -57,29 +83,22 @@ export default function CreateReviewModalView({
             {t("pull-request:label")} #{pullRequest?.githubId}
           </p>
 
-          <div className="d-flex align-items-center flex-wrap justify-content-center justify-content-md-start">
-            <span className="caption-small text-gray mr-2">
-              {t("misc.created-at")}{" "}
-              {pullRequest && formatDate(pullRequest?.createdAt)}
-            </span>
+          <div className="row d-flex align-items-center flex-wrap justify-content-center justify-content-md-start">
+            <div className="d-flex align-items-center flex-wrap-reverse justify-content-start ">
+              <div className="d-flex align-items-center justify-content-center me-2 mt-2">
+                <Avatar className="me-2" userLogin={pullRequest?.githubLogin} />
+                <GithubInfo
+                  parent="modal"
+                  variant="user"
+                  label={`@${pullRequest?.githubLogin}`}
+                />
+              </div>
 
-            <GithubInfo
-              parent="modal"
-              variant="repository"
-              label={githubPath}
-            />
-
-            <span className="caption-small text-gray ml-2 mr-2">
-              {t("misc.by")}
-            </span>
-
-            <GithubInfo
-              parent="modal"
-              variant="user"
-              label={`@${pullRequest?.githubLogin}`}
-            />
-
-            <Avatar className="ml-2" userLogin={pullRequest?.githubLogin} />
+              <span className="caption-small text-gray me-2 mt-2">
+                {t("misc.created-at")}{" "}
+                {pullRequest && formatDate(pullRequest?.createdAt)}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -87,7 +106,7 @@ export default function CreateReviewModalView({
           <label className="caption-small mb-2 text-gray">
             {t("modals.create-review.fields.review.label")}
           </label>
-          
+
           <textarea
             value={body}
             rows={5}
@@ -95,26 +114,6 @@ export default function CreateReviewModalView({
             className="form-control"
             placeholder={t("modals.create-review.fields.review.placeholder")}
           />
-        </div>
-
-        <div className="d-flex pt-2 justify-content-between">
-        <Button 
-            color="dark-gray" 
-            onClick={onCloseClick}
-            disabled={isExecuting}
-            withLockIcon={isExecuting}
-          >
-            {t("actions.cancel")}
-          </Button>
-
-          <ContractButton
-            disabled={isButtonDisabled()}
-            onClick={handleConfirm}
-            isLoading={isExecuting}
-            withLockIcon={isButtonDisabled() && !isExecuting}
-          >
-            <span>{t("modals.create-review.create-review")}</span>
-          </ContractButton>
         </div>
       </div>
     </Modal>
