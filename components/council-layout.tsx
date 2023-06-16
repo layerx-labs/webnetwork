@@ -34,6 +34,8 @@ export default function CouncilLayout({
   const { getURLWithNetwork } = useNetwork();
   const { getCuratorsResume, searchIssues } = useApi();
 
+  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
+
   const infos = [
     {
       value: totalReadyBounties || 0,
@@ -46,12 +48,12 @@ export default function CouncilLayout({
     {
       value: 0,
       label: t("council:distributed-developers"),
-      currency: t("misc.token"),
+      currency: networkTokenSymbol,
     },
     {
       value: 0,
       label: t("heroes.in-network"),
-      currency: t("misc.token"),
+      currency: networkTokenSymbol,
     },
   ];
 
@@ -112,7 +114,7 @@ export default function CouncilLayout({
       <PageHero
         title={t("council:title")}
         subtitle={t("council:subtitle", {
-          token: state.Service?.network?.active?.networkToken?.symbol,
+          token: networkTokenSymbol,
         })}
         infos={infos}
       />
