@@ -10,6 +10,10 @@ import GithubInfo from "components/github-info";
 
 import {IssueBigNumberData, pullRequest} from "interfaces/issue-data";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
+import PullRequestLabels from "../labels/controller";
+
 interface PullRequestHeroViewProps {
   currentPullRequest: pullRequest;
   currentBounty: IssueBigNumberData;
@@ -19,9 +23,11 @@ interface PullRequestHeroViewProps {
 export default function PullRequestHeroView({currentPullRequest, currentBounty, handleBack}: PullRequestHeroViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
 
+  const { isMobileView, isTabletView } = useBreakPoint();
+
   return (
-    <div className="banner-shadow">
-      <CustomContainer>
+    <>
+      <CustomContainer className="banner-shadow" col={(isTabletView || isMobileView) ? 'col-12' : 'col-10'} >
         <div className="d-flex flex-row">
           <div className="col-10 row">
             <div className="d-flex flex-row">
@@ -45,10 +51,20 @@ export default function PullRequestHeroView({currentPullRequest, currentBounty, 
               </div>
             </div>
 
-            <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-2">
-              <h4>{t("pull-request:title")}</h4>
-              <h4 className="text-white-40">#{currentPullRequest?.githubId}</h4>
+            <div className="d-flex align-items-center mt-3 ">
+              <div className="d-inline-flex align-items-center justify-content-md-start gap-2">
+                <h4>{t("pull-request:title")}</h4>
+                <h4 className="text-white-40">#{currentPullRequest?.githubId}</h4>
+              </div>
+              <div className="ms-5">
+                <PullRequestLabels  
+                  merged={currentPullRequest?.merged}
+                  isMergeable={currentPullRequest?.isMergeable}
+                  isDraft={currentPullRequest?.status === 'draft'}
+                /> 
+              </div>
             </div>
+
 
             <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-2">
               <div className="d-flex align-items-center">
@@ -80,6 +96,6 @@ export default function PullRequestHeroView({currentPullRequest, currentBounty, 
           </div>
         </div>
       </CustomContainer>
-    </div>
+    </>
   );
 }
