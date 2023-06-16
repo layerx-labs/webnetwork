@@ -18,11 +18,13 @@ import {useNetwork} from "x-hooks/use-network";
 interface CouncilLayoutProps {
   children?: ReactNode;
   totalReadyBounties?: number;
+  totalCurators?: number;
 }
 
 export default function CouncilLayout({ 
   children,
   totalReadyBounties,
+  totalCurators,
 }: CouncilLayoutProps) {
   const { asPath, query, push } = useRouter();
   const { t } = useTranslation(["common", "council"]);
@@ -32,13 +34,13 @@ export default function CouncilLayout({
   const { getURLWithNetwork } = useNetwork();
   const { getCuratorsResume, searchIssues } = useApi();
 
-  const [infos, setInfos] = useState<InfosHero[]>([
+  const infos = [
     {
-      value: 0,
+      value: totalReadyBounties || 0,
       label: t("council:ready-bountys"),
     },
     {
-      value: 0,
+      value: totalCurators || 0,
       label: t("council:council-members"),
     },
     {
@@ -51,7 +53,7 @@ export default function CouncilLayout({
       label: t("heroes.in-network"),
       currency: t("misc.token"),
     },
-  ]);
+  ];
 
   function handleUrlCurators (type: string) {
     return push(getURLWithNetwork("/curators", {
@@ -99,32 +101,7 @@ export default function CouncilLayout({
         .then(({ rows } : { rows: IssueBigNumberData[] }) => 
           rows.reduce((acc, { payments }) => acc + payments.reduce((acc, { ammount }) => acc + ammount, 0), 0))
     ]);
-
-    setInfos([
-      {
-        value: totalReadyBounties,
-        label: t("council:ready-bountys"),
-      },
-      {
-        value: totalActiveCurators,
-        label: t("council:council-members"),
-      },
-      {
-        value: distributed,
-        label: t("council:distributed-developers"),
-        currency: state.Service?.network?.active?.networkToken?.symbol,
-      },
-      {
-        value: totalValue,
-        label: t("heroes.in-network"),
-        currency: state.Service?.network?.active?.networkToken?.symbol,
-      },
-    ]);
   }
-
-  useEffect(() => {
-    loadTotals();
-  }, [state.Service?.network?.active?.name, chain]);
 
   useEffect(() => {
     if(!query?.type) handleUrlCurators("curators-list")

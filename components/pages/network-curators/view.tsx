@@ -15,8 +15,9 @@ interface NetworkCuratorsViewProps extends NetworkCuratorsPageProps {
 
 export default function NetworkCuratorsView({
   bounties,
+  curators,
   totalReadyBounties,
-  type
+  type,
 }: NetworkCuratorsViewProps) {
   const { t } = useTranslation(["council"]);
 
@@ -25,6 +26,7 @@ export default function NetworkCuratorsView({
   return (
     <CouncilLayout
       totalReadyBounties={totalReadyBounties}
+      totalCurators={curators.totalCurators}
     >
       <If 
         condition={isCuratorView}
