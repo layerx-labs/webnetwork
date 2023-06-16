@@ -11,7 +11,7 @@ export default function ApproveLink({
   forcePath?: string;
   color?: string;
 }) {
-  const { t } = useTranslation(["pull-request"]);
+  const { t } = useTranslation(["common"]);
 
   return (
     <GithubLink

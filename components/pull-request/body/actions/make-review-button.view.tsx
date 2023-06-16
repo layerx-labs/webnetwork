@@ -8,18 +8,20 @@ export default function MakeReviewButton({
   isLoading,
   disabled,
   onClick,
+  className
 }: {
   withLockIcon?: boolean;
   isLoading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  className?: string;
 }) {
-  const { t } = useTranslation(["pull-request"]);
+  const { t } = useTranslation(["common"]);
 
   return (
     <ReadOnlyButtonWrapper>
       <ContractButton
-        className="read-only-button text-nowrap"
+        className={`read-only-button text-nowrap ${className}`}
         onClick={onClick}
         disabled={disabled}
         isLoading={isLoading}
