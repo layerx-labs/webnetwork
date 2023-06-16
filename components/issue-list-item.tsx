@@ -36,6 +36,7 @@ import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -64,6 +65,7 @@ export default function IssueListItem({
   const { getURLWithNetwork } = useNetwork();
   const { signMessage } = useAuthentication();
   const { handleHardCancelBounty } = useBepro();
+  const { isMobileView } = useBreakPoint();
 
   const isVisible = visible !== undefined ? visible : issue?.visible;
 
