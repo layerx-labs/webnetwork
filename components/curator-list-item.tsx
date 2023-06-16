@@ -72,7 +72,7 @@ export default function CuratorListItem({ curator }: CuratorListItemProps) {
       </div>
 
       <div className="col-2 d-flex align-items-center justify-content-center">
-        <span className="caption-medium text-white">{curator?.disputes || 0}</span>
+        <span className="caption-medium text-white">{curator?.disputes?.length || 0}</span>
       </div>
 
       <div className="col-2 d-flex align-items-center justify-content-center">

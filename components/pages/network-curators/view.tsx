@@ -40,7 +40,7 @@ export default function NetworkCuratorsView({
       >
         <CuratorsList 
           key={"curators-list"} 
-          inView={isCuratorView}
+          curators={curators}
         />
       </If>
     </CouncilLayout>
