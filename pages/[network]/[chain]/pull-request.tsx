@@ -90,34 +90,6 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
     });
   }
 
-  function updatedPrComments() {
-    getBountyOrPullRequestComments(currentBounty?.repository?.githubPath, +prId)
-      .then((prComments) => {
-        setCurrentPullRequest({
-        ...currentPullRequest,
-        comments: prComments,
-        isMergeable: currentPullRequest.isMergeable,
-        merged: currentPullRequest.merged,
-        state: currentPullRequest.state,
-        reviews: currentPullRequest.reviews,
-        });
-      });
-  }
-
-  function updatePrReviews() {
-    getPullRequestReviews(currentBounty?.repository?.githubPath, +prId)
-      .then((prReviews) => {
-        setCurrentPullRequest({
-          ...currentPullRequest,
-          reviews: prReviews,
-          isMergeable: currentPullRequest.isMergeable,
-          merged: currentPullRequest.merged,
-          state: currentPullRequest.state,
-          comments: currentPullRequest.comments
-        })
-      })
-  }
-
   function handleCreateReview(body: string) {
     if (!state.currentUser?.login) return;
 
