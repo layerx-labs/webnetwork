@@ -3,9 +3,9 @@ import React from "react";
 import { useTranslation } from "next-i18next";
 
 import BountiesList from "components/bounty/bounties-list/controller";
-import CuratorsList from "components/curators-list";
 import If from "components/If";
 import CuratorsPageLayout from "components/layouts/curators-page/controller";
+import CuratorsList from "components/lists/curators/controller";
 
 import { NetworkCuratorsPageProps } from "types/pages";
 
@@ -42,7 +42,7 @@ export default function NetworkCuratorsView({
           />
         }
       >
-        <CuratorsList 
+        <CuratorsList
           key={"curators-list"} 
           curators={curators}
         />
