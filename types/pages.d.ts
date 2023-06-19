@@ -13,6 +13,8 @@ export interface NetworkCuratorsPageProps {
   bounties: SearchBountiesPaginated;
   curators: CuratorsListPaginated;
   totalReadyBounties: number;
+  totalDistributed: number;
+  totalLocked: number;
 }
 
 export interface LeaderBoardPageProps {

@@ -1,57 +1,55 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import { ReactNode, useEffect } from "react";
 
-import {useTranslation} from "next-i18next";
-import {useRouter} from "next/router";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import CardBecomeCouncil from "components/card-become-council";
 import { MiniTabs } from "components/mini-tabs";
-import PageHero, {InfosHero} from "components/page-hero";
+import PageHero from "components/page-hero";
 
-import {useAppState} from "contexts/app-state";
+import { useAppState } from "contexts/app-state";
 
-import { IssueBigNumberData } from "interfaces/issue-data";
-
-import useApi from "x-hooks/use-api";
-import useChain from "x-hooks/use-chain";
-import {useNetwork} from "x-hooks/use-network";
+import { useNetwork } from "x-hooks/use-network";
 
 interface CouncilLayoutProps {
   children?: ReactNode;
-  totalReadyBounties?: number;
-  totalCurators?: number;
+  totalReadyBounties: number;
+  totalCurators: number;
+  totalDistributed: number;
+  totalLocked: number;
 }
 
 export default function CouncilLayout({ 
   children,
   totalReadyBounties,
   totalCurators,
+  totalDistributed,
+  totalLocked,
 }: CouncilLayoutProps) {
   const { asPath, query, push } = useRouter();
   const { t } = useTranslation(["common", "council"]);
 
-  const { chain } = useChain();
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
-  const { getCuratorsResume, searchIssues } = useApi();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const infos = [
     {
-      value: totalReadyBounties || 0,
+      value: totalReadyBounties,
       label: t("council:ready-bountys"),
     },
     {
-      value: totalCurators || 0,
+      value: totalCurators,
       label: t("council:council-members"),
     },
     {
-      value: 0,
+      value: totalDistributed,
       label: t("council:distributed-developers"),
       currency: networkTokenSymbol,
     },
     {
-      value: 0,
+      value: totalLocked,
       label: t("heroes.in-network"),
       currency: networkTokenSymbol,
     },
@@ -86,28 +84,9 @@ export default function CouncilLayout({
     }
   ]
 
-  async function loadTotals() {
-    if (!state.Service?.network?.active?.name || !chain) return;
-    
-    const [{ totalActiveCurators, totalValue }, distributed] = await Promise.all([
-      getCuratorsResume({
-        networkName: state.Service?.network?.active?.name,
-        chainShortName: chain.chainShortName
-      }),
-      searchIssues({
-        state: "closed",
-        networkName: state.Service.network.active.name,
-        tokenAddress: state.Service?.network?.active?.networkToken?.address,
-        chainId: chain.chainId.toString()
-      })
-        .then(({ rows } : { rows: IssueBigNumberData[] }) => 
-          rows.reduce((acc, { payments }) => acc + payments.reduce((acc, { ammount }) => acc + ammount, 0), 0))
-    ]);
-  }
-
   useEffect(() => {
-    if(!query?.type) handleUrlCurators("curators-list")
-  }, [query?.type])
+    if(!query?.type) handleUrlCurators("curators-list");
+  }, [query?.type]);
 
   return (
     <div>

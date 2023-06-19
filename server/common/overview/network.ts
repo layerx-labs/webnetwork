@@ -7,7 +7,7 @@ import { caseInsensitiveEqual, caseLiteral } from "helpers/db/conditionals";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
-    name,
+    network: name,
     address,
     chain,
     chainId,

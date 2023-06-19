@@ -17,6 +17,8 @@ export default function NetworkCuratorsView({
   bounties,
   curators,
   totalReadyBounties,
+  totalDistributed,
+  totalLocked,
   type,
 }: NetworkCuratorsViewProps) {
   const { t } = useTranslation(["council"]);
@@ -27,6 +29,8 @@ export default function NetworkCuratorsView({
     <CouncilLayout
       totalReadyBounties={totalReadyBounties}
       totalCurators={curators.totalCurators}
+      totalDistributed={totalDistributed}
+      totalLocked={totalLocked}
     >
       <If 
         condition={isCuratorView}
