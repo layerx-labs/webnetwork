@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 
+import PageHero from "components/common/page-hero/view";
 import LeaderBoardList from "components/lists/leaderboard/controller";
-import PageHero from "components/page-hero";
 
 import { LeaderBoardPageProps } from "types/pages";
 

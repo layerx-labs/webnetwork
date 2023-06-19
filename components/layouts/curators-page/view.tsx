@@ -4,8 +4,8 @@ import { useTranslation } from "next-i18next";
 
 import CardBecomeCouncil from "components/card-become-council";
 import MiniTabs from "components/common/mini-tabs/view";
+import PageHero from "components/common/page-hero/view";
 import If from "components/If";
-import PageHero from "components/page-hero";
 
 import { HeroInfo, MiniTabsItem } from "types/components";
 

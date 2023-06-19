@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import ListActiveNetworks from "components/bounties/list-active-networks";
 import ListRecentIssues from "components/bounties/list-recent-issues";
 import BountiesList from "components/bounty/bounties-list/controller";
-import PageHero from "components/page-hero";
+import PageHero from "components/common/page-hero/view";
 
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
