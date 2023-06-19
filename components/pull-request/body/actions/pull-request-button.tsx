@@ -3,20 +3,28 @@ import { useTranslation } from "next-i18next";
 import ContractButton from "components/contract-button";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
-export default function CancelButton({
+export default function PullRequestButton({
   withLockIcon,
   isLoading,
   disabled,
   onClick,
-  className
+  className,
+  type
 }: {
   withLockIcon?: boolean;
   isLoading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  type: "cancel" | "review" | "ready-review"
 }) {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation([ "common" ,"pull-request"]);
+
+  const Labels = {
+    'cancel': t("common:actions.cancel"),
+    'review': t("common:actions.make-a-review"),
+    'ready-review': t("pull-request:actions.make-ready.title")
+  }
 
   return (
     <ReadOnlyButtonWrapper>
@@ -27,7 +35,7 @@ export default function CancelButton({
         isLoading={isLoading}
         withLockIcon={withLockIcon}
       >
-        {t("actions.cancel")}
+        {Labels[type]}
       </ContractButton>
     </ReadOnlyButtonWrapper>
   );

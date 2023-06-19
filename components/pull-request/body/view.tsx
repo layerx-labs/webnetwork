@@ -12,9 +12,7 @@ import { pullRequest } from "interfaces/issue-data";
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 import ApproveLink from "./actions/approve-link.view";
-import CancelButton from "./actions/cancel-button.view";
-import MakeReadyReviewButton from "./actions/make-ready-review-button.view";
-import MakeReviewButton from "./actions/make-review-button.view";
+import PullRequestButton from "./actions/pull-request-button";
 
 interface PullRequestBodyViewProps {
   currentPullRequest: pullRequest;
@@ -54,7 +52,8 @@ export default function PullRequestBodyView({
   function RenderMakeReviewButton({ className = "" }) {
     if (isMakeReviewButton)
       return (
-        <MakeReviewButton
+        <PullRequestButton
+          type="review"
           className={className}
           onClick={handleShowModal}
           disabled={
@@ -74,7 +73,8 @@ export default function PullRequestBodyView({
   function RenderMakeReadyReviewButton({ className = "" }) {
     if (isMakeReadyReviewButton)
       return (
-        <MakeReadyReviewButton
+        <PullRequestButton
+          type="ready-review"
           className={className}
           onClick={handleMakeReady}
           disabled={isCreatingReview || isCancelling || isMakingReady}
@@ -89,7 +89,8 @@ export default function PullRequestBodyView({
   function RenderCancelButton({ className = ""}) {
     if(isCancelButton)
       return (
-        <CancelButton
+        <PullRequestButton
+          type="cancel"
           className={className}
           onClick={handleCancel}
           disabled={isCreatingReview || isCancelling || isMakingReady}
