@@ -17,7 +17,7 @@ export default function GithubConnectionState({handleClickDisconnect}: GithubCon
 
   return <>
     <div className="row">
-      <div className="col-4">
+      <div className="col-lg-4 col-12 mb-3">
         <ConnectionButton
           type="github"
           credential={state.currentUser?.login}
@@ -25,13 +25,13 @@ export default function GithubConnectionState({handleClickDisconnect}: GithubCon
         />
 
         { handleClickDisconnect && state?.currentUser?.login && state.currentUser?.walletAddress &&
-          <Button outline color="danger" className="mt-3" onClick={handleClickDisconnect}>
+          <Button outline color="danger" className="mt-3 col-12" onClick={handleClickDisconnect}>
             {t("actions.remove-github-account")}
           </Button>
         }
       </div>
 
-      <div className="col-4">
+      <div className="col-lg-4 col-12">
         <ConnectionButton
           type="wallet"
           credential={state.currentUser?.walletAddress}
