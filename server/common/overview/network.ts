@@ -14,9 +14,7 @@ export default async function get(query: ParsedUrlQuery) {
   } = query;
 
   if (!name && !address || !chain && !chainId)
-    throw new Error("Missing parameters", {
-      cause: 404
-    });
+    throw new Error("Missing parameters");
 
   const networkWhere: WhereOptions = {};
 
@@ -47,9 +45,7 @@ export default async function get(query: ParsedUrlQuery) {
   });
 
   if (!network)
-    throw new Error("Network not found", {
-      cause: 404
-    });
+    throw new Error("Network not found");
 
   const [bounties, curators, networkTokenOnClosedBounties, members] = await Promise.all([
     models.issue.findAll({
