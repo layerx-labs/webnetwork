@@ -98,8 +98,8 @@ export default function PullRequestLabels({
   return ( 
     <PullRequestLabelsView 
       state={state}
-      getPullRequestLabelClass={getPullRequestLabelClass}
-      getColorLabel={getColorLabel}
+      className={getPullRequestLabelClass()}
+      colorLabel={getColorLabel()}
     />
   );
 }

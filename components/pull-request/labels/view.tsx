@@ -4,20 +4,20 @@ import { PRLabel } from "./controller";
 
 export interface PRLabelView {
     state: PRLabel;
-    getPullRequestLabelClass: () => string;
-    getColorLabel: () => "success" | "primary" | "danger" | "info" | "orange-500" | "white";
+    className?: string;
+    colorLabel: "success" | "primary" | "danger" | "info" | "orange-500" | "white";
 }
 
 export default function PullRequestLabelsView({
     state,
-    getPullRequestLabelClass,
-    getColorLabel
+    className,
+    colorLabel
 }: PRLabelView) {
 
   return (
-    <div className={getPullRequestLabelClass()}>
+    <div className={className}>
       <span
-        className={`caption-small text-uppercase text-${getColorLabel()} mx-1 text-nowrap`}
+        className={`caption-small text-uppercase text-${colorLabel} mx-1 text-nowrap`}
       >
         {state}
       </span>
