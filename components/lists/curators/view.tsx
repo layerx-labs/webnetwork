@@ -29,7 +29,7 @@ export default function CuratorsListView({
       <CuratorListBar />
       
       <If 
-        condition={isListEmpty}
+        condition={!isListEmpty}
         otherwise={
           <NothingFound description={t("council:errors.not-found")} />
         }

@@ -23,7 +23,7 @@ export default function NetworkCuratorsView({
 }: NetworkCuratorsViewProps) {
   const { t } = useTranslation(["council"]);
 
-  const isCuratorView = type === "curators-list";
+  const isCuratorView = !type || type === "curators-list";
 
   return (
     <CuratorsPageLayout
