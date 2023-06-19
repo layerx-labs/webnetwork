@@ -15,7 +15,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import getBountiesListData from "x-hooks/api/get-bounties-list-data";
+import getBountiesListData from "x-hooks/api/bounty/get-bounties-list-data";
 import useApi from "x-hooks/use-api";
 import {useBounty} from "x-hooks/use-bounty";
 import useChain from "x-hooks/use-chain";
