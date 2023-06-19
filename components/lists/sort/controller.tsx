@@ -24,7 +24,7 @@ export default function ListSort({
       page: "1"
     };
 
-    router.push({ pathname: `${router.pathname}`, query }, router.asPath, { shallow: false, scroll: false });
+    router.push({ pathname: router.pathname, query }, router.asPath, { shallow: false, scroll: false });
   }
 
   function getDefaultValue(): SortOption {
