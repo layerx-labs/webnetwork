@@ -1,17 +1,15 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import CardBecomeCouncil from "components/card-become-council";
-import { MiniTabs } from "components/mini-tabs";
-import PageHero from "components/page-hero";
+import CuratorsPageLayoutView from "components/layouts/curators-page/view";
 
 import { useAppState } from "contexts/app-state";
 
 import { useNetwork } from "x-hooks/use-network";
 
-interface CouncilLayoutProps {
+interface CuratorsLayoutProps {
   children?: ReactNode;
   totalReadyBounties: number;
   totalCurators: number;
@@ -19,13 +17,13 @@ interface CouncilLayoutProps {
   totalLocked: number;
 }
 
-export default function CouncilLayout({ 
+export default function CuratorsPageLayout({ 
   children,
   totalReadyBounties,
   totalCurators,
   totalDistributed,
   totalLocked,
-}: CouncilLayoutProps) {
+}: CuratorsLayoutProps) {
   const { asPath, query, push } = useRouter();
   const { t } = useTranslation(["common", "council"]);
 
@@ -33,8 +31,8 @@ export default function CouncilLayout({
   const { getURLWithNetwork } = useNetwork();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
-
-  const infos = [
+  const isCouncil = !!state?.Service?.network?.active?.isCouncil;
+  const heroInfos = [
     {
       value: totalReadyBounties,
       label: t("council:ready-bountys"),
@@ -61,7 +59,7 @@ export default function CouncilLayout({
     }), asPath, { shallow: false, scroll: false });
   }
 
-  const internalLinks = [
+  const tabsItems = [
     {
       onClick: () => handleUrlCurators("curators-list"),
       label: t("council:council-list"),
@@ -84,32 +82,14 @@ export default function CouncilLayout({
     }
   ]
 
-  useEffect(() => {
-    if(!query?.type) handleUrlCurators("curators-list");
-  }, [query?.type]);
-
   return (
-    <div>
-      <PageHero
-        title={t("council:title")}
-        subtitle={t("council:subtitle", {
-          token: networkTokenSymbol,
-        })}
-        infos={infos}
-      />
-      <div className="container pt-3">
-        <div className="d-flex justify-content-center">
-          <MiniTabs items={internalLinks} />
-        </div>
-      </div>
-      <div className="container p-footer">
-        <div className="row justify-content-center">
-          <div className="col-md-10 mt-2">
-            {!state?.Service?.network?.active?.isCouncil && <CardBecomeCouncil />}
-          </div>
-          {children}
-        </div>
-      </div>
-    </div>
+    <CuratorsPageLayoutView
+      networkTokenSymbol={networkTokenSymbol}
+      heroInfos={heroInfos}
+      isCouncil={isCouncil}
+      tabsItems={tabsItems}
+    >
+      {children}
+    </CuratorsPageLayoutView>
   );
 }

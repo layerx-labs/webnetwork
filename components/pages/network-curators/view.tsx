@@ -3,9 +3,9 @@ import React from "react";
 import { useTranslation } from "next-i18next";
 
 import BountiesList from "components/bounty/bounties-list/controller";
-import CouncilLayout from "components/council-layout";
 import CuratorsList from "components/curators-list";
 import If from "components/If";
+import CuratorsPageLayout from "components/layouts/curators-page/controller";
 
 import { NetworkCuratorsPageProps } from "types/pages";
 
@@ -26,7 +26,7 @@ export default function NetworkCuratorsView({
   const isCuratorView = type === "curators-list";
 
   return (
-    <CouncilLayout
+    <CuratorsPageLayout
       totalReadyBounties={totalReadyBounties}
       totalCurators={curators.totalCurators}
       totalDistributed={totalDistributed}
@@ -47,6 +47,6 @@ export default function NetworkCuratorsView({
           curators={curators}
         />
       </If>
-    </CouncilLayout>
+    </CuratorsPageLayout>
   );
 }

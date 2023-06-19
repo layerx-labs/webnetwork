@@ -8,25 +8,17 @@ import CustomContainer from "components/custom-container";
 import {formatNumberToNScale} from "helpers/formatNumber";
 import {highlightText} from "helpers/string";
 
-import {Currency} from "interfaces/currency";
+import { HeroInfo } from "types/components";
 
 import TokenSymbolView from "./common/token-symbol/view";
-
-export interface InfosHero {
-  value: number | string;
-  label: string;
-  currency?: Currency;
-  hasConvertedTokens?: boolean;
-  setListedModalVisibility?: (visible: boolean) => void;
-}
 
 export interface PageHeroProps {
   title: string;
   subtitle?: string;
-  infos: InfosHero[];
+  infos: HeroInfo[];
 }
 
-function InfoComponent(info: InfosHero) {
+function InfoComponent(info: HeroInfo) {
   if (info.currency) {
     return (
       <div className="col px-2">
