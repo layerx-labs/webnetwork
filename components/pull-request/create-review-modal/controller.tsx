@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { IssueBigNumberData, pullRequest } from "interfaces/issue-data";
 
@@ -28,7 +28,8 @@ export default function CreateReviewModal({
     return body.trim() === "" || isExecuting;
   }
 
-  function setDefaults() {
+  function handleOnCloseClick() {
+    onCloseClick();
     setBody("");
   }
 
@@ -40,13 +41,11 @@ export default function CreateReviewModal({
     setBody(e.target.value)
   }
 
-  useEffect(setDefaults, [show]);
-
   return (
     <CreateReviewModalView 
       show={show} 
       isExecuting={isExecuting} 
-      onCloseClick={onCloseClick} 
+      onCloseClick={handleOnCloseClick} 
       pullRequest={pullRequest} 
       currentBounty={currentBounty} 
       body={body} 
