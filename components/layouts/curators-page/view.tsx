@@ -2,10 +2,9 @@ import { ReactNode } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import CardBecomeCouncil from "components/card-become-council";
+import BecomeCuratorCard from "components/cards/become-curator/controller";
 import MiniTabs from "components/common/mini-tabs/view";
 import PageHero from "components/common/page-hero/view";
-import If from "components/If";
 
 import { HeroInfo, MiniTabsItem } from "types/components";
 
@@ -43,9 +42,7 @@ export default function CuratorsPageLayoutView({
       <div className="container p-footer">
         <div className="row justify-content-center">
           <div className="col-md-10 mt-2">
-            <If condition={!isCouncil}>
-              <CardBecomeCouncil />
-            </If>
+            <BecomeCuratorCard isCouncil={isCouncil} />
           </div>
           
           {children}
