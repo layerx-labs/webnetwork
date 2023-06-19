@@ -1,60 +1,58 @@
-import React, {useState} from "react";
+import React from "react";
 
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import GithubConnectionState from "components/github-connection-state";
-import KycSessionModal from "components/modals/kyc-session";
 import ProfileLayout from "components/profile/profile-layout";
-import {RemoveGithubAccount} from "components/profile/remove-github-modal";
+import { RemoveGithubAccount } from "components/profile/remove-github-modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import {useAppState} from "contexts/app-state";
+import { truncateAddress } from "helpers/truncate-address";
 
-import {truncateAddress} from "helpers/truncate-address";
-
-import {useAuthentication} from "x-hooks/use-authentication";
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-export default function ProfilePage() {
-  const { t } = useTranslation(["common"," profile"]);
-  
+interface ProfilePageViewProps {
+  userLogin: string;
+  walletAddress: string;
+  isCouncil: boolean;
+  handleClickDisconnect: () => void;
+  hideRemoveModal: () => void;
+  showRemoveModal: boolean;
+  disconnectGithub: () => void;
+}
+
+export default function ProfilePageView({
+  userLogin,
+  walletAddress,
+  isCouncil,
+  handleClickDisconnect,
+  hideRemoveModal,
+  disconnectGithub,
+  showRemoveModal,
+}: ProfilePageViewProps) {
+  const { t } = useTranslation(["common", " profile"]);
+
   const { isMobileView, isTabletView } = useBreakPoint();
 
-  const isTabletOrMobile = (isMobileView || isTabletView) ? true : false
+  const isTabletOrMobile = isMobileView || isTabletView ? true : false;
 
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
-
-  const {state} = useAppState();
-
-  const { disconnectGithub } = useAuthentication();
-
-  const addressOrUsername =
-    state.currentUser?.login ? state.currentUser.login : truncateAddress(state.currentUser?.walletAddress);
-
-  const handleClickDisconnect = () => setShowRemoveModal(true);
-  const hideRemoveModal = () => setShowRemoveModal(false);
-
-  return(
+  return (
     <ProfileLayout>
-      <ResponsiveWrapper
-        xl={false}
-        xs={true}
-        className="mb-4"
-      >
+      <ResponsiveWrapper xl={false} xs={true} className="mb-4">
         <h4>{t(`common:main-nav.nav-avatar.profile`)}</h4>
       </ResponsiveWrapper>
       <div className="row mb-5">
-      <div className="col">
+        <div className="col">
           <div
             className={`${
               isTabletOrMobile ? "d-flex" : null
             } mt-3 align-items-center`}
           >
             <AvatarOrIdenticon
-              user={state.currentUser?.login}
-              address={state.currentUser?.walletAddress}
+              user={userLogin}
+              address={walletAddress}
               size={isTabletOrMobile ? "md" : "lg"}
             />
             <div className="text-truncate">
@@ -63,11 +61,11 @@ export default function ProfilePage() {
                   isTabletOrMobile ? "ms-2" : "mt-2"
                 } text-gray text-uppercase text-truncate mr-2`}
               >
-                {addressOrUsername}
+                {userLogin ? userLogin : truncateAddress(walletAddress)}
               </h4>
             </div>
           </div>
-          {state.Service?.network?.active?.isCouncil && (
+          {isCouncil && (
             <Badge
               label={t("profile:council")}
               color="purple-30"
@@ -82,17 +80,11 @@ export default function ProfilePage() {
       </div>
 
       <GithubConnectionState handleClickDisconnect={handleClickDisconnect} />
-       
-       {state.Settings?.kyc?.isKycEnabled && (
-        <div className="mt-4">
-          <KycSessionModal/>
-        </div>
-       )}
 
       <RemoveGithubAccount
         show={showRemoveModal}
-        githubLogin={state.currentUser?.login}
-        walletAddress={state.currentUser?.walletAddress}
+        githubLogin={userLogin}
+        walletAddress={walletAddress}
         onCloseClick={hideRemoveModal}
         disconnectGithub={disconnectGithub}
       />
