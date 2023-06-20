@@ -27,6 +27,7 @@ interface BountiesListViewProps {
   searchString: string;
   isOnNetwork?: boolean;
   isConnected?: boolean;
+  hideFilter?: boolean;
   hasFilter?: boolean;
   onClearSearch: () => void;
   onNotFoundClick: () => void;
@@ -46,6 +47,7 @@ export default function BountiesListView({
   isOnNetwork,
   isConnected,
   hasFilter,
+  hideFilter,
   onClearSearch,
   onNotFoundClick,
   onNextPage,
@@ -146,24 +148,24 @@ export default function BountiesListView({
             </InputGroup>
           </div>
 
-          <div className="col-auto d-none d-xl-flex">
-            <div className="d-flex align-items-center">
-              <ListSort options={sortOptions} />
-            </div>
+          <div className="col-auto d-flex align-items-center">
+            <ListSort options={sortOptions} />
           </div>
 
-          <div className="col-auto">
-            <If condition={!isProfile && !isManagement}>
-              <IssueFilters />
-            </If>
-
-            <div className="d-none d-xl-flex">
-              <If condition={isProfile}>
-                <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />
+          <If condition={!hideFilter}>
+            <div className="col-auto">
+              <If condition={!isProfile && !isManagement}>
+                <IssueFilters />
               </If>
-              
+
+              <div className="d-none d-xl-flex">
+                <If condition={isProfile}>
+                  <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />
+                </If>
+                
+              </div>
             </div>
-          </div>
+          </If>
         </div>
       </If>
 

@@ -13,7 +13,7 @@ export default function ScrollableTabs({ tabs }: ScrollableTabsProps) {
     <div className="row w-100 border-bottom border-gray-850 mx-0 gap-3">
       <HorizontalScroll>
         {tabs.map((item) => (
-          <div key={item.label} className="w-auto px-0 me-4">
+          <div key={item.label} className="w-auto px-0 me-4 cursor-pointer">
             <div
               className={clsx([
                 "font-weight-medium py-2",

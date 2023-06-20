@@ -39,6 +39,7 @@ export default function NetworkCuratorsView({
             key={type}
             emptyMessage={t("council:empty")}
             bounties={bounties}
+            hideFilter
           />
         }
       >
