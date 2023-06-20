@@ -7,6 +7,7 @@ import {GetServerSideProps} from "next/types";
 
 import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero from "components/common/page-hero/view";
+import CustomContainer from "components/custom-container";
 
 import {useAppState} from "contexts/app-state";
 import {BountyEffectsProvider} from "contexts/bounty-effects";
@@ -112,10 +113,12 @@ export default function BountiesPage({
         infos={infos}
       />
 
-      <BountiesList
-        bounties={bounties}
-        variant="network"
-      />
+      <CustomContainer>
+        <BountiesList
+          bounties={bounties}
+          variant="network"
+        />
+      </CustomContainer>
     </BountyEffectsProvider>
   );
 }
