@@ -11,3 +11,11 @@ export interface SelectOption {
   label: string;
   value: string | number;
 }
+
+export interface MouseEvents {
+  onMouseDown: () => void;
+  onTouchStart: () => void;
+  onMouseUp: () => void;
+  onMouseLeave: () => void;
+  onTouchEnd: () => void;
+}

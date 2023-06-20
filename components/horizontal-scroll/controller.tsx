@@ -1,24 +1,20 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-import ChevronLeftIcon from "assets/icons/chevronleft-icon";
-import ChevronRightIcon from "assets/icons/chevronright-icon";
-
-import Button from "components/button";
-import If from "components/If";
+import HorizontalScrollView from "components/horizontal-scroll/view";
 
 import useMouseHold from "x-hooks/use-mouse-hold";
 
-interface HorizontalListProps {
+interface HorizontalScrollProps {
   children?: ReactNode;
   className?: string;
 }
 
 type Direction = "left" | "right";
 
-export default function HorizontalList({
+export default function HorizontalScroll({
   children,
   className
-}: HorizontalListProps) {
+}: HorizontalScrollProps) {
   const divRef = useRef(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -70,28 +66,15 @@ export default function HorizontalList({
   }, [children]);
 
   return(
-    <div className="horizontal-list">
-      <If condition={canScrollLeft}>
-        <Button 
-          className="leftButton p-0 rounded-0 h-100 border-0 d-xl-none"
-          {...mouseEventsLeft}
-        >
-          <ChevronLeftIcon />
-        </Button>
-      </If>
-      
-      <div className={`row flex-nowrap overflow-auto ${className} overflow-noscrollbar px-1`} ref={divRef}>
-        {children}
-      </div>
-
-      <If condition={canScrollRight}>
-        <Button 
-          className="rightButton p-0 rounded-0 h-100 border-0 d-xl-none"
-          {...mouseEventsRight}
-        >
-          <ChevronRightIcon />
-        </Button>
-      </If>
-    </div>
+    <HorizontalScrollView
+      className={className}
+      canScrollLeft={canScrollLeft}
+      canScrollRight={canScrollRight}
+      mouseEventsLeft={mouseEventsLeft}
+      mouseEventsRight={mouseEventsRight}
+      divRef={divRef}
+    >
+      {children}
+    </HorizontalScrollView>
   );
 }
