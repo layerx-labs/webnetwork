@@ -1,11 +1,11 @@
 import { useTranslation } from "next-i18next";
 
-import CuratorListBar from "components/curator-list-bar";
-import CuratorListItem from "components/curator-list-item";
-import CustomContainer from "components/custom-container";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
+import CuratorListHeader from "components/lists/curators/header/view";
+import CuratorListItem from "components/lists/curators/item/controller";
 import NothingFound from "components/nothing-found";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import ScrollTopButton from "components/scroll-top-button";
 
 import { CuratorsListPaginated } from "types/api";
@@ -25,8 +25,10 @@ export default function CuratorsListView({
   const hasMore = !isListEmpty && curators?.currentPage < curators?.pages;
 
   return (
-    <CustomContainer>
-      <CuratorListBar />
+    <>
+      <ResponsiveWrapper xs={false} xl={true} className="row">
+        <CuratorListHeader />
+      </ResponsiveWrapper>
       
       <If 
         condition={!isListEmpty}
@@ -37,17 +39,19 @@ export default function CuratorsListView({
         <InfiniteScroll
           handleNewPage={onNextPage}
           hasMore={hasMore}
+          className="d-flex flex-column gap-3"
         >
           {
-            curators?.rows?.map(curator => <CuratorListItem
-                                key={`curator-${curator?.address}`}
-                                curator={curator}
-                              />)
+            curators?.rows?.map(curator => 
+              <CuratorListItem
+                key={`curator-${curator?.address}`}
+                curator={curator}
+              />)
           }
         </InfiniteScroll>
       </If>
       
       <ScrollTopButton />
-    </CustomContainer>
+    </>
   );
 }

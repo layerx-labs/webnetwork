@@ -5,6 +5,7 @@ import { useTranslation } from "next-i18next";
 import BecomeCuratorCard from "components/cards/become-curator/controller";
 import MiniTabs from "components/common/mini-tabs/view";
 import PageHero from "components/common/page-hero/view";
+import CustomContainer from "components/custom-container";
 
 import { HeroInfo, MiniTabsItem } from "types/components";
 
@@ -26,28 +27,26 @@ export default function CuratorsPageLayoutView({
   const { t } = useTranslation(["common", "council"]);
 
   return (
-    <div>
+    <>
       <PageHero
         title={t("council:title")}
         subtitle={t("council:subtitle", { token: networkTokenSymbol })}
         infos={heroInfos}
       />
 
-      <div className="container pt-3">
+      <CustomContainer className="pt-3">
         <div className="d-flex justify-content-center">
           <MiniTabs items={tabsItems} />
         </div>
-      </div>
 
-      <div className="container p-footer">
-        <div className="row justify-content-center">
-          <div className="col-md-10 mt-2">
+        <div className="row justify-content-center mt-3 mx-0">
+          <div className="mb-3 px-0">
             <BecomeCuratorCard isCouncil={isCouncil} />
           </div>
           
           {children}
         </div>
-      </div>
-    </div>
+      </CustomContainer>
+    </>
   );
 }
