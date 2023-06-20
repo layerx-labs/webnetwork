@@ -1,7 +1,5 @@
 import { useTranslation } from "next-i18next";
 
-import FilterIcon from "assets/icons/filter-icon";
-
 import CustomDropdown from "components/common/custom-dropdown/view";
 import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import ReactSelect from "components/react-select";
@@ -24,16 +22,21 @@ export default function ListSortView({
   onChange,
 }: ListSortProps) {
   const { t } = useTranslation("common");
-  
+
   const { isDesktopView } = useBreakPoint();
+
+  function LabelView() {
+    return (
+      <span className="caption-small text-white-50 text-nowrap mr-1">
+        {t("sort.label")}
+      </span>
+    );
+  }
 
   if (isDesktopView)
     return (
       <>
-        <span className="caption-small text-white-50 text-nowrap mr-1">
-          {t("sort.label")}
-        </span>
-
+        <LabelView />
         <ReactSelect
           defaultValue={defaultOption}
           options={options}
@@ -44,14 +47,14 @@ export default function ListSortView({
     );
 
   return (
-    <NativeSelectWrapper
-      options={options}
-      onChange={onChange}
-    >
-      <CustomDropdown
-        btnContent={<div className="py-1">{defaultOption?.value}</div>}
-        items={dropdownItems}
-      />
-    </NativeSelectWrapper>
+    <>
+      <LabelView />
+      <NativeSelectWrapper options={options} onChange={onChange}>
+        <CustomDropdown
+          btnContent={<div className="py-1">{defaultOption?.value}</div>}
+          items={dropdownItems}
+        />
+      </NativeSelectWrapper>
+    </>
   );
 }
