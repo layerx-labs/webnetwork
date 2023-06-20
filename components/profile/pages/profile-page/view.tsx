@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
-import GithubConnectionState from "components/github-connection-state";
+import GithubConnectionState from "components/connections/github-connection-state/controller";
 import ProfileLayout from "components/profile/profile-layout";
 import { RemoveGithubAccount } from "components/profile/remove-github-modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
