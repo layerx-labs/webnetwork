@@ -28,7 +28,7 @@ export default function HorizontalScrollView({
   divRef,
 }: HorizontalScrollViewProps) {
   return(
-    <div className="horizontal-list">
+    <div className="horizontal-scroll">
       <If condition={canScrollLeft}>
         <Button 
           className="leftButton p-0 rounded-0 h-100 border-0 d-xl-none"
@@ -38,7 +38,7 @@ export default function HorizontalScrollView({
         </Button>
       </If>
       
-      <div className={`row flex-nowrap overflow-auto ${className} overflow-noscrollbar px-1`} ref={divRef}>
+      <div className={`row flex-nowrap overflow-auto overflow-noscrollbar ${className}`} ref={divRef}>
         {children}
       </div>
 

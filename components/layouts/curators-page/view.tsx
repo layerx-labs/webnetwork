@@ -6,6 +6,8 @@ import BecomeCuratorCard from "components/cards/become-curator/controller";
 import MiniTabs from "components/common/mini-tabs/view";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
+import ScrollableTabs from "components/navigation/scrollable-tabs/view";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { HeroInfo, MiniTabsItem } from "types/components";
 
@@ -35,9 +37,13 @@ export default function CuratorsPageLayoutView({
       />
 
       <CustomContainer className="pt-3">
-        <div className="d-flex justify-content-center">
+        <ResponsiveWrapper xs={false} xl={true} className="justify-content-center align-items-center">
           <MiniTabs items={tabsItems} />
-        </div>
+        </ResponsiveWrapper>
+
+        <ResponsiveWrapper xs={true} xl={false} className="justify-content-start align-items-center">
+          <ScrollableTabs tabs={tabsItems} />
+        </ResponsiveWrapper>
 
         <div className="row justify-content-center mt-3 mx-0">
           <div className="mb-3 px-0">

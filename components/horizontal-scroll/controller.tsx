@@ -18,7 +18,7 @@ export default function HorizontalScroll({
   const divRef = useRef(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const HOLD_STEP = 2;
 

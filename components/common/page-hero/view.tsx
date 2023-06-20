@@ -18,14 +18,14 @@ export default function PageHero({ title, subtitle, infos }: PageHeroProps) {
   return (
     <div>
       <div className="d-flex d-xl-none py-4 px-3 border-bottom border-gray-850">
-        <span className="xl-semibold text-white">{title}</span>
+        <span className="xl-semibold text-white text-capitalize">{title}</span>
       </div>
 
       <div className="banner-shadow d-none d-xl-flex">
         <CustomContainer>
           <div className="d-flex flex-column">
             <div className="d-flex flex-row">
-              <h2 className="text-white mr-1">{title}</h2>
+              <h2 className="text-white mr-1 text-capitalize">{title}</h2>
             </div>
 
             <If condition={!!subtitle}>
