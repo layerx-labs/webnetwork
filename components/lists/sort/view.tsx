@@ -49,7 +49,7 @@ export default function ListSortView({
       onChange={onChange}
     >
       <CustomDropdown
-        btnContent={<FilterIcon width={16} height={16} />}
+        btnContent={<div className="py-1">{defaultOption?.value}</div>}
         items={dropdownItems}
       />
     </NativeSelectWrapper>
