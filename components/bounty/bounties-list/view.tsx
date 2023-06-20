@@ -105,7 +105,7 @@ export default function BountiesListView({
   ];
 
   return (
-    <div className={isProfile && "px-0 mx-0" || ""}>
+    <div className="px-0 mx-0">
       <If condition={isBountyHall || isProfile}>
         <div className="d-flex flex-row align-items-center">
           <h3 className="text-capitalize font-weight-medium">{listTitleByType[type]}</h3>
