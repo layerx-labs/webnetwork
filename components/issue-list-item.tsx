@@ -398,7 +398,7 @@ export default function IssueListItem({
           </ResponsiveWrapper>
 
           <div className="row align-items-center border-xl-top border-gray-850 pt-3">
-            <ResponsiveWrapper xs={false} xl={true}>
+            <ResponsiveWrapper xs={false} xl={true} lg={true}>
               <div className="row w-100 align-items-center justify-content-md-start">
                 <BountyItemLabel label="ID" className="col-auto">
                   <IssueTag />
@@ -438,7 +438,7 @@ export default function IssueListItem({
                 </div>
               </div>
             </ResponsiveWrapper>
-            <ResponsiveWrapper xs={true} xl={false}>
+            <ResponsiveWrapper xs={true} xl={false} lg={false}>
               <div className={`col d-flex justify-content-between`} >
                 {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
                 <BountyAmount bounty={issue} size={size} />
