@@ -7,7 +7,6 @@ import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/contract-button";
-import CustomContainer from "components/custom-container";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
@@ -106,11 +105,7 @@ export default function BountiesListView({
   ];
 
   return (
-    <CustomContainer
-      className={isProfile && "px-0 mx-0" || ""}
-      childWrapperClassName={isProfile && "justify-content-left" || ""}
-      col={isProfile || isManagement ? "col-12" : undefined}
-    >
+    <div className={isProfile && "px-0 mx-0" || ""}>
       <If condition={isBountyHall || isProfile}>
         <div className="d-flex flex-row align-items-center">
           <h3 className="text-capitalize font-weight-medium">{listTitleByType[type]}</h3>
@@ -152,7 +147,9 @@ export default function BountiesListView({
           </div>
 
           <div className="col-auto d-none d-xl-flex">
-            <ListSort options={sortOptions} />
+            <div className="d-flex align-items-center">
+              <ListSort options={sortOptions} />
+            </div>
           </div>
 
           <div className="col-auto">
@@ -214,6 +211,6 @@ export default function BountiesListView({
         </InfiniteScroll>
       </If>
       <ScrollTopButton />
-    </CustomContainer>
+    </div>
   );
 }
