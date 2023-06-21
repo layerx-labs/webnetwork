@@ -414,7 +414,7 @@ export default function IssueListItem({
                       </Tooltip>
                     }
                   >
-                    <span className={`text-gray me-2 text-truncate`}>
+                    <span className={`mw-repo text-gray me-2 text-truncate`}>
                       {issue?.repository?.githubPath.split("/")?.[1]}
                     </span>
                   </OverlayTrigger>
@@ -439,7 +439,7 @@ export default function IssueListItem({
               </div>
             </ResponsiveWrapper>
             <ResponsiveWrapper xs={true} xl={false} lg={false}>
-              <div className={`col d-flex justify-content-between`} >
+              <div className={`col d-flex flex-wrap justify-content-between`} >
                 {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
                 <BountyAmount bounty={issue} size={size} />
               </div>
