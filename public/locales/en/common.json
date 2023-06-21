@@ -212,7 +212,8 @@
     "choose-one": "Choose one",
     "networks": "Networks",
     "copied": "Copied",
-    "address-copied": "Address Copied"
+    "address-copied": "Address Copied",
+    "empty-list": "Empty List"
   },
   "modals": {
     "help-modal": {
