@@ -45,7 +45,7 @@ export default function CuratorsPageLayoutView({
           <ScrollableTabs tabs={tabsItems} />
         </ResponsiveWrapper>
 
-        <div className="row justify-content-center mt-3 mx-0">
+        <div className="row justify-content-center mt-3">
           <div className="mb-3 px-0">
             <BecomeCuratorCard isCouncil={isCouncil} />
           </div>
