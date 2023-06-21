@@ -9,6 +9,8 @@ import { useAppState } from "contexts/app-state";
 import { NAVIGATION_LINKS } from "helpers/navigation-links";
 import { isOnNetworkPath } from "helpers/network";
 
+import { Link } from "types/utils";
+
 import { useAuthentication } from "x-hooks/use-authentication";
 import { useNetwork } from "x-hooks/use-network";
 
@@ -33,10 +35,10 @@ export default function HamburgerMenu({
 
   const { network, global, both } = NAVIGATION_LINKS;
 
-  const links = (isOnNetwork ? network.map(({ label, href }) => ({
+  const links = ((isOnNetwork ? network.map(({ label, href }) => ({
     href: getURLWithNetwork(href),
     label
-  })) : global).concat(both);
+  })) : global) as Link[]).concat(both as Link[]);
 
   function handleDisconnect() {
     setIsProfileLinksVisible(false);

@@ -1,4 +1,4 @@
-import { MutableRefObject, ReactNode, useRef } from "react";
+import { MutableRefObject, ReactNode } from "react";
 
 import ChevronLeftIcon from "assets/icons/chevronleft-icon";
 import ChevronRightIcon from "assets/icons/chevronright-icon";
