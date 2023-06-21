@@ -7,11 +7,13 @@ import { CustomDropdownItem, SortOption } from "types/components";
 interface ListSortProps {
   defaultOptionIndex?: number;
   options: SortOption[];
+  isProfile?: boolean;
 }
 
 export default function ListSort({
   defaultOptionIndex = 0,
-  options
+  options,
+  isProfile
 }: ListSortProps) {
   const router = useRouter();
   const { sortBy, order } = router.query;
@@ -51,6 +53,7 @@ export default function ListSort({
       options={options}
       onChange={handleSelectChange}
       dropdownItems={optionsToDropdownItems()}
+      isProfile={isProfile}
     />
   );
 }
