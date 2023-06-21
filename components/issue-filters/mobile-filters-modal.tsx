@@ -1,4 +1,9 @@
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
+
+import SelectNetwork from "components/bounties/select-network";
 import If from "components/If";
+import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
@@ -8,14 +13,48 @@ interface MobileFiltersModalProps {
   show: boolean;
   hide: () => void;
   onlyTimeFrame?: boolean;
+  isProfile?: boolean;
 }
 
 export default function MobileFiltersModal({
   show,
   hide,
-  onlyTimeFrame
+  onlyTimeFrame,
+  isProfile
 }: MobileFiltersModalProps) {
+  const { t } = useTranslation(["common"]);
+  const router = useRouter();
+  const isOnNetwork = !!router?.query?.network;
+
   const [ [repoOptions, stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
+
+  
+  const sortOptions = [
+    {
+      value: "newest",
+      sortBy: "createdAt",
+      order: "DESC",
+      label: t("sort.types.newest")
+    },
+    {
+      value: "oldest",
+      sortBy: "createdAt",
+      order: "ASC",
+      label: t("sort.types.oldest")
+    },
+    {
+      value: "highest-bounty",
+      sortBy: "amount,fundingAmount",
+      order: "DESC",
+      label: t("sort.types.highest-bounty")
+    },
+    {
+      value: "lowest-bounty",
+      sortBy: "amount,fundingAmount",
+      order: "ASC",
+      label: t("sort.types.lowest-bounty")
+    }
+  ];
 
   function getCurrentFilter(options) {
     return options?.find(({ checked }) => checked);
@@ -54,12 +93,21 @@ export default function MobileFiltersModal({
       okLabel="Apply"
       onOkClick={handleApply}
     >
-      <If condition={!onlyTimeFrame}>
-        {FilterComponent("Repository", repoOptions, "repo")}
-        {FilterComponent("Bounty State", stateOptions, "state")}
-      </If>
-      
-      {FilterComponent("Timeframe", timeOptions, "time")}
+      {isProfile ? (
+        <>
+          <ListSort options={sortOptions} isProfile={isProfile} />
+          <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} isProfile={isProfile} />
+        </>
+      ) : (
+        <>
+          <If condition={!onlyTimeFrame}>
+            {FilterComponent("Repository", repoOptions, "repo")}
+            {FilterComponent("Bounty State", stateOptions, "state")}
+          </If>
+
+          {FilterComponent("Timeframe", timeOptions, "time")}
+        </>
+      )}
     </Modal>
   );
 }
