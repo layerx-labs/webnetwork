@@ -60,7 +60,7 @@
     "wallet": {}
   },
   "main-nav": {
-    "council": "Curators",
+    "curators": "Curators",
     "leaderboard": "Leaderboard",
     "Oracle": "bv{{token}}",
     "new-bounty": "Create bounty",
@@ -72,6 +72,7 @@
     "new-network": "New Network",
     "my-network": "My Network",
     "networks": "Networks",
+    "bounties": "Bounties",
     "nav-avatar": {
       "my-profile": "My profile",
       "profile": "Profile",

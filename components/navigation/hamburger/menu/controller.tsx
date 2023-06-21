@@ -1,10 +1,16 @@
 import { useState } from "react";
 
+import { useRouter } from "next/router";
+
 import HamburgerMenuView from "components/navigation/hamburger/menu/view";
 
 import { useAppState } from "contexts/app-state";
 
+import { NAVIGATION_LINKS } from "helpers/navigation-links";
+import { isOnNetworkPath } from "helpers/network";
+
 import { useAuthentication } from "x-hooks/use-authentication";
+import { useNetwork } from "x-hooks/use-network";
 
 interface MenuDrawerProps {
   show: boolean;
@@ -15,10 +21,22 @@ export default function HamburgerMenu({
   show,
   onHide
 }: MenuDrawerProps) {
+  const { pathname } = useRouter();
+  
   const [isProfileLinksVisible, setIsProfileLinksVisible] = useState(false);
   
   const { state } = useAppState();
   const { disconnectWallet } = useAuthentication();
+  const { getURLWithNetwork } = useNetwork();
+
+  const isOnNetwork = isOnNetworkPath(pathname);
+
+  const { network, global, both } = NAVIGATION_LINKS;
+
+  const links = (isOnNetwork ? network.map(({ label, href }) => ({
+    href: getURLWithNetwork(href),
+    label
+  })) : global).concat(both);
 
   function handleDisconnect() {
     setIsProfileLinksVisible(false);
@@ -50,6 +68,7 @@ export default function HamburgerMenu({
       onShowProfileLinks={handleShowProfileLinks}
       onHideProfileLinks={handleHideProfileLinks}
       onHideHamburger={handleHideDrawer}
+      links={links}
     />
   );
 }

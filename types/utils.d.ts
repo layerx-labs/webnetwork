@@ -1,3 +1,5 @@
+import { UrlObject } from "url";
+
 export interface BreakpointOptions {
   xs?: boolean;
   sm?: boolean;
@@ -18,4 +20,9 @@ export interface MouseEvents {
   onMouseUp: () => void;
   onMouseLeave: () => void;
   onTouchEnd: () => void;
+}
+
+export interface Link {
+  label: string;
+  href: string | UrlObject;
 }
