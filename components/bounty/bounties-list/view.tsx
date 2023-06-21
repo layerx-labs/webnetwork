@@ -162,8 +162,8 @@ export default function BountiesListView({
           </div>
 
           <div className="col-auto">
-            <If condition={!isProfile && !isManagement}>
-              <IssueFilters />
+            <If condition={!isManagement}>
+              <IssueFilters isProfile={isProfile} />
             </If>
 
             <div className="d-none d-xl-flex">
