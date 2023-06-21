@@ -7,6 +7,7 @@ import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/contract-button";
+import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
@@ -14,7 +15,6 @@ import IssueListItem from "components/issue-list-item";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
-import ScrollTopButton from "components/scroll-top-button";
 
 import { SearchBountiesPaginatedBigNumber } from "types/components";
 
@@ -162,7 +162,6 @@ export default function BountiesListView({
                 <If condition={isProfile}>
                   <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />
                 </If>
-                
               </div>
             </div>
           </If>
@@ -212,7 +211,7 @@ export default function BountiesListView({
               />)}
         </InfiniteScroll>
       </If>
-      <ScrollTopButton />
+      <GoTopButton />
     </div>
   );
 }

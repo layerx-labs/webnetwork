@@ -34,7 +34,7 @@ export default function ResponsiveListItem({
   return (
     <div 
       className={clsx([
-        "p-3 row border-radius-8 border border-gray-850 bg-gray-900",
+        "p-3 row border-radius-8 border border-gray-850 bg-gray-900 mx-0",
         !!onClick && "cursor-pointer",
       ])} 
       onClick={onClick}

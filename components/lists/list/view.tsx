@@ -65,7 +65,7 @@ export default function ListView(props: ListViewProps) {
   } = props;
 
   return (
-    <div>
+    <div className="px-0">
       <If condition={withSearchAndFilters}>
         <div className="row w-100 align-items-center list-actions sticky-top bg-dark">
           <div className="col">
@@ -114,7 +114,7 @@ export default function ListView(props: ListViewProps) {
           <ListHeader columns={header} />
         </ResponsiveWrapper>
 
-        <If condition={infinite} otherwise={<div>{children}</div>}>
+        <If condition={infinite} otherwise={<div className="d-flex flex-column gap-3">{children}</div>}>
           <InfiniteScroll
             handleNewPage={onNextPage}
             hasMore={hasMorePages}
