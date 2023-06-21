@@ -26,3 +26,8 @@ export interface Link {
   label: string;
   href: string | UrlObject;
 }
+
+export interface Action {
+  onClick: () => void;
+  label: string;
+}
