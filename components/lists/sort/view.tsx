@@ -15,6 +15,7 @@ interface ListSortProps {
   options: SortOption[];
   dropdownItems: CustomDropdownItem[];
   onChange: (newValue: SortOption) => void;
+  isProfile?: boolean;
 }
 
 export default function ListSortView({
@@ -22,15 +23,20 @@ export default function ListSortView({
   options,
   dropdownItems,
   onChange,
+  isProfile = false
 }: ListSortProps) {
   const { t } = useTranslation("common");
   
   const { isDesktopView } = useBreakPoint();
 
-  if (isDesktopView)
+  function BreakLine({ children }) {
+    return isProfile ? <div className="mb-3">{children}</div> : <>{children}</>
+  }
+
+  if (isDesktopView || isProfile)
     return (
-      <>
-        <span className="caption-small text-white-50 text-nowrap mr-1">
+      <BreakLine>
+        <span className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
           {t("sort.label")}
         </span>
 
@@ -40,7 +46,7 @@ export default function ListSortView({
           isSearchable={false}
           onChange={onChange}
         />
-      </>
+      </BreakLine>
     );
 
   return (
