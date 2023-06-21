@@ -19,10 +19,12 @@ import useChain from "x-hooks/use-chain";
 
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
+  isProfile?: boolean;
 }
 
 export default function SelectNetwork({
-  isCurrentDefault = false
+  isCurrentDefault = false,
+  isProfile = false
 } : SelectNetworkProps) {
   const { t } = useTranslation("common");
   const { query, pathname, asPath, push } = useRouter();
@@ -57,11 +59,17 @@ export default function SelectNetwork({
       const newQuery = {
         ...query,
         page: "1",
-        networkName: newValue?.value?.name || "all"
+        networkName: newValue?.value?.name || null
       };
 
       push({ pathname: pathname, query: newQuery }, asPath);
     }
+  }
+
+  function getSpanClass() {
+    return isProfile
+      ? "caption-small font-weight-medium text-gray-100"
+      : "caption text-gray-500 text-nowrap mr-1 font-weight-normal";
   }
 
   useEffect(() => {
@@ -79,13 +87,21 @@ export default function SelectNetwork({
   }, [chain, isCurrentDefault]);
 
   useEffect(() => {
+    if(options?.length > 0 && selected === undefined) {
+      const opt = options.find(({ value }) => value?.name === query?.networkName)
+
+      if(opt) setSelected(opt)
+    }
+  }, [options])
+
+  useEffect(() => {
     if (state.Service?.network?.active && !selected && isCurrentDefault)
       setSelected(networkToOption(state.Service?.network?.active));
   }, [isCurrentDefault, state.Service?.network?.active]);
 
   return(
-    <div className="d-flex align-items-center">
-      <span className="caption text-gray-500 text-nowrap mr-1 font-weight-normal">
+    <div className={`${isProfile ? 'mb-3' : 'd-flex align-items-center'}`}>
+      <span className={getSpanClass()}>
         {t("misc.network")}
       </span>
 
