@@ -468,7 +468,7 @@ export default function CreateBountyPage() {
       !Service?.active ||
       currentNetwork?.networkAddress === Service?.active?.network?.contractAddress ||
       connectedChain?.name === UNSUPPORTED_CHAIN) return;
-    console.log("### changing network")
+
     changeNetwork(connectedChain?.id, currentNetwork?.networkAddress);
   }, [currentNetwork?.networkAddress, connectedChain, Service?.active, Service?.starting]);
 
