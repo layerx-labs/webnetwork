@@ -66,12 +66,6 @@ export default function SelectNetwork({
     }
   }
 
-  function getSpanClass() {
-    return onlyProfileFilters
-      ? "caption-small font-weight-medium text-gray-100"
-      : "caption text-gray-500 text-nowrap mr-1 font-weight-normal";
-  }
-
   useEffect(() => {
     if (!chain && isCurrentDefault) return;
 
@@ -101,7 +95,7 @@ export default function SelectNetwork({
 
   return(
     <div className={`${onlyProfileFilters ? 'mb-3' : 'd-flex align-items-center'}`}>
-      <span className={getSpanClass()}>
+      <span className='caption-small font-weight-medium text-gray-100 text-nowrap mr-1'>
         {t("misc.network")}
       </span>
 
