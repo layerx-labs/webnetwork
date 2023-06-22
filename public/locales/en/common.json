@@ -152,7 +152,8 @@
     "hide": "Hide",
     "remove": "Remove",
     "register": "Register",
-    "clear-all": "Clear All"
+    "clear-all": "Clear All",
+    "apply": "Apply"
   },
   "misc": {
     "by": "by",

@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 import If from "components/If";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
@@ -15,6 +17,8 @@ export default function MobileFiltersModal({
   hide,
   onlyTimeFrame
 }: MobileFiltersModalProps) {
+  const { t } = useTranslation("common");
+
   const [ [repoOptions, stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
 
   function getCurrentFilter(options) {
@@ -35,7 +39,7 @@ export default function MobileFiltersModal({
   function FilterComponent(label, options, type) {
     return(
       <div className="mb-3">
-        <span className="caption-small font-weight-medium text-gray-100">{label}</span>
+        <span className="caption-small font-weight-medium text-gray-100 text-capitalize">{label}</span>
         <ReactSelect
           value={getCurrentFilter(options)}
           options={options}
@@ -47,19 +51,19 @@ export default function MobileFiltersModal({
 
   return(
     <Modal
-      title="Filters"
+      title={t("filters.filters")}
       show={show}
       onCloseClick={hide}
-      cancelLabel="Cancel"
-      okLabel="Apply"
+      cancelLabel={t("actions.cancel")}
+      okLabel={t("actions.apply")}
       onOkClick={handleApply}
     >
       <If condition={!onlyTimeFrame}>
-        {FilterComponent("Repository", repoOptions, "repo")}
-        {FilterComponent("Bounty State", stateOptions, "state")}
+        {FilterComponent(t("filters.repository"), repoOptions, "repo")}
+        {FilterComponent(t("filters.bounties.title"), stateOptions, "state")}
       </If>
       
-      {FilterComponent("Timeframe", timeOptions, "time")}
+      {FilterComponent(t("filters.timeframe.title"), timeOptions, "time")}
     </Modal>
   );
 }
