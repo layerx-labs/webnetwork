@@ -31,7 +31,7 @@ import { useAppState } from "contexts/app-state";
 import { toastError, toastWarning } from "contexts/reducers/change-toaster";
 import { addTx, updateTx } from "contexts/reducers/change-tx-list";
 
-import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
+import { BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN } from "helpers/constants";
 import { parseTransaction } from "helpers/transactions";
 
 import { BountyPayload } from "interfaces/create-bounty";
@@ -466,8 +466,9 @@ export default function CreateBountyPage() {
       !connectedChain ||
       Service?.starting ||
       !Service?.active ||
-      currentNetwork?.networkAddress === Service?.active?.network?.contractAddress) return;
-
+      currentNetwork?.networkAddress === Service?.active?.network?.contractAddress ||
+      connectedChain?.name === UNSUPPORTED_CHAIN) return;
+    console.log("### changing network")
     changeNetwork(connectedChain?.id, currentNetwork?.networkAddress);
   }, [currentNetwork?.networkAddress, connectedChain, Service?.active, Service?.starting]);
 
@@ -503,7 +504,7 @@ export default function CreateBountyPage() {
 
   async function handleNetworkSelected(chain: SupportedChainData) {
     setCurrentNetwork(undefined)
-    handleAddNetwork(chain).catch((err) => console.log('handle Add Network error', err));
+    if (chain) handleAddNetwork(chain).catch((err) => console.log('handle Add Network error', err));
   }
 
   function section() {

@@ -64,7 +64,7 @@ export default function SelectChainDropdown({
   async function selectSupportedChain({value}) {
     const chain = supportedChains?.find(({ chainId }) => +chainId === +value.chainId);
 
-    if (!chain || chain?.chainId === selected?.value?.chainId)
+    if (chain?.chainId === selected?.value?.chainId)
       return;
 
     onSelect(chain);
@@ -81,6 +81,8 @@ export default function SelectChainDropdown({
         options?.find(({ value: { chainId } }) => chainId === +(defaultChain?.chainId || connectedChain.id))?.value;
 
     if (!chain) {
+      setSelectedChain(null);
+      onSelect(null);
       return;
     }
 
