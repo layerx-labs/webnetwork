@@ -66,27 +66,30 @@ export default function SelectNetwork({
     }
   }
 
+  function handleSelectedWithNetworkName(options) {
+    const opt = options.find(({ value }) => value?.name === query?.networkName)
+    if(opt) setSelected(opt)
+  }
+
   useEffect(() => {
     if (!chain && isCurrentDefault) return;
 
     const cache = new WinStorage(`networks:${chain?.chainId}`, 60000, "sessionStorage");
 
-    if (cache.value)
-      setOptions(cache.value.map(networkToOption));
-    else
+    if (cache.value){
+      const options = cache.value.map(networkToOption)
+      setOptions(options);
+      handleSelectedWithNetworkName(options);
+    } else
       searchNetworks({
         chainId: chain?.chainId?.toString()
       })
-        .then(({ rows }) => setOptions(rows.map(networkToOption)));
+        .then(({ rows }) => {
+          const options = rows.map(networkToOption)
+          setOptions(options)
+          handleSelectedWithNetworkName(options);
+        });
   }, [chain, isCurrentDefault]);
-
-  useEffect(() => {
-    if(options?.length > 0 && selected === undefined) {
-      const opt = options.find(({ value }) => value?.name === query?.networkName)
-
-      if(opt) setSelected(opt)
-    }
-  }, [options])
 
   useEffect(() => {
     if (state.Service?.network?.active && !selected && isCurrentDefault)
