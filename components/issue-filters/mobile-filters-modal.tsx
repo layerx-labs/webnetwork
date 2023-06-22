@@ -93,21 +93,22 @@ export default function MobileFiltersModal({
       okLabel="Apply"
       onOkClick={handleApply}
     >
-      {onlyProfileFilters ? (
-        <>
-          <ListSort options={sortOptions} onlyProfileFilters={onlyProfileFilters} />
-          <SelectNetwork isCurrentDefault={onlyProfileFilters && isOnNetwork} onlyProfileFilters={onlyProfileFilters} />
-        </>
-      ) : (
-        <>
-          <If condition={!onlyTimeFrame}>
-            {FilterComponent("Repository", repoOptions, "repo")}
-            {FilterComponent("Bounty State", stateOptions, "state")}
-          </If>
+      <If condition={onlyProfileFilters}>
+        <ListSort options={sortOptions} labelLineBreak={onlyProfileFilters} />
+        <SelectNetwork
+          isCurrentDefault={isOnNetwork}
+          onlyProfileFilters={onlyProfileFilters}
+        />
+      </If>
 
-          {FilterComponent("Timeframe", timeOptions, "time")}
-        </>
-      )}
+      <If condition={!onlyTimeFrame && !onlyProfileFilters}>
+        {FilterComponent("Repository", repoOptions, "repo")}
+        {FilterComponent("Bounty State", stateOptions, "state")}
+      </If>
+
+      <If condition={onlyTimeFrame || !onlyProfileFilters}>
+        {FilterComponent("Timeframe", timeOptions, "time")}
+      </If>
     </Modal>
   );
 }
