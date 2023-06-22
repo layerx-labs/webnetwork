@@ -15,7 +15,7 @@ interface ListSortProps {
   options: SortOption[];
   dropdownItems: CustomDropdownItem[];
   onChange: (newValue: SortOption) => void;
-  onlyProfileFilters?: boolean;
+  labelLineBreak?: boolean;
 }
 
 export default function ListSortView({
@@ -23,19 +23,15 @@ export default function ListSortView({
   options,
   dropdownItems,
   onChange,
-  onlyProfileFilters = false
+  labelLineBreak = false
 }: ListSortProps) {
   const { t } = useTranslation("common");
   
   const { isDesktopView } = useBreakPoint();
 
-  function BreakLine({ children }) {
-    return onlyProfileFilters ? <div className="mb-3">{children}</div> : <>{children}</>
-  }
-
-  if (isDesktopView || onlyProfileFilters)
+  if (isDesktopView || labelLineBreak)
     return (
-      <BreakLine>
+      <div className={labelLineBreak ? 'mb-3' : 'd-flex align-items-center'}>
         <span className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
           {t("sort.label")}
         </span>
@@ -46,7 +42,7 @@ export default function ListSortView({
           isSearchable={false}
           onChange={onChange}
         />
-      </BreakLine>
+      </div>
     );
 
   return (

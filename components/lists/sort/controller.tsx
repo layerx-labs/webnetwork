@@ -7,13 +7,13 @@ import { CustomDropdownItem, SortOption } from "types/components";
 interface ListSortProps {
   defaultOptionIndex?: number;
   options: SortOption[];
-  onlyProfileFilters?: boolean;
+  labelLineBreak?: boolean;
 }
 
 export default function ListSort({
   defaultOptionIndex = 0,
   options,
-  onlyProfileFilters
+  labelLineBreak
 }: ListSortProps) {
   const router = useRouter();
   const { sortBy, order } = router.query;
@@ -53,7 +53,7 @@ export default function ListSort({
       options={options}
       onChange={handleSelectChange}
       dropdownItems={optionsToDropdownItems()}
-      onlyProfileFilters={onlyProfileFilters}
+      labelLineBreak={labelLineBreak}
     />
   );
 }
