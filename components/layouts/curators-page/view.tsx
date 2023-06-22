@@ -46,11 +46,13 @@ export default function CuratorsPageLayoutView({
         </ResponsiveWrapper>
 
         <div className="row justify-content-center mt-3">
-          <div className="mb-3 px-0">
+          <div className="mb-3">
             <BecomeCuratorCard isCouncil={isCouncil} />
           </div>
           
-          {children}
+          <div>
+            {children}
+          </div>
         </div>
       </CustomContainer>
     </>
