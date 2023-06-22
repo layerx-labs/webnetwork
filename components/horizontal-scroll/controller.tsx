@@ -57,7 +57,10 @@ export default function HorizontalScroll({
     const lastChild = divRef.current?.lastChild;
 
     if (firstChild) observer.observe(firstChild);
-    if (lastChild) observer.observe(lastChild);
+    if (lastChild) {
+      observer.observe(lastChild);
+      setCanScrollRight((lastChild.offsetLeft + lastChild.offsetWidth) > lastChild.parentElement?.clientWidth);
+    }
 
     return () => {
       if (firstChild) observer.unobserve(firstChild);
