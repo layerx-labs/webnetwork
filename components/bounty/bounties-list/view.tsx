@@ -15,6 +15,7 @@ import IssueListItem from "components/issue-list-item";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { SearchBountiesPaginatedBigNumber } from "types/components";
 
@@ -148,9 +149,9 @@ export default function BountiesListView({
             </InputGroup>
           </div>
 
-          <div className="col-auto d-flex align-items-center">
+          <ResponsiveWrapper xs={false} xl={true} className="col-auto d-flex align-items-center">
             <ListSort options={sortOptions} />
-          </div>
+          </ResponsiveWrapper>
 
           <If condition={!hideFilter}>
             <div className="col-auto">
