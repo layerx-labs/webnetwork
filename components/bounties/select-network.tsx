@@ -19,12 +19,12 @@ import useChain from "x-hooks/use-chain";
 
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
-  isProfile?: boolean;
+  onlyProfileFilters?: boolean;
 }
 
 export default function SelectNetwork({
   isCurrentDefault = false,
-  isProfile = false
+  onlyProfileFilters = false
 } : SelectNetworkProps) {
   const { t } = useTranslation("common");
   const { query, pathname, asPath, push } = useRouter();
@@ -67,7 +67,7 @@ export default function SelectNetwork({
   }
 
   function getSpanClass() {
-    return isProfile
+    return onlyProfileFilters
       ? "caption-small font-weight-medium text-gray-100"
       : "caption text-gray-500 text-nowrap mr-1 font-weight-normal";
   }
@@ -100,7 +100,7 @@ export default function SelectNetwork({
   }, [isCurrentDefault, state.Service?.network?.active]);
 
   return(
-    <div className={`${isProfile ? 'mb-3' : 'd-flex align-items-center'}`}>
+    <div className={`${onlyProfileFilters ? 'mb-3' : 'd-flex align-items-center'}`}>
       <span className={getSpanClass()}>
         {t("misc.network")}
       </span>

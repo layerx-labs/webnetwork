@@ -5,7 +5,7 @@ import FilterIcon from "assets/icons/filter-icon";
 import Button from "components/button";
 import MobileFiltersModal from "components/issue-filters/mobile-filters-modal";
 
-export default function IssueMobileFilters({ onlyTimeFrame = false, isProfile = false }) {
+export default function IssueMobileFilters({ onlyTimeFrame = false, onlyProfileFilters = false }) {
   const [showModal, setShowModal] = useState(false);
 
   function handleShowModal() {
@@ -30,7 +30,7 @@ export default function IssueMobileFilters({ onlyTimeFrame = false, isProfile = 
         show={showModal}
         hide={handleCloseModal}
         onlyTimeFrame={onlyTimeFrame}
-        isProfile={isProfile}
+        onlyProfileFilters={onlyProfileFilters}
       />
     </>
   );

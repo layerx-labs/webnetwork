@@ -13,14 +13,14 @@ interface MobileFiltersModalProps {
   show: boolean;
   hide: () => void;
   onlyTimeFrame?: boolean;
-  isProfile?: boolean;
+  onlyProfileFilters?: boolean;
 }
 
 export default function MobileFiltersModal({
   show,
   hide,
   onlyTimeFrame,
-  isProfile
+  onlyProfileFilters
 }: MobileFiltersModalProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
@@ -93,10 +93,10 @@ export default function MobileFiltersModal({
       okLabel="Apply"
       onOkClick={handleApply}
     >
-      {isProfile ? (
+      {onlyProfileFilters ? (
         <>
-          <ListSort options={sortOptions} isProfile={isProfile} />
-          <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} isProfile={isProfile} />
+          <ListSort options={sortOptions} onlyProfileFilters={onlyProfileFilters} />
+          <SelectNetwork isCurrentDefault={onlyProfileFilters && isOnNetwork} onlyProfileFilters={onlyProfileFilters} />
         </>
       ) : (
         <>

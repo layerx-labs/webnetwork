@@ -3,18 +3,18 @@ import IssueMobileFilters from "components/issue-filters/mobile-filters";
 
 export default function IssueFilters({
   onlyTimeFrame = false,
-  isProfile = false,
+  onlyProfileFilters = false,
 }) {
   return (
     <>
-      {!isProfile && (
+      {!onlyProfileFilters && (
         <div className="d-none d-xl-flex">
           <IssueDesktopFilters onlyTimeFrame={onlyTimeFrame} />
         </div>
       )}
 
       <div className="d-flex d-xl-none">
-        <IssueMobileFilters onlyTimeFrame={onlyTimeFrame} isProfile={isProfile} />
+        <IssueMobileFilters onlyTimeFrame={onlyTimeFrame} onlyProfileFilters={onlyProfileFilters} />
       </div>
     </>
   );
