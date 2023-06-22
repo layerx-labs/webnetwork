@@ -14,6 +14,7 @@ interface ListSortProps {
   defaultOption?: SortOption;
   options: SortOption[];
   dropdownItems: CustomDropdownItem[];
+  asSelect?: boolean;
   onChange: (newValue: SortOption) => void;
 }
 
@@ -22,12 +23,17 @@ export default function ListSortView({
   options,
   dropdownItems,
   onChange,
+  asSelect,
 }: ListSortProps) {
   const { t } = useTranslation("common");
   
   const { isDesktopView } = useBreakPoint();
 
-  if (isDesktopView)
+  const labelClass = asSelect ? 
+    "caption-small font-weight-medium text-gray-100 text-capitalize" : 
+    "caption-small text-white-50 text-nowrap mr-1";
+
+  if (isDesktopView || asSelect)
     return (
       <div className="d-flex align-items-center">
         <span className="caption text-gray-500 text-nowrap mr-1 font-weight-normal">

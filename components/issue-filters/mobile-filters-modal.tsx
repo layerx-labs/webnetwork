@@ -1,8 +1,11 @@
 import { useTranslation } from "next-i18next";
 
 import If from "components/If";
+import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
+
+import { SortOption } from "types/components";
 
 import useFilters from "x-hooks/use-filters";
 
@@ -10,12 +13,14 @@ interface MobileFiltersModalProps {
   show: boolean;
   hide: () => void;
   onlyTimeFrame?: boolean;
+  sortOptions?: SortOption[];
 }
 
 export default function MobileFiltersModal({
   show,
   hide,
-  onlyTimeFrame
+  onlyTimeFrame,
+  sortOptions
 }: MobileFiltersModalProps) {
   const { t } = useTranslation("common");
 
@@ -64,6 +69,8 @@ export default function MobileFiltersModal({
       </If>
       
       {FilterComponent(t("filters.timeframe.title"), timeOptions, "time")}
+
+      <ListSort options={sortOptions} asSelect />
     </Modal>
   );
 }

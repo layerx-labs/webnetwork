@@ -156,7 +156,7 @@ export default function BountiesListView({
           <If condition={!hideFilter}>
             <div className="col-auto">
               <If condition={!isProfile && !isManagement}>
-                <IssueFilters />
+                <IssueFilters sortOptions={sortOptions} />
               </If>
 
               <div className="d-none d-xl-flex">
