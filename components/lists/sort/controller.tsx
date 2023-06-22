@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useRouter } from "next/router";
 
 import ListSortView from "components/lists/sort/view";
@@ -16,9 +18,15 @@ export default function ListSort({
   asSelect,
 }: ListSortProps) {
   const router = useRouter();
+
+  const [selectedIndex, setSelectedIndex] = useState<number>();
+
   const { sortBy, order } = router.query;
 
   function handleSelectChange(newValue) {
+    setSelectedIndex(options?.findIndex(option => option.sortBy === newValue.sortBy && 
+                                        option.order === newValue.order));
+
     const query = {
       ...router.query,
       sortBy: newValue.sortBy,
@@ -54,6 +62,7 @@ export default function ListSort({
       onChange={handleSelectChange}
       dropdownItems={optionsToDropdownItems()}
       asSelect={asSelect}
+      selectedIndex={selectedIndex}
     />
   );
 }

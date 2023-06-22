@@ -15,6 +15,7 @@ interface ListSortProps {
   options: SortOption[];
   dropdownItems: CustomDropdownItem[];
   asSelect?: boolean;
+  selectedIndex?: number;
   onChange: (newValue: SortOption) => void;
 }
 
@@ -22,6 +23,7 @@ export default function ListSortView({
   defaultOption,
   options,
   dropdownItems,
+  selectedIndex,
   onChange,
   asSelect,
 }: ListSortProps) {
@@ -53,6 +55,7 @@ export default function ListSortView({
     <NativeSelectWrapper
       options={options}
       onChange={onChange}
+      selectedIndex={selectedIndex}
     >
       <CustomDropdown
         btnContent={<FilterIcon width={16} height={16} />}
