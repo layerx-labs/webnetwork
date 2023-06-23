@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import PullAndProposalHero from "components/bounty/pull-and-proposal-hero/view";
+import PullAndProposalHero from "components/bounty/pull-and-proposal-hero/controller";
 import ConnectWalletButton from "components/connect-wallet-button";
 import CustomContainer from "components/custom-container";
 import NotMergeableModal from "components/not-mergeable-modal";

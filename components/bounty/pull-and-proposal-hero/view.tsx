@@ -1,6 +1,5 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import ArrowLeft from "assets/icons/arrow-left";
 
@@ -13,55 +12,82 @@ import GithubInfo from "components/github-info";
 
 import { truncateAddress } from "helpers/truncate-address";
 
-import { pullRequest } from "interfaces/issue-data";
-import { Proposal } from "interfaces/proposal";
-
-interface PullAndProposalHeroPRops {
-  proposal?: Proposal;
-  pullRequest?: pullRequest;
+interface PullAndProposalHeroViewPRops {
+  contractId: number;
+  githubLogin: string;
+  createdAt: Date;
+  creatorAddress: string;
+  issueTitle: string;
+  issueGithubId: string;
+  issueAmount: BigNumber;
+  transactionalTokenSymbol: string;
+  isProposal: boolean;
+  onBackClick: () => void;
 }
 
-export default function PullAndProposalHero({
-  proposal,
-  pullRequest,
-}: PullAndProposalHeroPRops) {
-  const router = useRouter();
-  const { t } = useTranslation("common");
-
-  const { contractId, githubLogin, createdAt, issue } =
-    proposal || pullRequest || {};
-  const creatorAddress = proposal?.creator || pullRequest?.userAddress;
+export default function PullAndProposalHeroView({
+  contractId,
+  githubLogin,
+  createdAt,
+  creatorAddress,
+  issueTitle,
+  issueGithubId,
+  isProposal,
+  issueAmount,
+  transactionalTokenSymbol,
+  onBackClick,
+}: PullAndProposalHeroViewPRops) {
+  const { t } = useTranslation([isProposal ? "proposal" : "pull-request", "common"]);
 
   return (
-    <CustomContainer className="p-3">
-      <div className="row align-items-center">
-        <div className="col-auto">
-          <Button className="rounded-circle p-1 text-white not-svg" outline>
-            <ArrowLeft
-              width={10}
-              height={10}
-            />
-          </Button>
-        </div>
-
-        <div className="col px-0">
-          <span className="me-2 text-gray-500 caption-medium font-weight-medium">
-            #{issue?.githubId}
-          </span>
-          <span className="text-white caption-medium font-weight-medium text-capitalize">{issue?.title}</span>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-10 row">
-          <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-2">
-            <h4>{t("proposal:title")}</h4>
-            <h4 className="text-white-40">#{+(contractId || 0) + 1}</h4>
+    <div className="w-100 border-bottom border-gray-800">
+      <CustomContainer className="p-3">
+        <div className="row align-items-center">
+          <div className="col-auto">
+            <Button
+              className="rounded-circle p-1 text-white not-svg"
+              onClick={onBackClick}
+              outline
+            >
+              <ArrowLeft width={10} height={10} />
+            </Button>
           </div>
 
-          <div className="mt-3 pt-1 d-inline-flex align-items-center justify-content-md-start gap-2">
-            <div className="d-flex align-items-center">
-              <div className="mr-1">
+          <div className="col px-0">
+            <span className="me-2 text-gray-500 caption-large font-weight-medium">
+              #{issueGithubId}
+            </span>
+            <span className="text-white caption-large font-weight-medium text-capitalize">
+              {issueTitle}
+            </span>
+          </div>
+        </div>
+
+        <div className="row align-items-center mt-2">
+          <div className="col">
+            <div className="row">
+              <span className="caption-large text-white text-capitalize">
+                {t("title")}
+
+                <span className="ml-1 text-gray-500 font-weight-medium">
+                  #{+(contractId || 0) + 1}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div className="col-auto">
+            <PriceConversor
+              currentValue={issueAmount}
+              currency={transactionalTokenSymbol || t("common:misc.token")}
+            />
+          </div>
+        </div>
+
+        <div className="row align-items-center mt-2">
+          <div className="col-xs-12 col-xl-auto mb-1">
+            <div className="row align-items-center gap-1">
+              <div className="col-auto px-0">
                 <AvatarOrIdenticon
                   user={githubLogin}
                   address={creatorAddress}
@@ -69,28 +95,25 @@ export default function PullAndProposalHero({
                 />
               </div>
 
-              <GithubInfo
-                parent="hero"
-                variant="user"
-                label={
-                  githubLogin
-                    ? `@${githubLogin}`
-                    : truncateAddress(creatorAddress)
-                }
-              />
+              <div className="col-auto px-0">
+                <GithubInfo
+                  parent="hero"
+                  variant="user"
+                  label={
+                    githubLogin
+                      ? `@${githubLogin}`
+                      : truncateAddress(creatorAddress)
+                  }
+                />
+              </div>
             </div>
+          </div>
 
-            {createdAt && <DateLabel date={createdAt} className="text-white" />}
+          <div className="col-xs-12 col-xl-auto mb-1">
+            <DateLabel date={createdAt} className="text-white" />
           </div>
         </div>
-
-        <div className="col-2 d-flex align-items-center justify-content-center">
-          <PriceConversor
-            currentValue={BigNumber(issue?.amount || 0)}
-            currency={issue?.transactionalToken?.symbol || t("misc.token")}
-          />
-        </div>
-      </div>
-    </CustomContainer>
+      </CustomContainer>
+    </div>
   );
 }

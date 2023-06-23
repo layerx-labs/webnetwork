@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 
 import { BaseModel } from "interfaces/db/base";
-import { IssueData } from "interfaces/issue-data";
+import { IssueBigNumberData, IssueData } from "interfaces/issue-data";
 
 export interface ProposalDistribution extends BaseModel {
   recipient: string;
@@ -30,7 +30,7 @@ export interface Proposal extends BaseModel {
   refusedByBountyOwner?: boolean;
   isDisputed?: boolean;
   disputes?: ProposalDisputes[];
-  issue?: IssueData;
+  issue?: IssueData | IssueBigNumberData;
 }
 
 export interface INetworkProposal {
