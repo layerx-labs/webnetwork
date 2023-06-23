@@ -39,7 +39,7 @@ export default function HorizontalScroll({
         const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
   
         if (direction === "left" && newScrollValue >= -ARROW_WIDTH || 
-            direction === "right" && newScrollValue <= (maxScroll + ARROW_WIDTH))
+            direction === "right" && newScrollValue <= (maxScroll + 2 * ARROW_WIDTH))
           divRef.current.scrollLeft = newScrollValue;
       }
     });
