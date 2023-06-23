@@ -21,6 +21,7 @@ export default function HorizontalScroll({
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const HOLD_STEP = 2;
+  const ARROW_WIDTH = 10;
 
   function updateCanScroll(entries) {
     const { isIntersecting, target } = entries.shift();
@@ -37,7 +38,8 @@ export default function HorizontalScroll({
         const newScrollValue = divRef.current.scrollLeft + (direction === "left" ? -HOLD_STEP : HOLD_STEP);
         const maxScroll = divRef.current.scrollWidth - divRef.current.clientWidth;
   
-        if (direction === "left" && newScrollValue >= 0 || direction === "right" && newScrollValue <= maxScroll)
+        if (direction === "left" && newScrollValue >= -ARROW_WIDTH || 
+            direction === "right" && newScrollValue <= (maxScroll + ARROW_WIDTH))
           divRef.current.scrollLeft = newScrollValue;
       }
     });
