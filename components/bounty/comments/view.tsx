@@ -2,6 +2,8 @@ import { useTranslation } from "next-i18next";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
+import CustomContainer from "components/custom-container";
+
 import Button from "../../button";
 import Comment from "../../comment";
 
@@ -39,6 +41,6 @@ export default function BountyCommentsView({ comments = [], replyRef }) {
           </div>
         </div>
       </div>
-    </div>
+    </CustomContainer>
   );
 }
