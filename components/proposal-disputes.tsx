@@ -39,35 +39,33 @@ export function ProposalDisputes({proposalId}: { proposalId: number}) {
       );
   
     return (
-        <>
-          <div
-            key={address}
-            className="bg-dark-gray px-3 py-3 d-flex justify-content-between mt-1"
-          >
-            <div className="col-md-5">{label}</div>
-            <div className="col-md-7 mt-1">
-              <div className="caption-medium">
-                <span className="text-gray">{percentage(weight)}%</span>
-                <ArrowRight className="text-gray mx-2" width={10} height={10} />
-                <span>
-                  {formatNumberToNScale(weight)}{" "}
-                  <span className="text-purple">
-                    {t("common:$oracles", {
-                      token: state.Service?.network?.active?.networkToken?.symbol,
-                    })}
-                  </span>
-                </span>
-              </div>
-            </div>
+      <div
+        key={address}
+        className="bg-gray-850 px-3 py-3 d-flex justify-content-between mt-1"
+      >
+        <div className="col-md-5">{label}</div>
+        <div className="col-md-7 mt-1">
+          <div className="caption-medium">
+            <span className="text-gray">{percentage(weight)}%</span>
+            <ArrowRight className="text-gray mx-2" width={10} height={10} />
+            <span>
+              {formatNumberToNScale(weight)}{" "}
+              <span className="text-purple">
+                {t("common:$oracles", {
+                  token: state.Service?.network?.active?.networkToken?.symbol,
+                })}
+              </span>
+            </span>
           </div>
-        </>
+        </div>
+      </div>
     );
   }
 
   return <>
     <div className="row mt-3">
       <div className="col-md-6">
-        <div className="bg-shadow rounded-5">
+        <div className="bg-gray-900 rounded-5">
           <div className="p-3">
             <CaptionMedium text={t('proposal:disputes.title')} color="gray" />
           </div>

@@ -6,4 +6,5 @@ export interface BountyDistribution {
     description: string;
     line?: boolean
     githubLogin?: string;
+    className?: string;
   }

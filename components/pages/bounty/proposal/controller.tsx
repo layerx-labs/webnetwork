@@ -190,31 +190,33 @@ export default function ProposalPage() {
       <PullAndProposalHero proposal={{...proposal, issue: state.currentBounty?.data}} />
 
       <CustomContainer>
-        <div className="mt-3 bg-shadow rounded-5 p-3 d-flex flex-column">
-          <ProposalPullRequestDetail
-            currentPullRequest={pullRequest}
-          />
-          
-          <ResponsiveWrapper xs={false} xl={true}>
-            <ProposalProgress distributedAmounts={distributedAmounts} />
-          </ResponsiveWrapper>
+        <div className="row mt-3 bg-gray-900 rounded-5 p-3 mx-0">
+          <div className="col">
+            <ProposalPullRequestDetail
+              currentPullRequest={pullRequest}
+            />
+            
+            <ResponsiveWrapper xs={false} xl={true}>
+              <ProposalProgress distributedAmounts={distributedAmounts} />
+            </ResponsiveWrapper>
+          </div>
         </div>
 
         <div className="mt-3 row justify-content-between">
-          <div className="col-md-6">
-          <div className="p-3 bg-gray-900 d-flex align-item-center rounded-top">
-            <h4 className="text-uppercase caption-medium text-gray">{t("proposal:addresses_for_the_distribution")}</h4>
+          <div className="col-12 col-xl-6">
+            <ProposalListDistribution distributedAmounts={distributedAmounts} />
           </div>
-          <ProposalListDistribution distributedAmounts={distributedAmounts} />
+
+          <div className="col-12 col-xl-6">
+            <ProposalActionCard
+              proposal={proposal}
+              currentPullRequest={pullRequest}
+              onMerge={closeIssue}
+              onDispute={disputeProposal}
+              onRefuse={handleRefuse}
+              distributedAmounts={distributedAmounts}
+            />
           </div>
-          <ProposalActionCard
-            proposal={proposal}
-            currentPullRequest={pullRequest}
-            onMerge={closeIssue}
-            onDispute={disputeProposal}
-            onRefuse={handleRefuse}
-            distributedAmounts={distributedAmounts}
-          />
         </div>
         <ProposalDisputes proposalId={proposal?.id} />
       </CustomContainer>

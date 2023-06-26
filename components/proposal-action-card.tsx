@@ -167,121 +167,119 @@ export default function ProposalActionCard({
   }, [proposal, state.currentUser?.walletAddress]);
 
   return (
-    <div className="col-md-6">
-      <div className="bg-shadow rounded-5 p-3">
-        <div className="mb-5">
-          <ProposalProgressBar
-            issueDisputeAmount={proposal?.disputeWeight?.toNumber()}
-            disputeMaxAmount={+state.Service?.network?.amounts?.percentageNeededForDispute || 0}
-            isDisputed={proposal?.isDisputed}
-            isFinished={state.currentBounty?.data?.isClosed}
-            isMerged={proposal?.isMerged}
-            refused={proposal?.refusedByBountyOwner}
+    <div className="bg-gray-900 rounded-5 p-3">
+      <div className="mb-5">
+        <ProposalProgressBar
+          issueDisputeAmount={proposal?.disputeWeight?.toNumber()}
+          disputeMaxAmount={+state.Service?.network?.amounts?.percentageNeededForDispute || 0}
+          isDisputed={proposal?.isDisputed}
+          isFinished={state.currentBounty?.data?.isClosed}
+          isMerged={proposal?.isMerged}
+          refused={proposal?.refusedByBountyOwner}
+        />
+      </div>
+      <div className="mt-2 py-2 ">
+        {!currentPullRequest?.isMergeable && !proposal?.isMerged && (
+          <span className="text-uppercase text-danger caption-small">
+            {t("pull-request:errors.merge-conflicts")}
+          </span>
+        )}
+        
+        <div className="d-flex flex-row justify-content-between mt-3">
+          <ProposalMerge 
+            amountTotal={bountyAmount} 
+            tokenSymbol={state.currentBounty?.data?.transactionalToken?.symbol}
+            proposal={proposal}
+            isMerging={isMerging}
+            idBounty={state.currentBounty?.data?.id}
+            onClickMerge={handleMerge}
+            canMerge={canMerge()}
+            distributedAmounts={distributedAmounts}
           />
-        </div>
-        <div className="mt-2 py-2 ">
-          {!currentPullRequest?.isMergeable && !proposal?.isMerged && (
-            <span className="text-uppercase text-danger caption-small">
-              {t("pull-request:errors.merge-conflicts")}
-            </span>
+
+          {proposalCanBeDisputed() && (
+            <ContractButton
+              className="flex-grow-1"
+              textClass="text-uppercase text-white"
+              color="purple"
+              disabled={isRefusing || isMerging ||  isDisputing || !proposalCanBeDisputed()}
+              onClick={handleDispute}
+              isLoading={isDisputing}
+              withLockIcon={!proposalCanBeDisputed() || isMerging || isRefusing}
+            >
+              {t("actions.dispute")}
+            </ContractButton>
           )}
-          
-          <div className="d-flex flex-row justify-content-between mt-3">
-            <ProposalMerge 
-              amountTotal={bountyAmount} 
-              tokenSymbol={state.currentBounty?.data?.transactionalToken?.symbol}
-              proposal={proposal}
-              isMerging={isMerging}
-              idBounty={state.currentBounty?.data?.id}
-              onClickMerge={handleMerge}
-              canMerge={canMerge()}
-              distributedAmounts={distributedAmounts}
-            />
 
-            {proposalCanBeDisputed() && (
-              <ContractButton
-                className="flex-grow-1"
-                textClass="text-uppercase text-white"
-                color="purple"
-                disabled={isRefusing || isMerging ||  isDisputing || !proposalCanBeDisputed()}
-                onClick={handleDispute}
-                isLoading={isDisputing}
-                withLockIcon={!proposalCanBeDisputed() || isMerging || isRefusing}
-              >
-                {t("actions.dispute")}
-              </ContractButton>
-            )}
+          {isRefusable() && (
+            <ContractButton
+              className="flex-grow-1"
+              textClass="text-uppercase text-white"
+              color="danger"
+              disabled={!isRefusable() || isRefusing || isDisputing || isMerging}
+              onClick={handleRefuse}
+              isLoading={isRefusing}
+              withLockIcon={isDisputing || isMerging}
+            >
+              {t("actions.refuse")}
+            </ContractButton>
+          )}
+        </div>
 
-            {isRefusable() && (
-              <ContractButton
-                className="flex-grow-1"
-                textClass="text-uppercase text-white"
-                color="danger"
-                disabled={!isRefusable() || isRefusing || isDisputing || isMerging}
-                onClick={handleRefuse}
-                isLoading={isRefusing}
-                withLockIcon={isDisputing || isMerging}
-              >
-                {t("actions.refuse")}
-              </ContractButton>
-            )}
-          </div>
-
-          {canShowImportant() && (
-            <div className="row mt-3">
-              <div className="d-flex justify-conten-start ms-2">
-                <div>
-                <span className="svg-warning">
-                  <WarningIcon width={14} height={14} className="mb-1" />
-                </span>
-                <span className="text-warning font-weight-500 mt-3 ms-1">
-                  {t("proposal:important")}
-                </span>
-                </div>
+        {canShowImportant() && (
+          <div className="row mt-3">
+            <div className="d-flex justify-conten-start ms-2">
+              <div>
+              <span className="svg-warning">
+                <WarningIcon width={14} height={14} className="mb-1" />
+              </span>
+              <span className="text-warning font-weight-500 mt-3 ms-1">
+                {t("proposal:important")}
+              </span>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          { chainDisputable &&
-            <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false}>
-                {t('proposal:messages.in-disputable-time', {time: missingDisputableTime})}
-              </ContextualSpan>
-            </div> || ""
-          }
+        { chainDisputable &&
+          <div className="row mt-2 ms-1">
+            <ContextualSpan context="warning" icon={false}>
+              {t('proposal:messages.in-disputable-time', {time: missingDisputableTime})}
+            </ContextualSpan>
+          </div> || ""
+        }
 
-          {(isPrOwner && !chainDisputable && !proposalCanBeDisputed()) && (
-            <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false}>
-                {t("proposal:messages.owner-pull-request")}
-              </ContextualSpan>
-            </div>
-          )}
+        {(isPrOwner && !chainDisputable && !proposalCanBeDisputed()) && (
+          <div className="row mt-2 ms-1">
+            <ContextualSpan context="warning" icon={false}>
+              {t("proposal:messages.owner-pull-request")}
+            </ContextualSpan>
+          </div>
+        )}
 
-          {(isProposalOwner && !chainDisputable && !proposalCanBeDisputed()) && (
-            <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false}>
-                {t("proposal:messages.owner-proposal")}
-              </ContextualSpan>
-            </div>
-          )}
+        {(isProposalOwner && !chainDisputable && !proposalCanBeDisputed()) && (
+          <div className="row mt-2 ms-1">
+            <ContextualSpan context="warning" icon={false}>
+              {t("proposal:messages.owner-proposal")}
+            </ContextualSpan>
+          </div>
+        )}
 
-          { allowMergeCommit === false &&
-            <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false}>
-                {t("pull-request:errors.merge-commit")}
-              </ContextualSpan>
-            </div>
-          }
+        { allowMergeCommit === false &&
+          <div className="row mt-2 ms-1">
+            <ContextualSpan context="warning" icon={false}>
+              {t("pull-request:errors.merge-commit")}
+            </ContextualSpan>
+          </div>
+        }
 
-          { prsNeedsApproval &&
-            <div className="row mt-2 ms-1">
-              <ContextualSpan context="warning" icon={false}>
-                {t("pull-request:errors.approval")}
-              </ContextualSpan>
-            </div>
-          }
-        </div>
+        { prsNeedsApproval &&
+          <div className="row mt-2 ms-1">
+            <ContextualSpan context="warning" icon={false}>
+              {t("pull-request:errors.approval")}
+            </ContextualSpan>
+          </div>
+        }
       </div>
     </div>
   );
