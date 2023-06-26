@@ -204,7 +204,13 @@ export default function ProposalPage() {
 
         <div className="mt-3 row justify-content-between">
           <div className="col-12 col-xl-6">
-            <ProposalListDistribution distributedAmounts={distributedAmounts} />
+            <div className="row">
+              <ProposalListDistribution distributedAmounts={distributedAmounts} />
+            </div>
+
+            <div className="row">
+              <ProposalDisputes proposalId={proposal?.id} />
+            </div>
           </div>
 
           <div className="col-12 col-xl-6">
@@ -218,7 +224,6 @@ export default function ProposalPage() {
             />
           </div>
         </div>
-        <ProposalDisputes proposalId={proposal?.id} />
       </CustomContainer>
 
       <NotMergeableModal

@@ -18,6 +18,7 @@ export default function BountyDistributionItem({
   description,
   githubLogin,
   className,
+  isNetworkToken,
 }: BountyDistribution) {
   function verifyAmount(): boolean {
     return amounts.length > 1 && BigNumber(amounts[1]).gt(0);
@@ -55,7 +56,10 @@ export default function BountyDistributionItem({
           <span className="caption-medium text-white text-truncate">
             {formatNumberToNScale(amounts[0])}{" "}
 
-            <TokenSymbolView name={symbols[0]} className="ps-1 pt-1 caption-small text-uppercase text-primary"/>
+            <TokenSymbolView 
+              name={symbols[0]} 
+              className={`ps-1 pt-1 caption-small text-uppercase ${ isNetworkToken ? "text-purple": "text-primary"}`}
+            />
           </span>
           
         </div>

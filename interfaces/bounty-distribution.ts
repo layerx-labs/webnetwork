@@ -3,8 +3,9 @@ export interface BountyDistribution {
     amounts: string[];
     symbols: string[];
     name: string;
-    description: string;
+    description?: string;
     line?: boolean
     githubLogin?: string;
     className?: string;
+    isNetworkToken?: boolean;
   }
