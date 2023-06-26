@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { FlexRow } from "../wallet-balance";
-import NetworkItemBodyView from "./body.view";
+import NetworkItemBody from "./body/controller";
 import NetworkItemTitleView from "./title.view";
 
 interface NetworkItemViewProps {
@@ -59,7 +59,7 @@ export default function NetworkItemView({
         <FlexRow className="d-sm-none justify-content-end">
           <span className="text-gray">{subNetworkText}</span>
         </FlexRow>
-        <NetworkItemBodyView
+        <NetworkItemBody
           isCollapsed={isCollapsed}
           handleNetworkLink={handleNetworkLink}
           type={type}
