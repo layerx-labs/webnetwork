@@ -13,6 +13,7 @@ import {ProposalDisputes} from "components/proposal-disputes";
 import ProposalListDistribution from "components/proposal-list-distribution";
 import ProposalProgress from "components/proposal-progress";
 import ProposalPullRequestDetail from "components/proposal-pullrequest-details";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import {useAppState} from "contexts/app-state";
 import {BountyEffectsProvider} from "contexts/bounty-effects";
@@ -193,8 +194,12 @@ export default function ProposalPage() {
           <ProposalPullRequestDetail
             currentPullRequest={pullRequest}
           />
-          <ProposalProgress distributedAmounts={distributedAmounts} />
+          
+          <ResponsiveWrapper xs={false} xl={true}>
+            <ProposalProgress distributedAmounts={distributedAmounts} />
+          </ResponsiveWrapper>
         </div>
+
         <div className="mt-3 row justify-content-between">
           <div className="col-md-6">
           <div className="p-3 bg-gray-900 d-flex align-item-center rounded-top">
