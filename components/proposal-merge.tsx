@@ -73,7 +73,6 @@ export default function ProposalMerge({
   return (
     <>
       <ContractButton
-        className="flex-grow-1"
         textClass="text-uppercase text-white"
         onClick={() => setShow(true)}
         disabled={!canMerge || isMerging}

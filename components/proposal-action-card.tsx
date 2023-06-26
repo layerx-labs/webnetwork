@@ -178,6 +178,7 @@ export default function ProposalActionCard({
           refused={proposal?.refusedByBountyOwner}
         />
       </div>
+
       <div className="mt-2 py-2 ">
         {!currentPullRequest?.isMergeable && !proposal?.isMerged && (
           <span className="text-uppercase text-danger caption-small">
@@ -185,44 +186,54 @@ export default function ProposalActionCard({
           </span>
         )}
         
-        <div className="d-flex flex-row justify-content-between mt-3">
-          <ProposalMerge 
-            amountTotal={bountyAmount} 
-            tokenSymbol={state.currentBounty?.data?.transactionalToken?.symbol}
-            proposal={proposal}
-            isMerging={isMerging}
-            idBounty={state.currentBounty?.data?.id}
-            onClickMerge={handleMerge}
-            canMerge={canMerge()}
-            distributedAmounts={distributedAmounts}
-          />
+        <div className="row justify-content-center justify-content-xl-between mt-3 gap-2">
+          <div className="col-12 col-xl">
+            <div className="row">
+              <ProposalMerge 
+                amountTotal={bountyAmount} 
+                tokenSymbol={state.currentBounty?.data?.transactionalToken?.symbol}
+                proposal={proposal}
+                isMerging={isMerging}
+                idBounty={state.currentBounty?.data?.id}
+                onClickMerge={handleMerge}
+                canMerge={canMerge()}
+                distributedAmounts={distributedAmounts}
+              />
+            </div>
+          </div>
 
           {proposalCanBeDisputed() && (
-            <ContractButton
-              className="flex-grow-1"
-              textClass="text-uppercase text-white"
-              color="purple"
-              disabled={isRefusing || isMerging ||  isDisputing || !proposalCanBeDisputed()}
-              onClick={handleDispute}
-              isLoading={isDisputing}
-              withLockIcon={!proposalCanBeDisputed() || isMerging || isRefusing}
-            >
-              {t("actions.dispute")}
-            </ContractButton>
+            <div className="col-12 col-xl">
+              <div className="row">
+                <ContractButton
+                  textClass="text-uppercase text-white"
+                  color="purple"
+                  disabled={isRefusing || isMerging ||  isDisputing || !proposalCanBeDisputed()}
+                  onClick={handleDispute}
+                  isLoading={isDisputing}
+                  withLockIcon={!proposalCanBeDisputed() || isMerging || isRefusing}
+                >
+                  <span>{t("actions.dispute")}</span>
+                </ContractButton>
+              </div>
+            </div>
           )}
 
           {isRefusable() && (
-            <ContractButton
-              className="flex-grow-1"
-              textClass="text-uppercase text-white"
-              color="danger"
-              disabled={!isRefusable() || isRefusing || isDisputing || isMerging}
-              onClick={handleRefuse}
-              isLoading={isRefusing}
-              withLockIcon={isDisputing || isMerging}
-            >
-              {t("actions.refuse")}
-            </ContractButton>
+            <div className="col-12 col-xl">
+              <div className="row">
+                <ContractButton
+                  textClass="text-uppercase text-white"
+                  color="danger"
+                  disabled={!isRefusable() || isRefusing || isDisputing || isMerging}
+                  onClick={handleRefuse}
+                  isLoading={isRefusing}
+                  withLockIcon={isDisputing || isMerging}
+                >
+                  <span>{t("actions.refuse")}</span>
+                </ContractButton>
+              </div>
+            </div>
           )}
         </div>
 
