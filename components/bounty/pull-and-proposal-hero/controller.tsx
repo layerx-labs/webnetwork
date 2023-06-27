@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 
 import PullAndProposalHeroView from "components/bounty/pull-and-proposal-hero/view";
 
-import { pullRequest } from "interfaces/issue-data";
+import { PullRequest } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 
 interface PullAndProposalHeroPRops {
   proposal?: Proposal;
-  pullRequest?: pullRequest;
+  pullRequest?: PullRequest;
 }
 
 export default function PullAndProposalHero({
