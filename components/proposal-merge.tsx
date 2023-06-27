@@ -115,7 +115,11 @@ export default function ProposalMerge({
           </div>
         }
       >
-       <ProposalDistributionList distributedAmounts={distributedAmounts}/>
+       <ProposalDistributionList
+        distributedAmounts={distributedAmounts}
+        transactionalTokenSymbol={currentTokenSymbol}
+        convertValue={handleConversion}
+      />
 
         <div className="mt-4 border-dashed"></div>
 
