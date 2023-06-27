@@ -5,6 +5,7 @@ import { useTranslation } from "next-i18next";
 import ConnectGithub from "components/connect-github";
 import { ContextualSpan } from "components/contextual-span";
 import CreatePullRequestModal from "components/create-pull-request-modal";
+import CustomContainer from "components/custom-container";
 import If from "components/If";
 import Modal from "components/modal";
 import ProposalModal from "components/proposal/create-proposal-modal";
@@ -181,6 +182,6 @@ export default function PageActionsView({
           <Translation ns="common" label="modals.gh-access.content" />
         </h5>
       </Modal>
-    </div>
+    </CustomContainer>
   );
 }
