@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useRef, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import {Spinner} from "react-bootstrap";
 import {NumberFormatValues} from "react-number-format";
 
@@ -8,10 +8,10 @@ import {useTranslation} from "next-i18next";
 import LockedIcon from "assets/icons/locked-icon";
 
 import Button from "components/button";
+import NetworkTxButton from "components/common/network-tx-button/controller";
 import ContractButton from "components/contract-button";
 import InputNumber from "components/input-number";
 import Modal from "components/modal";
-import NetworkTxButton from "components/network-tx-button";
 import OraclesBoxHeader from "components/oracles-box-header";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
@@ -48,8 +48,6 @@ function OraclesActions({
   const [isApproving, setIsApproving] = useState<boolean>(false)
   const [action, setAction] = useState<string>(actions[0]);
   const [tokenAmount, setTokenAmount] = useState<string>();
-
-  const networkTxRef = useRef<HTMLButtonElement>(null);
 
   const networkTokenERC20 = useERC20();
 
@@ -186,7 +184,6 @@ function OraclesActions({
 
   function handleConfirm() {
     setShow(false);
-    networkTxRef?.current?.click();
   }
 
   function handleCancel() {
@@ -351,7 +348,6 @@ function OraclesActions({
             modalDescription={renderInfo?.description}
             onSuccess={onSuccess}
             onFail={setError}
-            ref={networkTxRef}
           />
         </div>
       </div>
