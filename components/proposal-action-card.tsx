@@ -15,14 +15,15 @@ import {useAppState} from "contexts/app-state";
 
 import {isProposalDisputable} from "helpers/proposal";
 
-import {pullRequest} from "interfaces/issue-data";
+import {IssueBigNumberData, IssueData, PullRequest} from "interfaces/issue-data";
 import {DistributedAmounts, Proposal} from "interfaces/proposal";
 
 import useOctokit from "x-hooks/use-octokit";
 
 interface IProposalActionCardProps {
   proposal: Proposal;
-  currentPullRequest: pullRequest;
+  issue: IssueData | IssueBigNumberData;
+  pullRequest: PullRequest;
   distributedAmounts: DistributedAmounts;
   onMerge: () => Promise<void>;
   onDispute: () => Promise<void>;
@@ -31,7 +32,8 @@ interface IProposalActionCardProps {
 
 export default function ProposalActionCard({
   proposal,
-  currentPullRequest,
+  issue,
+  pullRequest,
   onMerge,
   onDispute,
   onRefuse,
@@ -52,15 +54,15 @@ export default function ProposalActionCard({
   const { getRepository } = useOctokit();
 
   const bountyAmount = 
-    BigNumber.maximum(state.currentBounty?.data?.amount || 0, state.currentBounty?.data?.fundingAmount || 0);
+    BigNumber.maximum(issue?.amount || 0, issue?.fundingAmount || 0);
   const branchProtectionRules = state.Service?.network?.repos?.active?.branchProtectionRules;
   const approvalsRequired = 
     branchProtectionRules ? 
-      branchProtectionRules[state.currentBounty?.data?.branch]?.requiredApprovingReviewCount || 0 : 0;
-  const approvalsCurrentPr = currentPullRequest?.approvals?.total || 0;
+      branchProtectionRules[issue?.branch]?.requiredApprovingReviewCount || 0 : 0;
+  const approvalsCurrentPr = pullRequest?.approvals?.total || 0;
   const prsNeedsApproval = approvalsCurrentPr < approvalsRequired;
   const isPrOwner = (
-    currentPullRequest?.userAddress?.toLowerCase() ===
+    pullRequest?.userAddress?.toLowerCase() ===
     state.currentUser?.walletAddress?.toLowerCase()
   )
   const isProposalOwner = (
@@ -75,21 +77,21 @@ export default function ProposalActionCard({
     canUserDispute,
     !proposal?.isDisputed,
     !proposal?.refusedByBountyOwner,
-    !state.currentBounty?.data?.isClosed,
+    !issue?.isClosed,
     !proposal?.isDisputed,
     !proposal?.isMerged
   ].every(c => c);
 
   const isRefusable = () => [
-    !state.currentBounty?.data?.isClosed,
-    !state.currentBounty?.data?.isCanceled,
+    !issue?.isClosed,
+    !issue?.isCanceled,
     !proposal?.isDisputed,
     !proposal?.refusedByBountyOwner,
-    state.currentBounty?.data?.creatorAddress === state.currentUser?.walletAddress
+    issue?.creatorAddress?.toLowerCase() === state.currentUser?.walletAddress?.toLowerCase()
   ].every(v => v);
 
   const canMerge = () => [
-    currentPullRequest?.isMergeable,
+    pullRequest?.isMergeable,
     !proposal?.isMerged,
     !proposal?.isDisputed,
     !proposal?.refusedByBountyOwner,
@@ -152,8 +154,8 @@ export default function ProposalActionCard({
   }, [state.Service?.active]);
 
   useEffect(() => {
-    if (state.currentBounty?.data?.repository?.githubPath)
-      getRepository(state.currentBounty?.data?.repository?.githubPath)
+    if (issue?.repository?.githubPath)
+      getRepository(issue?.repository?.githubPath)
         .then(({ mergeCommitAllowed }) => setAllowMergeCommit(mergeCommitAllowed))
         .catch(console.debug);
   }, [state?.currentBounty?.data]);
@@ -180,7 +182,7 @@ export default function ProposalActionCard({
       </div>
 
       <div className="mt-2 py-2 ">
-        {!currentPullRequest?.isMergeable && !proposal?.isMerged && (
+        {!pullRequest?.isMergeable && !proposal?.isMerged && (
           <span className="text-uppercase text-danger caption-small">
             {t("pull-request:errors.merge-conflicts")}
           </span>
@@ -191,10 +193,10 @@ export default function ProposalActionCard({
             <div className="row">
               <ProposalMerge 
                 amountTotal={bountyAmount} 
-                tokenSymbol={state.currentBounty?.data?.transactionalToken?.symbol}
+                tokenSymbol={issue?.transactionalToken?.symbol}
                 proposal={proposal}
                 isMerging={isMerging}
-                idBounty={state.currentBounty?.data?.id}
+                idBounty={issue?.id}
                 onClickMerge={handleMerge}
                 canMerge={canMerge()}
                 distributedAmounts={distributedAmounts}

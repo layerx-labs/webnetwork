@@ -6,7 +6,6 @@ import {useTranslation} from "next-i18next";
 import Button from "components/button";
 import ContractButton from "components/contract-button";
 import Modal from "components/modal";
-import ProposalListDistribution from "components/proposal-list-distribution";
 
 import {useAppState} from "contexts/app-state";
 
@@ -16,6 +15,8 @@ import { DistributedAmounts, Proposal } from "interfaces/proposal";
 import {TokenInfo} from "interfaces/token";
 
 import {getCoinInfoByContract} from "services/coingecko";
+
+import ProposalDistributionList from "./proposal/distribution/list/view";
 
 interface props {
   amountTotal: BigNumber;
@@ -114,7 +115,7 @@ export default function ProposalMerge({
           </div>
         }
       >
-       <ProposalListDistribution distributedAmounts={distributedAmounts}/>
+       <ProposalDistributionList distributedAmounts={distributedAmounts}/>
 
         <div className="mt-4 border-dashed"></div>
 

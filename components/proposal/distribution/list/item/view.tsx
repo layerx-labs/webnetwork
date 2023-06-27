@@ -1,29 +1,36 @@
-import BigNumber from "bignumber.js";
-
 import ArrowRight from "assets/icons/arrow-right";
 
 import Avatar from "components/avatar";
 import TokenSymbolView from "components/common/token-symbol/view";
+import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 
 import { formatNumberToNScale } from "helpers/formatNumber";
 
-import { BountyDistribution } from "interfaces/bounty-distribution";
+interface ProposalDistributionListItemProps {
+  percentage: string;
+  value: string;
+  convertedValue?: string;
+  symbols: string[];
+  name: string;
+  description?: string;
+  line?: boolean
+  githubLogin?: string;
+  className?: string;
+  isNetworkToken?: boolean;
+}
 
-export default function BountyDistributionItem({
+export default function ProposalDistributionListItem({
   percentage = "0",
   name,
   symbols,
-  amounts,
+  value,
+  convertedValue,
   description,
   githubLogin,
   className,
   isNetworkToken,
-}: BountyDistribution) {
-  function verifyAmount(): boolean {
-    return amounts.length > 1 && BigNumber(amounts[1]).gt(0);
-  }
-
+}: ProposalDistributionListItemProps) {
   return (
     <li
       className={`d-flex align-items-center bg-gray-850 px-3 py-2 text-truncate ${className}`}
@@ -31,18 +38,19 @@ export default function BountyDistributionItem({
     >
       <div className="d-flex flex-grow-1 flex-column">
         <div className="text-gray label-m d-flex align-items-center gap-2 mb-1">
-          {githubLogin ? <Avatar key={githubLogin}  size="xsm"  userLogin={githubLogin} tooltip /> : null}
+          <If condition={!!githubLogin}>
+            <Avatar key={githubLogin}  size="xsm"  userLogin={githubLogin} tooltip />
+          </If>
+
           <label className="text-truncate text-uppercase">
             {name}
           </label>
-          {description && (
+
+          <If condition={!!description}>
             <InfoTooltip description={description} secondaryIcon={true} />
-          )}
+          </If>
 
         </div>
-        {verifyAmount() && (
-          <span className="caption-small text-light-gray">{name}</span>
-        )}
       </div>
       
       <div className={"d-flex flex-column text-truncate"}>
@@ -54,7 +62,7 @@ export default function BountyDistributionItem({
           <ArrowRight color="text-gray" width={14}/>
 
           <span className="caption-medium text-white text-truncate">
-            {formatNumberToNScale(amounts[0])}{" "}
+            {formatNumberToNScale(value)}{" "}
 
             <TokenSymbolView 
               name={symbols[0]} 
@@ -64,14 +72,14 @@ export default function BountyDistributionItem({
           
         </div>
 
-        {verifyAmount() && (
+        <If condition={!!convertedValue}>
           <div className="d-flex justify-content-end">
             <span className="caption-small text-light-gray">
-              {amounts[1]}{" "}
+              {convertedValue}{" "}
               <TokenSymbolView name={symbols[1]} className="ps-1 caption-small text-uppercase text-light-gray"/>
             </span>
           </div>
-        )}
+        </If>
       </div>
     </li>
   );

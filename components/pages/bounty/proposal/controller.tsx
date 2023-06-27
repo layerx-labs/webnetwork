@@ -1,49 +1,34 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
-import {useRouter} from "next/router";
 
-import PullAndProposalHero from "components/bounty/pull-and-proposal-hero/controller";
-import ConnectWalletButton from "components/connect-wallet-button";
-import CustomContainer from "components/custom-container";
-import NotMergeableModal from "components/not-mergeable-modal";
-import ProposalActionCard from "components/proposal-action-card";
-import {ProposalDisputes} from "components/proposal-disputes";
-import ProposalListDistribution from "components/proposal-list-distribution";
-import ProposalProgress from "components/proposal-progress";
-import ProposalPullRequestDetail from "components/proposal-pullrequest-details";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import ProposalPageView from "components/pages/bounty/proposal/view";
 
 import {useAppState} from "contexts/app-state";
-import {BountyEffectsProvider} from "contexts/bounty-effects";
 import {addToast} from "contexts/reducers/change-toaster";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
+import { issueParser, mergeProposalParser, pullRequestParser } from "helpers/issue";
 
-import {MetamaskErrors} from "interfaces/enums/Errors";
+import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
-import {pullRequest} from "interfaces/issue-data";
-import {DistributedAmounts, Proposal} from "interfaces/proposal";
+import { IssueData } from "interfaces/issue-data";
+import { DistributedAmounts } from "interfaces/proposal";
+
+import { ProposalPageProps } from "types/pages";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-import {useBounty} from "x-hooks/use-bounty";
+import useRefresh from "x-hooks/use-refresh";
 
 const defaultAmount = {
   value: "0",
   percentage: "0",
 };
 
-export default function ProposalPage() {
-  useBounty();
-  const router = useRouter();
-  const {t} = useTranslation();
-
-  const { dispatch, state } = useAppState();
-  
-  const [proposal, setProposal] = useState<Proposal>({} as Proposal);
-  const [pullRequest, setPullRequest] = useState<pullRequest>({} as pullRequest);
+export default function ProposalPage(props: ProposalPageProps) {
+  const { t } = useTranslation("common");
 
   const [distributedAmounts, setDistributedAmounts] =
     useState<DistributedAmounts>({
@@ -52,30 +37,32 @@ export default function ProposalPage() {
       proposerAmount: defaultAmount,
       proposals: [],
     });
-  
-  const { getDatabaseBounty } = useBounty();
-  const { getUserOf, processEvent, createNFT } = useApi();
 
+  const { refresh } = useRefresh();
+  const { dispatch, state } = useAppState();
+  const { processEvent, createNFT } = useApi();
   const { handlerDisputeProposal, handleCloseIssue, handleRefuseByOwner } = useBepro();
 
-  const amountTotal = 
-    BigNumber.maximum(state.currentBounty?.data?.amount || 0, state.currentBounty?.data?.fundingAmount || 0);
+  const proposal = mergeProposalParser(props?.proposal, props?.proposal?.issue?.merged);
+  const issue = issueParser(proposal?.issue as IssueData);
+  const pullRequest = pullRequestParser(proposal?.pullRequest);
+  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
     
   async function closeIssue() {
     try{
       if (!state.currentUser?.walletAddress) return;
 
       const { url } =
-        await createNFT(state.currentBounty?.data?.contractId, proposal.contractId, state.currentUser?.walletAddress);
+        await createNFT(issue?.contractId, proposal.contractId, state.currentUser?.walletAddress);
       
-      await handleCloseIssue(+state.currentBounty?.data?.contractId, +proposal.contractId, url)
+      await handleCloseIssue(+issue?.contractId, +proposal.contractId, url)
         .then(async txInfo => {
           const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
           
           return Promise.all([processEvent(NetworkEvents.BountyClosed, undefined, { fromBlock } )]);
         })
         .then(() => {
-          getDatabaseBounty(true);
+          refresh();
           dispatch(addToast({
               type: "success",
               title: t("actions.success"),
@@ -102,7 +89,7 @@ export default function ProposalPage() {
 
         return processEvent(NetworkEvents.ProposalDisputed, undefined, { fromBlock } );
       })
-      .then(() => getDatabaseBounty(true))
+      .then(() => refresh())
       .catch(error => {
         if (error?.code === MetamaskErrors.UserRejected) return;
 
@@ -117,13 +104,13 @@ export default function ProposalPage() {
   }
 
   async function handleRefuse() {
-    return handleRefuseByOwner(+state.currentBounty?.data?.contractId, +proposal.contractId)
+    return handleRefuseByOwner(+issue?.contractId, +proposal.contractId)
       .then(txInfo => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
 
         return processEvent(NetworkEvents.ProposalRefused, undefined, { fromBlock } );
       })
-      .then(() => getDatabaseBounty(true))
+      .then(() => refresh())
       .then( () => {
         dispatch(addToast({
           type: "success",
@@ -146,7 +133,8 @@ export default function ProposalPage() {
 
   async function getDistributedAmounts() {
     if (!proposal?.distributions || !state?.Service?.network?.amounts) return;
-    
+
+    const amountTotal = BigNumber.maximum(issue?.amount || 0, issue?.fundingAmount || 0);
     const { treasury, mergeCreatorFeeShare, proposerFeeShare } = state.Service.network.amounts;
 
     const distributions = calculateDistributedAmounts(treasury,
@@ -155,83 +143,32 @@ export default function ProposalPage() {
                                                       amountTotal,
                                                       proposal.distributions);
 
-    Promise.all(distributions.proposals.map(async({recipient, ...rest}) => {
-      let githubLogin = null
+    const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
+      ...rest,
+      recipient,
+      githubLogin: proposal?.distributions?.find(p => p.recipient === recipient)?.user?.githubLogin
+    }));
 
-      try {
-        const user = await getUserOf(recipient);
-        githubLogin = user.githubLogin;
-      } catch (error) {
-        console.error(error)
-      }
-      return  {...rest, recipient, githubLogin}
-    })).then(proposals => setDistributedAmounts({...distributions, proposals}))
+    setDistributedAmounts({
+      ...distributions,
+      proposals 
+    });
   }
 
   useEffect(() => {
-    if (!proposal?.distributions?.length) return;
     getDistributedAmounts();
-  }, [proposal?.distributions, state?.Service?.network?.amounts]);
-
-  useEffect(() => {
-    if (!state.currentBounty?.data) return;
-
-    const { proposalId } = router.query;
-
-    const mergeProposal = state.currentBounty?.data?.mergeProposals?.find((p) => +p.id === +proposalId);
-    const pullRequest = state.currentBounty?.data?.pullRequests.find((pr) => pr.id === mergeProposal?.pullRequestId);
-
-    setProposal(mergeProposal);
-    setPullRequest(pullRequest);
-  }, [router.query, state.currentBounty?.data]);
+  }, [state?.Service?.network?.amounts]);
 
   return (
-    <BountyEffectsProvider>
-      <PullAndProposalHero proposal={{...proposal, issue: state.currentBounty?.data}} />
-
-      <CustomContainer>
-        <div className="row mt-3 bg-gray-900 rounded-5 p-3 mx-0">
-          <div className="col">
-            <ProposalPullRequestDetail
-              currentPullRequest={pullRequest}
-            />
-            
-            <ResponsiveWrapper xs={false} xl={true}>
-              <ProposalProgress distributedAmounts={distributedAmounts} />
-            </ResponsiveWrapper>
-          </div>
-        </div>
-
-        <div className="mt-3 row justify-content-between">
-          <div className="col-12 col-xl-6">
-            <div className="row">
-              <ProposalListDistribution distributedAmounts={distributedAmounts} />
-            </div>
-
-            <div className="row">
-              <ProposalDisputes proposalId={proposal?.id} />
-            </div>
-          </div>
-
-          <div className="col-12 col-xl-6">
-            <ProposalActionCard
-              proposal={proposal}
-              currentPullRequest={pullRequest}
-              onMerge={closeIssue}
-              onDispute={disputeProposal}
-              onRefuse={handleRefuse}
-              distributedAmounts={distributedAmounts}
-            />
-          </div>
-        </div>
-      </CustomContainer>
-
-      <NotMergeableModal
-        pullRequest={pullRequest}
-        proposal={proposal}
-      />
-
-      <ConnectWalletButton asModal={true} />
-    </BountyEffectsProvider>
+    <ProposalPageView
+      proposal={proposal}
+      pullRequest={pullRequest}
+      issue={issue}
+      distributedAmounts={distributedAmounts}
+      networkTokenSymbol={networkTokenSymbol}
+      onMerge={closeIssue}
+      onRefuse={handleRefuse}
+      onDispute={disputeProposal}
+    />
   );
 }
