@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 import { OraclesResume, Delegation } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 
@@ -23,4 +25,10 @@ export interface OraclesResumeExtended extends OraclesResume {
   delegatedToOthers: BigNumber;
   delegatedByOthers: BigNumber;
   delegations: DelegationExtended[];
+}
+
+export interface OracleToken {
+  symbol: string;
+  name: string;
+  icon: ReactElement;
 }
