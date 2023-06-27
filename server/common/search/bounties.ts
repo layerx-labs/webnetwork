@@ -14,6 +14,7 @@ export default async function get(query: ParsedUrlQuery) {
     state,
     issueId,
     chainId,
+    proposalId,
     chain,
     visible,
     creator,
@@ -102,9 +103,10 @@ export default async function get(query: ParsedUrlQuery) {
   const proposalAssociation = 
     getAssociation( "mergeProposals", 
                     undefined, 
-                    !!proposer || isMergeableState || isDisputableState, 
+                    !!proposer || !!proposalId || isMergeableState || isDisputableState, 
                     {
                       ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
+                      ... proposalId ? { id: proposalId } : {},
                       ... isMergeableState || isDisputableState ? {
                         [Op.and]: [
                           { isDisputed: false },
@@ -114,7 +116,12 @@ export default async function get(query: ParsedUrlQuery) {
                                           Sequelize.literal(disputableTimeCalc))
                         ]
                       } : {}
-                    });
+                    },
+                    proposalId ? [
+                        {
+                          association: "disputes"
+                        }
+                    ] : []);
 
   const pullRequestAssociation = 
     getAssociation( "pullRequests", 
