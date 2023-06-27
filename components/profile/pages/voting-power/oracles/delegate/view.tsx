@@ -8,8 +8,7 @@ import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {TransactionTypes} from "interfaces/enums/transaction-types";
-
-import { OraclesDelegateViewProps } from "./oracles-delegate";
+import { OraclesDelegateViewProps } from "interfaces/oracles-state";
 
 export default function OraclesDelegateView({
  tokenAmount,

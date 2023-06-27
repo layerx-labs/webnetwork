@@ -11,11 +11,11 @@ import {formatNumberToNScale} from "helpers/formatNumber";
 import { NetworkEvents } from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
+import { OraclesActionsProps } from "interfaces/oracles-state";
 
 import useApi from "x-hooks/use-api";
 import useERC20 from "x-hooks/use-erc20";
 
-import { OraclesActionsProps } from "./oracles-actions";
 import OraclesActionsView from "./view";
 
 export default function OraclesActions({

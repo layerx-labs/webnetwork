@@ -9,10 +9,10 @@ import { useAppState } from "contexts/app-state";
 import { NetworkEvents } from "interfaces/enums/events";
 import { TransactionStatus } from "interfaces/enums/transaction-status";
 import { TransactionTypes } from "interfaces/enums/transaction-types";
+import { OraclesDelegateProps } from "interfaces/oracles-state";
 
 import useApi from "x-hooks/use-api";
 
-import { OraclesDelegateProps } from "./oracles-delegate";
 import OraclesDelegateView from "./view";
 
 export default function OraclesDelegate({

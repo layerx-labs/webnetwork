@@ -5,7 +5,8 @@ import { useTranslation } from "next-i18next";
 import Button from "components/button";
 import Modal from "components/modal";
 
-import { ModalOraclesActionViewProps } from "./oracles-actions";
+import { ModalOraclesActionViewProps } from "interfaces/oracles-state";
+
 
 export default function ModalOraclesActionView({
     renderInfo,
