@@ -14,9 +14,9 @@ import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import { formatStringToCurrency} from "helpers/formatNumber";
 
 import {TransactionTypes} from "interfaces/enums/transaction-types";
+import { OraclesActionsViewProps } from "interfaces/oracles-state";
 
 import ModalOraclesActionView from "./modal-actions.view";
-import { OraclesActionsViewProps } from "./oracles-actions";
 
 export default function OraclesActionsView({
   wallet,
