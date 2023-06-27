@@ -71,7 +71,7 @@ export default function ProposalOrPullRequestView({
                 <Translation label={btnLabel} />
               </span>
             </Button>
-            {!shouldRenderApproveButton && (
+            {shouldRenderApproveButton && (
               <GithubLink
                 forcePath={githubPath}
                 hrefPath={`pull/${(item as pullRequest)?.githubId || ""}/files`}
