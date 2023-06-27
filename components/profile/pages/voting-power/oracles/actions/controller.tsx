@@ -232,7 +232,7 @@ export default function OraclesActions({
         actions={actions} 
         action={action} 
         handleAction={setAction} 
-        renderInfo={renderInfo[action]} 
+        renderInfo={renderInfo} 
         currentLabel={getCurrentLabel()} 
         networkTokenSymbol={Service?.network?.active?.networkToken?.symbol} 
         error={error} 
