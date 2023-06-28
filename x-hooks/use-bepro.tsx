@@ -39,7 +39,7 @@ export default function useBepro() {
     console.error("Tx error", err);
   }
 
-  async function handlerDisputeProposal(proposalContractId: number): Promise<TransactionReceipt | Error> {
+  async function handlerDisputeProposal(proposalContractId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const disputeTxAction = addTx([{
         type: TransactionTypes.dispute,
@@ -47,7 +47,7 @@ export default function useBepro() {
       }] as any);
       dispatch(disputeTxAction);
       await state.Service?.active.disputeProposal(+state.currentBounty?.data?.contractId, +proposalContractId)
-        .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
+        .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, disputeTxAction.payload[0] as SimpleBlockTransactionPayload)]))
           resolve?.(txInfo);
         })
@@ -119,7 +119,7 @@ export default function useBepro() {
 
   async function handleCloseIssue(bountyId: number,
                                   proposalContractId: number,
-                                  tokenUri: string): Promise<TransactionReceipt | Error> {
+                                  tokenUri: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const closeIssueTx = addTx([{
         type: TransactionTypes.closeIssue,
@@ -128,7 +128,7 @@ export default function useBepro() {
       dispatch(closeIssueTx);
 
       await state.Service?.active.closeBounty(+bountyId, +proposalContractId, tokenUri)
-        .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
+        .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, closeIssueTx.payload[0] as SimpleBlockTransactionPayload)]))
           resolve(txInfo);
         })
@@ -378,7 +378,7 @@ export default function useBepro() {
     });
   }
 
-  async function handleRefuseByOwner(bountyId: number, proposalId: number) {
+  async function handleRefuseByOwner(bountyId: number, proposalId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const tx = addTx([{
         type: TransactionTypes.refuseProposal,
@@ -387,7 +387,7 @@ export default function useBepro() {
       dispatch(tx);
 
       await state.Service?.active.refuseProposal(bountyId, proposalId)
-      .then((txInfo: unknown) => {
+      .then((txInfo: TransactionReceipt) => {
         dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
         resolve(txInfo);
       })

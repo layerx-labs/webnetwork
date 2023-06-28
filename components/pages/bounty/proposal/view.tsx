@@ -3,7 +3,7 @@ import ConnectWalletButton from "components/connect-wallet-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import NotMergeableModal from "components/not-mergeable-modal";
-import ProposalActionCard from "components/proposal-action-card";
+import ProposalActions from "components/proposal/actions/controller";
 import { ProposalDisputes } from "components/proposal/disputes-list/controller";
 import DistributionBar from "components/proposal/distribution/bar/view";
 import ProposalDistributionList from "components/proposal/distribution/list/controller";
@@ -20,9 +20,6 @@ interface ProposalPageViewProps extends ProposalPageProps {
   issue: IssueBigNumberData;
   distributedAmounts: DistributedAmounts;
   networkTokenSymbol: string;
-  onMerge: () => Promise<void>;
-  onRefuse: () => Promise<void>;
-  onDispute: () => Promise<void>;
 }
 
 export default function ProposalPageView({
@@ -31,9 +28,6 @@ export default function ProposalPageView({
   pullRequest,
   distributedAmounts,
   networkTokenSymbol,
-  onMerge,
-  onRefuse,
-  onDispute,
 }: ProposalPageViewProps) {
   return (
     <>
@@ -75,13 +69,10 @@ export default function ProposalPageView({
           </div>
 
           <div className="col-12 col-xl-6">
-            <ProposalActionCard
+            <ProposalActions
               proposal={proposal}
               issue={issue}
               pullRequest={pullRequest}
-              onMerge={onMerge}
-              onDispute={onDispute}
-              onRefuse={onRefuse}
               distributedAmounts={distributedAmounts}
             />
           </div>
