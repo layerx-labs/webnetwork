@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next/types";
 
 import ProposalPage from "components/pages/bounty/proposal/controller";
 
-import { getPullRequestsDetails } from "x-hooks/api/get-bounty-data";
+import { getPullRequestsDetails } from "x-hooks/api/bounty/get-bounty-data";
 import getProposalData from "x-hooks/api/get-proposal-data";
 
 export default ProposalPage;
