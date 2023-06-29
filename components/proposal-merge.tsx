@@ -123,15 +123,12 @@ export default function ProposalMerge({
 
         <div className="mt-4 border-dashed"></div>
 
-        <div className="d-flex justify-content-between rounded-5 mt-4 py-2 px-3 bg-black">
-          <span className="text-white caption-medium pt-3">
+        <div className="d-flex align-items-center justify-content-between rounded-5 mt-4 py-2 px-3 bg-black">
+          <span className="text-white caption-medium">
             {t("proposal:merge-modal.total")}
           </span>
 
-          <div
-            className={`d-flex flex-column cursor-pointer 
-          ${amountTotalConverted?.gt(0) ? "mt-1" : "mt-3"}`}
-          >
+          <div className={`d-flex flex-column`}>
             <div className="d-flex justify-content-end mb-1">
               <span className="text-white caption-medium">
                 {formatStringToCurrency(amountTotal?.toFixed())}
