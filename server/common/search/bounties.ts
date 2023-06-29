@@ -1,13 +1,13 @@
-import { subHours, subMonths, subWeeks, subYears } from "date-fns";
-import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import {subHours, subMonths, subWeeks, subYears} from "date-fns";
+import {ParsedUrlQuery} from "querystring";
+import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { getAssociation } from "helpers/db/models";
-import paginate, { calculateTotalPages } from "helpers/paginate";
-import { isTrue } from "helpers/string";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
+import {getAssociation} from "helpers/db/models";
+import paginate, {calculateTotalPages} from "helpers/paginate";
+import {isTrue} from "helpers/string";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -44,8 +44,10 @@ export default async function get(query: ParsedUrlQuery) {
         [Op.ne]: "0",
         [Op.ne]: Sequelize.literal('"issue"."fundedAmount"'),
       };
-    else if (state === "open")
+    else if (state === "open") {
       whereCondition.state[Op.in] = ["open", "ready", "proposal"];
+      whereCondition.fundingAmount = {[Op.eq]: "0"};
+    }
     else if (state === "proposable")
       whereCondition.state[Op.eq] = "ready";
     else
