@@ -350,9 +350,9 @@ export default function IssueListItem({
   return (
     <CardItem onClick={handleClickCard} key="default-card">
       <div className="row align-items-center">
-        <div className="col-md-12">
-          <div className="d-flex">
-            <div className="d-flex col-md-10 text-truncate">
+        <div className="col-12">
+          <div className="row">
+            <div className="d-flex col-10 text-truncate">
               <div className="me-2">
                 <BountyStatusInfo
                   issueState={issueState}
@@ -406,7 +406,7 @@ export default function IssueListItem({
 
           <div className="row align-items-center border-xl-top border-gray-850 pt-3">
             <ResponsiveWrapper xs={false} xl={true}>
-              <div className="row w-100 align-items-center justify-content-md-start">
+              <div className="row w-100 align-items-center justify-content-md-start gx-0">
                 <BountyItemLabel label="ID" className="col-auto">
                   <IssueTag />
                 </BountyItemLabel>
@@ -446,13 +446,19 @@ export default function IssueListItem({
               </div>
             </ResponsiveWrapper>
             <ResponsiveWrapper xs={true} xl={false}>
-              <div className={`col d-flex justify-content-between`} >
-                {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
-                <BountyAmount bounty={issue} size={size} />
+              <div className="col">
+                <div className="row justify-content-between">
+                  <div className="col-6 col-xs">
+                    <BountyTagsView tags={[issue?.network?.name]} />
+                  </div>
+                  
+                  <div className="col-auto">
+                    <BountyAmount bounty={issue} size={size} />
+                  </div>
+                </div>
               </div>
             </ResponsiveWrapper>
           </div>
-
         </div>
       </div>
     </CardItem>
