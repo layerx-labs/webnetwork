@@ -37,6 +37,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
+import NetworkBadge from "./network/badge/view";
 
 interface IssueListItemProps {
   issue?: IssueBigNumberData;
@@ -205,28 +206,21 @@ export default function IssueListItem({
 
   if (size === "sm") {
     const isSeekingFund = ["funding", "partial-funded"].includes(issueState);
+    const col = isSeekingFund ? "5" : "7";
+    const colMd = isSeekingFund ? "5" : "7";
 
     return (
       <CardItem onClick={handleClickCard} key="sm-card">
         <>
-          <div className="d-flex flex-row align-items-center justify-content-between">
-            <div className="d-flex flex-row align-items-center gap-3 d-none d-md-flex">
-              <div className="network-name bg-gray-850 p-1 border-radius-8 border border-gray-800">
-                {issue?.network?.logoIcon && (
-                  <img
-                    src={`${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
-                    width={14}
-                    height={14}
-                    className="ms-1 me-2"
-                  />
-                )}
-                <span className="caption-small me-1 text-uppercase">
-                  {issue?.network?.name}
-                </span>
-              </div>
+          <ResponsiveWrapper xs={false} md={true} className="row align-items-center justify-content-between">
+            <div className={`col-${col} col-md-${colMd} col-xl-${col} px-0 ml-1`}>
+              <NetworkBadge
+                logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
+                name={issue?.network?.name}
+              />
             </div>
 
-            <div className="d-none d-md-flex">
+            <div className="col-auto px-0 mr-1">
               <Badge
                 color="transparent"
                 className={`d-flex align-items-center gap-1 border border-gray-800 caption-medium 
@@ -238,34 +232,47 @@ export default function IssueListItem({
                 </>
               </Badge>
             </div>
-          </div>
+          </ResponsiveWrapper>
 
-          <div className="d-flex d-md-none align-items-center gap-2 mb-3">
+          <ResponsiveWrapper xs={true} md={false} className="align-items-center gap-2 mb-3">
             <BountyStatusInfo issueState={issueState} />
-            <span className="text-truncate">{issue?.title}</span>
-          </div>
-          
-          <div className="mt-3 d-none d-md-flex">
-            <span className="text-truncate">
+            <span className="text-truncate text-capitalize">{issue?.title}</span>
+          </ResponsiveWrapper>
+
+
+          <ResponsiveWrapper xs={false} md={true} className="mt-3 flex-column">
+            <span className="text-white text-truncate text-capitalize">
               {issue?.title}
             </span>
-          </div>
-          <div className="row align-items-center mt-2">
-            <div className="col caption-medium font-weight-normal text-capitalize">
-              <div className="d-none d-md-flex">
-                <If condition={isSeekingFund}>
-                  <span className="mr-1">{t("info.funded")}</span>
-                  <span className="text-yellow-500">{formatNumberToCurrency(issue?.fundedPercent)}%</span>
-                </If>
-              </div>
 
-              <div className="d-flex d-md-none">
-                <span className="caption-small me-1 text-uppercase">
-                  {issue?.network?.name}
-                </span>
-              </div>
-            </div>
-            <div className="col">
+            <span className="text-gray-600 text-truncate text-capitalize">
+              {issue?.body}
+            </span>
+          </ResponsiveWrapper>
+
+          <div className="row align-items-center justify-content-end mt-2">
+            <If condition={isSeekingFund}>
+              <ResponsiveWrapper 
+                xs={false} 
+                md={true} 
+                className="col-6 caption-medium font-weight-normal text-capitalize"
+              >
+                <span className="mr-1">{t("info.funded")}</span>
+                <span className="text-yellow-500">{formatNumberToCurrency(issue?.fundedPercent)}%</span>
+              </ResponsiveWrapper>
+            </If>
+
+            <ResponsiveWrapper 
+              md={false}
+              className="col-6 caption-medium font-weight-normal text-capitalize"
+            >
+              <NetworkBadge
+                logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
+                name={issue?.network?.name}
+              />
+            </ResponsiveWrapper>
+
+            <div className="col-6">
               <BountyAmount bounty={issue} size={size} />
             </div>
           </div>
