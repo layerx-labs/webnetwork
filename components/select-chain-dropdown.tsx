@@ -1,4 +1,4 @@
-import React, {useEffect, useState, ReactNode} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 
 import {useTranslation} from "next-i18next";
 
@@ -11,7 +11,7 @@ import {useAppState} from "contexts/app-state";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { getChainIcon } from "services/chain-id";
+import {getChainIcon, getChainIconsList} from "services/chain-id";
 
 interface SelectChainDropdownProps {
   onSelect: (chain: SupportedChainData) => void;
@@ -95,6 +95,8 @@ export default function SelectChainDropdown({
 
   async function updateOptions() {
     if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains)) return;
+
+    await getChainIconsList(); // request the chainsIconsList so we don't do it on the loop
 
     const chainsWithIcon = await Promise.all(supportedChains
       .filter(isChainConfigured)
