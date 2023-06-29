@@ -32,7 +32,7 @@ export default function PullRequestDetailsView({
   const { t } = useTranslation("pull-request");
 
   return (
-    <div>
+    <>
       <div className="row align-items-center">
         <div className="col-auto">
           <span className="caption-large text-capitalize text-white">
@@ -55,11 +55,11 @@ export default function PullRequestDetailsView({
         </div>
       </div>
 
-      <div className="row align-items-center mt-2 gy-2">
+      <div className="row align-items-center mt-2 gap-3">
         <div className="col-xs-12 col-xl-auto">
           <div className="row align-items-center">
-            <div className="col-auto px-1">
-              <Avatar className="me-2" userLogin={creatorGithubLogin} />
+            <div className="col-auto">
+              <Avatar userLogin={creatorGithubLogin} />
             </div>
 
             <div className="col-auto px-0">
@@ -93,6 +93,6 @@ export default function PullRequestDetailsView({
           <DateLabel date={createdAt} className="text-gray-500" />
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -65,7 +65,7 @@ export default function PullAndProposalHeroView({
 
         <div className="row align-items-center mt-2">
           <div className="col">
-            <div className="row">
+            <div className="row align-items-center">
               <span className="caption-large text-white text-capitalize">
                 {t("title")}
 
@@ -84,10 +84,10 @@ export default function PullAndProposalHeroView({
           </div>
         </div>
 
-        <div className="row align-items-center mt-2">
-          <div className="col-xs-12 col-xl-auto mb-1">
+        <div className="row align-items-center mt-1 gy-2">
+          <div className="col-xs-12 col-xl-auto">
             <div className="row align-items-center gap-1">
-              <div className="col-auto px-0">
+              <div className="col-auto">
                 <AvatarOrIdenticon
                   user={githubLogin}
                   address={creatorAddress}
@@ -109,7 +109,7 @@ export default function PullAndProposalHeroView({
             </div>
           </div>
 
-          <div className="col-xs-12 col-xl-auto mb-1">
+          <div className="col-xs-12 col-xl-auto">
             <DateLabel date={createdAt} className="text-white" />
           </div>
         </div>
