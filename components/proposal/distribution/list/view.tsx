@@ -63,6 +63,7 @@ export default function ProposalDistributionListView({
       <ul className="d-flex flex-column gap-px-1">
         {items.map((item, index, origin) => (
           <ProposalDistributionListItem
+            key={`distribution-item-${index}`}
             {...item}
             className={isLastItem(origin, index) ? "rounded-bottom-5" : ""}
           />
