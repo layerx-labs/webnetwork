@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 import ArrowRight from "assets/icons/arrow-right";
 
 import Avatar from "components/avatar";
@@ -72,7 +74,7 @@ export default function ProposalDistributionListItem({
           
         </div>
 
-        <If condition={!!convertedValue}>
+        <If condition={!!convertedValue && BigNumber(convertedValue).gt(0)}>
           <div className="d-flex justify-content-end">
             <span className="caption-small text-light-gray">
               {convertedValue}{" "}

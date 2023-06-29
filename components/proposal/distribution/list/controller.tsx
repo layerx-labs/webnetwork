@@ -39,7 +39,7 @@ export default function ProposalDistributionList({
 
   const handleConversion = (value) =>
     BigNumber(value)
-      .multipliedBy(coinInfo?.prices[defaultFiat])
+      .multipliedBy(coinInfo?.prices[defaultFiat] || 0)
       .toFixed(4);
 
   useEffect(() => {
