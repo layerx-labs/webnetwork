@@ -33,7 +33,6 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
@@ -66,7 +65,6 @@ export default function IssueListItem({
   const { getURLWithNetwork } = useNetwork();
   const { signMessage } = useAuthentication();
   const { handleHardCancelBounty } = useBepro();
-  const { isMobileView } = useBreakPoint();
 
   const isVisible = visible !== undefined ? visible : issue?.visible;
 
@@ -206,14 +204,13 @@ export default function IssueListItem({
 
   if (size === "sm") {
     const isSeekingFund = ["funding", "partial-funded"].includes(issueState);
-    const col = isSeekingFund ? "5" : "7";
-    const colMd = isSeekingFund ? "5" : "7";
+    const col = isSeekingFund ? "xxl-5 col-4": "xxl-auto col-6";
 
     return (
       <CardItem onClick={handleClickCard} key="sm-card">
         <>
           <ResponsiveWrapper xs={false} md={true} className="row align-items-center justify-content-between">
-            <div className={`col-${col} col-md-${colMd} col-xl-${col} px-0 ml-1`}>
+            <div className={`col-${col} px-0 ml-1`}>
               <NetworkBadge
                 logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
                 name={issue?.network?.name}
