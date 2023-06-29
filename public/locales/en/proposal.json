@@ -36,7 +36,7 @@
     "failed": "Failed",
     "open-for-dispute": "Open for Dispute",
     "accepted": "Accepted",
-    "waiting": "Waiting"
+    "waiting": "Waiting for Merge"
   },
   "merge-modal": {
     "title": "Confirm Bounty Distribution",

@@ -15,6 +15,7 @@ export default function ProposalProgressBar({
   isMerged = false,
   refused = false,
   disputeMaxAmount = 0,
+  isAbleToDispute = false,
 }) {
   const { t } = useTranslation("proposal");
 
@@ -54,7 +55,7 @@ export default function ProposalProgressBar({
     if (isDisputed === true || (!isMerged && isFinished === true))
       return t("status.failed");
 
-    if (isDisputed === false && isFinished === false) return t("status.open-for-dispute");
+    if (isDisputed === false && isFinished === false && isAbleToDispute) return t("status.open-for-dispute");
 
     if (isDisputed === false && isFinished === true && isMerged)
       return t("status.accepted");
