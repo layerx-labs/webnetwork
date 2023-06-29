@@ -16,7 +16,7 @@ interface ExecutionResult {
   eventsLogs: unknown;
 }
 
-type useContractTransactionHook = [boolean, (...args: unknown[]) => Promise<ExecutionResult>];
+type useContractTransactionHook = [boolean, (...args: unknown[]) => Promise<ExecutionResult>, (value: boolean) => void];
 
 export default function useContractTransaction( event: RegistryEvents | NetworkEvents,
                                                 method: (...args) => Promise<TransactionReceipt>,
@@ -59,5 +59,6 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
   return [
     isExecuting,
     execute,
+    setIsExecuting,
   ];
 }

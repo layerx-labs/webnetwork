@@ -51,10 +51,10 @@ export default function ProposalActions({
   const { handlerDisputeProposal, handleCloseIssue, handleRefuseByOwner } =
     useBepro();
 
-  const [isMerging, onMerge] = useContractTransaction(NetworkEvents.BountyClosed,
-                                                      handleCloseIssue,
-                                                      t("modals.not-mergeable.success-message"),
-                                                      t("errors.something-went-wrong"));
+  const [isMerging, onMerge, setIsMerging] = useContractTransaction(NetworkEvents.BountyClosed,
+                                                                    handleCloseIssue,
+                                                                    t("modals.not-mergeable.success-message"),
+                                                                    t("errors.something-went-wrong"));
   const [isDisputing, onDispute] = useContractTransaction(NetworkEvents.ProposalDisputed,
                                                           handlerDisputeProposal,
                                                           t("proposal:messages.proposal-disputed"),
@@ -162,6 +162,8 @@ export default function ProposalActions({
 
   async function handleMerge() {
     try {
+      setIsMerging(true);
+      
       const { url } = await createNFT(issue?.contractId,
                                       proposal.contractId,
                                       state.currentUser?.walletAddress);
