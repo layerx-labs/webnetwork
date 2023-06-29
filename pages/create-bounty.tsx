@@ -420,8 +420,12 @@ export default function CreateBountyPage() {
     }
   }
 
+  const [searchForNetwork, setSearchingForNetwork] = useState<string|null>(null);
+
   useEffect(() => {
-    if(!connectedChain) return;
+    if(!connectedChain || searchForNetwork === connectedChain?.id) return;
+
+    setSearchingForNetwork(connectedChain?.id);
 
     if (connectedChain.name === UNSUPPORTED_CHAIN)
       setCurrentNetwork(undefined);
@@ -440,7 +444,8 @@ export default function CreateBountyPage() {
         })
         .catch((error) => {
           console.log("Failed to retrieve networks list", error);
-        });
+        })
+        .finally(() => setSearchingForNetwork(null));
   }, [connectedChain]);
 
   useEffect(() => {

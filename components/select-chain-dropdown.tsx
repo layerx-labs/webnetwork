@@ -42,6 +42,7 @@ export default function SelectChainDropdown({
 
   const [options, setOptions] = useState<ChainOption[]>([]);
   const [selected, setSelectedChain] = useState<ChainOption>(null);
+  const [loadingInfo, setLoadingInfo] = useState<boolean>(false);
 
   const { state: { Service, supportedChains, connectedChain, currentUser, spinners } } = useAppState();
 
@@ -94,7 +95,9 @@ export default function SelectChainDropdown({
   }
 
   async function updateOptions() {
-    if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains)) return;
+    if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains) || loadingInfo) return;
+
+    setLoadingInfo(true);
 
     await getChainIconsList(); // request the chainsIconsList so we don't do it on the loop
 
@@ -110,6 +113,8 @@ export default function SelectChainDropdown({
         chainToOption(chain, !Service?.network?.availableChains?.find(({ chainId }) => chainId === chain.chainId))));
     else
       setOptions(chainsWithIcon.map(chain => chainToOption(chain)));
+
+    setLoadingInfo(false);
   }
 
   useEffect(() => {
