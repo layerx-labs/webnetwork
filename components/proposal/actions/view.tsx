@@ -144,8 +144,8 @@ export default function ProposalActionsView({
             </div>
           </div>
 
-          {warnings?.map(warning =>
-            <div className="row mt-2 ms-1">
+          {warnings?.map((warning, index) =>
+            <div className="row mt-2 ms-1" key={`actions-warning-${index}`}>
               <ContextualSpan context="warning" icon={false}>
                 {warning}
               </ContextualSpan>
