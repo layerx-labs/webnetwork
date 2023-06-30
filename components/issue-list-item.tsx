@@ -439,9 +439,15 @@ export default function IssueListItem({
               </div>
             </ResponsiveWrapper>
             <ResponsiveWrapper xs={true} xl={false}>
-              <div className={`col d-flex justify-content-between`} >
-                {isMobileView && <BountyTagsView tags={[issue?.network?.name]} />}
-                <BountyAmount bounty={issue} size={size} />
+              <div className={`col d-flex flex-wrap justify-content-between text-truncate`} >
+              {isMobileView && (
+                  <div className="text-truncate mb-2">
+                    <BountyTagsView tags={[issue?.network?.name]} />
+                  </div>
+                )}
+                <div className="mb-2">
+                  <BountyAmount bounty={issue} size={size} />
+                </div>
               </div>
             </ResponsiveWrapper>
           </div>

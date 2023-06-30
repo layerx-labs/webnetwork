@@ -16,7 +16,7 @@ export default function BountyTagsView({
           key={tag}
           label={tag}
           className={`caption-medium border border-gray-800
-           border-radius-4 text-uppercase text-white-40`}
+           border-radius-4 text-uppercase text-white-40 text-truncate`}
           color="bg-gray"
         />
       ))}
