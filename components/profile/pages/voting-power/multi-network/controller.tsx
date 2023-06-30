@@ -15,6 +15,7 @@ export default function VotingPowerMultiNetwork() {
   const { push } = useRouter();
 
   const [networks, setNetworks] = useState<Curator[]>([]);
+  const [network, setNetwork] = useState<Curator>();
 
   const { state } = useAppState();
   const { searchCurators } = useApi();
@@ -26,6 +27,10 @@ export default function VotingPowerMultiNetwork() {
           chain: network?.chain?.chainShortName,
     }));
     
+  }
+
+  function handleNetwork(network: Curator) {
+    setNetwork(network)
   }
 
   useEffect(() => {
@@ -41,6 +46,8 @@ export default function VotingPowerMultiNetwork() {
   return (
     <VotingPowerMultiNetworkView
       networks={networks}
+      network={network}
+      handleNetwork={handleNetwork}
       goToNetwork={goToNetwork}
     />
   );
