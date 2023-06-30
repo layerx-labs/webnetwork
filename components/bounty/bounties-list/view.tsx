@@ -6,6 +6,7 @@ import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
+import ChainBadge from "components/chain-badge";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -15,7 +16,10 @@ import IssueListItem from "components/issue-list-item";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import ScrollTopButton from "components/scroll-top-button";
+
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { SearchBountiesPaginatedBigNumber } from "types/components";
 
@@ -29,6 +33,7 @@ interface BountiesListViewProps {
   isOnNetwork?: boolean;
   isConnected?: boolean;
   hasFilter?: boolean;
+  currentChain?: SupportedChainData;
   onClearSearch: () => void;
   onNotFoundClick: () => void;
   onNextPage: () => void;
@@ -53,6 +58,7 @@ export default function BountiesListView({
   onSearchInputChange,
   onSearchClick,
   onEnterPressed,
+  currentChain
 }: BountiesListViewProps) {
   const { t } = useTranslation(["common", "bounty", "pull-request", "proposal"]);
 
@@ -112,13 +118,23 @@ export default function BountiesListView({
       col={isProfile || isManagement ? "col-12" : undefined}
     >
       <If condition={isBountyHall || isProfile}>
-        <div className="d-flex flex-row align-items-center">
-          <h3 className="text-capitalize font-weight-medium">{listTitleByType[type]}</h3>
-          <div className="ms-2">
-            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
-              {bounties?.count || 0}
-            </span>
+        <div className="d-flex justify-content-between">
+          <div className="d-flex flex-row align-items-center">
+            <h3 className="text-capitalize font-weight-medium">{listTitleByType[type]}</h3>
+            <div className="ms-2">
+              <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
+                {bounties?.count || 0}
+              </span>
+            </div>
+
           </div>
+          <If condition={isProfile}>
+            <ResponsiveWrapper md={false} xs={true} sm={true}>
+              <div className="d-flex align-items-center">
+                <ChainBadge chain={currentChain} />
+              </div>
+            </ResponsiveWrapper>
+          </If>
         </div>
       </If>
 
