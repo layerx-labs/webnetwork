@@ -126,7 +126,7 @@ export default function BountiesListView({
             </h4>
 
           </div>
-          <If condition={isProfile}>
+          <If condition={isProfile && isOnNetwork}>
             <ResponsiveWrapper md={false} xs={true} sm={true}>
             <div className="d-flex align-items-center">
                 <div
