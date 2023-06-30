@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import {Spinner} from "react-bootstrap";
 import {NumberFormatValues} from "react-number-format";
 
@@ -63,6 +63,8 @@ function OraclesActions({
     BigNumber(tokenAmount || 0).dividedBy(oracleExchangeRate).toFixed();
 
   const exceedsAvailable = value => BigNumber(value).gt(getMaxAmount());
+
+  const networkTxRef = useRef<HTMLButtonElement>(null);
 
   const verifyTransactionState = (type: TransactionTypes): boolean =>
     !!transactions.find((transactions) =>
@@ -184,6 +186,7 @@ function OraclesActions({
 
   function handleConfirm() {
     setShow(false);
+    networkTxRef?.current?.click();
   }
 
   function handleCancel() {
@@ -348,6 +351,7 @@ function OraclesActions({
             modalDescription={renderInfo?.description}
             onSuccess={onSuccess}
             onFail={setError}
+            buttonConfirmRef={networkTxRef}
           />
         </div>
       </div>

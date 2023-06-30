@@ -1,4 +1,4 @@
-import {ReactChild, useEffect, useState} from "react";
+import {MutableRefObject, ReactChild, useEffect, useState} from "react";
 
 import {useTranslation} from "next-i18next";
 
@@ -34,6 +34,7 @@ interface NetworkTxButtonParams {
   modalDescription: string;
   buttonLabel?: string;
   handleEvent?: (blockNumber) => void;
+  buttonConfirmRef?: MutableRefObject<HTMLButtonElement>
   children?: ReactChild | ReactChild[];
   disabled?: boolean;
   txType: TransactionTypes;
@@ -56,7 +57,8 @@ export default function NetworkTxButton({
     disabled = false,
     txType = TransactionTypes.unknown,
     txCurrency,
-    handleEvent
+    handleEvent,
+    buttonConfirmRef
   }: NetworkTxButtonParams) {
   const { t } = useTranslation(["common"]);
 
@@ -162,6 +164,7 @@ export default function NetworkTxButton({
         modalFooter={modalFooter} 
         divClassName={getDivClass()} 
         txSuccess={txSuccess}   
+        ref={buttonConfirmRef}
       />
   );
 }
