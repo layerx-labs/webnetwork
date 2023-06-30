@@ -1,6 +1,9 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
+import ArrowLeft from "assets/icons/arrow-left";
+import ArrowUpRight from "assets/icons/arrow-up-right";
+
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import Indicator from "components/indicator";
@@ -16,6 +19,7 @@ interface VotingPowerMultiNetworkViewProps {
   networks: Curator[];
   network: Curator;
   handleNetwork: (network: Curator) => void;
+  clearNetwork: () => void;
   goToNetwork: (network: Network) => void;
 }
 
@@ -31,6 +35,7 @@ export default function VotingPowerMultiNetworkView({
   networks,
   network,
   handleNetwork,
+  clearNetwork,
   goToNetwork,
 }: VotingPowerMultiNetworkViewProps) {
   const { t } = useTranslation(["common", "profile"]);
@@ -69,7 +74,6 @@ export default function VotingPowerMultiNetworkView({
 
   function renderItem() {
     if (!network) return null;
-
     const {
       tokensLocked,
       delegatedToMe,
@@ -78,10 +82,24 @@ export default function VotingPowerMultiNetworkView({
     } = network;
 
     return (
-      <>
-        <div className="h3">
-            
-           {currentNetwork?.name}
+      <div className="mt-4">
+        <div className="d-flex align-items-center mb-4 pb-3 border-bottom border-gray-850">
+          <div className="cursor-pointer ms-4 me-3" onClick={clearNetwork}>
+            <ArrowLeft width={12} height={12} />
+          </div>
+          <span className="h3">{currentNetwork?.name}</span>
+        </div>
+        <div className="col-12 mb-4">
+          <div
+            className={`
+            d-flex justify-content-center align-items-center py-2 cursor-pointer 
+            border border-gray-700 bg-gray-850 border-radius-4
+            `}
+            onClick={() => goToNetwork(currentNetwork)}
+          >
+            <span className="me-2">{t("profile:go-to-network")}</span>
+            <ArrowUpRight width={14} height={14} />
+          </div>
         </div>
         {renderVotingPowerData({
           tokensLocked,
@@ -89,7 +107,7 @@ export default function VotingPowerMultiNetworkView({
           delegations,
           network: currentNetwork,
         })}
-      </>
+      </div>
     );
   }
 
@@ -111,38 +129,41 @@ export default function VotingPowerMultiNetworkView({
               "",
             ]}
           />
-
-          {!!networks.length && !network
-            ? networks.map((curator, key) => {
-              const { tokensLocked, delegatedToMe, delegations, network } = curator;
-              return (
-                  <NetworkItem
-                    key={network?.networkAddress}
-                    type="network"
-                    networkName={network?.name}
-                    iconNetwork={network?.logoIcon}
-                    primaryColor={network?.colors?.primary}
-                    amount={BigNumber(tokensLocked)
-                      .plus(delegatedToMe)
-                      .toFixed()}
-                    symbol={`${network?.networkToken?.symbol} ${t("misc.votes")}`}
-                    variant="multi-network"
-                    handleNetworkLink={() => goToNetwork(network)}
-                    handleToggleTabletAndMobile={() => handleNetwork(curator)}
-                  >
-                    {renderVotingPowerData({
-                      tokensLocked,
-                      delegatedToMe,
-                      delegations,
-                      network,
-                      key,
-                    })}
-                  </NetworkItem>
-              );
-            })
-            : renderItem()}
         </div>
       </If>
+
+      {!!networks.length && !network
+        ? networks.map((curator, key) => {
+          const {
+              tokensLocked,
+              delegatedToMe,
+              delegations,
+              network: currentNetwork,
+            } = curator;
+          return (
+              <NetworkItem
+                key={currentNetwork?.networkAddress}
+                type="network"
+                networkName={currentNetwork?.name}
+                iconNetwork={currentNetwork?.logoIcon}
+                primaryColor={currentNetwork?.colors?.primary}
+                amount={BigNumber(tokensLocked).plus(delegatedToMe).toFixed()}
+                symbol={`${currentNetwork?.networkToken?.symbol} ${t("misc.votes")}`}
+                variant="multi-network"
+                handleNetworkLink={() => goToNetwork(currentNetwork)}
+                handleToggleTabletAndMobile={() => handleNetwork(curator)}
+              >
+                {renderVotingPowerData({
+                  tokensLocked,
+                  delegatedToMe,
+                  delegations,
+                  network: currentNetwork,
+                  key,
+                })}
+              </NetworkItem>
+          );
+        })
+        : renderItem()}
     </>
   );
 }
