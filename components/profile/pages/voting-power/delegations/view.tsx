@@ -11,6 +11,8 @@ import { formatStringToCurrency } from "helpers/formatNumber";
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import TokenSymbolView from "../../../../common/token-symbol/view";
 
 interface Info {
@@ -45,18 +47,24 @@ export default function DelegationsView({
   networkTokenName,
 }: DelegationsViewProps) {
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
+  const { isMobileView } = useBreakPoint();
 
   return (
     <div className="mb-3">
       <FlexRow className="mb-3 justify-content-between align-items-center">
-        <span className="h4 family-Regular text-white font-weight-500">
+        <span className={clsx([ 
+          "family-Regular text-white font-weight-500",
+          isMobileView ? 'fs-smallest': 'h4'
+        ])}>
           {renderInfo[type].title}
         </span>
 
         <FlexRow
           className={clsx([
-            "d-flex justify-content-center align-items-center gap-2 caption-large",
-            "text-white bg-gray-900 py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
+            "d-flex justify-content-center align-items-center gap-2",
+            "text-white py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
+            variant === "network" ? "bg-gray-900" : "bg-gray-950",
+            isMobileView ? 'fs-smallest': 'caption-large'
           ])}
         >
           <span>{formatStringToCurrency(renderInfo[type].total)}</span>
