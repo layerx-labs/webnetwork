@@ -33,6 +33,10 @@ export default function VotingPowerMultiNetwork() {
     setNetwork(network)
   }
 
+  function clearNetwork() {
+    setNetwork(undefined)
+  }
+
   useEffect(() => {
     if (state.currentUser?.walletAddress)
       searchCurators({
@@ -48,6 +52,7 @@ export default function VotingPowerMultiNetwork() {
       networks={networks}
       network={network}
       handleNetwork={handleNetwork}
+      clearNetwork={clearNetwork}
       goToNetwork={goToNetwork}
     />
   );
