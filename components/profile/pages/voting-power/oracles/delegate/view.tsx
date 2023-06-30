@@ -31,7 +31,7 @@ export default function OraclesDelegateView({
   const {t} = useTranslation(["common", "my-oracles"]);
 
   return (
-    <div className="col-md-6">
+    <div className="mt-2 col-md-6">
       <div className="bg-gray-950 border border-gray-800 border-radius-4 p-4 h-100">
         <OraclesBoxHeader
           actions={t("my-oracles:actions.delegate.title")}

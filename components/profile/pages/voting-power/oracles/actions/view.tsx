@@ -51,7 +51,7 @@ export default function OraclesActionsView({
 
   return (
     <>
-      <div className="col-md-6">
+      <div className="mt-2 col-md-6">
         <div className="bg-gray-950 border border-gray-800 border-radius-4 p-4 h-100">
           <OraclesBoxHeader
             actions={actions}
