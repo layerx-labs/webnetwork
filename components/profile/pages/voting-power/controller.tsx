@@ -12,7 +12,7 @@ export default function VotingPowerPage() {
 
   const isOnNetwork = !!network;
 
-  function RenderChildrenVotingPower() {
+  function renderChildrenVotingPower() {
     if (isOnNetwork) return <VotingPowerNetwork />;
 
     return <VotingPowerMultiNetwork />;
@@ -20,7 +20,7 @@ export default function VotingPowerPage() {
 
   return (
     <VotingPowerPageView>
-      <RenderChildrenVotingPower />
+      {renderChildrenVotingPower()}
     </VotingPowerPageView>
   );
 }
