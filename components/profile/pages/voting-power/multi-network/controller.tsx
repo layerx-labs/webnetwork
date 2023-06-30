@@ -21,12 +21,11 @@ export default function VotingPowerMultiNetwork() {
   const { getURLWithNetwork } = useNetwork();
 
   function goToNetwork(network) {
-    return () => {
-      push(getURLWithNetwork("/bounties", {
+    push(getURLWithNetwork("/bounties", {
           network: network?.name,
           chain: network?.chain?.chainShortName,
-      }));
-    };
+    }));
+    
   }
 
   useEffect(() => {
