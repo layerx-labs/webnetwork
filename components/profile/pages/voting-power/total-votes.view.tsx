@@ -11,6 +11,8 @@ import { FlexRow } from "components/profile/wallet-balance";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 interface TotalVotesProps {
   votesLocked: BigNumber;
   votesDelegatedToMe: BigNumber;
@@ -33,6 +35,8 @@ export default function TotalVotes({
   tokenColor
 } : TotalVotesProps) {
   const { t } = useTranslation(["common", "profile"]);
+  
+  const { isMobileView } = useBreakPoint();
 
   function getTextColorProps() {
     if (tokenColor)
@@ -62,15 +66,19 @@ export default function TotalVotes({
 
   return(
     <div className="border border-gray-800 p-4 border-radius-4 col-12">
-      <FlexRow className="mb-3 justify-content-between align-items-center">
-        <span className="h4 family-Regular text-white font-weight-500">
+      <FlexRow className="mb-3 justify-content-between align-items-center flex-wrap">
+        <span className={clsx([ 
+          "family-Regular text-white font-weight-500",
+          isMobileView ? 'fs-smallest': 'h4'
+        ])}>
           {t("profile:total-votes")}
         </span>
 
         <FlexRow className={clsx([
-          "d-flex justify-content-center align-items-center gap-2 caption-large",
+          "d-flex justify-content-center align-items-center gap-2",
           "text-white py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
-          variant === "network" ? "bg-gray-900" : "bg-gray-950"
+          variant === "network" ? "bg-gray-900" : "bg-gray-950",
+          isMobileView ? 'fs-smallest': 'caption-large'
         ])}>
           <span>
             {formatStringToCurrency(votesLocked.plus(votesDelegatedToMe).toFixed())}
