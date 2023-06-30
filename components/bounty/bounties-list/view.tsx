@@ -117,7 +117,7 @@ export default function BountiesListView({
       col={isProfile || isManagement ? "col-12" : undefined}
     >
       <If condition={isBountyHall || isProfile}>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex flex-wrap justify-content-between">
           <div className="d-flex flex-row flex-wrap align-items-center">
             <h4 className="text-capitalize font-weight-medium pb-2">{listTitleByType[type]}
             <span className="ms-2 p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
