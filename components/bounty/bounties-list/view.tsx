@@ -6,7 +6,6 @@ import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
-import ChainBadge from "components/chain-badge";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -130,8 +129,21 @@ export default function BountiesListView({
           </div>
           <If condition={isProfile}>
             <ResponsiveWrapper md={false} xs={true} sm={true}>
-              <div className="d-flex align-items-center">
-                <ChainBadge chain={currentChain} />
+            <div className="d-flex align-items-center">
+                <div
+                  className={`d-flex py-1 pe-2 justify-content-center text-truncate border border-gray-800
+                        border-radius-4 text-white-40 bg-gray-850 text-uppercase`}
+                >
+                  <div className="d-flex flex-column justify-content-center">
+                    <div
+                      className="d-flex ball mx-2"
+                      style={{
+                        backgroundColor: currentChain?.color,
+                      }}
+                    />
+                  </div>
+                  {currentChain?.chainShortName}
+                </div>
               </div>
             </ResponsiveWrapper>
           </If>
