@@ -60,17 +60,19 @@
     "wallet": {}
   },
   "main-nav": {
-    "council": "Curators",
+    "curators": "Curators",
     "leaderboard": "Leaderboard",
     "Oracle": "bv{{token}}",
     "new-bounty": "Create bounty",
     "explore": "Explore",
     "bounty-hall": "Bounty Hall",
     "get-started": "Get Started",
-    "connect": "Connect Wallet",
+    "connect": "Connect",
+    "connect-wallet": "Connect Wallet",
     "new-network": "New Network",
     "my-network": "My Network",
     "networks": "Networks",
+    "bounties": "Bounties",
     "nav-avatar": {
       "my-profile": "My profile",
       "profile": "Profile",
@@ -150,7 +152,8 @@
     "hide": "Hide",
     "remove": "Remove",
     "register": "Register",
-    "clear-all": "Clear All"
+    "clear-all": "Clear All",
+    "apply": "Apply"
   },
   "misc": {
     "by": "by",
@@ -209,7 +212,9 @@
     "bounty": "Bounty",
     "choose-one": "Choose one",
     "networks": "Networks",
-    "copied": "Copied"
+    "copied": "Copied",
+    "address-copied": "Address Copied",
+    "empty-list": "Empty List"
   },
   "modals": {
     "help-modal": {
@@ -358,7 +363,8 @@
     "creating-issue": "Failed to create github issue!",
     "failed-update-bounty": "Failed to update bounty!",
     "read-only-network": "This network is closed. It is set to read-only mode.",
-    "results-truncated": "Results Truncated"
+    "results-truncated": "Results Truncated",
+    "not-available-chain": "Not available on this chain"
   },
   "404": {
     "the-page": "The page you looking for was",
