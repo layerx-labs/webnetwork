@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 import BodyNetworkView from "./network.view";
 import BodyVotingView from "./voting.view";
 
@@ -24,11 +26,13 @@ export default function NetworkItemBody({
   isNetworkType,
   handleToggleCollapse,
 }: NetworkItemBodyViewProps) {
+  const { query } = useRouter();
 
   if (isNetworkType)
     return (
       <BodyNetworkView
         isCollapsed={isCollapsed}
+        isArrowRight={query?.profilePage[0] === 'voting-power'}
         handleNetworkLink={handleNetworkLink}
         type={type}
         amount={amount}

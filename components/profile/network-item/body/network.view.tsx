@@ -1,6 +1,7 @@
 import { useTranslation } from "next-i18next";
 
 import ArrowDown from "assets/icons/arrow-down";
+import ArrowRightSmall from "assets/icons/arrow-right-small";
 import ArrowUp from "assets/icons/arrow-up";
 import ArrowUpRight from "assets/icons/arrow-up-right";
 
@@ -19,10 +20,12 @@ interface BodyNetworkViewProps {
   isNetworkVariant: boolean;
   primaryColor: string;
   handleToggleCollapse: () => void;
+  isArrowRight?: boolean;
 }
 
 export default function BodyNetworkView({
   isCollapsed,
+  isArrowRight,
   type,
   amount,
   symbol,
@@ -34,7 +37,12 @@ export default function BodyNetworkView({
   const { t } = useTranslation(["profile"]);
 
   function ArrowComponent() {
-    if (isCollapsed) return <ArrowDown width={10} height={8} />;
+    if (isCollapsed)
+      return isArrowRight ? (
+        <ArrowRightSmall width={10} height={10} />
+      ) : (
+        <ArrowDown width={10} height={8} />
+      );
 
     return <ArrowUp width={10} height={8} />;
   }
