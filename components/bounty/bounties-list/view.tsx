@@ -118,7 +118,7 @@ export default function BountiesListView({
     >
       <If condition={isBountyHall || isProfile}>
         <div className="d-flex justify-content-between">
-          <div className="d-flex flex-row align-items-center">
+          <div className="d-flex flex-row flex-wrap align-items-center">
             <h3 className="text-capitalize font-weight-medium">{listTitleByType[type]}</h3>
             <div className="ms-2">
               <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
