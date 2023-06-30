@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 
 import { useAppState } from "contexts/app-state";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import NetworkItemView from "./view";
 
 interface NetworkItemProps {
@@ -41,12 +43,13 @@ export default function NetworkItem({
     state: { Settings: settings },
   } = useAppState();
   const { query } = useRouter();
+  const { isDesktopView } = useBreakPoint();
 
   const isNetworkVariant = variant === "network";
   const isNetworkType = type === "network";
 
   function toggleCollapse() {
-    if(handleToggleTabletAndMobile && query?.profilePage[0] === 'voting-power'){
+    if(handleToggleTabletAndMobile && query?.profilePage[0] === 'voting-power' && !isDesktopView){
       handleToggleTabletAndMobile()
     } else setIsCollapsed((previous) => !previous);
   }
