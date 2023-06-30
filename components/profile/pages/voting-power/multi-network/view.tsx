@@ -35,16 +35,19 @@ export default function VotingPowerMultiNetworkView({
 }: VotingPowerMultiNetworkViewProps) {
   const { t } = useTranslation(["common", "profile"]);
 
-
-  function renderVotingPowerData({ tokensLocked, delegatedToMe, delegations, network, key }: VotingPowerDataProps) {
+  function renderVotingPowerData({
+    tokensLocked,
+    delegatedToMe,
+    delegations,
+    network,
+    key,
+  }: VotingPowerDataProps) {
     return (
       <div className="col-12" key={key}>
         <TotalVotes
           votesLocked={BigNumber(tokensLocked)}
           votesDelegatedToMe={BigNumber(delegatedToMe)}
-          icon={
-            <Indicator bg={network?.colors?.primary} size="lg" />
-          }
+          icon={<Indicator bg={network?.colors?.primary} size="lg" />}
           tokenColor={network?.colors?.primary}
           tokenName={network?.networkToken?.name}
           tokenSymbol={network?.networkToken?.symbol}
@@ -60,22 +63,34 @@ export default function VotingPowerMultiNetworkView({
             tokenColor={network?.colors?.primary}
           />
         </div>
-    </div>
-    )
+      </div>
+    );
   }
 
-
   function renderItem() {
-    if(!network) return null;
+    if (!network) return null;
 
-    const { tokensLocked, delegatedToMe, delegations, network: currentNetwork } = network
-    
+    const {
+      tokensLocked,
+      delegatedToMe,
+      delegations,
+      network: currentNetwork,
+    } = network;
+
     return (
       <>
-
-        {renderVotingPowerData({ tokensLocked, delegatedToMe, delegations, network: currentNetwork })}
+        <div className="h3">
+            
+           {currentNetwork?.name}
+        </div>
+        {renderVotingPowerData({
+          tokensLocked,
+          delegatedToMe,
+          delegations,
+          network: currentNetwork,
+        })}
       </>
-    )
+    );
   }
 
   return (
@@ -86,36 +101,46 @@ export default function VotingPowerMultiNetworkView({
         </ContextualSpan>
       </div>
 
-      <If condition={!!networks.length}>
+      <If condition={!!networks.length && !network}>
         <div className="mt-5">
           <NetworkColumns
             columns={[
               t("profile:network-columns.network-name"),
               t("profile:network-columns.total-votes"),
               t("profile:network-columns.network-link"),
-              ""
+              "",
             ]}
           />
 
-          {(!!networks.length && !network) ?
-            networks.map(({ tokensLocked, delegatedToMe, delegations, network }, key) => (
-                <NetworkItem
-                  key={network?.networkAddress}
-                  type="network"
-                  networkName={network?.name}
-                  iconNetwork={network?.logoIcon}
-                  primaryColor={network?.colors?.primary}
-                  amount={BigNumber(tokensLocked).plus(delegatedToMe).toFixed()}
-                  symbol={`${network?.networkToken?.symbol} ${t("misc.votes")}`}
-                  variant="multi-network"
-                  handleNetworkLink={() => goToNetwork(network)}
-                >
-                  {renderVotingPowerData({ tokensLocked, delegatedToMe, delegations, network, key })}
-                </NetworkItem>
-              ))
-            :
-              renderItem()
-            }
+          {!!networks.length && !network
+            ? networks.map((curator, key) => {
+              const { tokensLocked, delegatedToMe, delegations, network } = curator;
+              return (
+                  <NetworkItem
+                    key={network?.networkAddress}
+                    type="network"
+                    networkName={network?.name}
+                    iconNetwork={network?.logoIcon}
+                    primaryColor={network?.colors?.primary}
+                    amount={BigNumber(tokensLocked)
+                      .plus(delegatedToMe)
+                      .toFixed()}
+                    symbol={`${network?.networkToken?.symbol} ${t("misc.votes")}`}
+                    variant="multi-network"
+                    handleNetworkLink={() => goToNetwork(network)}
+                    handleToggleTabletAndMobile={() => handleNetwork(curator)}
+                  >
+                    {renderVotingPowerData({
+                      tokensLocked,
+                      delegatedToMe,
+                      delegations,
+                      network,
+                      key,
+                    })}
+                  </NetworkItem>
+              );
+            })
+            : renderItem()}
         </div>
       </If>
     </>
