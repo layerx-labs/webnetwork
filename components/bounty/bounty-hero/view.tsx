@@ -70,8 +70,8 @@ export default function BountyHeroView({
               </div>
             </div>
 
-            <div className="d-flex flex-wrap justify-content-between border-top border-gray-850 mt-3">
-              <div className="d-flex d-inline-flex align-items-center mt-3">
+            <div className="d-flex flex-wrap justify-content-between border-top border-gray-850 mt-3 pt-3">
+              <div className="d-flex d-inline-flex align-items-center align-items-center">
                 <div
                   className={`d-flex py-1 px-2 bg-transparent border border-gray-700 text-gray-300 border-radius-4`}
                 >
@@ -106,7 +106,7 @@ export default function BountyHeroView({
                   </OverlayTrigger>
                 ) : null}
               </div>
-              <div className="mt-3">{renderPriceConversor()}</div>
+              <div>{renderPriceConversor()}</div>
             </div>
             <h5 className="mt-3 break-title">
               {bounty?.title}
