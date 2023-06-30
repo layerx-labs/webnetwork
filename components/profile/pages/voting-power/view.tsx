@@ -17,7 +17,7 @@ export default function VotingPowerPageView({
   return (
     <ProfileLayout>
       <ReadOnlyButtonWrapper>
-        <Col xs={11}>
+        <Col xs={12}>
           <FlexRow className="mb-3">
             <h3 className="text-white font-weight-500">
               {t("profile:voting-power")}
