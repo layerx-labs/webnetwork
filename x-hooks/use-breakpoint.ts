@@ -37,8 +37,8 @@ export default function useBreakPoint(validateAgent = false) {
   const updateCurrentBreakpoint = () => setCurrentBreakpoint(getCurrentBreakPoint());
   const debouncedHandler = useDebouncedCallback(updateCurrentBreakpoint, 300);
 
-  const isMobileView = ["xs", "sm", "md"].includes(currentBreakPoint) && userAgentCheck;
-  const isTabletView = currentBreakPoint === "lg" && userAgentCheck;
+  const isMobileView = ["xs", "sm"].includes(currentBreakPoint) && userAgentCheck;
+  const isTabletView = ["lg", "md"].includes(currentBreakPoint)  && userAgentCheck;
   const isDesktopView = ["xl", "xxl"].includes(currentBreakPoint) && userAgentCheck;
 
   useEffect(() => {
