@@ -53,7 +53,7 @@ export default function VotingPowerNetwork() {
       return;
 
     updateWalletBalance(true);
-  }, [state.currentUser?.walletAddress, state.Service?.active?.network, chain]);
+  }, [state.currentUser?.walletAddress]);
 
   return (
     <VotingPowerNetworkView
