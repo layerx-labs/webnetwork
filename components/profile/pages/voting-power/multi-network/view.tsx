@@ -2,11 +2,11 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import { ContextualSpan } from "components/contextual-span";
-import Delegations from "components/profile/pages/voting-power/delegations/controller";
 import If from "components/If";
 import Indicator from "components/indicator";
 import NetworkColumns from "components/profile/network-columns";
-import NetworkItem from "components/profile/network-item";
+import NetworkItem from "components/profile/network-item/controller";
+import Delegations from "components/profile/pages/voting-power/delegations/controller";
 import TotalVotes from "components/profile/pages/voting-power/total-votes.view";
 
 import { Curator } from "interfaces/curators";
@@ -38,6 +38,7 @@ export default function VotingPowerMultiNetworkView({
               t("profile:network-columns.network-name"),
               t("profile:network-columns.total-votes"),
               t("profile:network-columns.network-link"),
+              ""
             ]}
           />
 
