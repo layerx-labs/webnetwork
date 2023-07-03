@@ -33,6 +33,7 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import useBreakPoint from "x-hooks/use-breakpoint";
 import { useNetwork } from "x-hooks/use-network";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
@@ -65,6 +66,7 @@ export default function IssueListItem({
   const { getURLWithNetwork } = useNetwork();
   const { signMessage } = useAuthentication();
   const { handleHardCancelBounty } = useBepro();
+  const { isMobileView } = useBreakPoint();
 
   const isVisible = visible !== undefined ? visible : issue?.visible;
 
@@ -204,20 +206,19 @@ export default function IssueListItem({
 
   if (size === "sm") {
     const isSeekingFund = ["funding", "partial-funded"].includes(issueState);
-    const col = isSeekingFund ? "xxl-5 col-4": "xxl-auto col-6";
 
     return (
       <CardItem onClick={handleClickCard} key="sm-card">
         <>
-          <ResponsiveWrapper xs={false} md={true} className="row align-items-center justify-content-between">
-            <div className={`col-${col} px-0 ml-1`}>
+          <ResponsiveWrapper xs={false} md={true} className="d-flex gap-2 align-items-center justify-content-between">
+            <div className="mw-50-auto network-name">
               <NetworkBadge
                 logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
                 name={issue?.network?.name}
               />
             </div>
 
-            <div className="col-auto px-0 mr-1">
+            <div className="max-width-content">
               <Badge
                 color="transparent"
                 className={`d-flex align-items-center gap-1 border border-gray-800 caption-medium 
@@ -247,7 +248,7 @@ export default function IssueListItem({
             </span>
           </ResponsiveWrapper>
 
-          <div className="row align-items-center justify-content-end mt-2">
+          <div className="row align-items-center justify-content-md-end justify-content-between mt-2">
             <If condition={isSeekingFund}>
               <ResponsiveWrapper 
                 xs={false} 
@@ -261,7 +262,7 @@ export default function IssueListItem({
 
             <ResponsiveWrapper 
               md={false}
-              className="col-6 caption-medium font-weight-normal text-capitalize"
+              className="mw-50-auto network-name caption-medium font-weight-normal text-capitalize"
             >
               <NetworkBadge
                 logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
@@ -402,8 +403,8 @@ export default function IssueListItem({
           </ResponsiveWrapper>
 
           <div className="row align-items-center border-xl-top border-gray-850 pt-3">
-            <ResponsiveWrapper xs={false} xl={true}>
-              <div className="row w-100 align-items-center justify-content-md-start gx-0">
+            <ResponsiveWrapper xs={false} xl={true} lg={true}>
+              <div className="row w-100 align-items-center justify-content-md-start">
                 <BountyItemLabel label="ID" className="col-auto">
                   <IssueTag />
                 </BountyItemLabel>
@@ -418,7 +419,7 @@ export default function IssueListItem({
                       </Tooltip>
                     }
                   >
-                    <span className={`text-gray me-2 text-truncate`}>
+                    <span className={`mw-repo text-gray me-2 text-truncate`}>
                       {issue?.repository?.githubPath.split("/")?.[1]}
                     </span>
                   </OverlayTrigger>
@@ -443,15 +444,14 @@ export default function IssueListItem({
               </div>
             </ResponsiveWrapper>
             <ResponsiveWrapper xs={true} xl={false}>
-              <div className="col">
-                <div className="row justify-content-between">
-                  <div className="col-6 col-xs">
+              <div className={`col d-flex flex-wrap justify-content-between text-truncate`} >
+              {isMobileView && (
+                  <div className="text-truncate mb-2">
                     <BountyTagsView tags={[issue?.network?.name]} />
                   </div>
-                  
-                  <div className="col-auto">
-                    <BountyAmount bounty={issue} size={size} />
-                  </div>
+                )}
+                <div className="mb-2">
+                  <BountyAmount bounty={issue} size={size} />
                 </div>
               </div>
             </ResponsiveWrapper>

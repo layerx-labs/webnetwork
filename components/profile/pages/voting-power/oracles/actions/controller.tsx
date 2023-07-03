@@ -35,8 +35,6 @@ export default function OraclesActions({
   const [action, setAction] = useState<string>(actions[0]);
   const [tokenAmount, setTokenAmount] = useState<string>();
 
-  const networkTxRef = useRef<HTMLButtonElement>(null);
-
   const networkTokenERC20 = useERC20();
 
   const { state: { transactions, Service }} = useAppState();
@@ -51,6 +49,8 @@ export default function OraclesActions({
     BigNumber(tokenAmount || 0).dividedBy(oracleExchangeRate).toFixed();
 
   const exceedsAvailable = value => BigNumber(value).gt(getMaxAmount());
+
+  const networkTxRef = useRef<HTMLButtonElement>(null);
 
   const verifyTransactionState = (type: TransactionTypes): boolean =>
     !!transactions.find((transactions) =>

@@ -7,7 +7,6 @@ import { useAppState } from "contexts/app-state";
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 import NetworkItemView from "./view";
-
 interface NetworkItemProps {
   children?: ReactNode;
   key?: number | string;
