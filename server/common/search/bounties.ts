@@ -1,13 +1,13 @@
-import { subHours, subMonths, subWeeks, subYears } from "date-fns";
-import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import {subHours, subMonths, subWeeks, subYears} from "date-fns";
+import {ParsedUrlQuery} from "querystring";
+import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { getAssociation } from "helpers/db/models";
-import paginate, { calculateTotalPages } from "helpers/paginate";
-import { isTrue } from "helpers/string";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
+import {getAssociation} from "helpers/db/models";
+import paginate, {calculateTotalPages} from "helpers/paginate";
+import {isTrue} from "helpers/string";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -44,9 +44,12 @@ export default async function get(query: ParsedUrlQuery) {
         [Op.ne]: "0",
         [Op.ne]: Sequelize.literal('"issue"."fundedAmount"'),
       };
-    else if (state === "open")
+    else if (state === "open") {
       whereCondition.state[Op.in] = ["open", "ready", "proposal"];
-    else if (state === "proposable")
+      whereCondition.fundingAmount = {
+        [Op.eq]: Sequelize.literal('"issue"."fundedAmount"')
+      };
+    } else if (state === "proposable")
       whereCondition.state[Op.eq] = "ready";
     else
       whereCondition.state[Op.eq] = state;
@@ -126,7 +129,7 @@ export default async function get(query: ParsedUrlQuery) {
 
   const networkAssociation = 
     getAssociation( "network", 
-                    ["colors", "name", "networkAddress", "disputableTime"], 
+                    ["colors", "name", "networkAddress", "disputableTime", "logoIcon", "fullLogo"], 
                     true, 
                     networkName || network ? { 
                       networkName: caseInsensitiveEqual("network.name", (networkName || network).toString())
@@ -171,9 +174,7 @@ export default async function get(query: ParsedUrlQuery) {
     sort.push("updatedAt");
 
   const issues = await models.issue.findAndCountAll(paginate({
-    logging: console.log,
     where: whereCondition,
-    subQuery: false,
     include: [
       networkAssociation,
       proposalAssociation,

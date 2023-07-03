@@ -25,7 +25,7 @@
 @import "components/nav-avatar";
 @import "components/cookie-consent";
 @import "components/multi-action-button";
-@import "components/horizontal-list";
+@import "components/horizontal-scroll";
 @import "components/custom-dropdown";
 @import "components/native-select-wrapper";
 
@@ -233,7 +233,6 @@ li {
       background-color: $gray-900;
       z-index: 4;
       padding: 6px;
-      margin-bottom: 50px;
       &-list {
         padding-top: 0;
         padding-bottom: 0;
@@ -310,6 +309,11 @@ li {
 
 .max-width-content {
   width: max-content;
+}
+
+.mw-50-auto {
+  width: auto;
+  max-width: 50%;
 }
 
 .github-info {
@@ -679,7 +683,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 155px
 }
 
 .white-space {
@@ -1457,6 +1460,12 @@ textarea.form-control {
   hyphens: auto;
 }
 
+.overflow-wrap {
+  &-anywhere {
+    overflow-wrap: anywhere;
+  }
+}
+
 .bounty-settings {
   width: 180px;
 }
@@ -1488,7 +1497,7 @@ textarea.form-control {
 
   &.sticky-top {
     padding: 20px 0;
-    top: 4.4em;
+    top: 4.43em;
   }
 
   .input-group {

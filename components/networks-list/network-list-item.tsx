@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import ChainBadge from "components/chain-badge";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import NetworkLogo from "components/network-logo";
-import PullRequestLabels from "components/pull-request-labels";
+import PullRequestLabels from "components/pull-request/labels/controller";
 
 import { useAppState } from "contexts/app-state";
 
@@ -37,17 +37,20 @@ export default function NetworkListItem({
       label: t("label", { count: totalBounties }),
       secondaryLabel: formatNumberToNScale(totalBounties, 0),
       breakpoints: { xs: false, md: true },
+      justify: "center",
     },
     {
       label: `${t("status.open")} ${t("label", { count: openBounties })}`,
       secondaryLabel: formatNumberToNScale(openBounties || 0, 0),
       breakpoints: { xs: false, md: true },
+      justify: "center",
     },
     {
       label: t("common:tokens-locked"),
       secondaryLabel: formatNumberToNScale(BigNumber(network?.tokensLocked || 0).toFixed()),
       breakpoints: { xs: false, lg: true },
       currency: network?.networkToken?.symbol || tokenSymbolDefault,
+      justify: "center",
     },
   ];
 
