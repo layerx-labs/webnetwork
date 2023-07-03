@@ -4,12 +4,11 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import Indicator from "components/indicator";
-
 import { useAppState } from "contexts/app-state";
 
 import { useAuthentication } from "x-hooks/use-authentication";
 import useChain from "x-hooks/use-chain";
+import useOracleToken from "x-hooks/use-oracle-token";
 
 import VotingPowerNetworkView from "./view";
 
@@ -20,24 +19,12 @@ export default function VotingPowerNetwork() {
   const { state } = useAppState();
   const { updateWalletBalance } = useAuthentication();
   const { chain } = useChain();
+  const { currentOracleToken } = useOracleToken();
 
   const { curatorAddress } = query;
 
-  const oracleToken = {
-    symbol:
-      state.Service?.network?.active?.networkToken?.symbol || t("misc.token"),
-    name:
-      state.Service?.network?.active?.networkToken?.name ||
-      t("profile:oracle-name-placeholder"),
-    icon: (
-      <Indicator
-        bg={state.Service?.network?.active?.colors?.primary}
-        size="lg"
-      />
-    ),
-  };
 
-  const votesSymbol = t("token-votes", { token: oracleToken.symbol });
+  const votesSymbol = t("token-votes", { token: currentOracleToken.symbol });
 
   const oraclesLocked =
     state.currentUser?.balance?.oracles?.locked || BigNumber("0");
@@ -59,7 +46,7 @@ export default function VotingPowerNetwork() {
     <VotingPowerNetworkView
       oraclesLocked={oraclesLocked}
       oraclesDelegatedToMe={oraclesDelegatedToMe}
-      oracleToken={oracleToken}
+      oracleToken={currentOracleToken}
       votesSymbol={votesSymbol}
       walletAddress={state.currentUser?.walletAddress}
       userBalance={state.currentUser?.balance}

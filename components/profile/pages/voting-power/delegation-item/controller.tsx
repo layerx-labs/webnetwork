@@ -3,14 +3,11 @@ import { useState } from "react";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import Indicator from "components/indicator";
-
-import { useAppState } from "contexts/app-state";
-
-import { DelegationExtended, OracleToken } from "interfaces/oracles-state";
+import { DelegationExtended } from "interfaces/oracles-state";
 
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import useOracleToken from "x-hooks/use-oracle-token";
 
 import DelegationItemView from "./view";
 
@@ -34,9 +31,8 @@ export default function DelegationItem({
   const [show, setShow] = useState<boolean>(false);
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const { state } = useAppState();
-
   const { handleTakeBack } = useBepro();
+  const { currentOracleToken } = useOracleToken();
 
   const { updateWalletBalance } = useAuthentication();
 
@@ -44,21 +40,7 @@ export default function DelegationItem({
   const delegationAmount = BigNumber(delegation?.amount)?.toFixed() || "0";
   const tokenBalanceType = type === "toMe" ? "oracle" : "delegation";
 
-  const oracleToken: OracleToken = {
-    symbol:
-      state.Service?.network?.active?.networkToken?.symbol || t("misc.token"),
-    name:
-      state.Service?.network?.active?.networkToken?.name ||
-      t("profile:oracle-name-placeholder"),
-    icon: (
-      <Indicator
-        bg={tokenColor || state.Service?.network?.active?.colors?.primary}
-        size="lg"
-      />
-    ),
-  };
-
-  const votesSymbol = t("token-votes", { token: oracleToken?.symbol });
+  const votesSymbol = t("token-votes", { token: currentOracleToken?.symbol });
 
   function handleShow() {
     if (isNetworkVariant) return null;
@@ -85,7 +67,7 @@ export default function DelegationItem({
       tokenColor={tokenColor}
       delegation={delegation}
       variant={variant}
-      oracleToken={oracleToken}
+      oracleToken={currentOracleToken}
       delegationAmount={delegationAmount}
       tokenBalanceType={tokenBalanceType}
       votesSymbol={votesSymbol}

@@ -1,14 +1,12 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import Indicator from "components/indicator";
-
 import { useAppState } from "contexts/app-state";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
 import { Delegation } from "interfaces/curators";
-import { DelegationExtended, OracleToken } from "interfaces/oracles-state";
+import { DelegationExtended } from "interfaces/oracles-state";
 
 import DelegationsView from "./view";
 
@@ -67,22 +65,8 @@ export default function Delegations({
     },
   };
 
-  const oracleToken: OracleToken = {
-    symbol:
-      state.Service?.network?.active?.networkToken?.symbol || t("misc.token"),
-    name:
-      state.Service?.network?.active?.networkToken?.name ||
-      t("profile:oracle-name-placeholder"),
-    icon: (
-      <Indicator
-        bg={tokenColor || state.Service?.network?.active?.colors?.primary}
-        size="lg"
-      />
-    ),
-  };
-
   const networkTokenName =
-    state.Service?.network?.active?.networkToken?.name || oracleToken.name;
+    state.Service?.network?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
 
   function getTextColorProps() {
     if (tokenColor)
