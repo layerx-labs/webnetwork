@@ -7,7 +7,7 @@ import SearchIcon from "assets/icons/search-icon";
 
 import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/contract-button";
-import CustomContainer from "components/custom-container";
+import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
@@ -16,7 +16,6 @@ import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
-import ScrollTopButton from "components/scroll-top-button";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
@@ -31,6 +30,7 @@ interface BountiesListViewProps {
   searchString: string;
   isOnNetwork?: boolean;
   isConnected?: boolean;
+  hideFilter?: boolean;
   hasFilter?: boolean;
   currentChain?: SupportedChainData;
   onClearSearch: () => void;
@@ -51,6 +51,7 @@ export default function BountiesListView({
   isOnNetwork,
   isConnected,
   hasFilter,
+  hideFilter,
   onClearSearch,
   onNotFoundClick,
   onNextPage,
@@ -111,11 +112,7 @@ export default function BountiesListView({
   ];
 
   return (
-    <CustomContainer
-      className={isProfile && "px-0 mx-0" || ""}
-      childWrapperClassName={isProfile && "justify-content-left" || ""}
-      col={isProfile || isManagement ? "col-12" : undefined}
-    >
+    <div className="px-0 mx-0">
       <If condition={isBountyHall || isProfile}>
         <div className="d-flex flex-wrap justify-content-between">
           <div className="d-flex flex-row flex-wrap align-items-center">
@@ -178,22 +175,23 @@ export default function BountiesListView({
             </InputGroup>
           </div>
 
-          <div className="col-auto d-none d-xl-flex">
+          <ResponsiveWrapper xs={false} xl={true} className="col-auto d-flex align-items-center">
             <ListSort options={sortOptions} />
-          </div>
+          </ResponsiveWrapper>
 
-          <div className="col-auto">
-            <If condition={!isManagement}>
-              <IssueFilters onlyProfileFilters={isProfile} />
-            </If>
-
-            <div className="d-none d-xl-flex">
-              <If condition={isProfile}>
-                <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />
+          <If condition={!hideFilter}>
+            <div className="col-auto">
+              <If condition={!isManagement}>
+                <IssueFilters sortOptions={sortOptions} onlyProfileFilters={isProfile}/>
               </If>
-              
+
+              <div className="d-none d-xl-flex">
+                <If condition={isProfile}>
+                  <SelectNetwork isCurrentDefault={isProfile && isOnNetwork} />
+                </If>
+              </div>
             </div>
-          </div>
+          </If>
         </div>
       </If>
 
@@ -240,7 +238,7 @@ export default function BountiesListView({
               />)}
         </InfiniteScroll>
       </If>
-      <ScrollTopButton />
-    </CustomContainer>
+      <GoTopButton />
+    </div>
   );
 }

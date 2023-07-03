@@ -3,6 +3,7 @@ import IssueMobileFilters from "components/issue-filters/mobile-filters";
 
 export default function IssueFilters({
   onlyTimeFrame = false,
+  sortOptions,
   onlyProfileFilters = false,
 }) {
   return (
@@ -14,7 +15,11 @@ export default function IssueFilters({
       )}
 
       <div className="d-flex d-xl-none">
-        <IssueMobileFilters onlyTimeFrame={onlyTimeFrame} onlyProfileFilters={onlyProfileFilters} />
+        <IssueMobileFilters
+          onlyTimeFrame={onlyTimeFrame}
+          sortOptions={sortOptions}
+          onlyProfileFilters={onlyProfileFilters}
+        />
       </div>
     </>
   );

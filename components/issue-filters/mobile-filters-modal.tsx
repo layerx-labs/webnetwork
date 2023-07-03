@@ -7,6 +7,8 @@ import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
+import { SortOption } from "types/components";
+
 import useFilters from "x-hooks/use-filters";
 
 interface MobileFiltersModalProps {
@@ -14,13 +16,15 @@ interface MobileFiltersModalProps {
   hide: () => void;
   onlyTimeFrame?: boolean;
   onlyProfileFilters?: boolean;
+  sortOptions?: SortOption[];
 }
 
 export default function MobileFiltersModal({
   show,
   hide,
   onlyTimeFrame,
-  onlyProfileFilters
+  onlyProfileFilters,
+  sortOptions
 }: MobileFiltersModalProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
@@ -29,7 +33,7 @@ export default function MobileFiltersModal({
   const [ [repoOptions, stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
 
   
-  const sortOptions = [
+  const defaultSortOptions = sortOptions ? sortOptions : [
     {
       value: "newest",
       sortBy: "createdAt",
@@ -74,7 +78,7 @@ export default function MobileFiltersModal({
   function FilterComponent(label, options, type) {
     return(
       <div className="mb-3">
-        <span className="caption-small font-weight-medium text-gray-100">{label}</span>
+        <span className="caption-small font-weight-medium text-gray-100 text-capitalize">{label}</span>
         <ReactSelect
           value={getCurrentFilter(options)}
           options={options}
@@ -86,15 +90,15 @@ export default function MobileFiltersModal({
 
   return(
     <Modal
-      title="Filters"
+      title={t("filters.filters")}
       show={show}
       onCloseClick={hide}
-      cancelLabel="Cancel"
-      okLabel="Apply"
+      cancelLabel={t("actions.cancel")}
+      okLabel={t("actions.apply")}
       onOkClick={handleApply}
     >
       <If condition={onlyProfileFilters}>
-        <ListSort options={sortOptions} labelLineBreak={onlyProfileFilters} />
+        <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />
         <SelectNetwork
           isCurrentDefault={isOnNetwork}
           onlyProfileFilters={onlyProfileFilters}
@@ -108,6 +112,8 @@ export default function MobileFiltersModal({
 
       <If condition={onlyTimeFrame || !onlyProfileFilters}>
         {FilterComponent("Timeframe", timeOptions, "time")}
+
+        <ListSort options={defaultSortOptions} asSelect />
       </If>
     </Modal>
   );
