@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 import InfoTooltip from "components/info-tooltip";
 import {TokenBalanceType} from "components/profile/token-balance";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
 import TokenIcon from "components/token-icon";
 
@@ -151,21 +152,24 @@ export default function WalletBalance() {
           />
         </FlexRow>
       )}
-      <FlexRow className="justify-content-between align-items-center mb-4">
-        <span className="h4 family-Regular text-white font-weight-medium">{t("profile:tokens")}</span>
-        <FlexRow className="align-items-center">
-          <span className="text-white mr-2">{t("labels.recivedintotal")}</span>
-          <span className="d-flex caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium">
+      <FlexRow>
+        <span className="h4 family-Regular text-white font-weight-medium mb-2">{t("profile:tokens")}</span>
+      </FlexRow>
+      <FlexRow className="d-flex flex-wrap justify-content-between align-items-center mb-2">
+          <span className="text-white">{t("labels.recivedintotal")}</span>
+          <span className="d-flex mt-2 caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium">
             {formatStringToCurrency(totalAmount)}
             <span className="text-white-30 ml-1 mr-2">
               {!hasNoConvertedToken ? state?.Settings?.currency?.defaultFiat : t("misc.token_other")}
             </span>
-            <InfoTooltip 
-              description={t("profile:tips.total-balance")}
-              secondaryIcon
-            />
+            <ResponsiveWrapper className="d-flex align-items-center" xs={false} sm={false} md={true} xl={true}>
+              <InfoTooltip 
+                description={t("profile:tips.total-balance")}
+                secondaryIcon
+              />
+            </ResponsiveWrapper>
+
           </span>
-        </FlexRow>
       </FlexRow>
       {tokens.map((token) => (
         <NetworkItem
