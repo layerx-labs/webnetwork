@@ -7,7 +7,7 @@ import Delegations from "components/profile/pages/voting-power/delegations/contr
 import { Divider } from "components/divider";
 import OraclesActions from "components/profile/pages/voting-power/oracles/actions/controller";
 import OraclesDelegate from "components/profile/pages/voting-power/oracles/delegate/controller";
-import TotalVotes from "components/profile/pages/voting-power/total-votes.view";
+import TotalVotes from "components/profile/pages/voting-power/total-votes/view";
 
 import { Balance } from "interfaces/balance-state";
 

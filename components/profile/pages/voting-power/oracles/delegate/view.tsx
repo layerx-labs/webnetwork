@@ -2,7 +2,7 @@ import {useTranslation} from "next-i18next";
 
 import InputNumber from "components/input-number";
 import NetworkTxButton from "components/network-tx-button";
-import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/oracles-box-header.view";
+import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 import {formatNumberToNScale} from "helpers/formatNumber";

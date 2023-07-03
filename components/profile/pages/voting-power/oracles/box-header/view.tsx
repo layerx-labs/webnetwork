@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 
-import Button from "../../../../button";
+import Button from "../../../../../button";
 // This has to be generic.
 // todo: create something like <Tabs /> <TabContainer />
 

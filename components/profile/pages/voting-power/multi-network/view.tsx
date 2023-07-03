@@ -7,12 +7,12 @@ import Indicator from "components/indicator";
 import NetworkColumns from "components/profile/network-columns";
 import NetworkItem from "components/profile/network-item/controller";
 import Delegations from "components/profile/pages/voting-power/delegations/controller";
-import TotalVotes from "components/profile/pages/voting-power/total-votes.view";
+import TotalVotes from "components/profile/pages/voting-power/total-votes/view";
 
 import { Curator, Delegation } from "interfaces/curators";
 import { Network } from "interfaces/network";
 
-import PageItemView from "./page-item.view";
+import PageItemView from "./page-item/view";
 interface VotingPowerMultiNetworkViewProps {
   networks: Curator[];
   network: Curator;

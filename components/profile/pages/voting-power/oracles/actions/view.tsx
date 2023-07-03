@@ -8,7 +8,7 @@ import LockedIcon from "assets/icons/locked-icon";
 import ContractButton from "components/contract-button";
 import InputNumber from "components/input-number";
 import NetworkTxButton from "components/network-tx-button";
-import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/oracles-box-header.view";
+import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 import { formatStringToCurrency} from "helpers/formatNumber";
@@ -16,7 +16,7 @@ import { formatStringToCurrency} from "helpers/formatNumber";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { OraclesActionsViewProps } from "interfaces/oracles-state";
 
-import ModalOraclesActionView from "./modal-actions.view";
+import ModalOraclesActionView from "./modal-actions/view";
 
 export default function OraclesActionsView({
   wallet,
