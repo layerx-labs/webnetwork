@@ -22,8 +22,8 @@ export default function PaymentItem({
   return (
     <FlexRow className={CONTAINER_CLASSES.join(" ")} key={id}>
       <FlexColumn>
-        <FlexRow className="caption-large text-uppercase mb-1">
-          <span className="text-white mr-1">
+        <FlexRow className="caption-large font-weight-medium gap-1 text-uppercase mb-1">
+          <span className="text-white">
             {formatNumberToCurrency(ammount)}
           </span>
           <span className="text-primary">
@@ -32,20 +32,20 @@ export default function PaymentItem({
         </FlexRow>
 
         <FlexRow>
-          <span className="caption-small text-uppercase text-gray">
+          <span className="caption-small text-uppercase text-gray-500">
             {transactionHash}
           </span>
         </FlexRow>
       </FlexColumn>
 
       <Button
-        color="light-gray"
+        color="gray-900"
+        className="border border-gray-800 font-weight-medium"
         onClick={() =>
           handleItemClick(issue?.issueId,
                           issue?.network?.chain?.chainShortName,
                           issue?.network?.name)
         }
-        outline
       >
         <span className="text-white text-nowrap">
           {labelBounty} #{issue?.issueId}

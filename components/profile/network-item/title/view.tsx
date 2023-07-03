@@ -28,6 +28,7 @@ export default function NetworkItemTitleView({
             alt={`${networkName} logo`}
             isBepro={networkName?.toLowerCase() === "bepro"}
             size="md"
+            noBg
           />
         ) : (
           iconNetwork

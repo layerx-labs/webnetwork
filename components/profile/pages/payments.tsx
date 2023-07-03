@@ -118,11 +118,13 @@ export default function PaymentsPage() {
   }
 
   return (
-    <ProfileLayout>
-      <FlexColumn className="col-10">
-        <FlexRow className="align-items-center justify-content-between gap-2 mb-2">
+    <ProfileLayout childrenClassName="px-0">
+      <div className="col-12 col-xl-10">
+        <FlexRow 
+          className="align-items-center justify-content-between mb-4 border-bottom border-gray-850 border-xl-0 px-3 pb-3"
+        >
           <FlexColumn>
-            <h4 className="text-white">{t("main-nav.nav-avatar.payments")}</h4>
+            <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
           </FlexColumn>
 
           <FlexColumn>
@@ -133,7 +135,7 @@ export default function PaymentsPage() {
                   </span>
                 ) : (
                   <>
-                    <span className="caption-medium text-white mr-2">
+                    <span className="caption-medium font-weight-normal text-capitalize text-white mr-2">
                       {t("labels.recivedintotal")}
                     </span>
                     <div className="caption-large bg-dark-gray py-2 px-3 border-radius-8">
@@ -149,10 +151,10 @@ export default function PaymentsPage() {
           </FlexColumn>
         </FlexRow>
 
-        <FlexRow className="align-items-center gap-2 mb-4">
+        <FlexRow className="align-items-center gap-2 mb-4 px-3">
           <FlexColumn className="col-auto">
             <FlexRow className="align-items-center justify-content-between gap-1">
-              <label className="text-uppercase caption-small">
+              <label className="text-capitalize text-white font-weight-normal caption-medium">
                 {t("misc.latest")}
               </label>
               <ReactSelect
@@ -163,7 +165,7 @@ export default function PaymentsPage() {
             </FlexRow>
           </FlexColumn>
 
-          <label className="text-uppercase caption-small">
+          <label className="text-capitalize text-white font-weight-normal caption-medium">
             {t("profile:payments.period")}
           </label>
 
@@ -193,7 +195,7 @@ export default function PaymentsPage() {
           />
         </FlexRow>
 
-        <FlexRow className="justify-content-center">
+        <FlexRow className="justify-content-center px-3">
           <FlexColumn className="col-12">
             {networks?.length > 0 ? (
               <PaymentsList
@@ -207,7 +209,7 @@ export default function PaymentsPage() {
             )}
           </FlexColumn>
         </FlexRow>
-      </FlexColumn>
+      </div>
     </ProfileLayout>
   );
 }

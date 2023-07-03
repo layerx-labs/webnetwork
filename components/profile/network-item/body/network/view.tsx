@@ -5,6 +5,7 @@ import ArrowRightSmall from "assets/icons/arrow-right-small";
 import ArrowUp from "assets/icons/arrow-up";
 import ArrowUpRight from "assets/icons/arrow-up-right";
 
+import Button from "components/button";
 import { FlexColumn } from "components/profile/wallet-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -43,17 +44,6 @@ export default function BodyNetworkView({
       );
 
     return <ArrowUp width={10} height={8} />;
-  }
-
-  function NetworkLinkIconButton({ className = "" }) {
-    return (
-      <div
-        className={`${className} py-0 mt-1 ms-4 cursor-pointer border border-gray-700 bg-gray-850 border-radius-4`}
-        onClick={handleNetworkLink}
-      >
-        <ArrowUpRight />
-      </div>
-    );
   }
 
   function RenderAmount() {

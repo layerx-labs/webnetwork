@@ -2,13 +2,13 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import PaymentItem from "components/profile/payment-item";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
 
 import { useNetwork } from "x-hooks/use-network";
 
-import NetworkColumns from "./network-columns";
 import NetworkItem from "./network-item/controller";
 import { TotalFiatNetworks } from "./pages/payments";
 import { FlexColumn } from "./wallet-balance";
@@ -32,6 +32,12 @@ export default function PaymentsList({
 
   const { getURLWithNetwork } = useNetwork();
 
+  const headers = [
+    t("custom-network:steps.network-information.fields.name.default"),
+    "Total payments",
+    "Network link",
+  ];
+
   function handleItemClick(issueId: string, chainName: string, networkName: string) {
     const [repoId, id] = issueId.split("/");
 
@@ -47,18 +53,25 @@ export default function PaymentsList({
   if (!payments || !networks) return null;
   return (
     <>
-      <NetworkColumns
-        columns={[
-          t("custom-network:steps.network-information.fields.name.default"),
-          "Total payments",
-          "Network link",
-        ]}
-      />
+      <ResponsiveWrapper 
+        xs={false}
+        xl={true}
+        className="row"
+      >
+        {headers.map(title => 
+          <div className="col-3">
+            <div className="row text-center">
+              <span className="caption-medium text-gray-500 font-weight-normal text-capitalize">{title}</span>
+            </div>
+          </div>)}
+      </ResponsiveWrapper>
+
       {networks &&
         networks?.map((network, key) => (
           <NetworkItem
             key={key}
             type="network"
+            variant="multi-network"
             networkName={network?.name}
             iconNetwork={network?.logoIcon}
             handleNetworkLink={() => {
