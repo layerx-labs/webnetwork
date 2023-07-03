@@ -70,10 +70,10 @@ export default function OraclesActionsView({
               currency: currentLabel
             })}
             symbol={`${currentLabel}`}
-            classSymbol={`${
+            classSymbol={`bg-gray-900 ${
               currentLabel === t("$oracles", { token: networkTokenSymbol })
-                ? "text-purple bg-gray-900"
-                : "text-primary bg-gray-900"
+                ? "text-purple"
+                : "text-primary"
             }`}
             max={wallet?.balance?.bepro?.toFixed()}
             error={!!error}
