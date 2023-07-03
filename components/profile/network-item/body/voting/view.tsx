@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import ArrowUpRight from "assets/icons/arrow-up-right";
 
 import Button from "components/button";
-import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
+import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import NetworkItemAmountView from "../../amount/view";

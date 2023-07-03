@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { FlexRow } from "../wallet-balance";
+import { FlexRow } from "../../common/flex-box/view";
 import NetworkItemBody from "./body/controller";
 import NetworkItemTitleView from "./title/view";
 
