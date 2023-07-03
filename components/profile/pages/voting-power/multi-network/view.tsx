@@ -3,29 +3,20 @@ import { useTranslation } from "next-i18next";
 
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
-import Indicator from "components/indicator";
 import NetworkColumns from "components/profile/network-columns";
 import NetworkItem from "components/profile/network-item/controller";
-import Delegations from "components/profile/pages/voting-power/delegations/controller";
-import TotalVotes from "components/profile/pages/voting-power/total-votes/view";
 
-import { Curator, Delegation } from "interfaces/curators";
+import { Curator } from "interfaces/curators";
 import { Network } from "interfaces/network";
 
 import PageItemView from "./page-item/view";
+import VotingPowerRowView from "./voting-power-row/view";
 interface VotingPowerMultiNetworkViewProps {
   networks: Curator[];
   network: Curator;
   handleNetwork: (network: Curator) => void;
   clearNetwork: () => void;
   goToNetwork: (network: Network) => void;
-}
-interface VotingPowerDataProps {
-  tokensLocked: string;
-  delegatedToMe: string;
-  delegations: Delegation[];
-  network: Network;
-  key?: number;
 }
 
 export default function VotingPowerMultiNetworkView({
@@ -36,38 +27,6 @@ export default function VotingPowerMultiNetworkView({
   goToNetwork,
 }: VotingPowerMultiNetworkViewProps) {
   const { t } = useTranslation(["common", "profile"]);
-
-  function renderVotingPowerData({
-    tokensLocked,
-    delegatedToMe,
-    delegations,
-    network,
-    key,
-  }: VotingPowerDataProps) {
-    return (
-      <div className="col-12" key={key}>
-        <TotalVotes
-          votesLocked={BigNumber(tokensLocked)}
-          votesDelegatedToMe={BigNumber(delegatedToMe)}
-          icon={<Indicator bg={network?.colors?.primary} size="lg" />}
-          tokenColor={network?.colors?.primary}
-          tokenName={network?.networkToken?.name}
-          tokenSymbol={network?.networkToken?.symbol}
-          votesSymbol={`${network?.networkToken?.symbol} ${t("misc.votes")}`}
-          variant="multi-network"
-        />
-
-        <div className="mt-3">
-          <Delegations
-            type="toOthers"
-            delegations={delegations}
-            variant="multi-network"
-            tokenColor={network?.colors?.primary}
-          />
-        </div>
-      </div>
-    );
-  }
 
   function renderItem() {
     if (!network) return null;
@@ -84,12 +43,12 @@ export default function VotingPowerMultiNetworkView({
         clearNetwork={clearNetwork}
         name={network?.network?.name}
       >
-        {renderVotingPowerData({
-          tokensLocked,
-          delegatedToMe,
-          delegations,
-          network: currentNetwork,
-        })}
+        <VotingPowerRowView
+          tokensLocked={tokensLocked}
+          delegatedToMe={delegatedToMe}
+          delegations={delegations}
+          network={currentNetwork}
+        />
       </PageItemView>
     );
   }
@@ -136,13 +95,13 @@ export default function VotingPowerMultiNetworkView({
                 handleNetworkLink={() => goToNetwork(currentNetwork)}
                 handleToggleTabletAndMobile={() => handleNetwork(curator)}
               >
-                {renderVotingPowerData({
-                  tokensLocked,
-                  delegatedToMe,
-                  delegations,
-                  network: currentNetwork,
-                  key,
-                })}
+                <VotingPowerRowView
+                  tokensLocked={tokensLocked}
+                  delegatedToMe={delegatedToMe}
+                  delegations={delegations}
+                  network={currentNetwork}
+                  key={key}
+                />
               </NetworkItem>
           );
         })
