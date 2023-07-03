@@ -3,6 +3,8 @@ import { GetServerSideProps } from "next/types";
 
 import ProposalPage from "components/pages/bounty/proposal/controller";
 
+import { Logger } from "services/logging";
+
 import { getPullRequestsDetails } from "x-hooks/api/bounty/get-bounty-data";
 import getProposalData from "x-hooks/api/get-proposal-data";
 import useOctokit from "x-hooks/use-octokit";
@@ -18,16 +20,25 @@ export const getServerSideProps: GetServerSideProps = async ({
     issueId: `${query?.repoId}/${query?.id}`,
   })
     .then(({ data }) => data)
-    .catch(() => undefined);
+    .catch(error => {
+      Logger.error(error, "Failed to getProposalData");
+      return undefined;
+    });
 
   const [pullRequestDetails, repositoryDetails] = await Promise.all([
     getPullRequestsDetails( proposal?.issue?.repository?.githubPath,
                             [proposal?.pullRequest])
     .then((data) => [...data].shift())
-    .catch(() => undefined),
+    .catch(error => {
+      Logger.error(error, "Failed to getPullRequestsDetails from github");
+      return undefined;
+    }),
     useOctokit().getRepository(proposal?.issue?.repository?.githubPath)
       .then(data => data)
-      .catch(() => undefined)
+      .catch(error => {
+        Logger.error(error, "Failed to getRepository details from github");
+        return undefined;
+      })
   ]);
 
   return {
