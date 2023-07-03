@@ -1,9 +1,6 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import ArrowLeft from "assets/icons/arrow-left";
-import ArrowUpRight from "assets/icons/arrow-up-right";
-
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import Indicator from "components/indicator";
@@ -15,6 +12,7 @@ import TotalVotes from "components/profile/pages/voting-power/total-votes.view";
 import { Curator, Delegation } from "interfaces/curators";
 import { Network } from "interfaces/network";
 
+import PageItemView from "./page-item.view";
 interface VotingPowerMultiNetworkViewProps {
   networks: Curator[];
   network: Curator;
@@ -22,7 +20,6 @@ interface VotingPowerMultiNetworkViewProps {
   clearNetwork: () => void;
   goToNetwork: (network: Network) => void;
 }
-
 interface VotingPowerDataProps {
   tokensLocked: string;
   delegatedToMe: string;
@@ -82,32 +79,18 @@ export default function VotingPowerMultiNetworkView({
     } = network;
 
     return (
-      <div className="mt-4">
-        <div className="d-flex align-items-center mb-4 pb-3 border-bottom border-gray-850">
-          <div className="cursor-pointer ms-4 me-3" onClick={clearNetwork}>
-            <ArrowLeft width={12} height={12} />
-          </div>
-          <span className="h3">{currentNetwork?.name}</span>
-        </div>
-        <div className="col-12 mb-4">
-          <div
-            className={`
-            d-flex justify-content-center align-items-center py-2 cursor-pointer 
-            border border-gray-700 bg-gray-850 border-radius-4
-            `}
-            onClick={() => goToNetwork(currentNetwork)}
-          >
-            <span className="me-2">{t("profile:go-to-network")}</span>
-            <ArrowUpRight width={14} height={14} />
-          </div>
-        </div>
+      <PageItemView
+        goToNetwork={() => goToNetwork(currentNetwork)}
+        clearNetwork={clearNetwork}
+        name={network?.network?.name}
+      >
         {renderVotingPowerData({
           tokensLocked,
           delegatedToMe,
           delegations,
           network: currentNetwork,
         })}
-      </div>
+      </PageItemView>
     );
   }
 
