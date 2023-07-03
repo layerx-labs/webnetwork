@@ -4,7 +4,6 @@ import BountyDescription from "components/bounty/description/controller";
 import BountyEditTag from "components/bounty/edit-tag/controller";
 import BountyStatusProgress from "components/bounty/status-progress/controller";
 import Button from "components/button";
-import CustomContainer from "components/custom-container";
 import { IFilesProps } from "components/drag-and-drop";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
@@ -117,7 +116,7 @@ export default function BountyBodyView({
               <BountyStatusProgress currentBounty={bounty}/>
           </div>
         </div>
-      </CustomContainer>
+      </div>
     );
   else
     return (
@@ -128,6 +127,5 @@ export default function BountyBodyView({
           </div>
         </div>
       </div>
-    </CustomContainer>
-  );
+    );
 }
