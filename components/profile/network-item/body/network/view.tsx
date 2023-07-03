@@ -8,7 +8,7 @@ import ArrowUpRight from "assets/icons/arrow-up-right";
 import { FlexColumn } from "components/profile/wallet-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import NetworkItemAmountView from "../amount.view";
+import NetworkItemAmountView from "../../amount/view";
 interface BodyNetworkViewProps {
   isCollapsed: boolean;
   handleNetworkLink: () => void;

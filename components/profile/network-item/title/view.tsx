@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import NetworkLogo from "components/network-logo";
 
-import { FlexColumn, FlexRow } from "../wallet-balance";
+import { FlexColumn, FlexRow } from "../../wallet-balance";
 
 interface NetworkItemTitleViewProps {
   isNetworkType: boolean;

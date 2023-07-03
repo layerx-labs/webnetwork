@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import BodyNetworkView from "./network.view";
-import BodyVotingView from "./voting.view";
+import BodyNetworkView from "./network/view";
+import BodyVotingView from "./voting/view";
 
 interface NetworkItemBodyViewProps {
   isCollapsed: boolean;
