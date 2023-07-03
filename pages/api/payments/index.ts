@@ -1,9 +1,10 @@
 import {endOfDay, isAfter, parseISO, startOfDay} from "date-fns";
 import {NextApiRequest, NextApiResponse} from "next";
-import {Op} from "sequelize";
+import {Op, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import {resJsonMessage} from "helpers/res-json-message";
 
 import {LogAccess} from "middleware/log-access";
@@ -11,9 +12,32 @@ import {WithValidChainId} from "middleware/with-valid-chain-id";
 import WithCors from "middleware/withCors";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const {wallet, startDate, endDate} = req.query;
+  const {
+    wallet,
+    startDate,
+    endDate,
+    networkName,
+    networkChain,
+  } = req.query;
 
-  const networks = await models.network.findAll({});
+  const networksWhere: WhereOptions = {};
+
+  if (networkName)
+    networksWhere.name = caseInsensitiveEqual("network.name", networkName.toString());
+
+  const networks = await models.network.findAll({
+    where: networksWhere,
+    include: [
+      {
+        association: "chain",
+        required: !!networkChain,
+        attributes: [],
+        where: networkChain ? {
+          chainShortName: caseInsensitiveEqual("chain.chainShortName", networkChain.toString())
+        } : {}
+      }
+    ]
+  });
 
   if (!networks) return resJsonMessage("Network not found", res, 404);
 

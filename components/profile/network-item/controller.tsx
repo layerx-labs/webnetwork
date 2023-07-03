@@ -5,12 +5,14 @@ import { useRouter } from "next/router";
 import { useAppState } from "contexts/app-state";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+import { useNetwork } from "x-hooks/use-network";
 
 import NetworkItemView from "./view";
 interface NetworkItemProps {
   children?: ReactNode;
   key?: number | string;
   type?: "network" | "voting";
+  networkChain?: string;
   networkName: string;
   subNetworkText?: string;
   primaryColor?: string;
@@ -31,6 +33,7 @@ export default function NetworkItem({
   handleNetworkLink,
   iconNetwork,
   networkName,
+  networkChain,
   subNetworkText,
   primaryColor,
   variant = "network",
@@ -42,6 +45,7 @@ export default function NetworkItem({
     state: { Settings: settings },
   } = useAppState();
   const { query } = useRouter();
+  const { goToProfilePage } = useNetwork();
   const { isDesktopView } = useBreakPoint();
 
   const isNetworkVariant = variant === "network";

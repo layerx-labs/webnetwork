@@ -2,6 +2,7 @@ import {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 
 import {format, subDays} from "date-fns";
 import {useTranslation} from "next-i18next";
+import { useRouter } from "next/router";
 
 import ArrowRight from "assets/icons/arrow-right";
 
@@ -10,6 +11,7 @@ import PaymentsList from "components/profile/payments-list";
 import ProfileLayout from "components/profile/profile-layout";
 import {FlexColumn, FlexRow} from "components/profile/wallet-balance";
 import ReactSelect from "components/react-select";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import {useAppState} from "contexts/app-state";
 
@@ -22,6 +24,8 @@ import {getCoinPrice} from "services/coingecko";
 
 import useApi from "x-hooks/use-api";
 
+import PaymentsNetwork from "./payments-network";
+
 export interface TotalFiatNetworks {
   tokenAddress: string;
   value: number;
@@ -31,6 +35,7 @@ export interface TotalFiatNetworks {
 
 export default function PaymentsPage() {
   const { t } = useTranslation(["common", "profile", "custom-network"]);
+  const router = useRouter();
 
   const defaultOptions = [
     {
@@ -74,21 +79,22 @@ export default function PaymentsPage() {
   useEffect(() => {
     if (!state.currentUser?.walletAddress) return;
 
-    getPayments(state.currentUser.walletAddress, startDate, endDate).then(setPayments);
-  }, [state.currentUser?.walletAddress, startDate, endDate]);
+    getPayments(state.currentUser.walletAddress, 
+                startDate, 
+                endDate, 
+                (router?.query?.networkName || "").toString(),
+                (router?.query?.networkChain || "").toString()).then(setPayments);
+  }, [state.currentUser?.walletAddress, startDate, endDate, router?.query]);
 
   useEffect(() => {
     if (!payments) return;
     const allNetworks: Network[] = [];
-    payments.map((payment) => {
-      if (
-        !networks.find((network) => network?.id === payment?.issue?.network?.id) &&
-        !allNetworks.find((network) => network?.id === payment?.issue?.network?.id)
-      ) {
+    payments.forEach((payment) => {
+      if (!allNetworks.find((network) => network?.id === payment?.issue?.network?.id)) {
         allNetworks.push(payment?.issue?.network);
-        setNetworks(allNetworks);
       }
     });
+    setNetworks(allNetworks);
   }, [payments]);
 
   useEffect(() => {
@@ -108,7 +114,6 @@ export default function PaymentsPage() {
       setTotalFiat(totalConverted);
       setHasNoConvertedToken(noConverted);
     });
-    
   }, [payments]);
 
   function onChangeDate(e: ChangeEvent<HTMLInputElement>,
@@ -116,6 +121,40 @@ export default function PaymentsPage() {
     setOption({ value: "-", label: "-" });
     setState(e.target.value);
   }
+
+  function TotalReceived() {
+    if (hasNoConvertedToken)
+      return(
+        <span className="caption-small text-danger">
+          {t("currencies.error-convert-all-to-euro")}
+        </span>
+      );
+
+    return(
+      <>
+        <span className="caption-medium font-weight-medium text-capitalize text-white mr-2">
+          {t("labels.recivedintotal")}
+        </span>
+
+        <div className="caption-large font-weight-medium bg-gray-900 py-2 px-3 border border-gray-850 border-radius-4">
+          <span className="text-white">
+            {formatNumberToCurrency(totalFiat)}
+          </span>
+
+          <span className="text-gray-600 ml-1">{state?.Settings?.currency?.defaultFiat}</span>
+
+        </div>
+      </>
+    );
+  }
+
+  if (router?.query?.networkName && router?.query?.networkChain)
+    return <PaymentsNetwork
+      network={networks[0]} 
+      payments={payments}
+      totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
+      defaultFiat={state?.Settings?.currency?.defaultFiat}
+    />
 
   return (
     <ProfileLayout childrenClassName="px-0">
@@ -127,31 +166,24 @@ export default function PaymentsPage() {
             <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
           </FlexColumn>
 
-          <FlexColumn>
+          <ResponsiveWrapper xs={false} md={true}>
             <FlexRow className="align-items-center">
-              {hasNoConvertedToken ? (
-                  <span className="caption-small text-danger">
-                    {t("currencies.error-convert-all-to-euro")}
-                  </span>
-                ) : (
-                  <>
-                    <span className="caption-medium font-weight-normal text-capitalize text-white mr-2">
-                      {t("labels.recivedintotal")}
-                    </span>
-                    <div className="caption-large bg-dark-gray py-2 px-3 border-radius-8">
-                      <span className="text-white">
-                        {formatNumberToCurrency(totalFiat)}
-                      </span>
-
-                      <span className="text-gray ml-1">{state?.Settings?.currency?.defaultFiat}</span>
-                    </div>
-                  </>
-                )}
+              <TotalReceived />
             </FlexRow>
-          </FlexColumn>
+          </ResponsiveWrapper>
         </FlexRow>
 
-        <FlexRow className="align-items-center gap-2 mb-4 px-3">
+        <ResponsiveWrapper xs={true} md={false}>
+          <FlexRow className="align-items-center justify-content-between w-100 px-3 mb-3">
+            <TotalReceived />
+          </FlexRow>
+        </ResponsiveWrapper>
+
+        <ResponsiveWrapper
+          xs={false}
+          md={true}
+          className="align-items-center gap-2 mb-4 px-3"
+        >
           <FlexColumn className="col-auto">
             <FlexRow className="align-items-center justify-content-between gap-1">
               <label className="text-capitalize text-white font-weight-normal caption-medium">
@@ -193,7 +225,7 @@ export default function PaymentsPage() {
             value={endDate}
             max={format(new Date(), "yyyy-MM-dd").toString()}
           />
-        </FlexRow>
+        </ResponsiveWrapper>
 
         <FlexRow className="justify-content-center px-3">
           <FlexColumn className="col-12">

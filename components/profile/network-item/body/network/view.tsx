@@ -4,6 +4,7 @@ import ArrowDown from "assets/icons/arrow-down";
 import ArrowRightSmall from "assets/icons/arrow-right-small";
 import ArrowUp from "assets/icons/arrow-up";
 import ArrowUpRight from "assets/icons/arrow-up-right";
+import ChevronRightIcon from "assets/icons/chevronright-icon";
 
 import Button from "components/button";
 import { FlexColumn } from "components/profile/wallet-balance";
@@ -43,7 +44,7 @@ export default function BodyNetworkView({
         <ArrowDown width={10} height={8} />
       );
 
-    return <ArrowUp width={10} height={8} />;
+    return <ArrowUp width={14} height={14} />;
   }
 
   function RenderAmount() {
@@ -78,8 +79,20 @@ export default function BodyNetworkView({
         className="col-lg-3 col-6 d-flex justify-content-end cursor-pointer"
         onClick={handleToggleCollapse}
       >
-        <FlexColumn className="justify-content-center mt-1">
-          <ArrowComponent />
+        <FlexColumn className="justify-content-center mt-1 text-gray-200">
+          <ResponsiveWrapper
+            xs={false}
+            lg={true}
+          >
+            <ArrowComponent />
+          </ResponsiveWrapper>
+
+          <ResponsiveWrapper
+            xs={true}
+            lg={false}
+          >
+            <ChevronRightIcon width={14} height={14} />
+          </ResponsiveWrapper>
         </FlexColumn>
       </div>
       <ResponsiveWrapper

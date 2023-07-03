@@ -28,11 +28,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
   
   const visible = isMyNetworkPage ? "both" : undefined;
 
-  console.log({
-    pageName,
-    visible
-  })
-
   const bounties = hasNotWalletFilter ? emptyData : await getBountiesListData({...query, visible })
     .then(({ data }) => data)
     .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1 }));
