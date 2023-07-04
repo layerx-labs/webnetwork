@@ -3,6 +3,7 @@ import ConnectWalletButton from "components/connect-wallet-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import NotMergeableModal from "components/not-mergeable-modal";
+import ProposalActionsButtons from "components/proposal/actions/buttons/controller";
 import ProposalActions from "components/proposal/actions/controller";
 import { ProposalDisputes } from "components/proposal/disputes-list/controller";
 import DistributionBar from "components/proposal/distribution/bar/view";
@@ -20,6 +21,16 @@ interface ProposalPageViewProps extends ProposalPageProps {
   issue: IssueBigNumberData;
   distributedAmounts: DistributedAmounts;
   networkTokenSymbol: string;
+  isUserAbleToDispute: boolean;
+  isDisputableOnChain: boolean;
+  missingDisputableTime: string;
+  isDisputable: boolean;
+  isRefusable: boolean;
+  isMergeable: boolean;
+  allowMergeCommit: boolean;
+  isPrOwner: boolean;
+  isProposalOwner: boolean;
+  prsNeedsApproval: boolean;
 }
 
 export default function ProposalPageView({
@@ -28,14 +39,37 @@ export default function ProposalPageView({
   pullRequest,
   distributedAmounts,
   networkTokenSymbol,
+  isUserAbleToDispute,
+  isDisputableOnChain,
+  missingDisputableTime,
+  isDisputable,
+  isRefusable,
+  isMergeable,
+  allowMergeCommit,
+  isPrOwner,
+  isProposalOwner,
+  prsNeedsApproval,
 }: ProposalPageViewProps) {
   return (
     <>
       <PullAndProposalHero proposal={proposal} />
 
       <CustomContainer>
+        <div className="row justify-content-center my-4 d-flex d-xl-none">
+          <ProposalActionsButtons
+            issue={issue}
+            proposal={proposal}
+            distributedAmounts={distributedAmounts}
+            isUserAbleToDispute={isUserAbleToDispute}
+            isDisputable={isDisputable}
+            isRefusable={isRefusable}
+            isMergeable={isMergeable}
+            onlyMerge={true}
+          />
+        </div>
+
         <div className="row mt-3 bg-gray-900 rounded-5 p-3 mx-0">
-          <div className="col">
+          <div className="col p-0">
             <ProposalPullRequestDetails
               pullRequest={pullRequest}
               issue={issue}
@@ -74,6 +108,16 @@ export default function ProposalPageView({
               issue={issue}
               pullRequest={pullRequest}
               distributedAmounts={distributedAmounts}
+              isUserAbleToDispute={isUserAbleToDispute}
+              isDisputableOnChain={isDisputableOnChain}
+              missingDisputableTime={missingDisputableTime}
+              isDisputable={isDisputable}
+              isRefusable={isRefusable}
+              isMergeable={isMergeable}
+              allowMergeCommit={allowMergeCommit}
+              isPrOwner={isPrOwner}
+              isProposalOwner={isProposalOwner}
+              prsNeedsApproval={prsNeedsApproval}
             />
           </div>
         </div>

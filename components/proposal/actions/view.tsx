@@ -4,9 +4,7 @@ import { useTranslation } from "next-i18next";
 import WarningIcon from "assets/icons/warning-icon";
 
 import { ContextualSpan } from "components/contextual-span";
-import ContractButton from "components/contract-button";
 import If from "components/If";
-import ProposalMerge from "components/proposal-merge";
 import ProposalProgressBar from "components/proposal-progress-bar";
 
 import {
@@ -16,47 +14,35 @@ import {
 } from "interfaces/issue-data";
 import { DistributedAmounts, Proposal } from "interfaces/proposal";
 
+import ProposalActionsButtons from "./buttons/controller";
+
 interface ProposalActionsViewProps {
   proposal: Proposal;
   issue: IssueData | IssueBigNumberData;
   pullRequest: PullRequest;
   distributedAmounts: DistributedAmounts;
   percentageNeededForDispute: number;
-  bountyAmount: BigNumber;
   warnings: string[];
-  isAbleToMerge: boolean;
-  isAbleToDispute: boolean;
-  isAbleToRefuse: boolean;
-  isMerging: boolean;
-  isRefusing: boolean;
-  isDisputing: boolean;
-  onMerge: () => Promise<void>;
-  onDispute: () => Promise<void>;
-  onRefuse: () => Promise<void>;
+  isUserAbleToDispute: boolean;
+  isRefusable: boolean;
+  isDisputable: boolean;
+  isMergeable: boolean;
 }
 
 export default function ProposalActionsView({
   proposal,
   issue,
   pullRequest,
-  bountyAmount,
   distributedAmounts,
   percentageNeededForDispute,
   warnings,
-  isAbleToMerge,
-  isAbleToDispute,
-  isAbleToRefuse,
-  isMerging,
-  isRefusing,
-  isDisputing,
-  onMerge,
-  onDispute,
-  onRefuse,
+  isUserAbleToDispute,
+  isRefusable,
+  isDisputable,
+  isMergeable,
 }: ProposalActionsViewProps) {
   const { t } = useTranslation(["common", "pull-request", "proposal"]);
 
-  const isDisputeButtonDisabled = isRefusing || isMerging || isDisputing || !isAbleToDispute;
-  const isRefuseButtonDisabled = !isAbleToRefuse || isRefusing || isDisputing || isMerging;
   const hasWarnings = !!warnings?.length;
 
   return (
@@ -69,7 +55,7 @@ export default function ProposalActionsView({
           isFinished={issue?.isClosed}
           isMerged={proposal?.isMerged}
           refused={proposal?.refusedByBountyOwner}
-          isAbleToDispute={isAbleToDispute}
+          isAbleToDispute={isUserAbleToDispute}
         />
       </div>
 
@@ -80,55 +66,16 @@ export default function ProposalActionsView({
           </span>
         </If>
 
-        <div className="row justify-content-center justify-content-xl-between mt-3 gap-2">
-          <div className="col-12 col-xl">
-            <div className="row">
-              <ProposalMerge
-                amountTotal={bountyAmount}
-                tokenSymbol={issue?.transactionalToken?.symbol}
-                proposal={proposal}
-                isMerging={isMerging}
-                idBounty={issue?.id}
-                onClickMerge={onMerge}
-                canMerge={isAbleToMerge}
-                distributedAmounts={distributedAmounts}
-              />
-            </div>
-          </div>
-
-          <If condition={isAbleToDispute}>
-            <div className="col-12 col-xl">
-              <div className="row">
-                <ContractButton
-                  textClass="text-uppercase text-white"
-                  color="purple"
-                  disabled={isDisputeButtonDisabled}
-                  onClick={onDispute}
-                  isLoading={isDisputing}
-                  withLockIcon={!isAbleToDispute || isMerging || isRefusing}
-                >
-                  <span>{t("actions.dispute")}</span>
-                </ContractButton>
-              </div>
-            </div>
-          </If>
-
-          <If condition={isAbleToRefuse}>
-            <div className="col-12 col-xl">
-                <div className="row">
-                  <ContractButton
-                    textClass="text-uppercase text-white"
-                    color="danger"
-                    disabled={isRefuseButtonDisabled}
-                    onClick={onRefuse}
-                    isLoading={isRefusing}
-                    withLockIcon={isDisputing || isMerging}
-                  >
-                    <span>{t("actions.refuse")}</span>
-                  </ContractButton>
-                </div>
-              </div>
-          </If>
+        <div className="mt-3">
+          <ProposalActionsButtons
+            issue={issue}
+            proposal={proposal}
+            distributedAmounts={distributedAmounts}
+            isUserAbleToDispute={isUserAbleToDispute}
+            isDisputable={isDisputable}
+            isRefusable={isRefusable}
+            isMergeable={isMergeable}
+          />
         </div>
 
         <If condition={hasWarnings}>

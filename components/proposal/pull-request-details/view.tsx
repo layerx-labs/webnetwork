@@ -33,14 +33,14 @@ export default function PullRequestDetailsView({
 
   return (
     <>
-      <div className="row align-items-center">
+      <div className="row align-items-center gy-2">
         <div className="col-auto">
           <span className="caption-large text-capitalize text-white">
             {t("pull-request:label")}
           </span>
         </div>
 
-        <div className="col-auto px-0">
+        <div className="col col-md-auto px-0">
           <InternalLink
             href={pullRequestHref}
             title={t("actions.go-to-pull-request")}
