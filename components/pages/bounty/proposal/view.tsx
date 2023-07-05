@@ -55,18 +55,20 @@ export default function ProposalPageView({
       <PullAndProposalHero proposal={proposal} />
 
       <CustomContainer>
-        <div className="row justify-content-center my-4 d-flex d-xl-none">
-          <ProposalActionsButtons
-            issue={issue}
-            proposal={proposal}
-            distributedAmounts={distributedAmounts}
-            isUserAbleToDispute={isUserAbleToDispute}
-            isDisputable={isDisputable}
-            isRefusable={isRefusable}
-            isMergeable={isMergeable}
-            onlyMerge={true}
-          />
-        </div>
+        <If condition={isMergeable}>
+          <div className="row justify-content-center d-flex d-xl-none mt-3">
+            <ProposalActionsButtons
+              issue={issue}
+              proposal={proposal}
+              distributedAmounts={distributedAmounts}
+              isUserAbleToDispute={isUserAbleToDispute}
+              isDisputable={isDisputable}
+              isRefusable={isRefusable}
+              isMergeable={isMergeable}
+              onlyMerge={true}
+            />
+          </div>
+        </If>
 
         <div className="row mt-3 bg-gray-900 rounded-5 p-3 mx-0">
           <div className="col p-0">

@@ -39,14 +39,14 @@ export default function ProposalDistributionListItem({
       key={name}
     >
       <div className="d-flex flex-grow-1 flex-column">
-        <div className="text-gray label-m d-flex align-items-center gap-2 mb-1">
+        <div className="d-flex align-items-center gap-2">
           <If condition={!!githubLogin}>
             <Avatar key={githubLogin}  size="xsm"  userLogin={githubLogin} tooltip />
           </If>
 
-          <label className="text-truncate text-uppercase">
+          <span className="text-truncate text-gray caption-small font-weight-medium">
             {name}
-          </label>
+          </span>
 
           <If condition={!!description}>
             <InfoTooltip description={description} secondaryIcon={true} />
@@ -57,13 +57,13 @@ export default function ProposalDistributionListItem({
       
       <div className={"d-flex flex-column text-truncate"}>
         <div className="d-flex align-items-center gap-2 justify-content-end">
-          <span className="ms-1 text-gray label-m ">
+          <span className="ms-1 text-gray xs-medium">
             {percentage}%
           </span>
           
           <ArrowRight color="text-gray" width={14}/>
 
-          <span className="caption-medium text-white text-truncate">
+          <span className="xs-medium text-white text-truncate">
             {formatNumberToNScale(value)}{" "}
 
             <TokenSymbolView 

@@ -49,25 +49,18 @@ export default function ProposalActions({
 
   const { state } = useAppState();
 
+  const isProposalFailedOrMerged = !proposal?.refusedByBountyOwner || !proposal?.isMerged;
+  const isProposalDisputable = isDisputableOnChain && isDisputable;
+
   const warnings = [
-    ...(isDisputableOnChain
-      ? [
-          t("proposal:messages.in-disputable-time", {
-            time: missingDisputableTime,
-          }),
-      ]
-      : []),
-    ...(isPrOwner && !isDisputableOnChain && !isDisputable
-      ? [t("proposal:messages.owner-pull-request")]
-      : []),
-    ...(isProposalOwner && !isDisputableOnChain && !isDisputable
-      ? [t("proposal:messages.owner-proposal")]
-      : []),
-    ...(allowMergeCommit === false
-      ? [t("pull-request:errors.merge-commit")]
-      : []),
-    ...(prsNeedsApproval ? [t("pull-request:errors.approval")] : []),
-  ];
+    isDisputableOnChain && t("proposal:messages.in-disputable-time", {
+      time: missingDisputableTime,
+    }),
+    (isPrOwner && !isProposalDisputable && !isProposalFailedOrMerged) && t("proposal:messages.owner-pull-request"),
+    (isProposalOwner && !isProposalDisputable && !isProposalFailedOrMerged) && t("proposal:messages.owner-proposal"),
+    allowMergeCommit === false && t("pull-request:errors.merge-commit"),
+    prsNeedsApproval && t("pull-request:errors.approval"),
+  ].filter(warning => warning);
 
   return (
     <ProposalActionsView

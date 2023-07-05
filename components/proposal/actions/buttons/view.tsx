@@ -50,20 +50,22 @@ export default function ProposalActionsButtonsView({
 
   return(
     <div className="row justify-content-center justify-content-xl-between gap-2">
-      <div className={`col-12 col-xl ${responsiveClass}`}>
-        <div className="row">
-          <ProposalMerge
-            amountTotal={issueAmount}
-            tokenSymbol={transactionalTokenSymbol}
-            proposal={proposal}
-            isMerging={isMerging}
-            idBounty={issueDbId}
-            canMerge={isAbleToMerge}
-            distributedAmounts={distributedAmounts}
-            onClickMerge={onMerge}
-          />
+      <If condition={isAbleToMerge}>
+        <div className={`col-12 col-xl ${responsiveClass}`}>
+          <div className="row">
+            <ProposalMerge
+              amountTotal={issueAmount}
+              tokenSymbol={transactionalTokenSymbol}
+              proposal={proposal}
+              isMerging={isMerging}
+              idBounty={issueDbId}
+              canMerge={isAbleToMerge}
+              distributedAmounts={distributedAmounts}
+              onClickMerge={onMerge}
+            />
+          </div>
         </div>
-      </div>
+      </If>
 
       <If condition={isAbleToDispute && !onlyMerge}>
         <div className="col-12 col-xl">

@@ -47,7 +47,7 @@ export default function ProposalActionsView({
 
   return (
     <div className="bg-gray-900 rounded-5 p-3">
-      <div className="mb-5">
+      <div className="">
         <ProposalProgressBar
           issueDisputeAmount={proposal?.disputeWeight?.toNumber()}
           disputeMaxAmount={percentageNeededForDispute || 0}
@@ -55,28 +55,30 @@ export default function ProposalActionsView({
           isFinished={issue?.isClosed}
           isMerged={proposal?.isMerged}
           refused={proposal?.refusedByBountyOwner}
-          isAbleToDispute={isUserAbleToDispute}
+          isAbleToDispute={isDisputable}
         />
       </div>
 
-      <div className="mt-2 py-2 ">
+      <div className="mt-5">
         <If condition={!pullRequest?.isMergeable && !proposal?.isMerged}>
           <span className="text-uppercase text-danger caption-small">
             {t("pull-request:errors.merge-conflicts")}
           </span>
         </If>
 
-        <div className="mt-3">
-          <ProposalActionsButtons
-            issue={issue}
-            proposal={proposal}
-            distributedAmounts={distributedAmounts}
-            isUserAbleToDispute={isUserAbleToDispute}
-            isDisputable={isDisputable}
-            isRefusable={isRefusable}
-            isMergeable={isMergeable}
-          />
-        </div>
+        <If condition={isDisputable || isRefusable || isMergeable}>
+          <div className="mt-3">
+            <ProposalActionsButtons
+              issue={issue}
+              proposal={proposal}
+              distributedAmounts={distributedAmounts}
+              isUserAbleToDispute={isUserAbleToDispute}
+              isDisputable={isDisputable}
+              isRefusable={isRefusable}
+              isMergeable={isMergeable}
+            />
+          </div>
+        </If>
 
         <If condition={hasWarnings}>
           <div className="row mt-3">

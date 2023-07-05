@@ -52,22 +52,23 @@ export default function ProposalPage(props: ProposalPageProps) {
     : 0;
   const approvalsCurrentPr = pullRequest?.approvals?.total || 0;
   const prsNeedsApproval = approvalsCurrentPr < approvalsRequired;
+  const isWalletConnected = !!state.currentUser?.walletAddress;
   const isPrOwner = toLower(pullRequest?.userAddress) === toLower(state.currentUser?.walletAddress);
   const isProposalOwner = toLower(proposal?.creator) === toLower(state.currentUser?.walletAddress);
 
   const isDisputable = [
+    isWalletConnected,
     isProposalDisputable( proposal?.contractCreationDate,
                           BigNumber(state.Service?.network?.times?.disputableTime).toNumber(),
                           chaintime),
-    isUserAbleToDispute,
     !proposal?.isDisputed,
     !proposal?.refusedByBountyOwner,
     !issue?.isClosed,
-    !proposal?.isDisputed,
     !proposal?.isMerged,
   ].every((c) => c);
 
   const isRefusable = [
+    isWalletConnected,
     !issue?.isClosed,
     !issue?.isCanceled,
     !proposal?.isDisputed,
@@ -77,13 +78,13 @@ export default function ProposalPage(props: ProposalPageProps) {
   ].every((v) => v);
 
   const isMergeable = [
+    isWalletConnected,
     pullRequest?.isMergeable,
+    !issue?.isClosed,
     !proposal?.isMerged,
     !proposal?.isDisputed,
     !proposal?.refusedByBountyOwner,
-    !isProposalDisputable(proposal?.contractCreationDate,
-                          BigNumber(state.Service?.network?.times?.disputableTime).toNumber(),
-                          chaintime),
+    !isDisputable,
     allowMergeCommit === true,
     !prsNeedsApproval,
     !isPrOwner,
@@ -161,7 +162,7 @@ export default function ProposalPage(props: ProposalPageProps) {
       issue={issue}
       distributedAmounts={distributedAmounts}
       networkTokenSymbol={networkTokenSymbol}
-      isUserAbleToDispute={isUserAbleToDispute}
+      isUserAbleToDispute={isUserAbleToDispute && isDisputable}
       isDisputableOnChain={isDisputableOnChain}
       missingDisputableTime={missingDisputableTime}
       isDisputable={isDisputable}
