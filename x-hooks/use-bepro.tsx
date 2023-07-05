@@ -39,14 +39,15 @@ export default function useBepro() {
     console.error("Tx error", err);
   }
 
-  async function handlerDisputeProposal(proposalContractId: number): Promise<TransactionReceipt> {
+  async function handlerDisputeProposal(issueContractId: number,
+                                        proposalContractId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const disputeTxAction = addTx([{
         type: TransactionTypes.dispute,
         network: state.Service?.network?.active,
       }] as any);
       dispatch(disputeTxAction);
-      await state.Service?.active.disputeProposal(+state.currentBounty?.data?.contractId, +proposalContractId)
+      await state.Service?.active.disputeProposal(+issueContractId, +proposalContractId)
         .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, disputeTxAction.payload[0] as SimpleBlockTransactionPayload)]))
           resolve?.(txInfo);
