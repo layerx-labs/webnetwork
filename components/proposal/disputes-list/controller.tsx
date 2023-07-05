@@ -18,8 +18,12 @@ export function ProposalDisputes({
   const { state } = useAppState();
 
   function percentage(value: string) {
+    const totalNetworkToken = state.Service?.network?.amounts?.totalNetworkToken;
+
+    if (!totalNetworkToken) return "0";
+
     return BigNumber(value)
-      .dividedBy(state.currentUser?.balance?.staked?.toNumber())
+      .dividedBy(totalNetworkToken)
       .multipliedBy(100)
       .toFixed(2);
   }
