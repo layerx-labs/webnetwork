@@ -13,8 +13,8 @@ export default function ArrowDown(props: SVGProps<SVGSVGElement>) {
       <path
         d="M11.375 5.25L7 9.625L2.625 5.25"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

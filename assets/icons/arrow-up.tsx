@@ -13,8 +13,8 @@ export default function ArrowUp(props: SVGProps<SVGSVGElement>) {
       <path
         d="M2.625 8.75L7 4.375L11.375 8.75"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
