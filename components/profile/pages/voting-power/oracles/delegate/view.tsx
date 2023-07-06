@@ -36,7 +36,7 @@ export default function OraclesDelegateView({
         <OraclesBoxHeader
           actions={t("my-oracles:actions.delegate.title")}
         />
-        <p className="caption-small text-gray-500 text-uppercase mt-2 mb-3">
+        <p className="caption-small text-gray-500 text-uppercase mt-2 mb-4">
           {t("my-oracles:actions.delegate.description")}
         </p>
         <InputNumber
@@ -67,7 +67,7 @@ export default function OraclesDelegateView({
           }
         />
 
-        <div className="form-group mt-2">
+        <div className="form-group mt-4 mb-4">
           <label className="caption-small text-uppercase text-gray-500 bg-opacity-100 mb-2">
             {t("my-oracles:fields.address.label")}
           </label>

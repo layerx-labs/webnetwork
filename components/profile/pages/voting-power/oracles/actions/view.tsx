@@ -59,7 +59,7 @@ export default function OraclesActionsView({
             currentAction={action}
           />
 
-          <p className="caption-small text-gray-500 font-weight-500 text-uppercase mt-2 mb-3">
+          <p className="caption-small text-gray-500 font-weight-500 text-uppercase mt-2 mb-4">
             {renderInfo?.description}
           </p>
 
@@ -109,7 +109,7 @@ export default function OraclesActionsView({
               {action === t("my-oracles:actions.lock.label") && (
                 <ContractButton
                   disabled={!needsApproval || isApproving}
-                  className="ms-0 read-only-button"
+                  className="ms-0 read-only-button mt-3"
                   onClick={approveSettlerToken}
                 >
                   {!needsApproval && (
