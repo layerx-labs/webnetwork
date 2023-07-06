@@ -1,19 +1,13 @@
 import BigNumber from "bignumber.js";
-import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import InfoTooltip from "components/info-tooltip";
 import DelegationItem from "components/profile/pages/voting-power/delegation-item/controller";
 import { FlexRow } from "components/profile/wallet-balance";
-
-import { formatStringToCurrency } from "helpers/formatNumber";
 
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
-import useBreakPoint from "x-hooks/use-breakpoint";
-
-import TokenSymbolView from "../../../../common/token-symbol/view";
+import VotingPowerSubTitle from "../sub-title/controller";
 
 interface Info {
     title: string;
@@ -31,7 +25,6 @@ interface DelegationsViewProps {
     toOthers: Info;
   }
   votesSymbol: string;
-  getTextColorProps: () => { className: string } | { style: { color: string } };
   networkTokenName: string;
 }
 
@@ -43,39 +36,21 @@ export default function DelegationsView({
   tokenColor,
   renderInfo,
   votesSymbol,
-  getTextColorProps,
   networkTokenName,
 }: DelegationsViewProps) {
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
-  const { isMobileView } = useBreakPoint();
 
   return (
     <div className="mb-3">
       <FlexRow className="mb-3 justify-content-between align-items-center">
-        <span className={clsx([ 
-          "family-Regular text-white font-weight-500",
-          isMobileView ? 'fs-smallest': 'h4'
-        ])}>
-          {renderInfo[type].title}
-        </span>
-
-        <FlexRow
-          className={clsx([
-            "d-flex justify-content-center align-items-center gap-2",
-            "text-white py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
-            variant === "network" ? "bg-gray-900" : "bg-gray-950",
-            isMobileView ? 'fs-smallest': 'caption-large'
-          ])}
-        >
-          <span>{formatStringToCurrency(renderInfo[type].total)}</span>
-
-          <TokenSymbolView name={votesSymbol} {...getTextColorProps()} />
-
-          <InfoTooltip
-            description={renderInfo[type].description}
-            secondaryIcon
-          />
-        </FlexRow>
+        <VotingPowerSubTitle 
+          label={renderInfo[type].title}
+          infoTooltip={renderInfo[type].description}
+          total={renderInfo[type].total} 
+          votesSymbol={votesSymbol} 
+          variant={variant} 
+          tokenColor={tokenColor}        
+        />
       </FlexRow>
 
       <div className="row">

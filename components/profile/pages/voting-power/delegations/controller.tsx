@@ -68,19 +68,6 @@ export default function Delegations({
   const networkTokenName =
     state.Service?.network?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
 
-  function getTextColorProps() {
-    if (tokenColor)
-      return {
-        style: {
-          color: tokenColor,
-        },
-      };
-
-    return {
-      className: "text-primary",
-    };
-  }
-
   return (
     <DelegationsView
       type={type}
@@ -88,7 +75,6 @@ export default function Delegations({
       tokenColor={tokenColor}
       renderInfo={renderInfo}
       votesSymbol={votesSymbol}
-      getTextColorProps={getTextColorProps}
       networkTokenName={networkTokenName}
     />
   );

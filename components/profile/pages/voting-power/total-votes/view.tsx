@@ -1,18 +1,12 @@
 import { ReactNode } from "react";
 
 import { BigNumber } from "bignumber.js";
-import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import TokenSymbolView from "components/common/token-symbol/view";
-import InfoTooltip from "components/info-tooltip";
 import NetworkItem from "components/profile/network-item/controller";
 import { FlexRow } from "components/profile/wallet-balance";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
-
-import useBreakPoint from "x-hooks/use-breakpoint";
-
+import VotingPowerSubTitle from "../sub-title/controller";
 interface TotalVotesProps {
   votesLocked: BigNumber;
   votesDelegatedToMe: BigNumber;
@@ -35,21 +29,6 @@ export default function TotalVotes({
   tokenColor
 } : TotalVotesProps) {
   const { t } = useTranslation(["common", "profile"]);
-  
-  const { isMobileView } = useBreakPoint();
-
-  function getTextColorProps() {
-    if (tokenColor)
-      return {
-        style: {
-          color: tokenColor
-        }
-      };
-
-    return {
-      className: "text-primary"
-    };
-  }
 
   function getAmountItem(amount) {
     return <NetworkItem
@@ -67,32 +46,16 @@ export default function TotalVotes({
   return(
     <div className="border border-gray-800 p-4 border-radius-4 col-12">
       <FlexRow className="mb-3 justify-content-between align-items-center flex-wrap">
-        <span className={clsx([ 
-          "family-Regular text-white font-weight-500",
-          isMobileView ? 'fs-smallest': 'h4'
-        ])}>
-          {t("profile:total-votes")}
-        </span>
-
-        <FlexRow className={clsx([
-          "d-flex justify-content-center align-items-center gap-2",
-          "text-white py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
-          variant === "network" ? "bg-gray-900" : "bg-gray-950",
-          isMobileView ? 'fs-smallest': 'caption-large'
-        ])}>
-          <span>
-            {formatStringToCurrency(votesLocked.plus(votesDelegatedToMe).toFixed())}
-          </span>
-
-          <TokenSymbolView name={votesSymbol} {...getTextColorProps()} />
-
-          <InfoTooltip
-            description={t("profile:tips.total-oracles", {
-              tokenName: tokenName
-            })}
-            secondaryIcon
-          />
-        </FlexRow>
+        <VotingPowerSubTitle 
+          label={t("profile:total-votes")}
+          infoTooltip={t("profile:tips.total-oracles", {
+            tokenName: tokenName,
+          })}
+          total={votesLocked.plus(votesDelegatedToMe).toFixed()} 
+          votesSymbol={votesSymbol} 
+          variant={variant} 
+          tokenColor={tokenColor}        
+        />
       </FlexRow>
 
       <div className="caption-large text-capitalize family-Regular text-white font-weight-500 mb-3">
