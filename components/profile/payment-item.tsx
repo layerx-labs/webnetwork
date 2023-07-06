@@ -16,7 +16,7 @@ export default function PaymentItem({
 }: Payment) {
   const CONTAINER_CLASSES = [
     "justify-content-between align-items-center bg-gray-950",
-    "border border-dark-gray border-radius-8 mb-2 py-3 px-4",
+    "border border-dark-gray border-radius-4 mb-2 py-3 px-4",
   ];
 
   return (

@@ -64,7 +64,7 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         lg={true}
         xs={false}
-        className="d-flex justify-content-center col-lg-3"
+        className="d-flex align-items-center justify-content-center col-lg-3"
       >
         <RenderAmount />
       </ResponsiveWrapper>

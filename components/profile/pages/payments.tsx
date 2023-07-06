@@ -159,9 +159,8 @@ export default function PaymentsPage() {
   return (
     <ProfileLayout childrenClassName="px-0">
       <div className="col-12 col-xl-10">
-        <FlexRow 
-          className="align-items-center justify-content-between mb-4 border-bottom border-gray-850 border-xl-0 px-3 pb-3"
-        >
+        <FlexRow className={`align-items-center justify-content-between mb-2 border-bottom 
+          border-gray-850 border-xl-0 px-3 pb-3`}>
           <FlexColumn>
             <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
           </FlexColumn>
