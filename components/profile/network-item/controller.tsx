@@ -11,7 +11,7 @@ import NetworkItemView from "./view";
 interface NetworkItemProps {
   children?: ReactNode;
   key?: number | string;
-  type?: "network" | "voting";
+  type?: "network" | "voting" | "payments";
   networkChain?: string;
   networkName: string;
   subNetworkText?: string;
@@ -49,7 +49,7 @@ export default function NetworkItem({
   const { isDesktopView } = useBreakPoint();
 
   const isNetworkVariant = variant === "network";
-  const isNetworkType = type === "network";
+  const isNetworkType = ["network", "payments"].includes(type);
 
   function toggleCollapse() {
     if(handleToggleTabletAndMobile && query?.profilePage[0] === 'voting-power' && !isDesktopView){

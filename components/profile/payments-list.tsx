@@ -70,7 +70,7 @@ export default function PaymentsList({
         networks?.map((network, key) => (
           <NetworkItem
             key={key}
-            type="network"
+            type="payments"
             variant="multi-network"
             networkName={network?.name}
             iconNetwork={network?.logoIcon}

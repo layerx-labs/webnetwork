@@ -10,7 +10,7 @@ export default function ProfileLayout({ children, childrenClassName = "" }) {
         <ProfileSide />
 
         <div
-          className={`col-12 col-xl-10 pt-4 profile-content bg-gray-950 ${childrenClassName}`}
+          className={`col-12 col-xl-10 p-3 p-xl-5 profile-content bg-gray-950 ${childrenClassName}`}
         >
           {children}
         </div>

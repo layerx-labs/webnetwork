@@ -136,13 +136,12 @@ export default function PaymentsPage() {
           {t("labels.recivedintotal")}
         </span>
 
-        <div className="caption-large font-weight-medium bg-gray-900 py-2 px-3 border border-gray-850 border-radius-4">
+        <div className="caption-large font-weight-medium bg-gray-900 py-2 px-3 border-radius-4">
           <span className="text-white">
             {formatNumberToCurrency(totalFiat)}
           </span>
 
           <span className="text-gray-600 ml-1">{state?.Settings?.currency?.defaultFiat}</span>
-
         </div>
       </>
     );
@@ -157,90 +156,132 @@ export default function PaymentsPage() {
     />
 
   return (
-    <ProfileLayout childrenClassName="px-0">
-      <div className="col-12 col-xl-10">
-        <FlexRow className={`align-items-center justify-content-between mb-2 border-bottom 
-          border-gray-850 border-xl-0 px-3 pb-3`}>
-          <FlexColumn>
-            <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
-          </FlexColumn>
+    <>
+      <ResponsiveWrapper 
+        xs={true}
+        xl={false}
+        className={`align-items-center justify-content-between mb-2 border-bottom 
+        border-gray-850 border-xl-0 pb-3 px-3`}
+      >
+        <FlexColumn>
+          <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
+        </FlexColumn>
 
-          <ResponsiveWrapper xs={false} md={true}>
-            <FlexRow className="align-items-center">
-              <TotalReceived />
-            </FlexRow>
-          </ResponsiveWrapper>
-        </FlexRow>
-
-        <ResponsiveWrapper xs={true} md={false}>
-          <FlexRow className="align-items-center justify-content-between w-100 px-3 mb-3">
+        <ResponsiveWrapper xs={false} lg={true}>
+          <FlexRow className="align-items-center">
             <TotalReceived />
           </FlexRow>
         </ResponsiveWrapper>
+      </ResponsiveWrapper>
 
-        <ResponsiveWrapper
-          xs={false}
-          md={true}
-          className="align-items-center gap-2 mb-4 px-3"
-        >
-          <FlexColumn className="col-auto">
-            <FlexRow className="align-items-center justify-content-between gap-1">
-              <label className="text-capitalize text-white font-weight-normal caption-medium">
-                {t("misc.latest")}
-              </label>
-              <ReactSelect
-                options={defaultOptions}
-                value={option}
-                onChange={onChangeSelect}
-              />
+      <ProfileLayout>
+        <div className="col-12">
+          <ResponsiveWrapper 
+            xs={false}
+            xl={true}
+            className={`align-items-center justify-content-between mb-2 border-bottom 
+            border-gray-850 border-xl-0 pb-3`}
+          >
+            <FlexColumn>
+              <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
+            </FlexColumn>
+
+            <ResponsiveWrapper xs={false} md={true}>
+              <FlexRow className="align-items-center">
+                <TotalReceived />
+              </FlexRow>
+            </ResponsiveWrapper>
+          </ResponsiveWrapper>
+
+          <ResponsiveWrapper xs={true} lg={false}>
+            <FlexRow className="align-items-center justify-content-between w-100 mb-3">
+              <TotalReceived />
             </FlexRow>
-          </FlexColumn>
+          </ResponsiveWrapper>
 
-          <label className="text-capitalize text-white font-weight-normal caption-medium">
-            {t("profile:payments.period")}
-          </label>
+          <ResponsiveWrapper
+            xs={false}
+            lg={true}
+            className="row align-items-center mb-4"
+          >
+            <div className="col-2">
+              <div className="d-flex align-items-center gap-2">
+                <label className="text-capitalize text-white font-weight-normal caption-medium">
+                  {t("misc.latest")}
+                </label>
 
-          <input
-            type="date"
-            key="startDate"
-            className="form-control"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onChangeDate(e, setStartDate)
-            }
-            value={startDate}
-            max={endDate}
-          />
-          <span>
-            <ArrowRight height="10px" width="10px" />
-          </span>
+                <ReactSelect
+                  options={defaultOptions}
+                  value={option}
+                  onChange={onChangeSelect}
+                />
+              </div>
+            </div>
 
-          <input
-            type="date"
-            key="endDate"
-            className="form-control"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onChangeDate(e, setEndDate)
-            }
-            value={endDate}
-            max={format(new Date(), "yyyy-MM-dd").toString()}
-          />
-        </ResponsiveWrapper>
+            <div className="col">
+              <div className="d-flex align-items-center gap-2">
+                <label className="text-capitalize text-white font-weight-normal caption-medium">
+                  {t("profile:payments.period")}
+                </label>
 
-        <FlexRow className="justify-content-center px-3">
-          <FlexColumn className="col-12">
-            {networks?.length > 0 ? (
-              <PaymentsList
+                <input
+                  type="date"
+                  key="startDate"
+                  className="form-control"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    onChangeDate(e, setStartDate)
+                  }
+                  value={startDate}
+                  max={endDate}
+                  />
+                <span>
+                  <ArrowRight height="10px" width="10px" />
+                </span>
+
+                <input
+                  type="date"
+                  key="endDate"
+                  className="form-control"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    onChangeDate(e, setEndDate)
+                  }
+                  value={endDate}
+                  max={format(new Date(), "yyyy-MM-dd").toString()}
+                />
+              </div>
+            </div>
+
+            <div className="col-2">
+              <div className="d-flex align-items-center gap-2">
+                <label className="text-capitalize text-white font-weight-normal caption-medium">
+                  Chain
+                </label>
+
+                <ReactSelect
+                  options={defaultOptions}
+                  value={option}
+                  onChange={onChangeSelect}
+                  />
+              </div>
+            </div>
+          </ResponsiveWrapper>
+
+          <FlexRow className="justify-content-center">
+            <FlexColumn className="col-12">
+              {networks?.length > 0 ? (
+                <PaymentsList
                 payments={payments}
-                networks={networks}
-                totalNetworks={totalFiatNetworks}
-                symbol={state?.Settings?.currency?.defaultFiat?.toUpperCase()}
-              />
-            ) : (
-              <NothingFound description={t("filters.no-records-found")} />
-            )}
-          </FlexColumn>
-        </FlexRow>
-      </div>
-    </ProfileLayout>
+                  networks={networks}
+                  totalNetworks={totalFiatNetworks}
+                  symbol={state?.Settings?.currency?.defaultFiat?.toUpperCase()}
+                  />
+                  ) : (
+                    <NothingFound description={t("filters.no-records-found")} />
+              )}
+            </FlexColumn>
+          </FlexRow>
+        </div>
+      </ProfileLayout>
+    </>
   );
 }

@@ -14,7 +14,7 @@ import NetworkItemAmountView from "../../amount/view";
 interface BodyNetworkViewProps {
   isCollapsed: boolean;
   handleNetworkLink: () => void;
-  type: "network" | "voting";
+  type: "network" | "voting" | "payments";
   amount: string | number;
   symbol: string;
   isNetworkVariant: boolean;
@@ -53,7 +53,6 @@ export default function BodyNetworkView({
         amount={amount}
         symbol={symbol}
         isNetworkVariant={isNetworkVariant}
-        type={type}
         primaryColor={primaryColor}
       />
     );
@@ -79,7 +78,7 @@ export default function BodyNetworkView({
         className="col-lg-3 col-6 d-flex justify-content-end cursor-pointer"
         onClick={handleToggleCollapse}
       >
-        <FlexColumn className="justify-content-center mt-1 text-gray-200">
+        <FlexColumn className="justify-content-center text-gray-200">
           <ResponsiveWrapper
             xs={false}
             lg={true}
@@ -98,10 +97,10 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         lg={false}
         xs={true}
-        className="d-flex flex-column justify-content-center"
+        className="d-flex flex-column justify-content-center mt-3"
       >
-        <span className="mt-3 text-gray-500">
-          {t("network-columns.total-votes")}
+        <span className="font-weight-medium text-gray-500 text-capitalize">
+          {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
         </span>
         <RenderAmount />
       </ResponsiveWrapper>

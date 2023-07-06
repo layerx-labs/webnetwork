@@ -5,13 +5,11 @@ import { formatNumberToCurrency } from "helpers/formatNumber";
 import { FlexRow } from "../../wallet-balance";
 
 export default function NetworkItemAmountView({
-  type,
   amount,
   symbol,
   primaryColor,
   isNetworkVariant,
 }: {
-  type?: "network" | "voting";
   amount: string | number;
   symbol: string;
   isNetworkVariant: boolean;

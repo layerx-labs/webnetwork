@@ -8,7 +8,7 @@ import BodyVotingView from "./voting/view";
 interface NetworkItemBodyViewProps {
   isCollapsed: boolean;
   handleNetworkLink: () => void;
-  type: "network" | "voting";
+  type: "network" | "voting" | "payments";
   amount: string | number;
   symbol: string;
   isNetworkVariant: boolean;
