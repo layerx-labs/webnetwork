@@ -6,10 +6,8 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import { formatStringToCurrency } from "helpers/formatNumber";
 
 interface ResponsiveProps {
-  sm: boolean;
   xs: boolean;
   md: boolean;
-  xxl: boolean;
 }
 
 export default function VotingPowerSubTitleView({

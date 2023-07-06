@@ -25,12 +25,9 @@ export default function VotingPowerSubTitle({
       "text-white py-2 px-3 border-radius-4 border border-gray-800 font-weight-medium",
       variant === "network" ? "bg-gray-900" : "bg-gray-950",
     ]);
-  const responsiveMobile = { sm: true, xs: true, md: false, xxl: false };
+  const responsiveMobile = { xs: true, md: false };
   const responsiveDesktopAndTablet = {
-    sm: false,
-    xs: false,
-    md: true,
-    xxl: true,
+    xs: false, md: true
   };
 
   function getTextColorProps() {
