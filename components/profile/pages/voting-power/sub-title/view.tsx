@@ -53,7 +53,7 @@ export default function VotingPowerSubTitleView({
   return (
     <>
       <ResponsiveWrapper {...propsMobile}>
-        <span className={getTitleSpanClass("fs-smallest")}>
+        <span className={getTitleSpanClass("fs-small")}>
           {label}
         </span>
       </ResponsiveWrapper>
