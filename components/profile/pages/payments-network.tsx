@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 import ArrowUpRight from "assets/icons/arrow-up-right";
 import ChevronLeftIcon from "assets/icons/chevronleft-icon";
 
@@ -26,13 +28,22 @@ export default function PaymentsNetwork({
   totalConverted,
   defaultFiat,
 }: PaymentsNetworkProps) {
-  const { goToProfilePage } = useNetwork();
+  const { push } = useRouter();
+
+  const { goToProfilePage, getURLWithNetwork } = useNetwork();
 
   function handleBack() {
     goToProfilePage("payments", {
       networkName: "",
       networkChain: ""
     });
+  }
+
+  function goToNetwork() {
+    push(getURLWithNetwork("/", {
+      network: network?.name,
+      chain: network?.chain?.chainShortName
+    }));
   }
 
   return(
@@ -44,7 +55,7 @@ export default function PaymentsNetwork({
           </Button>
         </div>
         <div className="col">
-          <h3 className="text-white font-weight-medium text-capitalize">{network?.name}</h3>
+          <h4 className="text-white font-weight-medium text-capitalize">{network?.name}</h4>
         </div>
       </div>
 
@@ -52,6 +63,7 @@ export default function PaymentsNetwork({
         <Button
           color="gray-850"
           className="gap-1 border-radius-4 border-gray-700 text-gray-200 text-capitalize font-weight-medium not-svg"
+          onClick={goToNetwork}
         >
           <span>Go to Network</span>
           <ArrowUpRight />
@@ -65,7 +77,8 @@ export default function PaymentsNetwork({
         </span>
         </div>
 
-        <div className="col-auto caption-large font-weight-medium bg-gray-900 py-2 px-3 border border-gray-850 border-radius-4">
+        <div className={`col-auto caption-large font-weight-medium bg-gray-900 py-2 px-3 border 
+          border-gray-850 border-radius-4`}>
           <span className="text-white">
             {formatNumberToCurrency(totalConverted)}
           </span>
