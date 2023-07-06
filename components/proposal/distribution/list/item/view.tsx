@@ -38,7 +38,7 @@ export default function ProposalDistributionListItem({
       className={`d-flex align-items-center bg-gray-850 px-3 py-2 text-truncate ${className}`}
       key={name}
     >
-      <div className="d-flex flex-grow-1 flex-column">
+      <div className="d-flex flex-grow-1 flex-column py-1">
         <div className="d-flex align-items-center gap-2">
           <If condition={!!githubLogin}>
             <Avatar key={githubLogin}  size="xsm"  userLogin={githubLogin} tooltip />
