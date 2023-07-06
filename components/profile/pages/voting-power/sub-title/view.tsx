@@ -70,7 +70,7 @@ export default function VotingPowerSubTitleView({
       </ResponsiveWrapper>
       <ResponsiveWrapper
         {...propsDesktopAndTablet}
-        className={getAmountClass("h4")}
+        className={getAmountClass("caption-medium")}
       >
         {handleAmount()}
       </ResponsiveWrapper>
