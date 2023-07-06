@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import PaymentItem from "components/profile/payment-item";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+
+import { NetworkPaymentsData } from "types/api";
 
 import { useNetwork } from "x-hooks/use-network";
 
@@ -14,8 +15,7 @@ import { TotalFiatNetworks } from "./pages/payments";
 import { FlexColumn } from "./wallet-balance";
 
 interface PaymentsListProps {
-  payments: Payment[];
-  networks: Network[];
+  payments: NetworkPaymentsData[];
   totalNetworks: TotalFiatNetworks[];
   symbol: string;
 }
@@ -23,7 +23,6 @@ interface PaymentsListProps {
 // TODO: Add InfiniteScroll and pagination
 export default function PaymentsList({
   payments,
-  networks,
   totalNetworks,
   symbol
 }: PaymentsListProps) {
@@ -50,7 +49,6 @@ export default function PaymentsList({
       .reduce((acc, token) => acc + token.value * (token.price || 0), 0);
   }
 
-  if (!payments || !networks) return null;
   return (
     <>
       <ResponsiveWrapper 
@@ -66,35 +64,32 @@ export default function PaymentsList({
           </div>)}
       </ResponsiveWrapper>
 
-      {networks &&
-        networks?.map((network, key) => (
-          <NetworkItem
-            key={key}
-            type="payments"
-            variant="multi-network"
-            networkName={network?.name}
-            iconNetwork={network?.logoIcon}
-            networkChain={network?.chain?.chainShortName}
-            handleNetworkLink={() => {
-              push(getURLWithNetwork("/", { chain: network?.chain?.chainShortName, network: network?.name }))
-            }}
-            amount={handleAmount(network?.id)}
-            symbol={symbol}
-          >
-            <FlexColumn className="col-12">
-              {payments &&
-                payments
-                  ?.filter((p) => network?.id === p?.issue?.network?.id)
-                  .map((payment: Payment) =>
-                    PaymentItem({
-                      ...payment,
-                      labelToken: t("misc.$token"),
-                      labelBounty: t("bounty:label"),
-                      handleItemClick,
-                    }))}
-            </FlexColumn>
-          </NetworkItem>
-        ))}
+      {payments?.map(network => (
+        <NetworkItem
+          key={`payments-${network?.networkAddress}`}
+          type="payments"
+          variant="multi-network"
+          networkName={network?.name}
+          iconNetwork={network?.logoIcon}
+          networkChain={network?.chain?.chainShortName}
+          handleNetworkLink={() => {
+            push(getURLWithNetwork("/", { chain: network?.chain?.chainShortName, network: network?.name }))
+          }}
+          amount={handleAmount(network?.id)}
+          symbol={symbol}
+        >
+          <FlexColumn className="col-12">
+            {network?.payments
+              .map((payment: Payment) =>
+                PaymentItem({
+                  ...payment,
+                  labelToken: t("misc.$token"),
+                  labelBounty: t("bounty:label"),
+                  handleItemClick,
+                }))}
+          </FlexColumn>
+        </NetworkItem>
+      ))}
     </>
   );
 }

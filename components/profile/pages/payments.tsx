@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 import ArrowRight from "assets/icons/arrow-right";
 
+import If from "components/If";
 import NothingFound from "components/nothing-found";
 import PaymentsList from "components/profile/payments-list";
 import ProfileLayout from "components/profile/profile-layout";
@@ -17,12 +18,9 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToCurrency} from "helpers/formatNumber";
 
-import { Network } from "interfaces/network";
-import {Payment} from "interfaces/payments";
-
 import {getCoinPrice} from "services/coingecko";
 
-import useApi from "x-hooks/use-api";
+import { NetworkPaymentsData } from "types/api";
 
 import PaymentsNetwork from "./payments-network";
 
@@ -33,7 +31,11 @@ export interface TotalFiatNetworks {
   networkId: number;
 }
 
-export default function PaymentsPage() {
+interface PaymentsPageProps {
+  payments: NetworkPaymentsData[];
+}
+
+export default function PaymentsPage({ payments }: PaymentsPageProps) {
   const { t } = useTranslation(["common", "profile", "custom-network"]);
   const router = useRouter();
 
@@ -54,18 +56,12 @@ export default function PaymentsPage() {
 
   const [totalFiat, setTotalFiat] = useState(0);
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([])
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [networks, setNetworks] = useState<Network[]>([]);
   const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
-
-  const {state} = useAppState();
-
-  const { getPayments } = useApi();
-
-
   const [option, setOption] = useState<{ value: string; label: string }>(defaultOptions[0]);
   const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 7), "yyyy-MM-dd").toString());
   const [endDate, setEndDate] = useState<string>(format(new Date(), "yyyy-MM-dd").toString());
+  
+  const {state} = useAppState();
 
   function onChangeSelect(e: { value: string; label: string }) {
     setStartDate(e.value);
@@ -77,43 +73,22 @@ export default function PaymentsPage() {
   }
 
   useEffect(() => {
-    if (!state.currentUser?.walletAddress) return;
-
-    getPayments(state.currentUser.walletAddress, 
-                startDate, 
-                endDate, 
-                (router?.query?.networkName || "").toString(),
-                (router?.query?.networkChain || "").toString()).then(setPayments);
-  }, [state.currentUser?.walletAddress, startDate, endDate, router?.query]);
-
-  useEffect(() => {
-    if (!payments) return;
-    const allNetworks: Network[] = [];
-    payments.forEach((payment) => {
-      if (!allNetworks.find((network) => network?.id === payment?.issue?.network?.id)) {
-        allNetworks.push(payment?.issue?.network);
-      }
-    });
-    setNetworks(allNetworks);
-  }, [payments]);
-
-  useEffect(() => {
     if (!payments?.length) return;
 
-    Promise.all(payments.map(async (payment) => ({
-        tokenAddress: payment?.issue?.transactionalToken?.address,
-        value: payment.ammount,
-        price: await getCoinPrice(payment?.issue?.transactionalToken?.symbol, state?.Settings.currency.defaultFiat),
-        networkId: payment?.issue?.network_id
-    }))).then((tokens) => {
-      const totalConverted = tokens.reduce((acc, token) => acc + token.value * (token.price || 0),
-                                           0);
-      const noConverted = !!tokens.find((token) => token.price === undefined);
-      
-      setTotalFiatNetworks(tokens)
-      setTotalFiat(totalConverted);
-      setHasNoConvertedToken(noConverted);
-    });
+    Promise.all(payments.flatMap(({ payments }) => payments.map(async (payment) => ({
+      tokenAddress: payment?.issue?.transactionalToken?.address,
+      value: payment.ammount,
+      price: await getCoinPrice(payment?.issue?.transactionalToken?.symbol, state?.Settings?.currency?.defaultFiat),
+      networkId: payment?.issue?.network_id
+    }))))
+      .then((tokens) => {
+        const totalConverted = tokens.reduce((acc, token) => acc + token.value * (token.price || 0), 0);
+        const noConverted = !!tokens.find((token) => token.price === undefined);
+        
+        setTotalFiatNetworks(tokens)
+        setTotalFiat(totalConverted);
+        setHasNoConvertedToken(noConverted);
+      });
   }, [payments]);
 
   function onChangeDate(e: ChangeEvent<HTMLInputElement>,
@@ -149,8 +124,7 @@ export default function PaymentsPage() {
 
   if (router?.query?.networkName && router?.query?.networkChain)
     return <PaymentsNetwork
-      network={networks[0]} 
-      payments={payments}
+      payments={payments[0]}
       totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
     />
@@ -268,16 +242,18 @@ export default function PaymentsPage() {
 
           <FlexRow className="justify-content-center">
             <FlexColumn className="col-12">
-              {networks?.length > 0 ? (
+              <If 
+                condition={!!payments?.length}
+                otherwise={
+                  <NothingFound description={t("filters.no-records-found")} />
+                }
+              >
                 <PaymentsList
-                payments={payments}
-                  networks={networks}
+                  payments={payments}
                   totalNetworks={totalFiatNetworks}
                   symbol={state?.Settings?.currency?.defaultFiat?.toUpperCase()}
-                  />
-                  ) : (
-                    <NothingFound description={t("filters.no-records-found")} />
-              )}
+                />
+              </If>
             </FlexColumn>
           </FlexRow>
         </div>

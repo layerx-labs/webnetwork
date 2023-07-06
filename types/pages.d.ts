@@ -1,7 +1,7 @@
 import { IssueData } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 
-import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated } from "types/api";
+import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated, NetworkPaymentsData } from "types/api";
 
 export interface ExplorePageProps {
   numberOfNetworks: number;
@@ -28,4 +28,9 @@ export interface ProposalPageProps {
 
 interface MyNetworkPageProps {
   bounties: SearchBountiesPaginated;
+}
+
+interface ProfilePageProps {
+  bounties: SearchBountiesPaginated;
+  payments: NetworkPaymentsData[];
 }

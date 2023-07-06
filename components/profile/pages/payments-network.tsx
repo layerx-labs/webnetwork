@@ -7,35 +7,36 @@ import Button from "components/button";
 import CopyButton from "components/common/buttons/copy/controller";
 import CustomContainer from "components/custom-container";
 
+import { useAppState } from "contexts/app-state";
+
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import { truncateAddress } from "helpers/truncate-address";
 
-import { Network } from "interfaces/network";
-import { Payment } from "interfaces/payments";
+import { NetworkPaymentsData } from "types/api";
 
 import { useNetwork } from "x-hooks/use-network";
 
 interface PaymentsNetworkProps {
-  payments: Payment[];
-  network: Network;
+  payments: NetworkPaymentsData;
   totalConverted: number;
   defaultFiat: string;
 }
 
 export default function PaymentsNetwork({
   payments,
-  network,
   totalConverted,
   defaultFiat,
 }: PaymentsNetworkProps) {
   const { push } = useRouter();
 
+  const { state } = useAppState();
   const { goToProfilePage, getURLWithNetwork } = useNetwork();
 
   function handleBack() {
     goToProfilePage("payments", {
       networkName: "",
-      networkChain: ""
+      networkChain: "",
+      wallet: state.currentUser?.walletAddress
     });
   }
 

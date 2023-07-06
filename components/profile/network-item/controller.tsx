@@ -42,7 +42,7 @@ export default function NetworkItem({
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   const {
-    state: { Settings: settings },
+    state: { Settings: settings, currentUser },
   } = useAppState();
   const { query } = useRouter();
   const { goToProfilePage } = useNetwork();
