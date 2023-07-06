@@ -18,7 +18,7 @@ export default function VotingPowerSubTitle({
   tokenColor: string;
 }) {
   const getTitleSpanClass = (type: string) =>
-    `family-Regular text-white font-weight-500 ${type}`;
+    `family-Regular text-white font-weight-500 me-2 ${type}`;
   const getAmountClass = (type: string) =>
     clsx([
       `d-flex flex-row justify-content-center align-items-center gap-2 ${type}`,
