@@ -33,9 +33,9 @@ export default function PaymentsList({
   const { getURLWithNetwork } = useNetwork();
 
   const headers = [
-    t("custom-network:steps.network-information.fields.name.default"),
-    "Total payments",
-    "Network link",
+    t("profile:network-columns.network-name"),
+    t("profile:network-columns.total-received"),
+    t("profile:network-columns.network-link"),
   ];
 
   function handleItemClick(issueId: string, chainName: string, networkName: string) {
