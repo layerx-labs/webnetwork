@@ -42,7 +42,7 @@ export default function PullAndProposalHeroView({
   return (
     <div className="w-100 border-bottom border-gray-800">
       <CustomContainer className="p-3">
-        <div className="row align-items-center">
+        <div className="row align-items-center mb-4">
           <div className="col-auto">
             <Button
               className="rounded-circle p-1 text-white not-svg"
@@ -63,7 +63,7 @@ export default function PullAndProposalHeroView({
           </div>
         </div>
 
-        <div className="row align-items-center mt-2">
+        <div className="row align-items-center mb-4">
           <div className="col">
             <div className="row align-items-center">
               <span className="caption-large text-white text-capitalize">
@@ -84,7 +84,7 @@ export default function PullAndProposalHeroView({
           </div>
         </div>
 
-        <div className="row align-items-center mt-1 gy-2">
+        <div className="row align-items-center gy-2">
           <div className="col-xs-12 col-xl-auto">
             <div className="row align-items-center gap-1">
               <div className="col-auto">

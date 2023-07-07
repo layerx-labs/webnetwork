@@ -70,7 +70,7 @@ export default function ProposalPageView({
           </div>
         </If>
 
-        <div className="row mt-3 bg-gray-900 rounded-5 p-3 mx-0">
+        <div className="row mt-3 bg-gray-900 rounded-5 border border-gray-850 p-3 mx-0">
           <div className="col p-0">
             <ProposalPullRequestDetails
               pullRequest={pullRequest}
