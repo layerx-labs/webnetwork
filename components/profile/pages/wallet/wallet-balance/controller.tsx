@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useDebouncedCallback } from "use-debounce";
 
 import { TokenBalanceType } from "components/profile/token-balance";
 import TokenIcon from "components/token-icon";
@@ -10,14 +11,12 @@ import TokenIcon from "components/token-icon";
 import { useAppState } from "contexts/app-state";
 
 import { TokensOracles } from "interfaces/oracles-state";
-import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
 import { getCoinInfoByContract, getCoinPrice } from "services/coingecko";
 
 import useApi from "x-hooks/use-api";
 import { useNetwork } from "x-hooks/use-network";
-import useNetworkChange from "x-hooks/use-network-change";
 
 import WalletBalanceView from "./view";
 
@@ -25,15 +24,19 @@ export default function WalletBalance() {
   const { t } = useTranslation(["common", "profile"]);
 
   const [totalAmount, setTotalAmount] = useState("0");
-  const [tokensOracles, setTokensOracles] = useState<TokensOracles[]>([]);
-  const [tokens, setTokens] = useState<TokenBalanceType[]>([]);
+  const [tokensOracles, setTokensOracles] = useState<TokensOracles[]>();
+  const [tokens, setTokens] = useState<TokenBalanceType[]>();
   const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
+  const [searchState, setSearchState] = useState("");
+  const [search, setSearch] = useState("");
+
+  const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value),
+                                                      500);
 
   const { state } = useAppState();
 
   const { searchCurators, getTokens } = useApi();
   const { getURLWithNetwork } = useNetwork();
-  const { handleAddNetwork } = useNetworkChange();
   const { query, push } = useRouter();
 
   const getAddress = (token: string | Token) =>
@@ -57,9 +60,35 @@ export default function WalletBalance() {
     };
   }
 
-  async function handleNetworkSelected(chain: SupportedChainData) {
-    handleAddNetwork(chain).catch((e) =>
-      console.log("Handle Add Network Error", e));
+  function updateSearch() {
+    setSearch(searchState);
+  }
+
+  function handleSearch(event) {
+    if (event.key !== "Enter") return;
+
+    updateSearch();
+  }
+
+  function handleClearSearch(): void {
+    setSearchState("");
+    setSearch("");
+  }
+
+  function handleSearchChange(e) {
+    setSearchState(e.target.value);
+    debouncedSearchUpdater(e.target.value);
+  }
+
+  function handleSearchFilter(name = "", symbol = "", networks) {
+    const isNetwork = !!networks.find(({ name }) =>
+        query?.networkName?.toString().toLowerCase() === name?.toLowerCase());
+
+    return (
+      (name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+        symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0) &&
+      (query?.networkName ? isNetwork : true)
+    );
   }
 
   function loadBalances() {
@@ -104,7 +133,7 @@ export default function WalletBalance() {
   ]);
 
   useEffect(() => {
-    if (!tokens.length) return;
+    if (!tokens?.length) return;
 
     Promise.all(tokens.map(async (token) => ({
         tokenAddress: token.address,
@@ -135,15 +164,21 @@ export default function WalletBalance() {
       isOnNetwork={!!query?.network}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-      tokens={tokens}
-      tokensOracles={tokensOracles}
-      handleNetworkSelected={handleNetworkSelected}
+      tokens={tokens?.filter(({ name, symbol, networks }) =>
+        handleSearchFilter(name, symbol, networks))}
+      tokensOracles={tokensOracles?.filter(({ name, symbol, networkName }) =>
+        handleSearchFilter(name, symbol, [{ name: networkName }]))}
       handleNetworkLink={(token: TokensOracles) => {
         push(getURLWithNetwork("/", {
             chain: state?.connectedChain?.shortName,
             network: token?.networkName,
         }));
       }}
+      searchString={searchState}
+      onSearchClick={updateSearch}
+      onSearchInputChange={handleSearchChange}
+      onEnterPressed={handleSearch}
+      onClearSearch={handleClearSearch}
     />
   );
 }
