@@ -32,7 +32,7 @@ export default function VotingPowerSubTitleView({
   getAmountClass: (type: string) => string;
 }) {
 
-  function handleAmount(icon = true) {
+  function renderAmount({icon = true}) {
     return (
       <>
         <span>
@@ -66,13 +66,13 @@ export default function VotingPowerSubTitleView({
         {...propsMobile}
         className={getAmountClass("fs-smallest")}
       >
-        {handleAmount(false)}
+        {renderAmount({icon: false})}
       </ResponsiveWrapper>
       <ResponsiveWrapper
         {...propsDesktopAndTablet}
         className={getAmountClass("caption-medium")}
       >
-        {handleAmount()}
+        {renderAmount({})}
       </ResponsiveWrapper>
     </>
   );
