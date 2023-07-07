@@ -4,6 +4,7 @@ import { emptyPaginatedData } from "helpers/api";
 
 import getBountiesListData from "x-hooks/api/bounty/get-bounties-list-data";
 import getPaymentsData from "x-hooks/api/bounty/get-payments-data";
+import getChainsData from "x-hooks/api/get-chains-data";
 
 /**
  * Get curators from api based on query filters
@@ -16,30 +17,33 @@ export default async function getProfilePageData(query: ParsedUrlQuery) {
   const [pageName] = (profilePage || ["profile"]);
 
   const wallet = query?.wallet;
-  const data = {
-    bounties: emptyPaginatedData,
-    payments: null,
-  };
+  const bountyFilter = {
+    "bounties": "creator",
+    "pull-requests": "pullRequester",
+    "proposals": "proposer"
+  }[pageName];
 
-  if (["bounties", "pull-requests", "proposals"].includes(pageName) && wallet) {
-    const key = {
-      "bounties": "creator",
-      "pull-requests": "pullRequester",
-      "proposals": "proposer"
-    }[pageName];
+  const shouldFetchBounties = ["bounties", "pull-requests", "proposals"].includes(pageName) && wallet;
+  const shouldFetchPayments = pageName === "payments" && wallet;
+  const shouldFetchChains = pageName === "payments";
+  
 
-    data.bounties = await getBountiesListData({
+  const [bounties, payments, chains] = await Promise.all([
+    shouldFetchBounties ? getBountiesListData({
       ...query,
-      [key]: wallet
+      [bountyFilter]: wallet
     })
       .then(({ data }) => data)
-      .catch(() => emptyPaginatedData);
-  }
-
-  if (pageName === "payments" && wallet)
-    data.payments = await getPaymentsData({ ...query, groupBy: "network" })
+      .catch(() => emptyPaginatedData) : null,
+    shouldFetchPayments ? getPaymentsData({ ...query, groupBy: "network" })
       .then(({ data }) => data)
-      .catch(() => null);
+      .catch(() => null) : null,
+    shouldFetchChains ? getChainsData({}) : null,
+  ]);
 
-  return data;
+  return {
+    bounties,
+    payments,
+    chains,
+  };
 }

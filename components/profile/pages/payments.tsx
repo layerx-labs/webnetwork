@@ -1,28 +1,25 @@
-import {ChangeEvent, SetStateAction, useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-import {format, subDays} from "date-fns";
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import ArrowRight from "assets/icons/arrow-right";
-
 import If from "components/If";
+import IntervalListFilter from "components/lists/filters/interval/controller";
 import NothingFound from "components/nothing-found";
+import PaymentsNetwork from "components/profile/pages/payments-network";
 import PaymentsList from "components/profile/payments-list";
 import ProfileLayout from "components/profile/profile-layout";
-import {FlexColumn, FlexRow} from "components/profile/wallet-balance";
+import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
 import ReactSelect from "components/react-select";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import {useAppState} from "contexts/app-state";
+import { useAppState } from "contexts/app-state";
 
-import {formatNumberToCurrency} from "helpers/formatNumber";
+import { formatNumberToCurrency } from "helpers/formatNumber";
 
-import {getCoinPrice} from "services/coingecko";
+import { getCoinPrice } from "services/coingecko";
 
 import { NetworkPaymentsData } from "types/api";
-
-import PaymentsNetwork from "./payments-network";
 
 export interface TotalFiatNetworks {
   tokenAddress: string;
@@ -39,63 +36,13 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
   const { t } = useTranslation(["common", "profile", "custom-network"]);
   const router = useRouter();
 
-  const defaultOptions = [
-    {
-      value: format(subDays(new Date(), 7), "yyyy-MM-dd").toString(),
-      label: `7 ${t("info-data.days_other")}`,
-    },
-    {
-      value: format(subDays(new Date(), 15), "yyyy-MM-dd").toString(),
-      label: `15 ${t("info-data.days_other")}`,
-    },
-    {
-      value: format(subDays(new Date(), 30), "yyyy-MM-dd").toString(),
-      label: `30 ${t("info-data.days_other")}`,
-    },
-  ];
-
   const [totalFiat, setTotalFiat] = useState(0);
-  const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([])
   const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
-  const [option, setOption] = useState<{ value: string; label: string }>(defaultOptions[0]);
-  const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 7), "yyyy-MM-dd").toString());
-  const [endDate, setEndDate] = useState<string>(format(new Date(), "yyyy-MM-dd").toString());
+  const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
   const {state} = useAppState();
 
-  function onChangeSelect(e: { value: string; label: string }) {
-    setStartDate(e.value);
-    setEndDate(format(new Date(), "yyyy-MM-dd").toString());
-    setOption({
-      value: e.value,
-      label: e.label,
-    });
-  }
-
-  useEffect(() => {
-    if (!payments?.length) return;
-
-    Promise.all(payments.flatMap(({ payments }) => payments.map(async (payment) => ({
-      tokenAddress: payment?.issue?.transactionalToken?.address,
-      value: payment.ammount,
-      price: await getCoinPrice(payment?.issue?.transactionalToken?.symbol, state?.Settings?.currency?.defaultFiat),
-      networkId: payment?.issue?.network_id
-    }))))
-      .then((tokens) => {
-        const totalConverted = tokens.reduce((acc, token) => acc + token.value * (token.price || 0), 0);
-        const noConverted = !!tokens.find((token) => token.price === undefined);
-        
-        setTotalFiatNetworks(tokens)
-        setTotalFiat(totalConverted);
-        setHasNoConvertedToken(noConverted);
-      });
-  }, [payments]);
-
-  function onChangeDate(e: ChangeEvent<HTMLInputElement>,
-                        setState: (value: SetStateAction<string>) => void) {
-    setOption({ value: "-", label: "-" });
-    setState(e.target.value);
-  }
+  const intervalOptions = [7, 15, 30];
 
   function TotalReceived() {
     if (hasNoConvertedToken)
@@ -121,6 +68,25 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
       </>
     );
   }
+
+  useEffect(() => {
+    if (!payments?.length) return;
+
+    Promise.all(payments.flatMap(({ payments }) => payments.map(async (payment) => ({
+      tokenAddress: payment?.issue?.transactionalToken?.address,
+      value: payment.ammount,
+      price: await getCoinPrice(payment?.issue?.transactionalToken?.symbol, state?.Settings?.currency?.defaultFiat),
+      networkId: payment?.issue?.network_id
+    }))))
+      .then((tokens) => {
+        const totalConverted = tokens.reduce((acc, token) => acc + token.value * (token.price || 0), 0);
+        const noConverted = !!tokens.find((token) => token.price === undefined);
+        
+        setTotalFiatNetworks(tokens)
+        setTotalFiat(totalConverted);
+        setHasNoConvertedToken(noConverted);
+      });
+  }, [payments]);
 
   if (router?.query?.networkName && router?.query?.networkChain)
     return <PaymentsNetwork
@@ -178,64 +144,25 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
             lg={true}
             className="row align-items-center mb-4"
           >
-            <div className="col-2">
-              <div className="d-flex align-items-center gap-2">
-                <label className="text-capitalize text-white font-weight-normal caption-medium">
-                  {t("misc.latest")}
-                </label>
-
-                <ReactSelect
-                  options={defaultOptions}
-                  value={option}
-                  onChange={onChangeSelect}
-                />
-              </div>
-            </div>
-
             <div className="col">
-              <div className="d-flex align-items-center gap-2">
-                <label className="text-capitalize text-white font-weight-normal caption-medium">
-                  {t("profile:payments.period")}
-                </label>
-
-                <input
-                  type="date"
-                  key="startDate"
-                  className="form-control"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    onChangeDate(e, setStartDate)
-                  }
-                  value={startDate}
-                  max={endDate}
-                  />
-                <span>
-                  <ArrowRight height="10px" width="10px" />
-                </span>
-
-                <input
-                  type="date"
-                  key="endDate"
-                  className="form-control"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    onChangeDate(e, setEndDate)
-                  }
-                  value={endDate}
-                  max={format(new Date(), "yyyy-MM-dd").toString()}
-                />
-              </div>
+              <IntervalListFilter
+                defaultInterval={intervalOptions[0]}
+                intervals={intervalOptions}
+              />
             </div>
 
-            <div className="col-2">
-              <div className="d-flex align-items-center gap-2">
-                <label className="text-capitalize text-white font-weight-normal caption-medium">
-                  Chain
-                </label>
+            <div className="col-3">
+              <div className="row align-items-center gx-2">
+                <div className="col-auto">
+                  <label className="text-capitalize text-white font-weight-normal caption-medium">
+                    Chain
+                  </label>
+                </div>
 
-                <ReactSelect
-                  options={defaultOptions}
-                  value={option}
-                  onChange={onChangeSelect}
+                <div className="col">
+                  <ReactSelect
                   />
+                </div>
               </div>
             </div>
           </ResponsiveWrapper>
