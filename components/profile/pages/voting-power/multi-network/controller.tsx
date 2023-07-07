@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
@@ -33,6 +33,19 @@ export default function VotingPowerMultiNetwork() {
     setNetwork(network)
   }
 
+  function handleIconNetwork(icon: string, color: string): string | ReactElement {
+    const  className = "mx-1 circle-3"
+
+    const SecondaryIconProps = color ? {
+      className,
+      style: { backgroundColor: color }
+    }: { className: `${className} bg-primary`}
+
+    return icon ? icon : (
+      <div {...SecondaryIconProps} />
+    )
+  }
+
   function clearNetwork() {
     setNetwork(undefined)
   }
@@ -54,6 +67,7 @@ export default function VotingPowerMultiNetwork() {
       handleNetwork={handleNetwork}
       clearNetwork={clearNetwork}
       goToNetwork={goToNetwork}
+      handleIconNetwork={handleIconNetwork}
     />
   );
 }

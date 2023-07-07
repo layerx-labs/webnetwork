@@ -1,8 +1,11 @@
+import { ReactElement } from "react";
+
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
+import NothingFound from "components/nothing-found";
 import NetworkColumns from "components/profile/network-columns";
 import NetworkItem from "components/profile/network-item/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -18,6 +21,7 @@ interface VotingPowerMultiNetworkViewProps {
   handleNetwork: (network: Curator) => void;
   clearNetwork: () => void;
   goToNetwork: (network: Network) => void;
+  handleIconNetwork: (icon: string, color: string) => string | ReactElement;
 }
 
 export default function VotingPowerMultiNetworkView({
@@ -26,6 +30,7 @@ export default function VotingPowerMultiNetworkView({
   handleNetwork,
   clearNetwork,
   goToNetwork,
+  handleIconNetwork
 }: VotingPowerMultiNetworkViewProps) {
   const { t } = useTranslation(["common", "profile"]);
 
@@ -62,7 +67,7 @@ export default function VotingPowerMultiNetworkView({
         </ContextualSpan>
       </div>
 
-      <If condition={!!networks.length && !network}>
+      <If condition={!!networks?.length && !network}>
         <ResponsiveWrapper className="mt-5 flex-column" xs={false} lg={true}>
           <NetworkColumns
             columns={[
@@ -74,39 +79,50 @@ export default function VotingPowerMultiNetworkView({
           />
         </ResponsiveWrapper>
       </If>
-
-      {!!networks.length && !network
-        ? networks.map((curator, key) => {
-          const {
-              tokensLocked,
-              delegatedToMe,
-              delegations,
-              network: currentNetwork,
-            } = curator;
-          return (
-              <NetworkItem
-                key={currentNetwork?.networkAddress}
-                type="network"
-                networkName={currentNetwork?.name}
-                iconNetwork={currentNetwork?.logoIcon}
-                primaryColor={currentNetwork?.colors?.primary}
-                amount={BigNumber(tokensLocked).plus(delegatedToMe).toFixed()}
-                symbol={`${currentNetwork?.networkToken?.symbol} ${t("misc.votes")}`}
-                variant="multi-network"
-                handleNetworkLink={() => goToNetwork(currentNetwork)}
-                handleToggleTabletAndMobile={() => handleNetwork(curator)}
-              >
-                <VotingPowerRowView
-                  tokensLocked={tokensLocked}
-                  delegatedToMe={delegatedToMe}
-                  delegations={delegations}
-                  network={currentNetwork}
-                  key={key}
-                />
-              </NetworkItem>
-          );
-        })
-        : renderItem()}
+      <If
+        condition={networks?.length > 0}
+        otherwise={
+          networks &&
+          !network && (
+            <NothingFound
+              description={t("profile:not-found.any-voting-power")}
+            />
+          )
+        }
+      >
+        {!network
+          ? networks?.map((curator, key) => {
+            const {
+                tokensLocked,
+                delegatedToMe,
+                delegations,
+                network: currentNetwork,
+              } = curator;
+            return (
+                <NetworkItem
+                  key={currentNetwork?.networkAddress}
+                  type="network"
+                  networkName={currentNetwork?.name}
+                  iconNetwork={handleIconNetwork(currentNetwork?.logoIcon, currentNetwork?.colors?.primary)}
+                  primaryColor={currentNetwork?.colors?.primary}
+                  amount={BigNumber(tokensLocked).plus(delegatedToMe).toFixed()}
+                  symbol={`${currentNetwork?.networkToken?.symbol} ${t("misc.votes")}`}
+                  variant="multi-network"
+                  handleNetworkLink={() => goToNetwork(currentNetwork)}
+                  handleToggleTabletAndMobile={() => handleNetwork(curator)}
+                >
+                  <VotingPowerRowView
+                    tokensLocked={tokensLocked}
+                    delegatedToMe={delegatedToMe}
+                    delegations={delegations}
+                    network={currentNetwork}
+                    key={key}
+                  />
+                </NetworkItem>
+            );
+          })
+          : renderItem()}
+      </If>
     </>
   );
 }
