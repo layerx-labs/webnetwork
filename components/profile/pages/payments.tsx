@@ -124,10 +124,10 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
 
   if (router?.query?.networkName && router?.query?.networkChain)
     return <PaymentsNetwork
-      payments={payments[0]}
+      networkPayments={payments[0]}
       totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-    />
+    />;
 
   return (
     <>

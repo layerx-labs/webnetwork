@@ -59,7 +59,7 @@ export default async function get(query: ParsedUrlQuery) {
           },
           {
             association: "network",
-            attributes: ["id", "name", "colors", "logoIcon", "fullLogo"],
+            attributes: ["id", "name", "colors", "logoIcon", "fullLogo", "networkAddress"],
             required: !!networkName || !!networkChain,
             where: networkWhere,
             include: [

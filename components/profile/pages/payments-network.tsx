@@ -17,13 +17,13 @@ import { NetworkPaymentsData } from "types/api";
 import { useNetwork } from "x-hooks/use-network";
 
 interface PaymentsNetworkProps {
-  payments: NetworkPaymentsData;
+  networkPayments: NetworkPaymentsData;
   totalConverted: number;
   defaultFiat: string;
 }
 
 export default function PaymentsNetwork({
-  payments,
+  networkPayments,
   totalConverted,
   defaultFiat,
 }: PaymentsNetworkProps) {
@@ -40,11 +40,25 @@ export default function PaymentsNetwork({
     });
   }
 
-  function goToNetwork() {
-    push(getURLWithNetwork("/", {
-      network: network?.name,
-      chain: network?.chain?.chainShortName
+  function goToNetwork(id = undefined, repoId = undefined) {
+    const path = id && repoId ? "/bounty" : "/";
+
+    push(getURLWithNetwork(path, {
+      network: networkPayments?.name,
+      chain: networkPayments?.chain?.chainShortName,
+      id,
+      repoId,
     }));
+  }
+
+  function goToBounty(payment) {
+    return () => {
+      if (!payment?.issue?.issueId) return;
+
+      const [repoId, id] = payment.issue.issueId.split("/");
+
+      goToNetwork(id, repoId);
+    };
   }
 
   return(
@@ -56,7 +70,7 @@ export default function PaymentsNetwork({
           </Button>
         </div>
         <div className="col">
-          <h4 className="text-white font-weight-medium text-capitalize">{network?.name}</h4>
+          <h4 className="text-white font-weight-medium text-capitalize">{networkPayments?.name}</h4>
         </div>
       </div>
 
@@ -89,7 +103,11 @@ export default function PaymentsNetwork({
       </div>
 
       <div className="row mx-0 mt-4 gap-3">
-      {payments?.map(payment => <div className="row p-2 mx-0 bg-gray-900 border-radius-4 border border-gray-800">
+      {networkPayments?.payments?.map(payment => 
+      <div 
+        key={payment?.transactionHash}
+        className="row p-2 mx-0 bg-gray-900 border-radius-4 border border-gray-800"
+      >
         <div className="col">
           <div className="row align-items-center">
             <div className="col">
@@ -103,6 +121,7 @@ export default function PaymentsNetwork({
               <Button
                 color="gray-800"
                 className="text-white"
+                onClick={goToBounty(payment)}
                 outline
               >
                 Bounty #{payment?.issue?.issueId}
