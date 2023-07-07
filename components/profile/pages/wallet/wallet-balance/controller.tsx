@@ -37,7 +37,7 @@ export default function WalletBalance() {
 
   const { searchCurators, getTokens } = useApi();
   const { getURLWithNetwork } = useNetwork();
-  const { query, push } = useRouter();
+  const { query, push, pathname, asPath } = useRouter();
 
   const getAddress = (token: string | Token) =>
     typeof token === "string" ? token : token?.address;
@@ -81,13 +81,14 @@ export default function WalletBalance() {
   }
 
   function handleSearchFilter(name = "", symbol = "", networks) {
+    const hasNetworkName = query?.networkName
     const isNetwork = !!networks.find(({ name }) =>
-        query?.networkName?.toString().toLowerCase() === name?.toLowerCase());
+      hasNetworkName?.toString().toLowerCase() === name?.toLowerCase());
 
     return (
       (name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
         symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0) &&
-      (query?.networkName ? isNetwork : true)
+      (hasNetworkName ? isNetwork : true)
     );
   }
 
@@ -96,7 +97,6 @@ export default function WalletBalance() {
 
     searchCurators({
       address: state.currentUser?.walletAddress,
-      networkName: query?.network?.toString() || "",
       chainShortName:
         query?.chain?.toString() || state?.connectedChain?.shortName,
     }).then(({ rows }) => {
@@ -118,7 +118,7 @@ export default function WalletBalance() {
 
     if (state.Service?.starting) return;
 
-    getTokens(state?.connectedChain?.id, query?.network?.toString() || "").then((tokens) => {
+    getTokens(state?.connectedChain?.id).then((tokens) => {
       Promise.all(tokens?.map(async (token) => {
         const tokenData = await processToken(token?.address);
         return { networks: token?.networks, ...tokenData };
@@ -157,6 +157,16 @@ export default function WalletBalance() {
       setHasNoConvertedToken(noConverted);
     });
   }, [tokens]);
+
+  useEffect(() => {
+    if(!query?.networkName && query?.network){
+      const newQuery = {
+        ...query,
+        networkName: query?.network
+      };
+      push({ pathname: pathname, query: newQuery }, asPath);
+    }
+  }, [query?.network])
 
   return (
     <WalletBalanceView
