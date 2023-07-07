@@ -80,11 +80,9 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         lg={true}
         xs={false}
-        className="d-flex justify-content-center col-lg-3 "
+        className="d-flex justify-content-center align-items-center col-lg-3"
       >
-        <FlexColumn className="justify-content-center">
-          <NetworkLinkIconButton className="px-1" />
-        </FlexColumn>
+          <NetworkLinkIconButton className="px-1 ms-3" />
       </ResponsiveWrapper>
       <div
         className="col-lg-3 col-6 d-flex justify-content-end cursor-pointer"
