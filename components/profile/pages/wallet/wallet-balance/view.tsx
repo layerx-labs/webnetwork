@@ -9,6 +9,8 @@ import SelectNetwork from "components/bounties/select-network";
 import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
+import IssueMobileFilters from "components/issue-filters/mobile-filters";
+import ChainSelector from "components/navigation/chain-selector/controller";
 import NothingFound from "components/nothing-found";
 import { TokenBalanceType } from "components/profile/token-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -86,9 +88,18 @@ export default function WalletBalanceView({
           </InputGroup>
         </div>
         <div className="col-auto">
-          <div className="d-none d-xl-flex">
+          <ResponsiveWrapper xs={true} md={false}>
+            <IssueMobileFilters onlyProfileFilters={true} hideSort showChainSelector/>
+          </ResponsiveWrapper>
+          <ResponsiveWrapper xs={false} md={true}>
+            <div className="d-flex align-items-center me-3">
+              <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+                {t("misc.chain")}
+              </label>
+              <ChainSelector />
+            </div>
             <SelectNetwork isCurrentDefault={isOnNetwork} />
-          </div>
+          </ResponsiveWrapper>
         </div>
       </div>
 
