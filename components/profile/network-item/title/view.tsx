@@ -34,7 +34,7 @@ export default function NetworkItemTitleView({
         )}
       </FlexColumn>
       <FlexColumn className="justify-content-center">
-        <FlexRow className="flex-wrap">{networkName}</FlexRow>
+        <FlexRow className="flex-wrap xs-medium">{networkName}</FlexRow>
 
         {subNetworkText && (
           <FlexRow className="d-none d-sm-block">
