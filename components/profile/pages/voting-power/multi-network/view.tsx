@@ -5,6 +5,7 @@ import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import NetworkColumns from "components/profile/network-columns";
 import NetworkItem from "components/profile/network-item/controller";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { Curator } from "interfaces/curators";
 import { Network } from "interfaces/network";
@@ -62,7 +63,7 @@ export default function VotingPowerMultiNetworkView({
       </div>
 
       <If condition={!!networks.length && !network}>
-        <div className="mt-5">
+        <ResponsiveWrapper className="mt-5 flex-column" xs={false} lg={true}>
           <NetworkColumns
             columns={[
               t("profile:network-columns.network-name"),
@@ -71,7 +72,7 @@ export default function VotingPowerMultiNetworkView({
               "",
             ]}
           />
-        </div>
+        </ResponsiveWrapper>
       </If>
 
       {!!networks.length && !network
