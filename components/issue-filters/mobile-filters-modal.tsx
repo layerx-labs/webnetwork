@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -5,6 +7,7 @@ import SelectNetwork from "components/bounties/select-network";
 import If from "components/If";
 import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
+import ChainSelector from "components/navigation/chain-selector/controller";
 import ReactSelect from "components/react-select";
 
 import { SortOption } from "types/components";
@@ -17,6 +20,8 @@ interface MobileFiltersModalProps {
   onlyTimeFrame?: boolean;
   onlyProfileFilters?: boolean;
   sortOptions?: SortOption[];
+  hideSort?: boolean;
+  showChainSelector?: boolean;
 }
 
 export default function MobileFiltersModal({
@@ -24,7 +29,9 @@ export default function MobileFiltersModal({
   hide,
   onlyTimeFrame,
   onlyProfileFilters,
-  sortOptions
+  sortOptions,
+  showChainSelector,
+  hideSort = false
 }: MobileFiltersModalProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
@@ -75,16 +82,24 @@ export default function MobileFiltersModal({
     applyFilters();
   }
 
-  function FilterComponent(label, options, type) {
-    return(
+  function RenderFilterStructure({ label, children }: {label: string, children: ReactElement}) {
+    return (
       <div className="mb-3">
         <span className="caption-small font-weight-medium text-gray-100 text-capitalize">{label}</span>
-        <ReactSelect
-          value={getCurrentFilter(options)}
-          options={options}
-          onChange={handleChange(type)}
-        />
+          {children}
       </div>
+    )
+  }
+
+  function FilterComponent(label, options, type) {
+    return(
+        <RenderFilterStructure label={label}>
+          <ReactSelect
+            value={getCurrentFilter(options)}
+            options={options}
+            onChange={handleChange(type)}
+          />
+        </RenderFilterStructure>
     );
   }
 
@@ -97,8 +112,18 @@ export default function MobileFiltersModal({
       okLabel={t("actions.apply")}
       onOkClick={handleApply}
     >
+      <If condition={showChainSelector && !isOnNetwork}>
+        <RenderFilterStructure label={t("misc.chain")}>
+          <div className="col-12">
+          <ChainSelector />
+          </div>
+        </RenderFilterStructure>
+      </If>
       <If condition={onlyProfileFilters}>
-        <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />
+        <If condition={!hideSort}>
+          <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />
+        </If>
+
         <SelectNetwork
           isCurrentDefault={isOnNetwork}
           onlyProfileFilters={onlyProfileFilters}
