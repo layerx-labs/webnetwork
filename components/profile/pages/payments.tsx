@@ -4,22 +4,26 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import If from "components/If";
-import IntervalListFilter from "components/lists/filters/interval/controller";
+import ChainFilter from "components/lists/filters/chain/controller";
+import IntervalFilters from "components/lists/filters/interval/controller";
 import NothingFound from "components/nothing-found";
 import PaymentsNetwork from "components/profile/pages/payments-network";
 import PaymentsList from "components/profile/payments-list";
 import ProfileLayout from "components/profile/profile-layout";
 import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
-import ReactSelect from "components/react-select";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { useAppState } from "contexts/app-state";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 
+import { SupportedChainData } from "interfaces/supported-chain-data";
+
 import { getCoinPrice } from "services/coingecko";
 
 import { NetworkPaymentsData } from "types/api";
+
+import useQueryFilter from "x-hooks/use-query-filter";
 
 export interface TotalFiatNetworks {
   tokenAddress: string;
@@ -30,9 +34,13 @@ export interface TotalFiatNetworks {
 
 interface PaymentsPageProps {
   payments: NetworkPaymentsData[];
+  chains: SupportedChainData[];
 }
 
-export default function PaymentsPage({ payments }: PaymentsPageProps) {
+export default function PaymentsPage({ 
+  payments,
+  chains,
+}: PaymentsPageProps) {
   const { t } = useTranslation(["common", "profile", "custom-network"]);
   const router = useRouter();
 
@@ -40,7 +48,8 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
   const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
-  const {state} = useAppState();
+  const { state } = useAppState();
+  const { setValue } = useQueryFilter({ wallet: null });
 
   const intervalOptions = [7, 15, 30];
 
@@ -88,7 +97,11 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
       });
   }, [payments]);
 
-  if (router?.query?.networkName && router?.query?.networkChain)
+  useEffect(() => {
+    setValue({ wallet: state.currentUser?.walletAddress || "" }, true);
+  }, [state.currentUser?.walletAddress]);
+
+  if (router?.query?.networkName)
     return <PaymentsNetwork
       networkPayments={payments[0]}
       totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
@@ -145,25 +158,16 @@ export default function PaymentsPage({ payments }: PaymentsPageProps) {
             className="row align-items-center mb-4"
           >
             <div className="col">
-              <IntervalListFilter
+              <IntervalFilters
                 defaultInterval={intervalOptions[0]}
                 intervals={intervalOptions}
               />
             </div>
 
             <div className="col-3">
-              <div className="row align-items-center gx-2">
-                <div className="col-auto">
-                  <label className="text-capitalize text-white font-weight-normal caption-medium">
-                    Chain
-                  </label>
-                </div>
-
-                <div className="col">
-                  <ReactSelect
-                  />
-                </div>
-              </div>
+              <ChainFilter
+                chains={chains}
+              />
             </div>
           </ResponsiveWrapper>
 
