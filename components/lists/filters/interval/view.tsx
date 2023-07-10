@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import ArrowRight from "assets/icons/arrow-right";
 
+import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import ReactSelect from "components/react-select";
 
 import { SelectOption } from "types/utils";
@@ -40,12 +41,18 @@ export default function IntervalFiltersView({
           </div>
 
           <div className="col">
-            <ReactSelect
+            <NativeSelectWrapper
               options={intervals}
-              value={interval}
               onChange={onIntervalChange}
-              isSearchable={false}
-            />
+              selectedIndex={intervals?.findIndex(value => value === interval)}
+            >
+              <ReactSelect
+                options={intervals}
+                value={interval}
+                onChange={onIntervalChange}
+                isSearchable={false}
+              />
+            </NativeSelectWrapper>
           </div>
         </div>
       </div>
