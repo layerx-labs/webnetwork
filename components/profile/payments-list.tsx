@@ -87,7 +87,7 @@ export default function PaymentsList({
           amount={handleAmount(network?.id)}
           symbol={symbol}
         >
-          <FlexColumn className="col-12">
+          <FlexColumn className="col-12 gap-2">
             {network?.payments
               .map((payment: Payment) =>
                 PaymentItem({
