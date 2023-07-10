@@ -114,9 +114,7 @@ export default function MobileFiltersModal({
     >
       <If condition={showChainSelector && !isOnNetwork}>
         <RenderFilterStructure label={t("misc.chain")}>
-          <div className="col-12">
-          <ChainSelector />
-          </div>
+          <ChainSelector isFilter />
         </RenderFilterStructure>
       </If>
       <If condition={onlyProfileFilters}>
