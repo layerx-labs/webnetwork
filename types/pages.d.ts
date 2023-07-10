@@ -1,4 +1,5 @@
 import { IssueData } from "interfaces/issue-data";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Proposal } from "interfaces/proposal";
 
 import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated, NetworkPaymentsData } from "types/api";
@@ -31,6 +32,7 @@ interface MyNetworkPageProps {
 }
 
 interface ProfilePageProps {
-  bounties: SearchBountiesPaginated;
-  payments: NetworkPaymentsData[];
+  bounties?: SearchBountiesPaginated;
+  payments?: NetworkPaymentsData[];
+  chains?: SupportedChainData[];
 }

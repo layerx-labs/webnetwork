@@ -31,3 +31,7 @@ export interface Action {
   onClick: () => void;
   label: string;
 }
+
+export interface QueryParams {
+  [key: string]: string | undefined;
+}
