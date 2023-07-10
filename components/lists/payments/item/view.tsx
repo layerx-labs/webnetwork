@@ -47,11 +47,7 @@ export default function PaymentItem({
       <Button
         color="gray-900"
         className="border border-gray-800 font-weight-medium"
-        onClick={() =>
-          handleItemClick(issue?.issueId,
-                          issue?.network?.chain?.chainShortName,
-                          issue?.network?.name)
-        }
+        onClick={handleItemClick}
       >
         <span className="text-white text-nowrap">
           {labelBounty} #{issue?.issueId}
