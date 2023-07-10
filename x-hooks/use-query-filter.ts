@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
-export default function useQueryFilter(params: string[], defaultValue?: string) {
+import { QueryParams } from "types/utils";
+
+export default function useQueryFilter(params: QueryParams) {
   const router = useRouter();
 
-  const [value, setValue] = useState(Object.fromEntries(params.map(e => [e, null])));
+  const [value, setValue] = useState(params);
 
   function updateRouter(newValue) {
     router.push({
@@ -40,11 +42,7 @@ export default function useQueryFilter(params: string[], defaultValue?: string) 
       return;
     }
 
-    const currentQueryValue = Object.fromEntries(params.map(p => [p, router.query[p]]));
-
-    console.log("currentQueryValue", currentQueryValue)
-
-    setValue(currentQueryValue);
+    setValue(Object.fromEntries(Object.keys(value).map(key => [key, router?.query[key]?.toString()])));
   }, [router?.query]);
 
   return {
