@@ -13,10 +13,7 @@ export default function Profile(props: ProfilePageProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
   const pageData = await getProfilePageData(query);
-
-  console.log("query", query)
-  console.log("pageData", pageData)
-
+  
   return {
     props: {
       ...pageData,
