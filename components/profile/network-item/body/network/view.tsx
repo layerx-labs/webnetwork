@@ -61,41 +61,41 @@ export default function BodyNetworkView({
   return (
     <>
       <ResponsiveWrapper
-        lg={true}
+        xl={true}
         xs={false}
-        className="d-flex align-items-center justify-content-center col-lg-3"
+        className="d-flex align-items-center justify-content-center col-xl-3"
       >
         <RenderAmount />
       </ResponsiveWrapper>
       <ResponsiveWrapper
-        lg={true}
+        xl={true}
         xs={false}
-        className="d-flex justify-content-center align-items-center col-lg-3"
+        className="d-flex justify-content-center align-items-center col-xl-3 "
       >
           <NetworkLinkIconButton className="px-1 ms-3" />
       </ResponsiveWrapper>
       <div
-        className="col-lg-3 col-6 d-flex justify-content-end cursor-pointer"
+        className="col-xl-3 col-6 d-flex justify-content-end cursor-pointer"
         onClick={handleToggleCollapse}
       >
         <FlexColumn className="justify-content-center text-gray-200">
           <ResponsiveWrapper
             xs={false}
-            lg={true}
+            xl={true}
           >
             <ArrowComponent />
           </ResponsiveWrapper>
 
           <ResponsiveWrapper
             xs={true}
-            lg={false}
+            xl={false}
           >
             <ChevronRightIcon width={14} height={14} />
           </ResponsiveWrapper>
         </FlexColumn>
       </div>
       <ResponsiveWrapper
-        lg={false}
+        xl={false}
         xs={true}
         className="d-flex flex-column justify-content-center mt-3"
       >
