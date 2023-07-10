@@ -3,7 +3,12 @@ import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 
+import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+
+interface PaymentItemProps extends Payment {
+  network: Partial<Network>;
+}
 
 export default function PaymentItem({
   ammount,
@@ -12,8 +17,9 @@ export default function PaymentItem({
   id,
   labelBounty,
   labelToken,
+  network,
   handleItemClick,
-}: Payment) {
+}: PaymentItemProps) {
   const CONTAINER_CLASSES = [
     "justify-content-between align-items-center bg-gray-950",
     "border border-dark-gray border-radius-4 mb-2 py-3 px-4",
@@ -26,7 +32,7 @@ export default function PaymentItem({
           <span className="text-white">
             {formatNumberToCurrency(ammount)}
           </span>
-          <span className="text-primary">
+          <span style={{ color: network?.colors?.primary }}>
             {`${issue?.transactionalToken?.symbol || labelToken}`}
           </span>
         </FlexRow>

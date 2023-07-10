@@ -63,7 +63,7 @@ export default function PaymentsPage({
 
     return(
       <>
-        <span className="caption-medium font-weight-medium text-capitalize text-white mr-2">
+        <span className="caption-medium font-weight-normal text-capitalize text-white mr-2">
           {t("labels.recivedintotal")}
         </span>
 

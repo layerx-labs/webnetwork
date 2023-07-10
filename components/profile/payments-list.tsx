@@ -32,9 +32,18 @@ export default function PaymentsList({
   const { getURLWithNetwork } = useNetwork();
 
   const headers = [
-    t("profile:network-columns.network-name"),
-    t("profile:network-columns.total-received"),
-    t("profile:network-columns.network-link"),
+    {
+      label: t("profile:network-columns.network-name"),
+      align: "left px-2",
+    },
+    {
+      label: t("profile:network-columns.total-received"),
+      align: "center",
+    },
+    {
+      label: t("profile:network-columns.network-link"),
+      align: "center",
+    },
   ];
 
   function handleItemClick(issueId: string, chainName: string, networkName: string) {
@@ -56,10 +65,10 @@ export default function PaymentsList({
         xl={true}
         className="row"
       >
-        {headers.map(title => 
+        {headers.map(({ label, align }) => 
           <div className="col-3">
-            <div className="row text-center">
-              <span className="caption-medium text-gray-500 font-weight-normal text-capitalize">{title}</span>
+            <div className={`row text-${align}`}>
+              <span className="caption-medium text-gray-500 font-weight-normal text-capitalize">{label}</span>
             </div>
           </div>)}
       </ResponsiveWrapper>
@@ -83,6 +92,7 @@ export default function PaymentsList({
               .map((payment: Payment) =>
                 PaymentItem({
                   ...payment,
+                  network: network,
                   labelToken: t("misc.$token"),
                   labelBounty: t("bounty:label"),
                   handleItemClick,
