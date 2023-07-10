@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 
+
 import {
   differenceInDays,
   differenceInMonths,
@@ -11,31 +12,31 @@ import {
   subYears,
 } from "date-fns";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
-import ArrowRight from "assets/icons/arrow-right";
-
-import ReactSelect from "components/react-select";
+import IntervalFiltersView from "components/lists/filters/interval/view";
 
 import { SelectOption } from "types/utils";
 
 import useQueryFilter from "x-hooks/use-query-filter";
 
-interface IntervalListFilterProps {
+interface IntervalFiltersProps {
   defaultInterval?: number;
   intervals: number[];
   intervalIn?: "days" | "months" | "years";
 }
 
-export default function IntervalListFilter({
+export default function IntervalFilters({
   defaultInterval,
   intervals,
   intervalIn = "days",
-}: IntervalListFilterProps) {
+}: IntervalFiltersProps) {
   const { t } = useTranslation(["common"]);
+  const router = useRouter();
 
   const [interval, setInterval] = useState<number>(defaultInterval);
 
-  const { value, setValue } = useQueryFilter(["startDate", "endDate"]);
+  const { value, setValue } = useQueryFilter({ startDate: null, endDate: null });
 
   const now = new Date();
 
@@ -91,62 +92,21 @@ export default function IntervalListFilter({
     setInterval(isExistentInterval ? diff : null);
   }, [value]);
 
-  return (
-    <div className="row align-items-center">
-      <div className="col-3">
-        <div className="row align-items-center gx-2">
-          <div className="col-auto">
-            <label className="text-capitalize text-white font-weight-normal caption-medium">
-              {t("misc.latest")}
-            </label>
-          </div>
+  useEffect(() => {
+    if (!router?.query?.wallet || (router?.query?.startDate && router?.query?.endDate)) return;
 
-          <div className="col">
-            <ReactSelect
-              options={intervals.map(intervalToOption)}
-              value={intervalToOption(interval)}
-              onChange={onIntervalChange}
-            />
-          </div>
-        </div>
-      </div>
+    setValue(getIntervalDates(defaultInterval), true);
+  }, [router?.query]);
 
-      <div className="col">
-        <div className="row align-items-center gx-2">
-          <div className="col-auto">
-            <label className="text-capitalize text-white font-weight-normal caption-medium">
-              {t("profile:payments.period")}
-            </label>
-          </div>
-
-          <div className="col">
-            <input
-              type="date"
-              key="startDate"
-              className="form-control"
-              onChange={onDateChange("startDate")}
-              value={value.startDate}
-              max={value.endDate}
-            />
-          </div>
-
-          <div className="col-auto">
-            <ArrowRight height="10px" width="10px" />
-          </div>
-
-          <div className="col">
-            <input
-              type="date"
-              key="endDate"
-              className="form-control"
-              onChange={onDateChange("endDate")}
-              value={value.endDate}
-              min={value.startDate}
-              max={format(now, "yyyy-MM-dd").toString()}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+  return(
+    <IntervalFiltersView
+      intervals={intervals.map(intervalToOption)}
+      interval={intervalToOption(interval)}
+      startDate={value.startDate}
+      endDate={value.endDate}
+      onIntervalChange={onIntervalChange}
+      onStartDateChange={onDateChange("startDate")}
+      onEndDateChange={onDateChange("endDate")}
+    />
   );
 }
