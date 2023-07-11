@@ -54,10 +54,12 @@ export interface IntervalFiltersProps {
   intervals: number[];
   intervalIn?: "days" | "months" | "years";
   direction?: Direction;
+  onStartDateChange?: (value: string) => void;
+  onEndDateChange?: (value: string) => void;
 }
 
 export interface ChainFilterProps {
   chains: SupportedChainData[];
   direction?: Direction;
-  onChangeReplacement?: (value: string | number) => void;
+  onChange?: (value: string | number) => void;
 }

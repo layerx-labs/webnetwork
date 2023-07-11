@@ -13,7 +13,7 @@ import useQueryFilter from "x-hooks/use-query-filter";
 export default function ChainFilter({
   chains,
   direction = "horizontal",
-  onChangeReplacement,
+  onChange,
 }: ChainFilterProps) {
   const [chain, setChain] = useState<SupportedChainData>();
 
@@ -28,8 +28,8 @@ export default function ChainFilter({
   const findChain = chainShortName => chains?.find(c => c.chainShortName === chainShortName)
 
   function onChainChange(option: SelectOption) {
-    if (onChangeReplacement) {
-      onChangeReplacement(option?.value);
+    if (onChange) {
+      onChange(option?.value);
       setChain(findChain(option?.value));
     } else
       setValue({

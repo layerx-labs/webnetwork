@@ -38,6 +38,7 @@ export default function ChainFilterView({
           options={options}
           onChange={onChange}
           selectedIndex={options?.findIndex(opt => opt?.value === option?.value)}
+          isClearable
         >
           <ReactSelect
             options={options}

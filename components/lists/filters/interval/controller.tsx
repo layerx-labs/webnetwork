@@ -26,6 +26,8 @@ export default function IntervalFilters({
   intervals,
   intervalIn = "days",
   direction = "horizontal",
+  onStartDateChange,
+  onEndDateChange,
 }: IntervalFiltersProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
@@ -54,14 +56,27 @@ export default function IntervalFilters({
     setInterval(+value);
     const { startDate, endDate } = getIntervalDates(value);
 
-    setValue({ startDate, endDate }, true);
+    if (onStartDateChange || onEndDateChange) {
+      onStartDateChange?.(startDate);
+      onEndDateChange?.(endDate);
+    } else
+      setValue({ startDate, endDate }, true);
   }
 
   function onDateChange(dateParam: string) {
     return (e: ChangeEvent<HTMLInputElement>) => {
-      setValue({
-        [dateParam]: e.target.value,
-      }, true);
+      const newValue = e.target.value;
+
+      if (onStartDateChange || onEndDateChange) {
+        if (dateParam === "startDate") onStartDateChange?.(newValue);
+        else if (dateParam === "endDate") onEndDateChange?.(newValue);
+        setValue({
+          [dateParam]: newValue,
+        });
+      } else
+        setValue({
+          [dateParam]: newValue,
+        }, true);
     };
   }
 
@@ -72,7 +87,8 @@ export default function IntervalFilters({
     } : null;
 
   useEffect(() => {
-    if (defaultInterval) setValue(getIntervalDates(defaultInterval), true);
+    if (defaultInterval && !router?.query?.startDate && !router?.query?.endDate)
+      setValue(getIntervalDates(defaultInterval), true);
   }, []);
 
   useEffect(() => {

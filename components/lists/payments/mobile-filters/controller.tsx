@@ -22,6 +22,8 @@ export default function PaymentsListMobileFilters({
   const { value, setValue } = useQueryFilter({ endDate, startDate, networkChain });
 
   const onChainChange = (value: string | number) => setNetworkChain(value?.toString());
+  const onStartDateChange = (value: string) => setStartDate(value);
+  const onEndDateChange = (value: string) => setEndDate(value);
 
   function applyFilters() {
     setValue({ endDate, startDate, networkChain }, true);
@@ -37,17 +39,19 @@ export default function PaymentsListMobileFilters({
     <MobileFiltersButton
       onApply={applyFilters}
     >
-      {/* <IntervalFilters
+      <IntervalFilters
         defaultInterval={defaultInterval}
         intervals={intervals}
         direction="vertical"
-      /> */}
+        onStartDateChange={onStartDateChange}
+        onEndDateChange={onEndDateChange}
+      />
 
       <div className="mt-4">
         <ChainFilter
           chains={chains}
           direction="vertical"
-          onChangeReplacement={onChainChange}
+          onChange={onChainChange}
         />
       </div>
     </MobileFiltersButton>
