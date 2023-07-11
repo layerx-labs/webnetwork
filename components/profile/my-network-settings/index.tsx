@@ -37,6 +37,7 @@ import useNetworkTheme from "x-hooks/use-network-theme";
 import Management from "./management";
 
 interface MyNetworkSettingsProps {
+  bounties: SearchBountiesPaginated;
   network: Network;
   bounties: SearchBountiesPaginated;
   updateEditingNetwork: () => void;
@@ -49,6 +50,7 @@ interface TabsProps {
 }
 
 export default function MyNetworkSettings({
+  bounties,
   network,
   bounties,
   updateEditingNetwork,

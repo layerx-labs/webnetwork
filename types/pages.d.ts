@@ -36,3 +36,7 @@ interface ProfilePageProps {
   payments?: NetworkPaymentsData[];
   chains?: SupportedChainData[];
 }
+
+interface MyNetworkPageProps {
+  bounties: SearchBountiesPaginated;
+}

@@ -23,10 +23,9 @@ export default async function getProfilePageData(query: ParsedUrlQuery) {
     "proposals": "proposer"
   }[pageName];
 
-  const shouldFetchBounties = ["bounties", "pull-requests", "proposals"].includes(pageName) && wallet;
-  const shouldFetchPayments = pageName === "payments" && wallet;
+  const shouldFetchBounties = ["bounties", "pull-requests", "proposals", "my-network"].includes(pageName) && !!wallet;
+  const shouldFetchPayments = pageName === "payments" && !!wallet;
   const shouldFetchChains = pageName === "payments";
-  
 
   const [bounties, payments, chains] = await Promise.all([
     shouldFetchBounties ? getBountiesListData({
