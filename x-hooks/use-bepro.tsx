@@ -163,7 +163,9 @@ export default function useBepro() {
     });
   }
 
-  async function handleReedemIssue(funding = false): Promise<{ blockNumber: number; } | Error> {
+  async function handleReedemIssue( contractId: number, 
+                                    issueId: string, 
+                                    funding = false): Promise<{ blockNumber: number; } | Error> {
     return new Promise(async (resolve, reject) => {
       const redeemTx = addTx([{
         type: TransactionTypes.redeemIssue,
@@ -173,15 +175,15 @@ export default function useBepro() {
 
       let tx: { blockNumber: number; }
 
-      await state.Service?.active.cancelBounty(state.currentBounty?.data?.contractId, funding)
+      await state.Service?.active.cancelBounty(contractId, funding)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
           return processEvent(NetworkEvents.BountyCanceled, undefined, {
-            fromBlock: txInfo.blockNumber, id: state.currentBounty?.data?.contractId
+            fromBlock: txInfo.blockNumber, id: contractId
           });
         })
         .then((canceledBounties) => {
-          if (!canceledBounties?.[state.currentBounty?.data?.issueId]) throw new Error('Failed');
+          if (!canceledBounties?.[issueId]) throw new Error('Failed');
           dispatch(updateTx([parseTransaction(tx, redeemTx.payload[0] as SimpleBlockTransactionPayload)]))
           resolve(tx)
           // todo should force these two after action, but we can't have it here or it will fall outside of context
@@ -203,17 +205,17 @@ export default function useBepro() {
       dispatch(transaction);
       let tx: { blockNumber: number; }
 
-      await state.Service?.active.hardCancel(contractId || state.currentBounty?.data?.contractId)
+      await state.Service?.active.hardCancel(contractId)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
 
           return processEvent(NetworkEvents.BountyCanceled, undefined, {
             fromBlock: txInfo.blockNumber, 
-            id: contractId || state.currentBounty?.data?.contractId
+            id: contractId
           });
         })
         .then((canceledBounties) => {
-          if (!canceledBounties?.[issueId || state.currentBounty?.data?.issueId]) throw new Error('Failed');
+          if (!canceledBounties?.[issueId]) throw new Error('Failed');
           dispatch(updateTx([parseTransaction(tx, transaction.payload[0] as SimpleBlockTransactionPayload)]))
           resolve(canceledBounties)
           // getChainBounty(true);
