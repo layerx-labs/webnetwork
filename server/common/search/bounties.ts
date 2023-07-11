@@ -61,9 +61,11 @@ export default async function get(query: ParsedUrlQuery) {
 
   if (chainId) 
     whereCondition.chain_id = +chainId;
-  
-  if (typeof visible !== "undefined") 
+
+  if (typeof visible !== "undefined" && visible !== "both") 
     whereCondition.visible = isTrue(visible.toString());
+  else if (visible !== "both")
+    whereCondition.visible = true;
 
   if (creator) 
     whereCondition.creatorAddress = {

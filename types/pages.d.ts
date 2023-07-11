@@ -25,3 +25,7 @@ export interface LeaderBoardPageProps {
 export interface ProposalPageProps {
   proposal: Proposal;
 }
+
+interface MyNetworkPageProps {
+  bounties: SearchBountiesPaginated;
+}

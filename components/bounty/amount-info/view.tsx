@@ -39,7 +39,7 @@ export default function BountyAmountView({
           !isActive ? "bg-gray-950" : "bg-dark-gray"
         } `}
       >
-        <div className={`d-flex gap-1 px-0 text-truncate ${size === "sm" && "text-center"}`}>
+        <div className={`d-flex gap-1 px-0 justify-content-center text-truncate ${size === "sm" && "text-center"}`}>
           <span
             className={`text-opacity-1 text-white${isActive && "-40"}`}
           >
