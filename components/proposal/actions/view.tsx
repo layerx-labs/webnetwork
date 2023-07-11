@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import WarningIcon from "assets/icons/warning-icon";

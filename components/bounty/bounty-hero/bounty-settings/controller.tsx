@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import { useAppState } from "contexts/app-state";
 
-import { getIssueState } from "helpers/handleTypeIssue";
-
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useAuthentication } from "x-hooks/use-authentication";
