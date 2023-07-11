@@ -19,12 +19,19 @@ export default function Profile({
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
   const { profilePage } = query || {};
+  const [pageName] = (profilePage || ["profile"]);
 
-  const hasNotWalletFilter = !query?.creator && !query?.proposer && !query?.pullRequester;
+  const isMyNetworkPage = pageName === "my-network";
+  const hasNotWalletFilter = !query?.creator && !query?.proposer && !query?.pullRequester && !isMyNetworkPage;
   const emptyData = { count: 0, rows: [], currentPage: 1, pages: 1 };
 
-  const [pageName] = (profilePage || ["profile"]);
-  const visible = pageName === "my-network" ? "both" : undefined;
+  
+  const visible = isMyNetworkPage ? "both" : undefined;
+
+  console.log({
+    pageName,
+    visible
+  })
 
   const bounties = hasNotWalletFilter ? emptyData : await getBountiesListData({...query, visible })
     .then(({ data }) => data)
