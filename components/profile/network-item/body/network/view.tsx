@@ -99,7 +99,7 @@ export default function BodyNetworkView({
         xs={true}
         className="d-flex flex-column justify-content-center mt-3"
       >
-        <span className="font-weight-medium text-gray-500 text-capitalize">
+        <span className="font-weight-normal text-gray-500 text-capitalize">
           {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
         </span>
         <RenderAmount />

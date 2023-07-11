@@ -153,7 +153,8 @@
     "remove": "Remove",
     "register": "Register",
     "clear-all": "Clear All",
-    "apply": "Apply"
+    "apply": "Apply",
+    "clear": "Clear"
   },
   "misc": {
     "by": "by",
@@ -477,5 +478,9 @@
   "cookie-consent": {
     "message": "This website uses cookies to enhance the user experience.",
     "button-label": "Accept"
+  },
+  "placeholders": {
+    "select-chain": "Select Chain",
+    "select-latest": "Select Latest"
   }
 }

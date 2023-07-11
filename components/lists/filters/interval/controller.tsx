@@ -16,20 +16,16 @@ import { useRouter } from "next/router";
 
 import IntervalFiltersView from "components/lists/filters/interval/view";
 
+import { IntervalFiltersProps } from "types/components";
 import { SelectOption } from "types/utils";
 
 import useQueryFilter from "x-hooks/use-query-filter";
-
-interface IntervalFiltersProps {
-  defaultInterval?: number;
-  intervals: number[];
-  intervalIn?: "days" | "months" | "years";
-}
 
 export default function IntervalFilters({
   defaultInterval,
   intervals,
   intervalIn = "days",
+  direction = "horizontal",
 }: IntervalFiltersProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
@@ -107,6 +103,7 @@ export default function IntervalFilters({
       onIntervalChange={onIntervalChange}
       onStartDateChange={onDateChange("startDate")}
       onEndDateChange={onDateChange("endDate")}
+      direction={direction}
     />
   );
 }

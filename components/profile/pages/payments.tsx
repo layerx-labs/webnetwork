@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
 import IntervalFilters from "components/lists/filters/interval/controller";
+import PaymentsList from "components/lists/payments/controller";
+import PaymentsListMobileFilters from "components/lists/payments/mobile-filters/controller";
 import NothingFound from "components/nothing-found";
 import PaymentsNetwork from "components/profile/pages/payments-network";
-import PaymentsList from "components/profile/payments-list";
 import ProfileLayout from "components/profile/profile-layout";
 import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -67,7 +68,7 @@ export default function PaymentsPage({
           {t("labels.recivedintotal")}
         </span>
 
-        <div className="caption-large font-weight-medium bg-gray-900 py-2 px-3 border-radius-4">
+        <div className="caption-large font-weight-medium bg-gray-900 py-2 px-3 border border-gray-850 border-radius-4">
           <span className="text-white">
             {formatNumberToCurrency(totalFiat)}
           </span>
@@ -114,7 +115,7 @@ export default function PaymentsPage({
         xs={true}
         xl={false}
         className={`align-items-center justify-content-between mb-2 border-bottom 
-        border-gray-850 border-xl-0 pb-3 px-3`}
+        border-gray-850 border-xl-0 pb-3 px-3 mt-2`}
       >
         <FlexColumn>
           <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
@@ -124,6 +125,14 @@ export default function PaymentsPage({
           <FlexRow className="align-items-center">
             <TotalReceived />
           </FlexRow>
+        </ResponsiveWrapper>
+
+        <ResponsiveWrapper xs={true} lg={false}>
+          <PaymentsListMobileFilters
+            defaultInterval={intervalOptions[0]}
+            intervals={intervalOptions}
+            chains={chains}
+          />
         </ResponsiveWrapper>
       </ResponsiveWrapper>
 

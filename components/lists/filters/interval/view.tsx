@@ -7,13 +7,14 @@ import ArrowRight from "assets/icons/arrow-right";
 import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import ReactSelect from "components/react-select";
 
-import { SelectOption } from "types/utils";
+import { Direction, SelectOption } from "types/utils";
 
 interface IntervalFiltersViewProps {
   intervals: SelectOption[];
   interval: SelectOption;
   startDate: string;
   endDate: string;
+  direction: Direction;
   onIntervalChange: (value: SelectOption) => void;
   onStartDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onEndDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -24,17 +25,22 @@ export default function IntervalFiltersView({
   interval,
   startDate,
   endDate,
+  direction,
   onIntervalChange,
   onStartDateChange,
   onEndDateChange,
 }: IntervalFiltersViewProps) {
   const { t } = useTranslation("common");
 
+  const isHorizontal = direction === "horizontal";
+  const containerClass = isHorizontal ? "col-3" : "col-12 mb-4";
+  const labelClass = isHorizontal ? "col-auto" : "col-12";
+
   return (
     <div className="row align-items-center">
-      <div className="col-3">
-        <div className="row align-items-center gx-2">
-          <div className="col-auto">
+      <div className={containerClass}>
+        <div className="row align-items-center gx-2 gy-2">
+          <div className={labelClass}>
             <label className="text-capitalize text-white font-weight-normal caption-medium">
               {t("misc.latest")}
             </label>
@@ -51,6 +57,7 @@ export default function IntervalFiltersView({
                 value={interval}
                 onChange={onIntervalChange}
                 isSearchable={false}
+                placeholder={t("placeholders.select-latest")}
               />
             </NativeSelectWrapper>
           </div>
@@ -58,8 +65,8 @@ export default function IntervalFiltersView({
       </div>
 
       <div className="col">
-        <div className="row align-items-center gx-2">
-          <div className="col-auto">
+        <div className="row align-items-center gx-2 gy-2">
+          <div className={labelClass}>
             <label className="text-capitalize text-white font-weight-normal caption-medium">
               {t("profile:payments.period")}
             </label>

@@ -35,3 +35,5 @@ export interface Action {
 export interface QueryParams {
   [key: string]: string | undefined;
 }
+
+export type Direction = "vertical" | "horizontal";
