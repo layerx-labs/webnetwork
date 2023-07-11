@@ -14,7 +14,6 @@ export default function PaymentItem({
   ammount,
   issue,
   transactionHash,
-  id,
   labelBounty,
   labelToken,
   network,

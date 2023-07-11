@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import PaymentsListView from "components/lists/payments/view";
 import { TotalFiatNetworks } from "components/profile/pages/payments";
 
-import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
 
 import { NetworkPaymentsData } from "types/api";
