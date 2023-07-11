@@ -17,10 +17,13 @@ export default async function getProfilePageData(query: ParsedUrlQuery) {
   const [pageName] = (profilePage || ["profile"]);
 
   const wallet = query?.wallet;
+  const walletFilter = filter => ({ [filter]: wallet });
+
   const bountyFilter = {
-    "bounties": "creator",
-    "pull-requests": "pullRequester",
-    "proposals": "proposer"
+    "bounties": walletFilter("creator"),
+    "pull-requests": walletFilter("pullRequester"),
+    "proposals": walletFilter("proposer"),
+    "my-network": { visible: "both" },
   }[pageName];
 
   const shouldFetchBounties = ["bounties", "pull-requests", "proposals", "my-network"].includes(pageName) && !!wallet;
@@ -30,7 +33,7 @@ export default async function getProfilePageData(query: ParsedUrlQuery) {
   const [bounties, payments, chains] = await Promise.all([
     shouldFetchBounties ? getBountiesListData({
       ...query,
-      [bountyFilter]: wallet
+      ...bountyFilter || {},
     })
       .then(({ data }) => data)
       .catch(() => emptyPaginatedData) : null,
