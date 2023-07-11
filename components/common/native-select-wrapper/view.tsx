@@ -43,7 +43,10 @@ export default function NativeSelectWrapper({
           onChange={handleChange}
           value={selectedIndex > 0 ? selectedIndex : ""}
         >
-          { isClearable && <option value="">{t("actions.clear")}</option> }
+          <option value="" disabled={!isClearable}>
+          { isClearable && t("actions.clear") || t("misc.choose-one") }
+          </option>
+          
           {options.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}
         </select>
       </If>
