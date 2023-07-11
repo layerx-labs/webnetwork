@@ -26,7 +26,7 @@ export default function PaymentItem({
   ];
 
   return (
-    <FlexRow className={CONTAINER_CLASSES.join(" ")} key={id}>
+    <FlexRow className={CONTAINER_CLASSES.join(" ")} key={transactionHash}>
       <FlexColumn>
         <FlexRow className="caption-large font-weight-medium gap-1 text-uppercase mb-1">
           <span className="text-white">
