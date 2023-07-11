@@ -41,7 +41,7 @@ export default function NativeSelectWrapper({
         <select
           className="native-select"
           onChange={handleChange}
-          value={selectedIndex > 0 ? selectedIndex : ""}
+          value={selectedIndex >= 0 ? selectedIndex : ""}
         >
           <option value="" disabled={!isClearable}>
           { isClearable && t("actions.clear") || t("misc.choose-one") }
