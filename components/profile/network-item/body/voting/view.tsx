@@ -19,7 +19,6 @@ interface BodyVotingViewProps {
 }
 
 export default function BodyVotingView({
-  type,
   amount,
   symbol,
   isNetworkVariant,
