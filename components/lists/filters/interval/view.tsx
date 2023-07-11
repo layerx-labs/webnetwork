@@ -50,7 +50,7 @@ export default function IntervalFiltersView({
             <NativeSelectWrapper
               options={intervals}
               onChange={onIntervalChange}
-              selectedIndex={intervals?.findIndex(value => value === interval)}
+              selectedIndex={intervals?.findIndex(opt => opt?.value === interval?.value)}
             >
               <ReactSelect
                 options={intervals}
