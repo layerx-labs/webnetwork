@@ -48,10 +48,10 @@ export default function WalletBalance() {
         ? state.Service?.active?.getERC20TokenData(token)
         : token,
       state.Service?.active?.getTokenBalance(getAddress(token),
-                                             state.currentUser.walletAddress),
+                                             state?.currentUser?.walletAddress),
     ]);
 
-    const tokenInformation = await getCoinInfoByContract(tokenData.symbol);
+    const tokenInformation = await getCoinInfoByContract(tokenData?.symbol);
 
     return {
       balance,
@@ -92,7 +92,7 @@ export default function WalletBalance() {
     );
   }
 
-  function loadBalances() {
+  function loadOracleBalance() {
     if (!state.currentUser?.walletAddress) return;
 
     searchCurators({
@@ -115,8 +115,10 @@ export default function WalletBalance() {
         };
       })).then(setTokensOracles);
     });
+  }
 
-    if (state.Service?.starting) return;
+  function loadTokensBalance() {
+    if (state.Service?.starting || !state.currentUser?.walletAddress) return;
 
     getTokens(state?.connectedChain?.id).then((tokens) => {
       Promise.all(tokens?.map(async (token) => {
@@ -126,11 +128,15 @@ export default function WalletBalance() {
     });
   }
 
-  useEffect(loadBalances, [
+  useEffect(loadOracleBalance, [
+    state.currentUser?.walletAddress
+  ]);
+
+  useEffect(loadTokensBalance ,[
     state.currentUser?.walletAddress,
     state.connectedChain,
-    state.Service?.starting,
-  ]);
+    state.Service?.starting
+  ])
 
   useEffect(() => {
     if (!tokens?.length) return;
