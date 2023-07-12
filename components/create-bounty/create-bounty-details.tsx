@@ -199,7 +199,7 @@ export default function CreateBountyDetails({
         <h5>{t("steps.github")}</h5>
         <p className="text-gray">{t("descriptions.github")}</p>
         <div className="row mt-2">
-              <div className="col-6">   
+              <div className="col-md-6">   
               <ReposDropdown
                 repositories={repositories}
                 onSelected={(opt) => {
@@ -212,7 +212,7 @@ export default function CreateBountyDetails({
                 }}
               />
               </div>
-              <div className="col-6">
+              <div className="col-md-6">
               <BranchsDropdown
                 branches={branches}
                 onSelected={(opt) => updateBranch(opt)}
