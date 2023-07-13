@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 
+import ResponsiveWrapper from "components/responsive-wrapper";
+
 export default function CreateBountySteps({
   steps,
   currentSection,
@@ -39,13 +41,14 @@ export default function CreateBountySteps({
             </div>
           </div>
         </div>
-
-        <span className="text-gray">Step {index + 1}</span>
-        <span>{label}</span>
+        <ResponsiveWrapper  className="d-flex flex-column" xs={false} md={true}>
+          <span className="text-gray">Step {index + 1}</span>
+          <span>{label}</span>
+        </ResponsiveWrapper>
       </div>
     </Fragment>
     );
   }
 
-  return <div className="row my-4">{steps.map(renderColumn)}</div>;
+  return <div className="row my-4 mx-1">{steps.map(renderColumn)}</div>;
 }
