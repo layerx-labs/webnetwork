@@ -18,7 +18,7 @@ export default function ChainFilter({
   const [chain, setChain] = useState<SupportedChainData>();
 
   const { isMobileView, isTabletView } = useBreakPoint();
-  const { value, setValue } = useQueryFilter({ networkChain: null });
+  const { setValue } = useQueryFilter({ networkChain: null });
 
   const chainToOption = (chain: SupportedChainData): SelectOption => chain ? ({
     value: chain?.chainShortName,
@@ -28,18 +28,15 @@ export default function ChainFilter({
   const findChain = chainShortName => chains?.find(c => c.chainShortName === chainShortName)
 
   function onChainChange(option: SelectOption) {
-    if (onChange) {
-      onChange(option?.value);
-      setChain(findChain(option?.value));
-    } else
+    if (onChange)
+      onChange(option?.value);  
+    else
       setValue({
         networkChain: option?.value,
       }, true);
+    
+    setChain(findChain(option?.value));
   }
-
-  useEffect(() => {
-    setChain(findChain(value.networkChain));
-  }, [value]);
 
   return(
     <ChainFilterView
