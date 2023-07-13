@@ -7,6 +7,7 @@ import ArrowUpRight from "assets/icons/arrow-up-right";
 import ChevronRightIcon from "assets/icons/chevronright-icon";
 
 import Button from "components/button";
+import CollapseArrows from "components/common/collapse-arrows/view";
 import { FlexColumn } from "components/profile/wallet-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -83,7 +84,7 @@ export default function BodyNetworkView({
             xs={false}
             xl={true}
           >
-            <ArrowComponent />
+            <CollapseArrows isCollapsed={isCollapsed} />
           </ResponsiveWrapper>
 
           <ResponsiveWrapper
