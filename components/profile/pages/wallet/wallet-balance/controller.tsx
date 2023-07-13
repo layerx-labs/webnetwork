@@ -10,10 +10,12 @@ import TokenIcon from "components/token-icon";
 
 import { useAppState } from "contexts/app-state";
 
+import { getPricesAndConvert } from "helpers/tokens";
+
 import { TokensOracles } from "interfaces/oracles-state";
 import { Token } from "interfaces/token";
 
-import { getCoinInfoByContract, getCoinPrice } from "services/coingecko";
+import { getCoinInfoByContract } from "services/coingecko";
 
 import useApi from "x-hooks/use-api";
 import { useNetwork } from "x-hooks/use-network";
@@ -141,27 +143,22 @@ export default function WalletBalance() {
   useEffect(() => {
     if (!tokens?.length) return;
 
-    Promise.all(tokens.map(async (token) => ({
-        tokenAddress: token.address,
-        value:
-          typeof token.balance === "string"
-            ? BigNumber(token.balance)
-            : token.balance,
-        price: await getCoinPrice(token?.symbol,
-                                  state?.Settings.currency.defaultFiat),
-    }))).then((tokens) => {
-      const totalConverted = tokens.reduce((acc, token) =>
-          BigNumber(token.value)
-            .multipliedBy(token.price || 0)
-            .plus(acc),
-                                           BigNumber(0));
-      const noConverted = !!tokens.find((token) => token.price === undefined);
-      const totalTokens = tokens.reduce((acc, token) => BigNumber(token.value).plus(acc),
-                                        BigNumber(0));
+    const convertableItems = tokens.map((token) => ({
+      tokenAddress: token.address,
+      value:
+        typeof token.balance === "string"
+          ? BigNumber(token.balance)
+          : token.balance,
+      token: token
+    }))
 
-      setTotalAmount(noConverted ? totalTokens.toFixed() : totalConverted.toFixed());
-      setHasNoConvertedToken(noConverted);
-    });
+    getPricesAndConvert(convertableItems, state?.Settings?.currency?.defaultFiat)
+    .then(({ noConverted, totalConverted }) => {  
+      const totalTokens = tokens.reduce((acc, token) => BigNumber(token.balance).plus(acc),
+                                        BigNumber(0));          
+      setTotalAmount(noConverted.length > 0 ? totalTokens.toFixed() : totalConverted.toFixed());
+      setHasNoConvertedToken(!!noConverted.length);
+    })
   }, [tokens]);
 
   useEffect(() => {
