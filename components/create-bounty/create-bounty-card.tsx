@@ -16,11 +16,11 @@ export default function CreateBountyCard({
   function Card({ children }) {
     return (
       <>
-        <ResponsiveWrapper className="flex-column" xs={true} md={false}>
+        <ResponsiveWrapper className="mx-3 flex-column" xs={true} md={false}>
           {children}
         </ResponsiveWrapper>
         <ResponsiveWrapper
-          className="flex-column bg-gray-900 p-4 border-radius-4 border border-gray-850"
+          className="mx-2 flex-column bg-gray-900 p-4 border-radius-4 border border-gray-850"
           xs={false}
           md={true}
         >
