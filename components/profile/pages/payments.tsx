@@ -18,6 +18,7 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import { useAppState } from "contexts/app-state";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
+import { toLower } from "helpers/string";
 import { getPricesAndConvert } from "helpers/tokens";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
@@ -50,7 +51,7 @@ export default function PaymentsPage({
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
   const { state } = useAppState();
-  const { setValue } = useQueryFilter({ wallet: null });
+  const { value, setValue } = useQueryFilter({ wallet: null });
 
   const intervalOptions = [7, 15, 30];
 
@@ -102,7 +103,8 @@ export default function PaymentsPage({
   }, [payments]);
 
   useEffect(() => {
-    setValue({ wallet: state.currentUser?.walletAddress || "" }, true);
+    if (!value?.wallet || toLower(value?.wallet) !== toLower(state.currentUser?.walletAddress))
+      setValue({ wallet: state.currentUser?.walletAddress || "" }, true);
   }, [state.currentUser?.walletAddress]);
 
   if (router?.query?.networkName && payments?.length)
