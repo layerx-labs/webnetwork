@@ -27,7 +27,7 @@ export default function VotingPowerInfoCardView({
       </div>
       <div className="me-3">
       <span>
-        <InfoIconEmpty className="text-info me-2 mb-1" width={12.75} height={12.75} />
+        <InfoIconEmpty className="text-info me-2 mb-1" width={12} height={12} />
         {t("profile:need-network-to-manage")}
       </span>
       </div>
