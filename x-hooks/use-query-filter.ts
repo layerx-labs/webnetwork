@@ -23,17 +23,16 @@ export default function useQueryFilter(params: QueryParams) {
     updateRouter(value);
   }
 
-  function updateValue(newParams, autoApply?: boolean) {    
-    if (autoApply)
-      updateRouter({
-        ...value,
-        ...newParams,
-      });
+  function updateQuery(newParams, applyToRouter?: boolean, appendPrevious =  true) {    
+    const getNewValue = previous => ({
+      ... appendPrevious ? previous : {},
+      ...newParams
+    });
+
+    if (applyToRouter)
+      updateRouter(getNewValue(value));
     else
-      setValue(previous => ({
-        ...previous,
-        ...newParams,
-      }));
+      setValue(previous => getNewValue(previous));
   }
 
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function useQueryFilter(params: QueryParams) {
 
   return {
     value,
-    setValue: updateValue,
+    setValue: updateQuery,
     apply,
   }
 }
