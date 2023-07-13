@@ -5,11 +5,10 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
 
-import DoubleArrowRight from "assets/icons/double-arrow-right";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { useAppState } from "../../contexts/app-state";
 import { getCoinPrice } from "../../services/coingecko";
-import Button from "../button";
 import InputNumber from "../input-number";
 import TokensDropdown from "../tokens-dropdown";
 
@@ -71,17 +70,15 @@ export default function CreateBountyTokenAmount({
 
     getCoinPrice(currentToken?.symbol,
                  state?.Settings?.currency?.defaultFiat).then((price) => {
-                   if(isNaN(price) || price === 0) setIsErrorConverted(true)
-                   if(!isNaN(price)) setConvertedAmount((issueAmount.value || 0) * price);
+                   if (isNaN(price) || price === 0) setIsErrorConverted(true);
+                   if (!isNaN(price)) setConvertedAmount((issueAmount.value || 0) * price);
                  });
   }
 
   function renderConvertedAmount() {
-    return (
-      isErrorConverted
-        ? t("fields.conversion-token.invalid")
-        : `${convertedAmount} ${state.Settings?.currency.defaultFiat}`
-    )
+    return isErrorConverted
+      ? t("fields.conversion-token.invalid")
+      : `${convertedAmount} ${state.Settings?.currency.defaultFiat}`;
   }
 
   function selectTokens() {
@@ -104,108 +101,121 @@ export default function CreateBountyTokenAmount({
   }
 
   function inputNumber() {
-    return(
+    return (
       <InputNumber
-      groupClassName={isFunding ? `input-funded`: 'input-group-border'}
-      className={isFunding ? `input-funded`: 'input-fund'}
-      classSymbol={isFunding ? "" : 'symbol-fund text-primary'}
-      symbol={!isFunding && currentToken?.symbol}
-      thousandSeparator
-      fullWidth={!publicRuntimeConfig?.enableCoinGecko}
-      max={tokenBalance.toFixed()}
-      value={issueAmount.value}
-      placeholder="0"
-      allowNegative={false}
-      decimalScale={decimals}
-      onValueChange={handleIssueAmountOnValueChange}
-      onBlur={handleIssueAmountBlurChange}
-      error={!!inputError}
-      helperText={
-        <>
-          {inputError && <p className="p-small my-2">{inputError}</p>}
-        </>
-      }
-    />
-    )
-  } 
+        groupClassName={isFunding ? `input-funded` : ""}
+        className={isFunding ? `input-funded` : ""}
+        classSymbol={isFunding ? "" : " text-primary"}
+        symbol={!isFunding && currentToken?.symbol}
+        thousandSeparator
+        fullWidth={!publicRuntimeConfig?.enableCoinGecko}
+        max={tokenBalance.toFixed()}
+        value={issueAmount.value}
+        placeholder="0"
+        allowNegative={false}
+        decimalScale={decimals}
+        onValueChange={handleIssueAmountOnValueChange}
+        onBlur={handleIssueAmountBlurChange}
+        error={!!inputError}
+        helperText={
+          <>{inputError && <p className="p-small my-2">{inputError}</p>}</>
+        }
+      />
+    );
+  }
+
+  function renderBalance() {
+    return (
+      <div className="text-truncate">
+        <span className="text-gray">{t("bounty:balance")}</span>{" "}
+        {tokenBalance.toFixed()}{" "}
+        {currentToken?.symbol || t("common:misc.token")}
+      </div>
+    );
+  }
+
+  function RenderItemRow({ children, label = "", description = "", borderBottom = true }) {
+    return (
+      <div className={`mt-4 pb-4 ${borderBottom ? 'border-bottom border-gray-700' : ''}`}>
+        <label className="text-white">{label}</label>
+        <div className="row justify-content-between">
+          <div className="col-md-6 col-12 text-gray mt-1">{description}</div>
+          <div className="col-md-4 col-12 mt-1">{children}</div>
+        </div>
+      </div>
+    );
+  }
 
   function handleUpdateToken() {
-    if(issueAmount?.floatValue === 0) return;
+    if (issueAmount?.floatValue === 0) return;
 
-    if (BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))) {
+    if (
+      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
+    ) {
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
       }));
     } else setInputError("");
   }
 
-  useEffect(updateConversion, [issueAmount.value]);
+  //useEffect(updateConversion, [issueAmount.value]);
   useEffect(handleUpdateToken, [currentToken?.minimum]);
 
   return (
     <div className="mt-4">
       <label className="mb-1 text-gray">
-      {isFunding
+        {isFunding
           ? isFunders
             ? t("fields.select-token.funding")
             : t("fields.select-token.reward")
-          : t("fields.select-token.bounty")}
+          : t("fields.select-token.label")}
       </label>
       {isFunding ? (
         <div className="d-flex justify-content-between col-md-6 p-2 border-radius-8 border border-gray-700">
           <div className="d-flex flex-column col-7">
             {inputNumber()}
-            <div className="text-white-30 ms-2">
-              {renderConvertedAmount()}
-            </div>
+            <div className="text-white-30 ms-2">{renderConvertedAmount()}</div>
           </div>
           <div className="col-4 me-2 mt-3 pt-1">{selectTokens()}</div>
         </div>
       ) : (
-        <div className="p-2 border-radius-8 border border-gray-700">
-          <div className="row d-flex justify-content-between">
-            <div className="d-flex col-8">
-              <div className="col-md-6">{selectTokens()}</div>
-              <div className="col-md-4 ms-2">
-                <Button
-                  className="bounty-outline-button button-max"
-                  onClick={() => {
-                    setIssueAmount({
-                      formattedValue: tokenBalance.toFixed(),
-                      floatValue: tokenBalance.toNumber(),
-                      value: tokenBalance.toFixed(),
-                    });
-                  }}
-                >
-                  {t("fields.amount.max")}
-                </Button>
-              </div>
+        <div>
+          <div className="d-flex flex-wrap justify-content-between">
+            <div className="col col-md-4  mb-0 pb-0">
+              {selectTokens()}
+              <ResponsiveWrapper className="mt-1" xs={true} md={false}>
+                {renderBalance()}
+              </ResponsiveWrapper>
             </div>
-            <div className="col-md-4 ">
-              <div className="p-1 ps-3 border-radius-4 border border-gray-700 text-gray text-truncate">
-              {t("balance")} {tokenBalance.toFixed()}{" "}
-                {currentToken?.symbol || t("common:misc.token")}
-              </div>
-            </div>
+
+            <ResponsiveWrapper
+              className="d-flex justify-content-end mt-3"
+              xs={false}
+              md={true}
+            >
+              {renderBalance()}
+            </ResponsiveWrapper>
           </div>
 
-          <div className="col-md-12 bg-gray-850 border border-radius-4 border-gray-700">
-            <div className="d-flex mt-4 ms-3">
-              <div className="col-5">
-              {inputNumber()}
-              </div>
-              {publicRuntimeConfig?.enableCoinGecko && (
-                <div className="d-flex mt-0">
-                  <div className="pt-2 mx-4 mt-1">
-                    <DoubleArrowRight className="text-gray" />
-                  </div>
-                  <div className="pt-1 mt-2 ms-2 convert-value">
-                    {renderConvertedAmount()}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <RenderItemRow
+            label="Set Reward"
+            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          >
+            {inputNumber()}
+          </RenderItemRow>
+          <RenderItemRow
+            label="Service fees"
+            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          >
+            {inputNumber()}
+          </RenderItemRow>
+          <RenderItemRow
+            label="Total amount"
+            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+            borderBottom={false}
+          >
+            {inputNumber()}
+          </RenderItemRow>
         </div>
       )}
     </div>
