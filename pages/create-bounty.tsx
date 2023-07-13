@@ -15,6 +15,7 @@ import ConnectWalletButton from "components/connect-wallet-button";
 import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/contract-button";
 import CreateBountyCard from "components/create-bounty/create-bounty-card";
+import CreateBountyContainer from "components/create-bounty/create-bounty-container";
 import CreateBountyDetails from "components/create-bounty/create-bounty-details";
 import CreateBountyNetworkDropdown from "components/create-bounty/create-bounty-network-dropdown";
 import CreateBountyReview from "components/create-bounty/create-bounty-review";
@@ -710,7 +711,7 @@ export default function CreateBountyPage() {
   return (
     <>
       {!(query?.created?.toString() === "true") && (
-        <>
+        <CreateBountyContainer>
           <CustomContainer>
 
           <CreateBountySteps
@@ -783,7 +784,7 @@ export default function CreateBountyPage() {
               )}
             </div>
           </CustomContainer>
-        </>
+        </CreateBountyContainer>
       )}
       <Modal
         show={showModalSuccess}
