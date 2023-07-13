@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import ArrowUpRight from "assets/icons/arrow-up-right";
@@ -27,6 +28,7 @@ export default function PaymentsNetwork({
   totalConverted,
   defaultFiat,
 }: PaymentsNetworkProps) {
+  const { t } = useTranslation(["common", "profile"]);
   const { push } = useRouter();
 
   const { state } = useAppState();
@@ -40,7 +42,7 @@ export default function PaymentsNetwork({
     });
   }
 
-  function goToNetwork(id = undefined, repoId = undefined) {
+  function redirectToNetwork(id = undefined, repoId = undefined) {
     const path = id && repoId ? "/bounty" : "/";
 
     push(getURLWithNetwork(path, {
@@ -51,13 +53,17 @@ export default function PaymentsNetwork({
     }));
   }
 
+  function goToNetwork() {
+    redirectToNetwork();
+  }
+
   function goToBounty(payment) {
     return () => {
       if (!payment?.issue?.issueId) return;
 
       const [repoId, id] = payment.issue.issueId.split("/");
 
-      goToNetwork(id, repoId);
+      redirectToNetwork(id, repoId);
     };
   }
 
@@ -80,7 +86,7 @@ export default function PaymentsNetwork({
           className="gap-1 border-radius-4 border-gray-700 text-gray-200 text-capitalize font-weight-medium not-svg"
           onClick={goToNetwork}
         >
-          <span>Go to Network</span>
+          <span>{t("profile:go-to-network")}</span>
           <ArrowUpRight />
         </Button>
       </div>
@@ -88,7 +94,7 @@ export default function PaymentsNetwork({
       <div className="row align-items-center mx-0 mt-4">
         <div className="col">
         <span className="caption-medium font-weight-medium text-capitalize text-white mr-2">
-          Total Received
+          {t("profile:total-received")}
         </span>
         </div>
 
@@ -124,7 +130,7 @@ export default function PaymentsNetwork({
                 onClick={goToBounty(payment)}
                 outline
               >
-                Bounty #{payment?.issue?.issueId}
+                {t("misc.bounty")} #{payment?.issue?.issueId}
               </Button>
             </div>
           </div>
