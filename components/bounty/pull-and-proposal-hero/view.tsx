@@ -42,10 +42,10 @@ export default function PullAndProposalHeroView({
   return (
     <div className="w-100 border-bottom border-gray-800">
       <CustomContainer className="p-3">
-        <div className="row align-items-center mb-4">
+        <div className="row align-items-start mb-4">
           <div className="col-auto">
             <Button
-              className="rounded-circle p-1 text-white not-svg"
+              className="rounded-circle p-1 text-white not-svg mt-1"
               onClick={onBackClick}
               outline
             >
@@ -53,10 +53,13 @@ export default function PullAndProposalHeroView({
             </Button>
           </div>
 
-          <div className="col px-0">
+          <div className="col-auto px-0">
             <span className="me-2 text-gray-500 caption-large font-weight-medium">
               #{issueGithubId}
             </span>
+          </div>
+
+          <div className="col px-0">
             <span className="text-white caption-large font-weight-medium text-capitalize">
               {issueTitle}
             </span>
