@@ -118,6 +118,7 @@
     "tags-info": "Up to 3 tags",
     "reward-type": "Reward Type",
     "select-token": {
+      "label": "Select Token",
       "bounty": "Set Reward",
       "reward": "Set Funded Reward",
       "funding": "Set Funding Amount"
@@ -163,7 +164,7 @@
   "self-fund": "Self-fund",
   "seek-funding": "Seek Funding",
   "seeking-funding": "Seeking Funding",
-  "balance": "balance:",
+  "balance": "Total Balance:",
   "edit": "edit",
   "most-active-network-empty": "Not found active networks",
   "kyc": {
