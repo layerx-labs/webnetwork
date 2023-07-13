@@ -1,8 +1,4 @@
-import { useEffect, useState } from "react";
-
-import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
@@ -10,50 +6,35 @@ import IntervalFilters from "components/lists/filters/interval/controller";
 import PaymentsList from "components/lists/payments/controller";
 import PaymentsListMobileFilters from "components/lists/payments/mobile-filters/controller";
 import NothingFound from "components/nothing-found";
-import PaymentsNetwork from "components/profile/pages/payments-network";
 import ProfileLayout from "components/profile/profile-layout";
 import { FlexColumn, FlexRow } from "components/profile/wallet-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { useAppState } from "contexts/app-state";
-
 import { formatNumberToCurrency } from "helpers/formatNumber";
-import { toLower } from "helpers/string";
-import { getPricesAndConvert } from "helpers/tokens";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import { PaymentsPageProps } from "types/pages";
+import { TotalFiatNetworks } from "types/utils";
 
-import { NetworkPaymentsData } from "types/api";
-
-import useQueryFilter from "x-hooks/use-query-filter";
-
-export interface TotalFiatNetworks {
-  tokenAddress: string;
-  value: number;
-  price: number;
-  networkId: number;
+interface PaymentsMultiViewProps extends PaymentsPageProps {
+  fiatSymbol: string;
+  totalFiat: number;
+  intervals: number[];
+  defaultInterval: number;
+  totalFiatNetworks: TotalFiatNetworks[];
+  hasNoConvertedToken?: boolean;
 }
 
-interface PaymentsPageProps {
-  payments: NetworkPaymentsData[];
-  chains: SupportedChainData[];
-}
-
-export default function PaymentsPage({ 
+export default function PaymentsMultiView({
   payments,
   chains,
-}: PaymentsPageProps) {
+  fiatSymbol,
+  totalFiat,
+  intervals,
+  defaultInterval,
+  totalFiatNetworks,
+  hasNoConvertedToken,
+}: PaymentsMultiViewProps) {
   const { t } = useTranslation(["common", "profile", "custom-network"]);
-  const router = useRouter();
-
-  const [totalFiat, setTotalFiat] = useState(0);
-  const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
-  const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
-  
-  const { state } = useAppState();
-  const { value, setValue } = useQueryFilter({ wallet: null });
-
-  const intervalOptions = [7, 15, 30];
 
   function TotalReceived() {
     if (hasNoConvertedToken)
@@ -74,49 +55,15 @@ export default function PaymentsPage({
             {formatNumberToCurrency(totalFiat)}
           </span>
 
-          <span className="text-gray-600 ml-1">{state?.Settings?.currency?.defaultFiat}</span>
+          <span className="text-gray-600 ml-1">{fiatSymbol}</span>
         </div>
       </>
     );
   }
 
-  useEffect(() => {
-    if (!payments?.length) {
-      setTotalFiatNetworks([]);
-      setTotalFiat(0);
-      return;
-    }
-
-    const convertableItems = payments.flatMap(({ id, payments }) => payments.map(payment => ({
-      tokenAddress: payment?.issue?.transactionalToken?.address,
-      networkId: id,
-      value: BigNumber(payment.ammount),
-      token: payment.issue.transactionalToken
-    })));
-
-    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat)
-      .then(({ converted, noConverted, totalConverted }) => {      
-        setTotalFiatNetworks(converted);
-        setTotalFiat(totalConverted.toNumber());
-        setHasNoConvertedToken(!!noConverted.length);
-      });
-  }, [payments]);
-
-  useEffect(() => {
-    if (!value?.wallet || toLower(value?.wallet) !== toLower(state.currentUser?.walletAddress))
-      setValue({ wallet: state.currentUser?.walletAddress || "" }, true);
-  }, [state.currentUser?.walletAddress]);
-
-  if (router?.query?.networkName && payments?.length)
-    return <PaymentsNetwork
-      networkPayments={payments[0]}
-      totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
-      defaultFiat={state?.Settings?.currency?.defaultFiat}
-    />;
-
   return (
     <>
-      <ResponsiveWrapper 
+      <ResponsiveWrapper
         xs={true}
         xl={false}
         className={`align-items-center justify-content-between mb-2 border-bottom 
@@ -134,8 +81,8 @@ export default function PaymentsPage({
 
         <ResponsiveWrapper xs={true} lg={false}>
           <PaymentsListMobileFilters
-            defaultInterval={intervalOptions[0]}
-            intervals={intervalOptions}
+            defaultInterval={defaultInterval}
+            intervals={intervals}
             chains={chains}
           />
         </ResponsiveWrapper>
@@ -173,8 +120,8 @@ export default function PaymentsPage({
           >
             <div className="col">
               <IntervalFilters
-                defaultInterval={intervalOptions[0]}
-                intervals={intervalOptions}
+                defaultInterval={defaultInterval}
+                intervals={intervals}
               />
             </div>
 
@@ -187,7 +134,7 @@ export default function PaymentsPage({
 
           <FlexRow className="justify-content-center">
             <FlexColumn className="col-12">
-              <If 
+              <If
                 condition={!!payments?.length}
                 otherwise={
                   <NothingFound description={t("filters.no-records-found")} />
@@ -196,7 +143,7 @@ export default function PaymentsPage({
                 <PaymentsList
                   payments={payments}
                   totalNetworks={totalFiatNetworks}
-                  symbol={state?.Settings?.currency?.defaultFiat?.toUpperCase()}
+                  symbol={fiatSymbol}
                 />
               </If>
             </FlexColumn>

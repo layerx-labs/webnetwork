@@ -1,5 +1,4 @@
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import ArrowUpRight from "assets/icons/arrow-up-right";
 import ChevronLeftIcon from "assets/icons/chevronleft-icon";
@@ -8,64 +7,31 @@ import Button from "components/button";
 import CopyButton from "components/common/buttons/copy/controller";
 import CustomContainer from "components/custom-container";
 
-import { useAppState } from "contexts/app-state";
-
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import { truncateAddress } from "helpers/truncate-address";
 
+import { Payment } from "interfaces/payments";
+
 import { NetworkPaymentsData } from "types/api";
 
-import { useNetwork } from "x-hooks/use-network";
-
-interface PaymentsNetworkProps {
+interface PaymentsNetworkViewProps {
   networkPayments: NetworkPaymentsData;
   totalConverted: number;
   defaultFiat: string;
+  handleBack: () => void;
+  goToNetwork: () => void;
+  goToBounty: (payment: Payment) => () => void;
 }
 
-export default function PaymentsNetwork({
+export default function PaymentsNetworkView({
   networkPayments,
   totalConverted,
   defaultFiat,
-}: PaymentsNetworkProps) {
+  handleBack,
+  goToNetwork,
+  goToBounty,
+}: PaymentsNetworkViewProps) {
   const { t } = useTranslation(["common", "profile"]);
-  const { push } = useRouter();
-
-  const { state } = useAppState();
-  const { goToProfilePage, getURLWithNetwork } = useNetwork();
-
-  function handleBack() {
-    goToProfilePage("payments", {
-      networkName: "",
-      networkChain: "",
-      wallet: state.currentUser?.walletAddress
-    });
-  }
-
-  function redirectToNetwork(id = undefined, repoId = undefined) {
-    const path = id && repoId ? "/bounty" : "/";
-
-    push(getURLWithNetwork(path, {
-      network: networkPayments?.name,
-      chain: networkPayments?.chain?.chainShortName,
-      id,
-      repoId,
-    }));
-  }
-
-  function goToNetwork() {
-    redirectToNetwork();
-  }
-
-  function goToBounty(payment) {
-    return () => {
-      if (!payment?.issue?.issueId) return;
-
-      const [repoId, id] = payment.issue.issueId.split("/");
-
-      redirectToNetwork(id, repoId);
-    };
-  }
 
   return(
     <CustomContainer>

@@ -52,3 +52,10 @@ export interface ConvertedItem extends ConvertableItem {
   price: number;
   convertedValue: BigNumber;
 }
+
+export interface TotalFiatNetworks {
+  tokenAddress: string;
+  value: number;
+  price: number;
+  networkId: number;
+}

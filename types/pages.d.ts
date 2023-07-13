@@ -37,6 +37,11 @@ interface ProfilePageProps {
   chains?: SupportedChainData[];
 }
 
-interface MyNetworkPageProps {
+export interface MyNetworkPageProps {
   bounties: SearchBountiesPaginated;
+}
+
+export interface PaymentsPageProps {
+  payments: NetworkPaymentsData[];
+  chains: SupportedChainData[];
 }
