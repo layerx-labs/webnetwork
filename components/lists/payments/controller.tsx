@@ -2,11 +2,11 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import PaymentsListView from "components/lists/payments/view";
-import { TotalFiatNetworks } from "components/profile/pages/payments";
 
 import { Payment } from "interfaces/payments";
 
 import { NetworkPaymentsData } from "types/api";
+import { TotalFiatNetworks } from "types/utils";
 
 import { useNetwork } from "x-hooks/use-network";
 
