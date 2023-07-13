@@ -1,12 +1,7 @@
-import { ChangeEvent, useState, useEffect } from "react";
-
+import { ChangeEvent, useState } from "react";
 
 import {
-  differenceInDays,
-  differenceInMonths,
-  differenceInYears,
   format,
-  parseISO,
   subDays,
   subMonths,
   subYears,
@@ -15,6 +10,8 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import IntervalFiltersView from "components/lists/filters/interval/view";
+
+import { getDifferenceBetweenDates } from "helpers/formatDate";
 
 import { IntervalFiltersProps } from "types/components";
 import { SelectOption } from "types/utils";
@@ -32,11 +29,35 @@ export default function IntervalFilters({
   const { t } = useTranslation(["common"]);
   const router = useRouter();
 
-  const [interval, setInterval] = useState<number>(defaultInterval);
-
   const { value, setValue } = useQueryFilter({ startDate: null, endDate: null });
 
   const now = new Date();
+  const hasOnChangeCallbacks = !!onStartDateChange || !!onEndDateChange;
+
+  function getInitialInterval() {
+    if (!router?.query?.startDate || !router?.query?.endDate) {
+      if (router?.query?.wallet)
+        setValue(getIntervalDates(defaultInterval), !hasOnChangeCallbacks);
+
+      return defaultInterval;
+    }
+
+    const diff = getDifferenceBetweenDates( router?.query?.startDate?.toString(), 
+                                            router?.query?.endDate?.toString(),
+                                            intervalIn);
+
+    const isExistentIntervals = intervals?.includes(diff);
+
+    return isExistentIntervals ? diff : null;
+  }
+
+  const [interval, setInterval] = useState<number>(getInitialInterval());
+
+  const intervalToOption = (interval: number): SelectOption =>
+  interval ? {
+    value: interval,
+    label: t(`info-data.${intervalIn}WithCount`, { count: interval }),
+  } : null;
 
   function getIntervalDates(interval) {
     const formatDate = (date) => format(date, "yyyy-MM-dd").toString();
@@ -52,63 +73,46 @@ export default function IntervalFilters({
     };
   }
 
+  function getIntervalFromDates(dateParam?: string, newValue?: string) {
+    const tmpValue = {
+      ...value,
+      [dateParam]: newValue
+    };
+
+    const diff = getDifferenceBetweenDates(tmpValue.startDate, tmpValue.endDate, intervalIn);
+    const isExistentInterval = intervals.includes(diff);
+
+    return isExistentInterval ? diff : null;
+  }
+
   function onIntervalChange({ value }: SelectOption) {
     setInterval(+value);
     const { startDate, endDate } = getIntervalDates(value);
 
-    if (onStartDateChange || onEndDateChange) {
+    if (hasOnChangeCallbacks) {
       onStartDateChange?.(startDate);
       onEndDateChange?.(endDate);
-    } else
-      setValue({ startDate, endDate }, true);
+    }
+    
+    setValue({ startDate, endDate }, !hasOnChangeCallbacks);
   }
 
   function onDateChange(dateParam: string) {
     return (e: ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value;
 
-      if (onStartDateChange || onEndDateChange) {
+      if (hasOnChangeCallbacks) {
         if (dateParam === "startDate") onStartDateChange?.(newValue);
         else if (dateParam === "endDate") onEndDateChange?.(newValue);
-        setValue({
-          [dateParam]: newValue,
-        });
-      } else
-        setValue({
-          [dateParam]: newValue,
-        }, true);
+      }
+
+      setValue({
+        [dateParam]: newValue,
+      }, !hasOnChangeCallbacks);
+
+      setInterval(getIntervalFromDates(dateParam, newValue));
     };
   }
-
-  const intervalToOption = (interval: number): SelectOption =>
-    interval ? {
-      value: interval,
-      label: t(`info-data.${intervalIn}WithCount`, { count: interval }),
-    } : null;
-
-  useEffect(() => {
-    if (defaultInterval && !router?.query?.startDate && !router?.query?.endDate)
-      setValue(getIntervalDates(defaultInterval), true);
-  }, []);
-
-  useEffect(() => {
-    const diffFn = {
-      days: differenceInDays,
-      months: differenceInMonths,
-      years: differenceInYears,
-    }[intervalIn];
-
-    const diff = diffFn(parseISO(value.endDate), parseISO(value.startDate));
-    const isExistentInterval = intervals.includes(diff);
-
-    setInterval(isExistentInterval ? diff : null);
-  }, [value]);
-
-  useEffect(() => {
-    if (!router?.query?.wallet || (router?.query?.startDate && router?.query?.endDate)) return;
-
-    setValue(getIntervalDates(defaultInterval), true);
-  }, [router?.query]);
 
   return(
     <IntervalFiltersView

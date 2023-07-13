@@ -61,13 +61,14 @@ export default function PaymentsListView({
           <FlexColumn className="col-12 gap-2">
             {network?.payments
               .map((payment: Payment) =>
-                PaymentItem({
-                  ...payment,
-                  network: network,
-                  labelToken: t("misc.$token"),
-                  labelBounty: t("bounty:label"),
-                  handleItemClick: onPaymentRedirect(network, payment),
-                }))}
+                <PaymentItem
+                  key={payment?.transactionHash}
+                  {...payment}
+                  network={network}
+                  labelToken={t("misc.$token")}
+                  labelBounty={t("bounty:label")}
+                  handleItemClick={onPaymentRedirect(network, payment)}
+                />)}
           </FlexColumn>
         </NetworkItem>
       ))}

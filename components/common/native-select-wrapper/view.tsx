@@ -44,7 +44,7 @@ export default function NativeSelectWrapper({
           value={selectedIndex >= 0 ? selectedIndex : ""}
         >
           <option value="" disabled={!isClearable}>
-          { isClearable && t("actions.clear") || t("misc.choose-one") }
+            { isClearable && t("actions.clear") || t("misc.choose-one") }
           </option>
           
           {options.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}

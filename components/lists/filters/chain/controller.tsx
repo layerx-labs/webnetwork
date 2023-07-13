@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+import { useRouter } from "next/router";
 
 import ChainFilterView from "components/lists/filters/chain/view";
 
@@ -15,17 +17,19 @@ export default function ChainFilter({
   direction = "horizontal",
   onChange,
 }: ChainFilterProps) {
-  const [chain, setChain] = useState<SupportedChainData>();
+  const { query } = useRouter();
+  
+  const findChain = chainShortName => chains?.find(c => c.chainShortName === chainShortName);
+
+  const [chain, setChain] = useState<SupportedChainData>(findChain(query?.networkChain?.toString()));
 
   const { isMobileView, isTabletView } = useBreakPoint();
-  const { setValue } = useQueryFilter({ networkChain: null });
+  const { setValue } = useQueryFilter({ networkChain: query?.networkChain?.toString() });
 
   const chainToOption = (chain: SupportedChainData): SelectOption => chain ? ({
     value: chain?.chainShortName,
     label: chain?.chainName,
   }) : null;
-
-  const findChain = chainShortName => chains?.find(c => c.chainShortName === chainShortName)
 
   function onChainChange(option: SelectOption) {
     if (onChange)

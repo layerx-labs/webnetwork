@@ -80,7 +80,11 @@ export default function PaymentsPage({
   }
 
   useEffect(() => {
-    if (!payments?.length) return;
+    if (!payments?.length) {
+      setTotalFiatNetworks([]);
+      setTotalFiat(0);
+      return;
+    }
 
     const convertableItems = payments.flatMap(({ id, payments }) => payments.map(payment => ({
       tokenAddress: payment?.issue?.transactionalToken?.address,
