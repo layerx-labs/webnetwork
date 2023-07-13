@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -17,10 +18,9 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import { useAppState } from "contexts/app-state";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
+import { getPricesAndConvert } from "helpers/tokens";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
-
-import { getCoinPrice } from "services/coingecko";
 
 import { NetworkPaymentsData } from "types/api";
 
@@ -82,19 +82,18 @@ export default function PaymentsPage({
   useEffect(() => {
     if (!payments?.length) return;
 
-    Promise.all(payments.flatMap(({ payments }) => payments.map(async (payment) => ({
+    const convertableItems = payments.flatMap(({ id, payments }) => payments.map(payment => ({
       tokenAddress: payment?.issue?.transactionalToken?.address,
-      value: payment.ammount,
-      price: await getCoinPrice(payment?.issue?.transactionalToken?.symbol, state?.Settings?.currency?.defaultFiat),
-      networkId: payment?.issue?.network_id
-    }))))
-      .then((tokens) => {
-        const totalConverted = tokens.reduce((acc, token) => acc + token.value * (token.price || 0), 0);
-        const noConverted = !!tokens.find((token) => token.price === undefined);
-        
-        setTotalFiatNetworks(tokens)
-        setTotalFiat(totalConverted);
-        setHasNoConvertedToken(noConverted);
+      networkId: id,
+      value: BigNumber(payment.ammount),
+      token: payment.issue.transactionalToken
+    })));
+
+    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat)
+      .then(({ converted, noConverted, totalConverted }) => {      
+        setTotalFiatNetworks(converted);
+        setTotalFiat(totalConverted.toNumber());
+        setHasNoConvertedToken(!!noConverted.length);
       });
   }, [payments]);
 
@@ -102,7 +101,7 @@ export default function PaymentsPage({
     setValue({ wallet: state.currentUser?.walletAddress || "" }, true);
   }, [state.currentUser?.walletAddress]);
 
-  if (router?.query?.networkName)
+  if (router?.query?.networkName && payments?.length)
     return <PaymentsNetwork
       networkPayments={payments[0]}
       totalConverted={totalFiatNetworks?.reduce((acc, curr) => acc + (curr?.value * curr?.price), 0)}
