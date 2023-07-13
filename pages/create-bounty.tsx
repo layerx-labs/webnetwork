@@ -732,19 +732,21 @@ export default function CreateBountyPage() {
             </CreateBountyCard>
           </CustomContainer>
           {currentSection === 3 && (
+            <div className="mx-5">
             <div className="d-flex justify-content-center col-12 mt-4">
-              <p>
+              <p className="">
                 {t("bounty:creating-this-bounty")}{" "}
                 <a href="https://www.bepro.network/terms" target="_blank">
                   {t("bounty:terms-and-conditions")}
                 </a>
               </p>
             </div>
+          </div>
           )}
           <CustomContainer className='mb-5'>
             <div className="d-flex justify-content-between my-4 me-4">
               <Button
-                className="col-6 bounty-outline-button me-3"
+                className="col-6 bounty-outline-button ms-2"
                 onClick={() => {
                   currentSection !== 0 &&
                     setCurrentSection((prevState) => prevState - 1);
