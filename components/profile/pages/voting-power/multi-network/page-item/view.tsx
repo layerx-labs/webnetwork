@@ -24,7 +24,7 @@ export default function PageItemView({
         <div className="cursor-pointer ms-4 me-3" onClick={clearNetwork}>
           <ArrowLeft width={12} height={12} />
         </div>
-        <span className="h3">{name}</span>
+        <span className="h3 text-truncate">{name}</span>
       </div>
       <div className="col-12 mb-4">
         <div
