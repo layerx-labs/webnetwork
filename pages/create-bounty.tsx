@@ -55,6 +55,7 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useOctokit from "x-hooks/use-octokit";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -744,8 +745,8 @@ export default function CreateBountyPage() {
             </div>
           </div>
           )}
-          <CustomContainer className='mb-5'>
-            <div className="d-flex justify-content-between my-4 me-4">
+          <CustomContainer className='d-flex flex-column justify-content-end'>
+            <div className="d-flex justify-content-between mt-4 me-4">
               <Button
                 className="col-6 bounty-outline-button ms-2"
                 onClick={() => {
@@ -778,10 +779,21 @@ export default function CreateBountyPage() {
                       createBounty();
                     }
                   }}
-                >
-                  {currentSection === 3 ? t("bounty:create-bounty") : t("bounty:next-step")}
-                </ContractButton>
-              )}
+                  >
+                    {currentSection === 3 ? (
+                      <>
+                        <ResponsiveWrapper xs={true} md={false}>
+                          {t("common:misc.create")}
+                        </ResponsiveWrapper>
+                        <ResponsiveWrapper xs={false} md={true}>
+                          {t("bounty:create-bounty")}
+                        </ResponsiveWrapper>
+                      </>
+                    ) : (
+                      t("bounty:next-step")
+                    )}
+                  </ContractButton>
+                )}
             </div>
           </CustomContainer>
         </CreateBountyContainer>
