@@ -4,8 +4,16 @@ import { NumberFormatValues } from "react-number-format";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
+import { useDebouncedCallback } from "use-debounce";
 
+import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
+
+import { useAppState } from "contexts/app-state";
+
+import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
+
+import { DistributedAmounts } from "interfaces/proposal";
 
 import InputNumber from "../input-number";
 import TokensDropdown from "../tokens-dropdown";
@@ -31,6 +39,28 @@ export default function CreateBountyTokenAmount({
   const { t } = useTranslation("bounty");
   const { publicRuntimeConfig } = getConfig();
   const [inputError, setInputError] = useState("");
+  const [distributions, setDistributions] = useState<DistributedAmounts>();
+  const {
+    state: { currentUser, Service },
+  } = useAppState();
+
+  const debouncedDistributionsUpdater = useDebouncedCallback((value) => handleDistributions(value), 500);
+
+  function handleDistributions(value) {
+    if(!isFunders){
+      if (!value?.value || !Service?.network?.amounts) return;
+  
+      const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
+  
+      const distributions = calculateDistributedAmounts(treasury,
+                                                        mergeCreatorFeeShare,
+                                                        proposerFeeShare,
+                                                        BigNumber(value.value),
+                                                        [{recipient: currentUser?.walletAddress, percentage: 100}]);
+      setDistributions(distributions)
+      console.log('distributions', distributions)
+    }
+  }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues) {
     if (
@@ -50,6 +80,7 @@ export default function CreateBountyTokenAmount({
           amount: currentToken?.minimum,
       }));
     } else {
+      if(!isFunders) debouncedDistributionsUpdater(values)
       setIssueAmount(values);
       if (inputError) setInputError("");
     }
@@ -80,7 +111,7 @@ export default function CreateBountyTokenAmount({
     );
   }
 
-  function inputNumber() {
+  function RewardInputNumber() {
     return (
       <InputNumber
         symbol={currentToken?.symbol}
@@ -157,7 +188,7 @@ export default function CreateBountyTokenAmount({
           label={isFunding ? t("bounty:fields.select-token.reward") : t("bounty:fields.select-token.bounty")}
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
         >
-          {inputNumber()}
+          <RewardInputNumber />
         </RenderItemRow>
         <RenderItemRow
           label="Service fees"
@@ -176,7 +207,13 @@ export default function CreateBountyTokenAmount({
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
           borderBottom={isFunding ? true : false}
         >
-          {inputNumber()}
+          <InputNumber
+            symbol={currentToken?.symbol}
+            classSymbol=""
+            thousandSeparator
+            value={"10000"}
+            disabled
+          />
         </RenderItemRow>
       </div>
     );
@@ -197,6 +234,7 @@ export default function CreateBountyTokenAmount({
   useEffect(handleUpdateToken, [currentToken?.minimum]);
 
   return (
+    <>
     <div className="mt-4">
       <label className="mb-1 text-gray">
         {isFunding
@@ -216,12 +254,16 @@ export default function CreateBountyTokenAmount({
                 <RenderBalance />
               </ResponsiveWrapper>
             </div>
-            <div className="col-md-4 col-12">{inputNumber()}</div>
+            <div className="col-md-4 col-12"><RewardInputNumber /></div>
           </div>
         )
       ) : (
         renderPrimaryToken()
       )}
     </div>
+    <Modal>
+
+    </Modal>
+    </>
   );
 }
