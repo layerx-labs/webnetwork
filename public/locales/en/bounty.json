@@ -178,6 +178,9 @@
     "label": "KYC",
     "steps": "{{current}} of {{total}} steps"
   },
+  "proposal-creator": "Proposal Creator",
+  "proposal-merger": "Merger",
+  "network-fee": "Network Fee",
   "bounty-examples": "See bounty examples",
   "finding-yourself-lost": "Finding yourself lost?",
   "terms-and-conditions": "terms and conditions.",
