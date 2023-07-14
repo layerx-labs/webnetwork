@@ -1,10 +1,12 @@
-
 import { FormCheck } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
+import ResponsiveWrapper from "components/responsive-wrapper";
+
 import CreateBountyRewardInfo from "../create-bounty-reward-info";
 import CreateBountyTokenAmount from "../create-bounty-token-amount";
+import RewardInformationBalanceView from "./balance/view";
 import { RewardInformationViewProps } from "./reward-information";
 
 export default function RewardInformationView({
@@ -31,6 +33,19 @@ export default function RewardInformationView({
   updateIsFundingType,
 }: RewardInformationViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
+
+  function Balance({
+    amount,
+    symbol,
+    isRender,
+  }: {
+    amount: string;
+    symbol: string;
+    isRender: boolean;
+  }) {
+    if (isRender) return null;
+    return <RewardInformationBalanceView amount={amount} symbol={symbol} />;
+  }
 
   function renderBountyToken(type: "bounty" | "reward") {
     const fieldParams = {
@@ -103,17 +118,26 @@ export default function RewardInformationView({
       {isFundingType ? (
         <>
           {renderBountyToken("bounty")}
-          <div className="col-md-12 my-4">
-            <FormCheck
-              className="form-control-md pb-0"
-              type="checkbox"
-              label={t("bounty:reward-funders")}
-              onChange={handleRewardChecked}
-              checked={rewardChecked}
-            />
-            <p className="ms-4 text-gray">
-              {t("bounty:reward-funders-description")}
-            </p>
+          <div className="d-flex flex-row align-items-center justify-content-between mt-4">
+            <div>
+              <FormCheck
+                className="form-control-md pb-0"
+                type="checkbox"
+                label={t("bounty:reward-funders")}
+                onChange={handleRewardChecked}
+                checked={rewardChecked}
+              />
+              <p className="ms-4 text-gray">
+                {t("bounty:reward-funders-description")}
+              </p>
+            </div>
+            <ResponsiveWrapper className="mt-1" xs={false} md={true}>
+              <Balance
+                amount={rewardBalance.toFixed()}
+                symbol={rewardToken?.symbol}
+                isRender={!rewardChecked}
+              />
+            </ResponsiveWrapper>
           </div>
         </>
       ) : (
