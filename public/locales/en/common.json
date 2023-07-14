@@ -10,7 +10,7 @@
   "close": "Close",
   "currencies": {
     "euro": "EURO",
-    "error-convert-all-to-euro": "could not convert all tokens to Euro"
+    "error-convert-all-to-fiat": "Could not convert all tokens to {{fiat}}"
   },
   "filters": {
     "filters": "Filter",

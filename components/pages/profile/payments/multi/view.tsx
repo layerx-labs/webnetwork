@@ -40,7 +40,7 @@ export default function PaymentsMultiView({
     if (hasNoConvertedToken)
       return(
         <span className="caption-small text-danger">
-          {t("currencies.error-convert-all-to-euro")}
+          {t("currencies.error-convert-all-to-fiat", { fiat: fiatSymbol })}
         </span>
       );
 
