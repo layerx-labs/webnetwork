@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import ResponsiveWrapper from "components/responsive-wrapper";
+
 import { FlexRow } from "../../common/flex-box/view";
 import NetworkItemBody from "./body/controller";
 import NetworkItemTitleView from "./title/view";
@@ -56,9 +58,9 @@ export default function NetworkItemView({
           networkName={networkName}
           subNetworkText={subNetworkText}
         />
-        <FlexRow className="d-sm-none justify-content-end">
-          <span className="text-gray">{subNetworkText}</span>
-        </FlexRow>
+        <ResponsiveWrapper xs={true} md={false} className="ms-2">
+          <span className=" text-gray">{subNetworkText}</span>
+        </ResponsiveWrapper>
         <NetworkItemBody
           isCollapsed={isCollapsed}
           handleNetworkLink={handleNetworkLink}
