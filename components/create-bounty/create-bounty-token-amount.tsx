@@ -84,6 +84,7 @@ export default function CreateBountyTokenAmount({
     return (
       <InputNumber
         symbol={currentToken?.symbol}
+        classSymbol=""
         thousandSeparator
         fullWidth={!publicRuntimeConfig?.enableCoinGecko}
         max={tokenBalance.toFixed()}
@@ -135,8 +136,8 @@ export default function CreateBountyTokenAmount({
   function renderPrimaryToken() {
     return (
       <div>
-        <div className="d-flex flex-wrap justify-content-between">
-          <div className="col col-md-4 mb-0 pb-0">
+        <div className="row d-flex flex-wrap justify-content-between">
+          <div className="col col-md-5 mb-0 pb-0">
             {selectTokens()}
             <ResponsiveWrapper className="mt-1" xs={true} md={false}>
               <RenderBalance />
@@ -153,7 +154,7 @@ export default function CreateBountyTokenAmount({
         </div>
 
         <RenderItemRow
-          label="Set Reward"
+          label={isFunding ? t("bounty:fields.select-token.reward") : t("bounty:fields.select-token.bounty")}
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
         >
           {inputNumber()}
@@ -162,7 +163,13 @@ export default function CreateBountyTokenAmount({
           label="Service fees"
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
         >
-          {inputNumber()}
+          <InputNumber
+            symbol={currentToken?.symbol}
+            classSymbol=""
+            thousandSeparator
+            value={"10000"}
+            disabled
+          />
         </RenderItemRow>
         <RenderItemRow
           label="Total amount"
@@ -194,7 +201,7 @@ export default function CreateBountyTokenAmount({
       <label className="mb-1 text-gray">
         {isFunding
           ? isFunders
-            ? t("fields.select-token.funding")
+            ? t("fields.select-token.label")
             : t("fields.select-token.reward")
           : t("fields.select-token.label")}
       </label>
@@ -202,8 +209,8 @@ export default function CreateBountyTokenAmount({
         isFunders ? (
           renderPrimaryToken()
         ) : (
-          <div className="d-flex flex-wrap justify-content-between">
-            <div className="col col-md-4 mb-0 pb-0">
+          <div className="row d-flex flex-wrap justify-content-between">
+            <div className="col col-md-5 mb-0 pb-0">
               {selectTokens()}
               <ResponsiveWrapper className="mt-1 mb-4" xs={true} md={false}>
                 <RenderBalance />
