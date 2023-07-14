@@ -54,6 +54,12 @@ export default function NetworkItem({
   function toggleCollapse() {
     if(handleToggleTabletAndMobile && query?.profilePage[0] === 'voting-power' && !isDesktopView){
       handleToggleTabletAndMobile()
+    } else if (isNetworkType && !isDesktopView) {
+      goToProfilePage("payments", {
+        networkName,
+        networkChain,
+        wallet: currentUser?.walletAddress
+      });
     } else setIsCollapsed((previous) => !previous);
   }
 

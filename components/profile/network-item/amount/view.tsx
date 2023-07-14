@@ -6,12 +6,14 @@ import { FlexRow } from "../../wallet-balance";
 
 export default function NetworkItemAmountView({
   amount,
+  type,
   symbol,
   primaryColor,
   isNetworkVariant,
 }: {
   amount: string | number;
   symbol: string;
+  type?: "network" | "voting" | "payments";
   isNetworkVariant: boolean;
   primaryColor?: string;
 }) {

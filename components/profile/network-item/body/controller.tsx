@@ -1,7 +1,3 @@
-import { useRouter } from "next/router";
-
-import useBreakPoint from "x-hooks/use-breakpoint";
-
 import BodyNetworkView from "./network/view";
 import BodyVotingView from "./voting/view";
 
@@ -28,14 +24,10 @@ export default function NetworkItemBody({
   isNetworkType,
   handleToggleCollapse,
 }: NetworkItemBodyViewProps) {
-  const { query } = useRouter();
-  const { isDesktopView } = useBreakPoint();
-
   if (isNetworkType)
     return (
       <BodyNetworkView
         isCollapsed={isCollapsed}
-        isArrowRight={query?.profilePage[0] === 'voting-power' && !isDesktopView}
         handleNetworkLink={handleNetworkLink}
         type={type}
         amount={amount}

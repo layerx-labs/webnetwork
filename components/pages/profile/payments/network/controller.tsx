@@ -33,13 +33,13 @@ export default function PaymentsNetwork({
   }
 
   function redirectToNetwork(id = undefined, repoId = undefined) {
-    const path = id && repoId ? "/bounty" : "/";
+    const isBountyRedirect = !!id && !!repoId;
+    const path = isBountyRedirect ? "/bounty" : "/bounties";
 
     push(getURLWithNetwork(path, {
       network: networkPayments?.name,
       chain: networkPayments?.chain?.chainShortName,
-      id,
-      repoId,
+      ... isBountyRedirect ? { id, repoId } : {}
     }));
   }
 

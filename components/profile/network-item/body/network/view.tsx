@@ -1,8 +1,5 @@
 import { useTranslation } from "next-i18next";
 
-import ArrowDown from "assets/icons/arrow-down";
-import ArrowRightSmall from "assets/icons/arrow-right-small";
-import ArrowUp from "assets/icons/arrow-up";
 import ArrowUpRight from "assets/icons/arrow-up-right";
 import ChevronRightIcon from "assets/icons/chevronright-icon";
 
@@ -21,12 +18,10 @@ interface BodyNetworkViewProps {
   isNetworkVariant: boolean;
   primaryColor: string;
   handleToggleCollapse: () => void;
-  isArrowRight?: boolean;
 }
 
 export default function BodyNetworkView({
   isCollapsed,
-  isArrowRight,
   type,
   amount,
   symbol,
@@ -37,20 +32,21 @@ export default function BodyNetworkView({
 }: BodyNetworkViewProps) {
   const { t } = useTranslation(["profile"]);
 
-  function ArrowComponent() {
-    if (isCollapsed)
-      return isArrowRight ? (
-        <ArrowRightSmall width={10} height={10} />
-      ) : (
-        <ArrowDown width={10} height={8} />
-      );
-
-    return <ArrowUp width={14} height={14} />;
+  function NetworkLinkIconButton({ className = "" }) {
+    return (
+      <Button
+        className={`${className} cursor-pointer p-1 not-svg border border-gray-700 bg-gray-850 border-radius-4`}
+        onClick={handleNetworkLink}
+      >
+        <ArrowUpRight />
+      </Button>
+    );
   }
 
   function RenderAmount() {
     return (
       <NetworkItemAmountView
+        type={type}
         amount={amount}
         symbol={symbol}
         isNetworkVariant={isNetworkVariant}
