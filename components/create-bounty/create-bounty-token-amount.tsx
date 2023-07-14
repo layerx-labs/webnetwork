@@ -7,10 +7,9 @@ import getConfig from "next/config";
 
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { useAppState } from "../../contexts/app-state";
-import { getCoinPrice } from "../../services/coingecko";
 import InputNumber from "../input-number";
 import TokensDropdown from "../tokens-dropdown";
+import RewardInformationBalanceView from "./reward-information/balance/view";
 
 export default function CreateBountyTokenAmount({
   currentToken,
@@ -30,11 +29,8 @@ export default function CreateBountyTokenAmount({
   isFunding = false,
 }) {
   const { t } = useTranslation("bounty");
-  const { state } = useAppState();
   const { publicRuntimeConfig } = getConfig();
   const [inputError, setInputError] = useState("");
-  const [convertedAmount, setConvertedAmount] = useState(0);
-  const [isErrorConverted, setIsErrorConverted] = useState(false);
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues) {
     if (
@@ -65,22 +61,6 @@ export default function CreateBountyTokenAmount({
     }
   }
 
-  function updateConversion() {
-    if (!currentToken?.symbol || !publicRuntimeConfig?.enableCoinGecko) return;
-
-    getCoinPrice(currentToken?.symbol,
-                 state?.Settings?.currency?.defaultFiat).then((price) => {
-                   if (isNaN(price) || price === 0) setIsErrorConverted(true);
-                   if (!isNaN(price)) setConvertedAmount((issueAmount.value || 0) * price);
-                 });
-  }
-
-  function renderConvertedAmount() {
-    return isErrorConverted
-      ? t("fields.conversion-token.invalid")
-      : `${convertedAmount} ${state.Settings?.currency.defaultFiat}`;
-  }
-
   function selectTokens() {
     return (
       <TokensDropdown
@@ -103,10 +83,7 @@ export default function CreateBountyTokenAmount({
   function inputNumber() {
     return (
       <InputNumber
-        groupClassName={isFunding ? `input-funded` : ""}
-        className={isFunding ? `input-funded` : ""}
-        classSymbol={isFunding ? "" : " text-primary"}
-        symbol={!isFunding && currentToken?.symbol}
+        symbol={currentToken?.symbol}
         thousandSeparator
         fullWidth={!publicRuntimeConfig?.enableCoinGecko}
         max={tokenBalance.toFixed()}
@@ -124,24 +101,76 @@ export default function CreateBountyTokenAmount({
     );
   }
 
-  function renderBalance() {
+  function RenderBalance() {
+    if (isFunding && isFunders) return null;
     return (
-      <div className="text-truncate">
-        <span className="text-gray">{t("bounty:balance")}</span>{" "}
-        {tokenBalance.toFixed()}{" "}
-        {currentToken?.symbol || t("common:misc.token")}
-      </div>
+      <RewardInformationBalanceView
+        amount={tokenBalance.toFixed()}
+        symbol={currentToken?.symbol}
+      />
     );
   }
 
-  function RenderItemRow({ children, label = "", description = "", borderBottom = true }) {
+  function RenderItemRow({
+    children,
+    label = "",
+    description = "",
+    borderBottom = true,
+  }) {
     return (
-      <div className={`mt-4 pb-4 ${borderBottom ? 'border-bottom border-gray-700' : ''}`}>
+      <div
+        className={`mt-4 pb-4 ${
+          borderBottom ? "border-bottom border-gray-700" : ""
+        }`}
+      >
         <label className="text-white">{label}</label>
         <div className="row justify-content-between">
           <div className="col-md-6 col-12 text-gray mt-1">{description}</div>
           <div className="col-md-4 col-12 mt-1">{children}</div>
         </div>
+      </div>
+    );
+  }
+
+  function renderPrimaryToken() {
+    return (
+      <div>
+        <div className="d-flex flex-wrap justify-content-between">
+          <div className="col col-md-4 mb-0 pb-0">
+            {selectTokens()}
+            <ResponsiveWrapper className="mt-1" xs={true} md={false}>
+              <RenderBalance />
+            </ResponsiveWrapper>
+          </div>
+
+          <ResponsiveWrapper
+            className="d-flex justify-content-end mt-3"
+            xs={false}
+            md={true}
+          >
+            <RenderBalance />
+          </ResponsiveWrapper>
+        </div>
+
+        <RenderItemRow
+          label="Set Reward"
+          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+        >
+          {inputNumber()}
+        </RenderItemRow>
+        <RenderItemRow
+          label="Service fees"
+          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+        >
+          {inputNumber()}
+        </RenderItemRow>
+        <RenderItemRow
+          label="Total amount"
+          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          borderBottom={isFunding ? true : false}
+        >
+          {inputNumber()}
+        </RenderItemRow>
       </div>
     );
   }
@@ -158,7 +187,6 @@ export default function CreateBountyTokenAmount({
     } else setInputError("");
   }
 
-  //useEffect(updateConversion, [issueAmount.value]);
   useEffect(handleUpdateToken, [currentToken?.minimum]);
 
   return (
@@ -171,52 +199,21 @@ export default function CreateBountyTokenAmount({
           : t("fields.select-token.label")}
       </label>
       {isFunding ? (
-        <div className="d-flex justify-content-between col-md-6 p-2 border-radius-8 border border-gray-700">
-          <div className="d-flex flex-column col-7">
-            {inputNumber()}
-            <div className="text-white-30 ms-2">{renderConvertedAmount()}</div>
-          </div>
-          <div className="col-4 me-2 mt-3 pt-1">{selectTokens()}</div>
-        </div>
-      ) : (
-        <div>
+        isFunders ? (
+          renderPrimaryToken()
+        ) : (
           <div className="d-flex flex-wrap justify-content-between">
-            <div className="col col-md-4  mb-0 pb-0">
+            <div className="col col-md-4 mb-0 pb-0">
               {selectTokens()}
-              <ResponsiveWrapper className="mt-1" xs={true} md={false}>
-                {renderBalance()}
+              <ResponsiveWrapper className="mt-1 mb-4" xs={true} md={false}>
+                <RenderBalance />
               </ResponsiveWrapper>
             </div>
-
-            <ResponsiveWrapper
-              className="d-flex justify-content-end mt-3"
-              xs={false}
-              md={true}
-            >
-              {renderBalance()}
-            </ResponsiveWrapper>
+            <div className="col-md-4 col-12">{inputNumber()}</div>
           </div>
-
-          <RenderItemRow
-            label="Set Reward"
-            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
-          >
-            {inputNumber()}
-          </RenderItemRow>
-          <RenderItemRow
-            label="Service fees"
-            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
-          >
-            {inputNumber()}
-          </RenderItemRow>
-          <RenderItemRow
-            label="Total amount"
-            description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
-            borderBottom={false}
-          >
-            {inputNumber()}
-          </RenderItemRow>
-        </div>
+        )
+      ) : (
+        renderPrimaryToken()
       )}
     </div>
   );
