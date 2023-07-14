@@ -1,4 +1,4 @@
-import { FormCheck } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
@@ -120,14 +120,19 @@ export default function RewardInformationView({
           {renderBountyToken("bounty")}
           <div className="d-flex flex-row align-items-center justify-content-between mt-4">
             <div>
-              <FormCheck
-                className="form-control-md pb-0"
-                type="checkbox"
-                label={t("bounty:reward-funders")}
+              <div className="d-flex">
+              <label className="me-3">
+                {t("bounty:reward-funders")}
+              </label>
+              <Form.Check
+                className="form-control-md mb-1"
+                type="switch"
+                id="custom-switch"
                 onChange={handleRewardChecked}
                 checked={rewardChecked}
               />
-              <p className="ms-4 text-gray">
+              </div>
+              <p className="text-gray">
                 {t("bounty:reward-funders-description")}
               </p>
             </div>

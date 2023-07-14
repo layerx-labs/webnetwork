@@ -793,6 +793,16 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+.form-switch
+.form-check-input {
+  width: 40px;
+  height: 20px;
+}
+
+.form-check-input {
+  background-color: $gray-200;
+}
+
 .badge-opaque {
   font-size: 14px;
   line-height: 150%;
