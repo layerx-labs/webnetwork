@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {FormCheck} from "react-bootstrap";
 import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
@@ -19,13 +18,13 @@ import CreateBountyContainer from "components/create-bounty/create-bounty-contai
 import CreateBountyDetails from "components/create-bounty/create-bounty-details";
 import CreateBountyNetworkDropdown from "components/create-bounty/create-bounty-network-dropdown";
 import CreateBountyReview from "components/create-bounty/create-bounty-review";
-import CreateBountyRewardInfo from "components/create-bounty/create-bounty-reward-info";
 import CreateBountySteps from "components/create-bounty/create-bounty-steps";
-import CreateBountyTokenAmount from "components/create-bounty/create-bounty-token-amount";
+import RewardInformation from "components/create-bounty/reward-information/controller";
 import SelectNetwork from "components/create-bounty/select-network";
 import CustomContainer from "components/custom-container";
 import {IFilesProps} from "components/drag-and-drop";
 import Modal from "components/modal";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
@@ -55,7 +54,6 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useOctokit from "x-hooks/use-octokit";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -597,39 +595,27 @@ export default function CreateBountyPage() {
 
     if (currentSection === 2)
       return (
-        <>
-          <CreateBountyRewardInfo
-            isFunding={isFundingType}
-            updateIsFunding={(e: boolean) => {
-              if (e === true) setIssueAmount(ZeroNumberFormatValues);
-              else {
-                setIssueAmount(ZeroNumberFormatValues);
-                setRewardAmount(ZeroNumberFormatValues);
-              }
-
-              setIsFundingType(e);
-            }}
-          >
-            {isFundingType ? (
-              <>
-              {renderBountyToken("bounty")}
-              <div className="col-md-12 my-4">
-                <FormCheck
-                  className="form-control-md pb-0"
-                  type="checkbox"
-                  label={t("bounty:reward-funders")}
-                  onChange={handleRewardChecked}
-                  checked={rewardChecked}
-                />
-                <p className="ms-4 text-gray">
-                {t("bounty:reward-funders-description")}
-                </p>
-              </div>
-              </>
-            ): renderBountyToken("bounty")}
-            {rewardChecked && isFundingType && renderBountyToken("reward")}
-          </CreateBountyRewardInfo>
-        </>
+          <RewardInformation 
+            isFundingType={isFundingType} 
+            rewardChecked={rewardChecked} 
+            transactionalToken={transactionalToken} 
+            rewardToken={rewardToken} 
+            bountyDecimals={transactionalERC20?.decimals} 
+            rewardDecimals={transactionalERC20?.decimals} 
+            issueAmount={issueAmount} 
+            rewardAmount={rewardAmount} 
+            bountyTokens={customTokens.filter((token) => !!token?.network_tokens?.isTransactional)} 
+            rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)} 
+            rewardBalance={rewardERC20.balance} 
+            bountyBalance={transactionalERC20.balance} 
+            updateRewardToken={setRewardToken} 
+            updateTransactionalToken={setTransactionalToken} 
+            addToken={addToken} 
+            handleRewardChecked={handleRewardChecked} 
+            updateIssueAmount={setIssueAmount} 
+            updateRewardAmount={setRewardAmount} 
+            updateIsFundingType={setIsFundingType}          
+          />
       );
 
     if (currentSection === 3)
@@ -649,61 +635,6 @@ export default function CreateBountyPage() {
           }}
         />
       );
-  }
-
-  function renderBountyToken(type: "bounty" | "reward") {
-    const fieldParams = {
-      bounty: {
-        token: transactionalToken,
-        setToken: setTransactionalToken,
-        default: transactionalToken,
-        decimals: transactionalERC20?.decimals,
-        amount: issueAmount,
-        setAmount: setIssueAmount,
-        tokens: customTokens.filter((token) => !!token?.network_tokens?.isTransactional),
-        balance: transactionalERC20.balance,
-        isFunding: isFundingType,
-        label: t("bounty:fields.select-token.bounty", {
-          set: t("bounty:fields.set"),
-        }),
-      },
-      reward: {
-        token: rewardToken,
-        setToken: setRewardToken,
-        default: rewardToken,
-        decimals: transactionalERC20?.decimals,
-        amount: rewardAmount,
-        setAmount: setRewardAmount,
-        tokens: customTokens.filter((token) => !!token?.network_tokens?.isReward),
-        balance: rewardERC20.balance,
-        isFunding: isFundingType,
-        label: t("bounty:fields.select-token.reward", {
-          set: t("bounty:fields.set"),
-        }),
-      },
-    };
-
-    return (
-      <>
-        <CreateBountyTokenAmount
-          currentToken={fieldParams[type].token}
-          setCurrentToken={fieldParams[type].setToken}
-          customTokens={fieldParams[type].tokens}
-          userAddress={currentUser?.walletAddress}
-          defaultToken={fieldParams[type].default}
-          canAddCustomToken={false}
-          addToken={addToken}
-          decimals={fieldParams[type].decimals}
-          issueAmount={fieldParams[type].amount}
-          setIssueAmount={fieldParams[type].setAmount}
-          tokenBalance={fieldParams[type].balance}
-          isFunders={type === "reward" ? false : true}
-          needValueValidation={!isFundingType || type === "reward"}
-          isFunding={isFundingType}
-          labelSelect={fieldParams[type].label}
-        />
-      </>
-    );
   }
 
   if (!currentUser?.walletAddress)
