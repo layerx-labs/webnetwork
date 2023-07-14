@@ -214,7 +214,8 @@
     "networks": "Networks",
     "copied": "Copied",
     "address-copied": "Address Copied",
-    "empty-list": "Empty List"
+    "empty-list": "Empty List",
+    "learn-more": "Learn More"
   },
   "modals": {
     "help-modal": {
