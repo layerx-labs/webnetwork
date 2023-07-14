@@ -6,7 +6,6 @@ import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
 import { useDebouncedCallback } from "use-debounce";
 
-import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { useAppState } from "contexts/app-state";
@@ -15,9 +14,11 @@ import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 
 import { DistributedAmounts } from "interfaces/proposal";
 
-import InputNumber from "../input-number";
-import TokensDropdown from "../tokens-dropdown";
-import RewardInformationBalanceView from "./reward-information/balance/view";
+import InputNumber from "../../input-number";
+import TokensDropdown from "../../tokens-dropdown";
+import RewardInformationBalanceView from "../reward-information/balance/view";
+import RenderItemRow from "./item-row/view";
+import ServiceFeesModalView from "./service-fees-modal/view";
 
 export default function CreateBountyTokenAmount({
   currentToken,
@@ -36,30 +37,38 @@ export default function CreateBountyTokenAmount({
   decimals = 18,
   isFunding = false,
 }) {
-  const { t } = useTranslation("bounty");
+  const { t } = useTranslation(["bounty", "proposal"]);
   const { publicRuntimeConfig } = getConfig();
+  const [show, setShow] = useState<boolean>(false);
+  const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>();
   const [inputError, setInputError] = useState("");
   const [distributions, setDistributions] = useState<DistributedAmounts>();
   const {
     state: { currentUser, Service },
   } = useAppState();
 
+  const totalServiceFees = distributions
+    ? [
+        distributions.mergerAmount.value,
+        distributions.proposerAmount.value,
+        distributions.treasuryAmount.value,
+    ].reduce((acc, value) => BigNumber(value).plus(acc),
+             BigNumber(0))
+    : BigNumber(0);
+
   const debouncedDistributionsUpdater = useDebouncedCallback((value) => handleDistributions(value), 500);
 
   function handleDistributions(value) {
-    if(!isFunders){
-      if (!value?.value || !Service?.network?.amounts) return;
+    if (!value || !Service?.network?.amounts) return;
   
-      const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
+    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
   
-      const distributions = calculateDistributedAmounts(treasury,
-                                                        mergeCreatorFeeShare,
-                                                        proposerFeeShare,
-                                                        BigNumber(value.value),
+    const distributions = calculateDistributedAmounts(treasury,
+                                                      mergeCreatorFeeShare,
+                                                      proposerFeeShare,
+                                                      BigNumber(value),
                                                         [{recipient: currentUser?.walletAddress, percentage: 100}]);
-      setDistributions(distributions)
-      console.log('distributions', distributions)
-    }
+    setDistributions(distributions)
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues) {
@@ -80,7 +89,8 @@ export default function CreateBountyTokenAmount({
           amount: currentToken?.minimum,
       }));
     } else {
-      if(!isFunders) debouncedDistributionsUpdater(values)
+      console.log('is', isFunders, isFunding)
+      if(isFunders) debouncedDistributionsUpdater(values.value)
       setIssueAmount(values);
       if (inputError) setInputError("");
     }
@@ -111,7 +121,7 @@ export default function CreateBountyTokenAmount({
     );
   }
 
-  function RewardInputNumber() {
+  function inputNumber() {
     return (
       <InputNumber
         symbol={currentToken?.symbol}
@@ -143,27 +153,6 @@ export default function CreateBountyTokenAmount({
     );
   }
 
-  function RenderItemRow({
-    children,
-    label = "",
-    description = "",
-    borderBottom = true,
-  }) {
-    return (
-      <div
-        className={`mt-4 pb-4 ${
-          borderBottom ? "border-bottom border-gray-700" : ""
-        }`}
-      >
-        <label className="text-white">{label}</label>
-        <div className="row justify-content-between">
-          <div className="col-md-6 col-12 text-gray mt-1">{description}</div>
-          <div className="col-md-4 col-12 mt-1">{children}</div>
-        </div>
-      </div>
-    );
-  }
-
   function renderPrimaryToken() {
     return (
       <div>
@@ -188,17 +177,18 @@ export default function CreateBountyTokenAmount({
           label={isFunding ? t("bounty:fields.select-token.reward") : t("bounty:fields.select-token.bounty")}
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
         >
-          <RewardInputNumber />
+          {inputNumber()}
         </RenderItemRow>
         <RenderItemRow
           label="Service fees"
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          handleLink={() => setShow(true)}
         >
           <InputNumber
             symbol={currentToken?.symbol}
             classSymbol=""
             thousandSeparator
-            value={"10000"}
+            value={totalServiceFees.toFixed()}
             disabled
           />
         </RenderItemRow>
@@ -207,13 +197,7 @@ export default function CreateBountyTokenAmount({
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
           borderBottom={isFunding ? true : false}
         >
-          <InputNumber
-            symbol={currentToken?.symbol}
-            classSymbol=""
-            thousandSeparator
-            value={"10000"}
-            disabled
-          />
+          {inputNumber()}
         </RenderItemRow>
       </div>
     );
@@ -254,16 +238,19 @@ export default function CreateBountyTokenAmount({
                 <RenderBalance />
               </ResponsiveWrapper>
             </div>
-            <div className="col-md-4 col-12"><RewardInputNumber /></div>
+            <div className="col-md-4 col-12">{inputNumber()}</div>
           </div>
         )
       ) : (
         renderPrimaryToken()
       )}
     </div>
-    <Modal>
-
-    </Modal>
+    <ServiceFeesModalView 
+      show={show} 
+      onClose={() => setShow(false)} 
+      symbol={currentToken?.symbol} 
+      distributions={distributions}
+    />
     </>
   );
 }
