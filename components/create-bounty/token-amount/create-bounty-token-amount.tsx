@@ -37,7 +37,7 @@ export default function CreateBountyTokenAmount({
   decimals = 18,
   isFunding = false,
 }) {
-  const { t } = useTranslation(["bounty", "proposal"]);
+  const { t } = useTranslation(["bounty", "common", "proposal"]);
   const { publicRuntimeConfig } = getConfig();
   const [show, setShow] = useState<boolean>(false);
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>();
@@ -89,7 +89,6 @@ export default function CreateBountyTokenAmount({
           amount: currentToken?.minimum,
       }));
     } else {
-      console.log('is', isFunders, isFunding)
       if(isFunders) debouncedDistributionsUpdater(values.value)
       setIssueAmount(values);
       if (inputError) setInputError("");
