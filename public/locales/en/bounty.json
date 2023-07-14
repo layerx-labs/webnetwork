@@ -130,11 +130,10 @@
       "max": "Use max"
     },
     "conversion-token": {
-      "invalid": "Could not convert this token",
       "not-found": "Can't convert because not found"
     }
   },
-  "reward-funders": "Reward Funders",
+  "reward-funders": "Set Funders Reward",
   "reward-funders-description": "Reward anyone who funds this bounty.",
   "review": {
     "repository": "Repository",
