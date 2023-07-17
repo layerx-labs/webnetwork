@@ -25,6 +25,11 @@ const ZeroNumberFormatValues = {
   floatValue: 0,
 };
 
+interface DistributionsProps extends DistributedAmounts {
+  type: 'total' | 'reward';
+  totalServiceFees: BigNumber;
+}
+
 export default function CreateBountyTokenAmount({
   currentToken,
   setCurrentToken,
@@ -46,17 +51,14 @@ export default function CreateBountyTokenAmount({
   const [show, setShow] = useState<boolean>(false);
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [inputError, setInputError] = useState("");
-  const [distributions, setDistributions] = useState<DistributedAmounts>();
-  const [serviceFees, setServiceFees] = useState<BigNumber>();
-  const [totalServiceFee, setTotalServiceFee] = useState<BigNumber>();
-  const [rewardServiceFee, setRewardServiceFee] = useState<BigNumber>();
+  const [distributions, setDistributions] = useState<DistributionsProps>();
   const {
     state: { currentUser, Service },
   } = useAppState();
 
-  const debouncedDistributionsUpdater = useDebouncedCallback((value) => handleDistributions(value), 500);
+  const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 250);
 
-  function handleDistributions(value) {
+  function handleDistributions(value, type) {
     if (!value || !Service?.network?.amounts) return;
   
     const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
@@ -66,21 +68,42 @@ export default function CreateBountyTokenAmount({
                                                       proposerFeeShare,
                                                       BigNumber(value),
                                                         [{recipient: currentUser?.walletAddress, percentage: 100}]);
-    setDistributions(distributions)
-
+    
+    
+    
     const totalServiceFees = distributions
-    ? [
-        distributions.mergerAmount.value,
-        distributions.proposerAmount.value,
-        distributions.treasuryAmount.value,
-    ].reduce((acc, value) => BigNumber(value).plus(acc),
-             BigNumber(0))
-    : BigNumber(0);
+      ? [
+          distributions.mergerAmount.value,
+          distributions.proposerAmount.value,
+          distributions.treasuryAmount.value,
+      ].reduce((acc, value) => BigNumber(value).plus(acc),
+               BigNumber(0))
+      : BigNumber(0);
 
-    setServiceFees(totalServiceFees)
-
-    return distributions
+    setDistributions({type, totalServiceFees, ...distributions})
   }
+
+  useEffect(() => {
+    if(distributions) {
+      if(distributions.type === 'reward'){
+        const total = distributions.totalServiceFees.plus(rewardAmount?.value) 
+        setIssueAmount({
+          value: total.toFixed(),
+          floatValue: total.toNumber(),
+          formattedValue: total.toFixed()
+        })
+      }
+
+      if(distributions.type === 'total'){
+        const rewardValue = BigNumber(issueAmount?.value).minus(distributions.totalServiceFees) 
+        setRewardAmount({
+          value: rewardValue.toFixed(),
+          floatValue: rewardValue.toNumber(),
+          formattedValue: rewardValue.toFixed()
+        })
+      }
+    }
+  }, [distributions])
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
     const setType = type === 'reward' ? setRewardAmount : setIssueAmount
@@ -101,7 +124,7 @@ export default function CreateBountyTokenAmount({
           amount: currentToken?.minimum,
       }));
     } else {
-      if(isFunders) debouncedDistributionsUpdater(values.value)
+      if(isFunders) debouncedDistributionsUpdater(values.value, type)
       setType(values);
       if (inputError) setInputError("");
     }
@@ -113,44 +136,6 @@ export default function CreateBountyTokenAmount({
       setType({ formattedValue: tokenBalance.toFixed() });
     }
   }
-
-  useEffect(() => {
-    if(rewardAmount){
-      if(serviceFees){
-        const total = serviceFees.plus(rewardAmount?.floatValue)
-        setIssueAmount({
-          value: total.toFixed(),
-          formattedValue: total.toFixed(),
-          floatValue: total.toNumber(),
-        })
-      }
-  
-    /*  if(BigNumber(issueAmount?.floatValue).minus(totalServiceFees).eq(rewardAmount?.floatValue)){
-        const reward = BigNumber(issueAmount?.floatValue).minus(totalServiceFees)
-        
-        setRewardAmount({
-          value: reward.toFixed(),
-          formattedValue: reward.toFixed(),
-          floatValue: reward.toNumber(),
-        })
-      }*/
-    }
-  }, [rewardAmount])
-
-  useEffect(() => {
-    if(issueAmount) {
-      if(serviceFees){
-        const reward = BigNumber(issueAmount?.floatValue).minus(serviceFees)
-        
-        setRewardAmount({
-          value: reward.toFixed(),
-          formattedValue: reward.toFixed(),
-          floatValue: reward.toNumber(),
-        })
-      }
-    }
-  }, [issueAmount])
-
 
   function selectTokens() {
     return (
@@ -177,7 +162,7 @@ export default function CreateBountyTokenAmount({
         symbol={currentToken?.symbol}
         classSymbol=""
         thousandSeparator
-        value={issueAmount.value}
+        value={issueAmount?.value}
         placeholder="0"
         allowNegative={false}
         decimalScale={decimals}
@@ -250,7 +235,7 @@ export default function CreateBountyTokenAmount({
             symbol={currentToken?.symbol}
             classSymbol=""
             thousandSeparator
-            value={serviceFees?.toFixed()}
+            value={distributions?.totalServiceFees?.toFixed()}
             disabled
           />
         </RenderItemRow>
