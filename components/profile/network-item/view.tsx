@@ -59,7 +59,7 @@ export default function NetworkItemView({
           subNetworkText={subNetworkText}
         />
         <ResponsiveWrapper xs={true} md={false} className="ms-2">
-          <div className="mw-mobile-name-network text-truncate">
+          <div className="mw-repo text-truncate">
             <span className="text-gray">{subNetworkText}</span>
           </div>
         </ResponsiveWrapper>
