@@ -59,7 +59,9 @@ export default function NetworkItemView({
           subNetworkText={subNetworkText}
         />
         <ResponsiveWrapper xs={true} md={false} className="ms-2">
-          <span className=" text-gray">{subNetworkText}</span>
+          <div className="mw-mobile-name-network text-truncate">
+            <span className="text-gray">{subNetworkText}</span>
+          </div>
         </ResponsiveWrapper>
         <NetworkItemBody
           isCollapsed={isCollapsed}

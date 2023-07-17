@@ -68,7 +68,7 @@ export default function BodyVotingView({
         </FlexRow>
       </FlexColumn>
       {handleNetworkLink && (
-        <ResponsiveWrapper xl={false} lg={false} md={false} xs={true}>
+        <ResponsiveWrapper xs={true} md={false} >
           <FlexRow className="justify-content-center">
             <div>
               <NetworkLinkIconButton className="px-2" />
