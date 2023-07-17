@@ -98,7 +98,7 @@ export default function WalletBalanceView({
               </label>
               <ChainSelector />
             </div>
-            <SelectNetwork isCurrentDefault={isOnNetwork} />
+            <SelectNetwork isCurrentDefault={isOnNetwork} filterByConnectedChain/>
           </ResponsiveWrapper>
         </div>
       </div>
