@@ -3,7 +3,6 @@ import { NumberFormatValues } from "react-number-format";
 
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
-import getConfig from "next/config";
 import { useDebouncedCallback } from "use-debounce";
 
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -19,6 +18,12 @@ import TokensDropdown from "../../tokens-dropdown";
 import RewardInformationBalanceView from "../reward-information/balance/view";
 import RenderItemRow from "./item-row/view";
 import ServiceFeesModalView from "./service-fees-modal/view";
+
+const ZeroNumberFormatValues = {
+  value: "",
+  formattedValue: "",
+  floatValue: 0,
+};
 
 export default function CreateBountyTokenAmount({
   currentToken,
@@ -38,23 +43,16 @@ export default function CreateBountyTokenAmount({
   isFunding = false,
 }) {
   const { t } = useTranslation(["bounty", "common", "proposal"]);
-  const { publicRuntimeConfig } = getConfig();
   const [show, setShow] = useState<boolean>(false);
-  const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>();
+  const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [inputError, setInputError] = useState("");
   const [distributions, setDistributions] = useState<DistributedAmounts>();
+  const [serviceFees, setServiceFees] = useState<BigNumber>();
+  const [totalServiceFee, setTotalServiceFee] = useState<BigNumber>();
+  const [rewardServiceFee, setRewardServiceFee] = useState<BigNumber>();
   const {
     state: { currentUser, Service },
   } = useAppState();
-
-  const totalServiceFees = distributions
-    ? [
-        distributions.mergerAmount.value,
-        distributions.proposerAmount.value,
-        distributions.treasuryAmount.value,
-    ].reduce((acc, value) => BigNumber(value).plus(acc),
-             BigNumber(0))
-    : BigNumber(0);
 
   const debouncedDistributionsUpdater = useDebouncedCallback((value) => handleDistributions(value), 500);
 
@@ -69,37 +67,90 @@ export default function CreateBountyTokenAmount({
                                                       BigNumber(value),
                                                         [{recipient: currentUser?.walletAddress, percentage: 100}]);
     setDistributions(distributions)
+
+    const totalServiceFees = distributions
+    ? [
+        distributions.mergerAmount.value,
+        distributions.proposerAmount.value,
+        distributions.treasuryAmount.value,
+    ].reduce((acc, value) => BigNumber(value).plus(acc),
+             BigNumber(0))
+    : BigNumber(0);
+
+    setServiceFees(totalServiceFees)
+
+    return distributions
   }
 
-  function handleIssueAmountOnValueChange(values: NumberFormatValues) {
+  function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
+    const setType = type === 'reward' ? setRewardAmount : setIssueAmount
     if (
       needValueValidation &&
       +values.floatValue > +currentToken?.currentValue
     ) {
-      setIssueAmount({ formattedValue: "" });
+      setType(ZeroNumberFormatValues);
       setInputError(t("bounty:errors.exceeds-allowance"));
     } else if (values.floatValue < 0) {
-      setIssueAmount({ formattedValue: "" });
+      setType(ZeroNumberFormatValues);
     } else if (
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
-      setIssueAmount(values);
+      setType(values); 
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
       }));
     } else {
       if(isFunders) debouncedDistributionsUpdater(values.value)
-      setIssueAmount(values);
+      setType(values);
       if (inputError) setInputError("");
     }
   }
 
-  function handleIssueAmountBlurChange() {
+  function handleIssueAmountBlurChange(type: 'reward' | 'total') {
     if (needValueValidation && tokenBalance?.lt(issueAmount.floatValue)) {
-      setIssueAmount({ formattedValue: tokenBalance.toFixed() });
+      const setType = type === 'reward' ? setRewardAmount : setIssueAmount
+      setType({ formattedValue: tokenBalance.toFixed() });
     }
   }
+
+  useEffect(() => {
+    if(rewardAmount){
+      if(serviceFees){
+        const total = serviceFees.plus(rewardAmount?.floatValue)
+        setIssueAmount({
+          value: total.toFixed(),
+          formattedValue: total.toFixed(),
+          floatValue: total.toNumber(),
+        })
+      }
+  
+    /*  if(BigNumber(issueAmount?.floatValue).minus(totalServiceFees).eq(rewardAmount?.floatValue)){
+        const reward = BigNumber(issueAmount?.floatValue).minus(totalServiceFees)
+        
+        setRewardAmount({
+          value: reward.toFixed(),
+          formattedValue: reward.toFixed(),
+          floatValue: reward.toNumber(),
+        })
+      }*/
+    }
+  }, [rewardAmount])
+
+  useEffect(() => {
+    if(issueAmount) {
+      if(serviceFees){
+        const reward = BigNumber(issueAmount?.floatValue).minus(serviceFees)
+        
+        setRewardAmount({
+          value: reward.toFixed(),
+          formattedValue: reward.toFixed(),
+          floatValue: reward.toNumber(),
+        })
+      }
+    }
+  }, [issueAmount])
+
 
   function selectTokens() {
     return (
@@ -126,14 +177,12 @@ export default function CreateBountyTokenAmount({
         symbol={currentToken?.symbol}
         classSymbol=""
         thousandSeparator
-        fullWidth={!publicRuntimeConfig?.enableCoinGecko}
-        max={tokenBalance.toFixed()}
         value={issueAmount.value}
         placeholder="0"
         allowNegative={false}
         decimalScale={decimals}
-        onValueChange={handleIssueAmountOnValueChange}
-        onBlur={handleIssueAmountBlurChange}
+        onValueChange={(e) => handleIssueAmountOnValueChange(e, "total")}
+        onBlur={() => handleIssueAmountBlurChange("total")}
         error={!!inputError}
         helperText={
           <>{inputError && <p className="p-small my-2">{inputError}</p>}</>
@@ -176,7 +225,21 @@ export default function CreateBountyTokenAmount({
           label={isFunding ? t("bounty:fields.select-token.reward") : t("bounty:fields.select-token.bounty")}
           description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
         >
-          {inputNumber()}
+        <InputNumber
+            symbol={currentToken?.symbol}
+            classSymbol=""
+            thousandSeparator
+            value={rewardAmount?.value}
+            placeholder="0"
+            allowNegative={false}
+            decimalScale={decimals}
+            onValueChange={(e) => handleIssueAmountOnValueChange(e, "reward")}
+            onBlur={() => handleIssueAmountBlurChange("reward")}
+            error={!!inputError}
+            helperText={
+              <>{inputError && <p className="p-small my-2">{inputError}</p>}</>
+            }
+          />
         </RenderItemRow>
         <RenderItemRow
           label="Service fees"
@@ -187,7 +250,7 @@ export default function CreateBountyTokenAmount({
             symbol={currentToken?.symbol}
             classSymbol=""
             thousandSeparator
-            value={totalServiceFees.toFixed()}
+            value={serviceFees?.toFixed()}
             disabled
           />
         </RenderItemRow>
