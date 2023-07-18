@@ -22,6 +22,8 @@ import {
 
 import { DetailsProps } from "interfaces/create-bounty";
 
+import useOctokit from "x-hooks/use-octokit";
+
 import CreateBountyDescription from "./create-bounty-description";
 import BountyLabel from "./create-bounty-label";
 
@@ -43,6 +45,7 @@ export default function CreateBountyDetails({
   updateBranch,
   repositories,
   branches,
+  updateBranches,
   updateUploading,
 }: DetailsProps) {
   const { t } = useTranslation("bounty");
@@ -53,6 +56,8 @@ export default function CreateBountyDetails({
   const {
     state: { Settings },
   } = useAppState();
+
+  const { getRepositoryBranches } = useOctokit();
 
   const TAGS_OPTIONS = PROGRAMMING_LANGUAGES.map(({ tag }) => ({
     label: tag,
@@ -204,6 +209,8 @@ export default function CreateBountyDetails({
                 repositories={repositories}
                 onSelected={(opt) => {
                   updateRepository(opt.value)
+                  getRepositoryBranches(opt.value.path, true).then((b) =>
+                  updateBranches(b.branches));
                   updateBranch(null)
                 }}
                 value={{

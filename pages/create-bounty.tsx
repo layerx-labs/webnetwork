@@ -420,6 +420,18 @@ export default function CreateBountyPage() {
     }
   }
 
+  function handleNextStep() {
+    if (currentSection + 1 < steps.length){
+      if(currentSection + 1 === 1){
+        getReposList(true, currentNetwork.name, connectedChain?.id).then(setRepositories)
+      }
+      setCurrentSection((prevState) => prevState + 1);
+    }
+      
+    if (currentSection === 3) {
+      createBounty();
+    }
+  }
   const [searchForNetwork, setSearchingForNetwork] = useState<string|null>(null);
 
   useEffect(() => {
@@ -451,12 +463,12 @@ export default function CreateBountyPage() {
   useEffect(() => {
     if (transactionalToken?.address && currentSection === 2)
       transactionalERC20.setAddress(transactionalToken.address);
-  }, [transactionalToken?.address, currentUser, Service?.active, currentSection]);
+  }, [transactionalToken?.address, Service?.active, currentSection])
 
   useEffect(() => {
     if (rewardToken?.address && currentSection === 2)
       rewardERC20.setAddress(rewardToken.address);
-  }, [rewardToken?.address, currentUser, Service?.active, currentSection]);
+  }, [rewardToken?.address, Service?.active, currentSection]);
 
 
   useEffect(() => {
@@ -477,19 +489,6 @@ export default function CreateBountyPage() {
     rewardAmount,
     rewardChecked,
   ]);
-
-  useEffect(() => {
-    if (currentNetwork && currentSection === 1 && connectedChain?.id) {
-      getReposList(true, currentNetwork.name, connectedChain?.id).then(setRepositories)
-    }
-  }, [currentNetwork, currentSection, connectedChain]);
-
-  useEffect(() => {
-    if (repository) {
-      getRepositoryBranches(repository.path, true).then((b) =>
-        setBranches(b.branches));
-    }
-  }, [repository]);
 
   useEffect(() => {
     if (!currentNetwork?.tokens) {
@@ -589,6 +588,7 @@ export default function CreateBountyPage() {
           updateBranch={setBranch}
           repositories={repositories}
           branches={branches}
+          updateBranches={setBranches}
           updateUploading={setIsUploading}
         />
       );
@@ -703,13 +703,7 @@ export default function CreateBountyPage() {
                   className="col-6 bounty-button"
                   disabled={verifyNextStepAndCreate()}
                   isLoading={isLoadingCreateBounty}
-                  onClick={() => {
-                    if (currentSection + 1 < steps.length)
-                      setCurrentSection((prevState) => prevState + 1);
-                    if (currentSection === 3) {
-                      createBounty();
-                    }
-                  }}
+                  onClick={handleNextStep}
                   >
                     {currentSection === 3 ? (
                       <>
