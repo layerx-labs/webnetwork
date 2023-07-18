@@ -10,7 +10,7 @@
   "close": "Close",
   "currencies": {
     "euro": "EURO",
-    "error-convert-all-to-euro": "could not convert all tokens to Euro"
+    "error-convert-all-to-fiat": "Could not convert all tokens to {{fiat}}"
   },
   "filters": {
     "filters": "Filter",
@@ -153,7 +153,8 @@
     "remove": "Remove",
     "register": "Register",
     "clear-all": "Clear All",
-    "apply": "Apply"
+    "apply": "Apply",
+    "clear": "Clear"
   },
   "misc": {
     "by": "by",
@@ -215,7 +216,8 @@
     "copied": "Copied",
     "address-copied": "Address Copied",
     "empty-list": "Empty List",
-    "learn-more": "Learn More"
+    "learn-more": "Learn More",
+    "chain": "Chain"
   },
   "modals": {
     "help-modal": {
@@ -365,7 +367,8 @@
     "failed-update-bounty": "Failed to update bounty!",
     "read-only-network": "This network is closed. It is set to read-only mode.",
     "results-truncated": "Results Truncated",
-    "not-available-chain": "Not available on this chain"
+    "not-available-chain": "Not available on this chain",
+    "something-went-wrong": "Something went wrong"
   },
   "404": {
     "the-page": "The page you looking for was",
@@ -450,21 +453,35 @@
   },
   "info-data": {
     "minutes_other": "minutes",
-    "minutes": "minute",
+    "minutes_one": "minute",
+    "minutesWithCount_other": "{{count}} minutes",
+    "minutesWithCount_one": "{{count}} minute",
     "hours_other": "hours",
-    "hours": "hour",
-    "months": "month",
+    "hours_one": "hour",
+    "hoursWithCount_other": "{{count}} hours",
+    "hoursWithCount_one": "{{count}} hour",
+    "months_one": "month",
     "months_other": "months",
-    "years": "year",
+    "monthsWithCount_other": "{{count}} months",
+    "monthsWithCount_one": "{{count}} month",
+    "years_one": "year",
     "years_other": "years",
-    "days": "day",
+    "yearsWithCount_other": "{{count}} years",
+    "yearsWithCount_one": "{{count}} year",
+    "days_one": "day",
     "days_other": "days",
-    "seconds": "second",
+    "daysWithCount_other": "{{count}} days",
+    "daysWithCount_one": "{{count}} day",
+    "seconds_one": "second",
     "seconds_other": "seconds",
     "text-data": "Opened {{value}} Ago"
   },
   "cookie-consent": {
     "message": "This website uses cookies to enhance the user experience.",
     "button-label": "Accept"
+  },
+  "placeholders": {
+    "select-chain": "Select Chain",
+    "select-latest": "Select Latest"
   }
 }

@@ -1,10 +1,10 @@
-import BodyNetworkView from "./network.view";
-import BodyVotingView from "./voting.view";
+import BodyNetworkView from "./network/view";
+import BodyVotingView from "./voting/view";
 
 interface NetworkItemBodyViewProps {
   isCollapsed: boolean;
   handleNetworkLink: () => void;
-  type: "network" | "voting";
+  type: "network" | "voting" | "payments";
   amount: string | number;
   symbol: string;
   isNetworkVariant: boolean;
@@ -24,7 +24,6 @@ export default function NetworkItemBody({
   isNetworkType,
   handleToggleCollapse,
 }: NetworkItemBodyViewProps) {
-
   if (isNetworkType)
     return (
       <BodyNetworkView
