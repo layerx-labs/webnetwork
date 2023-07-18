@@ -510,9 +510,7 @@ export default function CreateBountyPage() {
 
   useEffect(() => {
     cleanFields();
-    transactionalERC20.updateAllowanceAndBalance();
-    rewardERC20.updateAllowanceAndBalance();
-
+    
     if (query?.type === "funding")
       setIsFundingType(true);
   }, []);
