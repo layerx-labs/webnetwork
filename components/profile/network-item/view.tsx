@@ -2,12 +2,12 @@ import { ReactNode } from "react";
 
 import { FlexRow } from "../wallet-balance";
 import NetworkItemBody from "./body/controller";
-import NetworkItemTitleView from "./title.view";
+import NetworkItemTitleView from "./title/view";
 
 interface NetworkItemViewProps {
   children?: ReactNode;
   key?: number | string;
-  type?: "network" | "voting";
+  type?: "network" | "voting" | "payments";
   networkName: string;
   subNetworkText?: string;
   primaryColor?: string;
