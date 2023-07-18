@@ -53,7 +53,6 @@ import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
-import useOctokit from "x-hooks/use-octokit";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -107,8 +106,6 @@ export default function CreateBountyPage() {
 
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
-
-  const { getRepositoryBranches } = useOctokit();
 
   const {
     dispatch,
@@ -420,6 +417,14 @@ export default function CreateBountyPage() {
     }
   }
 
+  
+  function handleUpdateToken(e: Token, type: 'transactional' | 'reward') {
+    const ERC20 = type === 'transactional' ? transactionalERC20 : rewardERC20
+    const setToken = type === 'transactional' ? setTransactionalToken : setRewardToken
+    setToken(e)
+    ERC20.setAddress(e.address) 
+  }
+
   function handleNextStep() {
     if (currentSection + 1 < steps.length){
       if(currentSection + 1 === 1){
@@ -461,17 +466,6 @@ export default function CreateBountyPage() {
   }, [connectedChain]);
 
   useEffect(() => {
-    if (transactionalToken?.address && currentSection === 2)
-      transactionalERC20.setAddress(transactionalToken.address);
-  }, [transactionalToken?.address, Service?.active, currentSection])
-
-  useEffect(() => {
-    if (rewardToken?.address && currentSection === 2)
-      rewardERC20.setAddress(rewardToken.address);
-  }, [rewardToken?.address, Service?.active, currentSection]);
-
-
-  useEffect(() => {
     let approved = true;
 
     if (!isFundingType)
@@ -502,8 +496,8 @@ export default function CreateBountyPage() {
       const tokens = currentNetwork?.tokens
 
       if (tokens.length === 1) {
-        setTransactionalToken(tokens[0]);
-        setRewardToken(tokens[0]);
+        handleUpdateToken(tokens[0], 'transactional');
+        handleUpdateToken(tokens[0], 'reward');
       }
 
       if (tokens.length !== customTokens.length)
@@ -608,8 +602,8 @@ export default function CreateBountyPage() {
             rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)} 
             rewardBalance={rewardERC20.balance} 
             bountyBalance={transactionalERC20.balance} 
-            updateRewardToken={setRewardToken} 
-            updateTransactionalToken={setTransactionalToken} 
+            updateRewardToken={(v) => handleUpdateToken(v, 'reward')} 
+            updateTransactionalToken={(v) => handleUpdateToken(v, 'transactional')} 
             addToken={addToken} 
             handleRewardChecked={handleRewardChecked} 
             updateIssueAmount={setIssueAmount} 
@@ -645,7 +639,6 @@ export default function CreateBountyPage() {
       {!(query?.created?.toString() === "true") && (
         <CreateBountyContainer>
           <CustomContainer>
-
           <CreateBountySteps
               steps={steps}
               currentSection={currentSection}
