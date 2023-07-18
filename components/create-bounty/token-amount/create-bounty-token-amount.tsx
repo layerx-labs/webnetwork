@@ -56,7 +56,7 @@ export default function CreateBountyTokenAmount({
     state: { currentUser, Service },
   } = useAppState();
 
-  const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 250);
+  const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 500);
 
   function handleDistributions(value, type) {
     if (!value || !Service?.network?.amounts) return;
@@ -166,7 +166,7 @@ export default function CreateBountyTokenAmount({
         placeholder="0"
         allowNegative={false}
         decimalScale={decimals}
-        onValueChange={(e) => handleIssueAmountOnValueChange(e, "total")}
+        onValueChange={(e) =>  e.value !== issueAmount.value && handleIssueAmountOnValueChange(e, "total")}
         onBlur={() => handleIssueAmountBlurChange("total")}
         error={!!inputError}
         helperText={
@@ -218,7 +218,7 @@ export default function CreateBountyTokenAmount({
             placeholder="0"
             allowNegative={false}
             decimalScale={decimals}
-            onValueChange={(e) => handleIssueAmountOnValueChange(e, "reward")}
+            onValueChange={(e) => e.value !== rewardAmount.value && handleIssueAmountOnValueChange(e, "reward")}
             onBlur={() => handleIssueAmountBlurChange("reward")}
             error={!!inputError}
             helperText={
