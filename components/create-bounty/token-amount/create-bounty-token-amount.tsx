@@ -84,6 +84,12 @@ export default function CreateBountyTokenAmount({
   }
 
   useEffect(() => {
+    if(issueAmount?.value && !distributions){
+      debouncedDistributionsUpdater(issueAmount.value, 'total')
+    }
+  }, [issueAmount])
+
+  useEffect(() => {
     if(distributions) {
       if(distributions.type === 'reward'){
         const total = distributions.totalServiceFees.plus(rewardAmount?.value) 
