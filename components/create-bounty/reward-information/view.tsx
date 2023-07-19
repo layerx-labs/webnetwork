@@ -34,19 +34,6 @@ export default function RewardInformationView({
 }: RewardInformationViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
-  function Balance({
-    amount,
-    symbol,
-    isRender,
-  }: {
-    amount: string;
-    symbol: string;
-    isRender: boolean;
-  }) {
-    if (isRender) return null;
-    return <RewardInformationBalanceView amount={amount} symbol={symbol} />;
-  }
-
   function renderBountyToken(type: "bounty" | "reward") {
     const fieldParams = {
       bounty: {
@@ -129,11 +116,12 @@ export default function RewardInformationView({
               </p>
             </div>
             <ResponsiveWrapper className="mt-1" xs={false} md={true}>
-              <Balance
-                amount={rewardBalance.toFixed()}
-                symbol={rewardToken?.symbol}
-                isRender={!rewardChecked}
-              />
+            {rewardChecked && (
+                <RewardInformationBalanceView
+                  amount={rewardBalance.toFixed()}
+                  symbol={rewardToken?.symbol}
+                />
+              )}
             </ResponsiveWrapper>
           </div>
         </>
