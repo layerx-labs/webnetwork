@@ -78,7 +78,9 @@ export function useNetwork() {
         }
 
         if (queryChainName) {
-          const data = rows.find((network) => network?.chain?.chainShortName === queryChainName)
+          const data = rows.find((network) =>
+              network?.chain?.chainShortName?.toLowerCase() ===
+              queryChainName?.toLowerCase());
 
           if (!data.isRegistered) {
             if (state.currentUser?.walletAddress === data.creatorAddress)
