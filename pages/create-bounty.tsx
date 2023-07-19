@@ -17,7 +17,7 @@ import CreateBountyCard from "components/create-bounty/create-bounty-card";
 import CreateBountyContainer from "components/create-bounty/create-bounty-container";
 import CreateBountyDetails from "components/create-bounty/create-bounty-details";
 import CreateBountyNetworkDropdown from "components/create-bounty/create-bounty-network-dropdown";
-import CreateBountyReview from "components/create-bounty/create-bounty-review";
+import CreateBountyReview from "components/create-bounty/create-bounty-review/view";
 import CreateBountySteps from "components/create-bounty/create-bounty-steps";
 import RewardInformation from "components/create-bounty/reward-information/controller";
 import SelectNetwork from "components/create-bounty/select-network";
