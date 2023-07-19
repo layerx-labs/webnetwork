@@ -186,5 +186,19 @@
   "terms-and-conditions": "terms and conditions.",
   "creating-this-bounty": "By creating this bounty you agree to our",
   "see-bounty": "See Bounty",
-  "created-success": "Bounty created successfully!"
+  "created-success": "Bounty created successfully!",
+  "service-fee": {
+    "title": "Service Fees",
+    "description": "You Can find more information in our",
+    "doc": "Documentation",
+    "support-message": "Amount paid to incentivize the community to participate on the network"
+  },
+  "step-of": "Step {{currentStep}} of {{maxSteps}}",
+  "set-reward-description": "Amount distributed to the person who solution was accepted",
+  "set-funded-reward-description": "Amount you want to rise to be distributed to the person who solution was accepted",
+  "set-funders-reward-description": "Amount you want to pay for the funders as recompense for their participation",
+  "total-amount": {
+    "title": "Total Amount",
+    "description": "Amount you will pay for this bounty (reward + services fees)"
+  }
 }
