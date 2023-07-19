@@ -14,6 +14,8 @@ import { SortOption } from "types/components";
 
 import useFilters from "x-hooks/use-filters";
 
+import { ContainerFilterView } from "./container-filter-view";
+
 interface MobileFiltersModalProps {
   show: boolean;
   hide: () => void;
@@ -82,24 +84,16 @@ export default function MobileFiltersModal({
     applyFilters();
   }
 
-  function RenderFilterStructure({ label, children }: {label: string, children: ReactElement}) {
-    return (
-      <div className="mb-3">
-        <span className="caption-small font-weight-medium text-gray-100 text-capitalize">{label}</span>
-          {children}
-      </div>
-    )
-  }
 
   function FilterComponent(label, options, type) {
     return(
-        <RenderFilterStructure label={label}>
+        <ContainerFilterView label={label}>
           <ReactSelect
             value={getCurrentFilter(options)}
             options={options}
             onChange={handleChange(type)}
           />
-        </RenderFilterStructure>
+        </ContainerFilterView>
     );
   }
 
@@ -113,9 +107,9 @@ export default function MobileFiltersModal({
       onOkClick={handleApply}
     >
       <If condition={showChainSelector && !isOnNetwork}>
-        <RenderFilterStructure label={t("misc.chain")}>
+        <ContainerFilterView label={t("misc.chain")}>
           <ChainSelector isFilter />
-        </RenderFilterStructure>
+        </ContainerFilterView>
       </If>
       <If condition={onlyProfileFilters}>
         <If condition={!hideSort}>
