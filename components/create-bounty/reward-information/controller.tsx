@@ -1,6 +1,8 @@
 import { useAppState } from "contexts/app-state";
 
-import { RewardInformationControllerProps } from "./reward-information";
+
+import { RewardInformationControllerProps } from "types/components";
+
 import RewardInformationView from "./view";
 
 const ZeroNumberFormatValues = {

@@ -4,10 +4,11 @@ import { useTranslation } from "next-i18next";
 
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import { RewardInformationViewProps } from "types/components";
+
 import CreateBountyRewardInfo from "../create-bounty-reward-info";
 import CreateBountyTokenAmount from "../token-amount/create-bounty-token-amount";
 import RewardInformationBalanceView from "./balance/view";
-import { RewardInformationViewProps } from "./reward-information";
 
 export default function RewardInformationView({
   transactionalToken,
