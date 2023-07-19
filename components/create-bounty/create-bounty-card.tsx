@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 
+import { useTranslation } from "next-i18next";
+
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface CardProps {
@@ -12,11 +14,16 @@ export default function CreateBountyCard({
   maxSteps,
   children,
 }: CardProps) {
+  const { t } = useTranslation(["bounty"]);
+
   return (
     <>
       <ResponsiveWrapper className="mx-3 flex-column" xs={true} md={false}>
         <span className="text-gray">
-          Step {currentStep} of {maxSteps}
+          {t("bounty:step-of", {
+            currentStep,
+            maxSteps,
+          })}
         </span>
         {children}
       </ResponsiveWrapper>
@@ -26,7 +33,10 @@ export default function CreateBountyCard({
         md={true}
       >
         <span className="text-gray">
-          Step {currentStep} of {maxSteps}
+          {t("bounty:step-of", {
+            currentStep,
+            maxSteps,
+          })}
         </span>
         {children}
       </ResponsiveWrapper>

@@ -24,12 +24,12 @@ export default function ServiceFeesModalView({
   const { t } = useTranslation(["common", "bounty"]);
 
   return (
-    <Modal show={show} title={"Service Fees"} onCloseClick={onClose}>
+    <Modal show={show} title={t("bounty:service-fee.title")} onCloseClick={onClose}>
       <div className="px-3">
         <span>
-          You Can find more information in our{" "}
+          {t("bounty:service-fee.description")}{" "}
           <a href={DAPPKIT_LINK} target="_blank">
-            Documentation
+            {t("bounty:service-fee.doc")}
           </a>
         </span>
         <ServiceFeesModalRow

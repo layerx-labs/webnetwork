@@ -214,7 +214,7 @@ export default function CreateBountyTokenAmount({
 
         <RenderItemRow
           label={isFunding ? t("bounty:fields.select-token.reward") : t("bounty:fields.select-token.bounty")}
-          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          description={isFunding ? t("bounty:set-funded-reward-description") : t("bounty:set-reward-description")}
         >
         <InputNumber
             symbol={currentToken?.symbol}
@@ -233,8 +233,8 @@ export default function CreateBountyTokenAmount({
           />
         </RenderItemRow>
         <RenderItemRow
-          label="Service fees"
-          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          label={t("bounty:service-fee.title")}
+          description={t("bounty:service-fee.support-message")}
           handleLink={() => setShow(true)}
         >
           <InputNumber
@@ -246,8 +246,8 @@ export default function CreateBountyTokenAmount({
           />
         </RenderItemRow>
         <RenderItemRow
-          label="Total amount"
-          description="Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex."
+          label={t("bounty:total-amount.title")}
+          description={t("bounty:total-amount.description")}
           borderBottom={isFunding ? true : false}
         >
           {inputNumber()}
