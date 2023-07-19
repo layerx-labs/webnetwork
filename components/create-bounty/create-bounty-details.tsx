@@ -80,6 +80,18 @@ export default function CreateBountyDetails({
     updateIsKyc(e.target.checked);
   }
 
+  function handleSelectedRepo(opt: {
+    value: {
+      id: string;
+      path: string;
+    };
+  }) {
+    updateRepository(opt.value);
+    getRepositoryBranches(opt.value.path, true).then((b) =>
+      updateBranches(b.branches));
+    updateBranch(null);
+  }
+
   useEffect(() => {
     if (description.length > 0) {
       const body = `${description}\n\n${strFiles
@@ -207,12 +219,7 @@ export default function CreateBountyDetails({
               <div className="col-md-6 mt-2">   
               <ReposDropdown
                 repositories={repositories}
-                onSelected={(opt) => {
-                  updateRepository(opt.value)
-                  getRepositoryBranches(opt.value.path, true).then((b) =>
-                  updateBranches(b.branches));
-                  updateBranch(null)
-                }}
+                onSelected={handleSelectedRepo}
                 value={{
                   label: repository?.path,
                   value: repository,
@@ -222,7 +229,7 @@ export default function CreateBountyDetails({
               <div className="col-md-6 mt-2">
               <BranchsDropdown
                 branches={branches}
-                onSelected={(opt) => updateBranch(opt)}
+                onSelected={updateBranch}
                 value={branch}
               />
               </div>
