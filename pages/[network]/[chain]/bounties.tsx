@@ -10,7 +10,6 @@ import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
 
 import {useAppState} from "contexts/app-state";
-import {BountyEffectsProvider} from "contexts/bounty-effects";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
@@ -106,7 +105,7 @@ export default function BountiesPage({
   }, [state.Service?.network?.active, query?.network, chain]);
 
   return (
-    <BountyEffectsProvider>
+    <>
       <PageHero
         title={t("heroes.bounties.title")}
         subtitle={t("heroes.bounties.subtitle")}
@@ -119,7 +118,7 @@ export default function BountiesPage({
           variant="network"
         />
       </CustomContainer>
-    </BountyEffectsProvider>
+    </>
   );
 }
 
