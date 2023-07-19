@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 
+import { useTranslation } from "next-i18next";
+
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 export default function CreateBountySteps({
@@ -13,6 +15,8 @@ export default function CreateBountySteps({
   progressPercentage?: number;
   updateCurrentSection?: (b: number) => void;
 }) {
+  const { t } = useTranslation(["bounty"]);
+
   function handleColorState(index: number) {
     if (index <= currentSection) {
       return "bg-primary";
@@ -42,7 +46,7 @@ export default function CreateBountySteps({
           </div>
         </div>
         <ResponsiveWrapper  className="d-flex flex-column" xs={false} md={true}>
-          <span className="text-gray">Step {index + 1}</span>
+          <span className="text-gray">{t("bounty:step", {currentStep: (index + 1)})}</span>
           <span>{label}</span>
         </ResponsiveWrapper>
       </div>
