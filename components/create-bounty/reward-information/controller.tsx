@@ -34,16 +34,14 @@ export default function RewardInformation({
     state: { currentUser },
   } = useAppState();
 
-  function handleIsFunding() {
-    (e: boolean) => {
-      if (e === true) updateIssueAmount(ZeroNumberFormatValues);
-      else {
-        updateIssueAmount(ZeroNumberFormatValues);
-        updateRewardAmount(ZeroNumberFormatValues);
-      }
-
-      updateIsFundingType(e);
+  function handleIsFunding(e: boolean) {
+    if (e === true) updateIssueAmount(ZeroNumberFormatValues);
+    else {
+      updateIssueAmount(ZeroNumberFormatValues);
+      updateRewardAmount(ZeroNumberFormatValues);
     }
+
+    updateIsFundingType(e);
   }
 
   return (
