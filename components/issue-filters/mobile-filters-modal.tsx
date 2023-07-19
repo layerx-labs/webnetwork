@@ -100,12 +100,12 @@ export default function MobileFiltersModal({
 
       <If condition={!onlyTimeFrame && !onlyProfileFilters}>
         <FilterComponent 
-          label="Repository"
+          label={t('filters.repository')}
           options={repoOptions}
           type="repo"
         />
         <FilterComponent 
-          label="Bounty State"
+          label={t('filters.bounties.title')}
           options={stateOptions}
           type="state"
         />
@@ -113,7 +113,7 @@ export default function MobileFiltersModal({
 
       <If condition={onlyTimeFrame || !onlyProfileFilters}>
         <FilterComponent 
-          label="Timeframe"
+          label={t('filters.timeframe.title')}
           options={timeOptions}
           type="time"
         />
