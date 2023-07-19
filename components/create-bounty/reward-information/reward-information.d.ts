@@ -30,7 +30,7 @@ export interface RewardInformationViewProps {
   handleRewardChecked: (v: ChangeEvent<HTMLInputElement>) => void;
   updateIssueAmount: (v: NumberFormatValues) => void;
   updateRewardAmount: (v: NumberFormatValues) => void;
-  updateIsFundingType: (v: boolean) => void;
+  updateIsFunding: (v: boolean) => void;
 }
 
 export interface RewardInformationControllerProps {

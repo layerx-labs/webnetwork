@@ -34,6 +34,18 @@ export default function RewardInformation({
     state: { currentUser },
   } = useAppState();
 
+  function handleIsFunding() {
+    (e: boolean) => {
+      if (e === true) updateIssueAmount(ZeroNumberFormatValues);
+      else {
+        updateIssueAmount(ZeroNumberFormatValues);
+        updateRewardAmount(ZeroNumberFormatValues);
+      }
+
+      updateIsFundingType(e);
+    }
+  }
+
   return (
     <RewardInformationView
       isFundingType={isFundingType}
@@ -56,7 +68,7 @@ export default function RewardInformation({
       handleRewardChecked={handleRewardChecked}
       updateIssueAmount={updateIssueAmount}
       updateRewardAmount={updateRewardAmount}
-      updateIsFundingType={updateIsFundingType}
+      updateIsFunding={handleIsFunding}
     />
   );
 }

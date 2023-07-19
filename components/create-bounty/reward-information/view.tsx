@@ -15,7 +15,6 @@ export default function RewardInformationView({
   isFundingType,
   currentUserWallet,
   rewardChecked,
-  defaultValue,
   bountyDecimals,
   rewardDecimals,
   issueAmount,
@@ -30,7 +29,7 @@ export default function RewardInformationView({
   handleRewardChecked,
   updateIssueAmount,
   updateRewardAmount,
-  updateIsFundingType,
+  updateIsFunding,
 }: RewardInformationViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -105,15 +104,7 @@ export default function RewardInformationView({
   return (
     <CreateBountyRewardInfo
       isFunding={isFundingType}
-      updateIsFunding={(e: boolean) => {
-        if (e === true) updateIssueAmount(defaultValue);
-        else {
-          updateIssueAmount(defaultValue);
-          updateRewardAmount(defaultValue);
-        }
-
-        updateIsFundingType(e);
-      }}
+      updateIsFunding={updateIsFunding}
     >
       {isFundingType ? (
         <>
