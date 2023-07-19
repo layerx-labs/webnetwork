@@ -1,5 +1,3 @@
-import { ReactElement } from "react";
-
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -8,13 +6,13 @@ import If from "components/If";
 import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 import ChainSelector from "components/navigation/chain-selector/controller";
-import ReactSelect from "components/react-select";
 
 import { SortOption } from "types/components";
 
 import useFilters from "x-hooks/use-filters";
 
-import { ContainerFilterView } from "./container-filter-view";
+import { ContainerFilterView } from "./container-filter/view";
+import FilterComponent from "./filter-component/controller";
 
 interface MobileFiltersModalProps {
   show: boolean;
@@ -39,7 +37,7 @@ export default function MobileFiltersModal({
   const router = useRouter();
   const isOnNetwork = !!router?.query?.network;
 
-  const [ [repoOptions, stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
+  const [ [repoOptions, stateOptions, timeOptions], , , , applyFilters ] = useFilters();
 
   
   const defaultSortOptions = sortOptions ? sortOptions : [
@@ -69,32 +67,9 @@ export default function MobileFiltersModal({
     }
   ];
 
-  function getCurrentFilter(options) {
-    return options?.find(({ checked }) => checked);
-  }
-
-  function handleChange(type) {
-    return (value) => {
-      checkOption(value, type);
-    };
-  }
-
   function handleApply() {
     hide();
     applyFilters();
-  }
-
-
-  function FilterComponent(label, options, type) {
-    return(
-        <ContainerFilterView label={label}>
-          <ReactSelect
-            value={getCurrentFilter(options)}
-            options={options}
-            onChange={handleChange(type)}
-          />
-        </ContainerFilterView>
-    );
   }
 
   return(
@@ -124,12 +99,24 @@ export default function MobileFiltersModal({
       </If>
 
       <If condition={!onlyTimeFrame && !onlyProfileFilters}>
-        {FilterComponent("Repository", repoOptions, "repo")}
-        {FilterComponent("Bounty State", stateOptions, "state")}
+        <FilterComponent 
+          label="Repository"
+          options={repoOptions}
+          type="repo"
+        />
+        <FilterComponent 
+          label="Bounty State"
+          options={stateOptions}
+          type="state"
+        />
       </If>
 
       <If condition={onlyTimeFrame || !onlyProfileFilters}>
-        {FilterComponent("Timeframe", timeOptions, "time")}
+        <FilterComponent 
+          label="Timeframe"
+          options={timeOptions}
+          type="time"
+        />
 
         <ListSort options={defaultSortOptions} asSelect />
       </If>
