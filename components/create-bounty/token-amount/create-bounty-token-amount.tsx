@@ -26,7 +26,6 @@ const ZeroNumberFormatValues = {
 };
 
 interface DistributionsProps extends DistributedAmounts {
-  type: 'total' | 'reward';
   totalServiceFees: BigNumber;
 }
 
@@ -62,54 +61,48 @@ export default function CreateBountyTokenAmount({
     if (!value || !Service?.network?.amounts) return;
   
     const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
+
+    const handleNumberFormat = (v: BigNumber) => ({
+      value: v.toFixed(),
+      floatValue: v.toNumber(),
+      formattedValue: v.toFixed()
+    })
   
-    const distributions = calculateDistributedAmounts(treasury,
-                                                      mergeCreatorFeeShare,
-                                                      proposerFeeShare,
-                                                      BigNumber(value),
+    const initialDistributions = calculateDistributedAmounts(treasury,
+                                                             mergeCreatorFeeShare,
+                                                             proposerFeeShare,
+                                                             BigNumber(value),
                                                         [{recipient: currentUser?.walletAddress, percentage: 100}]);
-    
-    
-    
-    const totalServiceFees = distributions
+
+    const totalServiceFees = initialDistributions
       ? [
-          distributions.mergerAmount.value,
-          distributions.proposerAmount.value,
-          distributions.treasuryAmount.value,
+        initialDistributions.mergerAmount.value,
+        initialDistributions.proposerAmount.value,
+        initialDistributions.treasuryAmount.value,
       ].reduce((acc, value) => BigNumber(value).plus(acc),
                BigNumber(0))
       : BigNumber(0);
 
-    setDistributions({type, totalServiceFees, ...distributions})
+    const distributions = { totalServiceFees, ...initialDistributions}
+
+    if(type === 'reward'){
+      const total = totalServiceFees.plus(rewardAmount?.value) 
+      setIssueAmount(handleNumberFormat(total))
+    }
+
+    if(type === 'total'){
+      const rewardValue = BigNumber(issueAmount?.value).minus(totalServiceFees) 
+      setRewardAmount(handleNumberFormat(rewardValue))
+    }
+
+    setDistributions(distributions)
   }
 
   useEffect(() => {
-    if(issueAmount?.value && !distributions){
+    if(issueAmount?.value && !rewardAmount?.value){
       debouncedDistributionsUpdater(issueAmount.value, 'total')
     }
   }, [issueAmount])
-
-  useEffect(() => {
-    if(distributions) {
-      if(distributions.type === 'reward'){
-        const total = distributions.totalServiceFees.plus(rewardAmount?.value) 
-        setIssueAmount({
-          value: total.toFixed(),
-          floatValue: total.toNumber(),
-          formattedValue: total.toFixed()
-        })
-      }
-
-      if(distributions.type === 'total'){
-        const rewardValue = BigNumber(issueAmount?.value).minus(distributions.totalServiceFees) 
-        setRewardAmount({
-          value: rewardValue.toFixed(),
-          floatValue: rewardValue.toNumber(),
-          formattedValue: rewardValue.toFixed()
-        })
-      }
-    }
-  }, [distributions])
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
     const setType = type === 'reward' ? setRewardAmount : setIssueAmount
