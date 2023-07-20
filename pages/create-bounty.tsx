@@ -168,11 +168,14 @@ export default function CreateBountyPage() {
     const isIssueAmount =
       issueAmount.floatValue <= 0 ||
       issueAmount.floatValue === undefined ||
-      handleIsLessThan(issueAmount.floatValue, transactionalToken?.minimum);
+      handleIsLessThan(issueAmount.floatValue, transactionalToken?.minimum) ||
+      (!isFundingType && BigNumber(issueAmount.floatValue).gt(transactionalERC20?.balance)) 
+
     const isRewardAmount =
       rewardAmount.floatValue <= 0 ||
       rewardAmount.floatValue === undefined ||
-      handleIsLessThan(rewardAmount.floatValue, rewardToken?.minimum);
+      handleIsLessThan(rewardAmount.floatValue, rewardToken?.minimum) ||
+      BigNumber(issueAmount.floatValue).gt(rewardERC20?.balance)
 
     if (section === 0 && !currentNetwork) return true;
 

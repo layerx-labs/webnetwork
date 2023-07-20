@@ -57,6 +57,8 @@ export default function CreateBountyTokenAmount({
 
   const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 500);
 
+  const amountIsGtBalance = (v: string | number, balance: BigNumber) => BigNumber(v).gt(balance)
+
   function handleDistributions(value, type) {
     if (!value || !Service?.network?.amounts) return;
   
@@ -88,6 +90,7 @@ export default function CreateBountyTokenAmount({
     if(type === 'reward'){
       const total = totalServiceFees.plus(rewardAmount?.value) 
       setIssueAmount(handleNumberFormat(total))
+      amountIsGtBalance(total.toNumber(), tokenBalance) && setInputError(t("bounty:errors.exceeds-allowance"));
     }
 
     if(type === 'total'){
@@ -106,7 +109,11 @@ export default function CreateBountyTokenAmount({
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
     const setType = type === 'reward' ? setRewardAmount : setIssueAmount
-    if (
+
+    if(needValueValidation && amountIsGtBalance(values.floatValue, tokenBalance)){
+      setInputError(t("bounty:errors.exceeds-allowance"));
+      setType(values);
+    }else if (
       needValueValidation &&
       +values.floatValue > +currentToken?.currentValue
     ) {
@@ -126,13 +133,6 @@ export default function CreateBountyTokenAmount({
       if(isFunders) debouncedDistributionsUpdater(values.value, type)
       setType(values);
       if (inputError) setInputError("");
-    }
-  }
-
-  function handleIssueAmountBlurChange(type: 'reward' | 'total') {
-    if (needValueValidation && tokenBalance?.lt(issueAmount.floatValue)) {
-      const setType = type === 'reward' ? setRewardAmount : setIssueAmount
-      setType({ formattedValue: tokenBalance.toFixed() });
     }
   }
 
@@ -164,12 +164,12 @@ export default function CreateBountyTokenAmount({
         value={issueAmount?.value}
         placeholder="0"
         allowNegative={false}
+        max={tokenBalance.toFixed()}
         decimalScale={decimals}
         onValueChange={(e) =>  e.value !== issueAmount.value && handleIssueAmountOnValueChange(e, "total")}
-        onBlur={() => handleIssueAmountBlurChange("total")}
         error={!!inputError}
         helperText={
-          <>{inputError && <p className="p-small my-2">{inputError}</p>}</>
+          <>{inputError && <p className="p-small">{inputError}</p>}</>
         }
       />
     );
@@ -215,14 +215,10 @@ export default function CreateBountyTokenAmount({
             thousandSeparator
             value={rewardAmount?.value}
             placeholder="0"
+            max={tokenBalance.toFixed()}
             allowNegative={false}
             decimalScale={decimals}
             onValueChange={(e) => e.value !== rewardAmount.value && handleIssueAmountOnValueChange(e, "reward")}
-            onBlur={() => handleIssueAmountBlurChange("reward")}
-            error={!!inputError}
-            helperText={
-              <>{inputError && <p className="p-small my-2">{inputError}</p>}</>
-            }
           />
         </RenderItemRow>
         <RenderItemRow
