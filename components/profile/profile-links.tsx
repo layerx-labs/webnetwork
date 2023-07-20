@@ -12,6 +12,10 @@ import PullRequestsIcon from "assets/icons/pull-requests-icon";
 import VotingPowerIcon from "assets/icons/voting-power-icon";
 import WalletIcon from "assets/icons/wallet-icon";
 
+import handleLinksWithoutNetwork from "helpers/handleProfileLinks";
+
+import { LinkProps } from "types/components";
+
 import { useNetwork } from "x-hooks/use-network";
 
 interface ProfileLinksProps {
@@ -34,7 +38,7 @@ export default function ProfileLinks({
   const getTranslation = page => t(`main-nav.nav-avatar.${page}`);
   const isActive = href => asPath.endsWith(`/profile${href ? `/${href}` : ""}`);
 
-  const ProfileLink = ({ label, href, icon }) => (
+  const ProfileLink = ({ label, href, icon }: LinkProps) => (
     <li className="mb-2" key={label}>
       <Link href={getUrl()} as={getHref(href)} passHref>
         <a
@@ -67,7 +71,7 @@ export default function ProfileLinks({
 
   return(
     <ul>
-      {links.map(ProfileLink)}
+      {handleLinksWithoutNetwork(links, !!query?.network).map(ProfileLink)}
     </ul>
   );
 }
