@@ -2,6 +2,7 @@ import {useState} from "react";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
+import { useRouter } from "next/router";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
@@ -12,6 +13,7 @@ import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/
 import {useAppState} from "contexts/app-state";
 
 import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
+import handleLinksWithoutNetwork from "helpers/handleProfileLinks";
 import {truncateAddress} from "helpers/truncate-address";
 
 import { ProfilePages } from "interfaces/utils";
@@ -25,7 +27,7 @@ export default function NavAvatar() {
   const [visible, setVisible] = useState(false);
 
   const {state} = useAppState();
-
+  const { query } = useRouter();
   const { goToProfilePage } = useNetwork();
   const { disconnectWallet } = useAuthentication();
 
@@ -124,7 +126,7 @@ export default function NavAvatar() {
         </div>
 
         <LinksSession>
-          {internalLinks.map(ProfileInternalLink)}
+          {handleLinksWithoutNetwork(internalLinks, !!query?.network).map(ProfileInternalLink)}
         </LinksSession>
 
         <LinksSession>
