@@ -3,15 +3,22 @@ import {ReactNode, createContext, useEffect} from "react";
 import {useRouter} from "next/router";
 
 import { useAppState } from "contexts/app-state";
+import { changeCurrentBountyData } from "contexts/reducers/change-current-bounty";
+
+import { issueParser } from "helpers/issue";
 
 import { CurrentBounty } from "interfaces/application-state";
+import { IssueData } from "interfaces/issue-data";
 
 import {useBounty} from "x-hooks/use-bounty";
 import { useRepos } from "x-hooks/use-repos";
 
+interface ContextCurrentBounty extends Omit<CurrentBounty, "data" | "lastUpdated"> {
+  data: IssueData;
+}
 interface BountyEffectsProviderProps {
   children: ReactNode;
-  currentBounty: CurrentBounty;
+  currentBounty: ContextCurrentBounty;
 }
 
 const _context = {};
@@ -22,7 +29,15 @@ export const BountyEffectsProvider = ({ children, currentBounty }: BountyEffects
   const repos = useRepos();
   const bounty = useBounty();
   const { query } = useRouter();
-  const { state } = useAppState();
+  const { dispatch, state } = useAppState();
+
+  useEffect(() => {
+    const parsedData = issueParser(currentBounty.data);
+
+    dispatch(changeCurrentBountyData(parsedData));
+  }, [
+    currentBounty
+  ]);
 
   useEffect(repos.updateActiveRepo, [
     query?.repoId, 

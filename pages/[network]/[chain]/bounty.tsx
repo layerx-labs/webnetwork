@@ -129,7 +129,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   ]);
 
   return (
-    <BountyEffectsProvider currentBounty={currentBounty}>
+    <BountyEffectsProvider currentBounty={bounty}>
       <BountyHero 
         currentBounty={currentBounty?.data}
         updateBountyData={updateBountyData}
