@@ -1,32 +1,37 @@
-import {createContext, useEffect} from "react";
+import {ReactNode, createContext, useEffect} from "react";
 
 import {useRouter} from "next/router";
 
 import { useAppState } from "contexts/app-state";
 
+import { CurrentBounty } from "interfaces/application-state";
+
 import {useBounty} from "x-hooks/use-bounty";
-import useChain from "x-hooks/use-chain";
+import { useRepos } from "x-hooks/use-repos";
+
+interface BountyEffectsProviderProps {
+  children: ReactNode;
+  currentBounty: CurrentBounty;
+}
 
 const _context = {};
 
 export const BountyEffectsContext = createContext(_context);
 
-export const BountyEffectsProvider = ({children}) => {
+export const BountyEffectsProvider = ({ children, currentBounty }: BountyEffectsProviderProps) => {
+  const repos = useRepos();
   const bounty = useBounty();
-  const { chain } = useChain();
   const { query } = useRouter();
   const { state } = useAppState();
 
-  useEffect(() => {
-    bounty.getDatabaseBounty();
-  }, [
-    chain,
-    query?.id,
-    query?.repoId,
+  useEffect(repos.updateActiveRepo, [
+    query?.repoId, 
+    state.Service?.network?.repos
   ]);
+
   useEffect(bounty.validateKycSteps, [
-      state?.currentBounty?.data?.isKyc,
-      state?.currentBounty?.data?.kycTierList,
+      currentBounty?.data?.isKyc,
+      currentBounty?.data?.kycTierList,
       state?.currentUser?.kycSession,
   ]);
 
