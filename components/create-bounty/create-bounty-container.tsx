@@ -6,7 +6,7 @@ export default function CreateBountyContainer({ children }) {
       <ResponsiveWrapper
         xs={true}
         md={false}
-        className="flex-column bg-gray-900 p-4 border-radius-4 border border-gray-850"
+        className="flex-column justify-content-between bg-gray-900 border-radius-4 border border-gray-850 min-vh-90"
       >
         {children}
       </ResponsiveWrapper>

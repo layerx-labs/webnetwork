@@ -54,5 +54,14 @@ export default function CreateBountySteps({
     );
   }
 
-  return <div className="row my-4 mx-1">{steps.map(renderColumn)}</div>;
+  return (
+    <>
+      <ResponsiveWrapper className="row mb-4 mt-1 mx-2" xs={true} md={false}>
+        {steps.map(renderColumn)}
+      </ResponsiveWrapper>
+      <ResponsiveWrapper className="row my-4 mx-1" xs={false} md={true}>
+        {steps.map(renderColumn)}
+      </ResponsiveWrapper>
+    </>
+  );
 }

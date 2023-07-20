@@ -636,7 +636,7 @@ export default function CreateBountyPage() {
     <>
       {!(query?.created?.toString() === "true") && (
         <CreateBountyContainer>
-          <CustomContainer>
+          <CustomContainer col="col-xs-12 col-xl-10 px-0">
           <CreateBountySteps
               steps={steps}
               currentSection={currentSection}
@@ -646,8 +646,6 @@ export default function CreateBountyPage() {
                 }
               }}
             />
-          </CustomContainer>
-          <CustomContainer>
             <CreateBountyCard
               maxSteps={steps?.length}
               currentStep={currentSection + 1}
@@ -668,9 +666,10 @@ export default function CreateBountyPage() {
           </div>
           )}
           <CustomContainer className='d-flex flex-column justify-content-end'>
-            <div className="d-flex justify-content-between mt-4 me-4">
+            <div className="row my-4">
+              <div className="col-6 ps-2">
               <Button
-                className="col-6 bounty-outline-button ms-2"
+                className="col-12 bounty-outline-button"
                 onClick={() => {
                   currentSection !== 0 &&
                     setCurrentSection((prevState) => prevState - 1);
@@ -679,10 +678,12 @@ export default function CreateBountyPage() {
               >
                 {t("actions.back")}
               </Button>
+              </div>
 
+              <div className="col-6 pe-2">
               {!isTokenApproved && currentSection === 3 ? (
                 <ContractButton
-                  className="col-6 bounty-button"
+                  className="col-12 bounty-button"
                   disabled={isApproveButtonDisabled()}
                   onClick={allowCreateIssue}
                   isLoading={isLoadingApprove}
@@ -691,7 +692,7 @@ export default function CreateBountyPage() {
                 </ContractButton>
               ) : (
                 <ContractButton
-                  className="col-6 bounty-button"
+                  className="col-12 bounty-button"
                   disabled={verifyNextStepAndCreate()}
                   isLoading={isLoadingCreateBounty}
                   onClick={handleNextStep}
@@ -710,6 +711,7 @@ export default function CreateBountyPage() {
                     )}
                   </ContractButton>
                 )}
+                </div>
             </div>
           </CustomContainer>
         </CreateBountyContainer>

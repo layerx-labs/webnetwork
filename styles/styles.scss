@@ -1862,6 +1862,10 @@ input[type="color"] {
   }
 }
 
+.min-vh-90 {
+  min-height: 90vh;
+}
+
 .nav-link-gradient {
   background: linear-gradient(to right, #9669ED -0.33%, #FF6A2C 50.71%, #4250E4 99.67%);
   background-clip: text;
