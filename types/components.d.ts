@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, ReactElement } from "react";
 
 import { Currency } from "interfaces/currency";
 import { IssueBigNumberData } from "interfaces/issue-data";
@@ -62,4 +62,9 @@ export interface ChainFilterProps {
   chains: SupportedChainData[];
   direction?: Direction;
   onChange?: (value: string | number) => void;
+}
+export interface LinkProps {
+  label: string;
+  href: string;
+  icon?: ReactElement;
 }
