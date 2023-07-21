@@ -508,6 +508,7 @@ export default function CreateBountyPage() {
     }
   }, [currentNetwork?.tokens]);
 
+  useEffect(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), [currentSection])
   useEffect(() => handleMinAmount('transactional'), [issueAmount])
   useEffect(() => handleMinAmount('reward'), [rewardAmount])
 
