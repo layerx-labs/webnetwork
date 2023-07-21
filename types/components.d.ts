@@ -1,8 +1,9 @@
-import { ReactNode, ReactElement } from "react";
+import { ReactNode, ReactElement, SVGProps } from "react";
 
 import { Currency } from "interfaces/currency";
 import { IssueBigNumberData } from "interfaces/issue-data";
 import { SupportedChainData } from "interfaces/supported-chain-data";
+import { ProfilePages } from "interfaces/utils";
 
 import { SearchBountiesPaginated } from "types/api";
 import { BreakpointOptions, Direction, SelectOption } from "types/utils";
@@ -65,6 +66,6 @@ export interface ChainFilterProps {
 }
 export interface LinkProps {
   label: string;
-  href: string;
-  icon?: ReactElement;
+  href?: ProfilePages;
+  icon?: (props?: SVGProps<SVGSVGElement>) => ReactElement
 }
