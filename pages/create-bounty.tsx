@@ -546,11 +546,13 @@ export default function CreateBountyPage() {
     if (currentSection === 0)
       return (
         <SelectNetwork>
+          <label className="p mb-2 text-gray-300">{t("common:placeholders.select-chain")}</label>
           <SelectChainDropdown 
               onSelect={handleNetworkSelected}
               isOnNetwork={false}
               className="select-network-dropdown w-max-none mb-4"
             />
+          <label className="p mb-2 text-gray-300">{t("bounty:steps.select-network")}</label>
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
