@@ -3,16 +3,7 @@ import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import BountiesIcon from "assets/icons/bounties-icon";
-import CustomNetworkIcon from "assets/icons/custom-network-icon";
-import PaymentsIcon from "assets/icons/payments-icon";
-import ProfileIcon from "assets/icons/profile-icon";
-import ProposalsIcon from "assets/icons/proposals-icon";
-import PullRequestsIcon from "assets/icons/pull-requests-icon";
-import VotingPowerIcon from "assets/icons/voting-power-icon";
-import WalletIcon from "assets/icons/wallet-icon";
-
-import handleLinksWithoutNetwork from "helpers/handleProfileLinks";
+import { getProfileLinks } from "helpers/navigation-links";
 
 import { LinkProps } from "types/components";
 
@@ -35,7 +26,6 @@ export default function ProfileLinks({
   const getUrl = () => query?.network ?
     getURLWithNetwork("/profile/[[...profilePage]]") :
     { pathname: "/profile/[[...profilePage]]", query };
-  const getTranslation = page => t(`main-nav.nav-avatar.${page}`);
   const isActive = href => asPath.endsWith(`/profile${href ? `/${href}` : ""}`);
 
   const ProfileLink = ({ label, href, icon }: LinkProps) => (
@@ -49,29 +39,16 @@ export default function ProfileLinks({
           ])}
           onClick={onClick}
         >
-          {icon}
-          <span>{getTranslation(label)}</span>
+          {icon()}
+          <span>{label}</span>
         </a>
       </Link>
     </li>
     );
 
-  const getLink = (label, href, icon) => ({ label, href, icon });
-
-  const links = [
-    getLink("profile", "", <ProfileIcon />),
-    getLink("wallet", "wallet", <WalletIcon />),
-    getLink("voting-power", "voting-power", <VotingPowerIcon />),
-    getLink("payments", "payments", <PaymentsIcon />),
-    getLink("bounties", "bounties", <BountiesIcon />),
-    getLink("pull-requests", "pull-requests", <PullRequestsIcon />),
-    getLink("proposals", "proposals", <ProposalsIcon />),
-    getLink("my-network", "my-network", <CustomNetworkIcon />),
-  ];
-
   return(
     <ul>
-      {handleLinksWithoutNetwork(links, !!query?.network).map(ProfileLink)}
+      {getProfileLinks(t, !!query?.network).map(ProfileLink)}
     </ul>
   );
 }
