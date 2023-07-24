@@ -330,8 +330,6 @@ export default function MyNetworkSettings({
     updateBountiesList(bounties);
   }, [bounties]);
 
-  console.log("bountiesList", bountiesList)
-
   return (
     <>
       {isCurrentNetwork && (
