@@ -635,6 +635,58 @@ export default function CreateBountyPage() {
       );
   }
 
+  function renderButtons() {
+    return (
+      <>
+        <div className="col-6 ps-2">
+          <Button
+            className="col-12 bounty-outline-button"
+            onClick={() => {
+              currentSection !== 0 &&
+                setCurrentSection((prevState) => prevState - 1);
+            }}
+            disabled={!!(currentSection === 0)}
+          >
+            {t("actions.back")}
+          </Button>
+        </div>
+
+        <div className="col-6 pe-2">
+          {!isTokenApproved && currentSection === 3 ? (
+            <ContractButton
+              className="col-12 bounty-button"
+              disabled={isApproveButtonDisabled()}
+              onClick={allowCreateIssue}
+              isLoading={isLoadingApprove}
+            >
+              {t("actions.approve")}
+            </ContractButton>
+          ) : (
+            <ContractButton
+              className="col-12 bounty-button"
+              disabled={verifyNextStepAndCreate()}
+              isLoading={isLoadingCreateBounty}
+              onClick={handleNextStep}
+            >
+              {currentSection === 3 ? (
+                <>
+                  <ResponsiveWrapper xs={true} md={false}>
+                    {t("common:misc.create")}
+                  </ResponsiveWrapper>
+                  <ResponsiveWrapper xs={false} md={true}>
+                    {t("bounty:create-bounty")}
+                  </ResponsiveWrapper>
+                </>
+              ) : (
+                t("bounty:next-step")
+              )}
+            </ContractButton>
+          )}
+        </div>
+      </>
+    );
+  }
+
   if (!currentUser?.walletAddress)
     return <ConnectWalletButton asModal={true} />;
 
@@ -672,53 +724,12 @@ export default function CreateBountyPage() {
           </div>
           )}
           <CustomContainer className='d-flex flex-column justify-content-end'>
-            <div className="row my-4">
-              <div className="col-6 ps-2">
-              <Button
-                className="col-12 bounty-outline-button"
-                onClick={() => {
-                  currentSection !== 0 &&
-                    setCurrentSection((prevState) => prevState - 1);
-                }}
-                disabled={!!(currentSection === 0)}
-              >
-                {t("actions.back")}
-              </Button>
-              </div>
-
-              <div className="col-6 pe-2">
-              {!isTokenApproved && currentSection === 3 ? (
-                <ContractButton
-                  className="col-12 bounty-button"
-                  disabled={isApproveButtonDisabled()}
-                  onClick={allowCreateIssue}
-                  isLoading={isLoadingApprove}
-                >
-                  {t("actions.approve")}
-                </ContractButton>
-              ) : (
-                <ContractButton
-                  className="col-12 bounty-button"
-                  disabled={verifyNextStepAndCreate()}
-                  isLoading={isLoadingCreateBounty}
-                  onClick={handleNextStep}
-                  >
-                    {currentSection === 3 ? (
-                      <>
-                        <ResponsiveWrapper xs={true} md={false}>
-                          {t("common:misc.create")}
-                        </ResponsiveWrapper>
-                        <ResponsiveWrapper xs={false} md={true}>
-                          {t("bounty:create-bounty")}
-                        </ResponsiveWrapper>
-                      </>
-                    ) : (
-                      t("bounty:next-step")
-                    )}
-                  </ContractButton>
-                )}
-                </div>
-            </div>
+            <ResponsiveWrapper className="row my-4" xs={false} md={true}>
+              {renderButtons()}
+            </ResponsiveWrapper>
+            <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
+              {renderButtons()}
+            </ResponsiveWrapper>
           </CustomContainer>
         </CreateBountyContainer>
       )}
