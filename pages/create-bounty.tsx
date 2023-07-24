@@ -556,6 +556,7 @@ export default function CreateBountyPage() {
           <CreateBountyNetworkDropdown
             value={currentNetwork}
             networks={networks}
+            className="select-network-dropdown w-max-none"
             onSelect={onNetworkSelected}
           />
           {notFoundNetworks && (
