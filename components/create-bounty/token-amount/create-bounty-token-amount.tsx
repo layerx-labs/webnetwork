@@ -78,10 +78,11 @@ export default function CreateBountyTokenAmount({
 
     const { mergerAmount, proposerAmount, treasuryAmount } = initialDistributions;
 
-    const totalServiceFees = initialDistributions
-      ? [mergerAmount.value, proposerAmount.value, treasuryAmount.value]
-          .reduce((acc, value) => BigNumber(value).plus(acc), BigNumber(0))
-      : BigNumber(0)
+    const mergerAmountValue = new BigNumber(mergerAmount.value);
+    const proposerAmountValue = new BigNumber(proposerAmount.value);
+    const treasuryAmountValue = new BigNumber(treasuryAmount.value);
+
+    const totalServiceFees = mergerAmountValue.plus(proposerAmountValue).plus(treasuryAmountValue) || BigNumber(0)
 
     const distributions = { totalServiceFees, ...initialDistributions}
 
