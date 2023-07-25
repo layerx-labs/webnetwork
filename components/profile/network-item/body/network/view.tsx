@@ -60,7 +60,7 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         xl={true}
         xs={false}
-        className="d-flex align-items-center justify-content-center col-xl-3 py-3"
+        className="d-flex align-items-center justify-content-center col-xl-3"
       >
         <RenderAmount />
       </ResponsiveWrapper>
@@ -94,7 +94,7 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         xl={false}
         xs={true}
-        className="d-flex flex-column justify-content-center mt-3"
+        className="d-flex flex-column col-6 justify-content-center mt-3 pb-3"
       >
         <span className="font-weight-normal text-gray-500 text-capitalize">
           {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
