@@ -56,11 +56,13 @@ export default function NetworkItemView({
           networkName={networkName}
           subNetworkText={subNetworkText}
         />
-        <ResponsiveWrapper xs={true} md={false} className="py-3 ms-2">
-          <div className="mw-repo text-truncate">
-            <span className="text-gray fs-8">{subNetworkText}</span>
-          </div>
-        </ResponsiveWrapper>
+        {subNetworkText && (
+          <ResponsiveWrapper xs={true} md={false} className="py-3 ms-2">
+            <div className="mw-repo text-truncate">
+              <span className="text-gray fs-8">{subNetworkText}</span>
+            </div>
+          </ResponsiveWrapper>
+        )}
         <NetworkItemBody
           isCollapsed={isCollapsed}
           handleNetworkLink={handleNetworkLink}
