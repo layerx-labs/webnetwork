@@ -43,9 +43,7 @@ export default function NetworkItemView({
 }: NetworkItemViewProps) {
   return (
     <div
-      className={`bg-gray-${
-        !isNetworkVariant && isNetworkType ? "900" : "950"
-      } p-3 border border-gray-800 border-radius-4 my-2`}
+      className={`bg-gray-900 border border-gray-800 border-radius-4 my-2 px-3`}
       key={key}
     >
       <FlexRow
@@ -58,9 +56,9 @@ export default function NetworkItemView({
           networkName={networkName}
           subNetworkText={subNetworkText}
         />
-        <ResponsiveWrapper xs={true} md={false} className="ms-2">
+        <ResponsiveWrapper xs={true} md={false} className="py-3 ms-2">
           <div className="mw-repo text-truncate">
-            <span className="text-gray">{subNetworkText}</span>
+            <span className="text-gray fs-8">{subNetworkText}</span>
           </div>
         </ResponsiveWrapper>
         <NetworkItemBody

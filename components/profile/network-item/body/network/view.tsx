@@ -60,7 +60,7 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         xl={true}
         xs={false}
-        className="d-flex align-items-center justify-content-center col-xl-3"
+        className="d-flex align-items-center justify-content-center col-xl-3 py-3"
       >
         <RenderAmount />
       </ResponsiveWrapper>
