@@ -57,7 +57,7 @@ export default function NetworkItemView({
           subNetworkText={subNetworkText}
         />
         {subNetworkText && (
-          <ResponsiveWrapper xs={true} md={false} className="py-3 ms-2">
+          <ResponsiveWrapper xs={true} md={false} className="py-3 ms-4">
             <div className="mw-repo text-truncate">
               <span className="text-gray fs-8">{subNetworkText}</span>
             </div>
