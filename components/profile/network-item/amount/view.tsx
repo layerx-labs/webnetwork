@@ -2,7 +2,7 @@ import TokenSymbolView from "components/common/token-symbol/view";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 
-import { FlexRow } from "../../wallet-balance";
+import { FlexRow } from "../../../../components/common/flex-box/view";
 
 export default function NetworkItemAmountView({
   amount,
@@ -21,7 +21,7 @@ export default function NetworkItemAmountView({
     <FlexRow
       className={`${
         type === "voting" ? "caption-medium" : "xs-small"
-      } flex-wrap align-items-center text-truncate mt-1`}
+      } flex-wrap align-items-center text-truncate`}
     >
       <span className="text-white mr-1">{formatNumberToCurrency(amount)}</span>
       <TokenSymbolView

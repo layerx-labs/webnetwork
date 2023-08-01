@@ -1,4 +1,4 @@
-import { ReactNode, ChangeEvent } from "react";
+import { ReactNode, ChangeEvent, SVGProps, ReactElement } from "react";
 import { NumberFormatValues } from "react-number-format";
 
 import BigNumber from "bignumber.js";
@@ -6,8 +6,10 @@ import BigNumber from "bignumber.js";
 import { Currency } from "interfaces/currency";
 import { IssueBigNumberData } from "interfaces/issue-data";
 import { SupportedChainData } from "interfaces/supported-chain-data";
+
 import { Token } from "interfaces/token";
 
+import { ProfilePages } from "interfaces/utils";
 
 import { SearchBountiesPaginated } from "types/api";
 import { BreakpointOptions, Direction, SelectOption } from "types/utils";
@@ -68,6 +70,7 @@ export interface ChainFilterProps {
   direction?: Direction;
   onChange?: (value: string | number) => void;
 }
+
 export interface RewardInformationViewProps {
   isFundingType: boolean;
   defaultValue: {
@@ -116,4 +119,10 @@ export interface RewardInformationControllerProps {
   updateIssueAmount: (v: NumberFormatValues) => void;
   updateRewardAmount: (v: NumberFormatValues) => void;
   updateIsFundingType: (v: boolean) => void;
+}
+
+export interface LinkProps {
+  label: string;
+  href?: ProfilePages;
+  icon?: (props?: SVGProps<SVGSVGElement>) => ReactElement
 }
