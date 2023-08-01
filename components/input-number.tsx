@@ -122,7 +122,7 @@ export default function InputNumber({
       </div>
       {helperText && (
         <div
-          className={clsx("caption-small text-gray-200 text-capitalize font-weight-500 mt-2", {
+          className={clsx("my-2", {
             className,
             ...errorStyle
           })}
