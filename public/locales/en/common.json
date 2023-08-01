@@ -15,12 +15,12 @@
   "filters": {
     "filters": "Filter",
     "search-repositories": "Search repositories",
-    "repository": "repository",
+    "repository": "Repository",
     "all": "All",
     "no-records-found": "No records found",
     "clear-filter": "Clear filter",
     "bounties": {
-      "title": "bounty state",
+      "title": "Bounty state",
       "all": "All bounties",
       "open": "Open bounties",
       "draft": "Draft bounties",
@@ -31,7 +31,7 @@
       "closed-not-found": "Closed bounties not found"
     },
     "timeframe": {
-      "title": "timeframe",
+      "title": "Timeframe",
       "week": "Past week",
       "month": "Past month",
       "year": "Past year"
@@ -169,6 +169,7 @@
     "details": "Details",
     "forks": "Forks",
     "title": "Title",
+    "chain": "Chain",
     "github": "Github",
     "metamask": "Metamask",
     "by-connecting": "By connecting, you accept",
@@ -367,7 +368,7 @@
     "failed-update-bounty": "Failed to update bounty!",
     "read-only-network": "This network is closed. It is set to read-only mode.",
     "results-truncated": "Results Truncated",
-    "not-available-chain": "Not available on this chain",
+    "not-available-chain": "Network not present on this chain",
     "something-went-wrong": "Something went wrong"
   },
   "404": {

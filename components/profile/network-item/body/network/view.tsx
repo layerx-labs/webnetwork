@@ -5,7 +5,7 @@ import ChevronRightIcon from "assets/icons/chevronright-icon";
 
 import Button from "components/button";
 import CollapseArrows from "components/common/collapse-arrows/view";
-import { FlexColumn } from "components/profile/wallet-balance";
+import { FlexColumn } from "components/common/flex-box/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import NetworkItemAmountView from "../../amount/view";
@@ -94,9 +94,9 @@ export default function BodyNetworkView({
       <ResponsiveWrapper
         xl={false}
         xs={true}
-        className="d-flex flex-column justify-content-center mt-3"
+        className="d-flex flex-column col-12 justify-content-center mt-3 pb-3"
       >
-        <span className="font-weight-normal text-gray-500 text-capitalize">
+        <span className="font-weight-normal text-gray-500 text-capitalize mb-2">
           {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
         </span>
         <RenderAmount />
