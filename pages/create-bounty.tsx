@@ -526,6 +526,11 @@ export default function CreateBountyPage() {
       .catch((err) => console.log('handle Add Network error', err));
   }
 
+  function handleBackButton() {
+    if(currentSection !== 0)
+      setCurrentSection((prevState) => prevState - 1);
+  }
+
   async function onNetworkSelected(opt) {
     changeNetwork(opt.chain_id, opt?.networkAddress)
       .then(_ => setCurrentNetwork(opt));
@@ -642,10 +647,7 @@ export default function CreateBountyPage() {
         <div className="col-6 ps-2">
           <Button
             className="col-12 bounty-outline-button"
-            onClick={() => {
-              if(currentSection !== 0)
-                setCurrentSection((prevState) => prevState - 1);
-            }}
+            onClick={handleBackButton}
             disabled={!!(currentSection === 0)}
           >
             {t("actions.back")}
