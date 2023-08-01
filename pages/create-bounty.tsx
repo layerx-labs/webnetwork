@@ -643,7 +643,7 @@ export default function CreateBountyPage() {
           <Button
             className="col-12 bounty-outline-button"
             onClick={() => {
-              currentSection !== 0 &&
+              if(currentSection !== 0)
                 setCurrentSection((prevState) => prevState - 1);
             }}
             disabled={!!(currentSection === 0)}
