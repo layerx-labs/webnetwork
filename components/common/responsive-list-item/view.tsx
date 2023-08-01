@@ -53,16 +53,6 @@ export default function ResponsiveListItem({
                 </span>
               </div>
 
-              <If condition={!!action}>
-                <ResponsiveWrapper
-                  className={`col align-items-center justify-content-end mb-1 mr-2`}
-                  xs={true}
-                  md={false}
-                >
-                  {action}
-                </ResponsiveWrapper>
-              </If>
-
               <If condition={!!secondaryLabel}>
                 <div className="col-auto px-0">
                   {secondaryLabel}
@@ -86,6 +76,13 @@ export default function ResponsiveListItem({
               </div>
             </If>
           </div>
+          <If condition={!!action}>
+            <ResponsiveWrapper className={`col-auto`} xs={true} md={false}>
+              <div className="d-flex col align-items-center mr-2">
+                {action}
+              </div>
+            </ResponsiveWrapper>
+          </If>
         </div>
       </div>
 
