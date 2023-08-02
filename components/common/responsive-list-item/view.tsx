@@ -75,14 +75,12 @@ export default function ResponsiveListItem({
                 />
               </div>
             </If>
-          </div>
-          <If condition={!!action}>
-            <ResponsiveWrapper className={`col-auto`} xs={true} md={false}>
-              <div className="d-flex col align-items-center mr-2">
+            <If condition={!!action}>
+              <ResponsiveWrapper className={`mt-2`} xs={true} md={false}>
                 {action}
-              </div>
-            </ResponsiveWrapper>
-          </If>
+              </ResponsiveWrapper>
+            </If>
+          </div>
         </div>
       </div>
 
