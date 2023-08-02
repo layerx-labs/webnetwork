@@ -1,29 +1,9 @@
-import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import getConfig from "next/config";
+import NextAuth, { Account } from "next-auth";
 
-import models from "db/models";
-
-const {serverRuntimeConfig} = getConfig();
+import { providersConfigsArray, providersCallbacksMap } from "server/auth/providers";
 
 export default NextAuth({
-  providers: [
-    GithubProvider({
-      clientId: serverRuntimeConfig?.github?.clientId,
-      clientSecret: serverRuntimeConfig?.github?.secret,
-      authorization:
-        "https://github.com/login/oauth/authorize?scope=read:user+user:email+repo",
-      profile(profile: { id; name; login; email; avatar_url }) {
-        return {
-          id: profile.id,
-          name: profile.name,
-          login: profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-        };
-      },
-    }),
-  ],
+  providers: providersConfigsArray,
   pages: {
     signIn: "/auth/signin"
   },
@@ -32,9 +12,14 @@ export default NextAuth({
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
   callbacks: {
-    async signIn({ profile }) {
+    async signIn(params) {
       try {
-        if (!profile?.login) return "/?authError=Profile not found";
+        const provider = params?.account?.provider;
+        
+        const callback = providersCallbacksMap[provider]?.signIn;
+
+        if (callback)
+          return callback(params);
 
         return true;
       } catch(e) {
@@ -42,29 +27,39 @@ export default NextAuth({
         return false;
       }
     },
-    async jwt({ token, account, profile }) {
-      const user = await models.user.findOne({
-        where: { 
-          githubLogin: profile?.login || token?.login
-        },
-        raw: true
-      })
-        .catch(error => {
-          console.log("JWT Callback", error)
-        });
+    async jwt(params) {
+      try {
+        const provider = params?.account?.provider;
+        
+        const callback = providersCallbacksMap[provider]?.jwt;
 
-      return { ...token, ...profile, ...account, wallet: user?.address };
-    },
-    async session({ session, token }) {
-      // console.log(`Session`, session, user, token);
+        if (callback)
+          return {
+            ...await callback(params),
+            provider
+          }
+      } catch(e) {
+        console.log("JWT Callback", e);
+      }
+
       return {
-        expires: session.expires,
-        user: {
-          ...session.user,
-          login: token.login,
-          accessToken: token?.access_token,
-        },
+        ...params,
+        params
       };
+    },
+    async session(params) {
+      try {
+        const provider = (params?.token?.account as Account)?.provider;
+        
+        const callback = providersCallbacksMap[provider]?.jwt;
+
+        if (callback)
+          return callback(params);
+      } catch(e) {
+        console.log("JWT Callback", e);
+      }
+
+      return params;
     },
   },
 });
