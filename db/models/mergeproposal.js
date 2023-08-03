@@ -77,7 +77,7 @@ class MergeProposal extends Model {
       sourceKey: "id"
     });
 
-    this.hasMany(models.comments, {
+    this.hasMany(models.comment, {
       foreignKey: "proposalId",
       sourceKey: "id",
       as: "comments"

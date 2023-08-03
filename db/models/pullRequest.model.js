@@ -78,7 +78,7 @@ class PullRequest extends Model {
       sourceKey: "id"
     });
 
-    this.hasMany(models.comments, {
+    this.hasMany(models.comment, {
       foreignKey: "deliverableId",
       sourceKey: "id",
       as: "comments"
