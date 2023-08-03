@@ -13,7 +13,7 @@ class Comments extends Model {
           unique: true,
         },
         comment: {
-          type: DataTypes.STRING,
+          type: DataTypes.STRING(255),
           allowNull: false,
         },
         hidden: {
@@ -50,7 +50,7 @@ class Comments extends Model {
         },
         userId: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
           references: {
             model: "users",
             key: "id",
@@ -65,7 +65,7 @@ class Comments extends Model {
         },
         replyId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: "issues",
             key: "id",
@@ -96,7 +96,7 @@ class Comments extends Model {
     });
 
     this.belongsTo(models.pullRequest, {
-      foreignKey: "pullRequestId",
+      foreignKey: "deliverableId",
       sourceKey: "id",
       as: "deliverable",
     });
