@@ -103,15 +103,19 @@ export function useAuthentication() {
 
     const { signature, message } = await signWithEthereumMessage(csrfToken, address);
 
+    if (!signature) return;
+
     signIn("credentials", {
       redirect: false,
       signature,
       message: JSON.stringify(message),
       callbackUrl: `${URL_BASE}${asPath}`
+    }).then(({ error }) => {
+      if (!error) {
+        dispatch(changeCurrentUserConnected(true));
+        dispatch(changeCurrentUserWallet(address));
+      }
     });
-
-    dispatch(changeCurrentUserConnected(true));
-    dispatch(changeCurrentUserWallet(address));
   }
 
   function updateWalletAddress() {
