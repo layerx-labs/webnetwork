@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import get from "server/common/search/curators";
 
 import { LogAccess } from "middleware/log-access";
 import { WithValidChainId } from "middleware/with-valid-chain-id";
 import WithCors from "middleware/withCors";
 
 import { error as LogError } from "services/logging";
+
+import get from "server/common/search/curators";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
