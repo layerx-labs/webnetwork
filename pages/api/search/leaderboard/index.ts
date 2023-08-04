@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import get from "server/common/search/leaderboard";
 
 import { LogAccess } from "middleware/log-access";
 import WithCors from "middleware/withCors";
 
 import { error as LogError } from "services/logging";
+
+import get from "server/common/search/leaderboard";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
