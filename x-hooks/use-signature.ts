@@ -1,3 +1,6 @@
+import { eip4361Params, TypedDataV4, jsonRpcParams } from "@taikai/dappkit";
+import getConfig from "next/config";
+
 import {useAppState} from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
