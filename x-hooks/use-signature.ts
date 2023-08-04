@@ -1,16 +1,13 @@
-import { eip4361Params, TypedDataV4, jsonRpcParams } from "@taikai/dappkit";
-import getConfig from "next/config";
-
 import {useAppState} from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
+import { DAY_IN_SECONDS } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
-const { publicRuntimeConfig } = getConfig();
+import { siweMessageService } from "services/ethereum/siwe";
 
 export default function useSignature() {
-
   const {
     dispatch, 
     state: {
@@ -19,19 +16,6 @@ export default function useSignature() {
       currentUser
     }
   } = useAppState();
-
-  async function sendTypedData(message: TypedDataV4, from: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const callback = (error: Error|null, value: any|null) => error ? reject(error) : resolve(value?.result);
-      
-      try {
-        Service?.web3Connection?.Web3.currentProvider
-          .send(jsonRpcParams(`eth_signTypedData_v4`, [from, JSON.stringify(message)]), callback);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
 
   async function signMessage(message = ""): Promise<string> {
     if ((!Service?.active && !window.ethereum) || !currentUser?.walletAddress)
@@ -68,30 +52,22 @@ export default function useSignature() {
     });
   }
 
-  async function signWithEthereumMessage(nonce: string, wallet: string) {
-    if ((!Service?.web3Connection && !window.ethereum) || !nonce || !wallet)
+  async function signWithEthereumMessage(nonce: string, address: string) {
+    if ((!Service?.web3Connection && !window.ethereum) || !nonce || !address)
       return;
 
-    const message = eip4361Params(publicRuntimeConfig?.urls?.home,
-                                  "",
-                                  "Sign in with Ethereum",
-                                  publicRuntimeConfig?.urls?.home,
-                                  "1.0",
-                                  "",
-                                  nonce,
-                                  new Date().toISOString(),
-                                  new Date(+new Date() + 3600 * 60).toISOString(),
-                                  new Date(+new Date() + 60 * 60).toISOString(),
-                                  "",
-                                  [],
-                                  "Bepro Network");
+    const message = siweMessageService.getMessage({
+      nonce,
+      issuedAt: new Date(),
+      expiresAt: new Date(+new Date() + 30 - DAY_IN_SECONDS)
+    });
 
-    const signature = await sendTypedData(message, wallet)
+    const signature = await siweMessageService.sendMessage(Service.web3Connection, address, message)
       .catch(() => null);
 
     return {
-      signature,
-      message
+      message,
+      signature
     };
   }
 
