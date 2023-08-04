@@ -1,7 +1,4 @@
-import { SignTypedDataVersion, recoverTypedSignature } from "@metamask/eth-sig-util";
-import { EIP4361Message } from "@taikai/dappkit";
-import { TypedDataV4 } from "@taikai/dappkit";
-import { Web3Connection } from "@taikai/dappkit";
+import { TypedMessage } from "@metamask/eth-sig-util";
 import { eip4361Params } from "@taikai/dappkit";
 import { EIP4361TypedData } from "@taikai/dappkit";
 import getConfig from "next/config";
@@ -26,7 +23,7 @@ export class SiweMessage extends EthereumMessage<EIP4361TypedData> {
     this.statement = statement;
   }
 
-  getMessage({ nonce, issuedAt, expiresAt }: GetMessageParams): EIP4361TypedData  {
+  getMessage({ nonce, issuedAt, expiresAt }: GetMessageParams): TypedMessage<EIP4361TypedData>  {
     const issued = new Date(issuedAt).toISOString();
     const expires = new Date(expiresAt).toISOString();
 
