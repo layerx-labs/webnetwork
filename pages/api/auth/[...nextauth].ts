@@ -3,18 +3,13 @@ import NextAuth, { Account, Profile } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import getConfig from "next/config";
 
-import models from "db/models";
-
 import { DAY_IN_SECONDS } from "helpers/constants";
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { toLower } from "helpers/string";
 
 import { Logger } from "services/logging";
 
 import { EthereumProvider, GHProvider } from "server/auth/providers";
 
 const {
-  publicRuntimeConfig,
   serverRuntimeConfig: {
     auth: {
       secret
@@ -24,11 +19,16 @@ const {
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const currentToken = await getToken({ req, secret: secret });
+  const signature = req?.body?.signature || currentToken?.signature;
+  const message = req?.body?.message || currentToken?.message;
+
+  const ethereumProvider = EthereumProvider(currentToken, signature, message);
+  const githubProvider = GHProvider(currentToken);
 
   return NextAuth(req, res, {
     providers: [
-      EthereumProvider,
-      GHProvider
+      ethereumProvider.config,
+      githubProvider.config
     ],
     pages: {
       signIn: "/auth/signin"
@@ -38,29 +38,19 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       maxAge: 30 * DAY_IN_SECONDS
     },
     callbacks: {
-      async signIn({ profile, account}) {
+      async signIn(params) {
         try {
-          const provider = account?.provider;
+          const provider = params?.account?.provider;
 
-          if (provider === "github") {
-            if (!profile?.login) return "/?authError=Profile not found";
-
-            return true;
-          } else if (provider === "credentials") {
-            const accountAddress = account?.providerAccountId;
-
-            if (accountAddress) {
-              await models.user.findOrCreate({
-                where: {
-                  address: caseInsensitiveEqual("address", accountAddress.toLowerCase())
-                },
-                defaults: {
-                  address: accountAddress
-                }
-              });
-  
-              return true;
-            }
+          switch (provider) {
+          case "github":
+            return githubProvider.callbacks.signIn(params);
+          
+          case "credentials":
+            return ethereumProvider.callbacks.signIn(params);
+          
+          default:
+            return false;
           }
         } catch(error) {
           Logger.error(error, "SignIn callback: ");
@@ -68,65 +58,43 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
         return false;
       },
-      async jwt({ token, profile, account }) {
+      async jwt(params) {
         try {
-          const provider = account?.provider;
+          const provider = params?.account?.provider;
+
+          switch (provider) {
+          case "github":
+            return githubProvider.callbacks.jwt(params);
           
-          if (provider === "github") {
-            const { name, login } = profile;
-            const { provider, access_token } = account;
-
-            return { 
-              ...token, 
-              profile: {
-                name,
-                login,
-              },
-              account: {
-                provider,
-                access_token
-              }, 
-              address: currentToken?.address,
-              role: currentToken?.role,
-            };
-          } else if (provider === "credentials") {
-            const address = token?.sub;
-
-            let role = "user";
-      
-            if (address && toLower(address) === toLower(publicRuntimeConfig?.adminWallet))
-              role = "governor";
-      
-            return {
-              ...currentToken,
-              ...token,
-              account: {
-                ...(currentToken?.account as Account),
-                ...account
-              },
-              role,
-              address
-            };
+          case "credentials":
+            return ethereumProvider.callbacks.jwt(params);
+          
+          default:
+            return params.token;
           }
         } catch(error) {
           Logger.error(error, "JWT callback: ");
         }
-  
-        return token;
+
+        return params?.token;
       },
       async session({ session, token }) {
         const { login, name } = (token?.profile || {}) as Profile;
         const accessToken = (token?.account as Account)?.access_token;
-        const { role, address } = token;
+        const { roles, address, signature, message } = token;
 
         return {
           expires: session.expires,
+          iat: token.iat,
+          exp: token.exp,
           user: {
             login,
             name,
             accessToken,
-            role,
+            roles,
             address,
+            signature,
+            message
           },
         };
       },
