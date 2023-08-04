@@ -18,6 +18,8 @@ const {
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const currentToken = await getToken({ req, secret: secret });
+  const signature = req?.body?.signature || currentToken?.signature;
+  const message = req?.body?.message || currentToken?.message;
 
   const ethereumProvider = EthereumProvider(currentToken, req);
   const githubProvider = GHProvider(currentToken);
@@ -80,6 +82,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
         return {
           expires: session.expires,
+          iat: token.iat,
+          exp: token.exp,
           user: {
             login,
             name,
