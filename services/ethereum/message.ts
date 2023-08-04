@@ -5,6 +5,7 @@ import { Web3Connection } from "@taikai/dappkit";
 import { toLower } from "helpers/string";
 
 interface GetMessageParams {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
