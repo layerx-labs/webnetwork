@@ -1,4 +1,4 @@
-FROM node:14.18.3-slim AS builder
+FROM node:14.17 AS builder
 
 WORKDIR /app
 RUN apt-get update 
@@ -9,7 +9,7 @@ ENV CI=true
 RUN npm install --no-audit
 COPY . .
 RUN export $(cat .build.env | xargs) && npm run build
-FROM node:14.18.3-slim AS release
+FROM node:14.17 AS release
 
 WORKDIR /app
 COPY package*.json ./
