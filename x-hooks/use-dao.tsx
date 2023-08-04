@@ -51,14 +51,13 @@ export function useDao() {
         return state.Service?.web3Connection?.getAddress();
       })
       .then(address => {
-        if (address === "0x00") return;
+        if (address === "0x00") return null;
 
-        dispatch(changeCurrentUserConnected(true));
-        dispatch(changeCurrentUserWallet(address));
+        return address;
       })
       .catch(error => {
         console.debug(`Failed to connect`, error);
-        return false;
+        return null;
       })
       .finally(() => {
         dispatch(changeConnecting(false));

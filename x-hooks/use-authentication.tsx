@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 import BigNumber from "bignumber.js";
-import {signIn, signOut, useSession} from "next-auth/react";
+import {getCsrfToken, signIn, signOut, useSession} from "next-auth/react";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 
@@ -11,6 +11,7 @@ import {
   changeCurrentUser,
   changeCurrentUserAccessToken,
   changeCurrentUserBalance,
+  changeCurrentUserConnected,
   changeCurrentUserHandle,
   changeCurrentUserKycSession,
   changeCurrentUserLogin,
@@ -52,7 +53,7 @@ export function useAuthentication() {
   const {connect} = useDao();
   const { chain } = useChain();
   const transactions = useTransactions();
-  const { signMessage: _signMessage } = useSignature();
+  const { signMessage: _signMessage, signWithEthereumMessage } = useSignature();
   const {state, dispatch} = useAppState();
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
@@ -93,8 +94,24 @@ export function useAuthentication() {
       });
   }
 
-  function connectWallet() {
-    connect();
+  async function connectWallet() {
+    const address = await connect();
+
+    if (!address) return;
+
+    const csrfToken = await getCsrfToken();
+
+    const { signature, message } = await signWithEthereumMessage(csrfToken, address);
+
+    signIn("credentials", {
+      redirect: false,
+      signature,
+      message: JSON.stringify(message),
+      callbackUrl: `${URL_BASE}${asPath}`
+    });
+
+    dispatch(changeCurrentUserConnected(true));
+    dispatch(changeCurrentUserWallet(address));
   }
 
   function updateWalletAddress() {
