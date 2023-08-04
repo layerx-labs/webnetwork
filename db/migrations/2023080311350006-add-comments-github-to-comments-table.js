@@ -120,18 +120,9 @@ async function up(queryInterface, Sequelize) {
   if (!chains.length) return;
 
   try {
-    for (const { chainRpc, networks } of chains) {
-      const web3Connection = new Web3Connection({
-        skipWindowAssignment: true,
-        web3Host: chainRpc,
-      });
+    for (const { networks } of chains) {
 
-      await web3Connection.start();
-
-      for (const { networkAddress, issues } of networks) {
-        const networkV2 = new Network_v2(web3Connection, networkAddress);
-
-        await networkV2.loadContract();
+      for (const { issues } of networks) {
 
         for (const issue of issues) {
           const [owner, repo] = issue?.repository?.githubPath.split("/");
