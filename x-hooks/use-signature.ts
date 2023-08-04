@@ -1,9 +1,7 @@
-import { eip4361Params, TypedDataV4, jsonRpcParams } from "@taikai/dappkit";
-import getConfig from "next/config";
-
 import {useAppState} from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
+import { DAY_IN_SECONDS } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
