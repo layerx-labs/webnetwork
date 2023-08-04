@@ -17,7 +17,7 @@ const CommentsModel = require("../models/comments.model");
 const UserModel = require("../models/user");
 
 const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN } = process.env;
-const BOT_NAME = 'MVLS-bot'
+const BOT_NAME = 'bepro-bot'
 
 async function handleAddComments(comment, id, type, prId){
   const regexGithubLogin = /@(\w+)/;
