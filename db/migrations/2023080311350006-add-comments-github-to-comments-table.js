@@ -1,4 +1,3 @@
-const { Web3Connection, Network_v2 } = require("@taikai/dappkit");
 const { Op } = require("sequelize");
 const Octokit = require("octokit").Octokit;
 const ChainModel = require("../models/chain.model");
@@ -142,25 +141,15 @@ async function up(queryInterface, Sequelize) {
           }
 
           for (const pr of issue.pullRequests){
-            const { data: commentsPr } = await octokit.rest.pulls.listReviewComments({
+            const { data: commentsPr } = await octokit.rest.issues.listComments({
               owner,
               repo,
-              pull_number: pr.githubId,
+              issue_number: pr.githubId,
             });
 
             for(const commentPr of commentsPr){
              await handleAddComments(commentPr, issue?.id, 'deliverable', pr?.id)
             }
-
-            const { data: commentsReviewsPr } = await octokit.rest.pulls.listReviews({
-              owner,
-              repo,
-              pull_number: pr.githubId,
-            });
-
-            for(const commentReviewPr of commentsReviewsPr){
-              await handleAddComments(commentReviewPr, issue?.id, 'deliverable', pr?.id)
-             }
           }
         }
       }
