@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { Account, Profile } from "next-auth";
+import NextAuth from "next-auth";
 import { getToken } from "next-auth/jwt";
 import getConfig from "next/config";
 
-import { DAY_IN_SECONDS } from "helpers/constants";
-
 import { Logger } from "services/logging";
 
+import { SESSION_TTL } from "server/auth/config";
 import { EthereumProvider, GHProvider } from "server/auth/providers";
 
 const {
@@ -19,10 +18,8 @@ const {
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const currentToken = await getToken({ req, secret: secret });
-  const signature = req?.body?.signature || currentToken?.signature;
-  const message = req?.body?.message || currentToken?.message;
 
-  const ethereumProvider = EthereumProvider(currentToken, signature, message);
+  const ethereumProvider = EthereumProvider(currentToken, req);
   const githubProvider = GHProvider(currentToken);
 
   return NextAuth(req, res, {
@@ -35,7 +32,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     },
     session:{
       strategy: "jwt",
-      maxAge: 30 * DAY_IN_SECONDS
+      maxAge: SESSION_TTL
     },
     callbacks: {
       async signIn(params) {
@@ -79,22 +76,16 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return params?.token;
       },
       async session({ session, token }) {
-        const { login, name } = (token?.profile || {}) as Profile;
-        const accessToken = (token?.account as Account)?.access_token;
-        const { roles, address, signature, message } = token;
+        const { login, name, accessToken, roles, address } = token;
 
         return {
           expires: session.expires,
-          iat: token.iat,
-          exp: token.exp,
           user: {
             login,
             name,
             accessToken,
             roles,
-            address,
-            signature,
-            message
+            address
           },
         };
       },
