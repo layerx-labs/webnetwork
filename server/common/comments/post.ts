@@ -9,14 +9,28 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
     const headerWallet = (req.headers.wallet as string).toLowerCase();
 
-    const { comment, issueId, deliverableId, proposalId, type: originalType, replyId } =
-      req.body;
+    const {
+      comment,
+      issueId,
+      deliverableId,
+      proposalId,
+      type: originalType,
+      replyId,
+    } = req.body;
 
     const type = originalType.toLowerCase();
 
     if (!["issue", "deliverable", "proposal"].includes(type)) {
       return res.status(404).json({ message: "type does not exist" });
     }
+
+    if(!issueId) return res.status(404).json({ message: "issueId not found" });
+
+    if (type === "deliverable" && !deliverableId)
+      return res.status(404).json({ message: "deliverableId not found" });
+
+    if (type === "proposal" && !proposalId)
+      return res.status(404).json({ message: "proposalId not found" });
 
     const user = await models.user.findOne({
       where: {
@@ -30,8 +44,10 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const whereCondition: WhereOptions = {};
 
-    if (deliverableId && type === 'deliverable') whereCondition.deliverableId = +deliverableId 
-    if (proposalId && type === 'proposal') whereCondition.proposalId = +proposalId
+    if (deliverableId && type === "deliverable")
+      whereCondition.deliverableId = +deliverableId;
+    if (proposalId && type === "proposal")
+      whereCondition.proposalId = +proposalId;
 
     const comments = await models.comments.create({
       issueId: +issueId,
@@ -45,7 +61,6 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     });
 
     return res.status(200).json(comments);
-    
   } catch (error) {
     LogError(error);
     res.status(500).json(error);
