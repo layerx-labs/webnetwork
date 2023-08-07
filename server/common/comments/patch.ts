@@ -1,19 +1,28 @@
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import models from "db/models";
 
-export default async function path(req: NextApiRequest) {
-  const { id } = req.query;
-  const { hidden } = req.body;
+import { error as LogError } from "services/logging";
 
-  const comments = await models.comments.findOne({
-    where: {
-      id: +id
-    }
-  });
+export default async function path(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { id } = req.query;
+    const { hidden } = req.body;
 
-  comments.hidden = hidden
-  await comments.save();
+    const comments = await models.comments.findOne({
+      where: {
+        id: +id,
+      },
+    });
 
-  return comments;
+    if(!comments) return res.status(404).json({ message: 'comment not found'});
+
+    comments.hidden = hidden;
+    await comments.save();
+
+    return res.status(200).json(comments);
+  } catch (error) {
+    LogError(error);
+    res.status(500).json(error);
+  }
 }
