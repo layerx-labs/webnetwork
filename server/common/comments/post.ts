@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Sequelize } from "sequelize";
+import { Sequelize, WhereOptions } from "sequelize";
 
 import models from "db/models";
 
@@ -9,10 +9,12 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
     const headerWallet = (req.headers.wallet as string).toLowerCase();
 
-    const { comment, issueId, deliverableId, proposalId, type, replyId } =
+    const { comment, issueId, deliverableId, proposalId, type: originalType, replyId } =
       req.body;
 
-    if (!["issue", "deliverable", "proposal"].includes(type.toLowerCase())) {
+    const type = originalType.toLowerCase();
+
+    if (!["issue", "deliverable", "proposal"].includes(type)) {
       return res.status(404).json({ message: "type does not exist" });
     }
 
@@ -26,19 +28,19 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!user) return res.status(404).json({ message: "user not found" });
 
-    let idType = {};
+    const whereCondition: WhereOptions = {};
 
-    if (deliverableId) idType = { deliverableId: +deliverableId };
-    if (proposalId) idType = { proposalId: +proposalId };
+    if (deliverableId && type === 'deliverable') whereCondition.deliverableId = +deliverableId 
+    if (proposalId && type === 'proposal') whereCondition.proposalId = +proposalId
 
     const comments = await models.comments.create({
       issueId: +issueId,
       comment,
-      type: type.toLowerCase(),
+      type,
       userAddress: headerWallet,
       userId: user.id,
       hidden: false,
-      ...(deliverableId || proposalId ? idType : null),
+      ...(deliverableId || proposalId ? whereCondition : null),
       ...(replyId ? { replyId: +replyId } : null),
     });
 
