@@ -6,24 +6,17 @@ import { LogAccess } from "middleware/log-access";
 import { WithValidChainId } from "middleware/with-valid-chain-id";
 import WithCors from "middleware/withCors";
 
-import { error as LogError } from "services/logging";
-
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    switch (req.method) {
-    case "GET":
-      res.status(200).json(await get(req));
-      break;
-    case "POST":
-      res.status(200).json(await post(req));
-      break;
+  switch (req.method) {
+  case "GET":
+    await get(req, res);
+    break;
+  case "POST":
+    await post(req, res);
+    break;
 
-    default:
-      res.status(405);
-    }
-  } catch (error) {
-    LogError(error);
-    res.status(500).json(error);
+  default:
+    res.status(405);
   }
 
   res.end();
