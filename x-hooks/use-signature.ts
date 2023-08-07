@@ -1,7 +1,6 @@
 import {useAppState} from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
-import { DAY_IN_SECONDS } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
@@ -52,29 +51,26 @@ export default function useSignature() {
     });
   }
 
-  async function signWithEthereumMessage(nonce: string, address: string) {
+  async function signInWithEthereum(nonce: string, address: string, issuedAt: Date, expiresAt: Date) {
     if ((!Service?.web3Connection && !window.ethereum) || !nonce || !address)
       return;
 
     const message = siweMessageService.getMessage({
       nonce,
-      issuedAt: new Date(),
-      expiresAt: new Date(+new Date() + 30 - DAY_IN_SECONDS)
+      issuedAt,
+      expiresAt
     });
 
     const signature = await siweMessageService.sendMessage(Service.web3Connection, address, message)
       .catch(() => null);
 
-    return {
-      message,
-      signature
-    };
+    return signature;
   }
 
   return {
     signMessage,
     messageFor,
     decodeMessage,
-    signWithEthereumMessage,
+    signInWithEthereum,
   }
 }

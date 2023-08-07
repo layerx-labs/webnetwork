@@ -34,6 +34,8 @@ import {kycSession} from "interfaces/kyc-session";
 
 import {WinStorage} from "services/win-storage";
 
+import { SESSION_TTL } from "server/auth/config";
+
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useApi from "x-hooks/use-api";
 import useChain from "x-hooks/use-chain";
@@ -53,7 +55,7 @@ export function useAuthentication() {
   const {connect} = useDao();
   const { chain } = useChain();
   const transactions = useTransactions();
-  const { signMessage: _signMessage, signWithEthereumMessage } = useSignature();
+  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const {state, dispatch} = useAppState();
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
@@ -101,21 +103,26 @@ export function useAuthentication() {
 
     const csrfToken = await getCsrfToken();
 
-    const { signature, message } = await signWithEthereumMessage(csrfToken, address);
+    const issuedAt = new Date();
+    const expiresAt = new Date(+issuedAt + SESSION_TTL);
+
+    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt);
 
     if (!signature) return;
 
     signIn("credentials", {
       redirect: false,
       signature,
-      message: JSON.stringify(message),
+      issuedAt: +issuedAt,
+      expiresAt: +expiresAt,
       callbackUrl: `${URL_BASE}${asPath}`
-    }).then(({ error }) => {
-      if (!error) {
-        dispatch(changeCurrentUserConnected(true));
-        dispatch(changeCurrentUserWallet(address));
-      }
-    });
+    })
+      .then(({ error }) => {
+        if (!error) {
+          dispatch(changeCurrentUserConnected(true));
+          dispatch(changeCurrentUserWallet(address));
+        }
+      });
   }
 
   function updateWalletAddress() {
