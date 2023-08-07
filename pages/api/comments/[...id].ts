@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import get from "server/common/comments/get";
 import patch from "server/common/comments/patch";
 
 import { LogAccess } from "middleware/log-access";
@@ -9,9 +8,6 @@ import WithCors from "middleware/withCors";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
-  case "GET":
-    await get(req, res);
-    break;
   case "PATCH":
     await patch(req, res);
     break;
