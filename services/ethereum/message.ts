@@ -61,10 +61,15 @@ export class EthereumMessage<T extends MessageTypes> {
   }
 
   async sendMessage(connection: Web3Connection, 
-                    from: string, message: TypedMessage<T | MessageTypes>): Promise<string> {
+                    from: string,
+                    message: TypedMessage<T | MessageTypes>): Promise<string> {
     return new Promise((resolve, reject) => {
-      const callback = (error: Error | null, value: SendResponse | null) => {
+      if (!connection || !from || !message) {
+        reject("Connection, from and message parameters can't be null");
+        return;
+      }
 
+      const callback = (error: Error | null, value: SendResponse | null) => {
         if (error)
           reject(error);
         else
