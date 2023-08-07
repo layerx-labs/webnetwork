@@ -12,8 +12,6 @@ Logger.changeActionName(`withSignature()`);
 
 export const withSignature = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {
-    console.log("withSignature", req)
-
     if (isMethodAllowed(req.method, allowedMethods))
       return handler(req, res);
 
