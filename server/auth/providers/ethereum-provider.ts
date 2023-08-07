@@ -1,34 +1,51 @@
+import { NextApiRequest } from "next";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getCsrfToken } from "next-auth/react";
 
 import models from "db/models";
 
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { isAdminAddress } from "helpers/validators/address";
 
 import { UserRole } from "interfaces/enums/roles";
-import { isAdminAddress } from "interfaces/validators/address";
 
 import { siweMessageService } from "services/ethereum/siwe";
 
 import { AuthProvider } from "server/auth/providers";
 
-export const EthereumProvider = (currentToken: JWT, signature: string, message): AuthProvider => ({
+export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider => ({
   config: CredentialsProvider({
     name: "Ethereum",
     credentials: {
-      message: {
-        label: "Message",
-        type: "text",
-        placeholder: "0x0"
-      },
       signature: {
         label: "Signature",
         type: "text",
         placeholder: "0x0"
+      },
+      issuedAt: {
+        label: "Issued at",
+        type: "number"
+      },
+      expiresAt: {
+        label: "Expires at",
+        type: "number"
       }
     },
     async authorize(credentials) {      
-      const signer = siweMessageService.getSigner(JSON.parse(credentials?.message), credentials?.signature);
+      const { signature, issuedAt, expiresAt } = credentials;
+
+      const nonce = await getCsrfToken({ req });
+
+      const message = siweMessageService.getMessage({
+        nonce,
+        issuedAt: +issuedAt,
+        expiresAt: +expiresAt
+      });
+
+      const signer = siweMessageService.getSigner(message, signature);
+
+      console.log("#test signer", signer)
 
       if (!signer) return null;
 
@@ -56,7 +73,11 @@ export const EthereumProvider = (currentToken: JWT, signature: string, message):
       
       return false;
     },
-    async jwt({ token, account }) {
+    async jwt({ token }) {
+      const signature = req?.body?.signature || currentToken?.signature;
+      const issuedAt = req?.body?.issuedAt || currentToken?.issuedAt;
+      const expiresAt = req?.body?.expiresAt || currentToken?.expiresAt;
+
       const address = token?.sub;
 
       const roles = [UserRole.USER];
@@ -74,11 +95,11 @@ export const EthereumProvider = (currentToken: JWT, signature: string, message):
       return {
         ...currentToken,
         ...token,
-        account: Object.assign({}, currentToken?.account, account),
         roles,
         address,
-        message,
-        signature
+        signature,
+        issuedAt,
+        expiresAt
       };
     },
   }

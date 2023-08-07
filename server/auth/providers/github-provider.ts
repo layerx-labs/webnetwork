@@ -45,14 +45,10 @@ export const GHProvider= (currentToken: JWT): AuthProvider => ({
       return {
         ...currentToken,
         ...token, 
-        profile: {
-          name,
-          login,
-        },
-        account: {
-          provider,
-          access_token
-        }
+        name,
+        login,
+        provider,
+        accessToken: access_token
       };
     },
   }
