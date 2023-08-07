@@ -1,8 +1,19 @@
-import {LogAccess} from "middleware/log-access";
+import { NextApiHandler } from "next";
+
+import { LogAccess } from "middleware/log-access";
+import { withAdmin } from "middleware/with-admin";
+import { withSignature } from "middleware/with-signature";
 import withCors from "middleware/withCors";
-import WithJwt from "middleware/withJwt";
+import { withJWT } from "middleware/withJwt";
 
-const withProtected = (handler) => withCors(WithJwt(handler))
-const RouteMiddleware = (handler) => LogAccess(withCors(WithJwt(handler)));
+const withProtected = (handler: NextApiHandler) => LogAccess(withCors(withJWT(withSignature(handler))));
+const RouteMiddleware = (handler: NextApiHandler) => LogAccess(withCors(withJWT(handler)));
+const AdminRoute = (handler: NextApiHandler) => withProtected(withAdmin(handler));
 
-export {withCors, WithJwt, withProtected, RouteMiddleware};
+export {
+  withCors,
+  withJWT,
+  withProtected,
+  RouteMiddleware,
+  AdminRoute
+};
