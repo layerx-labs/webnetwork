@@ -18,10 +18,7 @@ const UserModel = require("../models/user");
 const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN } = process.env;
 const BOT_NAME = 'bepro-bot'
 
-async function handleAddComments(comment, id, type, prId){
-  const regexGithubLogin = /@(\w+)/;
-  const bodyGithubLogin = regexGithubLogin.exec(comment.body);
-
+async function handleAddComments(comment, id, type, prId) {
   const getCommentCreateData = (userId, userAddress, body) => ({
     userId,
     userAddress,
@@ -31,40 +28,53 @@ async function handleAddComments(comment, id, type, prId){
     type,
     created_at: comment.created_at,
     updated_at: comment.updated_at,
-    ... prId ? { deliverableId: prId } : null
-  }) 
+    ...(prId ? { deliverableId: prId } : null),
+  });
 
-  const getUser = (name) => UserModel.findOne({
-    where: {
-      githubLogin: name
-    }
-  })
+  const getUser = (name) =>
+    UserModel.findOne({
+      where: {
+        githubLogin: name,
+      },
+    });
 
-  if(bodyGithubLogin && comment.user.login === BOT_NAME){
-    const user = await getUser(bodyGithubLogin[1])
+  if (comment.body.startsWith("@") && comment.user.login === BOT_NAME) {
+    const userTaggedByBot = await getUser(
+      comment.body.split(" ")[0].replace("@", "")
+    );
     let text;
 
-    if(user){
-      //Example text: "@name  is working on this."
-      if(/working/.test(comment.body) && type === 'issue') text = `i'm working on this.`
-      //Example text: "has a solution - [check your bounty](https://)"
-      if(/solution/.test(comment.body) && type === 'issue') {
-        const regexSolution = /(?<=- ).*/
-        text = `finished a solution - ${comment.body.match(regexSolution)[0]}`
-      }
-      //Example text: "reviewed this Pull Request with the following message:    Message"
-      if(/Pull Request/.test(comment.body) && type === 'deliverable') {
-        const regexPr = /(?<=:\s*).*/;
-        text = comment.body.match(regexPr)[0]
+    if (userTaggedByBot) {
+      switch (type) {
+        case "issue": {
+          //Example text: "@name  is working on this."
+          if (/working/.test(comment.body)) {
+            text = `i'm working on this.`;
+            break;
+          }
+          //Example text: "has a solution - [check your bounty](https://)"
+          if (/solution/.test(comment.body)) {
+            text = `finished a solution -${comment.body.split("-")[1]}`;
+            break;
+          }
+        }
+
+        case "deliverable": {
+          //Example text: "reviewed this Pull Request with the following message:    Message"
+          if (/Pull Request/.test(comment.body)) {
+            text = comment.body.split("message:")[1];
+            break;
+          }
+        }
       }
 
       await CommentsModel.create(getCommentCreateData(user.id, user.address, text))
     }
   } else {
-    const user = await getUser(comment.user.login)
+    const commentCreatorUser = await getUser(comment.user.login);
 
-    if(user)
-      await CommentsModel.create(getCommentCreateData(user.id, user.address, comment.body))
+    if (commentCreatorUser)
+      CommentsModel.create(getCommentCreateData(user.id, user.address, comment.body))
   }
 }
 
@@ -85,80 +95,56 @@ async function up(queryInterface, Sequelize) {
     UserPaymentsModel,
     DeveloperModel,
     CommentsModel,
-    UserModel
+    UserModel,
   ].forEach((model) => model.init(queryInterface.sequelize));
 
   [ChainModel, NetworkModel, IssueModel].forEach((model) =>
     model.associate(queryInterface.sequelize.models)
   );
 
-  const chains = await ChainModel.findAll({
+  const issues = await IssueModel.findAll({
     where: {
-      registryAddress: {
-        [Op.ne]: null,
-      },
+      state: { [Op.not]: "pending" },
     },
-    include: [
-      {
-        association: "networks",
-        required: true,
-        include: [
-          {
-            association: "issues",
-            where: {
-              state: { [Op.not]: "pending" },
-            },
-            include: [{ association: "repository" }, {association: "pullRequests"}],
-            required: true,
-          },
-        ],
-      },
-    ],
+    include: [{ association: "repository" }, { association: "pullRequests" }],
+    required: true,
   });
 
-  if (!chains.length) return;
+  if (!issues.length) return;
+
+  const octokit = new Octokit({
+    auth: NEXT_GH_TOKEN,
+  });
 
   try {
-    for (const { networks } of chains) {
+    
+    for (const issue of issues) {
+      const [owner, repo] = issue?.repository?.githubPath.split("/");
 
-      for (const { issues } of networks) {
+      const { data: commentsGithub } = await octokit.rest.issues.listComments({
+        owner,
+        repo,
+        issue_number: issue.githubId,
+      });
 
-        for (const issue of issues) {
-          const [owner, repo] = issue?.repository?.githubPath.split("/");
+      for (const comment of commentsGithub) {
+        await handleAddComments(comment, issue?.id, "issue");
+      }
 
-          const octokit = new Octokit({
-            auth: NEXT_GH_TOKEN,
-          });
+      for (const pr of issue.pullRequests) {
+        const { data: commentsPr } = await octokit.rest.issues.listComments({
+          owner,
+          repo,
+          issue_number: pr.githubId,
+        });
 
-          const { data: commentsGithub } = await octokit.rest.issues.listComments({
-            owner,
-            repo,
-            issue_number: issue.githubId,
-          });
-
-          for (const comment of commentsGithub) {
-            await handleAddComments(comment, issue?.id, 'issue')
-          }
-
-          for (const pr of issue.pullRequests){
-            const { data: commentsPr } = await octokit.rest.issues.listComments({
-              owner,
-              repo,
-              issue_number: pr.githubId,
-            });
-
-            for(const commentPr of commentsPr){
-             await handleAddComments(commentPr, issue?.id, 'deliverable', pr?.id)
-            }
-          }
+        for (const commentPr of commentsPr) {
+          await handleAddComments(commentPr, issue?.id, "deliverable", pr?.id);
         }
       }
     }
   } catch (error) {
-    console.log(
-      "Failed to add comments from github",
-      error.toString()
-    );
+    console.log("Failed to add comments from github", error.toString());
   }
 }
 
