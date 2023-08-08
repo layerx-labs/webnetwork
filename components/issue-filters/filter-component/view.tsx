@@ -1,3 +1,4 @@
+import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import ReactSelect from "components/react-select";
 
 import { IssueFilterBoxOption } from "interfaces/filters";
@@ -7,23 +8,27 @@ import { ContainerFilterView } from "../container-filter/view";
 export default function FilterComponentView({
   label,
   options,
-  type,
   handleCurrentFilter,
-  handleChange
+  handleChange,
 }: {
   label: string;
   options: IssueFilterBoxOption[];
-  type: string;
-  handleCurrentFilter: (v: IssueFilterBoxOption[]) => void;
-  handleChange: (type: string) => void
+  handleCurrentFilter: (v: IssueFilterBoxOption[]) => IssueFilterBoxOption;
+  handleChange: (type: string) => void;
 }) {
   return (
     <ContainerFilterView label={label}>
-      <ReactSelect
-        value={handleCurrentFilter(options)}
+      <NativeSelectWrapper
         options={options}
-        onChange={handleChange(type)}
-      />
+        onChange={handleChange}
+        selectedIndex={options?.findIndex((opt) => opt?.value === handleCurrentFilter(options)?.value)}
+      >
+        <ReactSelect
+          value={handleCurrentFilter(options)}
+          options={options}
+          onChange={handleChange}
+        />
+      </NativeSelectWrapper>
     </ContainerFilterView>
   );
 }
