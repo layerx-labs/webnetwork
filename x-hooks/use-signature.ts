@@ -4,9 +4,17 @@ import { addToast } from "contexts/reducers/change-toaster";
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
-export default function useSignature() {
+import { siweMessageService } from "services/ethereum/siwe";
 
-  const {dispatch, state: {connectedChain, Service, currentUser}} = useAppState();
+export default function useSignature() {
+  const {
+    dispatch, 
+    state: {
+      connectedChain, 
+      Service, 
+      currentUser
+    }
+  } = useAppState();
 
   async function signMessage(message = ""): Promise<string> {
     if ((!Service?.active && !window.ethereum) || !currentUser?.walletAddress)
@@ -43,9 +51,26 @@ export default function useSignature() {
     });
   }
 
+  async function signInWithEthereum(nonce: string, address: string, issuedAt: Date, expiresAt: Date) {
+    if ((!Service?.web3Connection && !window.ethereum) || !nonce || !address)
+      return;
+
+    const message = siweMessageService.getMessage({
+      nonce,
+      issuedAt,
+      expiresAt
+    });
+
+    const signature = await siweMessageService.sendMessage(Service.web3Connection, address, message)
+      .catch(() => null);
+
+    return signature;
+  }
+
   return {
     signMessage,
     messageFor,
     decodeMessage,
+    signInWithEthereum,
   }
 }

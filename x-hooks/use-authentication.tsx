@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 import BigNumber from "bignumber.js";
-import {signIn, signOut, useSession} from "next-auth/react";
+import {getCsrfToken, signIn, signOut, useSession} from "next-auth/react";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 
@@ -11,6 +11,7 @@ import {
   changeCurrentUser,
   changeCurrentUserAccessToken,
   changeCurrentUserBalance,
+  changeCurrentUserConnected,
   changeCurrentUserHandle,
   changeCurrentUserKycSession,
   changeCurrentUserLogin,
@@ -33,6 +34,8 @@ import {kycSession} from "interfaces/kyc-session";
 
 import {WinStorage} from "services/win-storage";
 
+import { SESSION_TTL } from "server/auth/config";
+
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useApi from "x-hooks/use-api";
 import useChain from "x-hooks/use-chain";
@@ -52,7 +55,7 @@ export function useAuthentication() {
   const {connect} = useDao();
   const { chain } = useChain();
   const transactions = useTransactions();
-  const { signMessage: _signMessage } = useSignature();
+  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const {state, dispatch} = useAppState();
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
@@ -93,8 +96,33 @@ export function useAuthentication() {
       });
   }
 
-  function connectWallet() {
-    connect();
+  async function connectWallet() {
+    const address = await connect();
+
+    if (!address) return;
+
+    const csrfToken = await getCsrfToken();
+
+    const issuedAt = new Date();
+    const expiresAt = new Date(+issuedAt + SESSION_TTL);
+
+    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt);
+
+    if (!signature) return;
+
+    signIn("credentials", {
+      redirect: false,
+      signature,
+      issuedAt: +issuedAt,
+      expiresAt: +expiresAt,
+      callbackUrl: `${URL_BASE}${asPath}`
+    })
+      .then(({ error }) => {
+        if (!error) {
+          dispatch(changeCurrentUserConnected(true));
+          dispatch(changeCurrentUserWallet(address));
+        }
+      });
   }
 
   function updateWalletAddress() {
