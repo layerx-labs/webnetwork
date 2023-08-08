@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { LogAccess } from "middleware/log-access";
+import { withCORS } from "middleware";
 import { WithValidChainId } from "middleware/with-valid-chain-id";
-import WithCors from "middleware/withCors";
 
 import { error as LogError } from "services/logging";
 
@@ -25,4 +24,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
-export default LogAccess(WithCors(WithValidChainId(handler)));
+export default withCORS(WithValidChainId(handler));

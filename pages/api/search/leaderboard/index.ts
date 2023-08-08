@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { LogAccess } from "middleware/log-access";
-import WithCors from "middleware/withCors";
+import { withCORS } from "middleware";
 
 import { error as LogError } from "services/logging";
 
@@ -24,4 +23,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
-export default LogAccess(WithCors(handler));
+export default withCORS(handler);
