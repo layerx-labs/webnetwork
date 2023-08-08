@@ -4,8 +4,7 @@ import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 import {Octokit} from "octokit";
 
-import {LogAccess} from "middleware/log-access";
-import WithCors from "middleware/withCors";
+import { withCORS } from "middleware";
 
 import {Logger} from "services/logging";
 
@@ -44,4 +43,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 Logger.changeActionName(`GraphQL`);
-export default LogAccess(WithCors(handler));
+export default withCORS(handler);
