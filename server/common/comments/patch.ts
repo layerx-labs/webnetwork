@@ -4,7 +4,7 @@ import models from "db/models";
 
 import { error as LogError } from "services/logging";
 
-export default async function path(req: NextApiRequest, res: NextApiResponse) {
+export default async function patch(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
     const { hidden } = req.body;
