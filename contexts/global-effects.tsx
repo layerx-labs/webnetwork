@@ -33,10 +33,6 @@ export const GlobalEffectsProvider = ({children}) => {
   const { connectedChain, currentUser, Service, supportedChains } = state;
 
   useEffect(() => {
-    console.log("session", session)
-  }, [session]);
-
-  useEffect(() => {
     const web3Connection = new Web3Connection({
       skipWindowAssignment: true
     });
