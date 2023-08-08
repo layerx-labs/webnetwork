@@ -5,6 +5,7 @@ import { getCsrfToken } from "next-auth/react";
 
 import models from "db/models";
 
+import { governorRole } from "helpers/api";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { isAdminAddress } from "helpers/validators/address";
 
@@ -45,8 +46,6 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
       const signer = siweMessageService.getSigner(message, signature);
 
-      console.log("#test signer", signer)
-
       if (!signer) return null;
 
       return {
@@ -86,15 +85,14 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         roles.push(UserRole.ADMIN);
 
       const governorOf = await models.network.findAllOfCreatorAddress(address)
-        .then(networks => networks.map(({ networkAddress, chain_id }) => 
-          `${UserRole.GOVERNOR}:${chain_id}_${networkAddress}`))
+        .then(networks => networks.map(({ networkAddress, chain_id }) => governorRole(chain_id, networkAddress)))
         .catch(() => []);
 
       roles.push(...governorOf);
 
       return {
-        ...currentToken,
         ...token,
+        ...currentToken,
         roles,
         address,
         signature,
