@@ -13,7 +13,7 @@ class Comments extends Model {
           unique: true,
         },
         comment: {
-          type: DataTypes.STRING(255),
+          type: DataTypes.TEXT,
           allowNull: false,
         },
         hidden: {

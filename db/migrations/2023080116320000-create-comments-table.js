@@ -10,7 +10,7 @@ module.exports = {
         unique: true
       },
       comment: {
-        type: Sequelize.STRING,
+        type: Sequelize.DataTypes.TEXT,
         allowNull: false
       },
       hidden: {
