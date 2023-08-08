@@ -150,7 +150,7 @@ class Network extends Model {
     this.belongsToMany(models.tokens, {through: 'network_tokens'});
   }
 
-  static findAllOf(creatorAddress) {
+  static findAllOfCreatorAddress(creatorAddress) {
     return this.findAll({
       where: {
         creatorAddress: Sequelize.where(Sequelize.fn("lower", Sequelize.col("creatorAddress")), creatorAddress?.toLowerCase())

@@ -85,7 +85,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       if (isAdminAddress(address))
         roles.push(UserRole.ADMIN);
 
-      const governorOf = await models.network.findAllOf(address)
+      const governorOf = await models.network.findAllOfCreatorAddress(address)
         .then(networks => networks.map(({ networkAddress, chain_id }) => 
           `${UserRole.GOVERNOR}:${chain_id}_${networkAddress}`))
         .catch(() => []);
