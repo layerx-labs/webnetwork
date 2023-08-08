@@ -17,7 +17,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const octokit = new Octokit({
-      auth: token?.access_token || botToken
+      auth: token?.accessToken || botToken
     });
 
     const result = await octokit.graphql(query, params);
