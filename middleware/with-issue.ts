@@ -49,7 +49,7 @@ export const withIssue = (handler: NextApiHandler, methods: string[] = [ `PUT` ]
       return res.status(401).json({ message: NOT_AN_CREATOR_ISSUE });
 
     const signature = req.body?.context?.token?.signature;
-    const typedMessage = req.body?.context?.token?.typedMessage;
+    const typedMessage = req.body?.context?.typedMessage;
     const issueCreator = issue?.creatorAddress?.toString();
 
     if (!(await siweMessageService.decodeMessage(typedMessage, signature?.toString(), issueCreator)))
