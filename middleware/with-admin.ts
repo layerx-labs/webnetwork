@@ -15,9 +15,9 @@ export const withAdmin = (handler: NextApiHandler, allowedMethods = ["GET"]): Ne
     if (isMethodAllowed(req.method, allowedMethods))
       return handler(req, res);
 
-    const token = req.body?.context?.token?.roles || [];
+    const roles = req.body?.context?.token?.roles || [];
 
-    if (!token.includes(UserRole.ADMIN))
+    if (!roles.includes(UserRole.ADMIN))
       return res.status(401).json({ message: NOT_ADMIN_WALLET });
 
     return handler(req, res);
