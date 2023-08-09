@@ -4,19 +4,20 @@ import { toLower } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
 export enum MatchAccountsStatus {
-  MATCH,
-  MISMATCH,
-  AVAILABLE
+  MATCH = "match",
+  MISMATCH = "mismatch"
 }
 
-export async function matchAddressAndGithub(address: string, githubLogin: string): Promise<MatchAccountsStatus> {
+export async function matchAddressAndGithub(address: string, githubLogin: string): Promise<MatchAccountsStatus | null> {
+  if (!address || !githubLogin) return null;
+
   const [userByAddress, userByLogin] = await Promise.all([
     models.user.findByAddress(address),
     models.user.findByGithubLogin(githubLogin)
   ]);
 
   if (!userByAddress && !userByLogin)
-    return MatchAccountsStatus.AVAILABLE;
+    return null;
 
   const isSameLogin = (login, loginToCompare) => toLower(login) === toLower(loginToCompare);
 
