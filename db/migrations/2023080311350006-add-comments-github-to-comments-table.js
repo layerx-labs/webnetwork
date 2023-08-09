@@ -68,13 +68,13 @@ async function handleAddComments(comment, id, type, prId) {
         }
       }
 
-      await CommentsModel.create(getCommentCreateData(user.id, user.address, text))
+      await CommentsModel.create(getCommentCreateData(userTaggedByBot.id, userTaggedByBot.address, text))
     }
   } else {
     const commentCreatorUser = await getUser(comment.user.login);
 
     if (commentCreatorUser)
-      CommentsModel.create(getCommentCreateData(user.id, user.address, comment.body))
+      CommentsModel.create(getCommentCreateData(commentCreatorUser.id, commentCreatorUser.address, comment.body))
   }
 }
 
