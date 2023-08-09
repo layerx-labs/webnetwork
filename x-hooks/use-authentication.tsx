@@ -6,7 +6,6 @@ import getConfig from "next/config";
 import {useRouter} from "next/router";
 
 import {useAppState} from "contexts/app-state";
-import {changeChain} from "contexts/reducers/change-chain";
 import {
   changeCurrentUser,
   changeCurrentUserAccessToken,
@@ -21,15 +20,17 @@ import {
   changeCurrentUserisAdmin
 } from "contexts/reducers/change-current-user";
 import {changeActiveNetwork} from "contexts/reducers/change-service";
-import {changeConnectingGH, changeSpinners, changeWalletSpinnerTo} from "contexts/reducers/change-spinners";
+import {changeConnectingGH, changeSpinners} from "contexts/reducers/change-spinners";
 import { addToast } from "contexts/reducers/change-toaster";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
-import {IM_AN_ADMIN, NOT_AN_ADMIN, SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
+import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
+import { AddressValidator } from "helpers/validators/address";
 
 import {EventName} from "interfaces/analytics";
 import {CustomSession} from "interfaces/custom-session";
+import { UserRole } from "interfaces/enums/roles";
 import {kycSession} from "interfaces/kyc-session";
 
 import {WinStorage} from "services/win-storage";
@@ -116,57 +117,7 @@ export function useAuthentication() {
       issuedAt: +issuedAt,
       expiresAt: +expiresAt,
       callbackUrl: `${URL_BASE}${asPath}`
-    })
-      .then(({ error }) => {
-        if (!error) {
-          dispatch(changeCurrentUserConnected(true));
-          dispatch(changeCurrentUserWallet(address));
-        }
-      });
-  }
-
-  function updateWalletAddress() {
-    if (state.spinners?.wallet || !state.currentUser?.connected)
-      return;
-
-    dispatch(changeWalletSpinnerTo(true));
-
-    (state.Service?.active ?
-      state.Service.active.getAddress() : window.ethereum.request({method: 'eth_requestAccounts'}))
-      .then(_address => {
-        if (Array.isArray(_address)) console.debug("eth_requestAccounts", _address);
-
-        const address = Array.isArray(_address) ? _address[0] : _address;
-
-        if (address !== state.currentUser?.walletAddress) {
-          dispatch(changeCurrentUserWallet(address?.toLowerCase()));
-          pushAnalytic(EventName.WALLET_ADDRESS_CHANGED, {newAddress: address?.toString()});
-        }
-
-        dispatch(changeCurrentUserisAdmin(publicRuntimeConfig.adminWallet.toLowerCase() === address?.toLowerCase()));
-
-        const windowChainId = +window.ethereum.chainId;
-        const chain = state.supportedChains?.find(({chainId}) => chainId === windowChainId);
-
-        dispatch(changeChain.update({
-          id: (chain?.chainId || windowChainId)?.toString(),
-          name: chain?.chainName || UNSUPPORTED_CHAIN,
-          shortName: chain?.chainShortName?.toLowerCase() || UNSUPPORTED_CHAIN,
-          explorer: chain?.blockScanner || SUPPORT_LINK,
-          events: chain?.eventsApi,
-          registry: chain?.registryAddress
-        }));
-
-        sessionStorage.setItem("currentChainId", chain ? chain?.chainId?.toString() : (+windowChainId)?.toString());
-        sessionStorage.setItem("currentWallet", address || '');
-      })
-      .catch(e => {
-        console.error("Error getting address", e);
-      })
-      .finally(() => {
-        dispatch(changeWalletSpinnerTo(false));
-      })
-
+    });
   }
 
   function connectGithub() {
@@ -278,23 +229,50 @@ export function useAuthentication() {
     loadNetworkAmounts();
   }
 
-  function updateCurrentUserLogin() {
-    const sessionUser = (session?.data as CustomSession)?.user;
+  function syncUserDataWithSession() {
+    if (session?.status === "loading") return;
 
-    if (!sessionUser || state.currentUser?.login === sessionUser?.login ||
-      sessionUser.accessToken === state.currentUser?.accessToken)
+    const isUnauthenticated = session?.status === "unauthenticated";
+
+    if (isUnauthenticated) {
+      dispatch(changeCurrentUserConnected(false));
+      dispatch(changeCurrentUserHandle(null));
+      dispatch(changeCurrentUserLogin(null));
+      dispatch(changeCurrentUserAccessToken(null));
+      dispatch(changeCurrentUserWallet(null));
+      dispatch(changeCurrentUserisAdmin(null));
+
+      sessionStorage.setItem("currentWallet", "");
+
+      return;
+    }
+
+    const user = session?.data?.user as CustomSession["user"];
+    const isSameGithubAccount = 
+      user.login === state.currentUser?.login && user.accessToken === state.currentUser?.accessToken;
+    const isSameWallet = AddressValidator.compare(user.address, state.currentUser?.walletAddress);
+
+    if (!user || isSameGithubAccount && isSameWallet)
       return;
 
-    const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
+    if (user.login !== state.currentUser?.login) {
+      dispatch(changeCurrentUserHandle(user.name));
+      dispatch(changeCurrentUserLogin(user.login));
+      dispatch(changeCurrentUserAccessToken(user.accessToken));
+    }
 
-    expirationStorage.value =  session.data.expires;
+    if (user.address !== state.currentUser?.walletAddress) {
+      const isAdmin = user.roles.includes(UserRole.ADMIN);
 
-    dispatch(changeCurrentUserHandle(session.data.user.name));
-    dispatch(changeCurrentUserLogin(sessionUser.login));
-    dispatch(changeCurrentUserAccessToken((sessionUser.accessToken)));
+      dispatch(changeCurrentUserWallet(user.address));
+      dispatch(changeCurrentUserisAdmin(isAdmin));
 
-    pushAnalytic(EventName.USER_LOGGED_IN, {username: session.data.user.name, login: sessionUser.login});
+      sessionStorage.setItem("currentWallet", user.address);
+    }
 
+    dispatch(changeCurrentUserConnected(true));
+
+    pushAnalytic(EventName.USER_LOGGED_IN, { username: user.name, login: user.login });
   }
 
   function verifyReAuthorizationNeed() {
@@ -386,12 +364,11 @@ export function useAuthentication() {
     disconnectGithub,
     connectGithub,
     updateWalletBalance,
-    updateWalletAddress,
     validateGhAndWallet,
     listenToAccountsChanged,
-    updateCurrentUserLogin,
     verifyReAuthorizationNeed,
     signMessage,
     updateKycSession,
+    syncUserDataWithSession,
   }
 }

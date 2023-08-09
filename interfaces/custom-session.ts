@@ -7,6 +7,8 @@ export interface CustomSession extends Record<string, unknown> {
     image?: string | null;
     login?: string | null;
     accessToken?: string | null;
+    address?: string | null;
+    roles?: string[] | null;
   };
   expires: ISODateString;
 }

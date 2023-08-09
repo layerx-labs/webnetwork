@@ -62,7 +62,6 @@ export const GlobalEffectsProvider = ({children}) => {
   ]);
 
   useEffect(auth.validateGhAndWallet, [session?.data, currentUser?.walletAddress]);
-  useEffect(auth.updateWalletAddress, [currentUser?.connected]);
   useEffect(auth.listenToAccountsChanged, [Service]);
   useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, Service?.active?.network?.contractAddress]);
   useEffect(auth.updateKycSession, [state?.currentUser?.login,
@@ -70,8 +69,8 @@ export const GlobalEffectsProvider = ({children}) => {
                                     state?.currentUser?.match,
                                     state?.currentUser?.walletAddress,
                                     state?.Settings?.kyc?.tierList]);
-  useEffect(auth.updateCurrentUserLogin, [session?.data?.user]);
   useEffect(auth.verifyReAuthorizationNeed, [currentUser?.walletAddress]);
+  useEffect(auth.syncUserDataWithSession, [session?.data]);
   
   useEffect(() => {
     network.updateActiveNetwork();
