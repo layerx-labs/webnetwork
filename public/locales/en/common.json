@@ -120,6 +120,7 @@
     "completed": "Completed",
     "confirm": "Confirm",
     "connect": "Connect",
+    "disconnect": "Disconnect",
     "connect-github": "Please, connect your GitHub account",
     "connect-github-to-work": "To start working on this bounty, please connect your github account below.",
     "connect-wallet": "Connect Wallet",

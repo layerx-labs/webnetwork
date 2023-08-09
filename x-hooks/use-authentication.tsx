@@ -7,7 +7,6 @@ import {useRouter} from "next/router";
 
 import {useAppState} from "contexts/app-state";
 import {
-  changeCurrentUser,
   changeCurrentUserAccessToken,
   changeCurrentUserBalance,
   changeCurrentUserConnected,
@@ -91,10 +90,7 @@ export function useAuthentication() {
     const lastChain = 
       state.Service?.network?.active ? `/${state.Service?.network?.active?.chain?.chainShortName?.toLowerCase()}` : "";
 
-    signOut({callbackUrl: `${URL_BASE}${lastNetwork}${lastChain}`})
-      .then(() => {
-        dispatch(changeCurrentUser.update({handle: state.currentUser?.handle, walletAddress: ''}));
-      });
+    signOut({callbackUrl: `${URL_BASE}${lastNetwork}${lastChain}`});
   }
 
   async function connectWallet() {
@@ -146,15 +142,6 @@ export function useAuthentication() {
 
         return setTimeout(() => dispatch(changeConnectingGH(false)), 5 * 1000)
       })
-  }
-
-  function listenToAccountsChanged() {
-    if (!state.Service || !window.ethereum)
-      return;
-
-    window.ethereum.on(`accountsChanged`, () => {
-      connect();
-    });
   }
 
   function updateWalletBalance(force = false) {
@@ -226,14 +213,13 @@ export function useAuthentication() {
     if (!user || isSameGithubAccount && isSameWallet)
       return;
 
-    if (user.login !== state.currentUser?.login) {
+    if (!isSameGithubAccount) {
       dispatch(changeCurrentUserHandle(user.name));
       dispatch(changeCurrentUserLogin(user.login));
       dispatch(changeCurrentUserAccessToken(user.accessToken));
-      dispatch(changeCurrentUserMatch(user.accountsMatch));
     }
 
-    if (user.address !== state.currentUser?.walletAddress) {
+    if (!isSameWallet) {
       const isAdmin = user.roles.includes(UserRole.ADMIN);
 
       dispatch(changeCurrentUserWallet(user.address));
@@ -242,6 +228,7 @@ export function useAuthentication() {
       sessionStorage.setItem("currentWallet", user.address);
     }
 
+    dispatch(changeCurrentUserMatch(user.accountsMatch));
     dispatch(changeCurrentUserConnected(true));
 
     pushAnalytic(EventName.USER_LOGGED_IN, { username: user.name, login: user.login });
@@ -336,7 +323,6 @@ export function useAuthentication() {
     disconnectGithub,
     connectGithub,
     updateWalletBalance,
-    listenToAccountsChanged,
     verifyReAuthorizationNeed,
     signMessage,
     updateKycSession,
