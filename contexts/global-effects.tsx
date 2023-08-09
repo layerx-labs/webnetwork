@@ -61,7 +61,6 @@ export const GlobalEffectsProvider = ({children}) => {
     Service?.network?.active?.chain_id,
   ]);
 
-  useEffect(auth.listenToAccountsChanged, [Service]);
   useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, Service?.active?.network?.contractAddress]);
   useEffect(auth.updateKycSession, [state?.currentUser?.login,
                                     state?.currentUser?.accessToken,
