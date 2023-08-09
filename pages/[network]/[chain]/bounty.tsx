@@ -167,7 +167,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
         <BountyComments
           comments={commentsIssue}
-          repo={currentBounty?.data?.repository?.githubPath}
+          userAddress={state.currentUser?.walletAddress}
           issueId={id}
         />
       </CustomContainer>
