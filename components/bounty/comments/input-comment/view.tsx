@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 import { useTranslation } from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
@@ -8,9 +10,15 @@ import { truncateAddress } from "helpers/truncate-address";
 export default function InputCommentView({
   githubLogin,
   userAddress,
+  comment,
+  handleSubmitComment,
+  handleChangeComment,
 }: {
   githubLogin?: string;
   userAddress: string;
+  comment: string;
+  handleSubmitComment: () => void;
+  handleChangeComment: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }) {
   const { t } = useTranslation("common");
 
@@ -33,10 +41,14 @@ export default function InputCommentView({
         className="ps-0 form-control input-comment"
         rows={2}
         placeholder={t("comments.input.placeholder")}
+        value={comment}
+        onChange={handleChangeComment}
       />
 
       <div className="d-flex justify-content-end mt-2">
-          <Button className="btn-comment">{t("comments.button")}</Button>
+        <Button className="btn-comment" onClick={handleSubmitComment} disabled={!comment?.length}>
+          {t("comments.button")}
+        </Button>
       </div>
     </div>
   );
