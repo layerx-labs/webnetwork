@@ -16,7 +16,12 @@ import {useAuthentication} from "x-hooks/use-authentication";
 import { ContextualSpan } from "./contextual-span";
 import ResponsiveWrapper from "./responsive-wrapper";
 
-export default function ConnectWalletButton({children = null, asModal = false, forceLogin = false,}) {
+export default function ConnectWalletButton({
+  children = null,
+  asModal = false,
+  forceLogin = false,
+  btnColor = "white",
+}) {
   const { t } = useTranslation(["common", "connect-wallet-button"]);
 
   const [showModal, setShowModal] = useState(false);
@@ -117,7 +122,7 @@ export default function ConnectWalletButton({children = null, asModal = false, f
   if (!state.currentUser?.walletAddress)
     return (
       <Button
-        color="white"
+        color={btnColor}
         className="text-dark bg-opacity-100"
         onClick={handleLogin}>
         <span>
