@@ -7,6 +7,7 @@ import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
 import {BranchesList} from "interfaces/branches-list";
+import { MatchAccountsStatus } from "interfaces/enums/api";
 import {IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
 import {kycSession} from "interfaces/kyc-session";
 import {LoadingState} from "interfaces/loading-state";
@@ -85,7 +86,7 @@ export interface ConnectedChain {
 export interface CurrentUserState {
   handle: string;
   walletAddress: string;
-  match?: boolean | undefined;
+  match?: MatchAccountsStatus | undefined;
   balance?: Balance | null;
   login?: string;
   accessToken?: string;

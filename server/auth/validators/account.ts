@@ -3,10 +3,7 @@ import models from "db/models";
 import { toLower } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
-export enum MatchAccountsStatus {
-  MATCH = "match",
-  MISMATCH = "mismatch"
-}
+import { MatchAccountsStatus } from "interfaces/enums/api";
 
 export async function matchAddressAndGithub(address: string, githubLogin: string): Promise<MatchAccountsStatus | null> {
   if (!address || !githubLogin) return null;
