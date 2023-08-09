@@ -43,8 +43,7 @@ export const GHProvider= (currentToken: JWT): AuthProvider => ({
       const { name, login } = profile;
       const { provider, access_token } = account;
 
-      const match = login && currentToken?.address ? 
-        await AccountValidator.matchAddressAndGithub(currentToken?.address?.toString(), login?.toString()) : null;
+      const match = await AccountValidator.matchAddressAndGithub(currentToken?.address?.toString(), login?.toString());
 
       return {
         ...token,

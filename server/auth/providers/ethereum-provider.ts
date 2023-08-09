@@ -91,8 +91,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
       roles.push(...governorOf);
 
-      const match = currentToken?.login && address ? 
-        await AccountValidator.matchAddressAndGithub(address, currentToken?.githubLogin?.toString()) : null;
+      const match = await AccountValidator.matchAddressAndGithub(address, currentToken?.githubLogin?.toString());
 
       return {
         ...token,
