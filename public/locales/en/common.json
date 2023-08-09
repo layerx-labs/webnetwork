@@ -255,6 +255,12 @@
       "merge-failed": "Merge Failed",
       "retry-merge": "Retry Merge"
     },
+    "comments": {
+      "input": {
+        "placeholder":"Leave a comment..."
+      },
+      "button": "Comment"
+    }, 
     "create-review": {
       "title": "Review",
       "fields": {
