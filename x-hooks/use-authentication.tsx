@@ -61,7 +61,7 @@ export function useAuthentication() {
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
 
-  const {getUserOf, getUserAll, searchCurators, getKycSession, validateKycSession} = useApi();
+  const {getUserOf, searchCurators, getKycSession, validateKycSession} = useApi();
 
   const [lastUrl,] = useState(new WinStorage('lastUrlBeforeGHConnect', 0, 'sessionStorage'));
   const [balance,] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
@@ -148,36 +148,6 @@ export function useAuthentication() {
       })
   }
 
-  function validateGhAndWallet() {
-    const sessionUser = (session?.data as CustomSession)?.user;
-
-    if (!state.currentUser?.walletAddress || !sessionUser?.login || state.spinners?.matching)
-      return;
-
-    dispatch(changeSpinners.update({matching: true}));
-
-    const userLogin = sessionUser.login;
-    const walletAddress = state.currentUser.walletAddress.toLowerCase();
-
-    getUserAll(walletAddress,userLogin)
-      .then(async(user) => {
-        if (!user?.githubLogin){
-          dispatch(changeCurrentUserMatch(undefined));
-
-          if(session.status === 'authenticated' && state.currentUser.login && !asPath.includes(`connect-account`)){
-            await disconnectGithub()
-          }
-        }
-        else if (user.githubLogin && userLogin)
-          dispatch(changeCurrentUserMatch(userLogin === user.githubLogin &&
-            (walletAddress ? walletAddress === user.address : true)));
-
-      })
-      .finally(() => {
-        dispatch(changeSpinners.update({matching: false}));
-      })
-  }
-
   function listenToAccountsChanged() {
     if (!state.Service || !window.ethereum)
       return;
@@ -241,6 +211,7 @@ export function useAuthentication() {
       dispatch(changeCurrentUserAccessToken(null));
       dispatch(changeCurrentUserWallet(null));
       dispatch(changeCurrentUserisAdmin(null));
+      dispatch(changeCurrentUserMatch(null));
 
       sessionStorage.setItem("currentWallet", "");
 
@@ -259,6 +230,7 @@ export function useAuthentication() {
       dispatch(changeCurrentUserHandle(user.name));
       dispatch(changeCurrentUserLogin(user.login));
       dispatch(changeCurrentUserAccessToken(user.accessToken));
+      dispatch(changeCurrentUserMatch(user.accountsMatch));
     }
 
     if (user.address !== state.currentUser?.walletAddress) {
@@ -364,7 +336,6 @@ export function useAuthentication() {
     disconnectGithub,
     connectGithub,
     updateWalletBalance,
-    validateGhAndWallet,
     listenToAccountsChanged,
     verifyReAuthorizationNeed,
     signMessage,

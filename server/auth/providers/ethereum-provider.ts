@@ -7,6 +7,7 @@ import models from "db/models";
 
 import { governorRole } from "helpers/api";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { toLower } from "helpers/string";
 import { isAdminAddress } from "helpers/validators/address";
 
 import { UserRole } from "interfaces/enums/roles";
@@ -90,6 +91,18 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
       roles.push(...governorOf);
 
+      let match = null;
+      if (currentToken?.login) {
+        const user = await models.user.findOne({
+          where: {
+            address: caseInsensitiveEqual("address", address?.toString())
+          }
+        });
+
+        if (user?.githubLogin)
+          match = toLower(user.githubLogin) === toLower(currentToken?.login?.toString());
+      }
+
       return {
         ...token,
         ...currentToken,
@@ -97,7 +110,8 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         address,
         signature,
         issuedAt,
-        expiresAt
+        expiresAt,
+        accountsMatch: match
       };
     },
   }

@@ -76,7 +76,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return params?.token;
       },
       async session({ session, token }) {
-        const { login, name, accessToken, roles, address } = token;
+        const { login, name, accessToken, roles, address, accountsMatch } = token;
 
         return {
           expires: session.expires,
@@ -85,7 +85,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             name,
             accessToken,
             roles,
-            address
+            address,
+            accountsMatch
           },
         };
       },
