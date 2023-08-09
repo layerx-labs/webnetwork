@@ -20,17 +20,24 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const type = originalType.toLowerCase();
 
+    const isValidNumber = (v) => /^\d+$/.test(v);
+
+    const foundOrValid = (v) => v ? 'found' : 'valid'
+
     if (!["issue", "deliverable", "proposal"].includes(type)) {
       return res.status(404).json({ message: "type does not exist" });
     }
 
-    if(!issueId) return res.status(404).json({ message: "issueId not found" });
+    if (!issueId || !isValidNumber(issueId))
+      return res
+        .status(404)
+        .json({ message: `issueId not ${foundOrValid(!issueId)}` });
 
-    if (type === "deliverable" && !deliverableId)
-      return res.status(404).json({ message: "deliverableId not found" });
+    if (type === "deliverable" && (!deliverableId || !isValidNumber(deliverableId)))
+      return res.status(404).json({ message: `deliverableId not ${foundOrValid(!deliverableId)}` });
 
-    if (type === "proposal" && !proposalId)
-      return res.status(404).json({ message: "proposalId not found" });
+    if (type === "proposal" && (!proposalId || !isValidNumber(proposalId)))
+      return res.status(404).json({ message: `proposalId not ${foundOrValid(!proposalId)}` });
 
     const user = await models.user.findOne({
       where: {
