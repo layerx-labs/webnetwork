@@ -30,13 +30,13 @@ export default function InputCommentView({
       </div>
       <textarea
         tabIndex={0}
-        className="form-control input-comment"
+        className="ps-0 form-control input-comment"
         rows={2}
-        placeholder={"Leave a comment..."}
+        placeholder={t("comments.input.placeholder")}
       />
 
       <div className="d-flex justify-content-end mt-2">
-          <Button className="btn-comment">Comment</Button>
+          <Button className="btn-comment">{t("comments.button")}</Button>
       </div>
     </div>
   );
