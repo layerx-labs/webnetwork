@@ -3,6 +3,7 @@ import {Dispatch} from "react";
 import {TreasuryInfo} from "@taikai/dappkit";
 import { Web3Connection } from "@taikai/dappkit";
 
+import { Spinners } from "contexts/reducers/change-spinners";
 import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
@@ -118,7 +119,7 @@ export interface State {
   show: {
     [key: string]: boolean;
   }
-  spinners: {
+  spinners: Partial<Spinners> & {
     [key: string]: boolean;
   }
 }
