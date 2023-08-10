@@ -7,16 +7,14 @@ import getConfig from "next/config";
 import models from "db/models";
 
 import { AuthProvider } from "server/auth/providers";
-import { AccountValidator } from "server/auth/validators/account";
 
 const { serverRuntimeConfig } = getConfig();
-
 interface Profile {
-  id: string;
+  id: number;
   name: string;
   login: string;
   email: string;
-  image: string;
+  image?: string;
   avatar_url: string;
 }
 
@@ -26,7 +24,7 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
     clientSecret: serverRuntimeConfig?.github?.secret,
     authorization:
       "https://github.com/login/oauth/authorize?scope=read:user+user:email+repo",
-    profile(profile: Profile) {
+    profile(profile) {
       return {
         id: profile.id,
         name: profile.name,
@@ -38,12 +36,14 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
   }),
   callbacks: {
     async signIn({ profile }) {
-      if (!profile?.login) return "/?authError=Profile not found";
+      const { login } = (profile || {}) as Profile;
+
+      if (!login) return "/?authError=Profile not found";
 
       const isConnectAccountsPage = req?.cookies ? 
         req.cookies["next-auth.callback-url"]?.includes("connect-account") : false;
 
-      const user = await models.user.findByGithubLogin(profile.login);
+      const user = await models.user.findByGithubLogin(login);
 
       if (!user && !isConnectAccountsPage)
         return "/connect-account";
@@ -51,10 +51,8 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
       return true;
     },
     async jwt({ profile, account, token }) {
-      const { name, login } = profile;
+      const { name, login } = (profile || {}) as Profile;
       const { provider, access_token } = account;
-
-      const match = await AccountValidator.matchAddressAndGithub(currentToken?.address?.toString(), login?.toString());
 
       return {
         ...token,
@@ -62,8 +60,7 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
         name,
         login,
         provider,
-        accessToken: access_token,
-        accountsMatch: match
+        accessToken: access_token
       };
     },
   }

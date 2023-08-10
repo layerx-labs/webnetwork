@@ -14,7 +14,6 @@ import { UserRole } from "interfaces/enums/roles";
 import { siweMessageService } from "services/ethereum/siwe";
 
 import { AuthProvider } from "server/auth/providers";
-import { AccountValidator } from "server/auth/validators/account";
 
 export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider => ({
   config: CredentialsProvider({
@@ -37,7 +36,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
     async authorize(credentials) {      
       const { signature, issuedAt, expiresAt } = credentials;
 
-      const nonce = await getCsrfToken({ req });
+      const nonce = await getCsrfToken({ req: { headers: req.headers } });
 
       const message = siweMessageService.getMessage({
         nonce,
@@ -91,8 +90,6 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
       roles.push(...governorOf);
 
-      const match = await AccountValidator.matchAddressAndGithub(address, currentToken?.githubLogin?.toString());
-
       return {
         ...token,
         ...currentToken,
@@ -100,8 +97,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         address,
         signature,
         issuedAt,
-        expiresAt,
-        accountsMatch: match
+        expiresAt
       };
     },
   }

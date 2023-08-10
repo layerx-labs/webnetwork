@@ -7,6 +7,7 @@ import { Logger } from "services/logging";
 
 import { SESSION_TTL } from "server/auth/config";
 import { EthereumProvider, GHProvider } from "server/auth/providers";
+import { AccountValidator } from "server/auth/validators/account";
 
 const {
   serverRuntimeConfig: {
@@ -76,7 +77,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return params?.token;
       },
       async session({ session, token }) {
-        const { login, name, accessToken, roles, address, accountsMatch } = token;
+        const { login, name, accessToken, roles, address } = token;
+
+        const accountsMatch = await AccountValidator.matchAddressAndGithub(address?.toString(), login?.toString());
 
         return {
           expires: session.expires,
