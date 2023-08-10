@@ -172,6 +172,9 @@ export function useAuthentication() {
       user.login === state.currentUser?.login && user.accessToken === state.currentUser?.accessToken;
     const isSameWallet = AddressValidator.compare(user.address, state.currentUser?.walletAddress);
 
+    if (user.accountsMatch !== state.currentUser?.match)
+      dispatch(changeCurrentUserMatch(user.accountsMatch));
+
     if (!user || isSameGithubAccount && isSameWallet)
       return;
 
