@@ -4,7 +4,6 @@ import {isAddress} from "web3-utils";
 
 import {useAppState} from "contexts/app-state";
 import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
-import {changeCurrentUserConnected, changeCurrentUserWallet} from "contexts/reducers/change-current-user";
 import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service";
 import {changeChangingChain, changeConnecting} from "contexts/reducers/change-spinners";
 
@@ -35,7 +34,7 @@ export function useDao() {
   /**
    * Enables the user/dapp to connect to the active DAOService
    */
-  function connect() {
+  function connect(): Promise<string | null> {
     if (!state.Service?.web3Connection) return;
 
     dispatch(changeConnecting(true));
