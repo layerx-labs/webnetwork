@@ -31,7 +31,7 @@ export default function InvalidAccountWalletModal() {
     }
   } = useAppState();
 
-  const { disconnectWallet } = useAuthentication();
+  const { signOut } = useAuthentication();
 
   const show = [
     currentUser?.match === MatchAccountsStatus.MISMATCH, 
@@ -40,6 +40,10 @@ export default function InvalidAccountWalletModal() {
     !asPath.includes(`connect-account`),
     !matching
   ].every(condition=> condition);
+
+  function handleSignOut() {
+    signOut();
+  }
 
   return (
     <Modal
@@ -87,7 +91,7 @@ export default function InvalidAccountWalletModal() {
         <div className="row justify-content-center align-items-center mt-3">
           <div className="col-auto">
             <Button
-              onClick={disconnectWallet}
+              onClick={handleSignOut}
             >
               {t("actions.disconnect")}
             </Button>
