@@ -1,8 +1,8 @@
 import { useTranslation } from "next-i18next";
 
+import { FlexColumn } from "components/common/flex-box/view";
+
 import {
-  formatDate,
-  getDifferenceBetweenDates,
   getTimeDifferenceInWords,
 } from "helpers/formatDate";
 import { truncateAddress } from "helpers/truncate-address";
@@ -11,7 +11,8 @@ import { User } from "interfaces/api";
 
 import AvatarOrIdenticon from "../../../avatar-or-identicon";
 import MarkedRender from "../../../MarkedRender";
-import { FlexColumn } from "components/common/flex-box/view";
+import CommentSettingsView from "./settings/view";
+import CommentSettings from "./settings/controller";
 
 export interface CommentsProps {
   id: number;
@@ -64,9 +65,12 @@ export default function Comment({
             </span>
           </FlexColumn>
         </div>
-        <div className="d-flex flex-column text-center justify-content-center align-items-center border-radius-4 bg-gray-850">
-          <span className="mx-2 mb-2">. . .</span>
-        </div>
+        <CommentSettings 
+          handleHide={() => console.log}
+          isGovernor={true}
+          hidden={true} 
+          updateBountyData={() => console.log}        
+        />
       </div>
 
       <MarkedRender
