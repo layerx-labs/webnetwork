@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import ConnectWalletButton from "components/connect-wallet-button";
 
 import Comment, { CommentsProps } from "./comment/view";
-import InputCommentView from "./input-comment/view";
+import InputComment from "./input-comment/controller";
 
 export default function BountyCommentsView({ comments = [], userAddress }) {
   const { t } = useTranslation("common");
@@ -59,7 +59,7 @@ export default function BountyCommentsView({ comments = [], userAddress }) {
             {!!newComments.length &&
               newComments?.map((data) => <Comment {...data} key={data?.id} />)}
             {userAddress ? (
-              <InputCommentView userAddress={userAddress} />
+              <InputComment userAddress={userAddress} />
             ) : (
               <div className="d-flex flex-column text-center mt-4 pt-2">
                 <span>{t("comments.not-connect-wallet")}</span>
