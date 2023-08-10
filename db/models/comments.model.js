@@ -33,31 +33,6 @@ class Comments extends Model {
             model: "issues",
             key: "id",
           },
-          validate: {
-            async validateIssueId(value) {
-              if (this.deliverableId) {
-                const deliverable = await DeliverableModel.findOne({
-                  where: {
-                    id: this.deliverableId,
-                  },
-                });
-                if (deliverable && deliverable?.issueId !== value) {
-                  throw new Error("Invalid Issue Id");
-                }
-              }
-
-              if (this.proposalId) {
-                const proposal = await ProposalModel.findOne({
-                  where: {
-                    id: this.proposalId,
-                  },
-                });
-                if (proposal && proposal?.issueId !== value) {
-                  throw new Error("Invalid Issue Id");
-                }
-              }
-            },
-          },
         },
         proposalId: {
           type: DataTypes.INTEGER,
@@ -109,6 +84,31 @@ class Comments extends Model {
       },
       {
         sequelize,
+        validate: {
+          async validateIssueId() {
+            if (this.deliverableId) {
+              const deliverable = await DeliverableModel.findOne({
+                where: {
+                  id: this.deliverableId,
+                },
+              });
+              if (deliverable && deliverable?.issueId !== this.issueId) {
+                throw new Error("Invalid Issue Id");
+              }
+            }
+
+            if (this.proposalId) {
+              const proposal = await ProposalModel.findOne({
+                where: {
+                  id: this.proposalId,
+                },
+              });
+              if (proposal && proposal?.issueId !== this.issueId) {
+                throw new Error("Invalid Issue Id");
+              }
+            }
+          },
+        },
         modelName: "comment",
         tableName: "comments",
       }
