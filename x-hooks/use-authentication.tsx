@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 import BigNumber from "bignumber.js";
-import {getCsrfToken, signIn, signOut, useSession} from "next-auth/react";
+import {getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession} from "next-auth/react";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 
@@ -19,7 +19,7 @@ import {
   changeCurrentUserisAdmin
 } from "contexts/reducers/change-current-user";
 import {changeActiveNetwork} from "contexts/reducers/change-service";
-import {changeConnectingGH, changeSpinners} from "contexts/reducers/change-spinners";
+import {changeSpinners} from "contexts/reducers/change-spinners";
 import { addToast } from "contexts/reducers/change-toaster";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
@@ -50,7 +50,7 @@ const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
   const session = useSession();
-  const {asPath, push} = useRouter();
+  const { asPath } = useRouter();
 
   const {connect} = useDao();
   const { chain } = useChain();
@@ -60,40 +60,24 @@ export function useAuthentication() {
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
 
-  const {getUserOf, searchCurators, getKycSession, validateKycSession} = useApi();
+  const { searchCurators, getKycSession, validateKycSession } = useApi();
 
-  const [lastUrl,] = useState(new WinStorage('lastUrlBeforeGHConnect', 0, 'sessionStorage'));
   const [balance,] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
   const URL_BASE = typeof window !== "undefined" ? `${window.location.protocol}//${ window.location.host}` : "";
 
-  function disconnectGithub() {
-    dispatch(changeCurrentUserMatch(undefined));
-    dispatch(changeCurrentUserHandle(undefined));
-    dispatch(changeCurrentUserLogin(undefined));
-    dispatch(changeCurrentUserAccessToken((undefined)));
-    return signOut({redirect: false});
-  }
-
-  function disconnectWallet() {
-
-    if (!state.currentUser?.walletAddress)
-      return;
-
-    transactions.deleteFromStorage();
-
+  function signOut(redirect?: string) {
     const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
 
     expirationStorage.removeItem();
+    transactions.deleteFromStorage();
 
-    const lastNetwork = state.Service?.network?.active ? `/${state.Service?.network?.active?.name?.toLowerCase()}` : "";
-    const lastChain = 
-      state.Service?.network?.active ? `/${state.Service?.network?.active?.chain?.chainShortName?.toLowerCase()}` : "";
-
-    signOut({callbackUrl: `${URL_BASE}${lastNetwork}${lastChain}`});
+    nextSignOut({
+      callbackUrl: `${URL_BASE}/${redirect || ""}`
+    });
   }
 
-  async function connectWallet() {
+  async function signInWallet() {
     const address = await connect();
 
     if (!address) return;
@@ -107,7 +91,7 @@ export function useAuthentication() {
 
     if (!signature) return;
 
-    signIn("credentials", {
+    nextSignIn("credentials", {
       redirect: false,
       signature,
       issuedAt: +issuedAt,
@@ -116,32 +100,10 @@ export function useAuthentication() {
     });
   }
 
-  function connectGithub() {
-    if (!state.currentUser?.walletAddress)
-      return;
-
-    dispatch(changeConnectingGH(true));
-
-    getUserOf(state.currentUser?.walletAddress)
-      .then((user) => {
-        if (!user?.githubLogin && !asPath.includes(`connect-account`)) {
-          disconnectGithub()
-          push(`/connect-account`);
-          return false;
-        }
-        return true;
-      })
-      .then(signedIn => {
-        if (!signedIn)
-          return dispatch(changeConnectingGH(false))
-
-        lastUrl.value = asPath;
-
-        if(signedIn)
-          signIn('github', {callbackUrl: `${URL_BASE}${asPath}`})
-
-        return setTimeout(() => dispatch(changeConnectingGH(false)), 5 * 1000)
-      })
+  function signInGithub() {
+    nextSignIn("github", {
+      callbackUrl: `${URL_BASE}${asPath}`
+    });
   }
 
   function updateWalletBalance(force = false) {
@@ -318,10 +280,9 @@ export function useAuthentication() {
   }
 
   return {
-    connectWallet,
-    disconnectWallet,
-    disconnectGithub,
-    connectGithub,
+    signOut,
+    signInWallet,
+    signInGithub,
     updateWalletBalance,
     verifyReAuthorizationNeed,
     signMessage,
