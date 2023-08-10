@@ -17,7 +17,7 @@ export const withSignature = (handler: NextApiHandler, allowedMethods = ['GET'])
 
     const token = req.body?.context?.token;
 
-    const nonce = await getCsrfToken({ req });
+    const nonce = await getCsrfToken({ req: { headers: req.headers } });
 
     const { issuedAt, expiresAt, signature, address } = token;
 
