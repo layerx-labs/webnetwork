@@ -13,7 +13,7 @@ export async function matchAddressAndGithub(address: string, githubLogin: string
     models.user.findByGithubLogin(githubLogin)
   ]);
 
-  if (!userByAddress && !userByLogin)
+  if (!userByAddress?.githubLogin && !userByLogin?.address)
     return null;
 
   const isSameLogin = (login, loginToCompare) => toLower(login) === toLower(loginToCompare);
