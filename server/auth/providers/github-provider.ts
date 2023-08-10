@@ -1,7 +1,10 @@
 
+import { NextApiRequest } from "next";
 import { JWT } from "next-auth/jwt";
 import GithubProvider from "next-auth/providers/github";
 import getConfig from "next/config";
+
+import models from "db/models";
 
 import { AuthProvider } from "server/auth/providers";
 import { AccountValidator } from "server/auth/validators/account";
@@ -17,7 +20,7 @@ interface Profile {
   avatar_url: string;
 }
 
-export const GHProvider= (currentToken: JWT): AuthProvider => ({
+export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider => ({
   config: GithubProvider({
     clientId: serverRuntimeConfig?.github?.clientId,
     clientSecret: serverRuntimeConfig?.github?.secret,
@@ -36,6 +39,14 @@ export const GHProvider= (currentToken: JWT): AuthProvider => ({
   callbacks: {
     async signIn({ profile }) {
       if (!profile?.login) return "/?authError=Profile not found";
+
+      const isConnectAccountsPage = req?.cookies ? 
+        req.cookies["next-auth.callback-url"]?.includes("connect-account") : false;
+
+      const user = await models.user.findByGithubLogin(profile.login);
+
+      if (!user && !isConnectAccountsPage)
+        return "/connect-account";
 
       return true;
     },

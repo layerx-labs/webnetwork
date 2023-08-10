@@ -20,7 +20,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const currentToken = await getToken({ req, secret: secret });
 
   const ethereumProvider = EthereumProvider(currentToken, req);
-  const githubProvider = GHProvider(currentToken);
+  const githubProvider = GHProvider(currentToken, req);
 
   return NextAuth(req, res, {
     providers: [
