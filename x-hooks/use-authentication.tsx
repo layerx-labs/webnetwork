@@ -193,7 +193,6 @@ export function useAuthentication() {
       sessionStorage.setItem("currentWallet", user.address);
     }
 
-    dispatch(changeCurrentUserMatch(user.accountsMatch));
     dispatch(changeCurrentUserConnected(true));
 
     pushAnalytic(EventName.USER_LOGGED_IN, { username: user.name, login: user.login });
