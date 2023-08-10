@@ -23,7 +23,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
 
     let comments;
 
-    if ((issueId || proposalId || deliverableId) && !id) {
+    if ((issueId || proposalId || deliverableId || userId) && !id) {
       comments = await models.comments.findAll({
         where: {
           ...filters,
