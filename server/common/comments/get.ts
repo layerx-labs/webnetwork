@@ -9,7 +9,7 @@ import { error as LogError } from "services/logging";
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { issueId, proposalId, deliverableId, id } = req.query;
+    const { issueId, proposalId, deliverableId, userId, id } = req.query;
 
     const isGovernor = await isGovernorSigned(req.headers);
 
@@ -19,6 +19,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     if (issueId) filters.issueId = +issueId;
     if (proposalId) filters.proposalId = +proposalId;
     if (deliverableId) filters.deliverableId = +deliverableId;
+    if (userId) filters.userId = +userId;
 
     let comments;
 
