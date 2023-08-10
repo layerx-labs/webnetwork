@@ -255,12 +255,6 @@
       "merge-failed": "Merge Failed",
       "retry-merge": "Retry Merge"
     },
-    "comments": {
-      "input": {
-        "placeholder":"Leave a comment..."
-      },
-      "button": "Comment"
-    }, 
     "create-review": {
       "title": "Review",
       "fields": {
@@ -488,5 +482,12 @@
   "placeholders": {
     "select-chain": "Select Chain",
     "select-latest": "Select Latest"
-  }
+  },
+  "comments": {
+    "input": {
+      "placeholder":"Leave a comment..."
+    },
+    "button": "Comment",
+    "not-connect-wallet": "You are not connected to your wallet. To comment please connect your wallet."
+  } 
 }
