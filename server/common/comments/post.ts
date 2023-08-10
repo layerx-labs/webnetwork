@@ -69,7 +69,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json(comments);
   } catch (error) {
-    LogError(error);
     res.status(500).json(error);
+    LogError(error)
   }
 }

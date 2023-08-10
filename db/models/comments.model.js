@@ -1,6 +1,8 @@
 "use strict";
 const { getValueToLowerCase } = require("../../helpers/db/getters");
 const { Model, DataTypes } = require("sequelize");
+const DeliverableModel = require("./pullRequest.model");
+const ProposalModel = require("./mergeproposal");
 
 class Comments extends Model {
   static init(sequelize) {
@@ -30,6 +32,31 @@ class Comments extends Model {
           references: {
             model: "issues",
             key: "id",
+          },
+          validate: {
+            async validateIssueId(value) {
+              if (this.deliverableId) {
+                const deliverable = await DeliverableModel.findOne({
+                  where: {
+                    id: this.deliverableId,
+                  },
+                });
+                if (deliverable && deliverable?.issueId !== value) {
+                  throw new Error("Invalid Issue Id");
+                }
+              }
+
+              if (this.proposalId) {
+                const proposal = await ProposalModel.findOne({
+                  where: {
+                    id: this.proposalId,
+                  },
+                });
+                if (proposal && proposal?.issueId !== value) {
+                  throw new Error("Invalid Issue Id");
+                }
+              }
+            },
           },
         },
         proposalId: {
@@ -118,7 +145,6 @@ class Comments extends Model {
       sourceKey: "id",
       as: "reply",
     });
-    
   }
 }
 
