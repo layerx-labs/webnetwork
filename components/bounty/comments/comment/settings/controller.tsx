@@ -17,6 +17,8 @@ export default function CommentSettings({
     updateBountyData();
   }
 
+  if(!isGovernor) return null;
+
   return (
     <CommentSettingsView
       hidden={hidden}

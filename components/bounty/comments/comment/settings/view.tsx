@@ -60,10 +60,10 @@ export default function CommentSettingsView({
     <>
       <div className="position-relative d-flex justify-content-end" ref={node}>
         <div
-          className={`cursor-pointer settings-comment border-radius-8 d-flex`}
+          className={`cursor-pointer settings-comment border-radius-8 d-flex flex-column justify-content-center`}
           onClick={() => setShow(!show)}
         >
-          <span className="mx-2 mb-2">. . .</span>
+          <span className="container-settings">. . .</span>
         </div>
 
         <div
