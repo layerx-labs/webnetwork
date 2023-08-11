@@ -124,7 +124,6 @@ export interface PullRequest {
   updatedAt: Date;
   issue?: IssueData;
   comments?: IssueDataComment[];
-  reviews?: IssueDataComment[];
   status?: string;
   reviewers?: string[];
   contractId?: number;
