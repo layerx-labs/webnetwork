@@ -19,7 +19,6 @@ export interface Spinners {
   signingMessage: boolean;
   switchingChain: boolean;
   needsToChangeChain: boolean;
-  walletMismatch: boolean;
 }
 
 class ChangeSpinners extends SimpleAction<Spinners|Partial<Spinners>> {
@@ -62,6 +61,3 @@ export const changeChangingChain = (changingChain: boolean) =>
 
 export const changeNeedsToChangeChain = (needsToChangeChain: boolean) =>
   changeSpinners.update({needsToChangeChain});
-
-export const changeWalletMismatch = (walletMismatch: boolean) =>
-  changeSpinners.update({walletMismatch});

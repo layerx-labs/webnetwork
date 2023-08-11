@@ -3,26 +3,28 @@ import { useTranslation } from "next-i18next";
 import Modal from "components/modal";
 
 import { useAppState } from "contexts/app-state";
-import { changeWalletMismatch } from "contexts/reducers/change-spinners";
 
 import { truncateAddress } from "helpers/truncate-address";
 
-export default function WalletMismatchModal() {
+interface WalletMismatchModalProps {
+  show: boolean;
+  onClose: () => void;
+}
+
+export default function WalletMismatchModal({
+  show,
+  onClose
+}: WalletMismatchModalProps) {
   const { t } = useTranslation();
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
 
-  const isVisible = state.spinners?.walletMismatch;
   const truncatedWallet = truncateAddress(state.currentUser?.walletAddress);
-
-  function onClose() {
-    dispatch(changeWalletMismatch(false));
-  }
 
   return(
     <Modal
       centerTitle
-      show={isVisible}
+      show={show}
       title={t("modals.wallet-mismatch.title")}
       onCloseClick={onClose}
     >

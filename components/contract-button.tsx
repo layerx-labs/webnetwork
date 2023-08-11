@@ -1,7 +1,10 @@
+import { useState } from "react";
+
 import Button, { ButtonProps } from "components/button";
+import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
 
 import { useAppState } from "contexts/app-state";
-import { changeNeedsToChangeChain, changeWalletMismatch } from "contexts/reducers/change-spinners";
+import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
@@ -12,7 +15,13 @@ export default function ContractButton({
   children,
   ...rest
 }: ButtonProps) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const { state, dispatch } = useAppState();
+
+  function onCloseModal() {
+    setIsModalVisible(false);
+  }
 
   async function validateEthereum() {
     if(window.ethereum) return true;
@@ -43,7 +52,7 @@ export default function ContractButton({
 
     if (isSameWallet) return true;
 
-    dispatch(changeWalletMismatch(true));
+    setIsModalVisible(true);
 
     return false;
   }
@@ -73,11 +82,18 @@ export default function ContractButton({
   }
 
   return(
-    <Button
-      onClick={handleExecute}
-      {...rest}
-    >
-      {children}
-    </Button>
+    <>
+      <Button
+        onClick={handleExecute}
+        {...rest}
+      >
+        {children}
+      </Button>
+
+      <WalletMismatchModal
+        show={isModalVisible}
+        onClose={onCloseModal}
+      />
+    </>
   );
 }

@@ -11,7 +11,6 @@ import {GoogleAnalytics} from "nextjs-google-analytics";
 import ConsentCookie from "components/consent-cokie";
 import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import Loading from "components/loading";
-import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
 import NavBar from "components/navigation/navbar/controller";
 import NoMetamaskModal from "components/no-metamask-modal/controller";
 import ReadOnlyContainer from "components/read-only-container";
@@ -42,7 +41,6 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
           <ReadOnlyContainer>
             <NoMetamaskModal />
             <InvalidAccountWalletModal />
-            <WalletMismatchModal />
             <ReAuthorizeGithubModal />
             <NavBar />
             <div id="root-container">
