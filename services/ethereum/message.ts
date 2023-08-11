@@ -85,3 +85,5 @@ export class EthereumMessage<T extends MessageTypes> {
     });
   }
 }
+
+export const ethereumMessageService = new EthereumMessage("Bepro Network");

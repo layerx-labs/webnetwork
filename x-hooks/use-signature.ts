@@ -4,6 +4,7 @@ import { addToast } from "contexts/reducers/change-toaster";
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
+import { ethereumMessageService } from "services/ethereum/message";
 import { siweMessageService } from "services/ethereum/siwe";
 
 export default function useSignature() {
@@ -17,23 +18,17 @@ export default function useSignature() {
   } = useAppState();
 
   async function signMessage(message = ""): Promise<string> {
-    if ((!Service?.active && !window.ethereum) || !currentUser?.walletAddress)
+    if ((!Service?.web3Connection && !window.ethereum) || !currentUser?.walletAddress)
       return;
 
-    const payload = {
-      method: `eth_signTypedData_v4`,
-      from: currentUser.walletAddress,
-      params: [
-        currentUser.walletAddress, messageFor(connectedChain?.id, message)
-      ]
-    }
+    const typedMessage = ethereumMessageService.getMessage({
+      chainId: connectedChain?.id,
+      message
+    });
 
-    return new Promise((res, rej) => {
-      const _promise = (err, d) => { 
-        if (!err)
-          return res(d?.result);
-        
-        console.debug("Failed to sign message", err);
+    return ethereumMessageService.sendMessage(Service?.web3Connection, currentUser.walletAddress, typedMessage)
+      .catch(error => {
+        console.debug("Failed to sign message", error?.toString());
 
         dispatch(addToast({
           type: "danger",
@@ -41,14 +36,8 @@ export default function useSignature() {
           content: "Signed message required to proceed",
         }));
 
-        return res(undefined);
-      };
-
-      if (Service.active?.web3Connection?.Web3?.currentProvider?.hasOwnProperty("sendAsync"))
-        Service.active?.web3Connection.Web3.currentProvider.sendAsync(payload, _promise);
-      else if (window.ethereum) 
-        window.ethereum.request(payload).then(v => _promise(null, {result: v})).catch(e => _promise(e, null));
-    });
+        return null;
+      });
   }
 
   async function signInWithEthereum(nonce: string, address: string, issuedAt: Date, expiresAt: Date) {
