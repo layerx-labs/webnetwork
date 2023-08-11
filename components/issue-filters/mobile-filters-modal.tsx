@@ -40,6 +40,7 @@ export default function MobileFiltersModal({
   const isOnNetwork = !!router?.query?.network;
   const [selectedSortIndex, setSelectedSortIndex] = useState<number>();
   const [ [repoOptions, stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
+
   
   const defaultSortOptions = sortOptions ? sortOptions : [
     {
