@@ -183,7 +183,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
   const pullRequestDetail = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                          [pullRequestDatabase]);
 
-  const pullRequestComments = []
+  const pullRequestComments = await getCommentsData({ deliverableId: pullRequestDatabase?.id.toString() })
 
   const pullRequest: PullRequest = {
     ...pullRequestDatabase,
