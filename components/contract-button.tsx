@@ -7,14 +7,11 @@ import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
-import { useDao } from "x-hooks/use-dao";
-
 export default function ContractButton({
   onClick,
   children,
   ...rest
 }: ButtonProps) {
-  const { connect } = useDao();
   const { state, dispatch } = useAppState();
 
   async function validateEthereum() {
@@ -26,7 +23,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (state.connectedChain?.matchWithNetworkChain !== false || state.connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (state.connectedChain?.matchWithNetworkChain !== false && state.connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
     dispatch(changeNeedsToChangeChain(true));
@@ -40,7 +37,7 @@ export default function ContractButton({
 
     if (!web3Connection || !sessionWallet) return false;
 
-    const connectedWallet = web3Connection?.started ? await web3Connection.getAddress() : await connect();
+    const connectedWallet = await web3Connection.getAddress();
 
     const isSameWallet = AddressValidator.compare(sessionWallet, connectedWallet);
 
