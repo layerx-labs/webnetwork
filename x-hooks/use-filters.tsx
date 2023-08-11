@@ -85,9 +85,7 @@ export default function useFilters(): [
   }
 
   function loadFilters() {
-    const { time, state, sortBy } = router.query || {};
-
-    if(sortBy) return;
+    const { time, state } = router.query || {};
 
     setStateFilters([
       makeFilterOption("All", "allstates", !state),
