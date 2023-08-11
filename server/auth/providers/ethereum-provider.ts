@@ -7,7 +7,7 @@ import models from "db/models";
 
 import { governorRole } from "helpers/api";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { isAdminAddress } from "helpers/validators/address";
+import { AddressValidator } from "helpers/validators/address";
 
 import { UserRole } from "interfaces/enums/roles";
 
@@ -81,7 +81,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
       const roles = [UserRole.USER];
 
-      if (isAdminAddress(address))
+      if (AddressValidator.isAdmin(address))
         roles.push(UserRole.ADMIN);
 
       const governorOf = await models.network.findAllOfCreatorAddress(address)

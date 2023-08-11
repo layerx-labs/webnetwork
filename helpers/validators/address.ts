@@ -1,13 +1,15 @@
 import getConfig from "next/config";
 
-import { toLower } from "helpers/string";
+import { lowerCaseCompare } from "helpers/string";
 
 const { publicRuntimeConfig } = getConfig();
 
-export const AddressValidator = {
-  compare: (address: string, addressToCompare: string) => toLower(address) === toLower(addressToCompare),
-};
+export class AddressValidator {
+  static compare(address: string, addressToCompare: string) {
+    return lowerCaseCompare(address, addressToCompare);
+  }
 
-export function isAdminAddress(address: string) {
-  return address && AddressValidator.compare(address, publicRuntimeConfig?.adminWallet);
+  static isAdmin(address: string) {
+    return this.compare(address, publicRuntimeConfig?.adminWallet);
+  }
 }

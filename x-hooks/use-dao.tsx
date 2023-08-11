@@ -8,6 +8,7 @@ import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service"
 import {changeChangingChain, changeConnecting} from "contexts/reducers/change-spinners";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { lowerCaseCompare } from "helpers/string";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
@@ -167,7 +168,7 @@ export function useDao() {
     const isSameWeb3Host = 
       chainToConnect.chainRpc === state.Service?.active?.web3Host && !shouldUseWeb3Connection || 
       shouldUseWeb3Connection && !state.Service?.active?.web3Host;
-    const isSameRegistry = chainToConnect?.registryAddress === state.Service?.active?.registryAddress?.toLowerCase();
+    const isSameRegistry = lowerCaseCompare(chainToConnect?.registryAddress, state.Service?.active?.registryAddress);
 
     if (isSameWeb3Host && isSameRegistry && !isConnected || state.Service?.starting) {
       console.debug("Already connected to this web3Host or the service is still starting");
