@@ -1,4 +1,5 @@
 import {isZeroAddress} from "ethereumjs-util";
+import { useSession } from "next-auth/react";
 import {useRouter} from "next/router";
 import {isAddress} from "web3-utils";
 
@@ -18,9 +19,10 @@ import useChain from "x-hooks/use-chain";
 import useNetworkChange from "x-hooks/use-network-change";
 
 export function useDao() {
+  const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
-  const {state, dispatch} = useAppState();
+  const { state, dispatch } = useAppState();
   const { findSupportedChain } = useChain();
   const { handleAddNetwork } = useNetworkChange();
 
@@ -119,6 +121,12 @@ export function useDao() {
    * dispatches changeNetwork() to active network
    */
   async function start() {
+    if (session.status === "loading" ||
+        session.status === "authenticated" && !state.currentUser?.connected) {
+      console.debug("Session not loaded yet");
+      return;
+    }
+
     const supportedChains = state.supportedChains;
 
     if (!supportedChains?.length) {
@@ -170,7 +178,7 @@ export function useDao() {
       shouldUseWeb3Connection && !state.Service?.active?.web3Host;
     const isSameRegistry = lowerCaseCompare(chainToConnect?.registryAddress, state.Service?.active?.registryAddress);
 
-    if (isSameWeb3Host && isSameRegistry && !isConnected || state.Service?.starting) {
+    if (isSameWeb3Host && isSameRegistry && !isConnected) {
       console.debug("Already connected to this web3Host or the service is still starting");
       return;
     }

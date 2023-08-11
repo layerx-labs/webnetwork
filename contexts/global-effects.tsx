@@ -50,7 +50,7 @@ export const GlobalEffectsProvider = ({children}) => {
     Service?.network?.active?.chain_id,
     connectedChain?.id,
     connectedChain?.registry,
-    currentUser?.connected,
+    currentUser?.connected
   ]);
 
   useEffect(() => {
@@ -68,7 +68,9 @@ export const GlobalEffectsProvider = ({children}) => {
                                     state?.currentUser?.walletAddress,
                                     state?.Settings?.kyc?.tierList]);
   useEffect(auth.verifyReAuthorizationNeed, [currentUser?.walletAddress]);
-  useEffect(auth.syncUserDataWithSession, [session]);
+  useEffect(() => {
+    auth.syncUserDataWithSession();
+  }, [session]);
   
   useEffect(() => {
     network.updateActiveNetwork();

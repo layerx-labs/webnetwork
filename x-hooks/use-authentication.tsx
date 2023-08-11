@@ -52,17 +52,17 @@ export function useAuthentication() {
   const session = useSession();
   const { asPath } = useRouter();
 
-  const {connect} = useDao();
+  const { connect } = useDao();
   const { chain } = useChain();
   const transactions = useTransactions();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
-  const {state, dispatch} = useAppState();
+  const { state, dispatch } = useAppState();
   const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
 
   const { searchCurators, getKycSession, validateKycSession } = useApi();
 
-  const [balance,] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
+  const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
   const URL_BASE = typeof window !== "undefined" ? `${window.location.protocol}//${ window.location.host}` : "";
 
@@ -148,7 +148,7 @@ export function useAuthentication() {
     loadNetworkAmounts();
   }
 
-  function syncUserDataWithSession() {
+  async function syncUserDataWithSession() {
     if (session?.status === "loading") return;
 
     const isUnauthenticated = session?.status === "unauthenticated";
@@ -192,6 +192,8 @@ export function useAuthentication() {
 
       sessionStorage.setItem("currentWallet", user.address);
     }
+
+    await connect();
 
     dispatch(changeCurrentUserConnected(true));
 
