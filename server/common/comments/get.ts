@@ -23,11 +23,19 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
 
     let comments;
 
+    const include = [
+      {
+        association: "user",
+        attributes: ["githubLogin"]
+      }
+    ]
+
     if ((issueId || proposalId || deliverableId || userId) && !id) {
       comments = await models.comments.findAll({
         where: {
           ...filters,
         },
+        include
       });
     } else {
       comments = await models.comments.findOne({
@@ -35,6 +43,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
           id: +id,
           ...filters,
         },
+        include
       });
     }
 
