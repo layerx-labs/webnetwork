@@ -40,8 +40,11 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
 
       if (!login) return "/?authError=Profile not found";
 
-      const isConnectAccountsPage = req?.cookies ? 
-        req.cookies["next-auth.callback-url"]?.includes("connect-account") : false;
+      const callbackUrlHttpKey = "__Secure-next-auth.callback-url";
+      const callbackUrlHttpsKey = "__Secure-next-auth.callback-url";
+
+      const isConnectAccountsPage = req?.cookies ?
+        (req.cookies[callbackUrlHttpKey] || req.cookies[callbackUrlHttpsKey])?.includes("connect-account") : false;
 
       const user = await models.user.findByGithubLogin(login);
 
