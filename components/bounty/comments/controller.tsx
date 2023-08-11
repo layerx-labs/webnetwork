@@ -4,7 +4,7 @@ import { IssueDataComment } from "interfaces/issue-data";
 
 import BountyCommentsView from "./view";
 
-export default function BountyComments({
+export default function Comments({
   comments = [],
   currentUser,
   type,
