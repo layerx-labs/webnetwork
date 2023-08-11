@@ -45,6 +45,7 @@ export default function InputComment({
         content: t("bounty:actions.comment.success"),
       }));
       updateData()
+      setComment("")
     }).catch(() => {
       dispatch(addToast({
         type: "danger",

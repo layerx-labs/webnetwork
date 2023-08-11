@@ -7,28 +7,11 @@ import {
 } from "helpers/formatDate";
 import { truncateAddress } from "helpers/truncate-address";
 
-import { User } from "interfaces/api";
+import { IssueDataComment } from "interfaces/issue-data";
 
 import AvatarOrIdenticon from "../../../avatar-or-identicon";
 import MarkedRender from "../../../MarkedRender";
-import CommentSettingsView from "./settings/view";
 import CommentSettings from "./settings/controller";
-
-export interface CommentsProps {
-  id: number;
-  comment: string;
-  hidden: boolean;
-  type: string;
-  issueId: number;
-  proposalId?: number;
-  deliberableId?: number;
-  userId: number;
-  userAddress: string;
-  replyId?: number;
-  updatedAt: Date;
-  createdAt: Date;
-  user: User;
-}
 
 export default function Comment({
   comment,
@@ -36,7 +19,7 @@ export default function Comment({
   user,
   updatedAt,
   hidden,
-}: CommentsProps) {
+}: IssueDataComment) {
   const { t } = useTranslation("bounty");
 
   if (hidden) return;
