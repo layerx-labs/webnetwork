@@ -18,16 +18,16 @@ import {useAppState} from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import {IM_AM_CREATOR_ISSUE} from "helpers/constants";
-import { issueParser } from "helpers/issue";
+import { commentsParser, issueParser } from "helpers/issue";
 
 import { CurrentBounty } from "interfaces/application-state";
 import { IssueData, IssueDataComment } from "interfaces/issue-data";
 
 import { 
   getBountyData,
-  getBountyOrPullRequestComments,
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
+import getCommentsData from "x-hooks/api/comments/get-comments-data";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useOctokit from "x-hooks/use-octokit";
 
@@ -42,10 +42,9 @@ interface PageBountyProps {
 export default function PageIssue({ bounty }: PageBountyProps) {
   const [currentBounty, setCurrentBounty] = useState<CurrentBounty>({
     data: issueParser(bounty?.data),
-    comments: bounty?.comments,
+    comments: commentsParser(bounty?.comments),
     lastUpdated: 0,
   });
-  const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isRepoForked, setIsRepoForked] = useState<boolean>();
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
@@ -58,19 +57,20 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
   async function updateBountyData(updatePrData = false) {
     const bountyDatabase = await getBountyData(router.query)
+    const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id })
 
     if(updatePrData) {
       const pullRequests = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                         bountyDatabase?.pullRequests);
       setCurrentBounty({
         data: { ...issueParser(bountyDatabase), pullRequests},
-        comments: commentsIssue,
+        comments: commentsParser(commentsDatabase),
         lastUpdated: 0
       })
     } else {
       setCurrentBounty({
         data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
-        comments: commentsIssue,
+        comments: commentsParser(commentsDatabase),
         lastUpdated: 0
       })
     }
@@ -108,10 +108,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
       console.log("Failed to get users repositories: ", e);
     });
   }
-
-  function addNewComment(comment) {
-    setCommentsIssue([...commentsIssue, comment]);
-  }
   
   useEffect(() => {
     if (!state.currentUser?.login ||
@@ -147,7 +143,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
         <PageActions
           isRepoForked={!!isRepoForked}
-          addNewComment={addNewComment}
           handleEditIssue={handleEditIssue}
           isEditIssue={isEditIssue}
           currentBounty={currentBounty?.data}
@@ -166,9 +161,13 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         />
 
         <BountyComments
-          comments={commentsIssue}
-          userAddress={state.currentUser?.walletAddress}
-          issueId={id}
+          type="issue"
+          updateData={updateBountyData}
+          ids={{
+            issueId: +currentBounty?.data?.id
+          }}
+          comments={currentBounty?.comments}
+          currentUser={state.currentUser}
         />
       </CustomContainer>
     </BountyEffectsProvider>
@@ -178,14 +177,13 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const bountyDatabase = await getBountyData(query)
 
-  const githubComments = await getBountyOrPullRequestComments(bountyDatabase?.repository?.githubPath, 
-                                                              +bountyDatabase?.githubId);
+  const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id })
 
   const pullRequestsDetails = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                            bountyDatabase?.pullRequests);
   
   const bounty = {
-    comments: githubComments,
+    comments: commentsDatabase,
     data: {...bountyDatabase, pullRequests: pullRequestsDetails}
   }
   
