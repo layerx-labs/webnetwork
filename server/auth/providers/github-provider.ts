@@ -40,7 +40,7 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
 
       if (!login) return "/?authError=Profile not found";
 
-      const callbackUrlHttpKey = "__Secure-next-auth.callback-url";
+      const callbackUrlHttpKey = "next-auth.callback-url";
       const callbackUrlHttpsKey = "__Secure-next-auth.callback-url";
 
       const isConnectAccountsPage = req?.cookies ?
