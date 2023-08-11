@@ -43,8 +43,8 @@ export default function Comment({
 
   return (
     <div className="border-radius-8 p-3 bg-gray-800 mb-3">
-      <div className="d-flex align-items-baseline justify-content-between mb-2">
-        <div className="d-flex align-items-baseline">
+      <div className="d-flex align-items-baseline justify-content-between mb-2 flex-wrap-reverse">
+        <div className="d-flex align-items-baseline flex-wrap">
           <FlexColumn className="justify-content-center">
             <AvatarOrIdenticon
               user={user?.githubLogin}
@@ -61,14 +61,14 @@ export default function Comment({
           </FlexColumn>
           <FlexColumn className="align-items-baseline">
             <span className="p-small text-gray-500 ms-2">
-              {updatedAt && getTimeDifferenceInWords(updatedAt, new Date())}
+              {updatedAt && getTimeDifferenceInWords(updatedAt, new Date(), true) }
             </span>
           </FlexColumn>
         </div>
         <CommentSettings 
           handleHide={() => console.log}
-          isGovernor={true}
-          hidden={true} 
+          isGovernor={false}
+          hidden={false} 
           updateBountyData={() => console.log}        
         />
       </div>
