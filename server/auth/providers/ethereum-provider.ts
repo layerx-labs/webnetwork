@@ -73,6 +73,8 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       return false;
     },
     async jwt({ token }) {
+      const nonce = await getCsrfToken({ req: { headers: req.headers } });
+
       const signature = req?.body?.signature || currentToken?.signature;
       const issuedAt = req?.body?.issuedAt || currentToken?.issuedAt;
       const expiresAt = req?.body?.expiresAt || currentToken?.expiresAt;
@@ -93,6 +95,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       return {
         ...token,
         ...currentToken,
+        nonce,
         roles,
         address,
         signature,

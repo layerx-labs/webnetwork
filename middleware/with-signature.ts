@@ -1,5 +1,4 @@
 import { NextApiHandler } from "next";
-import { getCsrfToken } from "next-auth/react";
 
 import { INVALID_SIGNATURE } from "helpers/error-messages";
 
@@ -17,9 +16,7 @@ export const withSignature = (handler: NextApiHandler, allowedMethods = ['GET'])
 
     const token = req.body?.context?.token;
 
-    const nonce = await getCsrfToken({ req: { headers: req.headers } });
-
-    const { issuedAt, expiresAt, signature, address } = token;
+    const { issuedAt, expiresAt, signature, address, nonce } = token;
 
     const typedMessage = await siweMessageService.getMessage({
       nonce,

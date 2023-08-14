@@ -77,7 +77,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return params?.token;
       },
       async session({ session, token }) {
-        const { login, name, accessToken, roles, address } = token;
+        const { login, name, accessToken, roles, address, nonce } = token;
 
         const accountsMatch = await AccountValidator.matchAddressAndGithub(address?.toString(), login?.toString());
 
@@ -89,7 +89,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             accessToken,
             roles,
             address,
-            accountsMatch
+            accountsMatch,
+            nonce
           },
         };
       },
