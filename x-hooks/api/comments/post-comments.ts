@@ -14,7 +14,5 @@ export default async function CreateComment(payload: {
   deliverableId?: number;
   proposalId?: number;
 }) {
-  return api.post<IssueDataComment>(`/comments`, {
-    ...payload,
-  });
+  return api.post<IssueDataComment>(`/comments`, payload);
 }

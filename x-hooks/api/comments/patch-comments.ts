@@ -11,7 +11,5 @@ export default async function HideComment(id: number,
                                           payload: {
     hidden: boolean;
   }) {
-  return api.patch<IssueDataComment>(`/comments/${id}`, {
-    ...payload,
-  });
+  return api.patch<IssueDataComment>(`/comments/${id}`, payload);
 }
