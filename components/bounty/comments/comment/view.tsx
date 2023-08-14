@@ -50,8 +50,8 @@ export default function Comment({
         </div>
         <CommentSettings 
           handleHide={() => console.log}
-          isGovernor={false}
-          hidden={false} 
+          isGovernor={true}
+          hidden={true} 
           updateBountyData={() => console.log}        
         />
       </div>
