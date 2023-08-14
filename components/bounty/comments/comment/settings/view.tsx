@@ -6,7 +6,7 @@ import EyeIcon from "assets/icons/eye-icon";
 import EyeSlashIcon from "assets/icons/eye-slash-icon";
 
 interface CommentSettingsViewProps {
-  handleHideAction: () => void;
+  onHideClick: () => void;
   isGovernor: boolean;
   hidden: boolean;
   show: boolean;
@@ -15,7 +15,7 @@ interface CommentSettingsViewProps {
 }
 
 export default function CommentSettingsView({
-  handleHideAction,
+  onHideClick,
   isGovernor,
   hidden,
   show,
@@ -44,7 +44,7 @@ export default function CommentSettingsView({
         >
           <div className="d-flex gap-2 flex-column bounty-settings p-2 bg-gray-850">
             {isGovernor && (
-              <div className="cursor-pointer" onClick={handleHideAction}>
+              <div className="cursor-pointer" onClick={onHideClick}>
                 {hidden ? <EyeIcon /> : <EyeSlashIcon />}{" "}
                 {t("common:actions.hide")}
               </div>

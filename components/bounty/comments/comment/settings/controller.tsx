@@ -44,7 +44,7 @@ export default function CommentSettings({
   return (
     <CommentSettingsView
       hidden={hidden}
-      handleHideAction={handleHideComment}
+      onHideClick={handleHideComment}
       isGovernor={isGovernor}
       show={show}
       updateShow={setShow}
