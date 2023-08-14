@@ -47,10 +47,10 @@ export default function CommentSettingsView({
   function renderHideButton() {
     if (isGovernor)
       return (
-        <span className="cursor-pointer" onClick={handleHideActionClick}>
+        <div className="cursor-pointer" onClick={handleHideActionClick}>
           {hidden ? <EyeIcon /> : <EyeSlashIcon />}{" "}
           {t("common:actions.hide")}
-        </span>
+        </div>
       );
   }
 
