@@ -11,14 +11,14 @@ export default function InputCommentView({
   githubLogin,
   userAddress,
   comment,
-  handleSubmitComment,
-  handleChangeComment,
+  onCommentSubmit,
+  onCommentChange ,
 }: {
   githubLogin?: string;
   userAddress: string;
   comment: string;
-  handleSubmitComment: () => void;
-  handleChangeComment: (e: ChangeEvent<HTMLTextAreaElement>) => void
+  onCommentSubmit: () => void;
+  onCommentChange : (e: ChangeEvent<HTMLTextAreaElement>) => void
 }) {
   const { t } = useTranslation("common");
 
@@ -42,11 +42,11 @@ export default function InputCommentView({
         rows={2}
         placeholder={t("comments.input.placeholder")}
         value={comment}
-        onChange={handleChangeComment}
+        onChange={onCommentChange}
       />
 
       <div className="d-flex justify-content-end mt-2">
-        <Button className="btn-comment" onClick={handleSubmitComment} disabled={!comment?.length}>
+        <Button className="btn-comment" onClick={onCommentSubmit} disabled={!comment?.length}>
           {t("comments.button")}
         </Button>
       </div>

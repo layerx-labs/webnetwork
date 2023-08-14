@@ -153,7 +153,7 @@ export interface IssueDataComment {
   type: string;
   issueId: number;
   proposalId?: number;
-  deliberableId?: number;
+  deliverableId?: number;
   userId: number;
   userAddress: string;
   replyId?: number;

@@ -29,11 +29,11 @@ export default function InputComment({
   const [comment, setComment] = useState<string>();
   const { dispatch } = useAppState();
 
-  function handleChangeComment(e: ChangeEvent<HTMLTextAreaElement>) {
+  function onCommentChange(e: ChangeEvent<HTMLTextAreaElement>) {
     setComment(e.target.value)
   }
 
-  async function handleSubmitComment() {
+  async function onCommentSubmit() {
     await CreateComment({
       comment,
       ...ids,
@@ -60,8 +60,8 @@ export default function InputComment({
       githubLogin={githubLogin}
       userAddress={userAddress}
       comment={comment}
-      handleChangeComment={handleChangeComment}
-      handleSubmitComment={handleSubmitComment}
+      onCommentChange={onCommentChange}
+      onCommentSubmit={onCommentSubmit}
     />
   );
 }
