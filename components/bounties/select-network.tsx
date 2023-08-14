@@ -57,7 +57,6 @@ export default function SelectNetwork({
 
   function onChange(newValue) {
     if (!newValue || newValue?.value?.networkAddress !== selected?.value?.networkAddress) {
-      console.log('newValue', newValue, options)
       setSelected(newValue);
 
       const newQuery = {
