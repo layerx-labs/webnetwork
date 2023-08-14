@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { MutableRefObject } from "react";
 
 import { useTranslation } from "next-i18next";
 
@@ -9,59 +9,30 @@ interface CommentSettingsViewProps {
   handleHideAction: () => void;
   isGovernor: boolean;
   hidden: boolean;
+  show: boolean;
+  updateShow: (v: boolean) => void;
+  refDiv: MutableRefObject<undefined>;
 }
 
 export default function CommentSettingsView({
   handleHideAction,
   isGovernor,
   hidden,
+  show,
+  updateShow,
+  refDiv,
 }: CommentSettingsViewProps) {
   const { t } = useTranslation(["common", "pull-request", "bounty"]);
-  const node = useRef();
-
-  const [show, setShow] = useState(false);
-
-  function handleHide() {
-    setShow(false);
-  }
-
-  function handleClick(e) {
-    // @ts-ignore
-    if (node.current.contains(e.target)) return;
-
-    handleHide();
-  }
-
-  function loadOutsideClick() {
-    if (show) document.addEventListener("mousedown", handleClick);
-    else document.removeEventListener("mousedown", handleClick);
-
-    return () => document.removeEventListener("mousedown", handleClick);
-  }
-
-  function handleHideActionClick() {
-    handleHide();
-    handleHideAction();
-  }
-
-  function renderHideButton() {
-    if (isGovernor)
-      return (
-        <div className="cursor-pointer" onClick={handleHideActionClick}>
-          {hidden ? <EyeIcon /> : <EyeSlashIcon />}{" "}
-          {t("common:actions.hide")}
-        </div>
-      );
-  }
-
-  useEffect(loadOutsideClick, [show]);
 
   return (
     <>
-      <div className="position-relative d-flex justify-content-end" ref={node}>
+      <div
+        className="position-relative d-flex justify-content-end"
+        ref={refDiv}
+      >
         <div
           className={`cursor-pointer settings-comment border-radius-8 d-flex flex-column justify-content-center`}
-          onClick={() => setShow(!show)}
+          onClick={() => updateShow(!show)}
         >
           <span className="container-settings">. . .</span>
         </div>
@@ -72,7 +43,12 @@ export default function CommentSettingsView({
           } justify-content-start align-items-stretch position-absolute`}
         >
           <div className="d-flex gap-2 flex-column bounty-settings p-2 bg-gray-850">
-            {renderHideButton()}
+            {isGovernor && (
+              <div className="cursor-pointer" onClick={handleHideAction}>
+                {hidden ? <EyeIcon /> : <EyeSlashIcon />}{" "}
+                {t("common:actions.hide")}
+              </div>
+            )}
           </div>
         </div>
       </div>
