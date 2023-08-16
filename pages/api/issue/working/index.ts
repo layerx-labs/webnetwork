@@ -1,15 +1,9 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import getConfig from "next/config";
-import {Octokit} from "octokit";
 import {Op} from "sequelize";
 
 import models from "db/models";
 
-import * as CommentsQueries from "graphql/comments";
-import * as IssueQueries from "graphql/issue";
-
 import {chainFromHeader} from "helpers/chain-from-header";
-import {getPropertyRecursively} from "helpers/object";
 
 import {LogAccess} from "middleware/log-access";
 import {WithValidChainId} from "middleware/with-valid-chain-id";
@@ -17,12 +11,8 @@ import WithCors from "middleware/withCors";
 
 import {Logger} from "services/logging";
 
-import {GraphQlQueryResponseData, GraphQlResponse} from "types/octokit";
-
-const { serverRuntimeConfig } = getConfig();
-
 async function put(req: NextApiRequest, res: NextApiResponse) {
-  const { issueId, githubLogin, networkName } = req.body;
+  const { issueId, address, networkName } = req.body;
 
   const chain = await chainFromHeader(req);
 
@@ -43,41 +33,22 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (!issue) return res.status(404).json({message: "Issue not found"});
+    
+    const user = await models.user.findOne({
+      where: {
+        address: address.toLowerCase()
+      }
+    })
 
-    if (!issue.working.find((el) => el === String(githubLogin))) {
-      const repository = await models.repositories.findOne({
-        where: { id: issue.repository_id }
-      });
-      const [owner, repo] = repository.githubPath.split("/");
+    if(!user) return res.status(404).json({message: "User not found"});
 
-      issue.working = [...issue.working, githubLogin];
+    if (!issue.working.find((el) => +el === user.id)) {
+
+      issue.working = [...issue.working, user.id];
 
       await issue.save();
 
-      const githubAPI = (new Octokit({ auth: serverRuntimeConfig?.github?.token })).graphql;
-
-      const issueDetails = await githubAPI<GraphQlResponse>(IssueQueries.Details, {
-        repo,
-        owner,
-        issueId: +issue.githubId
-      });
-
-      const issueGithubId = issueDetails.repository.issue.id;
-
-      const commentEdge = 
-        getPropertyRecursively<GraphQlQueryResponseData>("node", await githubAPI(CommentsQueries.Create, {
-          issueOrPullRequestId: issueGithubId,
-          body: `@${githubLogin} is working on this.`
-        }));
-      
-      const comment = {
-        id: commentEdge.id,
-        body: commentEdge.body,
-        updatedAt: commentEdge.updatedAt,
-        author: commentEdge.author.login
-      };
-
-      return res.status(200).json(comment);
+      return res.status(200).json([...issue.working, user.id]);
     }
 
     return res.status(409).json({message: "Already working"});
