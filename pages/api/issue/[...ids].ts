@@ -1,20 +1,11 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import getConfig from "next/config";
-import { Octokit } from "octokit";
 import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 
-import * as IssueQueries from "graphql/issue";
-
 import { chainFromHeader } from "helpers/chain-from-header";
-import { getPropertyRecursively } from "helpers/object";
 
 import { IssueRoute } from "middleware/issue-route";
-
-import { GraphQlQueryResponseData, GraphQlResponse } from "types/octokit";
-
-const { serverRuntimeConfig } = getConfig();
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { ids: [repoId, ghId, networkName, chainName], chainId } = req.query;
@@ -110,25 +101,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     if(tags) issue.tags = tags
     await issue.save()
 
-    const [owner, repo] = issue.repository.githubPath.split("/");
-
-    const githubAPI = (new Octokit({ auth: serverRuntimeConfig?.github?.token })).graphql;
-
-    const issueDetails = await githubAPI<GraphQlResponse>(IssueQueries.Details, {
-      repo,
-      owner,
-      issueId: +issue.githubId
-    });
-  
-    const issueGithubId = issueDetails.repository.issue.id;
-    
-    const updateIssue = getPropertyRecursively<GraphQlQueryResponseData>("node",
-                                                                         await githubAPI(IssueQueries.Update, {
-                                                                            body: body,
-                                                                            issueId: issueGithubId,
-                                                                         }));
-
-    return res.status(200).json(updateIssue);
+    return res.status(200).json({message: 'bounty updated'});
   } else{
     return res.status(400).json({message: 'bounty not in draft'})
   } 
