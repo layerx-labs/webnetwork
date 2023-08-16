@@ -13,7 +13,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
 
     const isGovernor = await isGovernorSigned(req.headers);
     
-    if (!["issue", "deliverable", "proposal"].includes(type?.toString())) {
+    if (type && !["issue", "deliverable", "proposal"].includes(type?.toString())) {
       return res.status(404).json({ message: "type does not exist" });
     }
 
