@@ -5,7 +5,7 @@ import models from "db/models";
 
 import { chainFromHeader } from "helpers/chain-from-header";
 
-import { IssueRoute } from "middleware/issue-route";
+import { IssueRoute } from "middleware";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { ids: [repoId, ghId, networkName, chainName], chainId } = req.query;

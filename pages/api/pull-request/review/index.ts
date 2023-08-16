@@ -6,9 +6,8 @@ import models from "db/models";
 import {chainFromHeader} from "helpers/chain-from-header";
 import {resJsonMessage} from "helpers/res-json-message";
 
-import {LogAccess} from "middleware/log-access";
+import { withProtected } from "middleware";
 import {WithValidChainId} from "middleware/with-valid-chain-id";
-import WithCors from "middleware/withCors";
 
 import {error} from "services/logging";
 
@@ -71,4 +70,4 @@ async function PullRequestReview(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-export default  LogAccess(WithCors(WithValidChainId(PullRequestReview)));
+export default withProtected(WithValidChainId(PullRequestReview));
