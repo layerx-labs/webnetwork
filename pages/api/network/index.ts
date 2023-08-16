@@ -1,6 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import getConfig from "next/config";
-import {Octokit} from "octokit";
 import {Op, Sequelize} from "sequelize";
 
 import Database from "db/models";
@@ -19,8 +18,6 @@ import DAO from "services/dao-service";
 import { ethereumMessageService } from "services/ethereum/message";
 import IpfsStorage from "services/ipfs-service";
 import {Logger} from 'services/logging';
-
-const {serverRuntimeConfig} = getConfig();
 
 const isTrue = (value: string) => value === "true";
 
@@ -144,13 +141,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       if (!validateSignature(sameNameOnOtherChain.creatorAddress))
         return resJsonMessage("Network name owned by other wallet", res, 403);
 
-    const settings = await Database.settings.findAll({
-      where: { visibility: "public" },
-      raw: true,
-    });
-
-    const publicSettings = (new Settings(settings)).raw();
-
     const defaultNetwork = await Database.network.findOne({
         where: {
           isDefault: true,
@@ -223,45 +213,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         githubPath: repository.fullName,
         network_id: network.id
       });
-    }
-
-    if (!publicSettings?.github?.botUser) return resJsonMessage("Missing github bot user", res, 500);
-    if (!serverRuntimeConfig?.github?.token) return resJsonMessage("Missing github bot token", res, 500);
-
-    const octokitUser = new Octokit({
-      auth: accessToken
-    });
-
-    const invitations = [];
-
-    for (const repository of repos) {
-      const [owner, repo] = repository.fullName.split("/");
-
-      await octokitUser.rest.repos.addCollaborator({
-        owner,
-        repo,
-        username: publicSettings.github.botUser,
-      })
-      .then(({data}) => invitations.push(data?.id))
-      .catch((e) => {
-        Logger.error(e, 'Add Collaborator Fail')
-        return e;
-      });
-    }
-
-    const octokitBot = new Octokit({
-      auth: serverRuntimeConfig.github.token
-    });
-
-    for (const invitation_id of invitations) {
-      if (invitation_id)
-        await octokitBot.rest.repos.acceptInvitationForAuthenticatedUser({
-          invitation_id
-        })
-          .catch((e)=>{
-            Logger.error(e, 'Accept Invitation Fail')
-            return e;
-          });
     }
 
     //TODO: move tokens logic to new endpoint   
@@ -447,50 +398,12 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     network.save();
 
     if (addingRepos.length && !isAdminOverriding) {
-      const octokitUser = new Octokit({
-        auth: accessToken
-      });
-
-      const invitations = [];
-
-      if (!publicSettings?.github?.botUser) return resJsonMessage("Missing github bot user", res, 500);
 
       for (const repository of addingRepos) {
-        const [owner, repo] = repository.fullName.split("/");
-
-        const { data } = await octokitUser.rest.repos.addCollaborator({
-          owner,
-          repo,
-          username: publicSettings?.github?.botUser
-        })
-          .catch((e) => {
-            Logger.error(e, 'Add collaborator fail')
-            return e;
-          });
-
-        if (data?.id) invitations.push(data?.id);
-        
         await Database.repositories.create({
           githubPath: repository.fullName,
           network_id: network.id
         });
-      }
-
-      if (invitations.length) {
-        const octokitBot = new Octokit({
-          auth: serverRuntimeConfig?.github?.token
-        });
-
-        for (const invitation_id of invitations) {
-          if (invitation_id)
-            await octokitBot.rest.repos.acceptInvitationForAuthenticatedUser({
-              invitation_id
-            })
-              .catch((e)=>{
-                Logger.error(e, 'Accept invitation fail', {e})
-                return e;
-              });
-        }
       }
     }
 
