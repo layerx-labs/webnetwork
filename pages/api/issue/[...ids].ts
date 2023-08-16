@@ -91,7 +91,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
 
     await issue.save();
 
-    return res.status(200).json("ok");
+    return res.status(200).json({message: 'bounty updated'});
   } else{
     return res.status(400).json({message: 'bounty not in draft'})
   } 
