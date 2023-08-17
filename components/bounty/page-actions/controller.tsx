@@ -22,7 +22,8 @@ export default function PageActions({
   handleEditIssue,
   isEditIssue,
   currentBounty,
-  updateBountyData
+  updateBountyData,
+  currentUserId
 }: PageActionsControllerProps) {
   const { t } = useTranslation([
     "common",
@@ -62,7 +63,7 @@ export default function PageActions({
     currentBounty?.isClosed === false &&
     currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
-  const isWorkingOnBounty = !!currentBounty?.working?.find((login) => login === state.currentUser?.login);
+  const isWorkingOnBounty = !!currentBounty?.working?.find((userId) => +userId === currentUserId);
   const isBountyOwner =
   isWalletConnected &&
   currentBounty?.creatorAddress &&

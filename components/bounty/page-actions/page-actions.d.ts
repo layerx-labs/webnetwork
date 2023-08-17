@@ -32,4 +32,5 @@ export interface PageActionsControllerProps {
   isEditIssue?: boolean;
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
+  currentUserId?: number;
 }

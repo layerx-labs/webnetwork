@@ -27,6 +27,7 @@ import {
   getBountyOrPullRequestComments,
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
+import useApi from "x-hooks/use-api";
 import useOctokit from "x-hooks/use-octokit";
 
 interface PageBountyProps {
@@ -46,10 +47,12 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isRepoForked, setIsRepoForked] = useState<boolean>();
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number>();
 
   const {state} = useAppState();
   const { getUserRepository } = useOctokit();
   const router = useRouter();
+  const { getUserOf } = useApi();
 
   const { id } = router.query;
 
@@ -121,6 +124,12 @@ export default function PageIssue({ bounty }: PageBountyProps) {
     !state.currentUser?.walletAddress
   ]);
 
+  useEffect(() => {
+    if(!state.currentUser?.walletAddress) return;
+
+    getUserOf(state.currentUser?.walletAddress?.toLowerCase()).then(({id}) => setUserId(id))
+  }, [state.currentUser?.walletAddress])
+
   return (
     <BountyEffectsProvider currentBounty={bounty}>
       <BountyHero 
@@ -144,6 +153,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
           handleEditIssue={handleEditIssue}
           isEditIssue={isEditIssue}
           currentBounty={currentBounty?.data}
+          currentUserId={userId}
           updateBountyData={updateBountyData}
         />
 
