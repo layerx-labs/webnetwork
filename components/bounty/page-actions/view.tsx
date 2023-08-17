@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import ConnectGithub from "components/connect-github";
-import { ContextualSpan } from "components/contextual-span";
 import CreatePullRequestModal from "components/create-pull-request-modal";
 import If from "components/If";
 import Modal from "components/modal";

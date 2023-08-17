@@ -6,7 +6,6 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ConnectGithub from "components/connect-github";
 import ContractButton from "components/contract-button";
 import AmountWithPreview from "components/custom-network/amount-with-preview";
 import InputNumber from "components/input-number";
