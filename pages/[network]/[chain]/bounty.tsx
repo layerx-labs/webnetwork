@@ -17,7 +17,6 @@ import If from "components/If";
 import {useAppState} from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
-import {IM_AM_CREATOR_ISSUE} from "helpers/constants";
 import { commentsParser, issueParser } from "helpers/issue";
 
 import { CurrentBounty } from "interfaces/application-state";
@@ -28,7 +27,6 @@ import {
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
 import getCommentsData from "x-hooks/api/comments/get-comments-data";
-import {useAuthentication} from "x-hooks/use-authentication";
 import useOctokit from "x-hooks/use-octokit";
 
 interface PageBountyProps {
@@ -50,7 +48,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
   const {state} = useAppState();
   const { getUserRepository } = useOctokit();
-  const { signMessage } = useAuthentication();
   const router = useRouter();
 
   const { id } = router.query;
@@ -77,11 +74,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   }
 
   async function handleEditIssue() {
-    signMessage(IM_AM_CREATOR_ISSUE)
-      .then(() => {
-        setIsEditIssue(true);
-      })
-      .catch(error => console.debug(error));
+    setIsEditIssue(true);
   }
 
   function handleCancelEditIssue() {
