@@ -977,6 +977,15 @@ export default function useApi() {
     });
   }
 
+  async function updateUserEmail(email: string) {
+    return api
+            .put("/user/connect/email", { email })
+            .then(({ data }) => data)
+            .catch((error) => {
+              throw error;
+            });
+  }
+
   return {
     getSupportedChains,
     createIssue,
@@ -1037,6 +1046,7 @@ export default function useApi() {
     getKycSession,
     validateKycSession,
     getReposWithBounties,
-    getCuratorsResume
+    getCuratorsResume,
+    updateUserEmail
   };
 }
