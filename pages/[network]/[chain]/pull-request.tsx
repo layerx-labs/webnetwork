@@ -27,7 +27,6 @@ import {
 } from "x-hooks/api/bounty/get-bounty-data";
 import getCommentsData from "x-hooks/api/comments/get-comments-data";
 import CreateComment from "x-hooks/api/comments/post-comments";
-import useApi from "x-hooks/use-api";
 
 interface PagePullRequestProps {
   bounty: IssueData;
@@ -51,8 +50,6 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   const { state, dispatch } = useAppState();
-
-  const { createReviewForPR } = useApi();
 
   const isPullRequestReady = !!currentPullRequest?.isReady;
 
@@ -97,44 +94,33 @@ export default function PullRequestPage({ pullRequest, bounty }: PagePullRequest
   }
 
   function handleCreateReview(body: string) {
-    if (!state.currentUser?.login) return;
+    if (!state.currentUser?.walletAddress) return;
 
     setIsCreatingReview(true);
 
-    createReviewForPR({
-      issueId: String(currentBounty?.issueId),
-      pullRequestId: String(prId),
-      githubLogin: state.currentUser?.login,
-      body,
-      networkName: state.Service?.network?.active?.name,
-      wallet: state.currentUser.walletAddress
+    CreateComment({
+      type: 'review',
+      issueId: +currentBounty.id,
+      deliverableId: currentPullRequest.id,
+      comment: body
+    }).then(() => {
+      dispatch(addToast({
+        type: "success",
+        title: t("actions.success"),
+        content: t("pull-request:actions.review.success"),
+      }));
+      updateCommentData()
+      setShowModal(false)
+    }).catch(() => {
+      dispatch(addToast({
+        type: "danger",
+        title: t("actions.failed"),
+        content: t("pull-request:actions.review.error"),
+      }));
     })
-      .then((response) => {
-        dispatch(addToast({
-          type: "success",
-          title: t("actions.success"),
-          content: t("pull-request:actions.review.success"),
-        }));
-
-        CreateComment({
-          type: 'deliverable',
-          issueId: +currentBounty.id,
-          deliverableId: currentPullRequest.id,
-          comment: response.data
-        }).then(() => updateCommentData())
-
-        setShowModal(false);
-      })
-      .catch(() => {
-        dispatch(addToast({
-          type: "danger",
-          title: t("actions.failed"),
-          content: t("pull-request:actions.review.error"),
-        }));
-      })
-      .finally(() => {
-        setIsCreatingReview(false);
-      });
+    .finally(() => {
+      setIsCreatingReview(false);
+    });
   }
 
   function handleShowModal() {

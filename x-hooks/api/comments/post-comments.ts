@@ -10,7 +10,7 @@ import { api } from "services/api";
 export default async function CreateComment(payload: {
   comment: string;
   issueId: number;
-  type: "deliverable" | "issue" | "proposal";
+  type: "deliverable" | "issue" | "proposal" | "review";
   deliverableId?: number;
   proposalId?: number;
 }) {
