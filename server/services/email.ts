@@ -16,11 +16,11 @@ export class EmailService {
         subject,
         text: subject,
         html: content
-      }, false, (error, [response]) => {
+      }, false, (error, result) => {
         if (error)
           reject(error);
         else
-          resolve(response);
+          resolve(result[0]);
       });
     });
   }
