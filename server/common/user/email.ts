@@ -63,7 +63,7 @@ export async function put(req: NextApiRequest) {
   const template = new TemplateProcessor("server/templates/emails/email-verification.hbs");
   await template.load();
 
-  const verifyLink = new URL(`/api/users/connect/confirm-email?code=${verificationCode}&email=${email}`, homeUrl);
+  const verifyLink = new URL(`/api/user/connect/confirm-email?code=${verificationCode}&email=${email}`, homeUrl);
 
   const emailhtml = template.compile({
     host: homeUrl,
