@@ -9,9 +9,13 @@ import { error as LogError } from "services/logging";
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { issueId, proposalId, deliverableId, userId, id } = req.query;
+    const { issueId, proposalId, deliverableId, userId, type, id } = req.query;
 
     const isGovernor = await isGovernorSigned(req.headers);
+    
+    if (type && !["issue", "deliverable", "proposal"].includes(type?.toString())) {
+      return res.status(404).json({ message: "type does not exist" });
+    }
 
     const filters: WhereOptions = {};
 
@@ -20,6 +24,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     if (proposalId) filters.proposalId = +proposalId;
     if (deliverableId) filters.deliverableId = +deliverableId;
     if (userId) filters.userId = +userId;
+    if (type) filters.type = type;
 
     let comments;
 
@@ -30,7 +35,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       }
     ]
 
-    if ((issueId || proposalId || deliverableId || userId) && !id) {
+    if ((issueId || proposalId || deliverableId || userId || type) && !id) {
       comments = await models.comments.findAll({
         where: {
           ...filters,
