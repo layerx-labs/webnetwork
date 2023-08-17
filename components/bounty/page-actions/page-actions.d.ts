@@ -12,7 +12,6 @@ export interface PageActionsViewProps {
   currentUser: CurrentUserState;
   bounty: IssueBigNumberData;
   isWalletConnected: boolean;
-  isGithubConnected: boolean;
   isCreatePr: boolean;
   isCreateProposal: boolean;
   isExecuting: boolean;

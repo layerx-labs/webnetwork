@@ -29,7 +29,6 @@ export default function PageActionsView({
   handlePullrequest,
   handleStartWorking,
   isWalletConnected,
-  isGithubConnected,
   isCreatePr,
   isCreateProposal,
   isExecuting,
@@ -107,16 +106,12 @@ export default function PageActionsView({
                 <If condition={isEditButton}>
                   <EditBountyButton onClick={handleEditIssue} />
                 </If>
-                <If condition={!isGithubConnected && isWalletConnected && !bounty?.isClosed && !bounty?.isDraft}>
-                  <ConnectGithub size="sm" />
-                </If>
               </div>
             </div>
             <If condition={isMobileView || isTabletView}>
               <div className="col-12 d-lg-none">
                 <TabletAndMobileButton 
                   isStartWorkingButton={isStartWorkingButton}
-                  isConnectGithub={!isGithubConnected && isWalletConnected}
                   isCreatePr={isCreatePr}
                   isCreateProposal={isCreateProposal}
                   isExecuting={isExecuting}

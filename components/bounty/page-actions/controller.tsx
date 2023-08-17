@@ -58,7 +58,6 @@ export default function PageActions({
   const hasPullRequests = 
     !!currentBounty?.pullRequests?.filter((pullRequest) => pullRequest?.status !== "canceled")?.length;
   const isWalletConnected = !!state.currentUser?.walletAddress;
-  const isGithubConnected = !!state.currentUser?.login;
   const isBountyOpen =
     currentBounty?.isClosed === false &&
     currentBounty?.isCanceled === false;
@@ -80,7 +79,6 @@ export default function PageActions({
     !isEditIssue;
   const isStartWorkingButton =
     isWalletConnected &&
-    isGithubConnected &&
     !isBountyInDraft &&
     isBountyOpen &&
     !isWorkingOnBounty &&
@@ -88,7 +86,7 @@ export default function PageActions({
     isStateToWorking &&
     !!state.currentUser?.accessToken
   const isForkRepositoryLink =
-    isGithubConnected && !isBountyInDraft && isBountyOpen && !isRepoForked;
+    !isBountyInDraft && isBountyOpen && !isRepoForked;
   const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
 
   const rest = {
@@ -98,12 +96,10 @@ export default function PageActions({
     isEditButton,
     isBountyInDraft,
     isWalletConnected,
-    isGithubConnected,
     isWorkingOnBounty,
     isBountyOpen,
     isCreatePr:
       isWalletConnected &&
-      isGithubConnected &&
       isBountyOpen &&
       !isBountyInDraft &&
       isWorkingOnBounty &&
