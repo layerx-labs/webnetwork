@@ -154,6 +154,7 @@ export default function ProfilePageView({
                     className={`form-control ${isEmailInvalid ? "is-invalid" : ""}`}
                     value={userEmail} 
                     onChange={handleEmailChange}
+                    disabled={isExecuting || isConfirmationPending}
                   />
 
                   <If condition={isEmailInvalid}>

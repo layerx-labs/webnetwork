@@ -18,7 +18,7 @@ import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ProfilePage() {
   const { query } = useRouter();
-  const { data: sessionData, status, update: updateSession } = useSession();
+  const { data: sessionData, update: updateSession } = useSession();
 
   const [inputEmail, setInputEmail] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
@@ -38,6 +38,7 @@ export default function ProfilePage() {
   const userEmail = sessionUser?.email || "";
   const isConfirmationPending = !!userEmail && !sessionUser?.isEmailConfirmed;
   const isSameEmail = lowerCaseCompare(userEmail, inputEmail);
+  const emailVerificationError = query?.emailVerificationError?.toString()?.replace("Error: ", "");
 
   const handleClickDisconnect = () => setShowRemoveModal(true);
   const hideRemoveModal = () => setShowRemoveModal(false);
@@ -79,13 +80,11 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    if (status === "authenticated") {
-      setInputEmail(userEmail);
+    setInputEmail(userEmail);
 
-      if (!!userEmail !== isNotificationEnabled) 
-        setIsNotificationEnabled(!!userEmail);
-    }
-  }, [sessionData, status]);
+    if (!!userEmail !== isNotificationEnabled) 
+      setIsNotificationEnabled(!!userEmail);
+  }, [userEmail]);
 
   return (
     <ProfilePageView
@@ -94,7 +93,7 @@ export default function ProfilePage() {
       onSave={onSave}
       onResend={onResend}
       isSaveButtonDisabled={isSameEmail || isExecuting || isEmailInvalid}
-      emailVerificationError={query?.emailVerificationError?.toString()?.replace("Error: ", "")}
+      emailVerificationError={emailVerificationError}
       isSwitchDisabled={isExecuting}
       isEmailInvalid={isEmailInvalid}
       isExecuting={isExecuting}
