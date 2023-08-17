@@ -24,7 +24,6 @@ interface BountySettingsViewProps {
     bounty: IssueBigNumberData;
     network: ServiceNetwork;
     isWalletConnected: boolean;
-    isGithubConnected: boolean;
     isBountyInDraft: boolean;
     hasOpenPullRequest: boolean;
     isBountyOwner: boolean;
@@ -42,7 +41,6 @@ export default function BountySettingsView({
     bounty,
     network,
     isWalletConnected,
-    isGithubConnected,
     isBountyInDraft,
     hasOpenPullRequest,
     isBountyOwner,
@@ -108,7 +106,6 @@ export default function BountySettingsView({
   function renderViewPullRequestLink() {
     if (
         isWalletConnected &&
-        isGithubConnected &&
         !isBountyInDraft &&
         hasOpenPullRequest
       )
