@@ -241,7 +241,6 @@ export default function MyNetworkSettings({
         !["registry", "governance", "management"].includes(activeTab)
       }
       isUpdating={isUpdating}
-      isGithubConnected={!!state.currentUser?.login}
       handleSubmit={handleSubmit}
     />
   );
