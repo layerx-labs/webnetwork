@@ -8,6 +8,8 @@ import models from "db/models";
 import paginate from "helpers/paginate";
 import { lowerCaseCompare } from "helpers/string";
 
+import { UserTableScopes } from "interfaces/enums/api";
+
 import { withCORS } from "middleware";
 
 import {Logger} from "services/logging";
@@ -44,16 +46,16 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const token = (await getToken({ req, secret: serverRuntimeConfig?.auth?.secret })) as JwtToken;
 
-    let scope = "defaultScope";
+    let scope = UserTableScopes.default;
 
     const isAdmin = UserRoleUtils.hasAdminRole(token);
     const isGovernor = UserRoleUtils.hasGovernorRole(token);
     const isSameUser = lowerCaseCompare(token?.address, req?.body[0]) || lowerCaseCompare(token?.login, req?.body[1]);
 
     if (isAdmin)
-      scope = "admin";
+      scope = UserTableScopes.admin;
     else if (isGovernor || isSameUser)
-      scope = "ownerOrGovernor";
+      scope = UserTableScopes.ownerOrGovernor;
 
     const users = await models.user.scope(scope).findAll(paginate(queryOptions, req.body));
 
