@@ -6,6 +6,7 @@ import models from "db/models";
 
 import { DISCORD_LINK, INSTAGRAM_LINK, LINKEDIN_LINK, TWITTER_LINK } from "helpers/constants";
 import { lowerCaseCompare } from "helpers/string";
+import { isValidEmail } from "helpers/validators/email";
 
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
@@ -54,6 +55,9 @@ export async function put(req: NextApiRequest) {
 
     return;
   }
+
+  if (!isValidEmail(email))
+    throw new HttpBadRequestError("Invalid email");
 
   if (lowerCaseCompare(user.email, email) && user.isEmailConfirmed)
     throw new HttpConflictError("Nothing to change");
