@@ -331,11 +331,6 @@
       "title": "Failed to load settings",
       "description": "Please reload the page or contact the administrator."
     },
-    "reauthorize-github": {
-      "title": "Reauthorize Github",
-      "description": "Your github connection has expired. Please, reauthorize the session.",
-      "button-label": "Reauthorize"
-    },
     "wallet-mismatch": {
       "title": "Wallet Mismatch",
       "description-pre": "You are logged in with the wallet",
