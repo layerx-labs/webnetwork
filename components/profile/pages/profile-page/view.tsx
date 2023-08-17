@@ -123,7 +123,7 @@ export default function ProfilePageView({
         <div className="row mb-4 mt-4">
           <div className="col-8">
             <div className="d-flex align-items-center justify-content-between mb-1">
-              <span className="base-medium text-white">Notifications</span>
+              <span className="base-medium text-white">{t("profile:notifications-form.title")}</span>
 
               <Switch
                 value={isNotificationEnabled}
@@ -134,16 +134,22 @@ export default function ProfilePageView({
 
             <div className="row">
               <span className="text-gray-500 xs-medium font-weight-normal">
-                Allow Bepro Network to send you updates via email. These can include updates to bounties, app updates, etc.
+              {t("profile:notifications-form.message")}
               </span>
             </div>
 
             <If condition={isNotificationEnabled}>
               <div className="row mt-3">
                 <div className="col-12 col-md-6">
-                  <input type="email" className="form-control" value={userEmail} onChange={handleEmailChange} />
+                  <input 
+                    type="text" 
+                    className={`form-control ${isEmailInvalid ? "is-invalid" : ""}`}
+                    value={userEmail} 
+                    onChange={handleEmailChange}
+                  />
+
                   <If condition={isEmailInvalid}>
-                    <small>Invalid email</small>
+                    <small className="xs-small text-danger">{t("profile:notifications-form.invalid-email")}</small>
                   </If>
                 </div>
 
@@ -152,7 +158,7 @@ export default function ProfilePageView({
                     onClick={onSave}
                     disabled={isSaveButtonDisabled}
                   >
-                    Save
+                    {t("actions.save")}
                   </Button>
                 </div>
               </div>

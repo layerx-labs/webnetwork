@@ -55,5 +55,10 @@
         "check-requirements": "Check the requirements"
       }
     }
+   },
+   "notifications-form": {
+      "title": "Notifications",
+      "message": "Allow Bepro Network to send you updates via email. These can include updates to bounties, app updates, etc.",
+      "invalid-email": "Invalid email"
    }
 }
