@@ -27,11 +27,15 @@ interface ProfilePageViewProps {
   isSaveButtonDisabled: boolean;
   isSwitchDisabled: boolean;
   isEmailInvalid: boolean;
+  isConfirmationPending: boolean;
+  isExecuting: boolean;
+  emailVerificationError?: string;
   handleClickDisconnect: () => void;
   hideRemoveModal: () => void;
   disconnectGithub: () => void;
   handleEmailChange: (e) => void;
   onSave: () => void;
+  onResend: () => void;
   onSwitchChange: (value: boolean) => void;
 }
 
@@ -45,11 +49,15 @@ export default function ProfilePageView({
   isSaveButtonDisabled,
   isSwitchDisabled,
   isEmailInvalid,
+  isConfirmationPending,
+  isExecuting,
+  emailVerificationError,
   handleClickDisconnect,
   hideRemoveModal,
   disconnectGithub,
   handleEmailChange,
   onSave,
+  onResend,
   onSwitchChange,
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
@@ -157,11 +165,30 @@ export default function ProfilePageView({
                   <Button
                     onClick={onSave}
                     disabled={isSaveButtonDisabled}
+                    isLoading={!isConfirmationPending && isExecuting}
                   >
                     {t("actions.save")}
                   </Button>
                 </div>
               </div>
+
+              <If condition={!!emailVerificationError}>
+                <div className="row mt-3">
+                  <small className="xs-medium text-danger">
+                    {t(`profile:email-errors.${emailVerificationError}`)}
+                  </small>
+                </div>
+              </If>
+
+              <If condition={isConfirmationPending}>
+                <div className="row align-items-center mt-3">
+                  <div className="col">
+                    <span className="text-info xs-medium font-weight-normal">
+                      {t("profile:notifications-form.re-send-email")}
+                    </span>
+                  </div>
+                </div>
+              </If>
             </If>
           </div>
         </div>

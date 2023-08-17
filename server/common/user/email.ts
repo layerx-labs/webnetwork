@@ -8,6 +8,8 @@ import { DISCORD_LINK, INSTAGRAM_LINK, LINKEDIN_LINK, TWITTER_LINK } from "helpe
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
 
+import { EmailConfirmationErrors } from "interfaces/enums/Errors";
+
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
 import { TemplateProcessor } from "server/utils/template";
@@ -24,7 +26,7 @@ export async function get(req: NextApiRequest) {
   const { code, email } = req.query;
 
   if (!code || !email)
-    throw new HttpBadRequestError("Missing parameter: code or email");
+    throw new HttpBadRequestError(EmailConfirmationErrors.INVALID_LINK);
 
   const user = await models.user.findOne({
     where: {
@@ -33,8 +35,11 @@ export async function get(req: NextApiRequest) {
     }
   });
 
-  if (!user || user?.isEmailConfirmed)
-    throw new HttpConflictError("User doesn't require email confirmation");
+  if (!user)
+    throw new HttpBadRequestError(EmailConfirmationErrors.INVALID_LINK);
+
+  if (user.isEmailConfirmed)
+    throw new HttpConflictError(EmailConfirmationErrors.ALREADY_CONFIRMED);
 
   user.isEmailConfirmed = true;
   user.emailVerificationCode = null;

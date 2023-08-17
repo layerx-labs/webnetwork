@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
 import ProfilePageView from "components/profile/pages/profile-page/view";
@@ -10,11 +11,14 @@ import { useAppState } from "contexts/app-state";
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
 
+import { CustomSession } from "interfaces/custom-session";
+
 import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ProfilePage() {
-  const { data: session, status, update: updateSession } = useSession();
+  const { query } = useRouter();
+  const { data: sessionData, status, update: updateSession } = useSession();
 
   const [inputEmail, setInputEmail] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
@@ -30,7 +34,9 @@ export default function ProfilePage() {
   const { updateUserEmail } = useApi();
   const { signOut } = useAuthentication();
 
-  const userEmail = session?.user?.email || "";
+  const sessionUser = (sessionData as CustomSession)?.user;
+  const userEmail = sessionUser?.email || "";
+  const isConfirmationPending = !!userEmail && !sessionUser?.isEmailConfirmed;
   const isSameEmail = lowerCaseCompare(userEmail, inputEmail);
 
   const handleClickDisconnect = () => setShowRemoveModal(true);
@@ -58,6 +64,10 @@ export default function ProfilePage() {
     handleUpdateEmail(inputEmail);
   }
 
+  function onResend() {
+    handleUpdateEmail(userEmail);
+  }
+
   function onSwitchChange(newValue: boolean) {
     if (!newValue) {
       if (!isExecuting && userEmail !== "")
@@ -75,18 +85,22 @@ export default function ProfilePage() {
       if (!!userEmail !== isNotificationEnabled) 
         setIsNotificationEnabled(!!userEmail);
     }
-  }, [session, status]);
+  }, [sessionData, status]);
 
   return (
     <ProfilePageView
       userLogin={state.currentUser?.login}
       userEmail={inputEmail}
       onSave={onSave}
+      onResend={onResend}
       isSaveButtonDisabled={isSameEmail || isExecuting || isEmailInvalid}
+      emailVerificationError={query?.emailVerificationError?.toString()?.replace("Error: ", "")}
       isSwitchDisabled={isExecuting}
       isEmailInvalid={isEmailInvalid}
+      isExecuting={isExecuting}
       handleEmailChange={handleEmailChange}
       isNotificationEnabled={isNotificationEnabled}
+      isConfirmationPending={isConfirmationPending}
       walletAddress={state.currentUser?.walletAddress}
       isCouncil={state.Service?.network?.active?.isCouncil}
       handleClickDisconnect={handleClickDisconnect}
