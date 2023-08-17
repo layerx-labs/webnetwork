@@ -2,10 +2,12 @@ import { NextApiRequest } from "next";
 import getConfig from "next/config";
 import { v4 as uuidv4 } from 'uuid';
 
+import models from "db/models";
+
 import { DISCORD_LINK, INSTAGRAM_LINK, LINKEDIN_LINK, TWITTER_LINK } from "helpers/constants";
 import { lowerCaseCompare } from "helpers/string";
 
-import { HttpConflictError } from "server/errors/http-errors";
+import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
 import { TemplateProcessor } from "server/utils/template";
 
@@ -16,6 +18,28 @@ const {
     }
   }
 } = getConfig();
+
+export async function get(req: NextApiRequest) {
+  const { code, email } = req.query;
+
+  if (!code || !email)
+    throw new HttpBadRequestError("Missing parameter: code or email");
+
+  const user = await models.user.findOne({
+    where: {
+      email,
+      emailVerificationCode: code
+    }
+  });
+
+  if (!user || user?.isEmailConfirmed)
+    throw new HttpConflictError("User doesn't require email confirmation");
+
+  user.isEmailConfirmed = true;
+  user.emailVerificationCode = null;
+
+  await user.save();
+}
 
 export async function put(req: NextApiRequest) {
   const { email, context } = req.body;
@@ -39,7 +63,7 @@ export async function put(req: NextApiRequest) {
   const template = new TemplateProcessor("server/templates/emails/email-verification.hbs");
   await template.load();
 
-  const verifyLink = new URL(`/api/auth/verifyEmail?code=${verificationCode}&email=${email}`, homeUrl);
+  const verifyLink = new URL(`/api/users/connect/confirm-email?code=${verificationCode}&email=${email}`, homeUrl);
 
   const emailhtml = template.compile({
     host: homeUrl,
