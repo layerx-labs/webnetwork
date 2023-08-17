@@ -94,7 +94,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             address,
             accountsMatch,
             nonce,
-            email: user.email
+            email: user.email,
+            isEmailConfirmed: user.isEmailConfirmed,
+            emailVerificationSentAt: user.emailVerificationSentAt,
           },
         };
       },

@@ -50,6 +50,7 @@ export async function put(req: NextApiRequest) {
     user.email = null;
     user.isEmailConfirmed = false;
     user.emailVerificationCode = null;
+    user.emailVerificationSentAt = null;
 
     await user.save();
 
@@ -83,6 +84,7 @@ export async function put(req: NextApiRequest) {
   user.email = email;
   user.isEmailConfirmed = false;
   user.emailVerificationCode = verificationCode;
+  user.emailVerificationSentAt = new Date();
 
   await user.save();
 }

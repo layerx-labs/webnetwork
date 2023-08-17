@@ -33,6 +33,9 @@ class User extends Model {
       },
       emailVerificationCode: {
         type: DataTypes.STRING
+      },
+      emailVerificationSentAt: {
+        type: DataTypes.DATE
       }
     },
     {
@@ -40,7 +43,7 @@ class User extends Model {
       modelName: "user",
       defaultScope: {
         attributes: {
-          exclude: ["emailVerificationCode", "email", "isEmailConfirmed"]
+          exclude: ["emailVerificationCode", "email", "isEmailConfirmed", "emailVerificationSentAt"]
         }
       },
       scopes: {
