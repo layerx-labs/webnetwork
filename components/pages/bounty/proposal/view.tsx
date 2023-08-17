@@ -131,7 +131,7 @@ export default function ProposalPageView({
             />
           </div>
         </div>
-        <div className="row mt-3 bg-gray-900 border-radius-8 mx-0">
+        <div className="row mt-3 mb-5 bg-gray-900 border-radius-8 mx-0">
         <Comments
             comments={comments}
             type="proposal"
