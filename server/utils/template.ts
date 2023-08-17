@@ -28,6 +28,9 @@ export class TemplateProcessor {
   }
 
   compile(data: TemplateData): string {
+    if (!this.html)
+      this.load();
+
     const template = Handlebars.compile(this.html);
 
     return template(data);

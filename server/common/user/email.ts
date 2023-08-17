@@ -12,6 +12,7 @@ import { EmailConfirmationErrors } from "interfaces/enums/Errors";
 
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
+import { EmailTemplates } from "server/templates";
 import { TemplateProcessor } from "server/utils/template";
 
 const { 
@@ -70,19 +71,17 @@ export async function put(req: NextApiRequest) {
 
   const verificationCode = uuidv4();
 
-  const template = new TemplateProcessor("server/templates/emails/email-verification.hbs");
-  await template.load();
-
   const verifyLink = new URL(`/api/user/connect/confirm-email?code=${verificationCode}&email=${email}`, homeUrl);
-
-  const emailhtml = template.compile({
+  const templateData = {
     host: homeUrl,
     verifyLink: verifyLink.href,
     twitter: TWITTER_LINK,
     instagram: INSTAGRAM_LINK,
     discord: DISCORD_LINK,
     linkedin: LINKEDIN_LINK
-  });
+  };
+
+  const emailhtml = new TemplateProcessor(EmailTemplates.EmailVerification).compile(templateData);
 
   await emailService.sendEmail("Verify your email", email, emailhtml);
 
