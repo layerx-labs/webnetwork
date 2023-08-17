@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
 import { useAppState } from "contexts/app-state";
+import { toastError } from "contexts/reducers/change-toaster";
 
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
@@ -18,6 +20,7 @@ import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ProfilePage() {
   const { query } = useRouter();
+  const { t } = useTranslation("profile");
   const { data: sessionData, update: updateSession } = useSession();
 
   const [inputEmail, setInputEmail] = useState("");
@@ -30,7 +33,7 @@ export default function ProfilePage() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const { state } = useAppState();
+  const { state, dispatch } = useAppState();
   const { updateUserEmail } = useApi();
   const { signOut } = useAuthentication();
 
@@ -53,6 +56,7 @@ export default function ProfilePage() {
 
     updateUserEmail(email)
       .catch(error => {
+        dispatch(toastError(t("email-errors.try-again-later"), t("email-errors.failed-to-update")));
         console.debug("Failed to update user email", error);
       })
       .finally(() => {
