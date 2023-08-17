@@ -15,7 +15,7 @@ import { isValidEmail } from "helpers/validators/email";
 
 import { CustomSession } from "interfaces/custom-session";
 
-import useApi from "x-hooks/use-api";
+import updateUserEmail from "x-hooks/api/user/update-email";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ProfilePage() {
@@ -34,7 +34,6 @@ export default function ProfilePage() {
   }, 500);
 
   const { state, dispatch } = useAppState();
-  const { updateUserEmail } = useApi();
   const { signOut } = useAuthentication();
 
   const sessionUser = (sessionData as CustomSession)?.user;
