@@ -54,7 +54,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
   async function updateBountyData(updatePrData = false) {
     const bountyDatabase = await getBountyData(router.query)
-    const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id })
+    const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
 
     if(updatePrData) {
       const pullRequests = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
