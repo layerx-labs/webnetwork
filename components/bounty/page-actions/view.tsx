@@ -74,12 +74,6 @@ export default function PageActionsView({
     <div className="mt-4">
       <div className="row justify-content-center">
         <div className="col-md-12">
-          {(!isGithubConnected && isWalletConnected && !bounty?.isClosed && !bounty?.isDraft) && (
-            <ContextualSpan context="info" className="mb-2" isAlert>
-              {t("actions.connect-github-to-work")}
-            </ContextualSpan>
-          )}
-
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h4 className="h4 d-flex align-items-center d-none d-lg-block">
               {t("misc.details")}
