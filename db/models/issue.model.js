@@ -100,7 +100,9 @@ class Issue extends Model {
       contractCreationDate: {
         type: DataTypes.STRING,
         allowNull: true
-      }
+      },
+      ipfsUrl: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     {
       sequelize,

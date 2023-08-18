@@ -75,6 +75,8 @@ export interface IssueData {
   visible: boolean;
   kycTierList: number[];
   contractCreationDate?: string;
+  ipfsUrl?: string;
+  type?: string;
 }
 
 export interface Disputes {
