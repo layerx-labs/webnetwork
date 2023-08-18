@@ -1,4 +1,4 @@
-import {  addHours } from "date-fns";
+import { addMinutes } from "date-fns";
 import { NextApiRequest } from "next";
 import getConfig from "next/config";
 import { v4 as uuidv4 } from 'uuid';
@@ -49,7 +49,7 @@ export async function get(req: NextApiRequest) {
   if (user.isEmailConfirmed)
     throw new HttpConflictError(EmailConfirmationErrors.ALREADY_CONFIRMED);
 
-  const emailSentWithExpiration = addHours(user.emailVerificationSentAt, verificationCodeExpiration);
+  const emailSentWithExpiration = addMinutes(user.emailVerificationSentAt, verificationCodeExpiration);
 
   if (emailSentWithExpiration < new Date())
     throw new HttpConflictError(EmailConfirmationErrors.EXPIRED_LINK); 
