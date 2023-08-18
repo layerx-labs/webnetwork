@@ -124,7 +124,7 @@ export default function PageActions({
       issueGithubID,
       title: prTitle,
       description: prDescription,
-      username: state.currentUser?.login,
+      username: state.currentUser?.handle,
       branch: "",
       wallet: state.currentUser.walletAddress,
     })
@@ -198,7 +198,6 @@ export default function PageActions({
 
     startWorking({
       issueId: currentBounty?.issueId,
-      githubLogin: state.currentUser?.login,
       networkName: state.Service?.network?.active?.name,
       wallet: state.currentUser.walletAddress,
     })

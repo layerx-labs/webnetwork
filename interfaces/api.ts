@@ -70,7 +70,6 @@ export interface CancelPrePullRequestParams extends RequestParams {
 
 export interface StartWorkingParams extends RequestParams {
   issueId: string;
-  githubLogin: string;
 }
 
 export interface CreateReviewParams extends RequestParams {
