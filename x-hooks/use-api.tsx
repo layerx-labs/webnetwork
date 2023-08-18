@@ -11,7 +11,6 @@ import {
   CancelPrePullRequestParams,
   CreatePrePullRequestParams,
   CreateReviewParams,
-  MergeClosedIssueParams,
   SearchActiveNetworkParams,
   PatchUserParams,
   User,
@@ -477,15 +476,6 @@ export default function useApi() {
   async function startWorking({ networkName = DEFAULT_NETWORK_NAME, ...rest } : StartWorkingParams) {
     return api
       .put("/issue/working", { networkName, ...rest })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
-  async function mergeClosedIssue({ networkName = DEFAULT_NETWORK_NAME, ...rest } : MergeClosedIssueParams) {
-    return api
-      .post("/pull-request/merge", { networkName, ...rest})
       .then((response) => response)
       .catch((error) => {
         throw error;
@@ -1005,7 +995,6 @@ export default function useApi() {
     getUserWith,
     isNetworkOwner,
     joinAddressToUser,
-    mergeClosedIssue,
     processEvent,
     removeRepo,
     removeUser,

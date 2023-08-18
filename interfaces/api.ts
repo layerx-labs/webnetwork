@@ -73,13 +73,6 @@ export interface StartWorkingParams extends RequestParams {
   githubLogin: string;
 }
 
-export interface MergeClosedIssueParams extends RequestParams {
-  issueId: string;
-  pullRequestId: string;
-  mergeProposalId: string | number;
-  address: string;
-}
-
 export interface CreateReviewParams extends RequestParams {
   issueId: string;
   pullRequestId: string;
