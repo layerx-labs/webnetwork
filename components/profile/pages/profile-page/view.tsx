@@ -174,14 +174,26 @@ export default function ProfilePageView({
               </div>
 
               <If condition={!!emailVerificationError}>
-                <div className="row mt-3">
-                  <small className="xs-medium text-danger">
-                    {t(`profile:email-errors.${emailVerificationError}`)}
-                  </small>
+                <div className="row align-items-center mt-3">
+                  <div className="col-6">
+                    <small className="xs-medium text-danger">
+                      {t(`profile:email-errors.${emailVerificationError}`)}
+                    </small>
+                  </div>
+
+                  <div className="col-auto">
+                    <Button
+                      onClick={onResend}
+                      disabled={isExecuting || !emailVerificationError}
+                      isLoading={emailVerificationError && isExecuting}
+                    >
+                       {t("profile:notifications-form.re-send")}
+                    </Button>
+                  </div>
                 </div>
               </If>
 
-              <If condition={isConfirmationPending}>
+              <If condition={isConfirmationPending && !emailVerificationError}>
                 <div className="row align-items-center mt-3">
                   <div className="col">
                     <span className="text-info xs-medium font-weight-normal">

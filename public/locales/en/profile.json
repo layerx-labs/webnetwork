@@ -66,6 +66,7 @@
    "email-errors": {
     "invalid-link": "Invalid confirmation link",
     "already-confirmed": "Email already confirmed",
+    "expired-link": "This confirmation link is expired. Try re-sending another email.",
     "failed-to-update": "Failed to update email",
     "try-again-later": "Something went wrong, try again later"
    }

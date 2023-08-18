@@ -17,6 +17,7 @@ import { CustomSession } from "interfaces/custom-session";
 
 import updateUserEmail from "x-hooks/api/user/update-email";
 import { useAuthentication } from "x-hooks/use-authentication";
+import { useNetwork } from "x-hooks/use-network";
 
 export default function ProfilePage() {
   const { query } = useRouter();
@@ -33,8 +34,9 @@ export default function ProfilePage() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const { state, dispatch } = useAppState();
+  const { goToProfilePage } = useNetwork();
   const { signOut } = useAuthentication();
+  const { state, dispatch } = useAppState();
 
   const sessionUser = (sessionData as CustomSession)?.user;
   const userEmail = sessionUser?.email || "";
@@ -53,7 +55,7 @@ export default function ProfilePage() {
   function handleUpdateEmail(email: string) {
     setIsExecuting(true);
 
-    updateUserEmail(email)
+    return updateUserEmail(email)
       .catch(error => {
         dispatch(toastError(t("email-errors.try-again-later"), t("email-errors.failed-to-update")));
         console.debug("Failed to update user email", error);
@@ -69,7 +71,10 @@ export default function ProfilePage() {
   }
 
   function onResend() {
-    handleUpdateEmail(userEmail);
+    handleUpdateEmail(userEmail)
+      .then(() => {
+        goToProfilePage("profile", { emailVerificationError: "" });
+      });
   }
 
   function onSwitchChange(newValue: boolean) {
