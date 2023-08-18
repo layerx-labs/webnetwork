@@ -26,7 +26,6 @@ interface PullRequestBodyViewProps {
   isApproveLink: boolean;
   isCancelling: boolean;
   isMakingReady: boolean;
-  isGithubConnected: boolean;
   githubPath: string;
 }
 
@@ -42,7 +41,6 @@ export default function PullRequestBodyView({
   isApproveLink,
   isCancelling,
   isMakingReady,
-  isGithubConnected,
   githubPath,
 }: PullRequestBodyViewProps) {
   const { t } = useTranslation(["common", "pull-request"]);
@@ -59,11 +57,10 @@ export default function PullRequestBodyView({
           disabled={
             isCreatingReview ||
             isCancelling ||
-            isMakingReady ||
-            !isGithubConnected
+            isMakingReady
           }
           isLoading={isCreatingReview}
-          withLockIcon={isCancelling || isMakingReady || !isGithubConnected}
+          withLockIcon={isCancelling || isMakingReady}
         />
       );
     
