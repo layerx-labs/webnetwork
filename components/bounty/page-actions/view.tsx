@@ -12,7 +12,6 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 import CreateProposalButton from "./actions/create-proposal.view";
 import CreatePullRequestButton from "./actions/create-pull-request.view";
 import EditBountyButton from "./actions/edit-bounty.view";
-import ForkRepositoryLink from "./actions/fork-repository.view";
 import StartWorkingButton from "./actions/start-working.view";
 import TabletAndMobileButton from "./actions/tablet-and-mobile.view";
 import UpdateAmountButton from "./actions/update-amount.view";
@@ -31,7 +30,6 @@ export default function PageActionsView({
   handleShowPRModal,
   isUpdateAmountButton,
   isStartWorkingButton,
-  isForkRepositoryLink,
   isEditButton,
   updateBountyData
 }: PageActionsViewProps) {
@@ -60,9 +58,6 @@ export default function PageActionsView({
             </h4>
             <div className="d-none d-lg-block">
               <div className="d-flex align-items-center gap-20">
-                <If condition={isForkRepositoryLink}>
-                  <ForkRepositoryLink path={bounty?.repository?.githubPath} />
-                </If>
                 <If condition={isStartWorkingButton}>
                   <StartWorkingButton 
                     onClick={handleActionWorking}

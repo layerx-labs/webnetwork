@@ -28,7 +28,6 @@ import {
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
 import useApi from "x-hooks/use-api";
-import useOctokit from "x-hooks/use-octokit";
 
 interface PageBountyProps {
   bounty: {
@@ -45,12 +44,10 @@ export default function PageIssue({ bounty }: PageBountyProps) {
     lastUpdated: 0,
   });
   const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
-  const [isRepoForked, setIsRepoForked] = useState<boolean>();
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
   const [userId, setUserId] = useState<number>();
 
   const {state} = useAppState();
-  const { getUserRepository } = useOctokit();
   const router = useRouter();
   const { getUserOf } = useApi();
 
@@ -84,45 +81,9 @@ export default function PageIssue({ bounty }: PageBountyProps) {
     setIsEditIssue(false)
   }
 
-  function checkForks(){
-    if (!state.Service?.network?.repos?.active?.githubPath || isRepoForked !== undefined) return;
-
-    if (bounty?.data?.working?.includes(state.currentUser?.login))
-      return setIsRepoForked(true);
-
-    const [, activeName] = state.Service.network.repos.active.githubPath.split("/");
-  
-    getUserRepository(state.currentUser?.login, activeName)
-    .then(repository => {
-      const { isFork, nameWithOwner, parent } = repository;
-
-      setIsRepoForked(isFork && parent?.nameWithOwner === state.Service.network.repos.active.githubPath ||
-        nameWithOwner.startsWith(`${state.currentUser?.login}/`));
-    })
-    .catch((e) => {
-      setIsRepoForked(false);
-      console.log("Failed to get users repositories: ", e);
-    });
-  }
-
   function addNewComment(comment) {
     setCommentsIssue([...commentsIssue, comment]);
   }
-  
-  useEffect(() => {
-    if (!state.currentUser?.login ||
-        !state.currentUser?.walletAddress ||
-        !state.Service?.network?.repos?.active ||
-        !currentBounty?.data ||
-        isRepoForked !== undefined) 
-      return;
-    checkForks();
-  },[
-    state.currentUser?.login, 
-    currentBounty?.data?.working, 
-    state.Service?.network?.repos?.active,
-    !state.currentUser?.walletAddress
-  ]);
 
   useEffect(() => {
     if(!state.currentUser?.walletAddress) return;
@@ -148,7 +109,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
         </If>
 
         <PageActions
-          isRepoForked={!!isRepoForked}
           addNewComment={addNewComment}
           handleEditIssue={handleEditIssue}
           isEditIssue={isEditIssue}

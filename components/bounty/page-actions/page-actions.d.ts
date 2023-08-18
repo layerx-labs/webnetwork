@@ -16,13 +16,11 @@ export interface PageActionsViewProps {
   handleShowPRModal: (v: boolean) => void;
   isUpdateAmountButton: boolean;
   isStartWorkingButton: boolean;
-  isForkRepositoryLink: boolean;
   isEditButton: boolean;
   updateBountyData: (updatePrData?: boolean) => void;
 }
 
 export interface PageActionsControllerProps {
-  isRepoForked?: boolean;
   addNewComment?: (comment: string) => void;
   handleEditIssue?: () => void;
   isEditIssue?: boolean;

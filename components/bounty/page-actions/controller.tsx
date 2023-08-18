@@ -17,7 +17,6 @@ import { PageActionsControllerProps } from "./page-actions";
 import PageActionsView from "./view";
 
 export default function PageActions({
-  isRepoForked = false,
   addNewComment,
   handleEditIssue,
   isEditIssue,
@@ -83,17 +82,13 @@ export default function PageActions({
     !isBountyInDraft &&
     isBountyOpen &&
     !isWorkingOnBounty &&
-    isRepoForked &&
     isStateToWorking &&
     !!state.currentUser?.accessToken
-  const isForkRepositoryLink =
-    !isBountyInDraft && isBountyOpen && !isRepoForked;
   const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
 
   const rest = {
     isUpdateAmountButton,
     isStartWorkingButton,
-    isForkRepositoryLink,
     isEditButton,
     isBountyInDraft,
     isWalletConnected,
@@ -103,8 +98,7 @@ export default function PageActions({
       isWalletConnected &&
       isBountyOpen &&
       !isBountyInDraft &&
-      isWorkingOnBounty &&
-      isRepoForked,
+      isWorkingOnBounty,
     isCreateProposal:
       isWalletConnected &&
       isCouncilMember &&
