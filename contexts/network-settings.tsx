@@ -34,7 +34,6 @@ import {WinStorage} from "services/win-storage";
 
 import useApi from "x-hooks/use-api";
 import useNetworkTheme from "x-hooks/use-network-theme";
-import useOctokit from "x-hooks/use-octokit";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
@@ -57,7 +56,6 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
-  const { getUserRepositories } = useOctokit();
   const { searchNetworks, searchRepositories } = useApi();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
@@ -70,7 +68,6 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   const isCreating = useMemo(() => ["/new-network", "/setup"].includes(router.pathname), [router.pathname]);
   const needsToLoad = useMemo(() => ALLOWED_PATHS.includes(router.pathname), [router.pathname]);
-  const isSetup = useMemo(() => router.pathname === "/setup", [router.pathname]);
   const network =
     useMemo(() =>
       forcedNetwork || state.Service?.network?.active, [forcedNetwork, state.Service?.network?.active]);
@@ -523,7 +520,6 @@ export const NetworkSettingsProvider = ({ children }) => {
     else if(isCreating)
       loadDefaultSettings().finally(()=> setIsLoadingData(false));
   }, [
-    state.currentUser?.login,
     state.currentUser?.walletAddress,
     forcedService,
     network,
