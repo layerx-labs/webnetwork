@@ -154,7 +154,7 @@ export default function ProfilePageView({
                     className={`form-control ${isEmailInvalid ? "is-invalid" : ""}`}
                     value={userEmail} 
                     onChange={handleEmailChange}
-                    disabled={isExecuting || isConfirmationPending}
+                    disabled={isExecuting}
                   />
 
                   <If condition={isEmailInvalid}>
@@ -166,7 +166,7 @@ export default function ProfilePageView({
                   <Button
                     onClick={onSave}
                     disabled={isSaveButtonDisabled}
-                    isLoading={!isConfirmationPending && isExecuting}
+                    isLoading={isExecuting}
                   >
                     {t("actions.save")}
                   </Button>
