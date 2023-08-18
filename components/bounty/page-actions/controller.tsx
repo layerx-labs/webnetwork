@@ -116,7 +116,6 @@ export default function PageActions({
   async function handlePullrequest({
     title: prTitle,
     description: prDescription,
-    branch,
   }): Promise<void> {
     let pullRequestPayload = undefined;
 
@@ -126,7 +125,7 @@ export default function PageActions({
       title: prTitle,
       description: prDescription,
       username: state.currentUser?.login,
-      branch,
+      branch: "",
       wallet: state.currentUser.walletAddress,
     })
       .then(({
@@ -235,7 +234,6 @@ export default function PageActions({
       handlePullrequest={handlePullrequest}
       handleStartWorking={handleStartWorking}
       handleEditIssue={handleEditIssue}
-      currentUser={state.currentUser}
       bounty={currentBounty}
       updateBountyData={updateBountyData}
       {...rest}

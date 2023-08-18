@@ -1,4 +1,3 @@
-import { CurrentUserState } from "interfaces/application-state";
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 export interface PageActionsViewProps {
@@ -6,10 +5,8 @@ export interface PageActionsViewProps {
   handlePullrequest: (arg: {
     title: string;
     description: string;
-    branch: string;
   }) => Promise<void>;
   handleStartWorking: () => Promise<void>;
-  currentUser: CurrentUserState;
   bounty: IssueBigNumberData;
   isWalletConnected: boolean;
   isCreatePr: boolean;

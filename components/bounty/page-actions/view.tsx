@@ -22,7 +22,6 @@ import { PageActionsViewProps } from "./page-actions";
 
 export default function PageActionsView({
   bounty,
-  currentUser,
   handleEditIssue,
   handlePullrequest,
   handleStartWorking,
@@ -51,17 +50,6 @@ export default function PageActionsView({
   const [showGHModal, setShowGHModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
 
-  function handleActionPr(arg: {
-    title: string;
-    description: string;
-    branch: string;
-  }): Promise<void> {
-    if (!ghVisibility)
-      return new Promise((resolve) => resolve(setShowGHModal(true)));
-
-    return handlePullrequest(arg);
-  }
-
   function handleActionWorking() {
     if (!ghVisibility) return setShowGHModal(true);
     handleStartWorking();
@@ -89,7 +77,7 @@ export default function PageActionsView({
                 <If condition={isCreatePr}>
                   <CreatePullRequestButton 
                     onClick={() => handleShowPRModal(true)}
-                    disabled={!currentUser?.login || !isWalletConnected}
+                    disabled={!isWalletConnected}
                   />
                 </If>
                 <If condition={isUpdateAmountButton}>
@@ -128,15 +116,8 @@ export default function PageActionsView({
             show={showPRModal}
             title={bounty?.title}
             description={bounty?.body}
-            onConfirm={handleActionPr}
-            repo={
-              (currentUser?.login &&
-                bounty?.repository?.githubPath &&
-                bounty?.repository?.githubPath) ||
-              ""
-            }
+            onConfirm={handlePullrequest}
             onCloseClick={() => handleShowPRModal(false)}
-            currentBounty={bounty}
           />
 
           <UpdateBountyAmountModal
