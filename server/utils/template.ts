@@ -27,9 +27,9 @@ export class TemplateProcessor {
     });
   }
 
-  compile(data: TemplateData): string {
+  async compile(data: TemplateData): Promise<string> {
     if (!this.html)
-      this.load();
+      await this.load();
 
     const template = Handlebars.compile(this.html);
 

@@ -76,7 +76,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       }))
     };
 
-    const result = new TemplateProcessor(GeneralTemplates.RSS).compile(templateData);
+    const result = await new TemplateProcessor(GeneralTemplates.RSS).compile(templateData);
 
     const ttlSetting = await models.settings.findAll({
       where: { 

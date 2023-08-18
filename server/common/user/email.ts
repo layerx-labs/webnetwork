@@ -81,7 +81,7 @@ export async function put(req: NextApiRequest) {
     linkedin: LINKEDIN_LINK
   };
 
-  const emailhtml = new TemplateProcessor(EmailTemplates.EmailVerification).compile(templateData);
+  const emailhtml = await new TemplateProcessor(EmailTemplates.EmailVerification).compile(templateData);
 
   await emailService.sendEmail("Verify your email", email, emailhtml);
 
