@@ -354,61 +354,6 @@ export const NetworkSettingsProvider = ({ children }) => {
     return tokensLocked;
   }
 
-  async function loadGHRepos(){
-    const repositories = [];
-
-    if(state.currentUser?.login) {
-      const botUser = !isCreating ? state.Settings?.github?.botUser : undefined
-      const githubRepositories = await getUserRepositories(state.currentUser?.login, botUser);
-
-      const filtered = githubRepositories
-          .filter(repo => {
-            const isOwner = state.currentUser.login === repo?.nameWithOwner.split("/")[0];
-
-            if((isOwner || repo?.isInOrganization) && !repo?.isFork && !repo?.isArchived)
-              return repo;
-          })
-          .map(repo => ({
-            checked: false,
-            isSaved: false,
-            hasIssues: false,
-            userPermission:repo.viewerPermission,
-            name: repo?.name,
-            fullName: repo?.nameWithOwner,
-            mergeCommitAllowed: repo.mergeCommitAllowed,
-            collaborators: repo.collaborators
-          }));
-
-      if (!isCreating) {
-        const repositoryAlreadyExists =  await searchRepositories({
-          networkName: network?.name,
-          chainId: state.connectedChain?.id,
-          includeIssues: "true"
-        })
-          .then(({ rows }) =>
-          Promise.all(rows.map( async repo => {
-            const repoOnGh = filtered.find(({ fullName }) => fullName === repo.githubPath);
-
-            return {
-              checked: true,
-              isSaved: true,
-              name: repo.githubPath.split("/")[1],
-              fullName: repo.githubPath,
-              hasIssues: !!repo.issues.length,
-              mergeCommitAllowed: repoOnGh?.mergeCommitAllowed || false,
-              collaborators: repoOnGh?.collaborators || [],
-            };
-          })));
-
-        repositories.push(...repositoryAlreadyExists);
-      }
-
-      repositories.push(...filtered.filter(repo => !repositories.find((repoB) => repoB.fullName === repo.fullName)));
-    }
-
-    return repositories;
-  }
-
   async function loadDefaultSettings(): Promise<typeof DefaultNetworkSettings>{
     const defaultState = JSON.parse(JSON.stringify(DefaultNetworkSettings)); //Deep Copy, More: https://www.codingem.com/javascript-clone-object
 
@@ -438,8 +383,6 @@ export const NetworkSettingsProvider = ({ children }) => {
     defaultState.settings.treasury.cancelFee = validatedParameter(DEFAULT_CANCEL_FEE);
     defaultState.settings.treasury.closeFee = validatedParameter(DEFAULT_CLOSE_FEE);
     defaultState.settings.treasury.validated = true;
-
-    defaultState.github.repositories = await loadGHRepos();
 
     const storageData = storage.getItem();
 
@@ -534,7 +477,6 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     defaultState.isAbleToClosed = isNetworkAbleToBeClosed;
     defaultState.settings.theme.colors = network?.colors || DefaultTheme();
-    defaultState.github.repositories = await loadGHRepos();
 
     setForcedNetwork((prev)=>({
       ...prev,
