@@ -14,7 +14,6 @@ export interface PageActionsViewProps {
   isExecuting: boolean;
   showPRModal: boolean;
   handleShowPRModal: (v: boolean) => void;
-  ghVisibility: boolean;
   isUpdateAmountButton: boolean;
   isStartWorkingButton: boolean;
   isForkRepositoryLink: boolean;

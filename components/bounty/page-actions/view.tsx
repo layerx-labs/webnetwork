@@ -4,9 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import CreatePullRequestModal from "components/create-pull-request-modal";
 import If from "components/If";
-import Modal from "components/modal";
 import ProposalModal from "components/proposal/create-proposal-modal";
-import Translation from "components/translation";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
@@ -31,7 +29,6 @@ export default function PageActionsView({
   isExecuting,
   showPRModal,
   handleShowPRModal,
-  ghVisibility,
   isUpdateAmountButton,
   isStartWorkingButton,
   isForkRepositoryLink,
@@ -47,11 +44,9 @@ export default function PageActionsView({
   
   const { isMobileView, isTabletView } = useBreakPoint();
   const [showPRProposal, setShowPRProposal] = useState(false);
-  const [showGHModal, setShowGHModal] = useState(false);
   const [showUpdateAmount, setShowUpdateAmount] = useState(false);
 
   function handleActionWorking() {
-    if (!ghVisibility) return setShowGHModal(true);
     handleStartWorking();
   }
 
@@ -137,18 +132,6 @@ export default function PageActionsView({
             updateBountyData={updateBountyData}
           />
         </>
-
-      <Modal
-        title={t("modals.gh-access.title")}
-        centerTitle
-        show={showGHModal}
-        okLabel={t("actions.close")}
-        onOkClick={() => setShowGHModal(false)}
-      >
-        <h5 className="text-center">
-          <Translation ns="common" label="modals.gh-access.content" />
-        </h5>
-      </Modal>
     </div>
   );
 }

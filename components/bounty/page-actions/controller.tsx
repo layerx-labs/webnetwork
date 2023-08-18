@@ -227,7 +227,6 @@ export default function PageActions({
 
   return (
     <PageActionsView
-      ghVisibility={state.Service?.network?.repos?.active?.ghVisibility}
       showPRModal={showPRModal}
       handleShowPRModal={setShowPRModal}
       isExecuting={isExecuting}
