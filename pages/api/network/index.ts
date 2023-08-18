@@ -290,7 +290,6 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       isClosed,
       accessToken,
       description,
-      githubLogin,
       networkAddress,
       repositoriesToAdd,
       repositoriesToRemove,
@@ -457,8 +456,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
         const { data } = await octokitUser.rest.repos.addCollaborator({
           owner,
           repo,
-          username: publicSettings?.github?.botUser,
-          ...(githubLogin !== owner  && { permission: "maintain"} || {})
+          username: publicSettings?.github?.botUser
         })
           .catch((e) => {
             Logger.error(e, 'Add collaborator fail')
