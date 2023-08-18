@@ -14,11 +14,7 @@ const DeveloperModel = require("../models/developer.model");
 const CommentsModel = require("../models/comments.model");
 const UserModel = require("../models/user");
 
-const { SKIP_MIGRATION_SEED_WORKING_WITH_USER_ID_ISSUE } = process.env;
-
 async function up(queryInterface, Sequelize) {
-  if (SKIP_MIGRATION_SEED_WORKING_WITH_USER_ID_ISSUE === "true") return;
-
   [
     ChainModel,
     NetworkModel,
