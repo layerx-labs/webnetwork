@@ -1,3 +1,4 @@
+import {  addHours } from "date-fns";
 import { NextApiRequest } from "next";
 import getConfig from "next/config";
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +9,7 @@ import { DISCORD_LINK, INSTAGRAM_LINK, LINKEDIN_LINK, TWITTER_LINK } from "helpe
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
 
+import { UserTableScopes } from "interfaces/enums/api";
 import { EmailConfirmationErrors } from "interfaces/enums/Errors";
 
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
@@ -20,6 +22,11 @@ const {
     urls: {
       home: homeUrl
     }
+  },
+  serverRuntimeConfig: {
+    email: {
+      verificationCodeExpiration
+    }
   }
 } = getConfig();
 
@@ -29,7 +36,7 @@ export async function get(req: NextApiRequest) {
   if (!code || !email)
     throw new HttpBadRequestError(EmailConfirmationErrors.INVALID_LINK);
 
-  const user = await models.user.findOne({
+  const user = await models.user.scope(UserTableScopes.ownerOrGovernor).findOne({
     where: {
       email,
       emailVerificationCode: code
@@ -41,6 +48,11 @@ export async function get(req: NextApiRequest) {
 
   if (user.isEmailConfirmed)
     throw new HttpConflictError(EmailConfirmationErrors.ALREADY_CONFIRMED);
+
+  const emailSentWithExpiration = addHours(user.emailVerificationSentAt, verificationCodeExpiration);
+
+  if (emailSentWithExpiration < new Date())
+    throw new HttpConflictError(EmailConfirmationErrors.EXPIRED_LINK); 
 
   user.isEmailConfirmed = true;
   user.emailVerificationCode = null;

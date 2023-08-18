@@ -9,5 +9,6 @@ export enum MetamaskErrors {
 
 export enum EmailConfirmationErrors {
   ALREADY_CONFIRMED = "already-confirmed",
-  INVALID_LINK = "invalid-link"
+  INVALID_LINK = "invalid-link",
+  EXPIRED_LINK = "expired-link"
 }

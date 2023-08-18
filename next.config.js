@@ -68,7 +68,8 @@ const serverRuntimeConfig = {
   logStackTrace: process.env.ELASTIC_INDEX_STACK_TRACE === "true",
   email: {
     apiKey: process.env.NEXT_SENDGRID_MAIL_API_KEY,
-    from: process.env.NEXT_SENDGRID_MAIL_FROM
+    from: process.env.NEXT_SENDGRID_MAIL_FROM,
+    verificationCodeExpiration: process.env.NEXT_MAIL_VERIFICATION_EXPIRATION || 24
   }
 }
 
