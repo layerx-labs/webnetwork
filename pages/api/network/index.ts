@@ -88,7 +88,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       repositories,
       botPermission,
       accessToken,
-      githubLogin,
       tokens,
       networkAddress,
       isDefault,
@@ -237,7 +236,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         owner,
         repo,
         username: publicSettings.github.botUser,
-        ...(githubLogin !== owner  && { permission: "admin"} || {})
       })
       .then(({data}) => invitations.push(data?.id))
       .catch((e) => {
