@@ -73,6 +73,7 @@ export interface IssueData {
   contractCreationDate?: string;
   ipfsUrl?: string;
   type?: string;
+  origin?: string;
 }
 
 export interface Disputes {
