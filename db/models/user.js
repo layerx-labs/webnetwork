@@ -5,7 +5,7 @@ const { Model, DataTypes, Sequelize } = require("sequelize");
 class User extends Model {
   static init(sequelize) {
     super.init({
-        githubHandle: DataTypes.STRING,
+        handle: DataTypes.STRING,
         githubLogin: DataTypes.STRING,
         address: { 
           type: DataTypes.STRING, 
