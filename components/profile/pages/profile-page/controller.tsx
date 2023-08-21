@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
 import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
+import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
@@ -93,6 +93,12 @@ export default function ProfilePage() {
     if (!!userEmail !== isNotificationEnabled) 
       setIsNotificationEnabled(!!userEmail);
   }, [userEmail]);
+
+  useEffect(() => {
+    if (query?.emailVerification === "success")
+      dispatch(toastSuccess(t("notifications-form.success-toast.content"), 
+                            t("notifications-form.success-toast.title")));
+  }, [query?.emailVerification]);
 
   return (
     <ProfilePageView
