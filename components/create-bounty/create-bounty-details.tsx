@@ -6,12 +6,13 @@ import { useTranslation } from "next-i18next";
 
 import { PROGRAMMING_LANGUAGES } from "assets/bounty-labels";
 
-import BranchsDropdown from "components/branchs-dropdown";
+import CheckButtons from "components/check-buttons/controller";
 import { ContextualSpan } from "components/contextual-span";
+import { Divider } from "components/divider";
 import DropDown from "components/dropdown";
+import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 import ReactSelect from "components/react-select";
-import ReposDropdown from "components/repos-dropdown";
 
 import { useAppState } from "contexts/app-state";
 
@@ -21,8 +22,6 @@ import {
 } from "helpers/constants";
 
 import { DetailsProps } from "interfaces/create-bounty";
-
-import useOctokit from "x-hooks/use-octokit";
 
 import CreateBountyDescription from "./create-bounty-description";
 import BountyLabel from "./create-bounty-label";
@@ -39,13 +38,6 @@ export default function CreateBountyDetails({
   isKyc,
   updateIsKyc,
   updateTierList,
-  repository,
-  updateRepository,
-  branch,
-  updateBranch,
-  repositories,
-  branches,
-  updateBranches,
   updateUploading,
 }: DetailsProps) {
   const { t } = useTranslation("bounty");
@@ -56,8 +48,6 @@ export default function CreateBountyDetails({
   const {
     state: { Settings },
   } = useAppState();
-
-  const { getRepositoryBranches } = useOctokit();
 
   const TAGS_OPTIONS = PROGRAMMING_LANGUAGES.map(({ tag }) => ({
     label: tag,
@@ -78,18 +68,6 @@ export default function CreateBountyDetails({
 
   function handleIsKYCChecked(e: React.ChangeEvent<HTMLInputElement>) {
     updateIsKyc(e.target.checked);
-  }
-
-  function handleSelectedRepo(opt: {
-    value: {
-      id: string;
-      path: string;
-    };
-  }) {
-    updateRepository(opt.value);
-    getRepositoryBranches(opt.value.path, true).then((b) =>
-      updateBranches(b.branches));
-    updateBranch(null);
   }
 
   useEffect(() => {
@@ -119,16 +97,19 @@ export default function CreateBountyDetails({
     <>
       <div className="mt-2 mb-4">
         <h5>{t("steps.details")}</h5>
+
         <p className="text-gray">
           {t("descriptions.details")}
         </p>
       </div>
+
       <div className="row justify-content-center">
         <div className="col-md-12 m-0 mb-2">
           <div className="form-group">
             <BountyLabel className="mb-2" required>
               {t("fields.title.label")}
             </BountyLabel>
+
             <input
               type="text"
               className={clsx("form-control form-bounty rounded-lg", {
@@ -139,11 +120,12 @@ export default function CreateBountyDetails({
               value={title}
               onChange={handleChangeTitle}
             />
-            {title.length >= BOUNTY_TITLE_LIMIT && (
+            
+            <If condition={title.length >= BOUNTY_TITLE_LIMIT}>
               <span className="caption-small mt-3 text-danger bg-opacity-100">
                 {t("errors.title-character-limit", { value: title?.length })}
               </span>
-            )}   
+            </If> 
           </div>
         </div>
       </div>
@@ -158,17 +140,20 @@ export default function CreateBountyDetails({
           updateUploading={updateUploading}
         />
       </div>
+
       <span className="text-gray">
-      {t("finding-yourself-lost")}
+        {t("finding-yourself-lost")}
+
         <a tabIndex={3} href="/explore" target="_blank" className="ms-1">
           {t("bounty-examples")}
         </a>
       </span>
 
-      <div className="form-group mt-4">
+      <div className="form-group mt-4 mb-0">
         <label htmlFor="" className="mb-2">
           {t("fields.tags")}
         </label>
+
         <ReactSelect
           value={selectedTags.map((tag) => ({ label: tag, value: tag }))}
           options={TAGS_OPTIONS}
@@ -176,13 +161,15 @@ export default function CreateBountyDetails({
           isOptionDisabled={() => selectedTags.length >= MAX_TAGS}
           isMulti
         />
-          <ContextualSpan context="info" className="mt-1">
-            {t("fields.tags-info")}
-          </ContextualSpan>
+
+        <ContextualSpan context="info" className="mt-1">
+          {t("fields.tags-info")}
+        </ContextualSpan>
       </div>
-      {Settings?.kyc?.isKycEnabled ? (
+
+      <If condition={Settings?.kyc?.isKycEnabled}>
         <>
-          <div className="col-md-12 d-flex flex-row gap-2">
+          <div className="col-md-12 d-flex flex-row gap-2 mt-4">
             <FormCheck
               className="form-control-md pb-0"
               type="checkbox"
@@ -190,6 +177,7 @@ export default function CreateBountyDetails({
               onChange={handleIsKYCChecked}
               checked={isKyc}
             />
+
             <span>
               <InfoTooltip
                 description={t("bounty:kyc.tool-tip")}
@@ -197,7 +185,8 @@ export default function CreateBountyDetails({
               />
             </span>
           </div>
-          {isKyc && Settings?.kyc?.tierList?.length ? (
+
+          <If condition={isKyc && !!Settings?.kyc?.tierList?.length}>
             <DropDown
               className="mt-2"
               onSelected={(opt) => {
@@ -208,31 +197,42 @@ export default function CreateBountyDetails({
                 label: i.name,
               }))}
             />
-          ) : null}
+          </If>
         </>
-      ) : null}
-      <div className="border-top border-gray-700 my-4"/>
-      <div className="mt-4">
-        <h5>{t("steps.github")}</h5>
-        <p className="text-gray">{t("descriptions.github")}</p>
-        <div className="row">
-              <div className="col-md-6 mt-2">   
-              <ReposDropdown
-                repositories={repositories}
-                onSelected={handleSelectedRepo}
-                value={{
-                  label: repository?.path,
-                  value: repository,
-                }}
-              />
-              </div>
-              <div className="col-md-6 mt-2">
-              <BranchsDropdown
-                branches={branches}
-                onSelected={updateBranch}
-                value={branch}
-              />
-              </div>
+      </If>
+
+      <Divider />
+
+      <div className="row">
+        <div className="col">
+          <div className="row">
+            <span className="lg-medium text-gray-50">
+              Deliverable types
+            </span>
+          </div>
+
+          <div className="row mt-2">
+            <span className="sm-regular text-gray-200">
+              Specify the type of work for this bounty
+            </span>
+          </div>
+
+          <div className="row mt-3">
+            <CheckButtons
+              options={[
+                { label: "Code", value: "code" },
+                { label: "Design", value: "design" },
+                { label: "Other", value: "other" }
+              ]}
+              onClick={() => {}}
+            />
+          </div>
+
+          <div className="row mt-3">
+            <span className="sm-regular text-gray-200">
+              If you have a project boilerplate, a figma design, or something that might help people to work on this bounty, you can provide a link below.
+            </span>
+          </div>
         </div>
       </div>
     </>

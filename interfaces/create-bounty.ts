@@ -1,15 +1,13 @@
 import { IFilesProps } from "components/drag-and-drop";
 
-import { ReposList } from "./repos-list";
-
 export interface Repository {
-    id: string; 
-    path: string
+  id: string; 
+  path: string;
 }
 
 export interface Branch {
-     value: string;
-     label: string 
+  value: string;
+  label: string;
 }
 
 export interface DetailsProps {
@@ -24,14 +22,7 @@ export interface DetailsProps {
   isKyc: boolean;
   updateIsKyc: (e: boolean) => void;
   updateTierList: (e: number[]) => void;
-  repository: Repository;
-  updateRepository: (e: Repository) => void;
-  branch?: Branch;
-  updateBranch?: (e: Branch) => void;
   updateUploading: (e: boolean) => void;
-  repositories?: ReposList;
-  branches?: string[];
-  updateBranches?: (e: string[]) => void;
 }
 export interface BountyPayload {
   title: string;
