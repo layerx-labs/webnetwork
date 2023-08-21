@@ -28,7 +28,7 @@ import useBepro from "x-hooks/use-bepro";
 import useOctokit from "x-hooks/use-octokit";
 
 interface participants {
-  githubHandle: string;
+  handle: string;
   githubLogin: string;
   address?: string;
 }
@@ -163,7 +163,7 @@ export default function ProposalModal({
 
     setShowDecimalsError(false);
 
-    if (participants.some(p => obj[p.githubHandle]%1 > 0)) {
+    if (participants.some(p => obj[p.handle]%1 > 0)) {
       setShowDecimalsError(true);
       return;
     }
@@ -174,7 +174,7 @@ export default function ProposalModal({
       const currentDistrbuition = {
         currentPrId: id,
         prAddressAmount: participants.map((item) => ({
-          amount: obj[item.githubHandle],
+          amount: obj[item.handle],
           address: item.address.toLowerCase()
         }))
       };
@@ -257,13 +257,13 @@ export default function ProposalModal({
           });
 
         return Promise.all(tmpParticipants.map(async (login) => {
-          const { address, githubLogin, githubHandle } = await getUserWith(login);
-          return { address, githubLogin, githubHandle };
+          const { address, githubLogin, handle } = await getUserWith(login);
+          return { address, githubLogin, handle };
         }));
       })
       .then((participantsPr) => {
         const tmpParticipants = participantsPr.filter(({ address }) => !!address);
-        setDistrib(Object.fromEntries(tmpParticipants.map((participant) => [participant?.githubHandle || '', 0])));
+        setDistrib(Object.fromEntries(tmpParticipants.map((participant) => [participant?.handle || '', 0])));
         setCurrentGithubId(githubId);
         setParticipants([])
         setParticipants(tmpParticipants);
@@ -279,9 +279,9 @@ export default function ProposalModal({
     const prAmounts: number[] = [];
 
     participants.map((items) => {
-      if (distrib[items.githubHandle] > 0) {
+      if (distrib[items.handle] > 0) {
         prAddresses.push(items.address);
-        prAmounts.push(distrib[items.githubHandle]);
+        prAmounts.push(distrib[items.handle]);
       }
     });
 
@@ -375,7 +375,7 @@ export default function ProposalModal({
           {participants.map((item) => (
             <CreateProposalDistributionItem
               key={`distribution-item-${item.githubLogin}`}
-              githubHandle={item.githubHandle}
+              handle={item.handle}
               githubLogin={item.githubLogin}
               onChangeDistribution={handleChangeDistrib}
               error={!!error}

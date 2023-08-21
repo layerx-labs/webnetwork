@@ -37,7 +37,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       ...leaderboard,
       rows: leaderboard.rows.map(row => ({
         ...row,
-        githubHandle: users.find(({ address }) => address.toLowerCase() === row.address.toLowerCase())?.githubHandle,
+        handle: users.find(({ address }) => address.toLowerCase() === row.address.toLowerCase())?.handle,
         ...calculateLeaderboardScore(row)
       }))
     };
