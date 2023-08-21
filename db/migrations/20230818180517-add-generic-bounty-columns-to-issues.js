@@ -9,10 +9,15 @@ module.exports = {
     await queryInterface.addColumn("issues", "type", {
       type: Sequelize.STRING
     });
+
+    await queryInterface.addColumn("issues", "origin", {
+      type: Sequelize.STRING
+    });
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.removeColumn("issues", "ipfsUrl");
     await queryInterface.removeColumn("issues", "type");
+    await queryInterface.removeColumn("issues", "origin");
   }
 };

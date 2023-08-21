@@ -102,7 +102,8 @@ class Issue extends Model {
         allowNull: true
       },
       ipfsUrl: DataTypes.STRING,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      origin: DataTypes.STRING
     },
     {
       sequelize,

@@ -25,11 +25,13 @@ module.exports = {
 
       const [owner, repo] = repository?.githubPath?.split("/");
 
+      const originLink = `https://github.com/${owner}/${repo}#${issue.branch}`;
+
       const bountyJson = {
         name: issue.title,
         properties: {
           type: "github",
-          deliverable: `https://github.com/${owner}/${repo}#${issue.branch}`,
+          deliverable: originLink,
           bountyId: issue.contractId,
           chainId: issue.chain_id,
           networkName: network.name,
@@ -43,7 +45,8 @@ module.exports = {
 
       await queryInterface.bulkUpdate("issues", {
         type: "code",
-        ipfsUrl: ipfsHash
+        ipfsUrl: ipfsHash,
+        origin: originLink
       }, {
         id: issue.id
       });
@@ -53,7 +56,8 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkUpdate("issues", {
       type: null,
-      ipfsUrl: null
+      ipfsUrl: null,
+      origin: null
     });
   }
 };
