@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -8,6 +9,7 @@ import { addToast } from "contexts/reducers/change-toaster";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
+import { CustomSession } from "interfaces/custom-session";
 import { NetworkEvents } from "interfaces/enums/events";
 
 import useApi from "x-hooks/use-api";
@@ -21,8 +23,7 @@ export default function PageActions({
   handleEditIssue,
   isEditIssue,
   currentBounty,
-  updateBountyData,
-  currentUserId
+  updateBountyData
 }: PageActionsControllerProps) {
   const { t } = useTranslation([
     "common",
@@ -37,7 +38,10 @@ export default function PageActions({
 
   const [isExecuting, setIsExecuting] = useState(false);
   const [showPRModal, setShowPRModal] = useState(false);
+  const [userId, setUserId] = useState<number>();
 
+  const session = useSession();
+  const currentUserSession = session?.data?.user as CustomSession["user"];
   const { state, dispatch } = useAppState();
   const { handleCreatePullRequest } = useBepro();
   const {
@@ -45,6 +49,7 @@ export default function PageActions({
     cancelPrePullRequest,
     startWorking,
     processEvent,
+    getUserOf
   } = useApi();
 
   const issueGithubID = currentBounty?.githubId;
@@ -62,7 +67,7 @@ export default function PageActions({
     currentBounty?.isClosed === false &&
     currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
-  const isWorkingOnBounty = !!currentBounty?.working?.find((userId) => +userId === currentUserId);
+  const isWorkingOnBounty = !!currentBounty?.working?.find((id) => +id === userId);
   const isBountyOwner =
   isWalletConnected &&
   currentBounty?.creatorAddress &&
@@ -218,6 +223,15 @@ export default function PageActions({
       });
   }
 
+  useEffect(() => {
+    if(!currentUserSession?.address) return;
+
+    getUserOf(currentUserSession?.address?.toLowerCase()).then((user) => {
+      if(user?.id)
+        setUserId(user?.id)
+    })
+  }, [currentUserSession?.address])
+  
   return (
     <PageActionsView
       showPRModal={showPRModal}

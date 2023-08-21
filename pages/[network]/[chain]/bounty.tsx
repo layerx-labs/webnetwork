@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 
 import { SSRConfig } from "next-i18next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
@@ -27,7 +27,6 @@ import {
   getBountyOrPullRequestComments,
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
-import useApi from "x-hooks/use-api";
 
 interface PageBountyProps {
   bounty: {
@@ -45,11 +44,9 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   });
   const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number>();
 
   const {state} = useAppState();
   const router = useRouter();
-  const { getUserOf } = useApi();
 
   const { id } = router.query;
 
@@ -85,12 +82,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
     setCommentsIssue([...commentsIssue, comment]);
   }
 
-  useEffect(() => {
-    if(!state.currentUser?.walletAddress) return;
-
-    getUserOf(state.currentUser?.walletAddress?.toLowerCase()).then(({id}) => setUserId(id))
-  }, [state.currentUser?.walletAddress])
-
   return (
     <BountyEffectsProvider currentBounty={bounty}>
       <BountyHero 
@@ -113,7 +104,6 @@ export default function PageIssue({ bounty }: PageBountyProps) {
           handleEditIssue={handleEditIssue}
           isEditIssue={isEditIssue}
           currentBounty={currentBounty?.data}
-          currentUserId={userId}
           updateBountyData={updateBountyData}
         />
 
