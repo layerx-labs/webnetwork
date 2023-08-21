@@ -36,8 +36,6 @@ export interface IssueData {
   creatorGithub?: string;
   developers: developer[];
   dueDate?: string;
-  githubId: string;
-  issueId: string; // custom id repo/githubid
   mergeProposals: Proposal[];
   merged: string;
   numberOfComments: number;
@@ -45,8 +43,6 @@ export interface IssueData {
   network_id?: number;
   pullRequests: PullRequest[];
   repo?: string;
-  repository?: Repository;
-  repository_id?: number;
   seoImage: string;
   nftImage?: string;
   state: IssueState;

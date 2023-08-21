@@ -5,8 +5,6 @@ const { BigNumber } = require("bignumber.js");
 class Issue extends Model {
   static init(sequelize) {
     super.init({
-      issueId: DataTypes.INTEGER,
-      githubId: DataTypes.STRING,
       state: DataTypes.STRING,
       creatorAddress: {
         type: DataTypes.STRING,
@@ -28,7 +26,6 @@ class Issue extends Model {
         type: DataTypes.STRING,
         defaultValue: "0"
       },
-      repository_id: DataTypes.STRING,
       title: DataTypes.TEXT,
       body: DataTypes.TEXT,
       branch: DataTypes.STRING,
@@ -142,11 +139,6 @@ class Issue extends Model {
       foreignKey: "issueId",
       sourceKey: "id",
       as: "payments"
-    });
-    this.belongsTo(models.repositories, {
-      foreignKey: "repository_id",
-      sourceKey: "id",
-      as: "repository"
     });
     this.belongsTo(models.network, {
       foreignKey: "network_id",
