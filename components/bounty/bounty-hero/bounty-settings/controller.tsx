@@ -28,7 +28,10 @@ export default function BountySettings({
   const objViewProps = {
     isWalletConnected: !!state.currentUser?.walletAddress,
     isBountyInDraft: !!currentBounty?.isDraft,
-    hasOpenPullRequest: !!currentBounty?.pullRequests?.find((pullRequest) => pullRequest?.status !== "canceled"),
+    hasOpenPullRequest: !!currentBounty?.pullRequests?.find((pullRequest) =>
+        pullRequest?.userAddress?.toLowerCase() ===
+          state.currentUser?.walletAddress?.toLowerCase() &&
+        pullRequest?.status !== "canceled"),
     isBountyOwner:
       !!state.currentUser?.walletAddress &&
       currentBounty?.creatorAddress &&
