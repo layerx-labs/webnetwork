@@ -42,7 +42,7 @@ module.exports = {
       const ipfsHash = await sendToIpfs(bountyJson, true);
 
       await queryInterface.bulkUpdate("issues", {
-        type: "github",
+        type: "code",
         ipfsUrl: ipfsHash
       }, {
         id: issue.id
