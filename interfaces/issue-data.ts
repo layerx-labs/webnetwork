@@ -74,6 +74,8 @@ export interface IssueData {
   ipfsUrl?: string;
   type?: string;
   origin?: string;
+  userId: number;
+  user?: User;
 }
 
 export interface Disputes {

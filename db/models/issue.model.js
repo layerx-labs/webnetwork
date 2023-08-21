@@ -100,7 +100,14 @@ class Issue extends Model {
       },
       ipfsUrl: DataTypes.STRING,
       type: DataTypes.STRING,
-      origin: DataTypes.STRING
+      origin: DataTypes.STRING,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "users",
+          key: "id"
+        }
+      }
     },
     {
       sequelize,
@@ -158,6 +165,11 @@ class Issue extends Model {
       foreignKey: "chain_id",
       targetKey: "chainId",
       as: "chain"
+    });
+    this.belongsTo(models.user, {
+      foreignKey: "userId",
+      targetKey: "id",
+      as: "user"
     });
     this.hasMany(models.comment, {
       foreignKey: "issueId",

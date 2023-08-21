@@ -7,31 +7,33 @@ const { sendToIpfs } = require("../../helpers/db/ipfs");
 module.exports = {
   async up (queryInterface, Sequelize) {
     const issues = await getAllFromTable(queryInterface, "issues");
+    const users = await getAllFromTable(queryInterface, "users");
     const repositories = await getAllFromTable(queryInterface, "repositories");
     const networks = await getAllFromTable(queryInterface, "networks");
 
     let repository = null;
     let network = null;
+    let user = null;
 
-    const findRepository = id => repositories.find(repo => repo.id === id);
-    const findNetwork = id => networks.find(repo => repo.id === id);
+    const isSameAddress = (address, addressToCompare) => address?.toLowerCase() === addressToCompare?.toLowerCase();
+    const findRepository = id => id !== repository?.id ? repositories.find(repo => repo.id === id) : repository;
+    const findNetwork = id => id !== network?.id ? networks.find(repo => repo.id === id) : network;
+    const findUser = address => !isSameAddress(address, user?.address) ? users.find(user => isSameAddress(user.address, address)) : user;
 
     for (const issue of issues) {
-      if (issue.repository_id !== repository?.id)
-        repository = findRepository(issue.repository_id);
-
-      if (issue.network_id !== network?.id)
-        network = findNetwork(issue.network_id);
+      repository = findRepository(issue.repository_id);
+      network = findNetwork(issue.network_id);
+      user = findUser(issue.creatorAddress);
 
       const [owner, repo] = repository?.githubPath?.split("/");
 
-      const originLink = `https://github.com/${owner}/${repo}#${issue.branch}`;
+      const originLink = `https://github.com/${owner}/${repo}/issues/${issue.githubId}`;
 
       const bountyJson = {
         name: issue.title,
         properties: {
           type: "github",
-          deliverable: originLink,
+          origin: originLink,
           bountyId: issue.contractId,
           chainId: issue.chain_id,
           networkName: network.name,
@@ -46,7 +48,8 @@ module.exports = {
       await queryInterface.bulkUpdate("issues", {
         type: "code",
         ipfsUrl: ipfsHash,
-        origin: originLink
+        origin: originLink,
+        userId: user.id
       }, {
         id: issue.id
       });
@@ -57,7 +60,8 @@ module.exports = {
     await queryInterface.bulkUpdate("issues", {
       type: null,
       ipfsUrl: null,
-      origin: null
+      origin: null,
+      userId: null
     });
   }
 };
