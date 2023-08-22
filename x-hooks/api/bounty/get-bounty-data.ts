@@ -15,10 +15,10 @@ import useOctokit from "x-hooks/use-octokit";
  * @returns bounty
  */
 export async function getBountyData(query: ParsedUrlQuery): Promise<IssueData | null> {
-  const { repoId, id: ghId, network: networkName, chain: chainName } = query;
+  const { id, network: networkName, chain: chainName } = query;
 
   return api
-    .get<IssueData>(`/issue/${repoId}/${ghId}/${networkName}/${chainName}`)
+    .get<IssueData>(`/issue/${id}/${networkName}/${chainName}`)
     .then(({ data }) => data)
     .catch(() => null);
 }
@@ -47,8 +47,8 @@ export async function getPullRequestReviews(repositoryPath: string, id: number) 
  * @param repositoryPath and @param pullRequests
  * @returns list of pullRequests
  */
-export async function getPullRequestsDetails(repositoryPath: string,
-                                             pullRequests: PullRequest[]): Promise<PullRequest[]> {
+export async function getPullRequestsDetails( repositoryPath: string,
+                                              pullRequests: PullRequest[]): Promise<PullRequest[]> {
 
   return Promise.all([
     ...pullRequests.map((pullRequest) => useOctokit()

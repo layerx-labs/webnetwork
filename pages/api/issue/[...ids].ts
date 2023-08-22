@@ -17,9 +17,7 @@ import { GraphQlQueryResponseData, GraphQlResponse } from "types/octokit";
 const { serverRuntimeConfig } = getConfig();
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const { ids: [repoId, ghId, networkName, chainName], chainId } = req.query;
-
-  const issueId = [repoId, ghId].join("/");
+  const { ids: [id, networkName, chainName], chainId } = req.query;
 
   let network_id: number;
 
@@ -27,7 +25,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     { association: "developers" },
     { association: "pullRequests", where: { status: { [Op.notIn]: ["pending", "canceled"] } }, required: false },
     { association: "mergeProposals", include: [{ association: "distributions" }, { association: "disputes" }]  },
-    { association: "repository" },
     { association: "transactionalToken" },
     { association: "rewardToken" },
     { association: "benefactors" },
@@ -62,7 +59,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const issue = await models.issue.findOne({
     where: {
-      issueId,
+      id,
       ... network_id ? { network_id } : {}
     },
     include
@@ -134,8 +131,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
   } 
 }
 
-async function IssuesMethods(req: NextApiRequest,
-                             res: NextApiResponse) {
+async function IssuesMethods(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
     await get(req, res);

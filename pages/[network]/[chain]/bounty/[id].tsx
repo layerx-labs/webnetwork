@@ -22,10 +22,7 @@ import { commentsParser, issueParser } from "helpers/issue";
 import { CurrentBounty } from "interfaces/application-state";
 import { IssueData, IssueDataComment } from "interfaces/issue-data";
 
-import { 
-  getBountyData,
-  getPullRequestsDetails
-} from "x-hooks/api/bounty/get-bounty-data";
+import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
 import getCommentsData from "x-hooks/api/comments/get-comments-data";
 
 interface PageBountyProps {
@@ -37,6 +34,8 @@ interface PageBountyProps {
 }
 
 export default function PageIssue({ bounty }: PageBountyProps) {
+  const router = useRouter();
+
   const [currentBounty, setCurrentBounty] = useState<CurrentBounty>({
     data: issueParser(bounty?.data),
     comments: commentsParser(bounty?.comments),
@@ -47,29 +46,16 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
   const {state} = useAppState();
-  const router = useRouter();
 
-  const { id } = router.query;
-
-  async function updateBountyData(updatePrData = false) {
+  async function updateBountyData() {
     const bountyDatabase = await getBountyData(router.query)
     const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
 
-    if(updatePrData) {
-      const pullRequests = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
-                                                        bountyDatabase?.pullRequests);
-      setCurrentBounty({
-        data: { ...issueParser(bountyDatabase), pullRequests},
-        comments: commentsParser(commentsDatabase),
-        lastUpdated: 0
-      })
-    } else {
-      setCurrentBounty({
-        data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
-        comments: commentsParser(commentsDatabase),
-        lastUpdated: 0
-      })
-    }
+    setCurrentBounty({
+      data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
+      comments: commentsParser(commentsDatabase),
+      lastUpdated: 0
+    });
   }
 
   async function handleEditIssue() {
@@ -135,22 +121,19 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
-  const bountyDatabase = await getBountyData(query)
+  const bountyDatabase = await getBountyData(query);
 
   const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
 
-  const pullRequestsDetails = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
-                                                           bountyDatabase?.pullRequests);
-  
   const bounty = {
     comments: commentsDatabase,
-    data: {...bountyDatabase, pullRequests: pullRequestsDetails}
+    data: bountyDatabase
   }
-  
+
   const seoData: Partial<IssueData> = {
     title: bountyDatabase?.title,
     body: bountyDatabase?.body,
-    issueId: bountyDatabase?.issueId
+    id: bountyDatabase?.id
   }
 
   return {
