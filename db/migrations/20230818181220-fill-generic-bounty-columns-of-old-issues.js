@@ -34,9 +34,11 @@ module.exports = {
         properties: {
           type: "github",
           origin: originLink,
-          bountyId: issue.contractId,
           chainId: issue.chain_id,
-          networkName: network.name,
+          network: {
+            name: network.name,
+            address: network.networkAddress,
+          },
           price: BigNumber.max(issue.amount, issue.fundingAmount).toString(),
           tags: issue.tags,
           kycNeeded: issue.isKyc
