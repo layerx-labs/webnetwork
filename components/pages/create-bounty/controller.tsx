@@ -58,10 +58,12 @@ const ZeroNumberFormatValues = {
 
 interface CreateBountyPageProps {
   bannedDomains: string[];
+  networks: Network[];
 }
 
 export default function CreateBountyPage({
-  bannedDomains = []
+  bannedDomains = [],
+  networks: allNetworks
 }: CreateBountyPageProps) {
   const { query } = useRouter();
   const { t } = useTranslation(["common", "bounty"]);
@@ -85,7 +87,7 @@ export default function CreateBountyPage({
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
-  const [networks, setNetworks] = useState<Network[]>([]);
+  const [networksOfConnectedChain, setNetworksOfConnectedChain] = useState<Network[]>([]);
   const [notFoundNetworks, setNotFoundNetwork] = useState<boolean>(false);
   const [deliverableType, setDeliverableType] = useState<string>();
   const [originLink, setOriginLink] = useState<string>("");
@@ -93,11 +95,11 @@ export default function CreateBountyPage({
 
   const rewardERC20 = useERC20();
   const transactionalERC20 = useERC20();
+  const { processEvent } = useApi();
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
   const { handleAddNetwork } = useNetworkChange();
-  const { searchNetworks, processEvent } = useApi();
 
   const {
     dispatch,
@@ -435,32 +437,20 @@ export default function CreateBountyPage({
       createBounty();
     }
   }
-  const [searchForNetwork, setSearchingForNetwork] = useState<string|null>(null);
 
   useEffect(() => {
-    if(!connectedChain || searchForNetwork === connectedChain?.id) return;
+    if(!connectedChain) return;
 
-    setSearchingForNetwork(connectedChain?.id);
-
-    if (connectedChain.name === UNSUPPORTED_CHAIN)
+    if (connectedChain.name === UNSUPPORTED_CHAIN) {
       setCurrentNetwork(undefined);
-    else
-      searchNetworks({
-        isRegistered: true,
-        isClosed: false,
-        chainId: connectedChain?.id,
-        sortBy: "name",
-        order: "asc",
-        isNeedCountsAndTokensLocked: true,
-      })
-        .then(async ({ count, rows }) => {
-          setNetworks(rows);
-          setNotFoundNetwork(!count);
-        })
-        .catch((error) => {
-          console.log("Failed to retrieve networks list", error);
-        })
-        .finally(() => setSearchingForNetwork(null));
+      
+      return;
+    }
+      
+    const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
+
+    setNetworksOfConnectedChain(networksOfChain);
+    setNotFoundNetwork(!networksOfChain.length);
   }, [connectedChain]);
 
   useEffect(() => {
@@ -517,7 +507,7 @@ export default function CreateBountyPage({
   async function handleNetworkSelected(chain: SupportedChainData) {
     setCurrentNetwork(undefined)
     handleAddNetwork(chain)
-      .then(_ => setCurrentNetwork(networks[0]))
+      .then(_ => setCurrentNetwork(networksOfConnectedChain[0]))
       .catch((err) => console.log('handle Add Network error', err));
   }
 
@@ -555,7 +545,7 @@ export default function CreateBountyPage({
           <label className="p mb-2 text-gray-300">{t("bounty:steps.select-network")}</label>
           <CreateBountyNetworkDropdown
             value={currentNetwork}
-            networks={networks}
+            networks={networksOfConnectedChain}
             className="select-network-dropdown w-max-none"
             onSelect={onNetworkSelected}
           />
