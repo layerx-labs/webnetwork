@@ -47,16 +47,6 @@ interface NewIssueParams {
   repository_id: string;
 }
 
-interface CreateBounty {
-  title: string;
-  body: string;
-  creator: string;
-  repositoryId: string;
-  tags: string[];
-  isKyc?: boolean;
-  tierList?: number[];
-}
-
 interface GetNetworkProps {
   name?: string;
   creator?: string;
@@ -247,21 +237,6 @@ export default function useApi() {
       .post("/token", { ...payload })
       .then(({ data }) => data)
       .catch(() => null);
-  }
-
-  /**
-   * Ping the API to create an issue on Github, if succeed returns the CID (Repository ID on database + Issue ID on Github)
-   * @param payload
-   * @param networkName
-   * @returns string
-   */
-  async function createPreBounty(payload: CreateBounty, networkName = DEFAULT_NETWORK_NAME): Promise<string> {
-    return api
-        .post("/issue", { ...payload, networkName })
-        .then(({ data }) => data)
-        .catch((error) => {
-          throw error
-        });
   }
 
   async function getPendingFor(address: string, page = "1", networkName = DEFAULT_NETWORK_NAME) {
@@ -1011,7 +986,6 @@ export default function useApi() {
     updateVisibleBounty,
     uploadFiles,
     userHasPR,
-    createPreBounty,
     cancelPrePullRequest,
     resetUser,
     getSettings,
