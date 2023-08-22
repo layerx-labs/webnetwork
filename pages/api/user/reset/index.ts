@@ -49,7 +49,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       return res.status(409).json("PULL_REQUESTS_OPEN");
 
     user.resetedAt = new Date();
-    user.handle = null;
     user.githubLogin = null;
 
     await user.save();

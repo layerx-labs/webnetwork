@@ -79,7 +79,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         return params?.token;
       },
       async session({ session, token }) {
-        const { login, name, accessToken, roles, address, nonce } = token;
+        const { login, accessToken, roles, address, nonce } = token;
 
         const accountsMatch = await AccountValidator.matchAddressAndGithub(address?.toString(), login?.toString());
         const user = await models.user.scope("ownerOrGovernor").findByAddress(address);
@@ -88,7 +88,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           expires: session.expires,
           user: {
             login,
-            name,
             accessToken,
             roles,
             address,

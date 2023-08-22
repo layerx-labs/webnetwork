@@ -5,7 +5,6 @@ export interface RequestParams {
   wallet?: string;
 }
 export interface User {
-  handle: string;
   githubLogin: string;
   address?: string;
   createdAt: string;
