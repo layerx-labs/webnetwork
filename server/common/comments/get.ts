@@ -36,6 +36,8 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     ]
 
     if ((issueId || proposalId || deliverableId || userId || type) && !id) {
+      /* When we only ask for deliverableId || proposalId || issueid, 
+      this route fetches all comments related to that id, regardless of type */
       comments = await models.comments.findAll({
         where: {
           ...filters,
