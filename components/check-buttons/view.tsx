@@ -17,8 +17,9 @@ export default function CheckButtonsView({
 }: CheckButtonsViewProps) {
   return(
     <div className="d-flex">
-      {options.map(opt => 
+      {options.map((opt, index) => 
         <Button
+          key={`${opt.label}-${index}`}
           color={getButtonColor(opt)}
           className="border-radius-4 text-capitalize font-weight-normal text-gray-50"
           onClick={onClick(opt)}
