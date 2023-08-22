@@ -10,7 +10,6 @@ class User extends Model {
    */
   static init(sequelize) {
     super.init({
-      handle: DataTypes.STRING,
       githubLogin: DataTypes.STRING,
       address: { 
         type: DataTypes.STRING, 
