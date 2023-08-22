@@ -20,17 +20,18 @@ export interface DetailsProps {
   selectedTags: string[];
   updateSelectedTags: (e: string[]) => void;
   isKyc: boolean;
+  originLink: string;
+  isOriginLinkBanned?: boolean;
+  onOriginLinkChange: (link: string) => void;
   updateIsKyc: (e: boolean) => void;
   updateTierList: (e: number[]) => void;
   updateUploading: (e: boolean) => void;
+  setDeliverableType: (type: string) => void;
 }
 export interface BountyPayload {
   title: string;
   cid: string | boolean;
-  repoPath: string;
   transactional: string;
-  branch: string;
-  githubUser: string;
   tokenAmount: string;
   rewardToken?: string;
   rewardAmount?: string;

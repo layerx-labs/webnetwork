@@ -4,8 +4,7 @@ import {NumberFormatValues} from "react-number-format";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 import router, {useRouter} from "next/router";
-
-import CheckCircle from "assets/icons/check-circle";
+import { useDebouncedCallback } from "use-debounce";
 
 import Button from "components/button";
 import ConnectWalletButton from "components/connect-wallet-button";
@@ -21,7 +20,6 @@ import RewardInformation from "components/create-bounty/reward-information/contr
 import SelectNetwork from "components/create-bounty/select-network";
 import CustomContainer from "components/custom-container";
 import {IFilesProps} from "components/drag-and-drop";
-import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
@@ -29,7 +27,7 @@ import {useAppState} from "contexts/app-state";
 import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
-import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
+import {BODY_CHARACTERES_LIMIT, TERMS_AND_CONDITIONS_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {parseTransaction} from "helpers/transactions";
 
 import {BountyPayload} from "interfaces/create-bounty";
@@ -38,13 +36,13 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
-import {ReposList} from "interfaces/repos-list";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
+import useCreatePreBounty from "x-hooks/api/bounty/use-create-pre-bounty";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -58,11 +56,16 @@ const ZeroNumberFormatValues = {
   floatValue: 0,
 };
 
-export default function CreateBountyPage() {
+interface CreateBountyPageProps {
+  bannedDomains: string[];
+}
+
+export default function CreateBountyPage({
+  bannedDomains = []
+}: CreateBountyPageProps) {
+  const { query } = useRouter();
   const { t } = useTranslation(["common", "bounty"]);
-  const [branch, setBranch] = useState<
-    { value: string; label: string } | undefined
-  >();
+
   const [files, setFiles] = useState<IFilesProps[]>([]);
   const [rewardToken, setRewardToken] = useState<Token>();
   const [bountyTitle, setBountyTitle] = useState<string>("");
@@ -76,11 +79,7 @@ export default function CreateBountyPage() {
   const [transactionalToken, setTransactionalToken] = useState<Token>();
   const [bountyDescription, setBountyDescription] = useState<string>("");
   const [isLoadingApprove, setIsLoadingApprove] = useState<boolean>(false);
-  const [repository, setRepository] = useState<{ id: string; path: string }>();
-  const [repositories, setRepositories] = useState<ReposList>();
-  const [branches, setBranches] = useState<string[]>();
-  const [isLoadingCreateBounty, setIsLoadingCreateBounty] =
-    useState<boolean>(false);
+  const [isLoadingCreateBounty, setIsLoadingCreateBounty] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [issueAmount, setIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
@@ -88,29 +87,22 @@ export default function CreateBountyPage() {
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [networks, setNetworks] = useState<Network[]>([]);
   const [notFoundNetworks, setNotFoundNetwork] = useState<boolean>(false);
-  const [showModalSuccess, setShowModalSuccess] = useState<boolean>(false);
-  const [currentCid, setCurrentCid] = useState<string>("");
-
-  const { query } = useRouter();
+  const [deliverableType, setDeliverableType] = useState<string>();
+  const [originLink, setOriginLink] = useState<string>("");
+  const [isOriginLinkBanned, setIsOriginLinkBanned] = useState(false);
 
   const rewardERC20 = useERC20();
-
   const transactionalERC20 = useERC20();
-
-  const { searchNetworks, getReposList, createPreBounty, processEvent } =
-    useApi();
-
-  const { getURLWithNetwork } = useNetwork();
-
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
+  const { getURLWithNetwork } = useNetwork();
+  const { handleAddNetwork } = useNetworkChange();
+  const { searchNetworks, processEvent } = useApi();
 
   const {
     dispatch,
     state: { transactions, Settings, Service, currentUser, connectedChain, },
   } = useAppState();
-
-  const { handleAddNetwork } = useNetworkChange();
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -134,6 +126,19 @@ export default function CreateBountyPage() {
         console.error("coinErro", err);
         setCustomTokens([...customTokens, newToken]);
       });
+  }
+
+  function validateBannedDomain(link: string) {
+    return bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
+  }
+
+  const validateBannedDomainDebounced = useDebouncedCallback((link: string) => {
+    setIsOriginLinkBanned(validateBannedDomain(link));
+  }, 500);
+
+  function handleOriginLinkChange(newLink: string) {
+    setOriginLink(newLink);
+    validateBannedDomainDebounced(newLink);
   }
 
   async function handleCustomTokens(tokens: Token[]) {
@@ -188,7 +193,7 @@ export default function CreateBountyPage() {
     )
       return true;
 
-    if (section === 1 && (!repository || !branch)) return true;
+    if (section === 1 && (!deliverableType || validateBannedDomain(originLink))) return true;
 
     if (section === 2 && !isFundingType && isIssueAmount) return true;
     if (
@@ -269,7 +274,7 @@ export default function CreateBountyPage() {
     ].some((value) => value === false);
 
   async function createBounty() {
-    if (!repository || !transactionalToken || !Service?.active || !currentUser)
+    if (!deliverableType || !transactionalToken || !Service?.active || !currentUser)
       return;
 
     setIsLoadingCreateBounty(true);
@@ -281,22 +286,24 @@ export default function CreateBountyPage() {
         amount: issueAmount.value,
         creatorAddress: currentUser.walletAddress,
         githubUser: currentUser?.login,
-        repositoryId: repository?.id,
-        branch,
+        deliverableType,
+        originLink
       };
 
-      const cid = await createPreBounty({
+      const savedIssue = await useCreatePreBounty({
           title: payload.title,
           body: payload.body,
           creator: payload.githubUser,
-          repositoryId: payload.repositoryId,
+          deliverableType,
+          origin: originLink,
           tags: selectedTags,
           isKyc: isKyc,
           tierList: tierList?.length ? tierList : null,
-      },
-                                        currentNetwork?.name).then((cid) => cid);
+          amount: issueAmount.value,
+          networkName: currentNetwork?.name
+      });
 
-      if (!cid) {
+      if (!savedIssue) {
         return dispatch(toastError(t("bounty:errors.creating-bounty")));
       }
 
@@ -312,13 +319,10 @@ export default function CreateBountyPage() {
       dispatch(transactionToast);
 
       const bountyPayload: BountyPayload = {
-        cid,
-        branch: branch.value,
-        repoPath: repository.path,
+        cid: savedIssue.ipfsUrl,
         transactional: transactionalToken.address,
         title: payload.title,
-        tokenAmount: payload.amount,
-        githubUser: payload.githubUser,
+        tokenAmount: payload.amount
       };
 
       if (isFundingType && !rewardChecked) {
@@ -360,8 +364,8 @@ export default function CreateBountyPage() {
 
       if (networkBounty?.error !== true) {
         dispatch(updateTx([
-            parseTransaction(networkBounty,
-                             transactionToast.payload[0] as SimpleBlockTransactionPayload),
+            parseTransaction( networkBounty,
+                              transactionToast.payload[0] as SimpleBlockTransactionPayload),
         ]));
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
@@ -372,17 +376,13 @@ export default function CreateBountyPage() {
           dispatch(toastWarning(t("bounty:errors.sync")));
         }
 
-        if (createdBounty?.[cid]) {
-          //setCurrentCid(cid);
-          //setShowModalSuccess(true);
-          const [repoId, githubId] = String(cid).split("/");
-
-          router.push(getURLWithNetwork("/bounty", {
+        if (createdBounty?.[savedIssue.id]) {
+          router.push(getURLWithNetwork("/bounty/[id]", {
               chain: connectedChain?.shortName,
               network: currentNetwork?.name,
-              id: githubId,
-              repoId,
-          })).then(() => cleanFields())
+              id: savedIssue.id
+          }))
+            .then(() => cleanFields());
         }
       }
     } finally {
@@ -397,8 +397,8 @@ export default function CreateBountyPage() {
     setBountyDescription("");
     setIssueAmount(ZeroNumberFormatValues);
     setRewardAmount(ZeroNumberFormatValues);
-    setRepository(undefined);
-    setBranch(null);
+    setDeliverableType(undefined);
+    setOriginLink("");
     setIsKyc(false);
     setTierList([]);
     setCurrentSection(0);
@@ -428,9 +428,6 @@ export default function CreateBountyPage() {
 
   function handleNextStep() {
     if (currentSection + 1 < steps.length){
-      if(currentSection + 1 === 1){
-        getReposList(true, currentNetwork.name, connectedChain?.id).then(setRepositories)
-      }
       setCurrentSection((prevState) => prevState + 1);
     }
       
@@ -584,14 +581,11 @@ export default function CreateBountyPage() {
           isKyc={isKyc}
           updateIsKyc={setIsKyc}
           updateTierList={setTierList}
-          repository={repository}
-          updateRepository={setRepository}
-          branch={branch}
-          updateBranch={setBranch}
-          repositories={repositories}
-          branches={branches}
-          updateBranches={setBranches}
           updateUploading={setIsUploading}
+          originLink={originLink}
+          isOriginLinkBanned={isOriginLinkBanned}
+          onOriginLinkChange={handleOriginLinkChange}
+          setDeliverableType={setDeliverableType}
         />
       );
 
@@ -628,8 +622,8 @@ export default function CreateBountyPage() {
             title: bountyTitle,
             description: addFilesInDescription(bountyDescription),
             tags: selectedTags && selectedTags,
-            repository: repository?.path?.split("/")[1],
-            branch: branch?.label,
+            origin_link: originLink,
+            deliverable_type: deliverableType,
             reward: `${issueAmount.value} ${transactionalToken?.symbol}`,
             funders_reward:
               (rewardAmount.value && isFundingType) &&
@@ -717,7 +711,7 @@ export default function CreateBountyPage() {
             <div className="d-flex justify-content-center col-12 mt-4">
               <p className="">
                 {t("bounty:creating-this-bounty")}{" "}
-                <a href="https://www.bepro.network/terms" target="_blank">
+                <a href={TERMS_AND_CONDITIONS_LINK} target="_blank">
                   {t("bounty:terms-and-conditions")}
                 </a>
               </p>
@@ -734,32 +728,6 @@ export default function CreateBountyPage() {
           </CustomContainer>
         </CreateBountyContainer>
       )}
-      <Modal
-        show={showModalSuccess}
-        footer={
-          <div className="d-flex justify-content-center mb-2">
-            <Button
-              onClick={() => {
-                const [repoId, githubId] = String(currentCid).split("/");
-
-                router.push(getURLWithNetwork("/bounty", {
-                    chain: connectedChain?.name,
-                    network: currentNetwork?.name,
-                    id: githubId,
-                    repoId,
-                }));
-              }}
-            >
-              <span>{t("bounty:see-bounty")}</span>
-            </Button>
-          </div>
-        }
-      >
-        <div className="d-flex flex-column text-center align-items-center">
-          <CheckCircle />
-          <span className="mt-1">{t("bounty:created-success")}</span>
-        </div>
-      </Modal>
     </>
   );
 }

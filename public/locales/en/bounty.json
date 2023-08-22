@@ -106,7 +106,8 @@
     "title-character-limit": "Exceeds allowed limit of 130 characters: {{value}}", 
     "description-limit": "Exceeds allowed limit of characters and files: {{value}}",
     "no-networks-chain": "The selected chain has no active networks",
-    "bounty-update": "Bounty update failed"
+    "bounty-update": "Bounty update failed",
+    "banned-domain": "This domain is banned and cannot be used to open bounties."
   },
   "title": "Create new Bounty",
   "fields": {
@@ -135,6 +136,20 @@
     },
     "conversion-token": {
       "not-found": "Can't convert because not found"
+    },
+    "deliverable-types": {
+      "label": "Deliverable Types",
+      "description": "Specify the type of work for this bounty.",
+      "types": {
+        "code": "Code",
+        "design": "Design",
+        "other": "Other"
+      }
+    },
+    "origin-link": {
+      "label": "Origin Link",
+      "description": "If you have a project boilerplate, a figma design, or something that might help people to work on this bounty, you can provide a link below.",
+      "placeholder": "github.com"
     }
   },
   "reward-funders": "Set Funders Reward",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { FormCheck } from "react-bootstrap";
 
 import clsx from "clsx";
@@ -23,6 +23,8 @@ import {
 
 import { DetailsProps } from "interfaces/create-bounty";
 
+import { SelectOption } from "types/utils";
+
 import CreateBountyDescription from "./create-bounty-description";
 import BountyLabel from "./create-bounty-label";
 
@@ -36,9 +38,13 @@ export default function CreateBountyDetails({
   selectedTags,
   updateSelectedTags,
   isKyc,
+  originLink,
+  isOriginLinkBanned,
+  onOriginLinkChange,
   updateIsKyc,
   updateTierList,
   updateUploading,
+  setDeliverableType
 }: DetailsProps) {
   const { t } = useTranslation("bounty");
 
@@ -54,11 +60,17 @@ export default function CreateBountyDetails({
     value: tag,
   }));
 
-  function handleChangeTitle(e: React.ChangeEvent<HTMLInputElement>) {
+  const deliverableTypes = [
+    { label: t("fields.deliverable-types.types.code"), value: "code" },
+    { label: t("fields.deliverable-types.types.design"), value: "design" },
+    { label: t("fields.deliverable-types.types.other"), value: "other" }
+  ];
+
+  function handleChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     updateTitle(e.target.value);
   }
 
-  function handleChangeDescription(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  function handleChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
     updateDescription(e.target.value);
   }
 
@@ -66,8 +78,18 @@ export default function CreateBountyDetails({
     updateSelectedTags(newTags.map(({ value }) => value));
   }
 
-  function handleIsKYCChecked(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleIsKYCChecked(e: ChangeEvent<HTMLInputElement>) {
     updateIsKyc(e.target.checked);
+  }
+  
+  function handleDeliverableTypeClick(selected: SelectOption | SelectOption[]) {
+    const { value } = Array.isArray(selected) ? selected.at(0) : selected;
+
+    setDeliverableType(value.toString());
+  }
+
+  function handleOriginLinkChange(e: ChangeEvent<HTMLInputElement>) {
+    onOriginLinkChange(e.target.value)
   }
 
   useEffect(() => {
@@ -207,31 +229,51 @@ export default function CreateBountyDetails({
         <div className="col">
           <div className="row">
             <span className="lg-medium text-gray-50">
-              Deliverable types
+              {t("fields.deliverable-types.label")}
             </span>
           </div>
 
           <div className="row mt-2">
             <span className="sm-regular text-gray-200">
-              Specify the type of work for this bounty
+            {t("fields.deliverable-types.description")}
             </span>
           </div>
 
           <div className="row mt-3">
             <CheckButtons
-              options={[
-                { label: "Code", value: "code" },
-                { label: "Design", value: "design" },
-                { label: "Other", value: "other" }
-              ]}
-              onClick={() => {}}
+              options={deliverableTypes}
+              onClick={handleDeliverableTypeClick}
             />
           </div>
 
-          <div className="row mt-3">
-            <span className="sm-regular text-gray-200">
-              If you have a project boilerplate, a figma design, or something that might help people to work on this bounty, you can provide a link below.
+          <div className="row mt-4 mb-2">
+            <span className="sm-regular text-gray-200 mt-2 mb-1">
+              {t("fields.origin-link.description")}
             </span>
+          </div>
+
+          <div className="row">
+            <div className="col-12 col-lg-7">
+              <label htmlFor="origin-link" className="sm-regular text-gray-300 mb-2">
+                {t("fields.origin-link.label")}
+              </label>
+
+              <input
+                type="text"
+                name="origin-link"
+                id="origin-link"
+                placeholder={t("fields.origin-link.placeholder")}
+                className={`form-control ${isOriginLinkBanned ? "is-invalid" : ""}`}
+                value={originLink}
+                onChange={handleOriginLinkChange}
+              />
+
+              <If condition={isOriginLinkBanned}>
+                <ContextualSpan context="danger" className="mt-2">
+                  {t("errors.banned-domain")}
+                </ContextualSpan>
+              </If>
+            </div>
           </div>
         </div>
       </div>
