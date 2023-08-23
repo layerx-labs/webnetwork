@@ -34,8 +34,8 @@ export default function BountySettings({
         pullRequest?.status !== "canceled"),
     isBountyOwner:
       !!state.currentUser?.walletAddress &&
-      currentBounty?.creatorAddress &&
-      currentBounty?.creatorAddress ===
+      currentBounty?.user?.address &&
+      currentBounty?.user?.address ===
         state.currentUser?.walletAddress,
 
     isFundingRequest: !!currentBounty?.isFundingRequest,
@@ -46,7 +46,7 @@ export default function BountySettings({
   };
 
   async function handleHardCancel() {
-    handleHardCancelBounty(currentBounty.contractId, currentBounty.issueId)
+    handleHardCancelBounty(currentBounty.contractId, currentBounty.id)
       .then(() => {
         updateWalletBalance();
         updateBountyData();
@@ -58,7 +58,7 @@ export default function BountySettings({
     
     const isFundingRequest = currentBounty.fundingAmount.gt(0);
 
-    handleReedemIssue(currentBounty.contractId, currentBounty.issueId, isFundingRequest)
+    handleReedemIssue(currentBounty.contractId, currentBounty.id, isFundingRequest)
       .then(() => {
         updateWalletBalance(true);
         updateBountyData();
@@ -79,7 +79,6 @@ export default function BountySettings({
   return (
     <BountySettingsView
       isCancelable={isCancelable}
-      bounty={currentBounty}
       network={state.Service?.network}
       handleEditIssue={handleEditIssue}
       handleHardCancel={handleHardCancel}

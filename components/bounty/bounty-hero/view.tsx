@@ -57,9 +57,10 @@ export default function BountyHeroView({
                   {network} /
                 </span>
                 <span className="text-break">
-                  {bounty?.githubId}
+                  {bounty?.id}
                 </span>
               </div>
+
               <div className="">
                 <BountySettings
                   currentBounty={bounty}
@@ -81,13 +82,13 @@ export default function BountyHeroView({
                       fundedAmount={bounty?.fundedAmount}
                     />
                   </div>
-                  <span className="ms-1 text-white">
-                    {currentState?.charAt(0)?.toUpperCase() +
-                      currentState?.slice(1)}
+
+                  <span className="ms-1 text-white text-capitalize">
+                    {currentState}
                   </span>
                 </div>
 
-                {bounty?.isKyc ? (
+                <If condition={bounty?.isKyc}>
                   <OverlayTrigger
                     key="bottom-githubPath"
                     placement="bottom"
@@ -104,34 +105,37 @@ export default function BountyHeroView({
                       {t("bounty:kyc.label")}
                     </div>
                   </OverlayTrigger>
-                ) : null}
+                </If>
               </div>
-              <div>{renderPriceConversor()}</div>
+
+              <div>
+                {renderPriceConversor()}
+              </div>
             </div>
+
             <h5 className="mt-3 break-title">
               {bounty?.title}
             </h5>
+
             <If condition={!!bounty?.tags?.length}>
               <div className="mt-3 border-bottom border-gray-850 pb-4">
                 <BountyTagsView tags={bounty?.tags} />
               </div>
             </If>
+
             <div 
               className={`py-3 gap-3 d-flex flex-wrap align-items-center border-top 
                 border-gray-850 justify-content-md-start`}
             >
-              <If condition={!!bounty?.repository}>
-                <BountyItemLabel label={t("common:misc.repository")} className="col-12 col-sm-auto">
-                  <span className={`text-truncate`}>
-                    {
-                      bounty?.repository?.githubPath.split("/")?.[1]
-                    }
-                  </span>
-                </BountyItemLabel>
-              </If>
-              <BountyItemLabel label={t("common:misc.branch")} className="col-12 col-sm-auto">
-                <span className={`text-truncate`}>
-                  {bounty?.branch}
+              <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-auto">
+                <a href={bounty?.origin} className={`text-truncate`} target="_blank" rel="noreferrer noopener">
+                  {bounty?.origin}
+                </a>
+              </BountyItemLabel>
+
+              <BountyItemLabel label={t("common:misc.type")} className="col-12 col-sm-auto">
+                <span className={`text-truncate text-capitalize`}>
+                  {bounty?.type}
                 </span>
               </BountyItemLabel>
 
@@ -147,17 +151,17 @@ export default function BountyHeroView({
                     <div className="d-flex flex-column justify-content-center">
                       <Avatar
                         size="xsm"
-                        userLogin={bounty?.creatorGithub}
+                        userLogin={bounty?.user?.githubLogin}
                       />{" "}
                     </div>
+
                     <span>
-                      {bounty?.creatorGithub
-                        ? bounty?.creatorGithub
-                        : truncateAddress(bounty?.creatorAddress)}
+                      {bounty?.user?.githubLogin || truncateAddress(bounty?.user?.address)}
                     </span>
                   </>
                 </BountyItemLabel>
               </div>
+
               <If condition={!!bounty?.createdAt}>
                 <BountyItemLabel
                   label={t("common:misc.opened-on")}

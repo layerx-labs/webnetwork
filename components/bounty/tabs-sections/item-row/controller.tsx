@@ -17,16 +17,12 @@ interface ItemRowProps {
   item: Proposal | PullRequest;
   isProposal: boolean;
   currentBounty: IssueBigNumberData;
-  approvalsRequired: number;
-  canUserApprove: boolean;
 }
 
 export default function ItemRow({
   item,
   isProposal,
-  currentBounty,
-  approvalsRequired,
-  canUserApprove,
+  currentBounty
 }: ItemRowProps) {
   const { state } = useAppState();
 
@@ -35,8 +31,7 @@ export default function ItemRow({
 
   const pathRedirect = isProposal ? "/proposal" : "/pull-request";
   const valueRedirect = {
-    id: currentBounty?.githubId,
-    repoId: currentBounty?.repository_id,
+    id: currentBounty?.id,
     prId: undefined,
     proposalId: undefined,
   };
@@ -64,15 +59,14 @@ export default function ItemRow({
     valueRedirect.proposalId = item?.id;
   }
 
-  const approvalsCurrentPr = (item as PullRequest)?.approvals?.total || 0;
-  const shouldRenderApproveButton =
-    approvalsCurrentPr < approvalsRequired && canUserApprove && !isProposal;
   const itemId = isProposal
     ? item?.contractId + 1
     : (item as PullRequest)?.githubId;
+
   const totalToBeDisputed = BigNumber(state.Service?.network?.amounts?.percentageNeededForDispute)
     .multipliedBy(state.Service?.network?.amounts?.totalNetworkToken)
     .dividedBy(100);
+
   const btnLabel = isProposal
     ? "actions.view-proposal"
     : (item as PullRequest)?.status === "draft"
@@ -94,11 +88,9 @@ export default function ItemRow({
       item={item}
       href={getURLWithNetwork(pathRedirect, valueRedirect)}
       handleBtn={handleBtn}
-      githubPath={state.Service?.network?.repos?.active?.githubPath}
       isProposal={isProposal}
       status={status}
       btnLabel={btnLabel}
-      shouldRenderApproveButton={shouldRenderApproveButton}
       proposal={proposal}
       isDisputed={isDisputed}
       isMerged={isMerged}

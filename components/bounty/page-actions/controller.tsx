@@ -4,6 +4,9 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
+import { PageActionsControllerProps } from "components/bounty/page-actions/page-actions";
+import PageActionsView from "components/bounty/page-actions/view";
+
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
@@ -12,11 +15,9 @@ import { getIssueState } from "helpers/handleTypeIssue";
 import { CustomSession } from "interfaces/custom-session";
 import { NetworkEvents } from "interfaces/enums/events";
 
+import useStartWorking from "x-hooks/api/bounty/use-start-working";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
-
-import { PageActionsControllerProps } from "./page-actions";
-import PageActionsView from "./view";
 
 export default function PageActions({
   handleEditIssue,
@@ -46,12 +47,10 @@ export default function PageActions({
   const {
     createPrePullRequest,
     cancelPrePullRequest,
-    startWorking,
     processEvent,
     getUserOf
   } = useApi();
 
-  const issueGithubID = currentBounty?.githubId;
   const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
   const isBountyReadyToPropose = !!currentBounty?.isReady;
   const bountyState = getIssueState({
@@ -62,16 +61,10 @@ export default function PageActions({
   const hasPullRequests = 
     !!currentBounty?.pullRequests?.filter((pullRequest) => pullRequest?.status !== "canceled")?.length;
   const isWalletConnected = !!state.currentUser?.walletAddress;
-  const isBountyOpen =
-    currentBounty?.isClosed === false &&
-    currentBounty?.isCanceled === false;
+  const isBountyOpen = currentBounty?.isClosed === false && currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
-  const isWorkingOnBounty = !!currentBounty?.working?.find((id) => +id === userId);
-  const isBountyOwner =
-  isWalletConnected &&
-  currentBounty?.creatorAddress &&
-  currentBounty?.creatorAddress ===
-    state.currentUser?.walletAddress
+  const isWorkingOnBounty = !!currentBounty?.working?.find((login) => login === state.currentUser?.login);
+  const isBountyOwner = isWalletConnected && currentBounty?.user?.address === state.currentUser?.walletAddress;
   const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
   const isUpdateAmountButton =
@@ -86,8 +79,7 @@ export default function PageActions({
     !isBountyInDraft &&
     isBountyOpen &&
     !isWorkingOnBounty &&
-    isStateToWorking &&
-    !!state.currentUser?.accessToken
+    isStateToWorking;
   const isEditButton = isWalletConnected && isBountyInDraft && isBountyOwner;
 
   const rest = {
@@ -119,7 +111,7 @@ export default function PageActions({
 
     await createPrePullRequest({
       repoId: String(repoId),
-      issueGithubID,
+      issueGithubID: currentBounty?.id,
       title: prTitle,
       description: prDescription,
       branch: "",
@@ -136,7 +128,7 @@ export default function PageActions({
         }) => {
         pullRequestPayload = {
             repoId,
-            issueGithubId: issueGithubID,
+            issueGithubId: currentBounty?.id,
             bountyId,
             issueCid: originCID,
             pullRequestGithubId: cid,
@@ -193,10 +185,9 @@ export default function PageActions({
   async function handleStartWorking() {
     setIsExecuting(true);
 
-    startWorking({
-      issueId: currentBounty?.issueId,
-      networkName: state.Service?.network?.active?.name,
-      wallet: state.currentUser.walletAddress,
+    useStartWorking({
+      id: currentBounty?.id,
+      networkName: state.Service?.network?.active?.name
     })
       .then(() => {
         dispatch(addToast({

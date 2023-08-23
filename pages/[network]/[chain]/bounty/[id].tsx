@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { SSRConfig } from "next-i18next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
-import {useRouter} from "next/router";
-import {GetServerSideProps} from "next/types";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next/types";
 
 import BountyBody from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
@@ -14,7 +14,7 @@ import TabSections from "components/bounty/tabs-sections/controller";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 
-import {useAppState} from "contexts/app-state";
+import { useAppState } from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import { commentsParser, issueParser } from "helpers/issue";
@@ -45,7 +45,7 @@ export default function PageIssue({ bounty }: PageBountyProps) {
   const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
-  const {state} = useAppState();
+  const { state } = useAppState();
 
   async function updateBountyData() {
     const bountyDatabase = await getBountyData(router.query)

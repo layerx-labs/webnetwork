@@ -30,10 +30,7 @@ export interface IssueData {
   fundedAmount?: string;
   rewardAmount?: string;
   body: string;
-  branch?: string;
   createdAt: Date;
-  creatorAddress?: string;
-  creatorGithub?: string;
   developers: developer[];
   dueDate?: string;
   mergeProposals: Proposal[];
@@ -42,7 +39,6 @@ export interface IssueData {
   owner?: string;
   network_id?: number;
   pullRequests: PullRequest[];
-  repo?: string;
   seoImage: string;
   nftImage?: string;
   state: IssueState;
