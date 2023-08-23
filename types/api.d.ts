@@ -45,3 +45,9 @@ export type PaymentsData = Payment[];
 export interface NetworkPaymentsData extends Partial<Network> {
   payments?: PaymentsData;
 }
+
+export interface UpdateBountyVisibilityParams {
+  id: string | number;
+  visible: boolean;
+  networkAddress: string;
+}
