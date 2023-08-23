@@ -21,7 +21,7 @@ async function getTotal(req: NextApiRequest, res: NextApiResponse) {
 
   if (state) whereCondition.state = state;
 
-  if (issueId) whereCondition.issueId = issueId;
+  if (issueId) whereCondition.id = issueId;
 
   if (repoId) whereCondition.repository_id = repoId;
 
