@@ -7,15 +7,17 @@ import Badge from "components/badge";
 import Button from "components/button";
 import Switch from "components/common/switch/view";
 import GithubConnectionState from "components/connections/github-connection-state/controller";
+import RemoveGithubAccount from "components/connections/remove-github-modal/controller";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
 import If from "components/If";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import ProfileLayout from "components/profile/profile-layout";
-import { RemoveGithubAccount } from "components/profile/remove-github-modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+
+import ConnectGithubAccount from "../../../connections/connect-github-modal/controller";
 
 interface ProfilePageViewProps {
   userLogin: string;
@@ -24,6 +26,7 @@ interface ProfilePageViewProps {
   walletAddress: string;
   isCouncil: boolean;
   showRemoveModal: boolean;
+  showConnectModal: boolean;
   isSaveButtonDisabled: boolean;
   isSwitchDisabled: boolean;
   isEmailInvalid: boolean;
@@ -37,6 +40,9 @@ interface ProfilePageViewProps {
   onSave: () => void;
   onResend: () => void;
   onSwitchChange: (value: boolean) => void;
+  hideConnectModal: () => void;
+  handleChangeMyhandle: () => void;
+  connectGithub: () => void;
 }
 
 export default function ProfilePageView({
@@ -46,6 +52,7 @@ export default function ProfilePageView({
   isNotificationEnabled,
   isCouncil,
   showRemoveModal,
+  showConnectModal,
   isSaveButtonDisabled,
   isSwitchDisabled,
   isEmailInvalid,
@@ -59,6 +66,9 @@ export default function ProfilePageView({
   onSave,
   onResend,
   onSwitchChange,
+  hideConnectModal,
+  handleChangeMyhandle,
+  connectGithub
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
@@ -91,15 +101,22 @@ export default function ProfilePageView({
                 size={isTabletOrMobile ? "md" : "lg"}
                 withBorder
               />
-              <div className={`d-flex flex-column ${isTabletOrMobile ? "ms-2" : "mt-2" }`}>
+              <div className={`d-flex flex-column ${isTabletOrMobile ? "ms-2" : "mt-2" } text-truncate`}>
                 <If
                   condition={!!userLogin}
                   otherwise={
-                    <AddressWithCopy
-                      address={walletAddress}
-                      textClass={handleClasses}
-                      truncated
-                    />
+                    <div className="d-flex flex-wrap">
+                      <AddressWithCopy
+                        address={walletAddress}
+                        textClass={handleClasses}
+                        truncated
+                      />
+                      <ResponsiveWrapper md={true} xs={false}>
+                        <Button className="ms-3" onClick={handleChangeMyhandle}>
+                          {t("profile:actions.change-my-handle")}
+                        </Button>
+                      </ResponsiveWrapper>
+                    </div>
                   }
                 >
                   <span className={handleClasses}>
@@ -125,6 +142,14 @@ export default function ProfilePageView({
             )}
           </div>
         </div>
+
+        <If condition={!userLogin}>
+          <ResponsiveWrapper md={false} xs={true}>
+            <Button onClick={handleChangeMyhandle}>
+              {t("profile:actions.change-my-handle")}
+            </Button>
+          </ResponsiveWrapper>
+        </If>
 
         <Divider bg="gray-850" />
 
@@ -220,6 +245,12 @@ export default function ProfilePageView({
           walletAddress={walletAddress}
           onCloseClick={hideRemoveModal}
           disconnectGithub={disconnectGithub}
+        />
+
+        <ConnectGithubAccount 
+          show={showConnectModal} 
+          onCloseClick={hideConnectModal}
+          onOkClick={connectGithub}        
         />
       </ProfileLayout>
     </>
