@@ -28,6 +28,7 @@ export default function ProfilePage() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
 
   const emailValidator = useDebouncedCallback(email => {
@@ -35,8 +36,8 @@ export default function ProfilePage() {
   }, 500);
 
   const { goToProfilePage } = useNetwork();
-  const { signOut } = useAuthentication();
   const { state, dispatch } = useAppState();
+  const { signInGithub } = useAuthentication();
 
   const sessionUser = (sessionData as CustomSession)?.user;
   const userEmail = sessionUser?.email || "";
@@ -46,6 +47,8 @@ export default function ProfilePage() {
 
   const handleClickDisconnect = () => setShowRemoveModal(true);
   const hideRemoveModal = () => setShowRemoveModal(false);
+  const hideConnectModal = () => setShowConnectModal(false);
+  const handleChangeMyhandle = () => setShowConnectModal(true);
 
   function handleEmailChange(e) {
     setInputEmail(e.target.value);
@@ -98,7 +101,9 @@ export default function ProfilePage() {
     if (query?.emailVerification === "success")
       dispatch(toastSuccess(t("notifications-form.success-toast.content"), 
                             t("notifications-form.success-toast.title")));
-  }, [query?.emailVerification]);
+    if (query?.isGithubLoginExist === "true")
+      dispatch(toastError(t("modals.connect-github.errors.github-already-exists")));
+  }, [query]);
 
   return (
     <ProfilePageView
@@ -119,7 +124,11 @@ export default function ProfilePage() {
       handleClickDisconnect={handleClickDisconnect}
       hideRemoveModal={hideRemoveModal}
       showRemoveModal={showRemoveModal}
-      disconnectGithub={signOut}
+      showConnectModal={showConnectModal}
+      hideConnectModal={hideConnectModal}
+      handleChangeMyhandle={handleChangeMyhandle}
+      disconnectGithub={updateSession}
+      connectGithub={signInGithub}
       onSwitchChange={onSwitchChange}
     />
   );
