@@ -26,6 +26,7 @@ import {
   getBountyData,
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
+import getCommentsData from "x-hooks/api/comments/get-comments-data";
 
 interface PageBountyProps {
   bounty: {
