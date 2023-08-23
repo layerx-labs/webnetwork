@@ -12,11 +12,10 @@ export default function GithubConnectionState({
   handleClickDisconnect,
 }: GithubConnectionStateProps) {
   const { state } = useAppState();
-  const { signInGithub, signInWallet } = useAuthentication();
+  const {  signInWallet } = useAuthentication();
 
   return (
     <GithubConnectionStateView
-      connectGithub={signInGithub}
       connectWallet={signInWallet}
       handleClickDisconnect={handleClickDisconnect}
       userLogin={state?.currentUser?.login}
