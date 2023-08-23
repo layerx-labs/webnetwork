@@ -161,6 +161,23 @@ class Network extends Model {
       }
     });
   }
+
+  static findByNetworkAndChainNames(networkName, chainName) {
+    return this.findAll({
+      where: {
+        name: Sequelize.where(Sequelize.fn("lower", Sequelize.col("name")), networkName?.toLowerCase())
+      },
+      include: [
+        {
+          association: "chain",
+          required: true,
+          where: {
+            chainShortName: Sequelize.where(Sequelize.fn("lower", Sequelize.col("chainShortName")), chainName?.toLowerCase())
+          }
+        }
+      ]
+    });
+  }
 }
 
 module.exports = Network;
