@@ -123,18 +123,18 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const bountyDatabase = await getBountyData(query);
 
-  const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
+  const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' });
 
   const bounty = {
     comments: commentsDatabase,
     data: bountyDatabase
-  }
+  };
 
   const seoData: Partial<IssueData> = {
     title: bountyDatabase?.title,
     body: bountyDatabase?.body,
     id: bountyDatabase?.id
-  }
+  };
 
   return {
     props: {

@@ -22,7 +22,6 @@ export default async function get(query: ParsedUrlQuery) {
     pullRequester,
     network,
     networkName,
-    repoId,
     transactionalTokenAddress,
     time,
     search,
@@ -48,8 +47,10 @@ export default async function get(query: ParsedUrlQuery) {
   if (state && !["disputable", "mergeable"].includes(state.toString())) {
     if (state === "funding")
       whereCondition.fundingAmount = {
-        [Op.ne]: "0",
-        [Op.ne]: Sequelize.literal('"issue"."fundedAmount"'),
+        [Op.and]: [
+          { [Op.ne]: "0" },
+          { [Op.ne]: Sequelize.literal('"issue"."fundedAmount"') },
+        ]
       };
     else if (state === "open") {
       whereCondition.state[Op.in] = ["open", "ready", "proposal"];
@@ -63,7 +64,7 @@ export default async function get(query: ParsedUrlQuery) {
   }
 
   if (issueId) 
-    whereCondition.issueId = issueId;
+    whereCondition.id = issueId;
 
   if (chainId) 
     whereCondition.chain_id = +chainId;
@@ -153,14 +154,6 @@ export default async function get(query: ParsedUrlQuery) {
                       chainShortName: { [Op.iLike]: chain.toString()}
                     } : {})]);
 
-  const repositoryAssociation = 
-    getAssociation( "repository", 
-                    ["id", "githubPath"], 
-                    !!repoId, 
-                    repoId ? { 
-                      id: +repoId
-                    } : {});
-
   const transactionalTokenAssociation = 
     getAssociation( "transactionalToken", 
                     ["address", "name", "symbol"], 
@@ -198,7 +191,6 @@ export default async function get(query: ParsedUrlQuery) {
       networkAssociation,
       proposalAssociation,
       pullRequestAssociation,
-      repositoryAssociation,
       transactionalTokenAssociation,
     ]
   }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
