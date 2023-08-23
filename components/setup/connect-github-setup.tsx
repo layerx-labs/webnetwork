@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 
 import GithubConnectionState from "components/connections/github-connection-state/controller";
-import {RemoveGithubAccount} from "components/profile/remove-github-modal";
+import RemoveGithubAccount from "components/connections/remove-github-modal/controller";
 
 import {useAppState} from "contexts/app-state";
 
