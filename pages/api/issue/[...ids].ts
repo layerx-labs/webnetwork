@@ -72,7 +72,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     tags
   } = req.body;
 
-  const network = await models.network.findByNetworkAndChainNames(networkName, chainName);
+  const network = await models.network.findOneByNetworkAndChainNames(networkName, chainName);
 
   if (!network) return res.status(404).json({message:"Invalid network"});
 
