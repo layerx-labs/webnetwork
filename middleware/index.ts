@@ -1,6 +1,7 @@
 import { NextApiHandler } from "next";
 
 import { LogAccess } from "middleware/log-access";
+import { NetworkRoute } from "middleware/network-route";
 import { withAdmin } from "middleware/with-admin";
 import { withGovernor } from "middleware/with-governor";
 import { withIssue } from "middleware/with-issue";
@@ -9,7 +10,6 @@ import { withUser } from "middleware/with-user";
 import { WithValidChainId } from "middleware/with-valid-chain-id";
 import withCors from "middleware/withCors";
 import { withJWT } from "middleware/withJwt";
-
 
 const withCORS = (handler: NextApiHandler) => LogAccess(withCors(handler));
 const withProtected = (handler: NextApiHandler) => withCORS(withJWT(withSignature(handler)));
@@ -27,5 +27,6 @@ export {
   IssueRoute,
   withGovernor,
   UserRoute,
-  WithValidChainId
+  WithValidChainId,
+  NetworkRoute
 };
