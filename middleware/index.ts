@@ -6,8 +6,10 @@ import { withGovernor } from "middleware/with-governor";
 import { withIssue } from "middleware/with-issue";
 import { withSignature } from "middleware/with-signature";
 import { withUser } from "middleware/with-user";
+import { WithValidChainId } from "middleware/with-valid-chain-id";
 import withCors from "middleware/withCors";
 import { withJWT } from "middleware/withJwt";
+
 
 const withCORS = (handler: NextApiHandler) => LogAccess(withCors(handler));
 const withProtected = (handler: NextApiHandler) => withCORS(withJWT(withSignature(handler)));
@@ -24,5 +26,6 @@ export {
   AdminRoute,
   IssueRoute,
   withGovernor,
-  UserRoute
+  UserRoute,
+  WithValidChainId
 };
