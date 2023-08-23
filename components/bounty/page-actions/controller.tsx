@@ -200,14 +200,13 @@ export default function PageActions({
       networkName: state.Service?.network?.active?.name,
       wallet: state.currentUser.walletAddress,
     })
-      .then((response) => {
+      .then(() => {
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
             content: t("bounty:actions.start-working.success"),
         }));
 
-        addNewComment(response.data);
         return updateBountyData();
       })
       .then(() => setIsExecuting(false))

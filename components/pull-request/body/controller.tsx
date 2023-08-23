@@ -23,6 +23,7 @@ interface PullRequestBodyControllerProps {
   updateBountyData: () => void;
   updatePrDetails: () => void;
   handleShowModal: () => void;
+  updateComments: () => void;
 }
 
 export default function PullRequestBody({
@@ -32,6 +33,7 @@ export default function PullRequestBody({
   updateBountyData,
   updatePrDetails,
   handleShowModal,
+  updateComments
 }: PullRequestBodyControllerProps) {
   const { t } = useTranslation(["common", "pull-request"]);
 
@@ -179,6 +181,9 @@ export default function PullRequestBody({
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
       githubPath={state.Service?.network?.repos?.active?.githubPath}
+      updateComments={updateComments}
+      currentUser={state.currentUser}
+      bountyId={currentBounty?.id}
     />
   );
 }

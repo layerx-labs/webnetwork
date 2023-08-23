@@ -7,7 +7,7 @@ import {GetServerSideProps} from "next/types";
 
 import BountyBody from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
-import BountyComments from "components/bounty/comments/controller";
+import Comments from "components/bounty/comments/controller";
 import FundingSection from "components/bounty/funding-section/controller";
 import PageActions from "components/bounty/page-actions/controller";
 import TabSections from "components/bounty/tabs-sections/controller";
@@ -17,14 +17,13 @@ import If from "components/If";
 import {useAppState} from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
-import { issueParser } from "helpers/issue";
+import { commentsParser, issueParser } from "helpers/issue";
 
 import { CurrentBounty } from "interfaces/application-state";
 import { IssueData, IssueDataComment } from "interfaces/issue-data";
 
 import { 
   getBountyData,
-  getBountyOrPullRequestComments,
   getPullRequestsDetails
 } from "x-hooks/api/bounty/get-bounty-data";
 
@@ -39,9 +38,10 @@ interface PageBountyProps {
 export default function PageIssue({ bounty }: PageBountyProps) {
   const [currentBounty, setCurrentBounty] = useState<CurrentBounty>({
     data: issueParser(bounty?.data),
-    comments: bounty?.comments,
+    comments: commentsParser(bounty?.comments),
     lastUpdated: 0,
   });
+
   const [commentsIssue, setCommentsIssue] = useState([...currentBounty?.comments || []]);
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
@@ -52,19 +52,20 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 
   async function updateBountyData(updatePrData = false) {
     const bountyDatabase = await getBountyData(router.query)
+    const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
 
     if(updatePrData) {
       const pullRequests = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                         bountyDatabase?.pullRequests);
       setCurrentBounty({
         data: { ...issueParser(bountyDatabase), pullRequests},
-        comments: commentsIssue,
+        comments: commentsParser(commentsDatabase),
         lastUpdated: 0
       })
     } else {
       setCurrentBounty({
         data: { ...issueParser(bountyDatabase), pullRequests: currentBounty?.data?.pullRequests },
-        comments: commentsIssue,
+        comments: commentsParser(commentsDatabase),
         lastUpdated: 0
       })
     }
@@ -118,10 +119,14 @@ export default function PageIssue({ bounty }: PageBountyProps) {
           cancelEditIssue={handleCancelEditIssue}
         />
 
-        <BountyComments
-          comments={commentsIssue}
-          repo={currentBounty?.data?.repository?.githubPath}
-          issueId={id}
+        <Comments
+          type="issue"
+          updateData={updateBountyData}
+          ids={{
+            issueId: +currentBounty?.data?.id
+          }}
+          comments={currentBounty?.comments}
+          currentUser={state.currentUser}
         />
       </CustomContainer>
     </BountyEffectsProvider>
@@ -131,14 +136,13 @@ export default function PageIssue({ bounty }: PageBountyProps) {
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const bountyDatabase = await getBountyData(query)
 
-  const githubComments = await getBountyOrPullRequestComments(bountyDatabase?.repository?.githubPath, 
-                                                              +bountyDatabase?.githubId);
+  const commentsDatabase = await getCommentsData({ issueId: bountyDatabase?.id, type: 'issue' })
 
   const pullRequestsDetails = await getPullRequestsDetails(bountyDatabase?.repository?.githubPath,
                                                            bountyDatabase?.pullRequests);
   
   const bounty = {
-    comments: githubComments,
+    comments: commentsDatabase,
     data: {...bountyDatabase, pullRequests: pullRequestsDetails}
   }
   

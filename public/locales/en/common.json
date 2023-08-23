@@ -153,7 +153,8 @@
     "register": "Register",
     "clear-all": "Clear All",
     "apply": "Apply",
-    "clear": "Clear"
+    "clear": "Clear",
+    "save": "Save"
   },
   "misc": {
     "by": "by",
@@ -161,8 +162,7 @@
     "and": "and",
     "add": "Add",
     "cap": "cap",
-    "comments_one": "{{count}} comment",
-    "comments_other": "{{count}} comments",
+    "comments": "Comments",
     "created-at": "Created at",
     "description": "Description",
     "details": "Details",
@@ -216,8 +216,7 @@
     "copied": "Copied",
     "address-copied": "Address Copied",
     "empty-list": "Empty List",
-    "learn-more": "Learn More",
-    "chain": "Chain"
+    "learn-more": "Learn More"
   },
   "modals": {
     "help-modal": {
@@ -480,5 +479,12 @@
   "placeholders": {
     "select-chain": "Select Chain",
     "select-latest": "Select Latest"
-  }
+  },
+  "comments": {
+    "input": {
+      "placeholder":"Leave a comment..."
+    },
+    "button": "Comment",
+    "not-connect-wallet": "You are not connected to your wallet. To comment please connect your wallet."
+  } 
 }
