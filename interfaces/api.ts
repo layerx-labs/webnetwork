@@ -71,7 +71,7 @@ export interface CancelPrePullRequestParams extends RequestParams {
 }
 
 export interface StartWorkingParams extends RequestParams {
-  issueId: string;
+  id: string;
 }
 
 export interface CreateReviewParams extends RequestParams {
@@ -89,9 +89,9 @@ export interface PatchUserParams extends RequestParams {
 }
 
 export interface updateIssueParams extends RequestParams {
-  repoId: string | number;
-  ghId: string | number;
+  id: string | number;
   networkName: string;
+  chainName: string;
   body?: string;
   tags?: string[];
 }

@@ -1,20 +1,11 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import getConfig from "next/config";
-import { Octokit } from "octokit";
 import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 
-import * as IssueQueries from "graphql/issue";
-
 import { chainFromHeader } from "helpers/chain-from-header";
-import { getPropertyRecursively } from "helpers/object";
 
 import { IssueRoute } from "middleware";
-
-import { GraphQlQueryResponseData, GraphQlResponse } from "types/octokit";
-
-const { serverRuntimeConfig } = getConfig();
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const { ids: [id, networkName, chainName], chainId } = req.query;
@@ -29,6 +20,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     { association: "rewardToken" },
     { association: "benefactors" },
     { association: "disputes" },
+    { association: "user" },
     { association: "network", include: [{ association: "chain", attributes: [ "chainShortName" ] }] },
   ];
 
@@ -72,7 +64,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
 async function put(req: NextApiRequest, res: NextApiResponse) {
   const {
-    ids: [repoId, ghId, networkName],
+    ids: [id, networkName, chainName],
   } = req.query;
 
   const {
@@ -80,21 +72,13 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     tags
   } = req.body;
 
-  const issueId = [repoId, ghId].join("/");
-
-  const network = await models.network.findOne({
-    where: {
-      name: {
-        [Op.iLike]: String(networkName).replaceAll(" ", "-")
-      }
-    }
-  });
+  const network = await models.network.findByNetworkAndChainNames(networkName, chainName);
 
   if (!network) return res.status(404).json({message:"Invalid network"});
 
   const issue = await models.issue.findOne({
     where: {
-      issueId,
+      id,
       network_id: network?.id
     },
     include: [{ association: "repository" }]
@@ -103,29 +87,11 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
   if (!issue) return res.status(404).json({message: "bounty not found"});
 
   if(issue.state === 'draft'){
-    if(body) issue.body = body
-    if(tags) issue.tags = tags
+    if(body) issue.body = body;
+    if(tags) issue.tags = tags;
+
     await issue.save()
-
-    const [owner, repo] = issue.repository.githubPath.split("/");
-
-    const githubAPI = (new Octokit({ auth: serverRuntimeConfig?.github?.token })).graphql;
-
-    const issueDetails = await githubAPI<GraphQlResponse>(IssueQueries.Details, {
-      repo,
-      owner,
-      issueId: +issue.githubId
-    });
-  
-    const issueGithubId = issueDetails.repository.issue.id;
-    
-    const updateIssue = getPropertyRecursively<GraphQlQueryResponseData>("node",
-                                                                         await githubAPI(IssueQueries.Update, {
-                                                                            body: body,
-                                                                            issueId: issueGithubId,
-                                                                         }));
-
-    return res.status(200).json(updateIssue);
+    return res.status(200).json("ok");
   } else{
     return res.status(400).json({message: 'bounty not in draft'})
   } 
@@ -147,4 +113,4 @@ async function IssuesMethods(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-export default IssueRoute(IssuesMethods)
+export default IssueRoute(IssuesMethods);

@@ -204,13 +204,6 @@ export default function useApi() {
       .catch(() => null);
   }
 
-  async function updateIssue({repoId, ghId, networkName = DEFAULT_NETWORK_NAME, ...rest}: updateIssueParams) {
-    return api
-      .put<IssueData>(`/issue/${repoId}/${ghId}/${networkName}`, { ...rest })
-      .then((response) => response)
-      .catch(() => null);
-  }
-
   async function getPayments( wallet: string,
                               startDate: string, 
                               endDate: string, 
@@ -445,15 +438,6 @@ export default function useApi() {
       .catch((e) => {
         console.log("Failed to fetch PR information", e);
         return false;
-      });
-  }
-
-  async function startWorking({ networkName = DEFAULT_NETWORK_NAME, ...rest } : StartWorkingParams) {
-    return api
-      .put("/issue/working", { networkName, ...rest })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
       });
   }
 
@@ -946,7 +930,6 @@ export default function useApi() {
     getSupportedChains,
     createIssue,
     createToken,
-    updateIssue,
     createNetwork,
     createPrePullRequest,
     createRepo,
@@ -981,7 +964,6 @@ export default function useApi() {
     searchRepositories,
     searchCurators,
     searchLeaderBoard,
-    startWorking,
     updateNetwork,
     updateVisibleBounty,
     uploadFiles,

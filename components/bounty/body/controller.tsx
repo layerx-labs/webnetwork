@@ -12,7 +12,7 @@ import { TAGS_OPTIONS } from "helpers/tags-options";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import useApi from "x-hooks/use-api";
+import useEditBounty from "x-hooks/api/bounty/use-edit-bounty";
 
 import BountyBodyView from "./view";
 
@@ -30,25 +30,14 @@ export default function BountyBody({
   updateBountyData
 }: BountyBodyControllerProps) {
   const { t } = useTranslation(["common", "bounty"]);
+
   const [body, setBody] = useState<string>();
   const [files, setFiles] = useState<IFilesProps[]>([]);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [selectedTags, setSelectedTags] = useState<string[]>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
+
   const { state, dispatch } = useAppState();
-
-  const { updateIssue } = useApi();
-
-  useEffect(() => {
-    if (!currentBounty?.body) return;
-
-    setBody(currentBounty?.body);
-  }, [currentBounty]);
-
-  useEffect(() => {
-    setSelectedTags(TAGS_OPTIONS.filter((tag) =>
-        currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
-  }, [currentBounty?.tags]);
 
   function onUpdateFiles(files: IFilesProps[]) {
     return setFiles(files);
@@ -74,10 +63,10 @@ export default function BountyBody({
     )
       return;
     setIsUploading(true);
-    updateIssue({
-      repoId: currentBounty?.repository_id,
-      ghId: currentBounty?.githubId,
+    useEditBounty({
+      id: currentBounty?.id,
       networkName: state.Service?.network?.active?.name,
+      chainName: state.Service?.network?.active?.chain?.chainShortName,
       body: addFilesInDescription(body),
       tags: selectedTags,
     })
@@ -107,6 +96,17 @@ export default function BountyBody({
       body?.length === 0
     );
   }
+
+  useEffect(() => {
+    if (!currentBounty?.body) return;
+
+    setBody(currentBounty?.body);
+  }, [currentBounty]);
+
+  useEffect(() => {
+    setSelectedTags(TAGS_OPTIONS.filter((tag) =>
+        currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
+  }, [currentBounty?.tags]);
 
   return (
     <BountyBodyView
