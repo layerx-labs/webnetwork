@@ -57,8 +57,13 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
         }
       });
 
-      if(isGithubLoginExist) 
-        return `${(req.cookies[callbackUrlHttpKey] || req.cookies[callbackUrlHttpsKey])}?isGithubLoginExist=true`
+      if(isGithubLoginExist){
+        const originalUrl = (req.cookies[callbackUrlHttpKey] || req.cookies[callbackUrlHttpsKey])
+        const queryError = "?isGithubLoginExist=true"
+        const verifyAlreadyExistsError = originalUrl.includes(queryError)
+        return `${verifyAlreadyExistsError ? originalUrl : originalUrl+queryError}`
+      }
+        
 
       if(currentUser && !isGithubLoginExist) {
         currentUser.githubLogin = login;
