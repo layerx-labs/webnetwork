@@ -27,8 +27,15 @@ export default function CheckButtons({
         onClick(option);
       } else
         setSelected(previous => {
-          const found = findIndex(option, previous);
-          const newSelected = isSelected(option, previous) ? previous.toSpliced(found, 1) : [...previous, option];
+          const newSelected = [...previous];
+
+          if (isSelected(option, previous)) {
+            const optionIndex = findIndex(option, previous);
+
+            newSelected.splice(optionIndex, 1);
+          } else {
+            newSelected.push(option);
+          }
 
           onClick(newSelected);
 
