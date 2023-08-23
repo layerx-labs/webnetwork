@@ -162,8 +162,17 @@ class Network extends Model {
     });
   }
 
-  static findByNetworkAndChainNames(networkName, chainName) {
-    return this.findAll({
+  static findOneByNetworkAddress(address, chainId = null) {
+    return this.findOne({
+      where: {
+        networkAddress: Sequelize.where(Sequelize.fn("lower", Sequelize.col("networkAddress")), address?.toLowerCase()),
+        ... chainId ? { chain_id: chainId } : {}
+      }
+    });
+  }
+
+  static findOneByNetworkAndChainNames(networkName, chainName) {
+    return this.findOne({
       where: {
         name: Sequelize.where(Sequelize.fn("lower", Sequelize.col("name")), networkName?.toLowerCase())
       },
