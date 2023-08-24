@@ -127,11 +127,13 @@ export default function BountyHeroView({
               className={`py-3 gap-3 d-flex flex-wrap align-items-center border-top 
                 border-gray-850 justify-content-md-start`}
             >
-              <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-auto">
-                <a href={bounty?.origin} className={`text-truncate`} target="_blank" rel="noreferrer noopener">
-                  {bounty?.origin}
-                </a>
-              </BountyItemLabel>
+              <If condition={!!bounty?.origin}>
+                <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-auto">
+                  <a href={bounty?.origin} className={`text-truncate`} target="_blank" rel="noreferrer noopener">
+                    {bounty?.origin}
+                  </a>
+                </BountyItemLabel>
+              </If>
 
               <BountyItemLabel label={t("common:misc.type")} className="col-12 col-sm-auto">
                 <span className={`text-truncate text-capitalize`}>
