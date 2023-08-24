@@ -1,0 +1,37 @@
+import { useTranslation } from "next-i18next";
+
+import Button from "components/button";
+import { FormGroup } from "components/form-group";
+
+interface PermissionInputProps {
+  placeholder?: string;
+  value: string;
+  onChange: (newValue: string) => void;
+  onClickAdd: () => void;
+}
+
+export default function PermissionInput({
+  placeholder,
+  value,
+  onChange,
+  onClickAdd,
+}: PermissionInputProps) {
+  const { t } = useTranslation(["common"]);
+
+  return (
+    <div className="d-flex align-items-center flex-wrap mb-4">
+      <FormGroup
+        className="me-3"
+        placeholder={placeholder}
+        variant="input"
+        colProps={{ xs: "12", md: "6", xl: "5" }}
+        value={value}
+        onChange={onChange}
+        label=""
+      />
+      <div className="mt-2">
+        <Button onClick={onClickAdd}>{t("misc.add")}</Button>
+      </div>
+    </div>
+  );
+}
