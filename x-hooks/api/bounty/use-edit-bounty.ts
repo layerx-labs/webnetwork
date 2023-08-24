@@ -11,6 +11,5 @@ export default async function useEditBounty({
 }: updateIssueParams) {
   return api
     .put<IssueData>(`/issue/${id}/${networkName}/${chainName}`, rest)
-    .then((response) => response)
-    .catch(() => null);
+    .then(({ data }) => data);
 }

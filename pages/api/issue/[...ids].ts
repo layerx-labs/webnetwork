@@ -80,8 +80,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     where: {
       id,
       network_id: network?.id
-    },
-    include: [{ association: "repository" }]
+    }
   });
 
   if (!issue) return res.status(404).json({message: "bounty not found"});
@@ -90,7 +89,8 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
     if(body) issue.body = body;
     if(tags) issue.tags = tags;
 
-    await issue.save()
+    await issue.save();
+
     return res.status(200).json("ok");
   } else{
     return res.status(400).json({message: 'bounty not in draft'})

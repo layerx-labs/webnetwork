@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import { IFilesProps } from "components/drag-and-drop";
 
 import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
+import { addToast, toastError } from "contexts/reducers/change-toaster";
 
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import { TAGS_OPTIONS } from "helpers/tags-options";
@@ -80,7 +80,10 @@ export default function BountyBody({
         cancelEditIssue();
         setIsPreview(false);
       })
-      .catch((err) => console.log("update issue error", err))
+      .catch(error => {
+        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
+        console.debug("Failed to edit issue", error);
+      })
       .finally(() => setIsUploading(false));
   }
 
