@@ -38,24 +38,23 @@ export default function CreateBountyReviewSection({
             </div>
 
             <div className="col-md-9 text-truncate">
-              <If condition={Array.isArray(value)}>
+              { Array.isArray(value) ?
                 <div className="d-flex flex-wrap">
-                  {Array(value).map((item, key) => (
+                  {value.map((item, key) => (
                     <div className="d-flex" key={key}>
                       <div className="ball tag mt-2 mx-2" key={key} />
 
                       {item}
                     </div>
                   ))}
-                </div>
-              </If>
-
-              <If 
-                condition={name === "description"}
-                otherwise={value}
-              >
-                <MarkedRender source={String(value)} />
-              </If>
+                </div> :
+                <If 
+                  condition={name === "description"}
+                  otherwise={value}
+                >
+                  <MarkedRender source={String(value)} />
+                </If>
+              }
             </div>
           </ContainerTypeFlex>
         )
