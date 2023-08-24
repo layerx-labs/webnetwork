@@ -23,7 +23,7 @@ export default function SelectNetworkSection({
 }: SelectNetworkSectionProps) {
   const { t } = useTranslation(["bounty", "common"]);
 
-  const notFoundNetworks = !!networksOfCurrentChain?.length;
+  const notFoundNetworks = !networksOfCurrentChain?.length;
 
   return(
     <div className="mt-2">
