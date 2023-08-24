@@ -6,28 +6,15 @@ import {useTranslation} from "next-i18next";
 import router, {useRouter} from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
-import CreateBountyCard from "components/bounty/create-bounty/create-bounty-card";
-import CreateBountyContainer from "components/bounty/create-bounty/create-bounty-container";
-import CreateBountyDetails from "components/bounty/create-bounty/create-bounty-details";
-import CreateBountyNetworkDropdown from "components/bounty/create-bounty/create-bounty-network-dropdown";
-import CreateBountyReview from "components/bounty/create-bounty/create-bounty-review/view";
-import CreateBountySteps from "components/bounty/create-bounty/create-bounty-steps";
-import RewardInformation from "components/bounty/create-bounty/reward-information/controller";
-import SelectNetwork from "components/bounty/create-bounty/select-network";
-import Button from "components/button";
-import ConnectWalletButton from "components/connect-wallet-button";
-import {ContextualSpan} from "components/contextual-span";
-import ContractButton from "components/contract-button";
-import CustomContainer from "components/custom-container";
 import {IFilesProps} from "components/drag-and-drop";
-import ResponsiveWrapper from "components/responsive-wrapper";
-import SelectChainDropdown from "components/select-chain-dropdown";
+import CreateBountyPageView from "components/pages/bounty/create-bounty/view";
 
 import {useAppState} from "contexts/app-state";
 import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
-import {BODY_CHARACTERES_LIMIT, TERMS_AND_CONDITIONS_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
+import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { addFilesToMarkdown } from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 
 import {BountyPayload} from "interfaces/create-bounty";
@@ -88,7 +75,6 @@ export default function CreateBountyPage({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [networksOfConnectedChain, setNetworksOfConnectedChain] = useState<Network[]>([]);
-  const [notFoundNetworks, setNotFoundNetwork] = useState<boolean>(false);
   const [deliverableType, setDeliverableType] = useState<string>();
   const [originLink, setOriginLink] = useState<string>("");
   const [isOriginLinkBanned, setIsOriginLinkBanned] = useState(false);
@@ -229,15 +215,7 @@ export default function CreateBountyPage({
   }
 
   function addFilesInDescription(str) {
-    const strFiles = files?.map((file) =>
-        file.uploaded &&
-        `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-          Settings?.urls?.ipfs
-        }/${file.hash}) \n\n`);
-    return `${str}\n\n${strFiles
-      .toString()
-      .replace(",![", "![")
-      .replace(",[", "[")}`;
+    return addFilesToMarkdown(str, files, Settings?.urls?.ipfs);
   }
 
   async function allowCreateIssue() {
@@ -450,7 +428,6 @@ export default function CreateBountyPage({
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
 
     setNetworksOfConnectedChain(networksOfChain);
-    setNotFoundNetwork(!networksOfChain.length);
   }, [connectedChain]);
 
   useEffect(() => {
@@ -521,6 +498,12 @@ export default function CreateBountyPage({
       .then(_ => setCurrentNetwork(opt));
   }
 
+  function handleSectionHeaderClick(i: number) {
+    if(!verifyNextStepAndCreate(i === 0 ? i : i-1) || currentSection > i){
+      setCurrentSection(i)
+    }
+  }
+
   useEffect(() => {
     start();
   }, []);
@@ -532,192 +515,73 @@ export default function CreateBountyPage({
     changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
   }, [currentNetwork, Service?.active])
 
-  function section() {
-    if (currentSection === 0)
-      return (
-        <SelectNetwork>
-          <label className="p mb-2 text-gray-300">{t("common:placeholders.select-chain")}</label>
-          <SelectChainDropdown 
-              onSelect={handleNetworkSelected}
-              isOnNetwork={false}
-              className="select-network-dropdown w-max-none mb-4"
-            />
-          <label className="p mb-2 text-gray-300">{t("bounty:steps.select-network")}</label>
-          <CreateBountyNetworkDropdown
-            value={currentNetwork}
-            networks={networksOfConnectedChain}
-            className="select-network-dropdown w-max-none"
-            onSelect={onNetworkSelected}
-          />
-          {notFoundNetworks && (
-            <ContextualSpan context="danger" className="my-3">
-              {t("bounty:errors.no-networks-chain")}
-            </ContextualSpan>
-          )}
-        </SelectNetwork>
-      );
 
-    if (currentSection === 1)
-      return (
-        <CreateBountyDetails
-          title={bountyTitle}
-          updateTitle={setBountyTitle}
-          description={bountyDescription}
-          updateDescription={setBountyDescription}
-          files={files}
-          updateFiles={onUpdateFiles}
-          selectedTags={selectedTags}
-          updateSelectedTags={setSelectedTags}
-          isKyc={isKyc}
-          updateIsKyc={setIsKyc}
-          updateTierList={setTierList}
-          updateUploading={setIsUploading}
-          originLink={originLink}
-          isOriginLinkBanned={isOriginLinkBanned}
-          onOriginLinkChange={handleOriginLinkChange}
-          setDeliverableType={setDeliverableType}
-        />
-      );
-
-    if (currentSection === 2)
-      return (
-          <RewardInformation 
-            isFundingType={isFundingType} 
-            rewardChecked={rewardChecked} 
-            transactionalToken={transactionalToken} 
-            rewardToken={rewardToken} 
-            bountyDecimals={transactionalERC20?.decimals} 
-            rewardDecimals={transactionalERC20?.decimals} 
-            issueAmount={issueAmount} 
-            rewardAmount={rewardAmount} 
-            bountyTokens={customTokens.filter((token) => !!token?.network_tokens?.isTransactional)} 
-            rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)} 
-            rewardBalance={rewardERC20.balance} 
-            bountyBalance={transactionalERC20.balance} 
-            updateRewardToken={(v) => handleUpdateToken(v, 'reward')} 
-            updateTransactionalToken={(v) => handleUpdateToken(v, 'transactional')} 
-            addToken={addToken} 
-            handleRewardChecked={handleRewardChecked} 
-            updateIssueAmount={setIssueAmount} 
-            updateRewardAmount={setRewardAmount} 
-            updateIsFundingType={setIsFundingType}          
-          />
-      );
-
-    if (currentSection === 3)
-      return (
-        <CreateBountyReview
-          payload={{
-            network: currentNetwork?.name,
-            title: bountyTitle,
-            description: addFilesInDescription(bountyDescription),
-            tags: selectedTags && selectedTags,
-            origin_link: originLink,
-            deliverable_type: deliverableType,
-            reward: `${issueAmount.value} ${transactionalToken?.symbol}`,
-            funders_reward:
-              (rewardAmount.value && isFundingType) &&
-              `${rewardAmount.value} ${rewardToken?.symbol}`,
-          }}
-        />
-      );
-  }
-
-  function renderButtons() {
-    return (
-      <>
-        <div className="col-6 ps-2">
-          <Button
-            className="col-12 bounty-outline-button"
-            onClick={handleBackButton}
-            disabled={!!(currentSection === 0)}
-          >
-            {t("actions.back")}
-          </Button>
-        </div>
-
-        <div className="col-6 pe-2">
-          {!isTokenApproved && currentSection === 3 ? (
-            <ContractButton
-              className="col-12 bounty-button"
-              disabled={isApproveButtonDisabled()}
-              onClick={allowCreateIssue}
-              isLoading={isLoadingApprove}
-            >
-              {t("actions.approve")}
-            </ContractButton>
-          ) : (
-            <ContractButton
-              className="col-12 bounty-button"
-              disabled={verifyNextStepAndCreate()}
-              isLoading={isLoadingCreateBounty}
-              onClick={handleNextStep}
-            >
-              {currentSection === 3 ? (
-                <>
-                  <ResponsiveWrapper xs={true} md={false}>
-                    {t("common:misc.create")}
-                  </ResponsiveWrapper>
-                  <ResponsiveWrapper xs={false} md={true}>
-                    {t("bounty:create-bounty")}
-                  </ResponsiveWrapper>
-                </>
-              ) : (
-                t("bounty:next-step")
-              )}
-            </ContractButton>
-          )}
-        </div>
-      </>
-    );
-  }
-
-  if (!currentUser?.walletAddress)
-    return <ConnectWalletButton asModal={true} />;
-
-  return (
-    <>
-      {!(query?.created?.toString() === "true") && (
-        <CreateBountyContainer>
-          <CustomContainer col="col-xs-12 col-xl-10 px-0">
-          <CreateBountySteps
-              steps={steps}
-              currentSection={currentSection}
-              updateCurrentSection={(i: number) => {
-                if(!verifyNextStepAndCreate(i === 0 ? i : i-1) || currentSection > i){
-                  setCurrentSection(i)
-                }
-              }}
-            />
-            <CreateBountyCard
-              maxSteps={steps?.length}
-              currentStep={currentSection + 1}
-            >
-              {section()}
-            </CreateBountyCard>
-          </CustomContainer>
-          {currentSection === 3 && (
-            <div className="mx-5">
-            <div className="d-flex justify-content-center col-12 mt-4">
-              <p className="">
-                {t("bounty:creating-this-bounty")}{" "}
-                <a href={TERMS_AND_CONDITIONS_LINK} target="_blank">
-                  {t("bounty:terms-and-conditions")}
-                </a>
-              </p>
-            </div>
-          </div>
-          )}
-          <CustomContainer className='d-flex flex-column justify-content-end'>
-            <ResponsiveWrapper className="row my-4" xs={false} md={true}>
-              {renderButtons()}
-            </ResponsiveWrapper>
-            <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
-              {renderButtons()}
-            </ResponsiveWrapper>
-          </CustomContainer>
-        </CreateBountyContainer>
-      )}
-    </>
+  return(
+    <CreateBountyPageView
+      isConnected={!!currentUser?.walletAddress}
+      currentSection={currentSection}
+      isTokenApproved={isTokenApproved}
+      isBackButtonDisabled={currentSection === 0}
+      isApproveButtonDisabled={isApproveButtonDisabled()}
+      isApproving={isLoadingApprove}
+      isNextOrCreateButtonDisabled={verifyNextStepAndCreate()}
+      isCreating={isLoadingCreateBounty}
+      creationSteps={steps}
+      onBackClick={handleBackButton}
+      onApproveClick={allowCreateIssue}
+      onNextOrCreateButtonClick={handleNextStep}
+      onSectionHeaderClick={handleSectionHeaderClick}
+      currentNetwork={currentNetwork}
+      networksOfCurrentChain={networksOfConnectedChain}
+      onChainChange={handleNetworkSelected}
+      onNetworkChange={onNetworkSelected}
+      title={bountyTitle}
+      updateTitle={setBountyTitle}
+      description={bountyDescription}
+      updateDescription={setBountyDescription}
+      files={files}
+      updateFiles={onUpdateFiles}
+      selectedTags={selectedTags}
+      updateSelectedTags={setSelectedTags}
+      isKyc={isKyc}
+      updateIsKyc={setIsKyc}
+      updateTierList={setTierList}
+      updateUploading={setIsUploading}
+      originLink={originLink}
+      isOriginLinkBanned={isOriginLinkBanned}
+      onOriginLinkChange={handleOriginLinkChange}
+      setDeliverableType={setDeliverableType}
+      isFundingType={isFundingType} 
+      rewardChecked={rewardChecked} 
+      transactionalToken={transactionalToken} 
+      rewardToken={rewardToken} 
+      bountyDecimals={transactionalERC20?.decimals} 
+      rewardDecimals={transactionalERC20?.decimals} 
+      issueAmount={issueAmount} 
+      rewardAmount={rewardAmount} 
+      bountyTokens={customTokens.filter((token) => !!token?.network_tokens?.isTransactional)} 
+      rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)} 
+      rewardBalance={rewardERC20.balance} 
+      bountyBalance={transactionalERC20.balance} 
+      updateRewardToken={(v) => handleUpdateToken(v, 'reward')} 
+      updateTransactionalToken={(v) => handleUpdateToken(v, 'transactional')} 
+      addToken={addToken} 
+      handleRewardChecked={handleRewardChecked} 
+      updateIssueAmount={setIssueAmount} 
+      updateRewardAmount={setRewardAmount} 
+      updateIsFundingType={setIsFundingType}
+      payload={{
+        network: currentNetwork?.name,
+        title: bountyTitle,
+        description: addFilesInDescription(bountyDescription),
+        tags: selectedTags && selectedTags,
+        origin_link: originLink,
+        deliverable_type: deliverableType,
+        reward: `${issueAmount.value} ${transactionalToken?.symbol}`,
+        funders_reward:
+          (rewardAmount.value && isFundingType) &&
+          `${rewardAmount.value} ${rewardToken?.symbol}`,
+      }} 
+    />
   );
 }

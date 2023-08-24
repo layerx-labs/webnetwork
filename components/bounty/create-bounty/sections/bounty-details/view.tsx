@@ -1,119 +1,74 @@
-import { useEffect, useState, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { FormCheck } from "react-bootstrap";
 
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import { PROGRAMMING_LANGUAGES } from "assets/bounty-labels";
-
+import CreateBountyDescription from "components/bounty/create-bounty/create-bounty-description";
+import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
 import { ContextualSpan } from "components/contextual-span";
 import { Divider } from "components/divider";
-import DropDown from "components/dropdown";
+import { IFilesProps } from "components/drag-and-drop";
+import DropDown, { DropdownOption } from "components/dropdown";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 import ReactSelect from "components/react-select";
 
-import { useAppState } from "contexts/app-state";
-
-import {
-  BOUNTY_TITLE_LIMIT,
-  MAX_TAGS,
-} from "helpers/constants";
-
-import { DetailsProps } from "interfaces/create-bounty";
-
 import { SelectOption } from "types/utils";
 
-import CreateBountyDescription from "./create-bounty-description";
-import BountyLabel from "./create-bounty-label";
+interface BountyDetailsSectionViewProps {
+  title: string;
+  description: string;
+  files: IFilesProps[];
+  bodyLength: number;
+  tags: SelectOption[];
+  tagsOptions: SelectOption[];
+  titleExceedsLimit: boolean;
+  isKycEnabled: boolean;
+  kycCheck: boolean;
+  kycOptions: DropdownOption[];
+  deliverableTypeOptions: SelectOption[];
+  originLink: string;
+  isOriginLinkBanned: boolean;
+  onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onDescriptionchange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  onFilesChange: (files: IFilesProps[]) => void;
+  setIsUploadingFiles: (isUploading: boolean) => void;
+  onTagsChange: (tags: SelectOption[]) => void;
+  isTagsSelectDisabled: () => boolean;
+  onKycCheckChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKycTierChange: (value: DropdownOption | DropdownOption[]) => void;
+  onDeliverableTypeClick: (tags: SelectOption | SelectOption[]) => void;
+  onOriginLinkchange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
 
-export default function CreateBountyDetails({
+export default function BountyDetailsSectionView({
   title,
-  updateTitle,
   description,
-  updateDescription,
   files,
-  updateFiles,
-  selectedTags,
-  updateSelectedTags,
-  isKyc,
+  bodyLength,
+  tags,
+  tagsOptions,
+  titleExceedsLimit,
+  kycCheck,
+  isKycEnabled,
+  kycOptions,
+  deliverableTypeOptions,
   originLink,
   isOriginLinkBanned,
-  onOriginLinkChange,
-  updateIsKyc,
-  updateTierList,
-  updateUploading,
-  setDeliverableType
-}: DetailsProps) {
+  onTitlechange,
+  onDescriptionchange,
+  onFilesChange,
+  setIsUploadingFiles,
+  onTagsChange,
+  isTagsSelectDisabled,
+  onKycCheckChange,
+  onKycTierChange,
+  onDeliverableTypeClick,
+  onOriginLinkchange,
+}: BountyDetailsSectionViewProps) {
   const { t } = useTranslation("bounty");
-
-  const [strFiles, setStrFiles] = useState<string[]>([]);
-  const [bodyLength, setBodyLength] = useState<number>(0);
-  
-  const {
-    state: { Settings },
-  } = useAppState();
-
-  const TAGS_OPTIONS = PROGRAMMING_LANGUAGES.map(({ tag }) => ({
-    label: tag,
-    value: tag,
-  }));
-
-  const deliverableTypes = [
-    { label: t("fields.deliverable-types.types.code"), value: "code" },
-    { label: t("fields.deliverable-types.types.design"), value: "design" },
-    { label: t("fields.deliverable-types.types.other"), value: "other" }
-  ];
-
-  function handleChangeTitle(e: ChangeEvent<HTMLInputElement>) {
-    updateTitle(e.target.value);
-  }
-
-  function handleChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
-    updateDescription(e.target.value);
-  }
-
-  function handleChangeTags(newTags) {
-    updateSelectedTags(newTags.map(({ value }) => value));
-  }
-
-  function handleIsKYCChecked(e: ChangeEvent<HTMLInputElement>) {
-    updateIsKyc(e.target.checked);
-  }
-  
-  function handleDeliverableTypeClick(selected: SelectOption | SelectOption[]) {
-    const { value } = Array.isArray(selected) ? selected.at(0) : selected;
-
-    setDeliverableType(value.toString());
-  }
-
-  function handleOriginLinkChange(e: ChangeEvent<HTMLInputElement>) {
-    onOriginLinkChange(e.target.value)
-  }
-
-  useEffect(() => {
-    if (description.length > 0) {
-      const body = `${description}\n\n${strFiles
-        .toString()
-        .replace(",![", "![")
-        .replace(",[", "[")}`;
-
-      if (body?.length) setBodyLength(body.length);
-    }
-  }, [description, strFiles]);
-
-  useEffect(() => {
-    if (files.length > 0) {
-      const strFiles = files?.map((file) =>
-          file.uploaded &&
-          `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-            Settings?.urls?.ipfs
-          }/${file.hash}) \n\n`);
-
-      setStrFiles(strFiles);
-    }
-  }, [files]);
 
   return (
     <>
@@ -135,15 +90,14 @@ export default function CreateBountyDetails({
             <input
               type="text"
               className={clsx("form-control form-bounty rounded-lg", {
-                "border border-1 border-danger border-radius-8":
-                  title.length >= BOUNTY_TITLE_LIMIT,
+                "border border-1 border-danger border-radius-8": titleExceedsLimit,
               })}
               placeholder={t("fields.title.placeholder")}
               value={title}
-              onChange={handleChangeTitle}
+              onChange={onTitlechange}
             />
             
-            <If condition={title.length >= BOUNTY_TITLE_LIMIT}>
+            <If condition={titleExceedsLimit}>
               <span className="caption-small mt-3 text-danger bg-opacity-100">
                 {t("errors.title-character-limit", { value: title?.length })}
               </span>
@@ -153,13 +107,13 @@ export default function CreateBountyDetails({
       </div>
 
       <div className="form-group">
-        <CreateBountyDescription 
+        <CreateBountyDescription
           description={description}
-          handleChangeDescription={handleChangeDescription}
+          handleChangeDescription={onDescriptionchange}
           bodyLength={bodyLength}
           files={files}
-          updateFiles={updateFiles}
-          updateUploading={updateUploading}
+          updateFiles={onFilesChange}
+          updateUploading={setIsUploadingFiles}
         />
       </div>
 
@@ -177,10 +131,10 @@ export default function CreateBountyDetails({
         </label>
 
         <ReactSelect
-          value={selectedTags.map((tag) => ({ label: tag, value: tag }))}
-          options={TAGS_OPTIONS}
-          onChange={handleChangeTags}
-          isOptionDisabled={() => selectedTags.length >= MAX_TAGS}
+          value={tags}
+          options={tagsOptions}
+          onChange={onTagsChange}
+          isOptionDisabled={isTagsSelectDisabled}
           isMulti
         />
 
@@ -189,15 +143,15 @@ export default function CreateBountyDetails({
         </ContextualSpan>
       </div>
 
-      <If condition={Settings?.kyc?.isKycEnabled}>
+      <If condition={isKycEnabled}>
         <>
           <div className="col-md-12 d-flex flex-row gap-2 mt-4">
             <FormCheck
               className="form-control-md pb-0"
               type="checkbox"
               label={t("bounty:kyc.is-required")}
-              onChange={handleIsKYCChecked}
-              checked={isKyc}
+              onChange={onKycCheckChange}
+              checked={kycCheck}
             />
 
             <span>
@@ -208,16 +162,11 @@ export default function CreateBountyDetails({
             </span>
           </div>
 
-          <If condition={isKyc && !!Settings?.kyc?.tierList?.length}>
+          <If condition={kycCheck && !!kycOptions?.length}>
             <DropDown
               className="mt-2"
-              onSelected={(opt) => {
-                updateTierList(Array.isArray(opt) ? opt.map((i) => +i.value) : [+opt.value]);
-              }}
-              options={Settings?.kyc?.tierList.map((i) => ({
-                value: i.id,
-                label: i.name,
-              }))}
+              onSelected={onKycTierChange}
+              options={kycOptions}
             />
           </If>
         </>
@@ -241,8 +190,8 @@ export default function CreateBountyDetails({
 
           <div className="row mt-3">
             <CheckButtons
-              options={deliverableTypes}
-              onClick={handleDeliverableTypeClick}
+              options={deliverableTypeOptions}
+              onClick={onDeliverableTypeClick}
             />
           </div>
 
@@ -265,7 +214,7 @@ export default function CreateBountyDetails({
                 placeholder={t("fields.origin-link.placeholder")}
                 className={`form-control ${isOriginLinkBanned ? "is-invalid" : ""}`}
                 value={originLink}
-                onChange={handleOriginLinkChange}
+                onChange={onOriginLinkchange}
               />
 
               <If condition={isOriginLinkBanned}>

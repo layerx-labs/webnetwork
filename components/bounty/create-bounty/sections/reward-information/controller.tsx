@@ -1,9 +1,8 @@
+import RewardInformationSectionView from "components/bounty/create-bounty/sections/reward-information/view";
+
 import { useAppState } from "contexts/app-state";
 
-
-import { RewardInformationControllerProps } from "types/components";
-
-import RewardInformationView from "./view";
+import { RewardInformationSectionProps } from "types/components";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -11,7 +10,7 @@ const ZeroNumberFormatValues = {
   floatValue: 0,
 };
 
-export default function RewardInformation({
+export default function RewardInformationSection({
   transactionalToken,
   rewardToken,
   isFundingType,
@@ -31,7 +30,7 @@ export default function RewardInformation({
   updateIssueAmount,
   updateRewardAmount,
   updateIsFundingType,
-}: RewardInformationControllerProps) {
+}: RewardInformationSectionProps) {
   const {
     state: { currentUser },
   } = useAppState();
@@ -47,7 +46,7 @@ export default function RewardInformation({
   }
 
   return (
-    <RewardInformationView
+    <RewardInformationSectionView
       isFundingType={isFundingType}
       defaultValue={ZeroNumberFormatValues}
       currentUserWallet={currentUser?.walletAddress}

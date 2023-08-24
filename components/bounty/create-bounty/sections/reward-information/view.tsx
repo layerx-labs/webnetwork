@@ -2,15 +2,16 @@ import { Form } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
+import If from "components/If";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { RewardInformationViewProps } from "types/components";
 
+import CreateBountyRewardInfo from "../../create-bounty-reward-info";
+import CreateBountyTokenAmount from "../../token-amount/create-bounty-token-amount";
 import RewardInformationBalanceView from "./balance/view";
-import CreateBountyTokenAmount from "../token-amount/create-bounty-token-amount";
-import CreateBountyRewardInfo from "../create-bounty-reward-info";
 
-export default function RewardInformationView({
+export default function RewardInformationSectionView({
   transactionalToken,
   rewardToken,
   isFundingType,
@@ -94,29 +95,35 @@ export default function RewardInformationView({
       isFunding={isFundingType}
       updateIsFunding={updateIsFunding}
     >
-      {isFundingType ? (
+      <If 
+        condition={isFundingType}
+        otherwise={renderBountyToken("bounty")}
+      >
         <>
           {renderBountyToken("bounty")}
           <div className="d-flex flex-row align-items-center justify-content-between mt-4">
             <div>
               <div className="d-flex">
-              <label className="me-3">
-                {t("bounty:reward-funders")}
-              </label>
-              <Form.Check
-                className="form-control-md mb-1"
-                type="switch"
-                id="custom-switch"
-                onChange={handleRewardChecked}
-                checked={rewardChecked}
-              />
+                <label className="me-3">
+                  {t("bounty:reward-funders")}
+                </label>
+
+                <Form.Check
+                  className="form-control-md mb-1"
+                  type="switch"
+                  id="custom-switch"
+                  onChange={handleRewardChecked}
+                  checked={rewardChecked}
+                />
               </div>
+
               <p className="text-gray">
                 {t("bounty:reward-funders-description")}
               </p>
             </div>
+
             <ResponsiveWrapper className="mt-1" xs={false} md={true}>
-            {rewardChecked && (
+              {rewardChecked && (
                 <RewardInformationBalanceView
                   amount={rewardBalance.toFixed()}
                   symbol={rewardToken?.symbol}
@@ -125,10 +132,11 @@ export default function RewardInformationView({
             </ResponsiveWrapper>
           </div>
         </>
-      ) : (
-        renderBountyToken("bounty")
-      )}
-      {rewardChecked && isFundingType && renderBountyToken("reward")}
+      </If>
+
+      <If condition={rewardChecked && isFundingType}>
+        {renderBountyToken("reward")}
+      </If>
     </CreateBountyRewardInfo>
   );
 }

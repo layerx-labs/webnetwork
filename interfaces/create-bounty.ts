@@ -10,7 +10,7 @@ export interface Branch {
   label: string;
 }
 
-export interface DetailsProps {
+export interface BountyDetailsSectionProps {
   title: string;
   updateTitle: (e: string) => void;
   description: string;
