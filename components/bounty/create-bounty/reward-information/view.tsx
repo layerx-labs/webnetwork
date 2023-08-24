@@ -6,9 +6,9 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { RewardInformationViewProps } from "types/components";
 
-import CreateBountyRewardInfo from "../create-bounty-reward-info";
-import CreateBountyTokenAmount from "../token-amount/create-bounty-token-amount";
 import RewardInformationBalanceView from "./balance/view";
+import CreateBountyTokenAmount from "../token-amount/create-bounty-token-amount";
+import CreateBountyRewardInfo from "../create-bounty-reward-info";
 
 export default function RewardInformationView({
   transactionalToken,

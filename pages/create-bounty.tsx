@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import CreateBountyPage from "components/pages/create-bounty/controller";
+import CreateBountyPage from "components/pages/bounty/create-bounty/controller";
 
 import useSearchNetworks from "x-hooks/api/network/use-search-networks";
 

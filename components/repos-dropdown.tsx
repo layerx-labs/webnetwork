@@ -8,7 +8,7 @@ import {useAppState} from "contexts/app-state";
 
 import { ReposList } from "interfaces/repos-list";
 
-import BountyLabel from "./create-bounty/create-bounty-label";
+import BountyLabel from "./bounty/create-bounty/create-bounty-label";
 
 export default function ReposDropdown({ repositories, onSelected, value, disabled }: {
   repositories?: ReposList;
