@@ -154,7 +154,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         fees: BigNumber(distributions.mergerAmount.value)
                         .plus(BigNumber(distributions.proposerAmount.value)
                         .plus(BigNumber(distributions.treasuryAmount.value))).toString(),
-        repository: issue?.repository?.githubPath,
         bountyId: networkBounty.id,
         githubPullRequestId: pullRequest.cid.toString(),
       }
