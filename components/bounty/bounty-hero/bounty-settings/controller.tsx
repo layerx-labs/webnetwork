@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { useTranslation } from "next-i18next";
+
 import { useAppState } from "contexts/app-state";
+import { toastError } from "contexts/reducers/change-toaster";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
@@ -20,10 +23,13 @@ export default function BountySettings({
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
 }) {
+  const { t } = useTranslation("common");
+
   const [isCancelable, setIsCancelable] = useState(false);
-  const { state } = useAppState();
-  const { handleReedemIssue, handleHardCancelBounty } = useBepro();
+
+  const { state, dispatch } = useAppState();
   const { updateWalletBalance } = useAuthentication();
+  const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
   const objViewProps = {
     isWalletConnected: !!state.currentUser?.walletAddress,
@@ -50,6 +56,10 @@ export default function BountySettings({
       .then(() => {
         updateWalletBalance();
         updateBountyData();
+      })
+      .catch(error => {
+        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
+        console.debug("Failed to cancel bounty", error)
       });
   }
 
@@ -62,6 +72,10 @@ export default function BountySettings({
       .then(() => {
         updateWalletBalance(true);
         updateBountyData();
+      })
+      .catch(error => {
+        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
+        console.debug("Failed to cancel bounty", error)
       });
   }
 
