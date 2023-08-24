@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 import BigNumber from "bignumber.js";
 import clsx from "clsx";

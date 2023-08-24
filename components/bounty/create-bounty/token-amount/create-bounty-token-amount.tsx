@@ -13,10 +13,10 @@ import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 
 import { DistributedAmounts } from "interfaces/proposal";
 
-import ServiceFeesModalView from "../service-fees-modal/view";
 import InputNumber from "../../../input-number";
 import TokensDropdown from "../../../tokens-dropdown";
 import RewardInformationBalanceView from "../sections/reward-information/balance/view";
+import ServiceFeesModalView from "../service-fees-modal/view";
 import RenderItemRow from "./item-row/view";
 
 const ZeroNumberFormatValues = {
