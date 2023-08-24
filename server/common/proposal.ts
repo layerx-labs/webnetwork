@@ -1,11 +1,12 @@
 import { ParsedUrlQuery } from "querystring";
 import { Sequelize } from "sequelize";
-import { HttpNotFoundError } from "server/errors/http-errors";
 
 import models from "db/models";
 
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { getAssociation } from "helpers/db/models";
+
+import { HttpNotFoundError } from "server/errors/http-errors";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -35,8 +36,7 @@ export default async function get(query: ParsedUrlQuery) {
                                         Sequelize.fn("lower", Sequelize.col("distributions.recipient"))))
       ]),
       getAssociation("pullRequest"),
-      getAssociation("issue", undefined, true, { issueId: issueId }, [
-        getAssociation("repository", ["githubPath"]),
+      getAssociation("issue", undefined, true, { id: issueId }, [
         getAssociation("transactionalToken", ["name", "symbol"]),
       ]),
       getAssociation("network", [], true, {

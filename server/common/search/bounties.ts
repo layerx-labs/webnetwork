@@ -74,11 +74,6 @@ export default async function get(query: ParsedUrlQuery) {
   else if (visible !== "both")
     whereCondition.visible = true;
 
-  if (creator) 
-    whereCondition.creatorAddress = {
-      [Op.iLike]: `%${creator.toString()}%`
-    };
-
   // Time filter
   if (time) {
     const subFn = {
@@ -160,6 +155,14 @@ export default async function get(query: ParsedUrlQuery) {
                     !!transactionalTokenAddress, 
                     transactionalTokenAddress ? { address: { [Op.iLike]: transactionalTokenAddress.toString() } } : {});
 
+  const userAssociation = getAssociation("user", undefined, !!creator, {
+    where: {
+      address: {
+        [Op.iLike]: `%${creator.toString()}%`
+      }
+    }
+  });
+
   const COLS_TO_CAST = ["amount", "fundingAmount"];
   const RESULTS_LIMIT = count ? +count : undefined;
   const PAGE = +(page || 1);
@@ -192,6 +195,7 @@ export default async function get(query: ParsedUrlQuery) {
       proposalAssociation,
       pullRequestAssociation,
       transactionalTokenAssociation,
+      userAssociation,
     ]
   }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
 
