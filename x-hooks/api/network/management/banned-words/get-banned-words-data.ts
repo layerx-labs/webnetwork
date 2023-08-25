@@ -1,5 +1,3 @@
-import { ParsedUrlQuery } from "querystring";
-
 import { api } from "services/api";
 
 /**
@@ -7,8 +5,8 @@ import { api } from "services/api";
  * @param query current url query
  * @returns list of Banned Words
  */
-export default async function getBannedWordsData(query: ParsedUrlQuery): Promise<string[]> {
+export default async function getBannedWordsData(id: number | string): Promise<string[]> {
   return api
-    .get<string[]>(`/network/management/banned-words/${query.id}`)
+    .get<string[]>(`/network/management/banned-words/${id}`)
     .then(({ data }) => data)
 }
