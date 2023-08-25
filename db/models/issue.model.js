@@ -147,6 +147,11 @@ class Issue extends Model {
       sourceKey: "id",
       as: "payments"
     });
+    this.belongsTo(models.repositories, {
+      foreignKey: "repository_id",
+      sourceKey: "id",
+      as: "repository"
+    });
     this.belongsTo(models.network, {
       foreignKey: "network_id",
       sourceKey: "id"
