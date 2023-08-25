@@ -8,6 +8,7 @@ interface PermissionInputProps {
   value: string;
   onChange: (newValue: string) => void;
   onClickAdd: () => void;
+  disabledButton?: boolean;
 }
 
 export default function PermissionInput({
@@ -15,6 +16,7 @@ export default function PermissionInput({
   value,
   onChange,
   onClickAdd,
+  disabledButton
 }: PermissionInputProps) {
   const { t } = useTranslation(["common"]);
 
@@ -30,7 +32,7 @@ export default function PermissionInput({
         label=""
       />
       <div className="mt-2">
-        <Button onClick={onClickAdd}>{t("misc.add")}</Button>
+        <Button onClick={onClickAdd} disabled={disabledButton}>{t("misc.add")}</Button>
       </div>
     </div>
   );
