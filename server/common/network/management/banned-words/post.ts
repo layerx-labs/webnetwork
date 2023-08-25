@@ -15,6 +15,9 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    if(!banned_domain) 
+      return res.status(404).json({ message: "banned_domain not found" });
+
     if (network.banned_domains.find((domain) => domain === banned_domain))
       return res.status(409).json({ message: "domain already exists" });
 
