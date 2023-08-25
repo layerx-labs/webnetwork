@@ -48,7 +48,7 @@ export default function ProfilePage() {
   const handleClickDisconnect = () => setShowRemoveModal(true);
   const hideRemoveModal = () => setShowRemoveModal(false);
   const hideConnectModal = () => setShowConnectModal(false);
-  const handleChangeMyhandle = () => setShowConnectModal(true);
+  const onChangeMyHandleClick = () => setShowConnectModal(true);
 
   function handleEmailChange(e) {
     setInputEmail(e.target.value);
@@ -116,19 +116,19 @@ export default function ProfilePage() {
       isSwitchDisabled={isExecuting}
       isEmailInvalid={isEmailInvalid}
       isExecuting={isExecuting}
-      handleEmailChange={handleEmailChange}
+      onHandleEmailChange={handleEmailChange}
       isNotificationEnabled={isNotificationEnabled}
       isConfirmationPending={isConfirmationPending}
       walletAddress={state.currentUser?.walletAddress}
       isCouncil={state.Service?.network?.active?.isCouncil}
-      handleClickDisconnect={handleClickDisconnect}
-      hideRemoveModal={hideRemoveModal}
+      onHandleClickDisconnect={handleClickDisconnect}
+      onHideRemoveModal={hideRemoveModal}
       showRemoveModal={showRemoveModal}
       showConnectModal={showConnectModal}
-      hideConnectModal={hideConnectModal}
-      handleChangeMyhandle={handleChangeMyhandle}
-      disconnectGithub={updateSession}
-      connectGithub={signInGithub}
+      onHideModalClick={hideConnectModal}
+      onChangeMyHandleClick={onChangeMyHandleClick}
+      onDisconnectGithub={updateSession}
+      onConnectGithub={signInGithub}
       onSwitchChange={onSwitchChange}
     />
   );

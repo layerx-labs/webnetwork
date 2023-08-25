@@ -14,7 +14,7 @@ interface RemoveGithubAccountProps {
   githubLogin: string;
   walletAddress: string;
   onCloseClick: () => void;
-  disconnectGithub: () => void;
+  onDisconnectGithub: () => void;
 }
 
 export default function RemoveGithubAccount({
@@ -22,7 +22,7 @@ export default function RemoveGithubAccount({
   githubLogin,
   walletAddress,
   onCloseClick,
-  disconnectGithub,
+  onDisconnectGithub,
 }: RemoveGithubAccountProps) {
   const { t } = useTranslation(["profile", "common"]);
   const [isExecuting, setIsExecuting] = useState(false);
@@ -34,7 +34,7 @@ export default function RemoveGithubAccount({
     setIsExecuting(true);
 
     resetUser(walletAddress, githubLogin)
-      .then(disconnectGithub)
+      .then(onDisconnectGithub)
       .then(() => {
         dispatch(toastSuccess(t("modals.remove-github.success")));
         onCloseClick();

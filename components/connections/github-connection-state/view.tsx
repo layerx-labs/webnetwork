@@ -4,7 +4,7 @@ import Button from "../../button";
 import { ConnectionButton } from "../../profile/connect-button";
 
 interface GithubConnectionStateProps {
-  handleClickDisconnect?: () => void;
+  onHandleClickDisconnect?: () => void;
   connectWallet: () => void;
   userLogin: string;
   walletAddress: string;
@@ -13,7 +13,7 @@ interface GithubConnectionStateProps {
 export default function GithubConnectionStateView({
   userLogin,
   walletAddress,
-  handleClickDisconnect,
+  onHandleClickDisconnect,
   connectWallet,
 }: GithubConnectionStateProps) {
   const { t } = useTranslation("profile");
@@ -28,12 +28,12 @@ export default function GithubConnectionStateView({
             connect={connectWallet}
           />
 
-          {handleClickDisconnect && userLogin && walletAddress && (
+          {onHandleClickDisconnect && userLogin && walletAddress && (
             <Button
               outline
               color="danger"
               className="mt-3 col-12"
-              onClick={handleClickDisconnect}
+              onClick={onHandleClickDisconnect}
             >
               {t("actions.remove-github-account")}
             </Button>
