@@ -3,7 +3,7 @@ import TrashIcon from "assets/icons/trash-icon";
 interface PermissionsItemProps {
   value: string;
   id: number;
-  onTrashClick: (id: number) => void;
+  onTrashClick: (v: string) => void;
 }
 
 export default function PermissionsItem({
@@ -22,7 +22,7 @@ export default function PermissionsItem({
         <div className="p ms-1">{value}</div>
       </div>
       <div>
-        <div className="cursor-pointer" onClick={() => onTrashClick(id)}>
+        <div className="cursor-pointer" onClick={() => onTrashClick(value)}>
           <TrashIcon viewBox="0 0 32 32" />
         </div>
       </div>
