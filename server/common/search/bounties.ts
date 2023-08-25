@@ -44,7 +44,7 @@ export default async function get(query: ParsedUrlQuery) {
       [Op.notIn]: defaultStatesToIgnore
     };
 
-  if (state && !["disputable", "mergeable"].includes(state.toString())) {
+  if (state && !["disputable", "mergeable"].includes(state?.toString())) {
     if (state === "funding")
       whereCondition.fundingAmount = {
         [Op.and]: [
@@ -64,7 +64,7 @@ export default async function get(query: ParsedUrlQuery) {
   }
 
   if (issueId) 
-    whereCondition.id = issueId;
+    whereCondition.id = +issueId;
 
   if (chainId) 
     whereCondition.chain_id = +chainId;
@@ -155,13 +155,13 @@ export default async function get(query: ParsedUrlQuery) {
                     !!transactionalTokenAddress, 
                     transactionalTokenAddress ? { address: { [Op.iLike]: transactionalTokenAddress.toString() } } : {});
 
-  const userAssociation = getAssociation("user", undefined, !!creator, {
+  const userAssociation = getAssociation("user", undefined, !!creator, creator ? {
     where: {
       address: {
-        [Op.iLike]: `%${creator.toString()}%`
+        [Op.iLike]: `%${creator?.toString()}%`
       }
     }
-  });
+  } : {});
 
   const COLS_TO_CAST = ["amount", "fundingAmount"];
   const RESULTS_LIMIT = count ? +count : undefined;
