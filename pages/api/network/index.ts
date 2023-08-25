@@ -1,5 +1,4 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import getConfig from "next/config";
 import {Op, Sequelize} from "sequelize";
 
 import Database from "db/models";
@@ -8,7 +7,6 @@ import {chainFromHeader} from "helpers/chain-from-header";
 import {WANT_TO_CREATE_NETWORK} from "helpers/constants";
 import {handleCreateSettlerToken, handlefindOrCreateTokens, handleRemoveTokens} from "helpers/handleNetworkTokens";
 import {resJsonMessage} from "helpers/res-json-message";
-import {Settings} from "helpers/settings";
 
 import {withProtected} from "middleware";
 import { NetworkRoute } from "middleware/network-route";
@@ -84,7 +82,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       description,
       repositories,
       botPermission,
-      accessToken,
       tokens,
       networkAddress,
       isDefault,
@@ -244,7 +241,6 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       logoIcon,
       fullLogo,
       isClosed,
-      accessToken,
       description,
       networkAddress,
       repositoriesToAdd,
@@ -280,13 +276,6 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
 
       return resJsonMessage("Network closed", res, 200);
     }
-
-    const settings = await Database.settings.findAll({
-      where: { visibility: "public" },
-      raw: true,
-    });
-
-    const publicSettings = (new Settings(settings)).raw();
 
     if (!chain.chainRpc)
       return resJsonMessage("Missing chainRpc", res, 400);
