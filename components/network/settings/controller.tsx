@@ -217,7 +217,7 @@ export default function MyNetworkSettings({
         eventKey: "permissions",
         title: t("custom-network:steps.permissions.title"),
         component: (
-          <NetworkPermissions domains={[network.networkAddress]}/>
+          <NetworkPermissions network={network}/>
         )
       }
     ])
