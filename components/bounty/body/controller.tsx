@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
@@ -8,6 +8,7 @@ import { useAppState } from "contexts/app-state";
 import { addToast, toastError } from "contexts/reducers/change-toaster";
 
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
+import { addFilesToMarkdown } from "helpers/markdown";
 import { TAGS_OPTIONS } from "helpers/tags-options";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
@@ -31,10 +32,11 @@ export default function BountyBody({
 }: BountyBodyControllerProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
-  const [body, setBody] = useState<string>();
+  const [body, setBody] = useState<string>(currentBounty?.body);
   const [files, setFiles] = useState<IFilesProps[]>([]);
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>();
+  const [selectedTags, setSelectedTags] = useState<string[]>(TAGS_OPTIONS.filter((tag) =>
+    currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const { state, dispatch } = useAppState();
@@ -44,15 +46,7 @@ export default function BountyBody({
   }
 
   function addFilesInDescription(str) {
-    const strFiles = files?.map((file) =>
-        file.uploaded &&
-        `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-          state.Settings?.urls?.ipfs
-        }/${file.hash}) \n\n`);
-    return `${str}\n\n${strFiles
-      .toString()
-      .replace(",![", "![")
-      .replace(",[", "[")}`;
+    return addFilesToMarkdown(str, files, state.Settings?.urls?.ipfs);
   }
 
   function handleUpdateBounty() {
@@ -99,17 +93,6 @@ export default function BountyBody({
       body?.length === 0
     );
   }
-
-  useEffect(() => {
-    if (!currentBounty?.body) return;
-
-    setBody(currentBounty?.body);
-  }, [currentBounty]);
-
-  useEffect(() => {
-    setSelectedTags(TAGS_OPTIONS.filter((tag) =>
-        currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
-  }, [currentBounty?.tags]);
 
   return (
     <BountyBodyView

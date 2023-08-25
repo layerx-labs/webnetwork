@@ -10,51 +10,35 @@ interface CheckButtonsProps {
   onClick: (value: SelectOption | SelectOption[]) => void;
 }
 
+interface SelectedOptions {
+  [index: number]: boolean;
+}
+
 export default function CheckButtons({
   options,
   multiple,
   onClick,
 }: CheckButtonsProps) {
-  const [selected, setSelected] = useState<SelectOption[]>([]);
+  const [selected, setSelected] = useState<SelectedOptions>({});
 
-  const findIndex = (opt, opts) => opts.findIndex(({ value }) => value === opt.value);
-  const isSelected = (opt, opts) => findIndex(opt, opts) > -1;
+  const isSelected = (opt, index) => !!selected[index];
+  const toOptionWithSelected = (opt, index) => ({ ...opt, selected: isSelected(opt, index) });
 
-  function handleClick(option) {
+  function handleClick(optionIndex) {
     return () => {
-      if (!multiple) {
-        setSelected([option]);
-        onClick(option);
-      } else
-        setSelected(previous => {
-          const newSelected = [...previous];
-
-          if (isSelected(option, previous)) {
-            const optionIndex = findIndex(option, previous);
-
-            newSelected.splice(optionIndex, 1);
-          } else {
-            newSelected.push(option);
-          }
-
-          onClick(newSelected);
-
-          return newSelected;
-        });
+      setSelected(previous => {
+        const toggled = { [optionIndex]: !multiple || !previous[optionIndex] };
+        const newValue = multiple ? { ...previous, ...toggled } : toggled;
+        const newOptions = options.filter((opt, index) => !!newValue[index]);
+        onClick(multiple ? newOptions : newOptions.at(0));
+        return newValue;
+      });
     };
-  }
-
-  function getButtonColor(opt) {
-    if (isSelected(opt, selected))
-      return "primary";
-
-    return "gray-900 border-gray-700";
   }
 
   return(
     <CheckButtonsView
-      options={options}
-      getButtonColor={getButtonColor}
+      options={options.map(toOptionWithSelected)}
       onClick={handleClick}
     />
   );

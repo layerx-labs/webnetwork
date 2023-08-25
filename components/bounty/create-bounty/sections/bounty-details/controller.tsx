@@ -77,9 +77,9 @@ export default function BountyDetailsSection({
   }
   
   function handleDeliverableTypeClick(selected: SelectOption | SelectOption[]) {
-    const { value } = Array.isArray(selected) ? selected.at(0) : selected;
+    const selectedType = Array.isArray(selected) ? selected.at(0) : selected;
 
-    setDeliverableType(value.toString());
+    setDeliverableType(selectedType?.value?.toString());
   }
 
   function handleOriginLinkChange(e: ChangeEvent<HTMLInputElement>) {
