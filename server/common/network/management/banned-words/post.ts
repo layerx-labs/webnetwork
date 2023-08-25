@@ -6,7 +6,8 @@ import { error as LogError } from "services/logging";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { id, banned_domain } = req.body;
+    const { id } = req.query;
+    const { banned_domain } = req.body;
 
     const network = await models.network.findOne({
       where: {
