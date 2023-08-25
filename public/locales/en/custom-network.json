@@ -141,7 +141,13 @@
         "title": "Blacklist Domains",
         "description": "Add or remove banned domains. Gain full control over domain restrictions on this page.",
         "list": "Banned Domains",
-        "placeholder": "Examples: www.domain, domain.com, www.domain.com"
+        "placeholder": "Examples: www.domain, domain.com, www.domain.com",
+        "created-message": "Banned word created",
+        "created-error": "Error create banned word",
+        "already-exists": "Banned word already exists",
+        "remove-message": "Banned word removed",
+        "remove-not-found": "Banned word not found",
+        "remove-error": "Error remove banned word"
       }  
     },
     "repositories": {
