@@ -1,24 +1,10 @@
-const { Op } = require("sequelize");
-const Octokit = require("octokit").Octokit;
-const ChainModel = require("../models/chain.model");
-const NetworkModel = require("../models/network.model");
-const IssueModel = require("../models/issue.model");
-const TokenModel = require("../models/tokens.model");
-const RepositoryModel = require("../models/repositories.model");
-const PullRequestModel = require("../models/pullRequest.model");
-const MergeProposalModel = require("../models/mergeproposal");
-const CuratorsModel = require("../models/curator-model");
-const BenefactorModel = require("../models/benefactor.model");
-const DisputeModel = require("../models/dispute-model");
-const UserPaymentsModel = require("../models/user-payments");
-const DeveloperModel = require("../models/developer.model");
-const CommentsModel = require("../models/comments.model");
-const UserModel = require("../models/user");
+const { Octokit } = require("octokit");
+const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
 const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN } = process.env;
 const BOT_NAME = 'bepro-bot'
 
-async function handleAddComments(comment, id, type, prId) {
+async function handleAddComments(queryInterface, users, comment, id, type, prId) {
   const getCommentCreateData = (userId, userAddress, body) => ({
     userId,
     userAddress,
@@ -31,15 +17,10 @@ async function handleAddComments(comment, id, type, prId) {
     ...(prId ? { deliverableId: prId } : null),
   });
 
-  const getUser = (name) =>
-    UserModel.findOne({
-      where: {
-        githubLogin: name,
-      },
-    });
+  const getUser = (name) => users.find(user => user.githubLogin === name);
 
   if (comment.body.startsWith("@") && comment.user.login === BOT_NAME) {
-    const userTaggedByBot = await getUser(
+    const userTaggedByBot = getUser(
       comment.body.split(" ")[0].replace("@", "")
     );
     let text;
@@ -68,58 +49,40 @@ async function handleAddComments(comment, id, type, prId) {
         }
       }
 
-      await CommentsModel.create(getCommentCreateData(userTaggedByBot.id, userTaggedByBot.address, text))
+      await queryInterface.bulkInsert("comments", [getCommentCreateData(userTaggedByBot.id, userTaggedByBot.address, text)]);
     }
   } else {
-    const commentCreatorUser = await getUser(comment.user.login);
+    const commentCreatorUser = getUser(comment.user.login);
 
     if (commentCreatorUser)
-      CommentsModel.create(getCommentCreateData(commentCreatorUser.id, commentCreatorUser.address, comment.body))
+      queryInterface.bulkInsert("comments", [getCommentCreateData(commentCreatorUser.id, commentCreatorUser.address, comment.body)]);
   }
 }
 
 async function up(queryInterface, Sequelize) {
   if (SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB === "true") return;
 
-  [
-    ChainModel,
-    NetworkModel,
-    IssueModel,
-    CuratorsModel,
-    RepositoryModel,
-    PullRequestModel,
-    MergeProposalModel,
-    TokenModel,
-    BenefactorModel,
-    DisputeModel,
-    UserPaymentsModel,
-    DeveloperModel,
-    CommentsModel,
-    UserModel,
-  ].forEach((model) => model.init(queryInterface.sequelize));
+  const issues = await getAllFromTable(queryInterface, "issues");
+  const openIssues = issues?.filter(issue => !["pending", "draft"].includes(issue.state) && !!issue.issueId);
 
-  [ChainModel, NetworkModel, IssueModel].forEach((model) =>
-    model.associate(queryInterface.sequelize.models)
-  );
+  if (!openIssues?.length) return;
 
-  const issues = await IssueModel.findAll({
-    where: {
-      state: { [Op.not]: "pending" },
-    },
-    include: [{ association: "repository" }, { association: "pullRequests" }],
-    required: true,
-  });
-
-  if (!issues.length) return;
+  const repositories = await getAllFromTable(queryInterface, "repositories");
+  const pullRequests = await getAllFromTable(queryInterface, "pull_requests");
+  const users = await getAllFromTable(queryInterface, "users");
 
   const octokit = new Octokit({
     auth: NEXT_GH_TOKEN,
   });
 
   try {
-    
-    for (const issue of issues) {
-      const [owner, repo] = issue?.repository?.githubPath.split("/");
+    let repository;
+
+    for (const issue of openIssues) {
+      if (issue.repository_id !== repository?.id)
+        repository = repositories.find(({ id }) => id === issue.repository_id);
+
+      const [owner, repo] = repository?.githubPath?.split("/");
 
       const { data: commentsGithub } = await octokit.rest.issues.listComments({
         owner,
@@ -128,10 +91,12 @@ async function up(queryInterface, Sequelize) {
       });
 
       for (const comment of commentsGithub) {
-        await handleAddComments(comment, issue?.id, "issue");
+        await handleAddComments(queryInterface, users, comment, issue?.id, "issue");
       }
 
-      for (const pr of issue.pullRequests) {
+      const pullRequestsOfIssue = pullRequests?.filter(pr => pr.issueId === issue.id);
+
+      for (const pr of pullRequestsOfIssue) {
         const { data: commentsPr } = await octokit.rest.issues.listComments({
           owner,
           repo,
@@ -139,7 +104,7 @@ async function up(queryInterface, Sequelize) {
         });
 
         for (const commentPr of commentsPr) {
-          await handleAddComments(commentPr, issue?.id, "deliverable", pr?.id);
+          await handleAddComments(queryInterface, users, commentPr, issue?.id, "deliverable", pr?.id);
         }
       }
     }
@@ -148,4 +113,4 @@ async function up(queryInterface, Sequelize) {
   }
 }
 
-module.exports = { up };
+module.exports = { up, down: async () => true };

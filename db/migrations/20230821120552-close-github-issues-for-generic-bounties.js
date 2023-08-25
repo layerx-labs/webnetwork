@@ -45,7 +45,10 @@ module.exports = {
     const issues = await getAllFromTable(queryInterface, "issues");
     const repositories = await getAllFromTable(queryInterface, "repositories");
 
-    const issuesToUpdate = issues.filter(({ ipfsUrl, state }) => !!ipfsUrl && !["closed", "canceled"].includes(state));
+    const issuesToUpdate = issues.filter(({ ipfsUrl, state, issueId }) => 
+      !!ipfsUrl && 
+      !["closed", "canceled"].includes(state) &&
+      !!issueId);
 
     await updateIssuesStateOnGithub(issuesToUpdate, repositories, "open");
   }
