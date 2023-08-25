@@ -11,6 +11,7 @@ interface NetworkPermissionsViewProps {
   domains: string[];
   onChangeDomain: (v: string) => void;
   handleAddDomain: () => void;
+  handleRemoveDomain: (v: string) => void;
 }
 
 export default function NetworkPermissionsView({
@@ -18,6 +19,7 @@ export default function NetworkPermissionsView({
   domains,
   onChangeDomain,
   handleAddDomain,
+  handleRemoveDomain,
 }: NetworkPermissionsViewProps) {
   const { t } = useTranslation(["custom-network"]);
   
@@ -33,6 +35,7 @@ export default function NetworkPermissionsView({
           onChange={onChangeDomain}
           onClickAdd={handleAddDomain}
           placeholder={t("steps.permissions.domains.placeholder")}
+          disabledButton={!domain}
         />
         {domains?.length > 0 ? (
           <div className="d-flex flex-column mt-4">
@@ -41,7 +44,7 @@ export default function NetworkPermissionsView({
               <PermissionsItem
                 value={value}
                 id={key}
-                onTrashClick={(id: number) => console.log(id)}
+                onTrashClick={handleRemoveDomain}
               />
             ))}
           </div>
