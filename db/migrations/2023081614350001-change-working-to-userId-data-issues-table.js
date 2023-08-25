@@ -1,69 +1,22 @@
-const { Op } = require("sequelize");
-const ChainModel = require("../models/chain.model");
-const NetworkModel = require("../models/network.model");
-const IssueModel = require("../models/issue.model");
-const TokenModel = require("../models/tokens.model");
-const RepositoryModel = require("../models/repositories.model");
-const PullRequestModel = require("../models/pullRequest.model");
-const MergeProposalModel = require("../models/mergeproposal");
-const CuratorsModel = require("../models/curator-model");
-const BenefactorModel = require("../models/benefactor.model");
-const DisputeModel = require("../models/dispute-model");
-const UserPaymentsModel = require("../models/user-payments");
-const DeveloperModel = require("../models/developer.model");
-const CommentsModel = require("../models/comments.model");
-const UserModel = require("../models/user");
+const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
 async function up(queryInterface, Sequelize) {
-  [
-    ChainModel,
-    NetworkModel,
-    IssueModel,
-    CuratorsModel,
-    RepositoryModel,
-    PullRequestModel,
-    MergeProposalModel,
-    TokenModel,
-    BenefactorModel,
-    DisputeModel,
-    UserPaymentsModel,
-    DeveloperModel,
-    CommentsModel,
-    UserModel,
-  ].forEach((model) => model.init(queryInterface.sequelize));
+  const issues = await getAllFromTable(queryInterface, "issues");
+  const users = await getAllFromTable(queryInterface, "users");
 
-  [ChainModel, NetworkModel, IssueModel].forEach((model) =>
-    model.associate(queryInterface.sequelize.models)
-  );
+  const issuesWithUsersWorking = issues?.filter(issue => !!issue?.working?.length);
 
-  const issues = await IssueModel.findAll({
-    where: {
-      state: { [Op.not]: "pending" },
-    },
-    required: true,
-  });
-
-  if (!issues.length) return;
+  if (!issuesWithUsersWorking?.length) return;
 
   try {
     for (const issue of issues) {
-      const newWorking = [];
-      if (issue.working.length) {
-        for (const githubLogin of issue.working) {
-          const user = await UserModel.findOne({
-            where: {
-              githubLogin: Sequelize.where(
-                Sequelize.fn("lower", Sequelize.col("user.githubLogin")),
-                githubLogin.toLowerCase()
-              ),
-            },
-          });
+      const working = issue.working.map(login => users?.find(({ githubLogin}) => githubLogin === login)?.id);
 
-          if (user) newWorking.push(user.id);
-        }
-      }
-      issue.working = newWorking;
-      await issue.save();
+      await queryInterface.bulkUpdate("issues", {
+        working
+      }, {
+        id: issue.id
+      });
     }
   } catch (error) {
     console.log(
