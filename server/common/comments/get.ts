@@ -20,7 +20,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     const filters: WhereOptions = {};
 
     if (!isGovernor) filters.hidden = false;
-    if (issueId) filters.id = +issueId;
+    if (issueId) filters.issueId = +issueId;
     if (proposalId) filters.proposalId = +proposalId;
     if (deliverableId) filters.deliverableId = +deliverableId;
     if (userId) filters.userId = +userId;
