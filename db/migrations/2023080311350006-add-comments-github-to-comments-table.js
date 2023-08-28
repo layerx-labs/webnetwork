@@ -62,7 +62,7 @@ async function up(queryInterface, Sequelize) {
   if (SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB === "true") return;
 
   const issues = await getAllFromTable(queryInterface, "issues");
-  const openIssues = issues?.filter(issue => !["pending", "draft"].includes(issue.state) && !!issue.issueId);
+  const openIssues = issues?.filter(issue => issue.state !== "pending" && !!issue.issueId);
 
   if (!openIssues?.length) return;
 
