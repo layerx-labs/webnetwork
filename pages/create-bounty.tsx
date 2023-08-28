@@ -8,8 +8,6 @@ import useSearchNetworks from "x-hooks/api/network/use-search-networks";
 export default CreateBountyPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  // TODO: BEPRO-1841 fetch banned domains list and pass to bannedDomains props
-
   const networks = await useSearchNetworks({
     isRegistered: true,
     isClosed: false,
@@ -20,7 +18,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
 
   return {
     props: {
-      bannedDomains: [],
       networks: networks.rows,
       ...(await serverSideTranslations(locale, [
         "common",

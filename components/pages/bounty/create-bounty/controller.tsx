@@ -44,12 +44,10 @@ const ZeroNumberFormatValues = {
 };
 
 interface CreateBountyPageProps {
-  bannedDomains: string[];
   networks: Network[];
 }
 
 export default function CreateBountyPage({
-  bannedDomains = [],
   networks: allNetworks
 }: CreateBountyPageProps) {
   const { query } = useRouter();
@@ -117,7 +115,7 @@ export default function CreateBountyPage({
   }
 
   function validateBannedDomain(link: string) {
-    return bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
+    return !!currentNetwork?.banned_domains?.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 
   const validateBannedDomainDebounced = useDebouncedCallback((link: string) => {
