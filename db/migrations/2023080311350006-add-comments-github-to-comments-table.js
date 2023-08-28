@@ -1,7 +1,7 @@
 const { Octokit } = require("octokit");
 const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
-const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN, NEXT_GH_OWNER } = process.env;
+const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN, NEXT_PUBLIC_GH_USER } = process.env;
 
 const PullRequestReviews = 
 `query Reviews($repo: String!, $owner: String!, $id: Int!) {
@@ -36,13 +36,11 @@ async function handleAddComments(queryInterface, users, comment, id, type, prId)
 
   const getUser = (name) => users.find(user => user.githubLogin === name);
 
-  if (comment.body.startsWith("@") && comment.user.login.toLowerCase() === NEXT_GH_OWNER?.toLowerCase()) {
-    console.log("### is bot", comment)
+  if (comment.body.startsWith("@") && comment.user.login.toLowerCase() === NEXT_PUBLIC_GH_USER) {
     const userTaggedByBot = getUser(
       comment.body.split(" ")[0].replace("@", "")
     );
     let text;
-    console.log("userTaggedByBot", userTaggedByBot)
     if (userTaggedByBot) {
       switch (type) {
         case "issue": {
@@ -70,7 +68,6 @@ async function handleAddComments(queryInterface, users, comment, id, type, prId)
       await queryInterface.bulkInsert("comments", [getCommentCreateData(userTaggedByBot.id, userTaggedByBot.address, text)]);
     }
   } else {
-    console.log("### is user", comment)
     const commentCreatorUser = getUser(comment.user.login);
 
     if (commentCreatorUser)
@@ -97,8 +94,6 @@ async function up(queryInterface, Sequelize) {
   try {
     let repository;
 
-    console.log("NEXT_GH_OWNER", NEXT_GH_OWNER)
-
     for (const issue of openIssues) {
       if (issue.repository_id !== repository?.id)
         repository = repositories.find(({ id }) => id === issue.repository_id);
@@ -112,7 +107,6 @@ async function up(queryInterface, Sequelize) {
       });
 
       for (const comment of commentsGithub) {
-        console.log("issue comment", comment.body)
         await handleAddComments(queryInterface, users, comment, issue?.id, "issue");
       }
 
@@ -133,12 +127,10 @@ async function up(queryInterface, Sequelize) {
           .then(data => data.repository.pullRequest.reviews.nodes);
 
         for (const commentPr of commentsPr) {
-          console.log("commentPr", commentPr.body)
           await handleAddComments(queryInterface, users, commentPr, issue?.id, "deliverable", pr?.id);
         }
 
         for (const reviewPr of reviewComments) {
-          console.log("reviewPr", reviewPr.body)
           await handleAddComments(queryInterface, users, reviewPr, issue?.id, "deliverable", pr?.id);
         }
       }
