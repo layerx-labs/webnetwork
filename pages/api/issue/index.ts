@@ -5,8 +5,7 @@ import models from "db/models";
 
 import { chainFromHeader } from "helpers/chain-from-header";
 
-import { withProtected } from "middleware";
-import { WithValidChainId } from "middleware/with-valid-chain-id";
+import { UserRoute, WithValidChainId } from "middleware";
 
 import { add } from "services/ipfs-service";
 
@@ -109,4 +108,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 // TODO: add withUser middleware after https://github.com/layerx-labs/webnetwork/pull/139 merge
-export default withProtected(WithValidChainId(handler));
+export default UserRoute(WithValidChainId(handler));
