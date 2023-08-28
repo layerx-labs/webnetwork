@@ -138,7 +138,7 @@
     "permissions": {
       "title": "Permissions",
       "domains": {
-        "title": "Blacklist Domains",
+        "title": "Blocklist domains",
         "description": "Add or remove banned domains. Gain full control over domain restrictions on this page.",
         "list": "Banned Domains",
         "placeholder": "Examples: www.domain, domain.com, www.domain.com",
