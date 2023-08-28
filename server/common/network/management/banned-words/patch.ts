@@ -4,7 +4,7 @@ import models from "db/models";
 
 import { error as LogError } from "services/logging";
 
-export default async function put(req: NextApiRequest, res: NextApiResponse) {
+export default async function patch(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { id } = req.query;
     const { banned_domain } = req.body;

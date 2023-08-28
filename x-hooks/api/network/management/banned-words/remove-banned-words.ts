@@ -13,6 +13,6 @@ interface payloadProps {
 export default async function RemoveBannedWord(id,
                                                payload: payloadProps): Promise<string[]> {
   return api
-    .put<string[]>(`/network/management/banned-words/${id}`, payload)
+    .patch<string[]>(`/network/management/banned-words/${id}`, payload)
     .then(({ data }) => data)
 }

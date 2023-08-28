@@ -9,7 +9,7 @@ import { Network } from "interfaces/network";
 
 import getBannedWordsData from "x-hooks/api/network/management/banned-words/get-banned-words-data";
 import CreateBannedWord from "x-hooks/api/network/management/banned-words/post-banned-words";
-import RemoveBannedWord from "x-hooks/api/network/management/banned-words/put-banned-words";
+import RemoveBannedWord from "x-hooks/api/network/management/banned-words/remove-banned-words";
 
 import NetworkPermissionsView from "./view";
 
