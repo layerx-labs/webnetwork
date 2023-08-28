@@ -23,6 +23,7 @@ import HeaderInformation from './header-information';
 import KycSession from './kyc-session.model'
 import Delegation from './delegation.model'
 import Comments from './comments.model'
+import Deliverables from './deliverable.model'
 
 const Database = { sequelize: null };
 
@@ -53,6 +54,8 @@ Database.headerInformation = HeaderInformation;
 Database.kycSession = KycSession;
 Database.delegation = Delegation;
 Database.comments = Comments;
+Database.deliverable = Deliverables;
+
 
 Object.values(Database).forEach((model) => {
   if (model?.init) {
