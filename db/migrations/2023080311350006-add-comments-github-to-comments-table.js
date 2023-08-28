@@ -3,6 +3,24 @@ const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
 const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN, NEXT_GH_OWNER } = process.env;
 
+const PullRequestReviews = 
+`query Reviews($repo: String!, $owner: String!, $id: Int!) {
+  repository(name: $repo, owner: $owner) {
+    pullRequest(number: $id) {
+      reviews(first: 100) {
+        nodes {
+          user: author {
+            login
+          }
+          body: bodyText
+          created_at: createdAt
+          updated_at: updatedAt
+        }
+      }
+    }
+  }
+}`;
+
 async function handleAddComments(queryInterface, users, comment, id, type, prId) {
   const getCommentCreateData = (userId, userAddress, body) => ({
     userId,
@@ -102,8 +120,19 @@ async function up(queryInterface, Sequelize) {
           issue_number: pr.githubId,
         });
 
+        const reviewComments = await octokit.graphql(PullRequestReviews, {
+          repo,
+          owner,
+          id: +pr.githubId
+        })
+          .then(data => data.repository.pullRequest.reviews.nodes);
+
         for (const commentPr of commentsPr) {
           await handleAddComments(queryInterface, users, commentPr, issue?.id, "deliverable", pr?.id);
+        }
+
+        for (const reviewPr of reviewComments) {
+          await handleAddComments(queryInterface, users, reviewPr, issue?.id, "deliverable", pr?.id);
         }
       }
     }
