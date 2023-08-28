@@ -99,6 +99,9 @@ async function up(queryInterface, Sequelize) {
       if (issue.repository_id !== repository?.id)
         repository = repositories.find(({ id }) => id === issue.repository_id);
 
+      console.log("issue.id", issue?.id)
+      console.log("repository.id", repository?.id)
+
       const [owner, repo] = repository?.githubPath?.split("/");
 
       const { data: commentsGithub } = await octokit.rest.issues.listComments({
@@ -108,6 +111,7 @@ async function up(queryInterface, Sequelize) {
       });
 
       for (const comment of commentsGithub) {
+        console.log("issue comment", comment)
         await handleAddComments(queryInterface, users, comment, issue?.id, "issue");
       }
 
@@ -128,10 +132,12 @@ async function up(queryInterface, Sequelize) {
           .then(data => data.repository.pullRequest.reviews.nodes);
 
         for (const commentPr of commentsPr) {
+          console.log("commentPr", commentPr)
           await handleAddComments(queryInterface, users, commentPr, issue?.id, "deliverable", pr?.id);
         }
 
         for (const reviewPr of reviewComments) {
+          console.log("reviewPr", reviewPr)
           await handleAddComments(queryInterface, users, reviewPr, issue?.id, "deliverable", pr?.id);
         }
       }
