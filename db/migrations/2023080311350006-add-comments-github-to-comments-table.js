@@ -1,8 +1,7 @@
 const { Octokit } = require("octokit");
 const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
-const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN } = process.env;
-const BOT_NAME = 'bepro-bot'
+const { SKIP_MIGRATION_SEED_COMMENTS_DATE_GITHUB, NEXT_GH_TOKEN, NEXT_GH_OWNER } = process.env;
 
 async function handleAddComments(queryInterface, users, comment, id, type, prId) {
   const getCommentCreateData = (userId, userAddress, body) => ({
@@ -12,14 +11,14 @@ async function handleAddComments(queryInterface, users, comment, id, type, prId)
     issueId: id,
     hidden: false,
     type,
-    created_at: comment.created_at,
-    updated_at: comment.updated_at,
+    createdAt: comment.created_at,
+    updatedAt: comment.updated_at,
     ...(prId ? { deliverableId: prId } : null),
   });
 
   const getUser = (name) => users.find(user => user.githubLogin === name);
 
-  if (comment.body.startsWith("@") && comment.user.login === BOT_NAME) {
+  if (comment.body.startsWith("@") && comment.user.login === NEXT_GH_OWNER) {
     const userTaggedByBot = getUser(
       comment.body.split(" ")[0].replace("@", "")
     );
