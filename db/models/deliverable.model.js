@@ -41,7 +41,7 @@ class Deliverables extends Model {
         },
         issueId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: "issues",
             key: "id",
