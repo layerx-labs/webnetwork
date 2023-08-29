@@ -41,11 +41,15 @@ class Deliverables extends Model {
         },
         issueId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: "issues",
             key: "id",
           },
+        },
+        prContractId: {
+          type: DataTypes.INTEGER,
+          allowNull: true
         },
         bountyId: {
           type: DataTypes.INTEGER,

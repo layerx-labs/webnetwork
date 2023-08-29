@@ -39,7 +39,7 @@ module.exports = {
       },
       issueId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "issues",
           key: "id"
@@ -47,7 +47,11 @@ module.exports = {
       },
       bountyId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
+      },
+      prContractId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       userId: {
         type: Sequelize.INTEGER,
