@@ -156,11 +156,7 @@ export default async function get(query: ParsedUrlQuery) {
                     transactionalTokenAddress ? { address: { [Op.iLike]: transactionalTokenAddress.toString() } } : {});
 
   const userAssociation = getAssociation("user", undefined, !!creator, creator ? {
-    where: {
-      address: {
-        [Op.iLike]: `%${creator?.toString()}%`
-      }
-    }
+    address: caseInsensitiveEqual("user.address", creator.toString())
   } : {});
 
   const COLS_TO_CAST = ["amount", "fundingAmount"];
