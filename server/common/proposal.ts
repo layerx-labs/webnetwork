@@ -10,18 +10,17 @@ import { HttpNotFoundError } from "server/errors/http-errors";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
-    proposalId,
-    issueId,
+    id,
     network,
     chain,
   } = query;
 
-  if (!proposalId || !issueId || !network || !chain)
+  if (!id|| !network || !chain)
     throw new HttpNotFoundError("Missing parameters");
 
   const proposal = await models.mergeProposal.findOne({
     where: {
-      id: proposalId
+      id: id
     },
     include: [
       getAssociation("disputes"),
@@ -36,7 +35,7 @@ export default async function get(query: ParsedUrlQuery) {
                                         Sequelize.fn("lower", Sequelize.col("distributions.recipient"))))
       ]),
       getAssociation("pullRequest"),
-      getAssociation("issue", undefined, true, { id: issueId }, [
+      getAssociation("issue", undefined, true, undefined, [
         getAssociation("transactionalToken", ["name", "symbol"]),
       ]),
       getAssociation("network", [], true, {
