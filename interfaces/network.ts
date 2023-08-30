@@ -148,12 +148,6 @@ export interface NetworkSettings {
     };
     validated: boolean;
   };
-  github?: {
-    repositories: Repository[];
-    botPermission: boolean;
-    validated: boolean;
-    allowMerge: boolean;
-  };
   tokens?: {
     settler: string;
     allowedTransactions: Token[],

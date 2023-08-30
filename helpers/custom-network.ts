@@ -67,12 +67,6 @@ export const DefaultNetworkSettings = {
     },
     validated: undefined
   },
-  github: {
-    repositories: [] as Repository[],
-    botPermission: false,
-    validated: false,
-    allowMerge: true,
-  },
   tokens: {
     settler: "",
     settlerTokenMinAmount: "",

@@ -80,13 +80,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       fullLogo,
       logoIcon,
       description,
-      repositories,
-      botPermission,
       tokens,
       networkAddress,
       isDefault,
-      signedMessage,
-      allowMerge = true,
+      signedMessage
     } = req.body;
 
     if (!_name) {
@@ -94,8 +91,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const name = _name.replaceAll(" ", "-").toLowerCase();
-
-    if (!botPermission) return resJsonMessage("Bepro-bot authorization needed", res, 403);
     
     const chain = await chainFromHeader(req);
 
@@ -199,18 +194,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       fullLogo: fullLogoHash,
       networkAddress,
       isDefault: isDefault || false,
-      chain_id: +chain?.chainId,
-      allowMerge
+      chain_id: +chain?.chainId
     });
-
-    const repos = JSON.parse(repositories);
-
-    for (const repository of repos) {
-      await Database.repositories.create({
-        githubPath: repository.fullName,
-        network_id: network.id
-      });
-    }
 
     //TODO: move tokens logic to new endpoint   
     if(tokens?.allowedTransactions?.length > 0){
@@ -243,11 +228,8 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       isClosed,
       description,
       networkAddress,
-      repositoriesToAdd,
-      repositoriesToRemove,
       allowedTokens,
-      isAdminOverriding,
-      allowMerge
+      isAdminOverriding
     } = req.body;
 
     const chain = await chainFromHeader(req);
@@ -304,62 +286,6 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       if (!isRegistryGovernor) return resJsonMessage("Unauthorized", res, 403);
     }
 
-    const addingRepos = repositoriesToAdd ? JSON.parse(repositoriesToAdd) : [];
-
-    if (addingRepos.length && !isAdminOverriding)
-      for (const repository of addingRepos) {
-        const exists = await Database.repositories.findOne({
-          where: {
-            githubPath: { [Op.iLike]: String(repository.fullName) }
-          },
-          include: [
-            {
-              association: "network",
-              where: {
-                [Op.or]: [
-                  {
-                    name: { [Op.not]: network.name }
-                  },
-                  {
-                    name: network.name,
-                    creatorAddress: { [Op.not]: network.creatorAddress }
-                  }
-                ]
-              }
-            }
-          ]
-        });
-
-        if (exists)
-          return resJsonMessage(`Repository ${repository.fullName} is already in use by another network `, res, 403);
-      }
-
-    const removingRepos = repositoriesToRemove
-      ? JSON.parse(repositoriesToRemove)
-      : [];
-
-    if (removingRepos.length && !isAdminOverriding)
-      for (const repository of removingRepos) {
-        const exists = await Database.repositories.findOne({
-          where: {
-            githubPath: { [Op.iLike]: String(repository.fullName) }
-          }
-        });
-
-        if (!exists) return resJsonMessage("Invalid repository", res, 404);
-
-        const hasIssues = await Database.issue.findOne({
-          where: {
-            repository_id: exists.id
-          }
-        });
-
-        if (hasIssues)
-          return resJsonMessage(`Repository ${repository.fullName} already has bounties and cannot be removed`, 
-                                res,
-                                403);
-      }
-
     if (isAdminOverriding && name) network.name = name;
 
     if (description) network.description = description;
@@ -381,20 +307,7 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
       }
     }
 
-    if (allowMerge !== undefined && allowMerge !== network.allowMerge)
-      network.allowMerge = allowMerge;
-
     network.save();
-
-    if (addingRepos.length && !isAdminOverriding) {
-
-      for (const repository of addingRepos) {
-        await Database.repositories.create({
-          githubPath: repository.fullName,
-          network_id: network.id
-        });
-      }
-    }
 
     if (allowedTokens) {
       const network_tokens = await Database.networkTokens.findAll({
@@ -426,17 +339,6 @@ async function put(req: NextApiRequest, res: NextApiResponse) {
         await handleRemoveTokens(allowedTokens.reward, token, 'reward');
       }
     }
-
-    if (removingRepos.length && !isAdminOverriding)
-      for (const repository of removingRepos) {
-        const exists = await Database.repositories.findOne({
-          where: {
-            githubPath: { [Op.iLike]: String(repository.fullName) }
-          }
-        });
-
-        if (exists) await exists.destroy();
-      }
 
     return resJsonMessage("Network updated", res, 200);
   } catch (error) {

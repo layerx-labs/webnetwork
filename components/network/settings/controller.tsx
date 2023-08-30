@@ -60,12 +60,7 @@ export default function MyNetworkSettings({
   const { colorsToCSS } = useNetworkTheme();
   const { signMessage } = useAuthentication();
   const { updateActiveNetwork } = useNetwork();
-  const {
-    details,
-    github,
-    settings,
-    forcedNetwork,
-  } = useNetworkSettings();
+  const { details, settings, forcedNetwork } = useNetworkSettings();
 
   const isCurrentNetwork =
     !!network &&
@@ -95,16 +90,8 @@ export default function MyNetworkSettings({
       fullLogo: details.fullLogo.value.raw
         ? await psReadAsText(details.fullLogo.value.raw)
         : undefined,
-      repositoriesToAdd: JSON.stringify(github.repositories
-          .filter((repo) => repo.checked && !repo.isSaved)
-          .map(({ name, fullName }) => ({ name, fullName }))),
-      repositoriesToRemove: JSON.stringify(github.repositories
-          .filter((repo) => !repo.checked && repo.isSaved)
-          .map(({ name, fullName }) => ({ name, fullName }))),
       creator: state.currentUser.walletAddress,
-      networkAddress: network.networkAddress,
-      accessToken: state.currentUser.accessToken,
-      allowMerge: github?.allowMerge
+      networkAddress: network.networkAddress
     };
 
     const handleError = (error) => {
@@ -181,13 +168,6 @@ export default function MyNetworkSettings({
         ),
       },
       {
-        eventKey: "repositories",
-        title: t("custom-network:tabs.repositories"),
-        component: (
-          <NetworkRepositoriesSettings />
-        ),
-      },
-      {
         eventKey: "governance",
         title: t("custom-network:tabs.governance"),
         component: (
@@ -241,7 +221,6 @@ export default function MyNetworkSettings({
       activeTab={activeTab}
       isAbleToSave={
         settings?.validated &&
-        github?.validated &&
         !network?.isClosed &&
         !networkNeedRegistration &&
         !["registry", "governance", "management"].includes(activeTab)
