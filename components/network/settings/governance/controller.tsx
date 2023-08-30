@@ -145,7 +145,7 @@ export default function NetworkGovernanceSettings({
   function getChangedTokens() {
     const changedTokens = [];
 
-    if (!settingsTokens.allowedRewards || !settingsTokens.allowedTransactions || !network) return changedTokens;
+    if (!settingsTokens.allowedRewards || !settingsTokens.allowedTransactions || !networkToken) return changedTokens;
 
     const getAddress = ({ address }) => address;
     const hasEqualLength = (arr1, arr2) => arr1.length === arr2.length;
@@ -154,8 +154,8 @@ export default function NetworkGovernanceSettings({
     const allowedRewards = settingsTokens.allowedRewards.map(getAddress);
     const allowedTransactions = settingsTokens.allowedTransactions.map(getAddress);
 
-    const networkRewards = network.tokens.filter(({ isReward }) => isReward).map(getAddress);
-    const networkTransactions = network.tokens.filter(({ isTransactional }) => isTransactional).map(getAddress);
+    const networkRewards = networkToken.filter(({ isReward }) => isReward).map(getAddress);
+    const networkTransactions = networkToken.filter(({ isTransactional }) => isTransactional).map(getAddress);
 
     if (!hasEqualLength(allowedRewards, networkRewards))
       changedTokens.push("reward");
