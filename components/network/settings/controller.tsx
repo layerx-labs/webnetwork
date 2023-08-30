@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import NetworkGovernanceSettings from "components/network/settings/governance/controller";
 import NetworkLogoAndColorsSettings from "components/network/settings/logo-and-colors/controller";
 import NetworkRegistrySettings from "components/network/settings/registry/controller";
-import NetworkRepositoriesSettings from "components/network/settings/repositories/controller";
 import MyNetworkSettingsView from "components/network/settings/view";
 
 import { useAppState } from "contexts/app-state";
@@ -22,7 +21,7 @@ import { Network } from "interfaces/network";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import useApi from "x-hooks/use-api";
+import useUpdateNetwork from "x-hooks/api/network/use-update-network";
 import { useAuthentication } from "x-hooks/use-authentication";
 import { useNetwork } from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
@@ -55,7 +54,6 @@ export default function MyNetworkSettings({
   const [tabs, setTabs] = useState<TabsProps[]>([]);
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
-  const { updateNetwork } = useApi();
   const { state, dispatch } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
   const { signMessage } = useAuthentication();
@@ -83,12 +81,12 @@ export default function MyNetworkSettings({
 
     const json = {
       description: details?.description || "",
-      colors: JSON.stringify(settings.theme.colors),
+      colors: settings.theme.colors,
       logoIcon: details.iconLogo.value.raw
-        ? await psReadAsText(details.iconLogo.value.raw)
+        ? (await psReadAsText(details.iconLogo.value.raw)).toString()
         : undefined,
       fullLogo: details.fullLogo.value.raw
-        ? await psReadAsText(details.fullLogo.value.raw)
+        ? (await psReadAsText(details.fullLogo.value.raw)).toString()
         : undefined,
       creator: state.currentUser.walletAddress,
       networkAddress: network.networkAddress
@@ -102,7 +100,7 @@ export default function MyNetworkSettings({
 
     signMessage(IM_AM_CREATOR_NETWORK)
       .then(async () => {
-        await updateNetwork(json)
+        await useUpdateNetwork(json)
           .then(async () => {
             if (isCurrentNetwork) updateActiveNetwork(true);
 

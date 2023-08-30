@@ -474,15 +474,6 @@ export default function useApi() {
     return api.post("/files", form).then(({ data }) => data);
   }
 
-  async function updateNetwork(networkInfo) {
-    return api
-      .put("/network", { ...networkInfo })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   async function getProposal(dbId: string | number): Promise<Proposal> {
     return api
       .get<Proposal>(`/merge-proposal/${dbId}`)
@@ -938,7 +929,6 @@ export default function useApi() {
     searchRepositories,
     searchCurators,
     searchLeaderBoard,
-    updateNetwork,
     uploadFiles,
     userHasPR,
     cancelPrePullRequest,

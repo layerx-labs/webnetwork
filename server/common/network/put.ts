@@ -89,7 +89,7 @@ export async function put(req: NextApiRequest) {
     network.description = description;
 
   if (colors)
-    network.colors = JSON.parse(colors);
+    network.colors = colors;
 
   if (fullLogo || logoIcon) {
     try {

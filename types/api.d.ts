@@ -68,3 +68,12 @@ export interface CreateNetworkParams {
   networkAddress: string;
   signedMessage: string;
 }
+
+export interface UpdateNetworkParams {
+  description?: string;
+  colors?: ThemeColors;
+  logoIcon?: string;
+  fullLogo?: string;
+  creator: string;
+  networkAddress: string;
+}
