@@ -29,6 +29,7 @@ export default function BountyDetailsSection({
   isKyc,
   originLink,
   isOriginLinkBanned,
+  deliverableType,
   onOriginLinkChange,
   updateIsKyc,
   updateTierList,
@@ -126,6 +127,7 @@ export default function BountyDetailsSection({
       isKycEnabled={Settings?.kyc?.isKycEnabled}
       kycOptions={kycTierOptions}
       deliverableTypeOptions={deliverableTypes}
+      deliverableType={deliverableType}
       originLink={originLink}
       isOriginLinkBanned={isOriginLinkBanned}
       onTitlechange={handleChangeTitle}

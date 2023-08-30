@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CheckButtonsView from "components/check-buttons/view";
 
 import { SelectOption } from "types/utils";
 
 interface CheckButtonsProps {
+  checked?: string | number | string[] | number[];
   options: SelectOption[];
   multiple?: boolean;
   onClick: (value: SelectOption | SelectOption[]) => void;
@@ -15,6 +16,7 @@ interface SelectedOptions {
 }
 
 export default function CheckButtons({
+  checked,
   options,
   multiple,
   onClick,
@@ -35,6 +37,13 @@ export default function CheckButtons({
       });
     };
   }
+
+  useEffect(() => {
+    if (!checked) return;
+    const tmpChecked = Array.isArray(checked) ? checked : [checked];
+    const newSelected = tmpChecked.map(c => [options.findIndex(o => o.value === c), true]);
+    setSelected(Object.fromEntries(newSelected));
+  }, [checked]);
 
   return(
     <CheckButtonsView

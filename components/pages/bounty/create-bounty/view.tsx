@@ -92,6 +92,7 @@ export default function CreateBountyPageView({
           updateUploading={rest.updateUploading}
           originLink={rest.originLink}
           isOriginLinkBanned={rest.isOriginLinkBanned}
+          deliverableType={rest.deliverableType}
           onOriginLinkChange={rest.onOriginLinkChange}
           setDeliverableType={rest.setDeliverableType}
         />

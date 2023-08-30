@@ -21,6 +21,7 @@ export interface BountyDetailsSectionProps {
   updateSelectedTags: (e: string[]) => void;
   isKyc: boolean;
   originLink: string;
+  deliverableType: string;
   isOriginLinkBanned?: boolean;
   onOriginLinkChange: (link: string) => void;
   updateIsKyc: (e: boolean) => void;

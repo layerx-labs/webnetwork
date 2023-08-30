@@ -30,6 +30,7 @@ interface BountyDetailsSectionViewProps {
   kycOptions: DropdownOption[];
   deliverableTypeOptions: SelectOption[];
   originLink: string;
+  deliverableType: string;
   isOriginLinkBanned: boolean;
   onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
   onDescriptionchange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -56,6 +57,7 @@ export default function BountyDetailsSectionView({
   kycOptions,
   deliverableTypeOptions,
   originLink,
+  deliverableType,
   isOriginLinkBanned,
   onTitlechange,
   onDescriptionchange,
@@ -190,6 +192,7 @@ export default function BountyDetailsSectionView({
 
           <div className="row mt-3">
             <CheckButtons
+              checked={deliverableType}
               options={deliverableTypeOptions}
               onClick={onDeliverableTypeClick}
             />

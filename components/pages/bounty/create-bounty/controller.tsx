@@ -517,6 +517,7 @@ export default function CreateBountyPage({
   return(
     <CreateBountyPageView
       isConnected={!!currentUser?.walletAddress}
+      deliverableType={deliverableType}
       currentSection={currentSection}
       isTokenApproved={isTokenApproved}
       isBackButtonDisabled={currentSection === 0}
