@@ -212,7 +212,7 @@ export default function FundingSectionView({
                         key={`fund-${fund.contractId}`}
                         className="p-2 bg-dark border-radius-8"
                         col1={
-                          <>
+                          <div className="d-flex align-items-center">
                             <Amount 
                               amount={fund.amount.toFixed()}
                               symbol={transactionalSymbol}
@@ -237,7 +237,7 @@ export default function FundingSectionView({
                                 />
                               </>
                             </If>
-                          </>
+                          </div>
                         }
                         col2={
                           <If condition={isBountyInDraft || isBountyClosed && hasReward && !fund.withdrawn}>
