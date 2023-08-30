@@ -75,5 +75,6 @@ export interface UpdateNetworkParams {
   logoIcon?: string;
   fullLogo?: string;
   creator: string;
+  isClosed?: boolean;
   networkAddress: string;
 }
