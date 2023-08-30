@@ -221,7 +221,7 @@ export default function MyNetworkSettings({
         settings?.validated &&
         !network?.isClosed &&
         !networkNeedRegistration &&
-        !["registry", "governance", "management"].includes(activeTab)
+        !["registry", "governance", "management", "permissions"].includes(activeTab)
       }
       isUpdating={isUpdating}
       handleSubmit={handleSubmit}
