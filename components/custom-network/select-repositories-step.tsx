@@ -14,7 +14,9 @@ export default function SelectRepositoriesStep({ activeStep, index, validated, h
   const { t } = useTranslation("custom-network");
 
   const {state} = useAppState();
-  const { details, github, fields } = useNetworkSettings();
+  const { details, fields } = useNetworkSettings();
+  
+  const github = { repositories: [], allowMerge: false, botPermission: false };
 
   function handleRepositoryCheck(fullName: string) {
     fields.repository.setter(fullName);
