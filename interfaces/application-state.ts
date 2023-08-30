@@ -96,6 +96,7 @@ export interface CurrentUserState {
   hasRegisteredNetwork?: boolean;
   kyc?: kycSession;
   kycSession?: kycSession;
+  id?: number;
 }
 
 export interface CurrentBounty {
