@@ -24,7 +24,6 @@ export async function post(req: NextApiRequest) {
     description,
     tokens,
     networkAddress,
-    isDefault,
     signedMessage
   } = req.body;
 
@@ -72,17 +71,6 @@ export async function post(req: NextApiRequest) {
   if (sameNameOnOtherChain && !validateSignature(sameNameOnOtherChain.creatorAddress))
     throw new HttpForbiddenError("Network name owned by other wallet");
 
-  const defaultNetwork = await Database.network.findOne({
-      where: {
-        isDefault: true,
-        isClosed: false,
-        chain_id: +chain?.chainId,
-      }
-  });
-
-  if (isDefault && defaultNetwork)
-    throw new HttpConflictError("Default Network already saved");
-
   // Contract Validations
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
@@ -127,11 +115,10 @@ export async function post(req: NextApiRequest) {
     creatorAddress: creator,
     name: name,
     description,
-    colors: JSON.parse(colors),
+    colors: colors,
     logoIcon: logoIconHash,
     fullLogo: fullLogoHash,
     networkAddress,
-    isDefault: isDefault || false,
     chain_id: +chain?.chainId
   });
 
@@ -147,5 +134,5 @@ export async function post(req: NextApiRequest) {
     }
   }
 
-  return "Network created";
+  return network.id;
 }

@@ -1,4 +1,4 @@
-export function psReadAsText(file: File) {
+export function psReadAsText(file: File): Promise<string | ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const fr = new FileReader();
 

@@ -36,6 +36,7 @@ import {psReadAsText} from "helpers/file-reader";
 
 import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
+import useCreateNetwork from "x-hooks/api/network/use-create-network";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
@@ -55,7 +56,7 @@ function NewNetwork() {
   const { signMessage } = useSignature();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
-  const { createNetwork, processEvent } = useApi();
+  const { processEvent } = useApi();
   const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
 
@@ -98,18 +99,16 @@ function NewNetwork() {
     const payload = {
       name: details.name.value,
       description: details.description,
-      colors: JSON.stringify(settings.theme.colors),
-      logoIcon: await psReadAsText(details.iconLogo.value.raw),
-      fullLogo: await psReadAsText(details.fullLogo.value.raw),
+      colors: settings.theme.colors,
+      logoIcon: (await psReadAsText(details.iconLogo.value.raw)).toString(),
+      fullLogo: (await psReadAsText(details.fullLogo.value.raw)).toString(),
       creator: state.currentUser.walletAddress,
-      accessToken: state.currentUser.accessToken,
       tokens,
       networkAddress: deployedNetworkAddress,
-      isDefault: isSetupPage,
       signedMessage
     };
 
-    const networkCreated = await createNetwork(payload)
+    const networkCreated = await useCreateNetwork(payload)
       .catch((error) => {
         setCreatingNetwork(-1);
         dispatch(addToast({

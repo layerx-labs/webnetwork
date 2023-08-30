@@ -1,8 +1,9 @@
 import { Curator } from "interfaces/curators";
 import { IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
-import { Network } from "interfaces/network";
+import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+import { Token } from "interfaces/token";
 
 export interface PaginatedData<T> {
   count: number;
@@ -50,4 +51,20 @@ export interface UpdateBountyVisibilityParams {
   id: string | number;
   visible: boolean;
   networkAddress: string;
+}
+
+export interface CreateNetworkParams {
+  name: string;
+  description: string;
+  colors: ThemeColors;
+  logoIcon: string;
+  fullLogo: string;
+  creator: string;
+  tokens: {
+    settler: string;
+    allowedTransactions: Token[];
+    allowedRewards: Token[];
+  };
+  networkAddress: string;
+  signedMessage: string;
 }

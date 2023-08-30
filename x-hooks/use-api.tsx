@@ -460,15 +460,6 @@ export default function useApi() {
       .then(({ status }) => status === 200);
   }
 
-  async function createNetwork(networkInfo) {
-    return api
-      .post("/network", { ...networkInfo })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   async function uploadFiles(files: File | File[]): Promise<FileUploadReturn> {
     const form = new FormData();
     const isArray = Array.isArray(files);
@@ -914,7 +905,6 @@ export default function useApi() {
     getSupportedChains,
     createIssue,
     createToken,
-    createNetwork,
     createPrePullRequest,
     createRepo,
     createReviewForPR,
