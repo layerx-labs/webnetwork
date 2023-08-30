@@ -20,7 +20,7 @@ module.exports = {
     const findNetwork = id => id !== network?.id ? networks.find(repo => repo.id === id) : network;
     const findUser = address => !isSameAddress(address, user?.address) ? users.find(user => isSameAddress(user.address, address)) : user;
 
-    const issuesWithGithubInfo = issues?.filter(issue => !!issue.issueId);
+    const issuesWithGithubInfo = issues?.filter(issue => !!issue.issueId && issue.state !== "pending");
     for (const issue of issuesWithGithubInfo) {
       repository = findRepository(issue.repository_id);
       network = findNetwork(issue.network_id);
