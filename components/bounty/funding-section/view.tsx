@@ -33,7 +33,6 @@ interface FundingSectionViewProps {
     hasReward: boolean;
     fundsGiven: BigNumber;
     futureRewards: string;
-    collapseAction: string;
     isBountyClosed: boolean;
     isBountyInDraft: boolean;
     rewardTokenSymbol: string;
@@ -50,7 +49,6 @@ export default function FundingSectionView({
     hasReward,
     fundsGiven,
     futureRewards,
-    collapseAction,
     isBountyClosed,
     isBountyInDraft,
     rewardTokenSymbol,
@@ -58,10 +56,10 @@ export default function FundingSectionView({
 }: FundingSectionViewProps) {
   const { t } = useTranslation(["common", "funding"]);
 
-  const { isMobileView, isTabletView } = useBreakPoint();
-
   const [showFundModal, setShowFundModal] = useState(false);
   const [fundingToRetractOrWithdraw, setFundingToRetractOrWithdraw] = useState<fundingBenefactor>();
+
+  const { isMobileView, isTabletView } = useBreakPoint();
 
   const handleShowFundModal = () => setShowFundModal(true);
   const handleCloseFundModal = () => setShowFundModal(false);
@@ -69,6 +67,7 @@ export default function FundingSectionView({
 
   if (isBountyFunded && !walletFunds?.length) return <></>;
 
+  const collapseAction = isBountyClosed ? t("funding:rewards") : t("funding:actions.manage-funding");
   const FundsGivenAmount = 
     <Amount 
       amount={fundsGiven.toFixed()}
