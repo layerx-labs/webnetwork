@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -12,7 +11,6 @@ import { addToast } from "contexts/reducers/change-toaster";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
-import { CustomSession } from "interfaces/custom-session";
 import { NetworkEvents } from "interfaces/enums/events";
 
 import useStartWorking from "x-hooks/api/bounty/use-start-working";
@@ -38,17 +36,13 @@ export default function PageActions({
 
   const [isExecuting, setIsExecuting] = useState(false);
   const [showPRModal, setShowPRModal] = useState(false);
-  const [userId, setUserId] = useState<number>();
 
-  const session = useSession();
-  const currentUserSession = session?.data?.user as CustomSession["user"];
   const { state, dispatch } = useAppState();
   const { handleCreatePullRequest } = useBepro();
   const {
     createPrePullRequest,
     cancelPrePullRequest,
-    processEvent,
-    getUserOf
+    processEvent
   } = useApi();
 
   const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
@@ -63,7 +57,7 @@ export default function PageActions({
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isBountyOpen = currentBounty?.isClosed === false && currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
-  const isWorkingOnBounty = !!currentBounty?.working?.find((login) => login === state.currentUser?.login);
+  const isWorkingOnBounty = !!currentBounty?.working?.find(id => +id === +state.currentUser?.id);
   const isBountyOwner = isWalletConnected && currentBounty?.user?.address === state.currentUser?.walletAddress;
   const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
@@ -210,15 +204,6 @@ export default function PageActions({
         setIsExecuting(false);
       });
   }
-
-  useEffect(() => {
-    if(!currentUserSession?.address) return;
-
-    getUserOf(currentUserSession?.address?.toLowerCase()).then((user) => {
-      if(user?.id)
-        setUserId(user?.id)
-    })
-  }, [currentUserSession?.address])
   
   return (
     <PageActionsView
