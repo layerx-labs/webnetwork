@@ -128,8 +128,8 @@ export default function BountyHeroView({
                 border-gray-850 justify-content-md-start`}
             >
               <If condition={!!bounty?.origin}>
-                <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-auto">
-                  <a href={bounty?.origin} className={`text-truncate`} target="_blank" rel="noreferrer noopener">
+                <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-5 text-truncate">
+                  <a href={bounty?.origin} target="_blank" rel="noreferrer noopener">
                     {bounty?.origin}
                   </a>
                 </BountyItemLabel>
