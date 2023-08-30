@@ -7,7 +7,12 @@ import { useNetworkSettings } from "contexts/network-settings";
 
 export default function NetworkRepositoriesSettings() {
   const { state } = useAppState();
-  const { fields, github } = useNetworkSettings();
+  const { fields } = useNetworkSettings();
+
+  const github = {
+    repositories: [],
+    allowMerge: false
+  };
 
   function changeAllowMergeCheckbox(e: ChangeEvent<HTMLInputElement>) {
     fields.allowMerge.setter(e?.target?.checked);
