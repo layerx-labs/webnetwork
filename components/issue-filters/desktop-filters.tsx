@@ -21,11 +21,11 @@ export default function IssueDesktopFilters({ onlyTimeFrame = false }) {
     clearFilters,
   ] = useFilters();
   const { query } = useRouter();
-  const { state, time, repoId } = query;
+  const { state, time } = query;
   const { t } = useTranslation("common");
 
   function countFilters() {
-    return +!!state + +!!time + +!!repoId;
+    return +!!state + +!!time;
   }
 
   function countFiltersLabel() {

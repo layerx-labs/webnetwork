@@ -95,15 +95,6 @@ components:
           type: string
         networkName:
           type: string
-    Repository:
-      type: object
-      properties:
-        id:
-          type: integer
-        githubPath:
-          type: string
-        network_id:
-          $ref: '#/components/schemas/NetworkDbId'
     PullRequest:
       type: object
       properties:
@@ -197,6 +188,8 @@ components:
     Bounty:
       type: object
       properties:
+        id:
+          $ref: '#/components/schemas/DbId'
         issueId:
           type: integer
           description: database bounty id
@@ -452,7 +445,7 @@ paths:
                     $ref: '#/components/schemas/String'
       responses:
         404:
-          description: repo not found or invalid network
+          description: invalid network
           content:
             application/json:
               schema:
@@ -469,8 +462,7 @@ paths:
             application/json:
               schema:
                 type: string
-                description: repository_id/githubId
-                example: 1/1
+                description: id
     get:
       description: retrieve bounty from database
       responses:
@@ -529,22 +521,22 @@ paths:
                     $ref: '#/components/schemas/Date'
                   author:
                     type: string
-  /issue/{repoId}/{ghId}/{networkName}/:
+  /issue/{id}/{networkName}/{chainName}/:
     get:
       description: Retrieve single issue from database
       parameters:
         - in: path
-          name: repoId
+          name: id
           required: true
           schema:
-            type: string
-        - in: path
-          name: ghId
-          required: true
-          schema:
-            type: string
+            type: integer
         - in: path
           name: networkName
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: chainName
           required: true
           schema:
             type: string
@@ -960,10 +952,6 @@ paths:
           schema:
             type: string
         - in: query
-          name: repoPath
-          schema:
-            type: string
-        - in: query
           name: tokenAddress
           schema:
             $ref: '#/components/schemas/StringAddress'
@@ -990,10 +978,6 @@ paths:
     get:
       description: Get list of recent bounties
       parameters:
-        - in: query
-          name: repoId
-          schema:
-            type: string
         - in: query
           name: creator
           schema:
@@ -1038,10 +1022,6 @@ paths:
             $ref: '#/components/schemas/BountyState'
         - in: query
           name: issueId
-          schema:
-            type: string
-        - in: query
-          name: repoId
           schema:
             type: string
         - in: query
