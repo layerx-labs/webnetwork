@@ -2,6 +2,7 @@ import { NextApiRequest } from "next";
 import { Op } from "sequelize";
 
 import models from "db/models";
+import Issue from "db/models/issue.model";
 
 import { chainFromHeader } from "helpers/chain-from-header";
 import { lowerCaseIncludes } from "helpers/string";
@@ -10,9 +11,7 @@ import { add } from "services/ipfs-service";
 
 import { HttpBadRequestError, HttpUnauthorizedError } from "server/errors/http-errors";
 
-import { DatabaseId } from "types/api";
-
-export async function post(req: NextApiRequest): Promise<DatabaseId> {
+export async function post(req: NextApiRequest): Promise<Issue> {
   const {
     title,
     body,
@@ -92,5 +91,5 @@ export async function post(req: NextApiRequest): Promise<DatabaseId> {
     ipfsUrl: hash
   });
 
-  return savedIssue.id;
+  return savedIssue;
 }
