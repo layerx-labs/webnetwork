@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Collapse, Row } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
@@ -62,11 +62,11 @@ export default function Collapsable({
         </Col>
       </Row>
 
-      { isOpen && 
-        <Row className={`bg-dark border-radius-8 justify-content-center align-items-center ${className}`}>
+      <Collapse in={isOpen}>
+      <Row className={`bg-dark border-radius-8 justify-content-center align-items-center ${className}`}>
           {children}
         </Row> 
-      }
+      </Collapse>
     </div>
   );
 }
