@@ -5,6 +5,7 @@ import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
 import { Token } from "interfaces/token";
 
+export type DatabaseId = number;
 export interface PaginatedData<T> {
   count: number;
   rows: T[];
