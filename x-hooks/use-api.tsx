@@ -15,9 +15,7 @@ import {
   PatchUserParams,
   User,
   PastEventsParams,
-  StartWorkingParams,
-  SearchNetworkParams,
-  updateIssueParams
+  SearchNetworkParams
 } from "interfaces/api";
 import { Curator, SearchCuratorParams } from "interfaces/curators";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
@@ -27,11 +25,9 @@ import { LeaderBoard, SearchLeaderBoard } from "interfaces/leaderboard";
 import { Network } from "interfaces/network";
 import { PaginatedData } from "interfaces/paginated-data";
 import { Proposal } from "interfaces/proposal";
-import { ReposList } from "interfaces/repos-list";
 import { Token } from "interfaces/token";
 
 import {api} from "services/api";
-import { WinStorage } from "services/win-storage";
 
 
 import {updateSupportedChains} from "../contexts/reducers/change-supported-chains";
@@ -61,8 +57,6 @@ type FileUploadReturn = {
   fileName: string;
   size: string;
 }[]
-
-const repoList: ReposList = [];
 
 export default function useApi() {
   const  {state, dispatch} = useAppState();

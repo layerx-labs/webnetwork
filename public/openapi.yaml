@@ -43,10 +43,6 @@ components:
       type: string
       description: id of network in database
 
-    RepositoryDbId:
-      type: string
-      description: id of repository in database
-
     TokenDbId:
       type: string
       description: id of token in database
@@ -87,8 +83,6 @@ components:
     PullRequestPayload:
       type: object
       properties:
-        repoId:
-          $ref: '#/components/schemas/RepositoryDbId'
         issueGithubID:
           type: string
         title:
@@ -228,8 +222,6 @@ components:
           $ref: '#/components/schemas/String'
         body:
           $ref: '#/components/schemas/String'
-        repository_id:
-          $ref: '#/components/schemas/RepositoryDbId'
         working:
           type: array
           items:
@@ -411,7 +403,6 @@ components:
             oneOf:
               - $ref: '#/components/schemas/Bounty'
               - $ref: '#/components/schemas/Curator'
-              - $ref: '#/components/schemas/Repository'
               - $ref: '#/components/schemas/LeaderboardEntry'
               - $ref: '#/components/schemas/Network'
 
@@ -452,8 +443,6 @@ paths:
                 body:
                   type: string
                   description: Markdown body of bounty
-                repositoryId:
-                  $ref: '#/components/schemas/RepositoryDbId'
                 networkName:
                   type: string
                   description: network name where bounty should be created
@@ -865,106 +854,6 @@ paths:
                     type: string
                   author:
                     type: string
-  /repos/:
-    get:
-      description: get all repositories for networkName
-      parameters:
-        - in: query
-          name: networkName
-          required: true
-          schema:
-            type: string
-      responses:
-        404:
-          description: Invalid network
-          content:
-            application/json:
-              schema:
-                type: string
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Repository'
-    post:
-      description: Add new repo, can only be done if no issues on database
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                owner:
-                  type: string
-                repo:
-                  type: string
-                networkName:
-                  type: string
-      responses:
-        422:
-          description: Database already has bounties
-          content:
-            application/json:
-              schema:
-                type: string
-        409:
-          description: repo already exists
-          content:
-            application/json:
-              schema:
-                type: string
-        404:
-          description: Invalid network
-          content:
-            application/json:
-              schema:
-                type: string
-        400:
-          description: error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-                example: "ok"
-    delete:
-      description: remove repo from database, can only be done if no bounties on database
-      parameters:
-        - in: query
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        422:
-          description: Unprocessable entity
-          content:
-            application/json:
-              schema:
-                type: string
-        404:
-          description: Id not found
-          content:
-            application/json:
-              schema:
-                type: string
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
   /rss/:
     get:
       description: query rss
@@ -1034,10 +923,6 @@ paths:
           name: issueId
           schema:
             type: string
-        - in: query
-          name: repoId
-          schema:
-            $ref: '#/components/schemas/RepositoryDbId'
         - in: query
           name: time
           schema:
@@ -1345,37 +1230,6 @@ paths:
             application/json:
               schema:
                 type: integer
-  /search/repositories/:
-    get:
-      description: search repos on database
-      parameters:
-        - in: query
-          name: owner
-          schema:
-            type: string
-        - in: query
-          name: name
-          schema:
-            type: string
-        - in: query
-          name: path
-          schema:
-            type: string
-        - in: query
-          name: networkName
-          schema:
-            type: string
-        - in: query
-          name: page
-          schema:
-            type: integer
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Search'
   /seo/{id}/:
     get:
       description: Get SEO image url for bounty
