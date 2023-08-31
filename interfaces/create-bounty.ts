@@ -1,15 +1,5 @@
 import { IFilesProps } from "components/drag-and-drop";
 
-export interface Repository {
-  id: string; 
-  path: string;
-}
-
-export interface Branch {
-  value: string;
-  label: string;
-}
-
 export interface BountyDetailsSectionProps {
   title: string;
   updateTitle: (e: string) => void;

@@ -8,13 +8,6 @@ export interface User {
   accessToken?: string;
 }
 
-export interface Repository {
-  name: string;
-  nameWithOwner: string;
-  isFork: boolean;
-  isInOrganization?: boolean;
-}
-
 export interface Wallet {
   address: string;
   isCouncil: boolean;

@@ -1,6 +1,6 @@
 import { Defaults } from "@taikai/dappkit";
 
-import { Repository, ThemeColors } from "interfaces/network";
+import { ThemeColors } from "interfaces/network";
 import { Token } from "interfaces/token";
 
 const ZeroField = () => ({

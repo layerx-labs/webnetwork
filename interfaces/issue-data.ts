@@ -101,13 +101,6 @@ export interface IssueSearch {
   currentPage: number
 }
 
-export interface Repository {
-  id: number;
-  githubPath: string;
-  network?: Network;
-  mergeCommitAllowed?: boolean;
-}
-
 export interface PullRequest {
   createdAt: Date;
   githubId: string;
