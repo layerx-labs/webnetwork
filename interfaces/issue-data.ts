@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 
 import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
-import { Proposal, INetworkProposal } from "interfaces/proposal";
+import { Proposal } from "interfaces/proposal";
 import { Token } from "interfaces/token";
 
 import { User } from "./api";
@@ -31,7 +31,6 @@ export interface IssueData {
   rewardAmount?: string;
   body: string;
   createdAt: Date;
-  developers: developer[];
   dueDate?: string;
   mergeProposals: Proposal[];
   merged: string;
@@ -89,18 +88,6 @@ export interface IssueBigNumberData
   rewardAmount: BigNumber;
 }
 
-export interface IssueNetwork extends IssueBigNumberData {
-  networkName?: string;
-  totalValueLock?: BigNumber;
-  issues?: IssueBigNumberData[]
-}
-export interface IssueSearch {
-  rows: IssueNetwork[] | [],
-  count: number,
-  pages: number,
-  currentPage: number
-}
-
 export interface PullRequest {
   createdAt: Date;
   githubId: string;
@@ -129,13 +116,6 @@ export interface PullRequest {
   isCancelable: boolean;
 }
 
-export interface developer {
-  id?: number;
-  login?: string;
-  avatar_url?: string;
-  url?: string;
-  type?: string;
-}
 export interface IssueDataComment {
   id: number;
   comment: string;
@@ -154,20 +134,6 @@ export interface IssueDataComment {
 
 export interface GithubUser {
   login: string;
-}
-
-export interface INetworkIssue {
-  _id: number;
-  canceled: boolean;
-  cid: CID | string;
-  creationDate: Date | number;
-  finalized: boolean;
-  issueGenerator: string;
-  mergeProposalAmount: number;
-  recognizedAsFinished: boolean;
-  isDraft: boolean;
-  tokensStaked: number;
-  networkProposals: INetworkProposal[];
 }
 
 export interface fundingBenefactor {
