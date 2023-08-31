@@ -168,32 +168,6 @@ export default function useApi() {
       .catch((): IssueBigNumberData[] => ([]));
   }
 
-
-  async function searchRepositories({
-    page = "1",
-    owner = "",
-    name = "",
-    path = "",
-    networkName = DEFAULT_NETWORK_NAME,
-    chainId = "",
-    includeIssues = ""
-  }) {
-    const params = {
-      page,
-      owner,
-      name,
-      path,
-      networkName,
-      chainId,
-      includeIssues
-    };
-
-    return api
-      .get<{ rows; count: number; pages: number; currentPage: number }>("/search/repositories", { params })
-      .then(({ data }) => data)
-      .catch(() => ({ rows: [], count: 0, pages: 0, currentPage: 1 }));
-  }
-
   async function getIssue(repoId: string | number,
                           ghId: string | number,
                           networkName = DEFAULT_NETWORK_NAME,
@@ -317,55 +291,6 @@ export default function useApi() {
       .post<User[]>("/search/users/all", payload)
       .then(({ data }) => data)
       .catch(() => []);
-  }
-
-  async function createRepo(owner, repo, networkName = DEFAULT_NETWORK_NAME) {
-    return api
-      .post("/repos/", { owner, repo, networkName })
-      .then(({ status }) => status === 200)
-      .catch((e) => {
-        console.error("Failed to create repo", e);
-        return false;
-      });
-  }
-
-  async function getReposWithBounties() {
-    const cache = new WinStorage("getReposWithBounties", 10000, "sessionStorage");
-
-    if (cache.value)
-      return cache.value;
-
-    return api
-      .get<ReposList>("/repos", {
-        params: {
-          withBounties: "true"
-        }
-      })
-      .then(({ data }) => {
-        cache.value = data;
-
-        return data;
-      })
-      .catch(() => []);
-  }
-
-  async function getReposList(force = false, networkName = DEFAULT_NETWORK_NAME, chainId?: string) {
-    const search = new URLSearchParams({ networkName, chainId }).toString();
-
-    if (!force && repoList.length)
-      return Promise.resolve(repoList as ReposList);
-
-    return api
-      .get<ReposList>(`/repos?${search}`)
-      .then(({ data }) => data)
-      .catch(() => []);
-  }
-
-  async function removeRepo(id: string) {
-    return api
-      .delete(`/repos/${id}`)
-      .then(({ status }) => status === 200)
-      .catch(() => false);
   }
 
   async function processEvent(event: NetworkEvents | RegistryEvents | StandAloneEvents,
@@ -733,15 +658,6 @@ export default function useApi() {
       .catch(() => ({ rows: [], count: 0, pages: 0, currentPage: 1 }));
   }
 
-  async function repositoryHasIssues(repoPath, networkName, chainId) {
-    const search = new URLSearchParams({ repoPath, networkName, chainId }).toString();
-
-    return api
-      .get<{ rows: IssueData[]; count: number }>(`/search/issues/?${search}`)
-      .then(({ data }) => !!data.count)
-      .catch(() => false);
-  }
-
   async function resetUser(address: string, githubLogin: string) {
     return api.post("/user/reset", { address, githubLogin });
   }
@@ -897,7 +813,6 @@ export default function useApi() {
     createIssue,
     createToken,
     createPrePullRequest,
-    createRepo,
     createReviewForPR,
     getAllUsers,
     getHealth,
@@ -908,7 +823,6 @@ export default function useApi() {
     getPendingFor,
     getProposal,
     getPullRequestIssue,
-    getReposList,
     getTotalUsers,
     getTotalBounties,
     getTotalNetworks,
@@ -919,14 +833,11 @@ export default function useApi() {
     isNetworkOwner,
     joinAddressToUser,
     processEvent,
-    removeRepo,
     removeUser,
-    repositoryHasIssues,
     searchIssues,
     searchRecentIssues,
     searchNetworks,
     searchActiveNetworks,
-    searchRepositories,
     searchCurators,
     searchLeaderBoard,
     uploadFiles,
@@ -944,7 +855,6 @@ export default function useApi() {
     patchSupportedChain,
     getKycSession,
     validateKycSession,
-    getReposWithBounties,
     getCuratorsResume
   };
 }
