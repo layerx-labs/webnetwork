@@ -100,7 +100,7 @@ class Issue extends Model {
       },
       ipfsUrl: DataTypes.STRING,
       type: DataTypes.STRING,
-      origin: DataTypes.STRING,
+      origin: DataTypes.TEXT,
       userId: {
         type: DataTypes.INTEGER,
         references: {

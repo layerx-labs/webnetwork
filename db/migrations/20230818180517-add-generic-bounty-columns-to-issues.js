@@ -11,7 +11,7 @@ module.exports = {
     });
 
     await queryInterface.addColumn("issues", "origin", {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     });
 
     await queryInterface.addColumn("issues", "userId", {
