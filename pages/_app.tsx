@@ -1,5 +1,6 @@
 import React from "react";
 
+import {QueryClientProvider} from '@tanstack/react-query'
 import {GetServerSideProps} from "next";
 import {SessionProvider} from "next-auth/react";
 import {appWithTranslation} from "next-i18next";
@@ -22,6 +23,7 @@ import RootProviders from "contexts";
 
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
+import { reactQueryClient } from "services/react-query";
 
 function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppProps) {
 
@@ -33,24 +35,26 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
 
   return (
     <>
-      <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
-      <SessionProvider session={session}>
-        <RootProviders>
-          <Seo issueMeta={seoData} />
-          <ReadOnlyContainer>
-            <NoMetamaskModal />
-            <InvalidAccountWalletModal />
-            <NavBar />
-            <div id="root-container">
-              <Component {...pageProps} />
-            </div>
-            <WrongNetworkModal />
-            <Toaster />
-            <Loading />
-          </ReadOnlyContainer>
-        </RootProviders>
-      </SessionProvider>
-      <ConsentCookie />
+      <QueryClientProvider client={reactQueryClient}>
+        <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
+        <SessionProvider session={session}>
+          <RootProviders>
+            <Seo issueMeta={seoData} />
+            <ReadOnlyContainer>
+              <NoMetamaskModal />
+              <InvalidAccountWalletModal />
+              <NavBar />
+              <div id="root-container">
+                <Component {...pageProps} />
+              </div>
+              <WrongNetworkModal />
+              <Toaster />
+              <Loading />
+            </ReadOnlyContainer>
+          </RootProviders>
+        </SessionProvider>
+        <ConsentCookie />
+      </QueryClientProvider>
     </>
   );
 }
