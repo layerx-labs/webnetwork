@@ -6,7 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import { Curator } from "interfaces/curators";
 
-import useApi from "x-hooks/use-api";
+import { useSearchCurators } from "x-hooks/api/curator/use-search-curators";
 import { useNetwork } from "x-hooks/use-network";
 
 import VotingPowerMultiNetworkView from "./view";
@@ -18,7 +18,6 @@ export default function VotingPowerMultiNetwork() {
   const [network, setNetwork] = useState<Curator>();
 
   const { state } = useAppState();
-  const { searchCurators } = useApi();
   const { getURLWithNetwork } = useNetwork();
 
   function goToNetwork(network) {
@@ -52,7 +51,7 @@ export default function VotingPowerMultiNetwork() {
 
   useEffect(() => {
     if (state.currentUser?.walletAddress)
-      searchCurators({
+      useSearchCurators({
         address: state.currentUser?.walletAddress,
       })
         .then(({ rows }) => setNetworks(rows))

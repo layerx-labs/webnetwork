@@ -17,6 +17,7 @@ import { truncateAddress } from "helpers/truncate-address";
 import {NetworkEvents} from "interfaces/enums/events";
 import {IssueBigNumberData, PullRequest} from "interfaces/issue-data";
 
+import { useGetUserByLogin } from "x-hooks/api/user/use-get-user-by-login";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 
@@ -80,8 +81,8 @@ export default function ProposalModal({
 
   const {state} = useAppState();
 
-  const { handleProposeMerge } = useBepro();
   const { processEvent } = useApi();
+  const { handleProposeMerge } = useBepro();
 
   async function handleClickCreate(): Promise<void> {
     if (!currentPullRequest) return;

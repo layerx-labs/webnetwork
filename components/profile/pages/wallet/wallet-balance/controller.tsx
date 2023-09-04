@@ -18,7 +18,8 @@ import { Token } from "interfaces/token";
 
 import { getCoinInfoByContract } from "services/coingecko";
 
-import useApi from "x-hooks/use-api";
+import { useSearchCurators } from "x-hooks/api/curator/use-search-curators";
+import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
 import { useNetwork } from "x-hooks/use-network";
 
 import WalletBalanceView from "./view";
@@ -38,7 +39,6 @@ export default function WalletBalance() {
 
   const { state } = useAppState();
 
-  const { searchCurators, getTokens } = useApi();
   const { getURLWithNetwork } = useNetwork();
   const { query, push, pathname, asPath } = useRouter();
 
@@ -98,7 +98,7 @@ export default function WalletBalance() {
   function loadOracleBalance() {
     if (!state.currentUser?.walletAddress) return;
 
-    searchCurators({
+    useSearchCurators({
       address: state.currentUser?.walletAddress,
       chainShortName:
         query?.chain?.toString() || state?.connectedChain?.shortName,
@@ -123,7 +123,7 @@ export default function WalletBalance() {
   function loadTokensBalance() {
     if (state.Service?.starting || !state.currentUser?.walletAddress) return;
 
-    getTokens(state?.connectedChain?.id).then((tokens) => {
+    useGetTokens(state?.connectedChain?.id).then((tokens) => {
       Promise.all(tokens?.map(async (token) => {
         const tokenData = await processToken(token?.address);
         return { networks: token?.networks, ...tokenData };

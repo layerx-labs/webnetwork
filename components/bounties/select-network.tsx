@@ -15,7 +15,7 @@ import { Network } from "interfaces/network";
 
 import { WinStorage } from "services/win-storage";
 
-import useApi from "x-hooks/use-api";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 import useChain from "x-hooks/use-chain";
 
 interface SelectNetworkProps {
@@ -37,7 +37,6 @@ export default function SelectNetwork({
 
   const { chain } = useChain();
   const { state } = useAppState();
-  const { searchNetworks } = useApi();
 
   function networkToOption(network: Network) {
     return {
@@ -82,7 +81,7 @@ export default function SelectNetwork({
       setOptions(options);
       handleSelectedWithNetworkName(options);
     } else
-      searchNetworks({
+      useSearchNetworks({
         chainId: id
       })
         .then(({ rows }) => {

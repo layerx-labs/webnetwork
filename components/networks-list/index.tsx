@@ -17,7 +17,8 @@ import {Network} from "interfaces/network";
 
 import {NetworksPageContext} from "pages/networks";
 
-import useApi from "x-hooks/use-api";
+import { useGetHeaderNetworks } from "x-hooks/api/network/use-get-header-networks";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 import {useNetwork} from "x-hooks/use-network";
 
 export default function NetworksList() {
@@ -28,7 +29,6 @@ export default function NetworksList() {
   const [networks, setNetworks] = useState<Network[]>([]);
 
   const { getURLWithNetwork } = useNetwork();
-  const { searchNetworks, getHeaderNetworks } = useApi();
 
   const { state, dispatch } = useAppState();
   const { 
@@ -51,7 +51,7 @@ export default function NetworksList() {
   useEffect(() => {    
     dispatch(changeLoadState(true));
 
-    getHeaderNetworks()
+    useGetHeaderNetworks()
       .then(({ TVL, bounties, number_of_network }) => {
         setTotalConverted(TVL.toFixed() || "0");
         setNumberOfNetworks(number_of_network || 0);
@@ -59,7 +59,7 @@ export default function NetworksList() {
       })
       .catch(error => console.log("Failed to retrieve header data", error));
 
-    searchNetworks({
+    useSearchNetworks({
       isRegistered: true,
       sortBy: "name",
       order: "asc",

@@ -19,7 +19,8 @@ import {ProfilePages} from "interfaces/utils";
 
 import {WinStorage} from "services/win-storage";
 
-import useApi from "x-hooks/use-api";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
 import useChain from "x-hooks/use-chain";
 
 export function useNetwork() {
@@ -30,7 +31,6 @@ export function useNetwork() {
 
   const {state, dispatch} = useAppState();
   const { chain, findSupportedChain } = useChain();
-  const {searchNetworks, getNetworkTokens} = useApi();
 
   function getStorageKey(networkName: string, chainId: string | number) {
     return `bepro.network:${networkName}:${chainId}`;
@@ -73,7 +73,7 @@ export function useNetwork() {
       }
     }
 
-    await searchNetworks({
+    await useSearchNetworks({
       name: queryNetworkName,
       isNeedCountsAndTokensLocked: true
     })
@@ -158,18 +158,16 @@ export function useNetwork() {
     if (!state?.Service?.network?.active || !chain)
       return;
 
-    getNetworkTokens({
-      networkName: state?.Service?.network?.active?.name,
-      chainId: chain.chainId.toString()
-    }).then(tokens => {
-      const transactional = [];
-      const reward = [];
+    useGetTokens(chain.chainId.toString(), state?.Service?.network?.active?.name)
+      .then(tokens => {
+        const transactional = [];
+        const reward = [];
 
-      for (const token of tokens)
-        (token.isTransactional ? transactional : reward).push(token);
+        for (const token of tokens)
+          (token.isTransactional ? transactional : reward).push(token);
 
-      dispatch(changeAllowedTokens(transactional, reward));
-    })
+        dispatch(changeAllowedTokens(transactional, reward));
+      });
   }
 
   function loadNetworkTimes() {

@@ -7,7 +7,7 @@ import NavBarView from "components/navigation/navbar/view";
 import {useAppState} from "contexts/app-state";
 import {changeCurrentUserHasRegisteredNetwork} from "contexts/reducers/change-current-user";
 
-import useApi from "x-hooks/use-api";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 import {useNetwork} from "x-hooks/use-network";
 
 export default function NavBar() {
@@ -15,7 +15,6 @@ export default function NavBar() {
 
   const { state } = useAppState();
   const { dispatch } = useAppState();
-  const { searchNetworks } = useApi();
   const { getURLWithNetwork } = useNetwork();
   const [checkedNetworkExistance, setCheckedNetworkExistance] = useState('');
 
@@ -36,7 +35,7 @@ export default function NavBar() {
 
     setCheckedNetworkExistance(state.currentUser.walletAddress.concat(state.connectedChain.id));
 
-    searchNetworks({
+    useSearchNetworks({
       creatorAddress: state.currentUser?.walletAddress,
       chainId: state.connectedChain?.id,
       isClosed: false

@@ -12,12 +12,13 @@ import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
 import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
+import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import useApi from "x-hooks/use-api";
+import { useGetChains } from "x-hooks/api/chain/use-get-chains";
 import { useDao } from "x-hooks/use-dao";
 import useNetworkChange from "x-hooks/use-network-change";
 
@@ -33,7 +34,6 @@ export default function WrongNetworkModal() {
   const [networkChain, setNetworkChain] = useState<SupportedChainData>(null);
   const [chosenSupportedChain, setChosenSupportedChain] = useState<SupportedChainData>(null);
 
-  const api = useApi();
   const { connect } = useDao();
   const { handleAddNetwork } = useNetworkChange();
   const {
@@ -107,7 +107,11 @@ export default function WrongNetworkModal() {
 
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
-  useEffect(() => { api.getSupportedChains() }, []);
+  useEffect(() => {
+    useGetChains()
+      .then(chains => dispatch(updateSupportedChains(chains)))
+      .catch(console.debug);
+  }, []);
   useEffect(updateNetworkChain, [Service?.network?.active?.chain_id, supportedChains, query?.network]);
   useEffect(changeShowModal, [
     currentUser?.walletAddress,

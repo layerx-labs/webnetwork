@@ -17,7 +17,7 @@ import {useAppState} from "contexts/app-state";
 
 import {Network} from "interfaces/network";
 
-import useApi from "x-hooks/use-api";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 
 export default function SetupPage(){
   const { replace } = useRouter();
@@ -26,7 +26,6 @@ export default function SetupPage(){
   const [activeTab, setActiveTab] = useState("supportedChains");
   const [defaultNetwork, setDefaultNetwork] = useState<Network>();
 
-  const { searchNetworks } = useApi();
   const { state: { currentUser, supportedChains, connectedChain } } = useAppState();
 
   const isConnected = !!currentUser?.walletAddress;
@@ -40,7 +39,7 @@ export default function SetupPage(){
   function searchForNetwork() {
     if (!isConnected || !isAdmin) return;
 
-    searchNetworks({
+    useSearchNetworks({
       isDefault: true
     })
       .then(({ rows, count }) => {

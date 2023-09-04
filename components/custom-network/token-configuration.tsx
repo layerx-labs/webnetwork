@@ -14,7 +14,7 @@ import {useNetworkSettings} from "contexts/network-settings";
 import {StepWrapperProps} from "interfaces/stepper";
 import {Token} from "interfaces/token";
 
-import useApi from "x-hooks/use-api";
+import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
 
 export default function TokenConfiguration({
   activeStep,
@@ -32,7 +32,6 @@ export default function TokenConfiguration({
   const [allowedTransactionalTokens, setAllowedTransactionalTokens] = useState<Token[]>();
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   
-  const { getTokens } = useApi();
   const { state } = useAppState();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
 
@@ -81,7 +80,7 @@ export default function TokenConfiguration({
   useEffect(() => {
     if(!state.currentUser?.walletAddress || !state.connectedChain?.id) return;
     
-    getTokens(state.connectedChain?.id)
+    useGetTokens(state.connectedChain?.id)
       .then(tokens => {
         const { transactional, reward } = tokens.reduce((acc, curr) => ({
           transactional: curr.isTransactional ? [...acc.transactional, curr]: acc.transactional,

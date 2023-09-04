@@ -12,7 +12,7 @@ import { useNetworkSettings } from "contexts/network-settings";
 
 import {Token, TokenType} from "interfaces/token";
 
-import useApi from "x-hooks/use-api";
+import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
 
 export default function TokensSettings({
   isGovernorRegistry = false,
@@ -35,8 +35,6 @@ export default function TokensSettings({
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   const [allowedTransactionalTokensList, setAllowedTransactionalTokensList] = useState<Token[]>();
 
-  const { getTokens } = useApi();
-
   const {
     fields
   } = useNetworkSettings();
@@ -54,7 +52,7 @@ export default function TokensSettings({
     setIsLoadingTokens(true);
 
     try {
-      const dbTokens = await getTokens(state.connectedChain?.id);
+      const dbTokens = await useGetTokens(state.connectedChain?.id);
 
       const { 
         dbRewardAllowed,

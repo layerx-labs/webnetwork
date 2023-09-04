@@ -13,7 +13,7 @@ import NothingFound from "components/nothing-found";
 
 import { Network } from "interfaces/network";
 
-import useApi from "x-hooks/use-api";
+import { useSearchActiveNetworks } from "x-hooks/api/network/use-search-active-networks";
 
 export default function ListActiveNetworks() {
   const router = useRouter();
@@ -21,12 +21,10 @@ export default function ListActiveNetworks() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [networks, setNetworks] = useState<Network[]>([]);
-  
-  const { searchActiveNetworks } = useApi();
 
   useEffect(() => {
     setLoading(true);
-    searchActiveNetworks({
+    useSearchActiveNetworks({
       isClosed: false,
       isRegistered: true,
       name: router.query?.network?.toString()

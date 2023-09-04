@@ -11,7 +11,7 @@ import {Network} from "interfaces/network";
 import { SearchBountiesPaginated } from "types/api";
 import { MyNetworkPageProps } from "types/pages";
 
-import useApi from "x-hooks/use-api";
+import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 import useChain from "x-hooks/use-chain";
 
 interface MyNetworkProps {
@@ -24,7 +24,6 @@ export function MyNetwork({
   const [myNetwork, setMyNetwork] = useState<Network>();
 
   const { chain } = useChain();
-  const { searchNetworks } = useApi();
   const { state, dispatch } = useAppState();
   const { setForcedNetwork } = useNetworkSettings();
 
@@ -33,7 +32,7 @@ export function MyNetwork({
 
     const chainId = chain.chainId.toString();
 
-    searchNetworks({
+    useSearchNetworks({
       creatorAddress: state.currentUser.walletAddress,
       isClosed: false,
       chainId: chainId
