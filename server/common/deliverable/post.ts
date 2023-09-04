@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import getConfig from "next/config";
 import { Sequelize } from "sequelize";
 
 import models from "db/models";
@@ -8,11 +9,12 @@ import { Settings } from "helpers/settings";
 
 import ipfsService from "services/ipfs-service";
 
+const {publicRuntimeConfig} = getConfig();
+
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const headerWallet = (req.headers.wallet as string).toLowerCase();
 
-    const { deliverableUrl, title, description, issueId } = req.body;
+    const { deliverableUrl, title, description, address, issueId } = req.body;
 
     const settings = await models.settings.findAll({where: {visibility: "public", group: "urls"}, raw: true,});
     const defaultConfig = (new Settings(settings)).raw();
@@ -22,6 +24,10 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const issue = await models.issue.findOne({
       where: { id: issueId },
+      include: [
+        { association: "network" },
+        { association: "chain" }
+      ]
     });
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
@@ -30,11 +36,15 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       where: {
         address: Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("address")),
                                  "=",
-                                 headerWallet),
+                                 address?.toLowerCase()),
       },
     });
 
     if (!user) return res.status(404).json({ message: "user not found" });
+
+    const { network, chain, githubId, repository_id } = issue
+    const homeUrl = publicRuntimeConfig.urls.home
+    const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/bounty?id=${githubId}&repoId=${repository_id}`
 
     const deliverableIpfs = {
       name: "BEPRO deliverable",
@@ -42,7 +52,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       properties: {
         title,
         deliverableUrl,
-        bountyUrl: ""
+        bountyUrl: bountyUrl
       },
     };
 
@@ -63,7 +73,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({
       bountyId: issue.contractId,
-      originCID: issue.issueId,
+      originCID: hash,
       cid: deliverable.id,
     });
   } catch (error) {
