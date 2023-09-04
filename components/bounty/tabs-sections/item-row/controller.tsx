@@ -29,9 +29,9 @@ export default function ItemRow({
   const router = useRouter();
   const { getURLWithNetwork } = useNetwork();
 
-  const pathRedirect = isProposal ? "/proposal" : "/pull-request";
+  const pathRedirect = isProposal ? "/proposal/[id]" : "/pull-request";
   const valueRedirect = {
-    id: currentBounty?.id,
+    id: isProposal ? item?.id : currentBounty?.id,
     prId: undefined,
     proposalId: undefined,
   };
