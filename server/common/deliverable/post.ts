@@ -12,7 +12,6 @@ const {publicRuntimeConfig} = getConfig();
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-
     const { deliverableUrl, title, description, issueId, context } = req.body;
 
     const settings = await models.settings.findAll({where: {visibility: "public", group: "urls"}, raw: true,});
