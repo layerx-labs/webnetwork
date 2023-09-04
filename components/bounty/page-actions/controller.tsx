@@ -14,7 +14,6 @@ import { getIssueState } from "helpers/handleTypeIssue";
 import { NetworkEvents } from "interfaces/enums/events";
 
 import useStartWorking from "x-hooks/api/bounty/use-start-working";
-import { useGetUserByAddress } from "x-hooks/api/user/use-get-user-by-address";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 

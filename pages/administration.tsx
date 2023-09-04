@@ -10,7 +10,7 @@ import Stepper from "components/stepper";
 
 import {Network} from "interfaces/network";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/network";
 
 import {useAppState} from "../contexts/app-state";
 

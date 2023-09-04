@@ -15,7 +15,7 @@ import { isValidEmail } from "helpers/validators/email";
 
 import { CustomSession } from "interfaces/custom-session";
 
-import useUpdateEmail from "x-hooks/api/user/use-update-email";
+import { useUpdateEmail } from "x-hooks/api/user";
 import { useAuthentication } from "x-hooks/use-authentication";
 import { useNetwork } from "x-hooks/use-network";
 

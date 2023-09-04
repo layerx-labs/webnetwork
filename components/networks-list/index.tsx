@@ -17,8 +17,7 @@ import {Network} from "interfaces/network";
 
 import {NetworksPageContext} from "pages/networks";
 
-import { useGetHeaderNetworks } from "x-hooks/api/network/use-get-header-networks";
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useGetHeaderNetworks, useSearchNetworks } from "x-hooks/api/network";
 import {useNetwork} from "x-hooks/use-network";
 
 export default function NetworksList() {

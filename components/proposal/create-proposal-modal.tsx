@@ -17,7 +17,7 @@ import { truncateAddress } from "helpers/truncate-address";
 import {NetworkEvents} from "interfaces/enums/events";
 import {IssueBigNumberData, PullRequest} from "interfaces/issue-data";
 
-import { useGetUserByLogin } from "x-hooks/api/user/use-get-user-by-login";
+import { useGetUserByLogin } from "x-hooks/api/user";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 

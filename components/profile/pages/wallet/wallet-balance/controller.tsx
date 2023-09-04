@@ -18,8 +18,8 @@ import { Token } from "interfaces/token";
 
 import { getCoinInfoByContract } from "services/coingecko";
 
-import { useSearchCurators } from "x-hooks/api/curator/use-search-curators";
-import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
+import { useSearchCurators } from "x-hooks/api/curator";
+import { useGetTokens } from "x-hooks/api/token";
 import { useNetwork } from "x-hooks/use-network";
 
 import WalletBalanceView from "./view";

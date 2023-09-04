@@ -11,7 +11,7 @@ import Translation from "components/translation";
 import {useAppState} from 'contexts/app-state';
 import {changeCurrentUserKycSession} from 'contexts/reducers/change-current-user';
 
-import { useValidateKycSession } from 'x-hooks/api/kyc/use-validate-kyc-session';
+import { useValidateKycSession } from 'x-hooks/api/kyc';
 
 export function KycSessionModal() {
   const [show, setShow] = useState<boolean>(false);

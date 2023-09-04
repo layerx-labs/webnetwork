@@ -34,16 +34,14 @@ import {WinStorage} from "services/win-storage";
 
 import { SESSION_TTL } from "server/auth/config";
 
+import { useSearchCurators } from "x-hooks/api/curator";
+import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
 import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
-
-import { useSearchCurators } from "./api/curator/use-search-curators";
-import { useGetKycSession } from "./api/kyc/use-get-kyc-session";
-import { useValidateKycSession } from "./api/kyc/use-validate-kyc-session";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 

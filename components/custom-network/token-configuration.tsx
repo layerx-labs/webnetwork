@@ -14,7 +14,7 @@ import {useNetworkSettings} from "contexts/network-settings";
 import {StepWrapperProps} from "interfaces/stepper";
 import {Token} from "interfaces/token";
 
-import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
+import { useGetTokens } from "x-hooks/api/token";
 
 export default function TokenConfiguration({
   activeStep,

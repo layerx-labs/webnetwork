@@ -17,7 +17,7 @@ import {useAppState} from "contexts/app-state";
 
 import {Network} from "interfaces/network";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/network";
 
 export default function SetupPage(){
   const { replace } = useRouter();

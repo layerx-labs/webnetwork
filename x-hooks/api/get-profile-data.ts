@@ -2,8 +2,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { emptyPaginatedData } from "helpers/api";
 
-import getBountiesListData from "x-hooks/api/bounty/get-bounties-list-data";
-import getPaymentsData from "x-hooks/api/bounty/get-payments-data";
+import { getBountiesListData, getPaymentsData } from "x-hooks/api/bounty";
 import getChainsData from "x-hooks/api/get-chains-data";
 
 /**

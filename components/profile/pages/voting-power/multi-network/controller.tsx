@@ -6,7 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import { Curator } from "interfaces/curators";
 
-import { useSearchCurators } from "x-hooks/api/curator/use-search-curators";
+import { useSearchCurators } from "x-hooks/api/curator";
 import { useNetwork } from "x-hooks/use-network";
 
 import VotingPowerMultiNetworkView from "./view";

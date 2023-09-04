@@ -21,9 +21,8 @@ import {
   PullRequest,
 } from "interfaces/issue-data";
 
-import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
-import getCommentsData from "x-hooks/api/comments/get-comments-data";
-import CreateComment from "x-hooks/api/comments/post-comments";
+import { getBountyData } from "x-hooks/api/bounty";
+import { getCommentsData, CreateComment } from "x-hooks/api/comments";
 
 interface PagePullRequestProps {
   bounty: IssueData;

@@ -15,7 +15,7 @@ import { Network } from "interfaces/network";
 
 import { WinStorage } from "services/win-storage";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
 
 interface SelectNetworkProps {

@@ -12,7 +12,7 @@ import { useNetworkSettings } from "contexts/network-settings";
 
 import {Token, TokenType} from "interfaces/token";
 
-import { useGetTokens } from "x-hooks/api/token/use-get-tokens";
+import { useGetTokens } from "x-hooks/api/token";
 
 export default function TokensSettings({
   isGovernorRegistry = false,

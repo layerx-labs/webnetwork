@@ -4,7 +4,7 @@ import { api } from "services/api";
 
 import { ExplorePageProps } from "types/pages";
 
-import getBountiesListData from "x-hooks/api/bounty/get-bounties-list-data";
+import { getBountiesListData } from "x-hooks/api/bounty";
 
 /**
  * Get explore page data from api based on the current url query

@@ -13,7 +13,7 @@ import NothingFound from "components/nothing-found";
 
 import { Network } from "interfaces/network";
 
-import { useSearchActiveNetworks } from "x-hooks/api/network/use-search-active-networks";
+import { useSearchActiveNetworks } from "x-hooks/api/network";
 
 export default function ListActiveNetworks() {
   const router = useRouter();

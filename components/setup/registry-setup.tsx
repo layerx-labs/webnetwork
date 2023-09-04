@@ -26,7 +26,7 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import { RegistryParameters } from "types/dappkit";
 
-import { useGetChains } from "x-hooks/api/chain/use-get-chains";
+import { useGetChains } from "x-hooks/api/chain";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";

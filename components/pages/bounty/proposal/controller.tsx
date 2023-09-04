@@ -19,7 +19,7 @@ import { DistributedAmounts } from "interfaces/proposal";
 
 import { ProposalPageProps } from "types/pages";
 
-import getCommentsData from "x-hooks/api/comments/get-comments-data";
+import { getCommentsData } from "x-hooks/api/comments";
 
 const defaultAmount = {
   value: "0",

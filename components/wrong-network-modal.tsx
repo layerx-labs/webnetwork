@@ -18,7 +18,7 @@ import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { useGetChains } from "x-hooks/api/chain/use-get-chains";
+import { useGetChains } from "x-hooks/api/chain";
 import { useDao } from "x-hooks/use-dao";
 import useNetworkChange from "x-hooks/use-network-change";
 

@@ -22,8 +22,8 @@ import { commentsParser, issueParser } from "helpers/issue";
 import { CurrentBounty } from "interfaces/application-state";
 import { IssueData, IssueDataComment } from "interfaces/issue-data";
 
-import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
-import getCommentsData from "x-hooks/api/comments/get-comments-data";
+import { getBountyData } from "x-hooks/api/bounty";
+import { getCommentsData } from "x-hooks/api/comments";
 
 interface PageBountyProps {
   bounty: {
