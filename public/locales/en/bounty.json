@@ -220,5 +220,13 @@
   "total-amount": {
     "title": "Total Amount",
     "description": "Amount you will pay for this bounty (reward + services fees)"
+  },
+  "modals": {
+    "origin-link-warning": {
+      "title": "Origin",
+      "you-are-going-to": "You are going to navigate to",
+      "provided-by": "This link was provided by the bounty creator. Please be careful and access only if you know the domain.",
+      "open-link": "Open link"
+    }
   }
 }

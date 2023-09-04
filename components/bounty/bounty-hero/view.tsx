@@ -6,8 +6,10 @@ import Avatar from "components/avatar";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
+import Button from "components/button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
+import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
 
 import { truncateAddress } from "helpers/truncate-address";
 
@@ -18,8 +20,11 @@ import BountySettings from "./bounty-settings/controller";
 interface BountyHeroProps {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
+  isOriginModalVisible: boolean;
   bounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
+  showOriginModal: () => void;
+  hideOriginModal: () => void;
   network: string | string[];
   currentState: IssueState;
 }
@@ -30,7 +35,10 @@ export default function BountyHeroView({
   bounty,
   updateBountyData,
   network,
-  currentState
+  currentState,
+  isOriginModalVisible,
+  showOriginModal,
+  hideOriginModal
 }: BountyHeroProps) {
   const { t } = useTranslation(["bounty", "common"]);
 
@@ -128,10 +136,17 @@ export default function BountyHeroView({
                 border-gray-850 justify-content-md-start`}
             >
               <If condition={!!bounty?.origin}>
-                <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-5 text-truncate">
-                  <a href={bounty?.origin} target="_blank" rel="noreferrer noopener">
-                    {bounty?.origin}
-                  </a>
+                <BountyItemLabel label={t("common:misc.origin")} className="col-12 col-sm-3 text-overflow-ellipsis">
+                  <Button
+                    transparent
+                    onClick={showOriginModal}
+                    className="p-0 m-0 font-weight-medium text-decoration-underline"
+                    textClass="text-primary"
+                  >
+                    <span className="text-lowercase">
+                      {bounty?.origin}
+                    </span>
+                  </Button>
                 </BountyItemLabel>
               </If>
 
@@ -178,6 +193,12 @@ export default function BountyHeroView({
           </div>
         </div>
       </CustomContainer>
+
+      <OriginLinkWarningModal
+        show={isOriginModalVisible}
+        originLink={bounty?.origin}
+        onClose={hideOriginModal}
+      />
     </div>
   );
 }
