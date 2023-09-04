@@ -90,6 +90,9 @@ export default function BountySettings({
       })();
   }, [state.Service?.active, currentBounty]);
 
+  if (!objViewProps.isBountyInDraft && !state.Service?.network?.active?.isGovernor)
+    return <></>;
+
   return (
     <BountySettingsView
       isCancelable={isCancelable}
