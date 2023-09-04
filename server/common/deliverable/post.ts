@@ -31,9 +31,9 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
 
-    const { network, chain, githubId, repository_id } = issue
-    const homeUrl = publicRuntimeConfig.urls.home
-    const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/bounty?id=${githubId}&repoId=${repository_id}`
+    const { network, chain } = issue;
+    const homeUrl = publicRuntimeConfig.urls.home;
+    const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/bounty/${issue.id}`;
 
     const deliverableIpfs = {
       name: "BEPRO deliverable",
