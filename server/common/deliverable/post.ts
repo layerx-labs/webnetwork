@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { User } from "next-auth";
+import { getSession } from "next-auth/react";
 import getConfig from "next/config";
 import { Sequelize } from "sequelize";
 
@@ -11,10 +13,17 @@ import ipfsService from "services/ipfs-service";
 
 const {publicRuntimeConfig} = getConfig();
 
+interface UserSession extends User {
+  address: string;
+}
+
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const session = await getSession({ req });
 
-    const { deliverableUrl, title, description, address, issueId } = req.body;
+    const { address } = session as unknown as UserSession;
+
+    const { deliverableUrl, title, description, issueId } = req.body;
 
     const settings = await models.settings.findAll({where: {visibility: "public", group: "urls"}, raw: true,});
     const defaultConfig = (new Settings(settings)).raw();
