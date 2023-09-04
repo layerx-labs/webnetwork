@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import {QueryClientProvider} from '@tanstack/react-query'
+import {QueryClientProvider, QueryClient, Hydrate} from '@tanstack/react-query'
 import {GetServerSideProps} from "next";
 import {SessionProvider} from "next-auth/react";
 import {appWithTranslation} from "next-i18next";
@@ -21,40 +21,45 @@ import WrongNetworkModal from "components/wrong-network-modal";
 
 import RootProviders from "contexts";
 
+import { reactQueryConfig } from "services/react-query";
+
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
-import { reactQueryClient } from "services/react-query";
+
+const { publicRuntimeConfig } = getConfig();
 
 function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppProps) {
-
   const {asPath} = useRouter();
-  const {publicRuntimeConfig} = getConfig();
+
+  const [queryClient] = useState(() => new QueryClient(reactQueryConfig));
 
   if (asPath.includes('api-doc'))
     return <Component {...pageProps}></Component>
 
   return (
     <>
-      <QueryClientProvider client={reactQueryClient}>
-        <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
-        <SessionProvider session={session}>
-          <RootProviders>
-            <Seo issueMeta={seoData} />
-            <ReadOnlyContainer>
-              <NoMetamaskModal />
-              <InvalidAccountWalletModal />
-              <NavBar />
-              <div id="root-container">
-                <Component {...pageProps} />
-              </div>
-              <WrongNetworkModal />
-              <Toaster />
-              <Loading />
-            </ReadOnlyContainer>
-          </RootProviders>
-        </SessionProvider>
-        <ConsentCookie />
-      </QueryClientProvider>
+      <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
+      <SessionProvider session={session}>
+        <RootProviders>
+          <QueryClientProvider client={queryClient}>
+            <Hydrate state={pageProps.dehydratedState}>
+              <Seo issueMeta={seoData} />
+              <ReadOnlyContainer>
+                <NoMetamaskModal />
+                <InvalidAccountWalletModal />
+                <NavBar />
+                <div id="root-container">
+                  <Component {...pageProps} />
+                </div>
+                <WrongNetworkModal />
+                <Toaster />
+                <Loading />
+              </ReadOnlyContainer>
+            </Hydrate>
+          </QueryClientProvider>
+        </RootProviders>
+      </SessionProvider>
+      <ConsentCookie />
     </>
   );
 }
