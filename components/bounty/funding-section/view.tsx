@@ -33,7 +33,6 @@ interface FundingSectionViewProps {
   hasReward: boolean;
   fundsGiven: BigNumber;
   futureRewards: string;
-  collapseAction: string;
   isBountyClosed: boolean;
   isBountyInDraft: boolean;
   rewardTokenSymbol: string;
