@@ -47,7 +47,6 @@ export default function PullRequestBody({
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
-  const isPullRequestOpen = lowerCaseCompare(currentPullRequest?.state, "open");
   const isPullRequestReady = !!currentPullRequest?.isReady;
   const isPullRequestCanceled = !!currentPullRequest?.isCanceled;
   const isPullRequestCancelable = !!currentPullRequest?.isCancelable;
@@ -55,13 +54,11 @@ export default function PullRequestBody({
 
   const isMakeReviewButton =
     isWalletConnected &&
-    isPullRequestOpen &&
     isPullRequestReady &&
     !isPullRequestCanceled;
 
   const isMakeReadyReviewButton =
     isWalletConnected &&
-    isPullRequestOpen &&
     !isPullRequestReady &&
     !isPullRequestCanceled &&
     isPullRequestCreator;
