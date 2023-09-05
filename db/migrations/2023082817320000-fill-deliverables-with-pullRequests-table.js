@@ -58,8 +58,7 @@ async function up(queryInterface, Sequelize) {
         properties: {
           title: pullRequestGithub.title,
           deliverableUrl: pullRequestGithub.html_url,
-          //TODO await new params and new structure to bountyUrl on BEPRO-1678
-          bountyUrl: `${NEXT_PUBLIC_HOME_URL}/${network.name}/${chain.chainShortName}/bounty?id=${issue.githubId}&repoId=${issue.repository_id}`,
+          bountyUrl: `${NEXT_PUBLIC_HOME_URL}/${network.name}/${chain.chainShortName}/bounty/${issue.id}`,
         },
       };
 
