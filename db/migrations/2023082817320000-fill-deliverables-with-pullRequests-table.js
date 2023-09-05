@@ -1,15 +1,21 @@
 const { Octokit } = require("octokit");
 const { getAllFromTable } = require("../../helpers/db/rawQueries");
 const { ipfsAdd } = require("../../helpers/db/ipfsAdd");
+const { QueryTypes } = require("sequelize");
 
 const { NEXT_GH_TOKEN, NEXT_PUBLIC_HOME_URL } = process.env;
 
 async function up(queryInterface, Sequelize) {
   const pullRequests = await getAllFromTable(queryInterface, "pull_requests");
-  const issues = await getAllFromTable(queryInterface, "issues");
 
-  const openIssues = issues?.filter(
-    (issue) => issue.state !== "pending" && !!issue.issueId
+  const openIssues = await queryInterface.sequelize.query(
+    `
+    SELECT * FROM issues
+    WHERE state <> 'pending'
+    `,
+    {
+      type: QueryTypes.SELECT,
+    }
   );
 
   if (!pullRequests?.length) return;
@@ -45,7 +51,6 @@ async function up(queryInterface, Sequelize) {
         repo,
         pull_number: pullRequest.githubId,
       });
-
 
       const ipfsObject = {
         name: "BEPRO Deliverable",
