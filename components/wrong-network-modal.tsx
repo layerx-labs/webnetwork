@@ -41,8 +41,10 @@ export default function WrongNetworkModal() {
     dispatch,
     state: { connectedChain, currentUser, Service, supportedChains, loading, spinners }
   } = useAppState();
-  const { data: _chains } = 
-    useReactQuery(["supportedChains"], () => useGetChains().then(chains => dispatch(updateSupportedChains(chains))));
+  const { data: _chains } = useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+    dispatch(updateSupportedChains(chains));
+    return chains; 
+  }));
 
   const isRequired = [
     pathname?.includes("new-network"),
