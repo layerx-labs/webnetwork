@@ -133,7 +133,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    await models.pullRequest.create({
+    const pullRequest = await models.pullRequest.create({
       issueId: issue.id,
       githubLogin: username,
       branch,
@@ -149,7 +149,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       originBranch: issue.branch,
       originCID: issue.issueId,
       userRepo: `${username}/${repo}`,
-      userBranch: branch
+      userBranch: branch,
+      pullRequestId: pullRequest.id
     });
   } catch (error) {
     return res.status(error?.errors[0]?.type === "UNPROCESSABLE" && 422|| 500).json(error?.errors || error);
@@ -158,15 +159,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function del(req: NextApiRequest, res: NextApiResponse) {
-  const { 
-    repoId: repository_id, 
-    issueGithubId: githubId, 
-    bountyId: contractId, 
-    issueCid: issueId, 
-    pullRequestGithubId, 
-    customNetworkName,
-    creator,
-    userBranch
+  const {  
+    bountyId,
+    pullRequestId, 
+    customNetworkName
   } = req.body;
 
   const chain = await chainFromHeader(req);
@@ -185,24 +181,16 @@ async function del(req: NextApiRequest, res: NextApiResponse) {
 
   const issue = await models.issue.findOne({
     where: {
-      issueId,
-      network_id: customNetwork.id,
-      contractId,
-      repository_id,
-      githubId
-    },
-    include: [
-      { association: "repository" }
-    ]
+      id: bountyId,
+      network_id: customNetwork.id
+    }
   });
 
   if (!issue) return res.status(404).json("Invalid");
 
   const pullRequest = await models.pullRequest.findOne({
     where: {
-      githubId: String(pullRequestGithubId),
-      githubLogin: creator,
-      userBranch: userBranch,
+      id: pullRequestId,
       status: "pending",
       network_id: customNetwork.id,
     }
@@ -224,7 +212,7 @@ async function del(req: NextApiRequest, res: NextApiResponse) {
 
   await network.start();
 
-  const networkBounty = await network.getBounty(contractId);
+  const networkBounty = await network.getBounty(issue.contractId);
   
   if (!networkBounty) return resJsonMessage("Bounty not found", res, 404);
 

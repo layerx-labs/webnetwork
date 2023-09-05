@@ -119,17 +119,12 @@ export default function PageActions({
           userRepo,
           userBranch,
           cid,
+          pullRequestId,
         }) => {
         pullRequestPayload = {
-            repoId,
-            issueGithubId: currentBounty?.id,
             bountyId,
-            issueCid: originCID,
-            pullRequestGithubId: cid,
+            pullRequestId,
             customNetworkName: state.Service?.network?.lastVisited,
-            creator: userRepo.split("/")[0],
-            userBranch,
-            userRepo,
             wallet: state.currentUser.walletAddress,
         };
 

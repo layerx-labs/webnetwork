@@ -59,15 +59,10 @@ export interface CreatePrePullRequestParams extends RequestParams {
 }
 
 export interface CancelPrePullRequestParams extends RequestParams {
-  repoId: string;
-  issueGithubId: string;
   bountyId: string;
-  issueCid: string; 
-  pullRequestGithubId: string;
+  pullRequestId: string;
   customNetworkName: string;
   creator: string;
-  userBranch: string;
-  userRepo: string;
 }
 
 export interface StartWorkingParams extends RequestParams {
