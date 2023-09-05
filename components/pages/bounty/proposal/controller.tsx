@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
 import { addSeconds, formatDistance } from "date-fns";
-import { toLower } from "lodash";
 import {useTranslation} from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -46,9 +45,12 @@ export default function ProposalPage() {
   const { state } = useAppState();
 
   const proposalId = query?.id?.toString();
-  const { data: proposal } = useReactQuery(["proposal", proposalId], () => getProposalData(query));
+  const proposalQueryKey = ["proposal", proposalId];
+  const commentsQueryKey = ["proposal", "comments", proposalId];
+
+  const { data: proposal } = useReactQuery(proposalQueryKey, () => getProposalData(query));
   const { data: comments, invalidate: invalidateComments } = 
-    useReactQuery(["proposal", "comments", proposalId], () => getCommentsData({ proposalId }));
+    useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
   const parsedProposal = mergeProposalParser(proposal, proposal?.issue?.merged);
   const parsedComments = commentsParser(comments);
@@ -58,8 +60,8 @@ export default function ProposalPage() {
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
-  const isPrOwner = toLower(pullRequest?.userAddress) === toLower(state.currentUser?.walletAddress);
-  const isProposalOwner = toLower(proposal?.creator) === toLower(state.currentUser?.walletAddress);
+  const isPrOwner = lowerCaseCompare(pullRequest?.userAddress, state.currentUser?.walletAddress);
+  const isProposalOwner = lowerCaseCompare(proposal?.creator, state.currentUser?.walletAddress);
 
   const isDisputable = [
     isWalletConnected,
