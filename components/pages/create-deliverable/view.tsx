@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import CreateBountyDescription from "components/create-bounty/create-bounty-description";
-import BountyLabel from "components/create-bounty/create-bounty-label";
+import CreateBountyDescription from "components/bounty/create-bounty/create-bounty-description";
+import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CustomContainer from "components/custom-container";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
