@@ -1,39 +1,15 @@
-
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import Button from "components/button";
-import ContractButton from "components/contract-button";
 import CreateBountyDescription from "components/create-bounty/create-bounty-description";
 import BountyLabel from "components/create-bounty/create-bounty-label";
 import CustomContainer from "components/custom-container";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import FooterButtons from "./footer-buttons/view";
+
 export default function CreateDeliverablePageView() {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
-
-  function footerButtons() {
-    return (
-      <>
-        <div className="col-6 ps-2">
-          <Button className="col-12 bounty-outline-button">
-            {t("actions.back")}
-          </Button>
-        </div>
-
-        <div className="col-6 pe-2">
-          <ContractButton className="col-12 bounty-button">
-            <ResponsiveWrapper xs={true} md={false}>
-              {t("common:misc.create")}
-            </ResponsiveWrapper>
-            <ResponsiveWrapper xs={false} md={true}>
-              {t("bounty:create-bounty")}
-            </ResponsiveWrapper>
-          </ContractButton>
-        </div>
-      </>
-    );
-  }
 
   return (
     <div className="row justify-content-center">
@@ -128,10 +104,16 @@ export default function CreateDeliverablePageView() {
       </div>
       <CustomContainer className="d-flex flex-column justify-content-end">
         <ResponsiveWrapper className="row my-4" xs={false} md={true}>
-          {footerButtons()}
+          <FooterButtons
+            handleBack={() => console.log}
+            handleCreate={() => console.log}
+          />
         </ResponsiveWrapper>
         <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
-          {footerButtons()}
+          <FooterButtons
+            handleBack={() => console.log}
+            handleCreate={() => console.log}
+          />
         </ResponsiveWrapper>
       </CustomContainer>
     </div>
