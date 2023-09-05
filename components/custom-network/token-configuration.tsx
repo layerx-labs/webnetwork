@@ -24,7 +24,7 @@ export default function TokenConfiguration({
   finishLabel,
   handleFinish
 }: StepWrapperProps) {
-  const {t} = useTranslation(["common", "custom-network"]);
+  const { t } = useTranslation(["common", "custom-network"]);
   
   const [createNetworkAmount, setCreateNetworkAmount] = useState<string>();
   const [allowedRewardTokens, setAllowedRewardTokens] = useState<Token[]>([]);
