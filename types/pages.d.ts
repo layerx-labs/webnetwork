@@ -1,6 +1,6 @@
 import { IssueData } from "interfaces/issue-data";
-import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Proposal } from "interfaces/proposal";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated, NetworkPaymentsData } from "types/api";
 
