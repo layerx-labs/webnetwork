@@ -52,8 +52,8 @@ export default function PageActions({
     amount: currentBounty?.amount,
     fundingAmount: currentBounty?.fundingAmount,
   });
-  const hasPullRequests = 
-    !!currentBounty?.pullRequests?.filter((pullRequest) => pullRequest?.status !== "canceled")?.length;
+  const hasDeliverables = 
+    !!currentBounty?.deliverables?.filter((deliverable) => !deliverable.canceled)?.length;
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isBountyOpen = currentBounty?.isClosed === false && currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
@@ -94,7 +94,7 @@ export default function PageActions({
       isCouncilMember &&
       isBountyOpen &&
       isBountyReadyToPropose &&
-      hasPullRequests,
+      hasDeliverables,
   };
 
   async function handlePullrequest({
