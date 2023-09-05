@@ -23,7 +23,8 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.changeColumn("comments", "deliverableId", {
+    await queryInterface.removeColumn("comments", "deliverableId");
+    await queryInterface.addColumn("comments", "deliverableId", {
       type: Sequelize.INTEGER,
       allowNull: true,
       references: {

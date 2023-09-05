@@ -53,7 +53,7 @@ module.exports = {
         allowNull: true,
       },
       reviewers: {
-        type: Sequelize.ARRAY(DataTypes.STRING),
+        type: Sequelize.ARRAY(Sequelize.DataTypes.STRING),
         defaultValue: [],
       },
       network_id: {
