@@ -3,7 +3,7 @@ import { ParsedUrlQuery } from "querystring";
 import { emptyPaginatedData } from "helpers/api";
 
 import { getBountiesListData, getPaymentsData } from "x-hooks/api/bounty";
-import getChainsData from "x-hooks/api/get-chains-data";
+import { useGetChains } from "x-hooks/api/chain";
 
 /**
  * Get curators from api based on query filters
@@ -40,7 +40,7 @@ export default async function getProfilePageData(query: ParsedUrlQuery) {
     shouldFetchPayments ? getPaymentsData({ ...query, groupBy: "network" })
       .then(({ data }) => data)
       .catch(() => null) : null,
-    shouldFetchChains ? getChainsData({}) : null,
+    shouldFetchChains ? useGetChains() : null,
   ]);
 
   return {

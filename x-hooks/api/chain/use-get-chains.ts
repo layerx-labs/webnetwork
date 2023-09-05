@@ -1,20 +1,21 @@
+import { ParsedUrlQuery } from "querystring";
+
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { api } from "services/api";
 
-export async function useGetChains(query: Partial<SupportedChainData> = null) {
-  const params = new URLSearchParams(query as any);
-
-  return api.get<{result: SupportedChainData[], error?: string; }>(`/chains`, {... query ? {params} : {}})
-    .then(({data}) => data)
-    .then(data => {
-      if (data.error)
-        console.debug(`failed to fetch supported chains`, data.error);
+/**
+ * Get chain from api based on query filters
+ * @param query current url query
+ * @returns list of filtered chains
+ */
+export async function useGetChains(query?: ParsedUrlQuery): Promise<SupportedChainData[]> {
+  return api.get("/chains", {
+    params: query
+  })
+    .then(({ data }) => {
+      if (data?.error) throw data?.error;
 
       return data?.result;
-    })
-    .catch(e => {
-      console.error(`failed to fetch supported chains`, e);
-      return [];
-    })
+    });
 }
