@@ -15,7 +15,7 @@ import {useAppState} from "contexts/app-state";
 import { truncateAddress } from "helpers/truncate-address";
 
 import {NetworkEvents} from "interfaces/enums/events";
-import {IssueBigNumberData, PullRequest} from "interfaces/issue-data";
+import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
@@ -53,7 +53,7 @@ function SelectOptionComponent({ innerProps, innerRef, data }) {
 
 interface ProposalModalProps {
   amountTotal: BigNumber | string | number;
-  pullRequests: PullRequest[];
+  deliverables: Deliverable[];
   show: boolean;
   onCloseClick: () => void;
   currentBounty: IssueBigNumberData;
@@ -61,7 +61,8 @@ interface ProposalModalProps {
 }
 
 export default function ProposalModal({
-  pullRequests = [],
+  amountTotal,
+  deliverables = [],
   show,
   onCloseClick,
   currentBounty,
@@ -75,7 +76,7 @@ export default function ProposalModal({
   ]);
 
   const [executing, setExecuting] = useState<boolean>(false);
-  const [currentPullRequest, setCurrentPullRequest] = useState<PullRequest>();
+  const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
 
   const {state} = useAppState();
 
@@ -83,13 +84,13 @@ export default function ProposalModal({
   const { handleProposeMerge } = useBepro();
 
   async function handleClickCreate(): Promise<void> {
-    if (!currentPullRequest) return;
+    if (!currentDeliverable) return;
 
-    const prCreator = currentPullRequest.userAddress;
+    const prCreator = currentDeliverable.user?.address;
 
     setExecuting(true);
 
-    handleProposeMerge(+currentBounty.contractId, +currentPullRequest.contractId, [prCreator], [100])
+    handleProposeMerge(+currentBounty.contractId, +currentDeliverable.prContractId, [prCreator], [100])
       .then(txInfo => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
 
@@ -107,19 +108,19 @@ export default function ProposalModal({
   }
 
   function handleChangeSelect({ value }) {
-    const newPr = pullRequests.find((el) => el.id === value);
-    if (newPr)
-      setCurrentPullRequest(newPr);
+    const newDeliverable = deliverables.find((el) => el.id === value);
+    if (newDeliverable)
+      setCurrentDeliverable(newDeliverable);
   }
 
-  function pullRequestToOption(pr) {
-    if (!pr) return;
+  function deliverableToOption(deliverable: Deliverable) {
+    if (!deliverable) return;
 
     return {
-      value: pr?.id,
-      label: `PR #${pr?.id} ${t("misc.by")} @${truncateAddress(pr?.userAddress)}`,
-      githubId: pr?.githubId,
-      githubLogin: pr?.githubLogin
+      value: deliverable?.id,
+      label: `Deliverable #${deliverable?.id} ${t("misc.by")} @${truncateAddress(deliverable?.user?.address)}`,
+      address: deliverable?.user?.address,
+      githubLogin: deliverable?.user?.githubLogin
     }
   }
 
@@ -149,14 +150,14 @@ export default function ProposalModal({
           {t("pull-request:select")}
         </p>
         <ReactSelect
-          id="pullRequestSelect"
+          id="deliverableSelect"
           components={{
             Option: SelectOptionComponent,
             SingleValue
           }}
           placeholder={t("forms.select-placeholder")}
-          value={pullRequestToOption(currentPullRequest)}
-          options={pullRequests?.map(pullRequestToOption)}
+          value={deliverableToOption(currentDeliverable)}
+          options={deliverables?.map(deliverableToOption)}
           isOptionDisabled={(option) => option.isDisable}
           onChange={handleChangeSelect}
           isSearchable={false}
