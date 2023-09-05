@@ -7,14 +7,14 @@ import ProposalProgressSmall from "components/proposal-progress-small";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";
 
-import { PullRequest } from "interfaces/issue-data";
+import { Deliverable } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 
 import ReviewsNumberView from "../reviews-number.view";
 
 interface ItemRowProps {
   isProposal: boolean;
-  item: Proposal | PullRequest;
+  item: Proposal | Deliverable;
   handleBtn: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   btnLabel: string;
   proposal: Proposal;
@@ -23,7 +23,7 @@ interface ItemRowProps {
   totalToBeDisputed: BigNumber;
 }
 
-export default function ProposalOrPullRequestView({
+export default function ProposalOrDeliverableView({
   isProposal,
   item,
   handleBtn,
@@ -48,7 +48,7 @@ export default function ProposalOrPullRequestView({
       ) : (
         <ReviewsNumberView
           className="d-none d-xl-block"
-          reviewers={(item as PullRequest)?.reviewers?.length || 0}
+          reviewers={(item as Deliverable)?.comments?.length || 0}
         />
       )}
 
