@@ -12,5 +12,6 @@ import { api } from "services/api";
 export async function getProposalData(query: ParsedUrlQuery) {
   return api.get<Proposal>("/merge-proposal", {
     params: query
-  });
+  })
+    .then(({ data }) => data);
 }
