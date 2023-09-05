@@ -2,16 +2,16 @@ import BigNumber from "bignumber.js";
 
 import { bountyReadyPRsHasNoInvalidProposals } from "helpers/proposal";
 
-import { IssueBigNumberData, IssueData, IssueDataComment, PullRequest } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData, IssueData, IssueDataComment } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 
 export const OPEN_STATES = ["draft", "open", "ready", "proposal"];
 
-export const pullRequestParser = (pr: PullRequest, proposals?: Proposal[]) => ({
-  ...pr,
-  createdAt: new Date(pr.createdAt),
-  updatedAt: new Date(pr.updatedAt),
-  isCancelable: !proposals?.some(proposal => proposal.pullRequestId === pr.id)
+export const deliverableParser = (d: Deliverable, proposals?: Proposal[]) => ({
+  ...d,
+  createdAt: new Date(d.createdAt),
+  updatedAt: new Date(d.updatedAt),
+  isCancelable: !proposals?.some(proposal => proposal.deliverableId === d.id)
 });
 
 export const mergeProposalParser = (proposal: Proposal, mergedProposal?: string) => ({
@@ -32,7 +32,7 @@ export const mergeProposalParser = (proposal: Proposal, mergedProposal?: string)
     updatedAt: new Date(dispute.updatedAt),
     weight: BigNumber(dispute.weight)
   })),
-  pullRequest: proposal?.pullRequest ? pullRequestParser(proposal?.pullRequest, [proposal]) : undefined
+  deliverable: proposal?.deliverable ? deliverableParser(proposal?.deliverable, [proposal]) : undefined
 });
 
 export const benefactorsParser = (issue: IssueData) =>
@@ -51,7 +51,7 @@ export const issueParser = (issue: IssueData) : IssueBigNumberData => ({
   fundingAmount: BigNumber(issue.fundingAmount),
   fundedAmount: BigNumber(issue.fundedAmount),
   rewardAmount: BigNumber(issue.rewardAmount),
-  pullRequests: issue?.pullRequests && issue?.pullRequests?.map(p => pullRequestParser(p, issue?.mergeProposals)),
+  deliverables: issue?.deliverables && issue?.deliverables?.map(p => deliverableParser(p, issue?.mergeProposals)),
   mergeProposals: issue?.mergeProposals && issue?.mergeProposals?.map(p => mergeProposalParser(p, issue?.merged)),
   benefactors: issue?.benefactors && benefactorsParser(issue)
 });
