@@ -48,38 +48,38 @@ export default function ProposalPage() {
   const proposalQueryKey = ["proposal", proposalId];
   const commentsQueryKey = ["proposal", "comments", proposalId];
 
-  const { data: proposal } = useReactQuery(proposalQueryKey, () => getProposalData(query));
+  const { data: proposalData } = useReactQuery(proposalQueryKey, () => getProposalData(query));
   const { data: comments, invalidate: invalidateComments } = 
     useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
-  const parsedProposal = mergeProposalParser(proposal, proposal?.issue?.merged);
+  const parsedProposal = mergeProposalParser(proposalData, proposalData?.issue?.merged);
   const parsedComments = commentsParser(comments);
 
-  const issue = issueParser(proposal?.issue as IssueData);
+  const issue = issueParser(parsedProposal?.issue as IssueData);
   const pullRequest = parsedProposal?.pullRequest;
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isPrOwner = lowerCaseCompare(pullRequest?.userAddress, state.currentUser?.walletAddress);
-  const isProposalOwner = lowerCaseCompare(proposal?.creator, state.currentUser?.walletAddress);
+  const isProposalOwner = lowerCaseCompare(parsedProposal?.creator, state.currentUser?.walletAddress);
 
   const isDisputable = [
     isWalletConnected,
-    isProposalDisputable( proposal?.contractCreationDate,
+    isProposalDisputable( parsedProposal?.contractCreationDate,
                           BigNumber(state.Service?.network?.times?.disputableTime).toNumber(),
                           chaintime),
-    !proposal?.isDisputed,
-    !proposal?.refusedByBountyOwner,
+    !parsedProposal?.isDisputed,
+    !parsedProposal?.refusedByBountyOwner,
     !issue?.isClosed,
-    !proposal?.isMerged,
+    !parsedProposal?.isMerged,
   ].every((c) => c);
 
   const isRefusable = [
     isWalletConnected,
     !issue?.isClosed,
     !issue?.isCanceled,
-    !proposal?.isDisputed,
-    !proposal?.refusedByBountyOwner,
+    !parsedProposal?.isDisputed,
+    !parsedProposal?.refusedByBountyOwner,
     lowerCaseCompare(issue?.user?.address, state.currentUser?.walletAddress),
   ].every((v) => v);
 
@@ -87,20 +87,16 @@ export default function ProposalPage() {
     isWalletConnected,
     pullRequest?.isMergeable,
     !issue?.isClosed,
-    !proposal?.isMerged,
-    !proposal?.isDisputed,
-    !proposal?.refusedByBountyOwner,
+    !parsedProposal?.isMerged,
+    !parsedProposal?.isDisputed,
+    !parsedProposal?.refusedByBountyOwner,
     !isDisputable,
     !isPrOwner,
     !isProposalOwner,
   ].every((v) => v);
 
-  function updateProposalComments() {
-    invalidateComments();
-  }
-
   async function getDistributedAmounts() {
-    if (!proposal?.distributions || !state?.Service?.network?.amounts) return;
+    if (!parsedProposal?.distributions || !state?.Service?.network?.amounts) return;
 
     const amountTotal = BigNumber.maximum(issue?.amount || 0, issue?.fundingAmount || 0);
     const { treasury, mergeCreatorFeeShare, proposerFeeShare } = state.Service.network.amounts;
@@ -109,12 +105,12 @@ export default function ProposalPage() {
                                                       mergeCreatorFeeShare,
                                                       proposerFeeShare,
                                                       amountTotal,
-                                                      proposal.distributions);
+                                                      parsedProposal.distributions);
 
     const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
       ...rest,
       recipient,
-      githubLogin: proposal?.distributions?.find(p => p.recipient === recipient)?.user?.githubLogin
+      githubLogin: parsedProposal?.distributions?.find(p => p.recipient === recipient)?.user?.githubLogin
     }));
 
     setDistributedAmounts({
@@ -127,11 +123,12 @@ export default function ProposalPage() {
     if (
       !chaintime ||
       !state.Service?.network?.times?.disputableTime ||
-      !proposal?.contractCreationDate
+      !parsedProposal?.contractCreationDate
     )
       return;
 
-    const target = addSeconds(new Date(proposal?.contractCreationDate), +state.Service?.network.times.disputableTime);
+    const target = addSeconds(new Date(parsedProposal?.contractCreationDate), 
+                              +state.Service?.network.times.disputableTime);
     const missingTime = formatDistance(new Date(chaintime), target, {
       includeSeconds: true,
     });
@@ -141,7 +138,7 @@ export default function ProposalPage() {
   }
 
   useEffect(changeMissingDisputableTime, [
-    proposal?.contractCreationDate,
+    parsedProposal?.contractCreationDate,
     chaintime,
     state.Service?.network?.times?.disputableTime,
   ]);
@@ -152,12 +149,12 @@ export default function ProposalPage() {
   }, [state.Service?.active]);
 
   useEffect(() => {
-    if (!proposal || !state.currentUser?.walletAddress)
+    if (!parsedProposal || !state.currentUser?.walletAddress)
       setIsUserAbleToDispute(false);
     else
-      setIsUserAbleToDispute(!proposal.disputes?.some(({ address, weight }) => 
+      setIsUserAbleToDispute(!parsedProposal.disputes?.some(({ address, weight }) => 
         address === state.currentUser.walletAddress && weight.gt(0)));
-  }, [proposal, state.currentUser?.walletAddress]);
+  }, [parsedProposal, state.currentUser?.walletAddress]);
 
   useEffect(() => {
     getDistributedAmounts();
@@ -179,7 +176,7 @@ export default function ProposalPage() {
       isPrOwner={isPrOwner}
       isProposalOwner={isProposalOwner}
       comments={parsedComments}
-      updateComments={updateProposalComments}
+      updateComments={invalidateComments}
       userData={state.currentUser}
     />
   );
