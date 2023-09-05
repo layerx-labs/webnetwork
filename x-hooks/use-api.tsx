@@ -3,31 +3,17 @@ import {isZeroAddress} from "ethereumjs-util";
 
 import {useAppState} from "contexts/app-state";
 
-import { issueParser } from "helpers/issue";
-
 import {
   CancelPrePullRequestParams,
   CreatePrePullRequestParams,
-  CreateReviewParams,
-  PatchUserParams,
   PastEventsParams
 } from "interfaces/api";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
-import { IssueData } from "interfaces/issue-data";
 
 import {api} from "services/api";
 
 import {toastError, toastSuccess} from "../contexts/reducers/change-toaster";
 import {SupportedChainData} from "../interfaces/supported-chain-data";
-
-interface NewIssueParams {
-  title: string;
-  description: string;
-  amount: number;
-  creatorAddress: string;
-  creatorGithub: string;
-  repository_id: string;
-}
 
 type FileUploadReturn = {
   hash: string;
@@ -60,23 +46,6 @@ export default function useApi() {
     return config;
   });
 
-  async function getIssue(repoId: string | number,
-                          ghId: string | number,
-                          networkName = DEFAULT_NETWORK_NAME,
-                          chainId?: string | number) {
-    return api
-      .get<IssueData>(`/issue/${repoId}/${ghId}/${networkName}`, { params: { chainId } })
-      .then(({ data }) => issueParser(data))
-      .catch(() => null);
-  }
-
-  async function createIssue(payload: NewIssueParams, networkName = DEFAULT_NETWORK_NAME) {
-    return api
-      .post<number>("/issue", { ...payload, networkName })
-      .then(({ data }) => data)
-      .catch(() => null);
-  }
-
   async function createToken(payload: {address: string; minAmount: string; chainId: number }) {
     return api
       .post("/token", { ...payload })
@@ -103,10 +72,6 @@ export default function useApi() {
       .catch((error) => {
         throw error;
       });
-  }
-
-  async function joinAddressToUser({ wallet, ...rest } : PatchUserParams): Promise<boolean> {
-    return api.patch(`/user/connect`, { wallet, ...rest });
   }
 
   async function processEvent(event: NetworkEvents | RegistryEvents | StandAloneEvents,
@@ -147,25 +112,6 @@ export default function useApi() {
       });
   }
 
-  async function createReviewForPR({
-    networkName = DEFAULT_NETWORK_NAME,
-    event = "COMMENT",
-    ...rest
-  } : CreateReviewParams) {
-    return api
-      .put("/pull-request/review", { networkName, event, ...rest })
-      .then((response) => response)
-      .catch(error => {
-        throw error;
-      });
-  }
-
-  async function removeUser(address: string, githubLogin: string) {
-    return api
-      .delete(`/user/${address}/${githubLogin}`)
-      .then(({ status }) => status === 200);
-  }
-
   async function uploadFiles(files: File | File[]): Promise<FileUploadReturn> {
     const form = new FormData();
     const isArray = Array.isArray(files);
@@ -178,31 +124,6 @@ export default function useApi() {
     }
 
     return api.post("/files", form).then(({ data }) => data);
-  }
-
-  async function updateNetwork(networkInfo) {
-    return api
-      .put("/network", { ...networkInfo })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
-  async function updateVisibleBounty(managmentInfo: {
-    issueId: string;
-    visible: boolean;
-    creator: string;
-    networkAddress: string;
-    accessToken: string;
-    override: boolean;
-  }) {
-    return api
-      .put("/network/management", { ...managmentInfo })
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
   }
 
   async function resetUser(address: string, githubLogin: string) {
@@ -250,14 +171,6 @@ export default function useApi() {
       })
   }
 
-  async function saveNetworkRegistry(wallet: string, registryAddress: string) {
-    return api.post("setup/registry", { wallet, registryAddress })
-      .then(({ data }) => data)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   async function addSupportedChain(chain) {
     chain.loading = true;
     return api.post(`chains`, chain)
@@ -301,21 +214,13 @@ export default function useApi() {
   }
 
   return {
-    createIssue,
     createToken,
     createPrePullRequest,
-    createReviewForPR,
-    getIssue,
-    joinAddressToUser,
     processEvent,
-    removeUser,
-    updateNetwork,
-    updateVisibleBounty,
     uploadFiles,
     cancelPrePullRequest,
     resetUser,
     createNFT,
-    saveNetworkRegistry,
     addSupportedChain,
     deleteSupportedChain,
     updateChainRegistry,
