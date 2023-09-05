@@ -81,8 +81,10 @@ export function RegistrySetup({
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { patchSupportedChain, processEvent, updateChainRegistry, createToken } = useApi();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
-  const { invalidate: invalidateChains } = 
-    useReactQuery(["supportedChains"], () => useGetChains().then(chains => dispatch(updateSupportedChains(chains))));
+  const { invalidate: invalidateChains } = useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+    dispatch(updateSupportedChains(chains));
+    return chains; 
+  }));
 
   function isEmpty(value: string) {
     return value.trim() === "";
