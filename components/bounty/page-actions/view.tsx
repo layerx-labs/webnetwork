@@ -126,7 +126,7 @@ export default function PageActionsView({
 
           <ProposalModal
             amountTotal={bounty?.amount}
-            pullRequests={bounty?.pullRequests}
+            deliverables={bounty?.deliverables}
             show={showPRProposal}
             onCloseClick={() => setShowPRProposal(false)}
             currentBounty={bounty}
