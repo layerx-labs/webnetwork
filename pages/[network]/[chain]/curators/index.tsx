@@ -6,7 +6,7 @@ import NetworkCurators from "components/pages/network-curators/controller";
 import { emptyBountiesPaginated, emptyCuratorsPaginated, emptyNetworkOverview } from "helpers/api";
 
 import { getBountiesListData } from "x-hooks/api/bounty";
-import getCuratorsListData from "x-hooks/api/get-curators-list-data";
+import { getCuratorsListData } from "x-hooks/api/curator";
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 
 export default NetworkCurators;

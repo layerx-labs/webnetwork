@@ -6,7 +6,7 @@ import ProposalPage from "components/pages/bounty/proposal/controller";
 import { Logger } from "services/logging";
 
 import { getCommentsData } from "x-hooks/api/comments";
-import getProposalData from "x-hooks/api/get-proposal-data";
+import { getProposalData } from "x-hooks/api/proposal";
 
 export default ProposalPage;
 
