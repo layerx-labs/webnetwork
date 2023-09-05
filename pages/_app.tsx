@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {QueryClientProvider, QueryClient, Hydrate} from '@tanstack/react-query'
+import {QueryClientProvider, Hydrate} from '@tanstack/react-query'
 import {GetServerSideProps} from "next";
 import {SessionProvider} from "next-auth/react";
 import {appWithTranslation} from "next-i18next";
@@ -21,7 +21,7 @@ import WrongNetworkModal from "components/wrong-network-modal";
 
 import RootProviders from "contexts";
 
-import { reactQueryConfig } from "services/react-query";
+import { getReactQueryClient } from "services/react-query";
 
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
@@ -31,7 +31,7 @@ const { publicRuntimeConfig } = getConfig();
 function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppProps) {
   const {asPath} = useRouter();
 
-  const [queryClient] = useState(() => new QueryClient(reactQueryConfig));
+  const [queryClient] = useState(() => getReactQueryClient());
 
   if (asPath.includes('api-doc'))
     return <Component {...pageProps}></Component>
