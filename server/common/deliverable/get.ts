@@ -4,7 +4,6 @@ import { Sequelize } from "sequelize";
 import models from "db/models";
 
 import paginate from "helpers/paginate";
-import { resJsonMessage } from "helpers/res-json-message";
 
 interface propsWhere {
   userId?: string | string[];
@@ -12,7 +11,7 @@ interface propsWhere {
 }
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
-  const { address, issueId } = req.query;
+  const { address, issueId, page, sortBy, order } = req.query;
   const where = {} as propsWhere;
 
   if (address) {
@@ -24,9 +23,9 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    if (!user) return res.status(404).json({ message: "user not found" });
-
-    where.userId = user.id;
+    if (user) {
+      where.userId = user.id;
+    }
   }
 
   if (issueId) {
@@ -34,16 +33,18 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       where: { id: issueId },
     });
 
-    if (!issue) return resJsonMessage("Issue not found", res, 404);
-
-    where.issueId = issue.id;
+    if (issue) {
+      where.issueId = issue.id;
+    }
   }
 
-  const deliverables = await models.deliverable.findAndCountAll({
-    ...paginate({ where, include: [{ association: "issues" }] }, req.query, [
-      [req.query.sortBy || "updatedAt", req.query.order || "DESC"],
-    ]),
-  });
+  const PAGE = +(page || 1);
+
+  const deliverables = await models.deliverable.findAndCountAll(paginate({ 
+    where, 
+    include: [{ association: "issues" }] }, 
+    { page: PAGE }, 
+    [[sortBy || "updatedAt", order || "DESC"]]));
 
   return res.status(200).json(deliverables);
 }
