@@ -4,37 +4,37 @@ import BigNumber from "bignumber.js";
 import { addSeconds, formatDistance } from "date-fns";
 import { toLower } from "lodash";
 import {useTranslation} from "next-i18next";
+import { useRouter } from "next/router";
 
 import ProposalPageView from "components/pages/bounty/proposal/view";
 
 import {useAppState} from "contexts/app-state";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
-import { commentsParser, issueParser, mergeProposalParser, pullRequestParser } from "helpers/issue";
+import { commentsParser, issueParser, mergeProposalParser } from "helpers/issue";
 import { isProposalDisputable } from "helpers/proposal";
 import { lowerCaseCompare } from "helpers/string";
 
-import { IssueData, IssueDataComment } from "interfaces/issue-data";
+import { IssueData } from "interfaces/issue-data";
 import { DistributedAmounts } from "interfaces/proposal";
 
-import { ProposalPageProps } from "types/pages";
-
 import { getCommentsData } from "x-hooks/api/comments";
+import { getProposalData } from "x-hooks/api/proposal";
+import useReactQuery from "x-hooks/use-react-query";
 
 const defaultAmount = {
   value: "0",
   percentage: "0",
 };
 
-export default function ProposalPage(props: ProposalPageProps) {
+export default function ProposalPage() {
+  const { query } = useRouter();
   const { t } = useTranslation("common");
 
   const [chaintime, setChainTime] = useState<number>();
   const [isUserAbleToDispute, setIsUserAbleToDispute] = useState(false);
   const [isDisputableOnChain, setIsDisputableOnChain] = useState<boolean>(false);
   const [missingDisputableTime, setMissingDisputableTime] = useState<string>("");
-  const [proposalComments, setProposalComments] = 
-      useState<IssueDataComment[]>(commentsParser(props?.proposal?.comments));
   const [distributedAmounts, setDistributedAmounts] =
     useState<DistributedAmounts>({
       treasuryAmount: defaultAmount,
@@ -45,9 +45,16 @@ export default function ProposalPage(props: ProposalPageProps) {
 
   const { state } = useAppState();
 
-  const proposal = mergeProposalParser(props?.proposal, props?.proposal?.issue?.merged);
+  const proposalId = query?.id?.toString();
+  const { data: proposal } = useReactQuery(["proposal", proposalId], () => getProposalData(query));
+  const { data: comments, invalidate: invalidateComments } = 
+    useReactQuery(["proposal", "comments", proposalId], () => getCommentsData({ proposalId }));
+
+  const parsedProposal = mergeProposalParser(proposal, proposal?.issue?.merged);
+  const parsedComments = commentsParser(comments);
+
   const issue = issueParser(proposal?.issue as IssueData);
-  const pullRequest = pullRequestParser(proposal?.pullRequest);
+  const pullRequest = parsedProposal?.pullRequest;
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
@@ -87,8 +94,7 @@ export default function ProposalPage(props: ProposalPageProps) {
   ].every((v) => v);
 
   function updateProposalComments() {
-    getCommentsData({ proposalId: proposal?.id?.toString() })
-      .then((comments) => setProposalComments(commentsParser(comments)))
+    invalidateComments();
   }
 
   async function getDistributedAmounts() {
@@ -157,7 +163,7 @@ export default function ProposalPage(props: ProposalPageProps) {
 
   return (
     <ProposalPageView
-      proposal={proposal}
+      proposal={parsedProposal}
       pullRequest={pullRequest}
       issue={issue}
       distributedAmounts={distributedAmounts}
@@ -170,7 +176,7 @@ export default function ProposalPage(props: ProposalPageProps) {
       isMergeable={isMergeable}
       isPrOwner={isPrOwner}
       isProposalOwner={isProposalOwner}
-      comments={proposalComments}
+      comments={parsedComments}
       updateComments={updateProposalComments}
       userData={state.currentUser}
     />

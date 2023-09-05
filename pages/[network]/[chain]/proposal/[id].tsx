@@ -1,9 +1,10 @@
+import { dehydrate } from "@tanstack/react-query";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from "next/types";
 
 import ProposalPage from "components/pages/bounty/proposal/controller";
 
-import { Logger } from "services/logging";
+import { getReactQueryClient } from "services/react-query";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
@@ -14,21 +15,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
   locale,
 }) => {
-  const proposal = await getProposalData(query)
-    .then(({ data }) => data)
-    .catch(error => {
-      Logger.error(error, "Failed to getProposalData");
-      return undefined;
-    });
+  const queryClient = getReactQueryClient();
+  const proposalId = query.id?.toString();
 
-  const proposalComments = await getCommentsData({ proposalId: proposal?.id?.toString() })
+  await queryClient.prefetchQuery(["proposal", proposalId], () => getProposalData(query));
+  await queryClient.prefetchQuery(["proposal", "comments", proposalId], () => getCommentsData({ proposalId }));
 
   return {
     props: {
-      proposal: {
-        ...proposal,
-        comments: proposalComments
-      },
+      dehydratedState: dehydrate(queryClient),
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",
