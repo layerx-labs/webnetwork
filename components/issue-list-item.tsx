@@ -167,9 +167,9 @@ export default function IssueListItem({
         translation: t("info.working"),
       },
       ready: {
-        value: issue?.pullRequests?.length,
+        value: issue?.deliverables?.length,
         translation: t("info.pull-requests", {
-          count: issue?.pullRequests?.length,
+          count: issue?.deliverables?.length,
         }),
       },
       proposal: {
