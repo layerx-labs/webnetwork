@@ -11,7 +11,7 @@ function TabSections({
 }: { currentBounty: IssueBigNumberData }){
   const { t } = useTranslation("bounty");
   
-  const pullRequests = currentBounty?.pullRequests
+  const deliverables = currentBounty?.deliverables
   const proposals = currentBounty?.mergeProposals
 
   const tabs: TabbedNavigationItem[] = [
@@ -23,16 +23,16 @@ function TabSections({
       component: <ItemSections isProposal data={proposals} currentBounty={currentBounty}/>
     },
     {
-      isEmpty: !pullRequests?.length,
+      isEmpty: !deliverables?.length,
       eventKey: "pull-requests",
-      title: t("pull-request:labelWithCount", { count: pullRequests?.length || 0 }),
+      title: t("pull-request:labelWithCount", { count: deliverables?.length || 0 }),
       description: t("description_pull-request"),
-      component: <ItemSections isProposal={false} data={pullRequests} currentBounty={currentBounty}/>
+      component: <ItemSections isProposal={false} data={deliverables} currentBounty={currentBounty}/>
 
     }
   ];
   
-  if(!proposals?.length  && !pullRequests?.length)
+  if(!proposals?.length  && !deliverables?.length)
     return <></>;
 
   return (
