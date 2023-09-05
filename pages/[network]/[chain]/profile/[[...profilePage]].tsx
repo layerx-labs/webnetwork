@@ -1,5 +1,7 @@
 import { GetServerSideProps } from "next";
+import { getToken } from "next-auth/jwt";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import getConfig from "next/config";
 
 import ProfileRouter from "components/profile/profile-router";
 
@@ -7,23 +9,30 @@ import { ProfilePageProps } from "types/pages";
 
 import { useGetProfileBounties, useGetProfilePayments } from "x-hooks/api/pages/profile";
 
+const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
+
 export default function Profile(props: ProfilePageProps) {
   return <ProfileRouter {...props} />;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
+  const token = await getToken({ req, secret: secret });
   const { profilePage } = query || {};
   const [pageName] = (profilePage || ["profile"]);
+  const queryWithWallet = {
+    ...query,
+    wallet: token?.address as string
+  };
 
   const getDataFn = {
-    payments: () => useGetProfilePayments(query),
-    bounties: () => useGetProfileBounties(query, "creator"),
-    proposals: () => useGetProfileBounties(query, "proposer"),
-    "pull-requests": () => useGetProfileBounties(query, "pullRequester"),
+    payments: () => useGetProfilePayments(queryWithWallet),
+    bounties: () => useGetProfileBounties(queryWithWallet, "creator"),
+    proposals: () => useGetProfileBounties(queryWithWallet, "proposer"),
+    "pull-requests": () => useGetProfileBounties(queryWithWallet, "pullRequester"),
     "my-network": () => useGetProfileBounties(query, "governor"),
   };
 
-  const pageData = await getDataFn[pageName]();
+  const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};
   
   return {
     props: {
