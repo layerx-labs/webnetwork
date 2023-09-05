@@ -30,6 +30,7 @@ import { useGetChains } from "x-hooks/api/chain";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
+import useReactQuery from "x-hooks/use-react-query";
 import {useSettings} from "x-hooks/use-settings";
 
 interface RegistrySetupProps { 
@@ -80,6 +81,8 @@ export function RegistrySetup({
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { patchSupportedChain, processEvent, updateChainRegistry, createToken } = useApi();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
+  const { invalidate: invalidateChains } = 
+    useReactQuery(["supportedChains"], () => useGetChains().then(chains => dispatch(updateSupportedChains(chains))));
 
   function isEmpty(value: string) {
     return value.trim() === "";
@@ -264,8 +267,7 @@ export function RegistrySetup({
           return;
         }
         dispatch(toastSuccess(`Updated chain ${chain.chainId} with ${address} `))
-        return useGetChains()
-          .then(chains => dispatch(updateSupportedChains(chains)));
+        return invalidateChains();
       })
   }
 

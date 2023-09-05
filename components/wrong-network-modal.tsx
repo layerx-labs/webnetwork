@@ -21,6 +21,7 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import { useGetChains } from "x-hooks/api/chain";
 import { useDao } from "x-hooks/use-dao";
 import useNetworkChange from "x-hooks/use-network-change";
+import useReactQuery from "x-hooks/use-react-query";
 
 type typeError = { code?: number; message?: string }
 
@@ -40,6 +41,8 @@ export default function WrongNetworkModal() {
     dispatch,
     state: { connectedChain, currentUser, Service, supportedChains, loading, spinners }
   } = useAppState();
+  const { data: _chains } = 
+    useReactQuery(["supportedChains"], () => useGetChains().then(chains => dispatch(updateSupportedChains(chains))));
 
   const isRequired = [
     pathname?.includes("new-network"),
@@ -107,11 +110,6 @@ export default function WrongNetworkModal() {
 
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
-  useEffect(() => {
-    useGetChains()
-      .then(chains => dispatch(updateSupportedChains(chains)))
-      .catch(console.debug);
-  }, []);
   useEffect(updateNetworkChain, [Service?.network?.active?.chain_id, supportedChains, query?.network]);
   useEffect(changeShowModal, [
     currentUser?.walletAddress,
