@@ -19,8 +19,7 @@ import {psReadAsText} from "helpers/file-reader";
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
-import useUpdateNetwork from "x-hooks/api/network/use-update-network";
+import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 const {publicRuntimeConfig: {urls: {homeURL}}} = getConfig();

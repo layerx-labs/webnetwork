@@ -29,7 +29,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import useCreatePreBounty from "x-hooks/api/bounty/use-create-pre-bounty";
+import { useCreatePreBounty } from "x-hooks/api/bounty";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
