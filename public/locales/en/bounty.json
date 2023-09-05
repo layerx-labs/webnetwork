@@ -107,7 +107,8 @@
     "description-limit": "Exceeds allowed limit of characters and files: {{value}}",
     "no-networks-chain": "The selected chain has no active networks",
     "bounty-update": "Bounty update failed",
-    "banned-domain": "This domain is banned and cannot be used to open bounties."
+    "banned-domain": "This domain is banned and cannot be used to open bounties.",
+    "failed-to-cancel": "Bounty could not be canceled"
   },
   "title": "Create new Bounty",
   "fields": {

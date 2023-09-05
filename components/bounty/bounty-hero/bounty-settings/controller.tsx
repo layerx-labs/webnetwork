@@ -23,7 +23,7 @@ export default function BountySettings({
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "bounty"]);
 
   const [isCancelable, setIsCancelable] = useState(false);
 
@@ -59,8 +59,8 @@ export default function BountySettings({
         updateBountyData();
       })
       .catch(error => {
-        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
-        console.debug("Failed to cancel bounty", error)
+        dispatch(toastError(t("bounty:errors.failed-to-cancel"), t("actions.failed")));
+        console.debug("Failed to cancel bounty", error);
       });
   }
 
@@ -75,8 +75,8 @@ export default function BountySettings({
         updateBountyData();
       })
       .catch(error => {
-        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
-        console.debug("Failed to cancel bounty", error)
+        dispatch(toastError(t("bounty:errors.failed-to-cancel"), t("actions.failed")));
+        console.debug("Failed to cancel bounty", error);
       });
   }
 
