@@ -42,11 +42,11 @@ export default function SelectNetwork({
   const chainIdToFilter = filterByConnectedChain || !isOnNetworkPath(pathname) ? 
     state.connectedChain?.id : chain?.chainId?.toString();
 
-  const { data: networks} = useReactQuery(["networks", chainIdToFilter], 
-                                          () => useSearchNetworks({ chainId: chainIdToFilter }),
-                                          {
-                                            enabled: !!chainIdToFilter
-                                          });
+  const { data: networks } = useReactQuery( ["networks", chainIdToFilter], 
+                                            () => useSearchNetworks({ chainId: chainIdToFilter }),
+                                            {
+                                              enabled: !!chainIdToFilter
+                                            });
 
   function networkToOption(network: Network) {
     return {
@@ -79,13 +79,13 @@ export default function SelectNetwork({
   }
 
   function handleSelectedWithNetworkName(options) {
-    const opt = options.find(({ value }) => value?.name === query?.networkName)
+    const opt = options?.find(({ value }) => value?.name === query?.networkName)
     if(opt) setSelected(opt)
   }
 
   useEffect(() => {
     const options = networks?.rows?.map(networkToOption);
-    setOptions(options)
+    setOptions(options || [])
     handleSelectedWithNetworkName(options);
   }, [networks]);
 
@@ -109,7 +109,7 @@ export default function SelectNetwork({
           value={selected}
           options={options}
           onChange={onChange}
-          placeholder="Select a network"
+          placeholder={t("select-a-network")}
           components={{
             Option: IconOption,
             SingleValue: IconSingleValue,
