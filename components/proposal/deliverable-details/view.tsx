@@ -1,32 +1,33 @@
 import { useTranslation } from "next-i18next";
 import { UrlObject } from "url";
 
-import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import DateLabel from "components/date-label";
-import GithubInfo from "components/github-info";
 import InternalLink from "components/internal-link";
 import PullRequestLabels from "components/pull-request/labels/controller";
 import Translation from "components/translation";
 
-interface PullRequestDetailsViewProps {
-  githubId: string;
-  creatorGithubLogin: string;
-  branch: string;
+import { User } from "interfaces/api";
+
+interface DeliverableDetailsViewProps {
+  id: number;
+  user: User;
+  deliverableUrl: string;
   createdAt: Date;
   isMerged: boolean;
   isMergeable: boolean;
-  pullRequestHref: UrlObject;
+  deliverableHref: UrlObject;
 }
 
-export default function PullRequestDetailsView({
-  githubId,
-  creatorGithubLogin,
-  branch,
+export default function DeliverableDetailsView({
+  id,
+  user,
+  deliverableUrl,
   createdAt,
   isMerged,
   isMergeable,
-  pullRequestHref,
-}: PullRequestDetailsViewProps) {
+  deliverableHref,
+}: DeliverableDetailsViewProps) {
   const { t } = useTranslation("pull-request");
 
   return (
@@ -40,10 +41,10 @@ export default function PullRequestDetailsView({
 
         <div className="col col-md-auto px-0">
           <InternalLink
-            href={pullRequestHref}
+            href={deliverableHref}
             title={t("actions.go-to-pull-request")}
             className="caption-large text-gray-500 p-0 hover-primary text-decoration-underline"
-            label={`#${githubId || ""}`}
+            label={`#${id || ""}`}
             transparent
           />
         </div>
@@ -57,15 +58,7 @@ export default function PullRequestDetailsView({
         <div className="col-xs-12 col-xl-auto">
           <div className="row align-items-center">
             <div className="col-auto">
-              <Avatar userLogin={creatorGithubLogin} />
-            </div>
-
-            <div className="col-auto px-0">
-              <GithubInfo
-                parent="hero"
-                variant="user"
-                label={`@${creatorGithubLogin}`}
-              />
+              <AvatarOrIdenticon user={user?.githubLogin} address={user?.address} />
             </div>
           </div>
         </div>
@@ -73,7 +66,7 @@ export default function PullRequestDetailsView({
         <div className="col-xs-12 col-xl-auto">
           <span className="caption-small text-light-gray text-uppercase">
             <Translation label={"branch"} />:
-            <span className="text-primary">{branch}</span>
+            <span className="text-primary">{deliverableUrl}</span>
           </span>
         </div>
 
