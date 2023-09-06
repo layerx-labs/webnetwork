@@ -27,7 +27,7 @@ export default function VotingPowerMultiNetwork() {
       .then(({ rows }) => rows);
   }
 
-  const { data: networks } = useReactQuery( ["voting-power", state.currentUser?.walletAddress],
+  const { data: networks } = useReactQuery( ["voting-power-multi", state.currentUser?.walletAddress],
                                             getNetworsVotingPower,
                                             !!state.currentUser?.walletAddress);
 
