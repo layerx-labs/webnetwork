@@ -1,43 +1,68 @@
+import { ChangeEvent } from "react";
+
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
 import CreateBountyDescription from "components/bounty/create-bounty/create-bounty-description";
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
+import CheckButtons from "components/check-buttons/controller";
 import CustomContainer from "components/custom-container";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import { SelectOption } from "types/utils";
+
 import FooterButtons from "./footer-buttons/view";
 
-export default function CreateDeliverablePageView() {
-  const { t } = useTranslation(["common", "custom-network", "bounty"]);
+interface CreateDeliverablePageViewProps {
+  checkButtonsOptions: SelectOption[];
+  checkButtonsOption: string;
+  originLink: string;
+  onChangeOriginLink: (v: ChangeEvent<HTMLInputElement>) => void;
+  description: string;
+  onChangeDescription: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  title: string;
+  onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
+  onHandleBack: () => void;
+  onHandleCreate: () => void;
+}
+
+export default function CreateDeliverablePageView({
+  originLink,
+  onChangeOriginLink,
+  title,
+  onChangeTitle,
+  description,
+  onChangeDescription,
+  onHandleBack,
+  onHandleCreate,
+  checkButtonsOption,
+  checkButtonsOptions,
+}: CreateDeliverablePageViewProps) {
+  const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
   return (
-    <div className="row justify-content-center">
+    <div className="row justify-content-center mx-0">
       <div className="col-md-10 bg-gray-900 border border-gray-800 border-radius-4 mt-5 p-4">
         <div>
-          <h5>Create Deliverable</h5>
-          <p className="text-gray-200">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
+          <h5>{t("deliverable:create.title")}</h5>
+          <p className="text-gray-200">{t("deliverable:create.description")}</p>
         </div>
         <div className="pt-2">
-          <span>Deliverable type</span>
+          <span>{t("deliverable:create.type")}</span>
           <p className="text-gray-200">
-            Est quis sit irure exercitation id consequat cupidatat elit nulla
-            velit amet ex.
+            {t("deliverable:create.description-type")}
           </p>
+        </div>
+        <div className="mb-4 mt-4">
+          <p>{t("deliverable:create.type")}</p>
+          <CheckButtons
+            checked={checkButtonsOption}
+            options={checkButtonsOptions}
+          />
         </div>
 
         <div>
-          <p className="text-gray-200">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
+          <p className="text-gray-200">{t("deliverable:create.info-type")}</p>
         </div>
 
         <div>
@@ -45,15 +70,16 @@ export default function CreateDeliverablePageView() {
             <div className="col-md-12 m-0 mb-2">
               <div className="form-group">
                 <BountyLabel className="mb-2 text-white" required>
-                  Origin Link
+                  {t("deliverable:create.labels.origin-link")}
                 </BountyLabel>
                 <input
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
                     "border border-1 border-danger border-radius-8": false,
                   })}
-                  placeholder={"github.com"}
-                  value={""}
+                  placeholder={t("deliverable:create.placeholders.origin-link")}
+                  value={originLink}
+                  onChange={onChangeOriginLink}
                 />
               </div>
             </div>
@@ -62,10 +88,12 @@ export default function CreateDeliverablePageView() {
           <div className="row justify-content-center">
             <div className="col-md-12 m-0 mb-2">
               <div className="form-group">
-                <BountyLabel className="mb-2 text-white">Preview</BountyLabel>
+                <BountyLabel className="mb-2 text-white">
+                  {t("deliverable:create.labels.preview")}
+                </BountyLabel>
                 <div className="d-flex justify-content-center border-dotter border-radius-4 border-gray-800">
                   <span className="p-5 text-gray-800">
-                    Preview your embedded link
+                    {t("deliverable:create.placeholders.preview")}
                   </span>
                 </div>
               </div>
@@ -76,15 +104,16 @@ export default function CreateDeliverablePageView() {
             <div className="col-md-12 m-0 mb-2">
               <div className="form-group">
                 <BountyLabel className="mb-2 text-white" required>
-                  Title
+                  {t("deliverable:create.labels.title")}
                 </BountyLabel>
                 <input
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
                     "border border-1 border-danger border-radius-8": false,
                   })}
-                  placeholder={"Deliverable title..."}
-                  value={""}
+                  placeholder={t("deliverable:create.placeholders.title")}
+                  value={title}
+                  onChange={onChangeTitle}
                 />
               </div>
             </div>
@@ -92,27 +121,35 @@ export default function CreateDeliverablePageView() {
 
           <div className="form-group">
             <CreateBountyDescription
-              description={""}
-              handleChangeDescription={() => console.log}
-              bodyLength={1}
-              files={undefined}
-              updateFiles={() => console.log}
-              updateUploading={() => console.log}
+              description={description}
+              handleChangeDescription={onChangeDescription}
+              borderColor="gray-800"
+              textAreaColor="gray-850"
             />
           </div>
+
+          <p className="text-gray-200">
+            {t("deliverable:create.markdown-helper")}{" "}
+            <a
+              href="https://www.markdownguide.org/getting-started/"
+              target="_blank"
+            >
+              {t("deliverable:create.markdown-link")}
+            </a>
+          </p>
         </div>
       </div>
       <CustomContainer className="d-flex flex-column justify-content-end">
         <ResponsiveWrapper className="row my-4" xs={false} md={true}>
           <FooterButtons
-            handleBack={() => console.log}
-            handleCreate={() => console.log}
+            handleBack={onHandleBack}
+            handleCreate={onHandleCreate}
           />
         </ResponsiveWrapper>
         <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
           <FooterButtons
-            handleBack={() => console.log}
-            handleCreate={() => console.log}
+            handleBack={onHandleBack}
+            handleCreate={onHandleCreate}
           />
         </ResponsiveWrapper>
       </CustomContainer>
