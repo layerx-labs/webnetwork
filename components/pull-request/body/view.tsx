@@ -3,14 +3,14 @@ import CustomContainer from "components/custom-container";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
-import { PullRequest } from "interfaces/issue-data";
+import { Deliverable } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import PullRequestButton from "./actions/pull-request-button";
+import DeliverableButton from "./actions/deliverable-button";
 
-interface PullRequestBodyViewProps {
-  currentPullRequest: PullRequest;
+interface DeliverableBodyViewProps {
+  currentDeliverable: Deliverable;
   isCreatingReview: boolean;
   handleShowModal: () => void;
   handleCancel: () => void;
@@ -25,8 +25,8 @@ interface PullRequestBodyViewProps {
   bountyId: string;
 }
 
-export default function PullRequestBodyView({
-  currentPullRequest,
+export default function DeliverableBodyView({
+  currentDeliverable,
   isCreatingReview,
   handleShowModal,
   handleCancel,
@@ -39,13 +39,13 @@ export default function PullRequestBodyView({
   updateComments,
   currentUser,
   bountyId
-}: PullRequestBodyViewProps) {  
+}: DeliverableBodyViewProps) {  
   const { isMobileView, isTabletView } = useBreakPoint();
 
   function RenderMakeReviewButton({ className = "" }) {
     if (isMakeReviewButton)
       return (
-        <PullRequestButton
+        <DeliverableButton
           type="review"
           className={className}
           onClick={handleShowModal}
@@ -65,7 +65,7 @@ export default function PullRequestBodyView({
   function RenderMakeReadyReviewButton({ className = "" }) {
     if (isMakeReadyReviewButton)
       return (
-        <PullRequestButton
+        <DeliverableButton
           type="ready-review"
           className={className}
           onClick={handleMakeReady}
@@ -81,7 +81,7 @@ export default function PullRequestBodyView({
   function RenderCancelButton({ className = ""}) {
     if(isCancelButton)
       return (
-        <PullRequestButton
+        <DeliverableButton
           type="cancel"
           className={className}
           onClick={handleCancel}
@@ -124,9 +124,9 @@ export default function PullRequestBodyView({
           updateData={updateComments}
           ids={{
             issueId: +bountyId,
-            deliverableId: currentPullRequest?.id,
+            deliverableId: currentDeliverable?.id,
           }}
-          comments={currentPullRequest?.comments}
+          comments={currentDeliverable?.comments}
           currentUser={currentUser}
         />
       </CustomContainer>

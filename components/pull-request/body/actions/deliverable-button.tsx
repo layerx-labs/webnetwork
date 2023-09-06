@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import ContractButton from "components/contract-button";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
-export default function PullRequestButton({
+export default function DeliverableButton({
   withLockIcon,
   isLoading,
   disabled,

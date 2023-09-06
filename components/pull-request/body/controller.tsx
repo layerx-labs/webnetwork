@@ -10,16 +10,16 @@ import { lowerCaseCompare } from "helpers/string";
 
 import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
-import { IssueBigNumberData, PullRequest } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
-import PullRequestBodyView from "./view";
+import DeliverableBodyView from "./view";
 
-interface PullRequestBodyControllerProps {
-  currentPullRequest: PullRequest;
+interface DeliverableBodyControllerProps {
+  currentDeliverable: Deliverable;
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
   updateBountyData: () => void;
@@ -27,14 +27,14 @@ interface PullRequestBodyControllerProps {
   updateComments: () => void;
 }
 
-export default function PullRequestBody({
-  currentPullRequest,
+export default function DeliverableBody({
+  currentDeliverable,
   currentBounty,
   isCreatingReview,
   updateBountyData,
   handleShowModal,
   updateComments
-}: PullRequestBodyControllerProps) {
+}: DeliverableBodyControllerProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "pull-request"]);
 
@@ -47,34 +47,34 @@ export default function PullRequestBody({
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
-  const isPullRequestReady = !!currentPullRequest?.isReady;
-  const isPullRequestCanceled = !!currentPullRequest?.isCanceled;
-  const isPullRequestCancelable = !!currentPullRequest?.isCancelable;
-  const isPullRequestCreator = lowerCaseCompare(currentPullRequest?.userAddress, state.currentUser?.walletAddress);
+  const isDeliverableReady = currentDeliverable?.markedReadyForReview;
+  const isDeliverableCanceled = currentDeliverable?.canceled;
+  const isDeliverableCancelable = currentDeliverable?.isCancelable;
+  const isDeliverableCreator = lowerCaseCompare(currentDeliverable?.user?.address, state.currentUser?.walletAddress);
 
   const isMakeReviewButton =
     isWalletConnected &&
-    isPullRequestReady &&
-    !isPullRequestCanceled;
+    isDeliverableReady &&
+    !isDeliverableCanceled;
 
   const isMakeReadyReviewButton =
     isWalletConnected &&
-    !isPullRequestReady &&
-    !isPullRequestCanceled &&
-    isPullRequestCreator;
+    !isDeliverableReady &&
+    !isDeliverableCanceled &&
+    isDeliverableCreator;
 
   const isCancelButton =
     isWalletConnected &&
-    !isPullRequestCanceled &&
-    isPullRequestCancelable &&
-    isPullRequestCreator;
+    !isDeliverableCanceled &&
+    isDeliverableCancelable &&
+    isDeliverableCreator;
 
   function handleMakeReady() {
-    if (!currentBounty || !currentPullRequest) return;
+    if (!currentBounty || !currentDeliverable) return;
 
     setIsMakingReady(true);
 
-    handleMakePullRequestReady(currentBounty.contractId, currentPullRequest.contractId)
+    handleMakePullRequestReady(currentBounty.contractId, currentDeliverable.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
         return processEvent(NetworkEvents.PullRequestReady, undefined, {
@@ -108,7 +108,7 @@ export default function PullRequestBody({
   function handleCancel() {
     setIsCancelling(true);
 
-    handleCancelPullRequest(currentBounty?.contractId, currentPullRequest?.contractId)
+    handleCancelPullRequest(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
         return processEvent(NetworkEvents.PullRequestCanceled, undefined, {
@@ -141,8 +141,8 @@ export default function PullRequestBody({
   }
 
   return (
-    <PullRequestBodyView
-      currentPullRequest={currentPullRequest}
+    <DeliverableBodyView
+      currentDeliverable={currentDeliverable}
       isCreatingReview={isCreatingReview}
       handleShowModal={handleShowModal}
       handleCancel={handleCancel}
