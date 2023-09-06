@@ -92,6 +92,12 @@ class Deliverables extends Model {
       sourceKey: "id",
       as: "user",
     });
+
+    this.hasMany(models.comment, {
+      foreignKey: "deliverableId",
+      sourceKey: "id",
+      as: "comments"
+    });
   }
 }
 
