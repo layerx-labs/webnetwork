@@ -29,7 +29,7 @@ export default function VotingPowerMultiNetwork() {
 
   const { data: networks } = useReactQuery( ["voting-power-multi", state.currentUser?.walletAddress],
                                             getNetworsVotingPower,
-                                            !!state.currentUser?.walletAddress);
+                                            { enabled: !!state.currentUser?.walletAddress });
 
   function goToNetwork(network) {
     push(getURLWithNetwork("/bounties", {

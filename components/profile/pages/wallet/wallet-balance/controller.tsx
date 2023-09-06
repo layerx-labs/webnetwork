@@ -127,13 +127,15 @@ export default function WalletBalance() {
 
   const { data: tokensOracles } = useReactQuery(["voting-power-wallet", state.currentUser?.walletAddress],
                                                 loadOracleBalance,
-                                                !!state.currentUser?.walletAddress);
+                                                { enabled: !!state.currentUser?.walletAddress });
 
   const { data: tokens } = useReactQuery( ["tokens-balance", state.currentUser?.walletAddress],
                                           loadTokensBalance,
-                                          !!state.currentUser?.walletAddress && 
-                                          !!state.connectedChain &&
-                                          !!state.Service?.active);
+                                          {
+                                            enabled:  !!state.currentUser?.walletAddress && 
+                                                      !!state.connectedChain &&
+                                                      !!state.Service?.active
+                                          });
 
   useEffect(() => {
     if (!tokens?.length) return;

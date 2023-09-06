@@ -1,10 +1,16 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function useReactQuery<T>(key: (string | number)[], getFn: () => Promise<T>, enabled = true) {
+interface useReactQueryOptions {
+  enabled?: boolean;
+  onSuccess?: () => void
+}
+export default function useReactQuery<T>( key: (string | number)[], 
+                                          getFn: () => Promise<T>, 
+                                          options?: useReactQueryOptions) {
   const query = useQuery({
     queryKey: key, 
     queryFn: getFn,
-    enabled
+    ...options
   });
   const queryClient = useQueryClient();
 
