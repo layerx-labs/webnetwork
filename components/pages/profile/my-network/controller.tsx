@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import MyNetworkPageView from "components/pages/profile/my-network/view";
 
@@ -13,6 +13,7 @@ import { MyNetworkPageProps } from "types/pages";
 
 import { useSearchNetworks } from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
+import useReactQuery from "x-hooks/use-react-query";
 
 interface MyNetworkProps {
   bounties: SearchBountiesPaginated;
@@ -27,12 +28,10 @@ export function MyNetwork({
   const { state, dispatch } = useAppState();
   const { setForcedNetwork } = useNetworkSettings();
 
-  async function updateEditingNetwork() {
-    dispatch(changeLoadState(true));
-
+  async function getNetwork() {
     const chainId = chain.chainId.toString();
 
-    useSearchNetworks({
+    return useSearchNetworks({
       creatorAddress: state.currentUser.walletAddress,
       isClosed: false,
       chainId: chainId
@@ -46,22 +45,23 @@ export function MyNetwork({
 
         setMyNetwork(savedNetwork);
         setForcedNetwork(savedNetwork);
+        return rows;
       })
       .catch(error => console.debug("Failed to get network", error))
       .finally(() => dispatch(changeLoadState(false)));
   }
-
-  useEffect(() => {
-    if (!state.currentUser?.walletAddress || !chain) return;
-
-    updateEditingNetwork();
-  }, [state.currentUser?.walletAddress, chain]);
+  
+  const { invalidate } = useReactQuery( ["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
+                                        getNetwork,
+                                        {
+                                          enabled: !!state.currentUser?.walletAddress && !!chain
+                                        });
 
   return(
     <MyNetworkPageView
       myNetwork={myNetwork}
       bounties={bounties}
-      updateEditingNetwork={updateEditingNetwork}
+      updateEditingNetwork={invalidate}
     />
   );
 }

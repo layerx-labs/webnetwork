@@ -15,6 +15,7 @@ import {StepWrapperProps} from "interfaces/stepper";
 import {Token} from "interfaces/token";
 
 import { useGetTokens } from "x-hooks/api/token";
+import useReactQuery from "x-hooks/use-react-query";
 
 export default function TokenConfiguration({
   activeStep,
@@ -34,6 +35,28 @@ export default function TokenConfiguration({
   
   const { state } = useAppState();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
+
+  const connectedChainId = state.connectedChain?.id;
+
+  function processTokens(tokens) {
+    const { transactional, reward } = tokens.reduce((acc, curr) => ({
+      transactional: curr.isTransactional ? [...acc.transactional, curr]: acc.transactional,
+      reward: curr.isReward ? [...acc.reward, curr]: acc.reward,
+    }), {
+      transactional: [],
+      reward: []
+    });
+    
+    setAllowedTransactionalTokens(transactional);
+    setAllowedRewardTokens(reward);
+  }
+
+  useReactQuery(["tokens", connectedChainId],
+                () => useGetTokens(connectedChainId),
+                {
+                  enabled: !!connectedChainId,
+                  onSuccess: processTokens
+                });
 
   const networkTokenSymbol = state.Settings?.beproToken?.symbol || t("misc.$token");
 
@@ -76,25 +99,6 @@ export default function TokenConfiguration({
   useEffect(() => {
     fields.allowedTransactions.setter(selectedTransactionalTokens);
   }, [selectedTransactionalTokens])
-
-  useEffect(() => {
-    if(!state.currentUser?.walletAddress || !state.connectedChain?.id) return;
-    
-    useGetTokens(state.connectedChain?.id)
-      .then(tokens => {
-        const { transactional, reward } = tokens.reduce((acc, curr) => ({
-          transactional: curr.isTransactional ? [...acc.transactional, curr]: acc.transactional,
-          reward: curr.isReward ? [...acc.reward, curr]: acc.reward,
-        }), {
-          transactional: [],
-          reward: []
-        });
-        
-        setAllowedTransactionalTokens(transactional);
-        setAllowedRewardTokens(reward);
-      })
-      .catch(err => console.log("error to get tokens database ->", err));
-  }, [state.currentUser?.walletAddress, state.connectedChain?.id]);
 
   useEffect(() => {
     if(!state?.currentUser?.walletAddress || !state?.Service?.active || !BigNumber(tokensLocked.needed).gt(0)) return
