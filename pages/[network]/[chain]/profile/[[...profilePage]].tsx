@@ -24,12 +24,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     wallet: token?.address as string
   };
 
+  const bountiesResult = result => ({ bounties: result });
+
   const getDataFn = {
     payments: () => useGetProfilePayments(queryWithWallet),
-    bounties: () => useGetProfileBounties(queryWithWallet, "creator"),
-    proposals: () => useGetProfileBounties(queryWithWallet, "proposer"),
-    "pull-requests": () => useGetProfileBounties(queryWithWallet, "pullRequester"),
-    "my-network": () => useGetProfileBounties(query, "governor"),
+    bounties: () => useGetProfileBounties(queryWithWallet, "creator").then(bountiesResult),
+    proposals: () => useGetProfileBounties(queryWithWallet, "proposer").then(bountiesResult),
+    "pull-requests": () => useGetProfileBounties(queryWithWallet, "pullRequester").then(bountiesResult),
+    "my-network": () => useGetProfileBounties(query, "governor").then(bountiesResult),
   };
 
   const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};
