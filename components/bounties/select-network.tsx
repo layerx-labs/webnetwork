@@ -11,12 +11,13 @@ import ReactSelect from "components/react-select";
 
 import { useAppState } from "contexts/app-state";
 
-import { Network } from "interfaces/network";
+import { isOnNetworkPath } from "helpers/network";
 
-import { WinStorage } from "services/win-storage";
+import { Network } from "interfaces/network";
 
 import { useSearchNetworks } from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
+import useReactQuery from "x-hooks/use-react-query";
 
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
@@ -37,6 +38,15 @@ export default function SelectNetwork({
 
   const { chain } = useChain();
   const { state } = useAppState();
+
+  const chainIdToFilter = filterByConnectedChain || !isOnNetworkPath(pathname) ? 
+    state.connectedChain?.id : chain?.chainId?.toString();
+
+  const { data: networks} = useReactQuery(["networks", chainIdToFilter], 
+                                          () => useSearchNetworks({ chainId: chainIdToFilter }),
+                                          {
+                                            enabled: !!chainIdToFilter
+                                          });
 
   function networkToOption(network: Network) {
     return {
@@ -73,35 +83,11 @@ export default function SelectNetwork({
     if(opt) setSelected(opt)
   }
 
-  function getNetworksByChainId(id: string) {
-    const cache = new WinStorage(`networks:${chain?.chainId}`, 60000, "sessionStorage");
-
-    if (cache.value){
-      const options = cache.value.map(networkToOption)
-      setOptions(options);
-      handleSelectedWithNetworkName(options);
-    } else
-      useSearchNetworks({
-        chainId: id
-      })
-        .then(({ rows }) => {
-          const options = rows.map(networkToOption)
-          setOptions(options)
-          handleSelectedWithNetworkName(options);
-        });
-  }
-
   useEffect(() => {
-    if (!chain && isCurrentDefault) return;
-    
-    getNetworksByChainId(chain?.chainId?.toString())
-  }, [chain, isCurrentDefault]);
-
-  useEffect(() => {
-    if(filterByConnectedChain && state.connectedChain?.id){
-      getNetworksByChainId(state.connectedChain?.id)
-    }
-  }, [state.connectedChain])
+    const options = networks?.rows?.map(networkToOption);
+    setOptions(options)
+    handleSelectedWithNetworkName(options);
+  }, [networks]);
 
   useEffect(() => {
     if (state.Service?.network?.active && !selected && isCurrentDefault)
