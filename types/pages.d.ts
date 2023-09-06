@@ -1,4 +1,5 @@
 import { IssueData } from "interfaces/issue-data";
+import { Network } from "interfaces/network";
 import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
@@ -9,6 +10,7 @@ export interface ExplorePageProps {
   bounties: SearchBountiesPaginated;
   recentBounties: IssueData[];
   recentFunding: IssueData[];
+  activeNetworks: Network[];
 }
 
 export interface NetworkCuratorsPageProps {

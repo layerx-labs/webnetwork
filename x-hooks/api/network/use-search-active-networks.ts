@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js";
-
 import { emptyPaginatedData } from "helpers/api";
 
 import { SearchActiveNetworkParams } from "interfaces/api";
@@ -30,12 +28,6 @@ export async function useSearchActiveNetworks({
 
   return api
     .get<PaginatedData<Network>>(`/search/networks/active/?${params}`)
-    .then(({ data }) => ({
-      ...data,
-      rows: data.rows.map(row => ({
-        ...row,
-        totalValueLock: BigNumber(row.totalValueLock)
-      }))
-    }))
+    .then(({ data }) => data)
     .catch(() => emptyPaginatedData as PaginatedData<Network>);
 }
