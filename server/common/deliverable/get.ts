@@ -15,7 +15,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   const where = {} as propsWhere;
 
   if (address) {
-    const user = await models.user.findByAddress(address?.toString()?.toLowerCase())
+    const user = await models.user.findByAddress(address)
 
     if (user) {
       where.userId = user.id;

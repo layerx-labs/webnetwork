@@ -41,7 +41,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
 
-    const user = await models.user.findByAddress(address?.toLowerCase())
+    const user = await models.user.findByAddress(address)
 
     if (!user) return res.status(404).json({ message: "user not found" });
 
