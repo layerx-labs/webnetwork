@@ -1,0 +1,84 @@
+{
+    "label": "Deliverable",
+    "title": "Deliverable",
+    "label_one": "deliverable",
+    "label_other": "deliverables",
+    "labelWithCount_one": "{{count}} deliverable",
+    "labelWithCount_other": "{{count}} deliverables",
+    "abbreviation": "DR",
+    "select": "Select a deliverable",
+    "review_one": "review",
+    "review_other": "reviews",
+    "reviewWithCount_one": "{{count}} review",
+    "reviewWithCount_other": "{{count}} reviews",
+    "find-a-bounty": "Find a bounty to work on",
+    "loc": "LOC",
+    "create": {
+        "title": "Create Deliverable",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "type": "Deliverable type",
+        "description-type": "Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex.",
+        "info-type": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "markdown-helper": "Finding yourself lost with markdown language?",
+        "markdown-link": "See how to use it",
+        "labels": {
+            "origin-link": "Origin Link",
+            "preview": "Preview",
+            "title": "Title"
+        },
+        "placeholders": {
+            "origin-link": "github.com",
+            "preview": "Preview your embedded link",
+            "title": "Deliverable title..."
+        }
+    },
+    "actions": {
+      "create": {
+        "title": "Create Deliverable",
+        "success": "Created Deliverable",
+        "error": "To create deliverable"
+      },
+      "merge": {
+        "title": "Merge",
+        "success": "",
+        "error": ""
+      },
+      "review": {
+        "success": "Review submitted",
+        "error": "To submit review"
+      },
+      "view": "View Deliverables",
+      "make-ready": {
+        "title": "Make ready for review",
+        "success": "Deliverable is ready for review",
+        "error": "Failed to make deliverable ready for review"
+      },
+      "cancel": {
+        "title": "Cancel Deliverable",
+        "success": "Deliverable cancelled",
+        "error": "Failed to cancel deliverable"
+      },
+      "go-to-pull-request": "Go to Deliverable"
+    },
+    "status": {
+      "ready-to-merge": "Ready to merge",
+      "draft": "Draft",
+      "merged": "Merged",
+      "conflicts": "Conflicts",
+      "closed": "Closed",
+      "broken-tests": "Broken tests",
+      "accepted": "Accepted",
+      "disputed": "Disputed",
+      "failed": "Failed",
+      "needs-approval": "Pending approval"
+    },
+    "errors": {
+      "not-found": "No deliverables found",
+      "no-reviews-found": "No reviews found",
+      "merge-conflicts": "Deliverable has merge conflicts and can't be merged",
+      "you-dont-have-pull-requests": "You don't have any Deliverables. Find a Bounty to work on.",
+      "pull-request-participants": "Failed to get participants",
+      "merge-commit": "This proposal can't be merged because the repository don't allow \"merge commits\". Please contact the network governor.",
+      "approval": "Please contact repository admin for deliverable approval before merging is enabled."
+    }
+  }
