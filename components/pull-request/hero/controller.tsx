@@ -1,17 +1,17 @@
 import {useRouter} from "next/router";
 
-import {IssueBigNumberData, PullRequest} from "interfaces/issue-data";
+import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import { useNetwork } from "x-hooks/use-network";
 
-import PullRequestHeroView from "./view";
+import DeliverableHeroView from "./view";
 
-interface PullRequestHeroControllerProps {
-  currentPullRequest: PullRequest;
+interface DeliverableHeroControllerProps {
+  currentDeliverable: Deliverable;
   currentBounty: IssueBigNumberData;
 }
 
-export default function PullRequestHero({currentPullRequest, currentBounty}: PullRequestHeroControllerProps) {
+export default function DeliverableHero({currentDeliverable, currentBounty}: DeliverableHeroControllerProps) {
   const router = useRouter();
   
   const { getURLWithNetwork } = useNetwork();
@@ -23,8 +23,8 @@ export default function PullRequestHero({currentPullRequest, currentBounty}: Pul
   }
 
   return (
-    <PullRequestHeroView 
-      currentPullRequest={currentPullRequest} 
+    <DeliverableHeroView 
+      currentDeliverable={currentDeliverable} 
       currentBounty={currentBounty} 
       handleBack={handleBack}    
     />
