@@ -2,7 +2,6 @@ import { ChangeEvent } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import Avatar from "components/avatar";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import GithubInfo from "components/github-info";
