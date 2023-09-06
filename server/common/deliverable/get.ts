@@ -15,13 +15,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   const where = {} as propsWhere;
 
   if (address) {
-    const user = await models.user.findOne({
-      where: {
-        address: Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("address")),
-                                 "=",
-                                 address),
-      },
-    });
+    const user = await models.user.findByAddress(address?.toString()?.toLowerCase())
 
     if (user) {
       where.userId = user.id;

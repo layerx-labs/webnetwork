@@ -41,13 +41,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
 
-    const user = await models.user.findOne({
-      where: {
-        address: Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("address")),
-                                 "=",
-                                 address?.toLowerCase()),
-      },
-    });
+    const user = await models.user.findByAddress(address?.toLowerCase())
 
     if (!user) return res.status(404).json({ message: "user not found" });
 
