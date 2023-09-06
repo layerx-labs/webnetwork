@@ -19,7 +19,7 @@ export default async function get(query: ParsedUrlQuery) {
     visible,
     creator,
     proposer,
-    pullRequester,
+    deliverabler,
     network,
     networkName,
     transactionalTokenAddress,
@@ -127,16 +127,16 @@ export default async function get(query: ParsedUrlQuery) {
                         }
                     ] : []);
 
-  const pullRequestAssociation = 
-    getAssociation( "pullRequests", 
+  const deliverableAssociation = 
+    getAssociation( "deliverables", 
                     undefined, 
-                    !!pullRequester, 
+                    !!deliverabler, 
                     {
-                      status: {
-                        [Op.not]: "canceled",
-                      },
-                      ... pullRequester ? { userAddress: { [Op.iLike]: pullRequester.toString() } } : {}
-                    });
+                      canceled: false
+                    },
+                    deliverabler ? [{association: "user", required: true, where: {
+                      address: { [Op.iLike]: deliverabler.toString() }
+                    }}] : []);
 
   const networkAssociation = 
     getAssociation( "network", 
@@ -189,7 +189,7 @@ export default async function get(query: ParsedUrlQuery) {
     include: [
       networkAssociation,
       proposalAssociation,
-      pullRequestAssociation,
+      deliverableAssociation,
       transactionalTokenAssociation,
       userAssociation,
     ]
