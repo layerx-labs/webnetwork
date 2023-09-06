@@ -3,7 +3,6 @@ import { useTranslation } from "next-i18next";
 import Link from "next/link";
 
 import ListActiveNetworksItem from "components/bounties/list-active-networks-item";
-import LoadingList from "components/bounties/loading-list";
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
