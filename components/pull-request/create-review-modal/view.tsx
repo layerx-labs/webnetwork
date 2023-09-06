@@ -3,13 +3,14 @@ import { ChangeEvent } from "react";
 import { useTranslation } from "next-i18next";
 
 import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import GithubInfo from "components/github-info";
 import Modal from "components/modal";
 
 import { formatDate } from "helpers/formatDate";
 
-import { IssueBigNumberData, PullRequest } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -19,7 +20,7 @@ interface CreateReviewModalViewProps {
   show: boolean;
   isExecuting: boolean;
   onCloseClick: () => void;
-  pullRequest: PullRequest;
+  deliverable: Deliverable;
   currentBounty: IssueBigNumberData;
   body: string;
   handleChangeBody: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -31,7 +32,7 @@ export default function CreateReviewModalView({
   show = false,
   isExecuting = false,
   onCloseClick,
-  pullRequest,
+  deliverable,
   currentBounty,
   body,
   handleChangeBody,
@@ -80,23 +81,27 @@ export default function CreateReviewModalView({
           </p>
 
           <p className="h4 mb-2">
-            {t("pull-request:label")} #{pullRequest?.githubId}
+            {t("pull-request:label")} #{deliverable?.id}
           </p>
 
           <div className="row d-flex align-items-center flex-wrap justify-content-center justify-content-md-start">
             <div className="d-flex align-items-center flex-wrap-reverse justify-content-start ">
               <div className="d-flex align-items-center justify-content-center me-2 mt-2">
-                <Avatar className="me-2" userLogin={pullRequest?.githubLogin} />
-                <GithubInfo
-                  parent="modal"
-                  variant="user"
-                  label={`@${pullRequest?.githubLogin}`}
-                />
+                <div className="me-2">
+                  <AvatarOrIdenticon user={deliverable?.user?.githubLogin} address={deliverable?.user?.address} />
+                </div>
+                {deliverable?.user?.githubLogin && (
+                  <GithubInfo
+                    parent="modal"
+                    variant="user"
+                    label={`@${deliverable?.user?.githubLogin}`}
+                  />
+                )}
               </div>
 
               <span className="caption-small text-gray me-2 mt-2">
                 {t("misc.created-at")}{" "}
-                {pullRequest && formatDate(pullRequest?.createdAt)}
+                {deliverable && formatDate(deliverable?.createdAt)}
               </span>
             </div>
           </div>

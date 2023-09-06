@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 
-import { IssueBigNumberData, PullRequest } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import CreateReviewModalView from "./view";
 
@@ -9,7 +9,7 @@ interface CreateReviewModalModalProps {
   isExecuting: boolean;
   onConfirm: (body: string) => void;
   onCloseClick: () => void;
-  pullRequest: PullRequest;
+  deliverable: Deliverable;
   currentBounty: IssueBigNumberData;
 }
 
@@ -18,7 +18,7 @@ export default function CreateReviewModal({
   isExecuting = false,
   onConfirm,
   onCloseClick,
-  pullRequest,
+  deliverable,
   currentBounty
 }: CreateReviewModalModalProps) {
 
@@ -46,7 +46,7 @@ export default function CreateReviewModal({
       show={show} 
       isExecuting={isExecuting} 
       onCloseClick={handleOnCloseClick} 
-      pullRequest={pullRequest} 
+      deliverable={deliverable} 
       currentBounty={currentBounty} 
       body={body} 
       handleChangeBody={handleChangeBody} 
