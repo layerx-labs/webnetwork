@@ -11,11 +11,8 @@ import { addToast } from "contexts/reducers/change-toaster";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
-import { NetworkEvents } from "interfaces/enums/events";
-
 import { useStartWorking } from "x-hooks/api/bounty";
-import useApi from "x-hooks/use-api";
-import useBepro from "x-hooks/use-bepro";
+import { useNetwork } from "x-hooks/use-network";
 
 export default function PageActions({
   handleEditIssue,
@@ -31,19 +28,14 @@ export default function PageActions({
   ]);
 
   const {
-    query: { repoId },
+    query,
+    push
   } = useRouter();
 
   const [isExecuting, setIsExecuting] = useState(false);
-  const [showPRModal, setShowPRModal] = useState(false);
 
   const { state, dispatch } = useAppState();
-  const { handleCreatePullRequest } = useBepro();
-  const {
-    createPrePullRequest,
-    cancelPrePullRequest,
-    processEvent
-  } = useApi();
+  const { getURLWithNetwork } = useNetwork();
 
   const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
   const isBountyReadyToPropose = !!currentBounty?.isReady;
@@ -97,78 +89,8 @@ export default function PageActions({
       hasDeliverables,
   };
 
-  async function handlePullrequest({
-    title: prTitle,
-    description: prDescription,
-  }): Promise<void> {
-    let pullRequestPayload = undefined;
-
-    await createPrePullRequest({
-      repoId: String(repoId),
-      issueGithubID: currentBounty?.id,
-      title: prTitle,
-      description: prDescription,
-      branch: "",
-      wallet: state.currentUser.walletAddress,
-    })
-      .then(({
-          bountyId,
-          originRepo,
-          originBranch,
-          originCID,
-          userRepo,
-          userBranch,
-          cid,
-          pullRequestId,
-        }) => {
-        pullRequestPayload = {
-            bountyId,
-            pullRequestId,
-            customNetworkName: state.Service?.network?.lastVisited,
-            wallet: state.currentUser.walletAddress,
-        };
-
-        return handleCreatePullRequest(bountyId,
-                                       originRepo,
-                                       originBranch,
-                                       originCID,
-                                       userRepo,
-                                       userBranch,
-                                       cid);
-      })
-      .then((txInfo) => {
-        return processEvent(NetworkEvents.PullRequestCreated, undefined, {
-          fromBlock: (txInfo as { blockNumber: number }).blockNumber,
-        });
-      })
-      .then(() => {
-        setShowPRModal(false);
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("pull-request:actions.create.success"),
-        }));
-
-        return updateBountyData(true);
-      })
-      .catch((err) => {
-        if (pullRequestPayload) cancelPrePullRequest(pullRequestPayload);
-
-        if (err.response?.status === 422 && err.response?.data) {
-          err.response?.data?.map((item) =>
-            dispatch(addToast({
-                type: "danger",
-                title: t("actions.failed"),
-                content: item.message,
-            })));
-        } else {
-          dispatch(addToast({
-              type: "danger",
-              title: t("actions.failed"),
-              content: t("pull-request:actions.create.error"),
-          }));
-        }
-      });
+  function handlePullrequest() {
+    push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
   }
 
   async function handleStartWorking() {
@@ -202,8 +124,6 @@ export default function PageActions({
   
   return (
     <PageActionsView
-      showPRModal={showPRModal}
-      handleShowPRModal={setShowPRModal}
       isExecuting={isExecuting}
       handlePullrequest={handlePullrequest}
       handleStartWorking={handleStartWorking}

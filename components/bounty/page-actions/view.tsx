@@ -9,7 +9,6 @@ import StartWorkingButton from "components/bounty/page-actions/actions/start-wor
 import TabletAndMobileButton from "components/bounty/page-actions/actions/tablet-and-mobile.view";
 import UpdateAmountButton from "components/bounty/page-actions/actions/update-amount.view";
 import { PageActionsViewProps } from "components/bounty/page-actions/page-actions";
-import CreatePullRequestModal from "components/create-pull-request-modal";
 import If from "components/If";
 import ProposalModal from "components/proposal/create-proposal-modal";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
@@ -25,8 +24,6 @@ export default function PageActionsView({
   isCreatePr,
   isCreateProposal,
   isExecuting,
-  showPRModal,
-  handleShowPRModal,
   isUpdateAmountButton,
   isStartWorkingButton,
   isEditButton,
@@ -68,7 +65,7 @@ export default function PageActionsView({
 
                 <If condition={isCreatePr}>
                   <CreatePullRequestButton 
-                    onClick={() => handleShowPRModal(true)}
+                    onClick={handlePullrequest}
                     disabled={!isWalletConnected}
                   />
                 </If>
@@ -97,7 +94,7 @@ export default function PageActionsView({
                   isCreatePr={isCreatePr}
                   isCreateProposal={isCreateProposal}
                   isExecuting={isExecuting}
-                  handleShowPRModal={handleShowPRModal}
+                  handleShowPRModal={handlePullrequest}
                   handleShowPRProposal={setShowPRProposal}
                   handleActionWorking={handleActionWorking}
                 />
@@ -108,14 +105,6 @@ export default function PageActionsView({
       </div>
    
         <>
-          <CreatePullRequestModal
-            show={showPRModal}
-            title={bounty?.title}
-            description={bounty?.body}
-            onConfirm={handlePullrequest}
-            onCloseClick={() => handleShowPRModal(false)}
-          />
-
           <UpdateBountyAmountModal
             show={showUpdateAmount}
             transactionalAddress={bounty?.transactionalToken?.address}
