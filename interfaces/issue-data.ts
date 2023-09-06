@@ -100,7 +100,10 @@ export interface Deliverable {
   issueId: number;
   bountyId?: number;
   prContractId?: number;
+  user?: User;
+  comments?: IssueDataComment[];
   userId: number;
+  isCancelable: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
