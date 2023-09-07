@@ -122,16 +122,18 @@ export default function DeliverableBodyView({
         </div>
         <DeliverableOriginLink url={currentDeliverable.deliverableUrl} />
         <DeliverableDescription description={currentDeliverable.description}/>
-        <Comments
-          type="deliverable"
-          updateData={updateComments}
-          ids={{
-            issueId: +bountyId,
-            deliverableId: currentDeliverable?.id,
-          }}
-          comments={currentDeliverable?.comments}
-          currentUser={currentUser}
-        />
+        {currentDeliverable?.markedReadyForReview && (
+          <Comments
+            type="deliverable"
+            updateData={updateComments}
+            ids={{
+              issueId: +bountyId,
+              deliverableId: currentDeliverable?.id,
+            }}
+            comments={currentDeliverable?.comments}
+            currentUser={currentUser}
+          />
+        )}
       </CustomContainer>
     </div>
   );
