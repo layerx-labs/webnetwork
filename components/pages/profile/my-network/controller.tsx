@@ -6,6 +6,8 @@ import { useAppState} from "contexts/app-state";
 import { NetworkSettingsProvider, useNetworkSettings } from "contexts/network-settings";
 import { changeLoadState } from "contexts/reducers/change-load";
 
+import { MINUTE_IN_MS } from "helpers/constants";
+
 import {Network} from "interfaces/network";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -54,7 +56,8 @@ export function MyNetwork({
   const { invalidate } = useReactQuery( ["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
                                         getNetwork,
                                         {
-                                          enabled: !!state.currentUser?.walletAddress && !!chain
+                                          enabled: !!state.currentUser?.walletAddress && !!chain,
+                                          staleTime: MINUTE_IN_MS
                                         });
 
   return(
