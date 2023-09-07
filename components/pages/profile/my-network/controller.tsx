@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useEffect } from "react";
 
 import MyNetworkPageView from "components/pages/profile/my-network/view";
 
 import { useAppState} from "contexts/app-state";
 import { NetworkSettingsProvider, useNetworkSettings } from "contexts/network-settings";
-import { changeLoadState } from "contexts/reducers/change-load";
 
 import { MINUTE_IN_MS } from "helpers/constants";
-
-import {Network} from "interfaces/network";
 
 import { SearchBountiesPaginated } from "types/api";
 import { MyNetworkPageProps } from "types/pages";
@@ -24,10 +21,8 @@ interface MyNetworkProps {
 export function MyNetwork({
   bounties
 }: MyNetworkProps) {
-  const [myNetwork, setMyNetwork] = useState<Network>();
-
   const { chain } = useChain();
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { setForcedNetwork } = useNetworkSettings();
 
   async function getNetwork() {
@@ -42,23 +37,28 @@ export function MyNetwork({
         const savedNetwork = count > 0 ? rows[0] : undefined;
 
         if (savedNetwork)
-          sessionStorage.setItem(`bepro.network:${savedNetwork.name.toLowerCase()}:${chainId}`,
-                                 JSON.stringify(savedNetwork));
-
-        setMyNetwork(savedNetwork);
-        setForcedNetwork(savedNetwork);
-        return rows;
-      })
-      .catch(error => console.debug("Failed to get network", error))
-      .finally(() => dispatch(changeLoadState(false)));
+          sessionStorage.setItem( `bepro.network:${savedNetwork.name.toLowerCase()}:${chainId}`,
+                                  JSON.stringify(savedNetwork));
+        return savedNetwork;
+      });
   }
   
-  const { invalidate } = useReactQuery( ["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
-                                        getNetwork,
-                                        {
-                                          enabled: !!state.currentUser?.walletAddress && !!chain,
-                                          staleTime: MINUTE_IN_MS
-                                        });
+  const {
+    data: myNetwork,
+    isFetching,
+    isSuccess,
+    invalidate
+  } = useReactQuery(["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
+                    getNetwork,
+                    {
+                      enabled: !!state.currentUser?.walletAddress && !!chain,
+                      staleTime: MINUTE_IN_MS
+                    });
+
+  useEffect(() => {
+    if (myNetwork && !isFetching && isSuccess)
+      setForcedNetwork(myNetwork);
+  }, [myNetwork]);
 
   return(
     <MyNetworkPageView
