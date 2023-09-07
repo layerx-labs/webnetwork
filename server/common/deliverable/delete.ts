@@ -5,11 +5,18 @@ import models from "db/models";
 import { resJsonMessage } from "helpers/res-json-message";
 
 export default async function del(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.body;
+  const { id } = req.query;
+
+  const { context } = req.body;
+
+  const user = await models.user.findByAddress(context.token.address)
+
+  if (!user) return res.status(404).json({ message: "user not found" });
 
   const deliverable = await models.deliverable.findOne({
     where: {
       id: id,
+      userId: user.id
     },
   });
 
