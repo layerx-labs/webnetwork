@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface useReactQueryOptions<T> {
   enabled?: boolean;
+  staleTime?: number;
   onSuccess?: (data: T) => void;
   onSettled?: (...params) => void;
 }
