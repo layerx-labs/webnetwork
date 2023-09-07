@@ -8,6 +8,8 @@ import { Deliverable } from "interfaces/issue-data";
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 import DeliverableButton from "./actions/deliverable-button";
+import DeliverableDescription from "./description/view";
+import DeliverableOriginLink from "./origin-link/view";
 
 interface DeliverableBodyViewProps {
   currentDeliverable: Deliverable;
@@ -118,7 +120,8 @@ export default function DeliverableBodyView({
               </div>
           </div>
         </div>
-
+        <DeliverableOriginLink url={currentDeliverable.deliverableUrl} />
+        <DeliverableDescription description={currentDeliverable.description}/>
         <Comments
           type="deliverable"
           updateData={updateComments}
