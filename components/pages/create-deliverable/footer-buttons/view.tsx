@@ -17,7 +17,7 @@ export default function FooterButtons({
     <>
       <div className="col-6 ps-2">
         <Button className="col-12 bounty-outline-button" onClick={handleBack}>
-          {t("actions.back")}
+          {t("actions.cancel")}
         </Button>
       </div>
 
