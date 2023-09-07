@@ -14,7 +14,7 @@ import {useAppState} from "contexts/app-state";
 import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
 import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import { MINUTE_IN_MS, UNSUPPORTED_CHAIN } from "helpers/constants";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
@@ -45,7 +45,9 @@ export default function WrongNetworkModal() {
   useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
     dispatch(updateSupportedChains(chains));
     return chains; 
-  }));
+  }), {
+    staleTime: MINUTE_IN_MS
+  });
 
   const isRequired = [
     pathname?.includes("new-network"),
