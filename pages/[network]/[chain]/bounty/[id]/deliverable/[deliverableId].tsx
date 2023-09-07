@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
 import ConnectWalletButton from "components/connect-wallet-button";
-import PullRequestBody from "components/pull-request/body/controller";
-import CreateReviewModal from "components/pull-request/create-review-modal/controller";
-import DeliverableHero from "components/pull-request/hero/controller";
+import DeliverableBody from "components/deliverable/body/controller";
+import CreateReviewModal from "components/deliverable/create-review-modal/controller";
+import DeliverableHero from "components/deliverable/hero/controller";
 
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
@@ -33,8 +33,8 @@ interface PageDeliverableProps {
 
 export default function DeliverablePage({ deliverable, bounty }: PageDeliverableProps) {
   const router = useRouter();
-  {console.log('router.query', router.query)}
-  const { t } = useTranslation(["common", "pull-request"]);
+
+  const { t } = useTranslation(["common", "deliverable"]);
 
   const { id, review } = router.query;
 
@@ -44,7 +44,9 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
     ...deliverable,
     comments: commentsParser(deliverable.comments),
     createdAt: new Date(deliverable.createdAt),
+    updatedAt: new Date(deliverable.updatedAt)
   });
+  {console.log('router.query', currentDeliverable)}
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   const { state, dispatch } = useAppState();
@@ -87,7 +89,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
       dispatch(addToast({
         type: "success",
         title: t("actions.success"),
-        content: t("pull-request:actions.review.success"),
+        content: t("deliverable:actions.review.success"),
       }));
       updateCommentData()
       setShowModal(false)
@@ -95,7 +97,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
       dispatch(addToast({
         type: "danger",
         title: t("actions.failed"),
-        content: t("pull-request:actions.review.error"),
+        content: t("deliverable:actions.review.error"),
       }));
     })
     .finally(() => {
@@ -115,7 +117,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
     <>
       <DeliverableHero currentDeliverable={currentDeliverable} currentBounty={currentBounty} />
 
-      <PullRequestBody 
+      <DeliverableBody 
         currentDeliverable={currentDeliverable} 
         currentBounty={currentBounty} 
         isCreatingReview={isCreatingReview} 
@@ -139,19 +141,12 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
 }
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
-  const { id } = query;
+  const { deliverableId } = query;
 
   const bountyDatabase = await getBountyData(query);
 
-  const deliverableDatabase = bountyDatabase?.deliverables?.find((d) => +d.id === +id);
-
-  const deliverableComments = await getCommentsData({ deliverableId: deliverableDatabase?.id.toString() });
-
-  const deliverable: Deliverable = {
-    ...deliverableDatabase,
-    comments: deliverableComments
-  }
-                                                           
+  const deliverable = bountyDatabase?.deliverables?.find((d) => +d.id === +deliverableId);
+                    
   return {
     props: {
       bounty: bountyDatabase,
@@ -160,7 +155,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
         "common",
         "bounty",
         "proposal",
-        "pull-request",
+        "deliverable",
         "connect-wallet-button",
         "funding"
       ]))
