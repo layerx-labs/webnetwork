@@ -2,7 +2,7 @@ import Translation from "components/translation";
 
 import PageActionsButton from "../action-button/view";
 
-export default function CreatePullRequestButton({
+export default function CreateDeliverableButton({
     onClick,
     disabled
 }: {
@@ -16,7 +16,7 @@ export default function CreatePullRequestButton({
       disabled={disabled}
     >
       <span>
-        <Translation ns="pull-request" label="actions.create.title" />
+        <Translation ns="deliverable" label="actions.create.title" />
       </span>
     </PageActionsButton>
   );

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
+import CreateDeliverableButton from "components/bounty/page-actions/actions/create-deliverable.view";
 import CreateProposalButton from "components/bounty/page-actions/actions/create-proposal.view";
-import CreatePullRequestButton from "components/bounty/page-actions/actions/create-pull-request.view";
 import EditBountyButton from "components/bounty/page-actions/actions/edit-bounty.view";
 import StartWorkingButton from "components/bounty/page-actions/actions/start-working.view";
 import TabletAndMobileButton from "components/bounty/page-actions/actions/tablet-and-mobile.view";
@@ -14,6 +14,7 @@ import ProposalModal from "components/proposal/create-proposal-modal";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+
 
 export default function PageActionsView({
   bounty,
@@ -64,7 +65,7 @@ export default function PageActionsView({
                 </If>
 
                 <If condition={isCreatePr}>
-                  <CreatePullRequestButton 
+                  <CreateDeliverableButton 
                     onClick={handlePullrequest}
                     disabled={!isWalletConnected}
                   />
