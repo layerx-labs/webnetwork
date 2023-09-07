@@ -9,9 +9,9 @@ import NetworkListItem from "components/networks-list/network-list-item";
 import NothingFound from "components/nothing-found";
 
 import {useAppState} from "contexts/app-state";
-import {changeLoadState} from "contexts/reducers/change-load";
+import { changeLoadState } from "contexts/reducers/change-load";
 
-import {orderByProperty} from "helpers/array";
+import { orderByProperty } from "helpers/array";
 
 import {Network} from "interfaces/network";
 
@@ -50,7 +50,6 @@ export default function NetworksList() {
 
   useEffect(() => {    
     dispatch(changeLoadState(true));
-
     getHeaderNetworks()
       .then(({ TVL, bounties, number_of_network }) => {
         setTotalConverted(TVL.toFixed() || "0");
@@ -58,7 +57,6 @@ export default function NetworksList() {
         setNumberOfBounties(bounties || 0);
       })
       .catch(error => console.log("Failed to retrieve header data", error));
-
     searchNetworks({
       isRegistered: true,
       sortBy: "name",
