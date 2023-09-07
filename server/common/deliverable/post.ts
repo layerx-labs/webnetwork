@@ -1,8 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { User } from "next-auth";
-import { getSession } from "next-auth/react";
 import getConfig from "next/config";
-import { Sequelize } from "sequelize";
 
 import models from "db/models";
 
@@ -13,17 +10,10 @@ import ipfsService from "services/ipfs-service";
 
 const {publicRuntimeConfig} = getConfig();
 
-interface UserSession extends User {
-  address: string;
-}
-
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const session = await getSession({ req });
 
-    const { address } = session as unknown as UserSession;
-
-    const { deliverableUrl, title, description, issueId } = req.body;
+    const { deliverableUrl, title, description, issueId, context } = req.body;
 
     const settings = await models.settings.findAll({where: {visibility: "public", group: "urls"}, raw: true,});
     const defaultConfig = (new Settings(settings)).raw();
@@ -41,7 +31,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
 
-    const user = await models.user.findByAddress(address)
+    const user = await models.user.findByAddress(context.token.address)
 
     if (!user) return res.status(404).json({ message: "user not found" });
 
@@ -67,6 +57,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const deliverable = await models.deliverable.create({
       issueId: issue.id,
+      userId: user.id,
       network_id: issue?.network_id,
       ipfsLink,
       title,
