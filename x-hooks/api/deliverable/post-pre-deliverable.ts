@@ -5,7 +5,7 @@ import { api } from "services/api";
  * @param query current url query
  * @returns created deliverable
  */
-export default async function CreateDeliverable(payload: {
+export default async function CreatePreDeliverable(payload: {
   deliverableUrl: string;
   title: string;
   description: string;
@@ -15,5 +15,5 @@ export default async function CreateDeliverable(payload: {
     bountyId: number;
     originCID: string;
     cid: number;
-  }>(`/deliverable`, payload);
+  }>(`/deliverable`, payload).then(({data}) => data)
 }
