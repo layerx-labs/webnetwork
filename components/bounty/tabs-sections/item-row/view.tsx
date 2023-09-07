@@ -5,8 +5,8 @@ import Link from "next/link";
 import { UrlObject } from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
+import { IPRLabel } from "components/deliverable/labels/controller";
 import Identicon from "components/identicon";
-import { IPRLabel } from "components/pull-request/labels/controller";
 
 import { truncateAddress } from "helpers/truncate-address";
 

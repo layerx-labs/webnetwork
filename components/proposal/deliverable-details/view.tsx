@@ -3,8 +3,8 @@ import { UrlObject } from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import DateLabel from "components/date-label";
+import PullRequestLabels from "components/deliverable/labels/controller";
 import InternalLink from "components/internal-link";
-import PullRequestLabels from "components/pull-request/labels/controller";
 import Translation from "components/translation";
 
 import { User } from "interfaces/api";
