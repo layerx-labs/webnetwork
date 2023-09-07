@@ -29,11 +29,13 @@ export default function ItemRow({
   const router = useRouter();
   const { getURLWithNetwork } = useNetwork();
 
-  const pathRedirect = isProposal ? "/proposal/[id]" : "/pull-request";
-  const valueRedirect = {
+  const pathRedirect = isProposal ? "/proposal/[id]" : "bounty/[id]/deliverable/[deliverableId]";
+  const valueRedirect: {
+    id: number | string;
+    deliverableId?: number;
+    proposalId?: number;
+  } = {
     id: isProposal ? item?.id : currentBounty?.id,
-    deliverableId: undefined,
-    proposalId: undefined,
   };
   const status = [];
 
@@ -71,7 +73,7 @@ export default function ItemRow({
   const btnLabel = isProposal
     ? "actions.view-proposal"
     : isDraftDeliverable
-    ? "actions.view-pull-request"
+    ? "actions.view-deliverable"
     : "actions.review";
 
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

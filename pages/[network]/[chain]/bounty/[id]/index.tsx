@@ -131,7 +131,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
         "common",
         "bounty",
         "proposal",
-        "pull-request",
+        "deliverable",
         "connect-wallet-button",
         "funding"
       ]))

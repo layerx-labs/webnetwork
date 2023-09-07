@@ -24,9 +24,9 @@ function TabSections({
     },
     {
       isEmpty: !deliverables?.length,
-      eventKey: "pull-requests",
-      title: t("pull-request:labelWithCount", { count: deliverables?.length || 0 }),
-      description: t("description_pull-request"),
+      eventKey: "deliverables",
+      title: t("deliverable:labelWithCount", { count: deliverables?.length || 0 }),
+      description: t("description_deliverable"),
       component: <ItemSections isProposal={false} data={deliverables} currentBounty={currentBounty}/>
 
     }

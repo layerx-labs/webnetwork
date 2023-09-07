@@ -34,7 +34,7 @@ export default function PullRequestLabels({
   isDraft = false,
   hero = false
 }: IPRLabel) {
-  const { t } = useTranslation("pull-request");
+  const { t } = useTranslation("deliverable");
 
   const [state, setState] = useState<PRLabel>(label || null);
 

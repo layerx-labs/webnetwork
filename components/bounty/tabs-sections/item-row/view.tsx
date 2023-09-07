@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { UrlObject } from "url";
 
-import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Identicon from "components/identicon";
 import { IPRLabel } from "components/pull-request/labels/controller";
 
@@ -69,13 +69,19 @@ export default function ItemRowView({
         <div className="col-10 col-md-8 d-flex flex-row align-items-center gap-3">
           <ItemRowIdView id={id} className="col-1 d-none d-xl-block" />
           <div className="text-truncate col-md-5 col-xl-4 d-flex align-items-center gap-2">
-            {(item as Deliverable)?.user?.githubLogin ? (
+            {(item as Deliverable)?.user ? (
               <>
-                <Avatar userLogin={(item as Deliverable)?.user?.githubLogin} size="sm" />
+                <AvatarOrIdenticon
+                  user={(item as Deliverable)?.user?.githubLogin}
+                  address={(item as Deliverable)?.user?.address}
+                  size="sm"
+                />
                 <span
-                  className={`text-uppercase text-white caption text-truncate`}
+                  className={`text-uppercase text-white caption text-truncate mt-1`}
                 >
-                  {(item as Deliverable)?.user?.githubLogin}
+                  {(item as Deliverable)?.user?.githubLogin
+                    ? (item as Deliverable)?.user?.githubLogin
+                    : truncateAddress((item as Deliverable)?.user?.address)}
                 </span>
               </>
             ) : (
@@ -92,7 +98,6 @@ export default function ItemRowView({
             )}
           </div>
           {!isProposal && (
-            //todo: change translations reviews to comments
             <ReviewsNumberView
               reviewers={(item as Deliverable)?.comments?.length || 0}
               className="col-xs-12 d-xl-none d-none d-sm-block"

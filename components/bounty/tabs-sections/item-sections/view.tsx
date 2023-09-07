@@ -17,7 +17,7 @@ interface ItemViewProps {
 }
 
 function ItemSectionsView({ data, isProposal, currentBounty }: ItemViewProps) {
-  const { t } = useTranslation(["proposal", "pullrequest", "common"]);
+  const { t } = useTranslation(["proposal", "deliverable", "common"]);
 
   return (
     <section className="content-wrapper border-top-0 p-20 d-flex flex-column gap-2 bg-gray-850">
