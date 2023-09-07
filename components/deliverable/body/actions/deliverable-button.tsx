@@ -18,12 +18,12 @@ export default function DeliverableButton({
   className?: string;
   type: "cancel" | "review" | "ready-review"
 }) {
-  const { t } = useTranslation([ "common" ,"pull-request"]);
+  const { t } = useTranslation([ "common" ,"deliverable"]);
 
   const Labels = {
     'cancel': t("common:actions.cancel"),
     'review': t("common:actions.make-a-review"),
-    'ready-review': t("pull-request:actions.make-ready.title")
+    'ready-review': t("deliverable:actions.make-ready.title")
   }
 
   return (

@@ -6,7 +6,8 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
 import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
-import GithubInfo from "components/github-info";
+
+import { truncateAddress } from "helpers/truncate-address";
 
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
@@ -23,7 +24,7 @@ export default function DeliverableHeroView({
   currentBounty,
   handleBack,
 }: DeliverableHeroViewProps) {
-  const { t } = useTranslation(["common", "pull-request"]);
+  const { t } = useTranslation(["common", "deliverable"]);
 
   return (
     <div className="mt-3 pb-2 border-bottom border-gray-850">
@@ -55,7 +56,7 @@ export default function DeliverableHeroView({
             <div className="row d-flex flex-wrap justify-content-between">
               <div className="col d-flex flex-wrap align-items-center mt-3">
                 <div className="d-inline-flex align-items-center justify-content-md-start gap-2 me-2">
-                  <h4>{t("pull-request:title")}</h4>
+                  <h4>{t("deliverable:title")}</h4>
 
                   <h4 className="text-white-40">
                     #{currentDeliverable?.id}
@@ -87,21 +88,21 @@ export default function DeliverableHeroView({
 
           <div className="col row">
             <div className="d-flex flex-wrap-reverse justify-content-start align-items-center mt-2">
-              <div className="d-flex align-items-center my-2 me-2">
+            <div className="d-flex align-items-center my-2 me-2">
                 <div className="me-2">
                   <AvatarOrIdenticon
                     address={currentDeliverable?.user?.address}
                     user={currentDeliverable?.user?.githubLogin}
                   />
                 </div>{" "}
-
-                {currentDeliverable?.user?.githubLogin && (
-                  <GithubInfo
-                    parent="hero"
-                    variant="user"
-                    label={["@", currentDeliverable?.user?.githubLogin].join("")}
-                  />
-                )}
+                <div
+                  className={`text-uppercase text-white border border-gray-700 p-1 
+                              border-radius-4 caption text-truncate`}
+                >
+                  {currentDeliverable.user?.githubLogin
+                    ? currentDeliverable.user?.githubLogin
+                    : truncateAddress(currentDeliverable.user?.address)}
+                </div>
               </div>
 
               {currentDeliverable?.createdAt && (
