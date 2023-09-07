@@ -3,9 +3,9 @@ import { ChangeEvent } from "react";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import CreateBountyDescription from "components/bounty/create-bounty/create-bounty-description";
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
+import DescriptionAndPreview from "components/common/description-and-preview/controller";
 import CustomContainer from "components/custom-container";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -120,7 +120,7 @@ export default function CreateDeliverablePageView({
           </div>
 
           <div className="form-group">
-            <CreateBountyDescription
+            <DescriptionAndPreview
               description={description}
               handleChangeDescription={onChangeDescription}
               borderColor="gray-800"

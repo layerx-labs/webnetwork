@@ -601,6 +601,10 @@ label {
   &:focus {
     border-color: #6873E9 !important;
   }
+
+  &.bg-gray-850 {
+    background-color: $gray-850 !important;
+  }
 }
 
 .input-comment {
