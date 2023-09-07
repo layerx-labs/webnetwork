@@ -98,7 +98,6 @@ export default function ItemRowView({
             )}
           </div>
           {!isProposal && (
-            //todo: change translations reviews to comments
             <ReviewsNumberView
               reviewers={(item as Deliverable)?.comments?.length || 0}
               className="col-xs-12 d-xl-none d-none d-sm-block"
