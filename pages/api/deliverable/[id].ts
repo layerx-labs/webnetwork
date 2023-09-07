@@ -2,19 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { UserRoute, withCORS, WithValidChainId } from "middleware";
 
-import get from "server/common/deliverable/get";
-import post from "server/common/deliverable/post";
+import del from "server/common/deliverable/delete";
+
 
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
-  case "GET":
-    await get(req, res);
+  case "DELETE":
+    await del(req, res);
     break;
-  case "POST":
-    await post(req, res);
-    break;
-
   default:
     res.status(405);
   }
