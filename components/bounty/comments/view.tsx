@@ -37,7 +37,7 @@ export default function BountyCommentsView({
             {!!comments.length &&
               comments?.map((data) => <Comment {...data} key={data?.id} />)}
             {currentUser?.walletAddress ? (
-              disableCreateComment ? (
+              !disableCreateComment ? (
                 <InputComment
                   userAddress={currentUser?.walletAddress}
                   githubLogin={currentUser?.login}
