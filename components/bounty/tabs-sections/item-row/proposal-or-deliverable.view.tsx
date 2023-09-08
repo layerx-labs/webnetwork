@@ -48,7 +48,7 @@ export default function ProposalOrDeliverableView({
       ) : (
         <ReviewsNumberView
           className="d-none d-xl-block"
-          reviewers={(item as Deliverable)?.comments?.length || 0}
+          reviewers={(item as Deliverable)?.comments?.filter(e => e.type === 'review')?.length || 0}
         />
       )}
 

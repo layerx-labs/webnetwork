@@ -113,7 +113,7 @@ export default function ItemRowView({
 
         {!isProposal && (
           <ReviewsNumberView
-            reviewers={(item as Deliverable)?.comments?.length || 0}
+            reviewers={(item as Deliverable)?.comments?.filter(e => e.type === 'review')?.length || 0}
             className="d-block d-sm-none mb-2 mt-4"
           />
         )}

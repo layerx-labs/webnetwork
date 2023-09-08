@@ -77,7 +77,7 @@ export default function PullRequestLabels({
     if (isMergeable) return t("status.ready-to-merge");
     if (needsApproval) return t("status.needs-approval");
     
-    return t("status.conflicts");
+    return t("status.closed");
   }
 
   function getPullRequestLabelClass(): string {

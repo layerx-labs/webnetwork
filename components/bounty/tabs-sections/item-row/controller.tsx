@@ -47,7 +47,10 @@ export default function ItemRow({
   if (!isProposal) {
     status.push({
       merged: (item as Deliverable)?.accepted,
-      isMergeable: (item as Deliverable)?.markedReadyForReview && !currentBounty?.deliverables?.find(d => d.accepted),
+      isMergeable:
+        (item as Deliverable)?.markedReadyForReview &&
+        !currentBounty?.deliverables?.find((d) => d.accepted) &&
+        !(item as Deliverable)?.canceled,
       isDraft: isDraftDeliverable,
     });
     valueRedirect.deliverableId = (item as Deliverable)?.id;
