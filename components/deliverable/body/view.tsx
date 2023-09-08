@@ -132,6 +132,7 @@ export default function DeliverableBodyView({
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
+            disableCreateComment={currentDeliverable?.canceled}
           />
         )}
       </CustomContainer>
