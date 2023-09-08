@@ -9,6 +9,7 @@ export const OPEN_STATES = ["draft", "open", "ready", "proposal"];
 
 export const deliverableParser = (d: Deliverable, proposals?: Proposal[]) => ({
   ...d,
+  comments: commentsParser(d?.comments),
   createdAt: new Date(d.createdAt),
   updatedAt: new Date(d.updatedAt),
   isCancelable: !proposals?.some(proposal => proposal.deliverableId === d.id)

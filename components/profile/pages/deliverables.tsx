@@ -7,14 +7,14 @@ import { SearchBountiesPaginated } from "types/api";
 
 import {useNetwork} from "x-hooks/use-network";
 
-interface PullRequestsPageProps {
+interface DeliverablesPageProps {
   bounties: SearchBountiesPaginated;
 }
 
-export default function PullRequestsPage({
+export default function DeliverablesPage({
   bounties
-}: PullRequestsPageProps) {
-  const {t} = useTranslation(["pull-request", "bounty"]);
+}: DeliverablesPageProps) {
+  const {t} = useTranslation(["deliverable", "bounty"]);
 
   const { getURLWithNetwork } = useNetwork();
 
@@ -24,9 +24,9 @@ export default function PullRequestsPage({
         bounties={bounties}
         redirect={getURLWithNetwork("/bounties")}
         buttonMessage={t('bounty:label_other')}
-        emptyMessage={String(t('errors.you-dont-have-pull-requests'))}
+        emptyMessage={String(t('errors.you-dont-have-deliverables'))}
         variant="profile"
-        type="pull-requests"
+        type="deliverables"
       />
     </ProfileLayout>
   );
