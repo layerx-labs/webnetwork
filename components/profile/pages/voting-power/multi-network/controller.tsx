@@ -20,7 +20,7 @@ export default function VotingPowerMultiNetwork() {
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
 
-  function getNetworsVotingPower() {
+  function getNetworksVotingPower() {
     return useSearchCurators({
       address: state.currentUser?.walletAddress,
     })
@@ -28,7 +28,7 @@ export default function VotingPowerMultiNetwork() {
   }
 
   const { data: networks } = useReactQuery( ["voting-power-multi", state.currentUser?.walletAddress],
-                                            getNetworsVotingPower,
+                                            getNetworksVotingPower,
                                             { enabled: !!state.currentUser?.walletAddress });
 
   function goToNetwork(network) {
