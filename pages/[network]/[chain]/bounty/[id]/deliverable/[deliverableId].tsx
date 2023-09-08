@@ -13,7 +13,7 @@ import DeliverableHero from "components/deliverable/hero/controller";
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
-import { commentsParser, issueParser } from "helpers/issue";
+import { commentsParser, deliverableParser, issueParser } from "helpers/issue";
 
 import {
   Deliverable,
@@ -40,13 +40,9 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
 
   const [showModal, setShowModal] = useState(!!review);
   const [currentBounty, setCurrentBounty] = useState<IssueBigNumberData>(issueParser(bounty));
-  const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>({
-    ...deliverable,
-    comments: commentsParser(deliverable.comments),
-    createdAt: new Date(deliverable.createdAt),
-    updatedAt: new Date(deliverable.updatedAt)
-  });
-  {console.log('router.query', currentDeliverable)}
+  const [currentDeliverable, setCurrentDeliverable] = 
+    useState<Deliverable>(deliverableParser(deliverable, bounty?.mergeProposals));
+
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   const { state, dispatch } = useAppState();
@@ -60,10 +56,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
         const deliverableDatabase = bounty?.deliverables?.find((d) => +d.id === +id);
 
         setCurrentBounty(bounty);
-        setCurrentDeliverable({
-          ...deliverableDatabase,
-          comments: currentDeliverable.comments,
-        });
+        setCurrentDeliverable(deliverableParser(deliverableDatabase, bounty?.mergeProposals));
       });
   }
 
