@@ -254,8 +254,8 @@
       "title": "Merging bounty",
       "closed-bounty": "This bounty was closed and distributed but the code was unable to be merged.",
       "open-bounty": "This proposal has github conflicts and cannot be merged. Please, fix it before doing so.",
-      "go-to-pr": "Go to Pull Request",
-      "success-message": "Pull Request merged",
+      "go-to-pr": "Go to Deliverable",
+      "success-message": "Deliverable accepted",
       "merge-failed": "Merge Failed",
       "retry-merge": "Retry Merge"
     },
