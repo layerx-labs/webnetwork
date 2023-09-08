@@ -130,13 +130,11 @@ export default async function get(query: ParsedUrlQuery) {
   const deliverableAssociation = 
     getAssociation( "deliverables", 
                     undefined, 
-                    !!deliverabler, 
-                    {
-                      canceled: false
-                    },
-                    deliverabler ? [{association: "user", required: true, where: {
-                      address: { [Op.iLike]: deliverabler.toString() }
-                    }}] : []);
+                    false, 
+                    {},
+                    [getAssociation("user", undefined, !!deliverabler, deliverabler ? {
+                      address: { [Op.iLike]: deliverabler?.toString() }
+                    }: {})]);
 
   const networkAssociation = 
     getAssociation( "network", 
