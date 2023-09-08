@@ -4,6 +4,8 @@ import ChainSelectorView from "components/navigation/chain-selector/view";
 
 import { useAppState } from "contexts/app-state";
 
+import { isOnNetworkPath } from "helpers/network";
+
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { useDao } from "x-hooks/use-dao";
@@ -22,7 +24,13 @@ export default function ChainSelector({
   const { getURLWithNetwork } = useNetwork();
   const { handleAddNetwork } = useNetworkChange();
   
-  const isOnNetwork = pathname?.includes("[network]");
+  const isOnNetwork = isOnNetworkPath(pathname);
+  const isWalletPage = asPath?.includes("wallet");
+  const isCreateBountyPage = pathname?.includes("create-bounty");
+  const isCreateNetworkPage = pathname?.includes("new-network");
+  const isCreateDeliverablePage = pathname?.includes("create-deliverable");
+  const shouldMatchChain = 
+    isFilter || isWalletPage || isOnNetwork || isCreateBountyPage || isCreateNetworkPage || isCreateDeliverablePage;
 
   async function handleNetworkSelected(chain: SupportedChainData) {
     if (!isOnNetwork) {
@@ -52,6 +60,7 @@ export default function ChainSelector({
     <ChainSelectorView
       isFilter={isFilter}
       onSelect={handleNetworkSelected}
+      shouldMatchChain={shouldMatchChain}
       isOnNetwork={isOnNetwork}
     />
   );
