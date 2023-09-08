@@ -24,6 +24,7 @@ interface SelectChainDropdownProps {
   isDisabled?: boolean;
   placeHolder?: string;
   shouldMatchChain?: boolean;
+  readonly?: boolean;
 }
 
 interface ChainOption {
@@ -42,6 +43,7 @@ export default function SelectChainDropdown({
   isDisabled,
   placeHolder,
   shouldMatchChain = true,
+  readonly,
 }: SelectChainDropdownProps) {
   const { t } = useTranslation("common");
 
@@ -73,6 +75,8 @@ export default function SelectChainDropdown({
   }
 
   async function selectSupportedChain({value}) {
+    if (readonly) return;
+
     const chain = supportedChains?.find(({ chainId }) => +chainId === +value.chainId);
 
     if (!chain || chain?.chainId === selected?.value?.chainId)

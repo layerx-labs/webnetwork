@@ -22,6 +22,7 @@ export default function ChainSelectorView({
       isOnNetwork={isOnNetwork}
       className={isFilter ? null : 'select-network-dropdown'}
       shouldMatchChain={shouldMatchChain}
+      readonly={!shouldMatchChain}
     />
   );
 }

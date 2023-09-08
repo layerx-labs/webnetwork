@@ -33,6 +33,8 @@ export default function ChainSelector({
     isFilter || isWalletPage || isOnNetwork || isCreateBountyPage || isCreateNetworkPage || isCreateDeliverablePage;
 
   async function handleNetworkSelected(chain: SupportedChainData) {
+    if (!shouldMatchChain) return;
+
     if (!isOnNetwork) {
       handleAddNetwork(chain)
         .then(() => {
