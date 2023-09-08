@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export default function PullRequestIcon(props: SVGProps<SVGSVGElement>) {
+export default function DeliverableIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       aria-hidden="true"
