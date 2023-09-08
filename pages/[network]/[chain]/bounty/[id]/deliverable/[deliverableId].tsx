@@ -24,6 +24,7 @@ import {
 import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
 import getCommentsData from "x-hooks/api/comments/get-comments-data";
 import CreateComment from "x-hooks/api/comments/post-comments";
+import getDeliverable from "x-hooks/api/deliverable/get-deliverable";
 
 interface PageDeliverableProps {
   bounty: IssueData;
@@ -50,14 +51,13 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
   const isDeliverableReady = !!currentDeliverable?.markedReadyForReview;
 
   function updateBountyData() {
-    getBountyData(router.query)
-      .then(issueParser)
-      .then((bounty) => {
-        const deliverableDatabase = bounty?.deliverables?.find((d) => +d.id === +id);
+    const { deliverableId } = router.query;
 
-        setCurrentBounty(bounty);
-        setCurrentDeliverable(deliverableParser(deliverableDatabase, bounty?.mergeProposals));
-      });
+    getDeliverable(+deliverableId)
+      .then(deliverable => {
+        setCurrentBounty(issueParser(deliverable?.issue));
+        setCurrentDeliverable(deliverableParser(deliverable, deliverable?.issue?.mergeProposals));
+      })
   }
 
   function updateCommentData() {
@@ -136,14 +136,12 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const { deliverableId } = query;
 
-  const bountyDatabase = await getBountyData(query);
-
-  const deliverable = bountyDatabase?.deliverables?.find((d) => +d.id === +deliverableId);
+  const Dbdeliverable = await getDeliverable(+deliverableId);
                     
   return {
     props: {
-      bounty: bountyDatabase,
-      deliverable,
+      bounty: Dbdeliverable.issue,
+      deliverable: Dbdeliverable,
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",
