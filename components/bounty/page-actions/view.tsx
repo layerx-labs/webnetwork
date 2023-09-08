@@ -32,7 +32,7 @@ export default function PageActionsView({
 }: PageActionsViewProps) {
   const { t } = useTranslation([
     "common",
-    "pull-request",
+    "deliverable",
     "bounty",
     "proposal",
   ]);

@@ -37,7 +37,7 @@ export default function ProposalActionsView({
   isDisputable,
   isMergeable,
 }: ProposalActionsViewProps) {
-  const { t } = useTranslation(["common", "pull-request", "proposal"]);
+  const { t } = useTranslation(["common", "deliverable", "proposal"]);
 
   const hasWarnings = !!warnings?.length;
 

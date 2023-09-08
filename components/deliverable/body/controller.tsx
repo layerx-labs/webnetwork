@@ -36,7 +36,7 @@ export default function DeliverableBody({
   updateComments
 }: DeliverableBodyControllerProps) {
   const router = useRouter();
-  const { t } = useTranslation(["common", "pull-request"]);
+  const { t } = useTranslation(["common", "deliverable"]);
 
   const [isCancelling, setIsCancelling] = useState(false);
   const [isMakingReady, setIsMakingReady] = useState(false);
@@ -89,7 +89,7 @@ export default function DeliverableBody({
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
-            content: t("pull-request:actions.make-ready.success"),
+            content: t("deliverable:actions.make-ready.success"),
         }));
       })
       .catch((error) => {
@@ -100,7 +100,7 @@ export default function DeliverableBody({
         dispatch(addToast({
             type: "danger",
             title: t("actions.failed"),
-            content: t("pull-request:actions.make-ready.error"),
+            content: t("deliverable:actions.make-ready.error"),
         }));
       });
   }
@@ -120,7 +120,7 @@ export default function DeliverableBody({
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
-            content: t("pull-request:actions.cancel.success"),
+            content: t("deliverable:actions.cancel.success"),
         }));
 
         router.push(getURLWithNetwork("/bounty/[id]", {
@@ -132,7 +132,7 @@ export default function DeliverableBody({
           dispatch(addToast({
               type: "danger",
               title: t("actions.failed"),
-              content: t("pull-request:actions.cancel.error"),
+              content: t("deliverable:actions.cancel.error"),
           }));
       })
       .finally(() => {

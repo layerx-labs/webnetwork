@@ -33,7 +33,7 @@ export default function ProposalActions({
   isRefusable,
   isMergeable
 }: ProposalActionsProps) {
-  const { t } = useTranslation(["common", "pull-request", "proposal"]);
+  const { t } = useTranslation(["common", "deliverable", "proposal"]);
 
   const { state } = useAppState();
 

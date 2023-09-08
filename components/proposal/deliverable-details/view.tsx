@@ -28,21 +28,21 @@ export default function DeliverableDetailsView({
   isMergeable,
   deliverableHref,
 }: DeliverableDetailsViewProps) {
-  const { t } = useTranslation("pull-request");
+  const { t } = useTranslation("deliverable");
 
   return (
     <>
       <div className="row align-items-center gy-2">
         <div className="col-auto">
           <span className="caption-large text-capitalize text-white">
-            {t("pull-request:label")}
+            {t("deliverable:label")}
           </span>
         </div>
 
         <div className="col col-md-auto px-0">
           <InternalLink
             href={deliverableHref}
-            title={t("actions.go-to-pull-request")}
+            title={t("actions.go-to-deliverable")}
             className="caption-large text-gray-500 p-0 hover-primary text-decoration-underline"
             label={`#${id || ""}`}
             transparent

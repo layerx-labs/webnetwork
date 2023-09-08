@@ -72,7 +72,7 @@ export default function ProposalModal({
     "common",
     "bounty",
     "proposal",
-    "pull-request"
+    "deliverable"
   ]);
 
   const [executing, setExecuting] = useState<boolean>(false);
@@ -147,7 +147,7 @@ export default function ProposalModal({
           </div>
         }>
         <p className="caption-small text-white-50 mb-2 mt-2">
-          {t("pull-request:select")}
+          {t("deliverable:select")}
         </p>
         <ReactSelect
           id="deliverableSelect"

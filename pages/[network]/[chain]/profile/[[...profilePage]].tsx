@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
         "my-oracles",
         "connect-wallet-button",
         "profile",
-        "pull-request",
+        "deliverable",
         "custom-network",
         "setup",
         "change-token-modal",

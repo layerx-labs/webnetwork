@@ -22,7 +22,7 @@ export default function PageActions({
 }: PageActionsControllerProps) {
   const { t } = useTranslation([
     "common",
-    "pull-request",
+    "deliverable",
     "bounty",
     "proposal",
   ]);

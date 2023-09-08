@@ -39,7 +39,7 @@ export default function CreateReviewModalView({
   isButtonDisabled,
   handleConfirm,
 }: CreateReviewModalViewProps) {
-  const { t } = useTranslation(["common", "pull-request"]);
+  const { t } = useTranslation(["common", "deliverable"]);
 
   const { isMobileView } = useBreakPoint();
 
@@ -81,7 +81,7 @@ export default function CreateReviewModalView({
           </p>
 
           <p className="h4 mb-2">
-            {t("pull-request:label")} #{deliverable?.id}
+            {t("deliverable:label")} #{deliverable?.id}
           </p>
 
           <div className="row d-flex align-items-center flex-wrap justify-content-center justify-content-md-start">
