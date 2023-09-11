@@ -70,7 +70,7 @@ export default function CreateDeliverablePageView({
 
   return (
     <div className="row justify-content-center mx-0">
-      <div className="col-md-10 bg-gray-900 border border-gray-800 border-radius-4 mt-5 p-4">
+      <div className="col-md-8 bg-gray-900 border border-gray-800 border-radius-4 mt-5 p-4">
         <div>
           <h5>{t("deliverable:create.title")}</h5>
           <p className="text-gray-200">{t("deliverable:create.description")}</p>
