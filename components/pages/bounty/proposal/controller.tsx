@@ -54,7 +54,6 @@ export default function ProposalPage() {
 
   const parsedProposal = mergeProposalParser(proposalData, proposalData?.issue?.merged);
   const parsedComments = commentsParser(comments);
-
   const issue = issueParser(parsedProposal?.issue as IssueData);
   const deliverable = deliverableParser(parsedProposal?.deliverable);
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
