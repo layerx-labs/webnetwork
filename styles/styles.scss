@@ -75,6 +75,10 @@ li {
   cursor: not-allowed;
 }
 
+.cursor-default {
+  cursor: default !important;
+}
+
 .text-purple {
   color: var(--bs-purple) !important;
 }

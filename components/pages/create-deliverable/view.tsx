@@ -58,6 +58,7 @@ export default function CreateDeliverablePageView({
           <CheckButtons
             checked={checkButtonsOption}
             options={checkButtonsOptions}
+            disabled
           />
         </div>
 
