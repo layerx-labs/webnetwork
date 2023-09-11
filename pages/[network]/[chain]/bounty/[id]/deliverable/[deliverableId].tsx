@@ -21,10 +21,9 @@ import {
   IssueData,
 } from "interfaces/issue-data";
 
-import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
-import getCommentsData from "x-hooks/api/comments/get-comments-data";
-import CreateComment from "x-hooks/api/comments/post-comments";
+import { getCommentsData, CreateComment } from "x-hooks/api/comments";
 import getDeliverable from "x-hooks/api/deliverable/get-deliverable";
+import useReactQuery from "x-hooks/use-react-query";
 
 interface PageDeliverableProps {
   bounty: IssueData;
@@ -34,10 +33,12 @@ interface PageDeliverableProps {
 
 export default function DeliverablePage({ deliverable, bounty }: PageDeliverableProps) {
   const router = useRouter();
-
   const { t } = useTranslation(["common", "deliverable"]);
 
-  const { id, review } = router.query;
+  const { review, deliverableId } = router.query;
+
+  const { data: deliverableData, invalidate: invalidateDeliverable } = 
+  useReactQuery(["deliverable", +deliverableId], () => getDeliverable(+deliverableId));  
 
   const [showModal, setShowModal] = useState(!!review);
   const [currentBounty, setCurrentBounty] = useState<IssueBigNumberData>(issueParser(bounty));
@@ -137,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
   const { deliverableId } = query;
 
   const Dbdeliverable = await getDeliverable(+deliverableId);
-                    
+
   return {
     props: {
       bounty: Dbdeliverable.issue,
