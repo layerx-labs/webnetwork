@@ -34,6 +34,7 @@ export default function CreateDeliverablePage({
   const [originLink, setOriginLink] = useState<string>();
   const [previewLink, setPreviewLink] = useState<metadata>();
   const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
+  const [createIsLoading, setCreateIsLoading] = useState<boolean>(false);
   const [previewError, setPreviewError] = useState<boolean>(false);
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
@@ -93,7 +94,7 @@ export default function CreateDeliverablePage({
 
   async function onHandleCreate() {
     let deliverableId: number;
-
+    setCreateIsLoading(true)
     await CreatePreDeliverable({
       deliverableUrl: originLink,
       title,
@@ -135,7 +136,8 @@ export default function CreateDeliverablePage({
             content: t("deliverable:actions.create.error"),
         }));
       }
-    });
+    })
+    .finally(() => setCreateIsLoading(false))
   }
 
   return (
@@ -153,6 +155,7 @@ export default function CreateDeliverablePage({
       onHandleCreate={onHandleCreate}
       checkButtonsOptions={checkButtonsOptions}
       checkButtonsOption={currentBounty?.type}
+      createIsLoading={createIsLoading}
     />
   );
 }

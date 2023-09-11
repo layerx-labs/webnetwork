@@ -7,11 +7,13 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 export default function FooterButtons({
   handleBack,
   handleCreate,
-  disabledCreate
+  disabledCreate,
+  isLoadingCreate,
 }: {
   handleBack: () => void;
   handleCreate: () => void;
   disabledCreate?: boolean;
+  isLoadingCreate?: boolean;
 }) {
   const { t } = useTranslation(["common", "deliverable"]);
 
@@ -24,7 +26,12 @@ export default function FooterButtons({
       </div>
 
       <div className="col-6 pe-2">
-        <ContractButton className="col-12 bounty-button" onClick={handleCreate} disabled={disabledCreate}>
+        <ContractButton
+          className="col-12 bounty-button"
+          onClick={handleCreate}
+          disabled={disabledCreate}
+          isLoading={isLoadingCreate}
+        >
           <ResponsiveWrapper xs={true} md={false}>
             {t("common:misc.create")}
           </ResponsiveWrapper>

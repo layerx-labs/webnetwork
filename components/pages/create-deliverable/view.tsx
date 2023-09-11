@@ -32,6 +32,7 @@ interface CreateDeliverablePageViewProps {
   previewLink: metadata;
   previewError: boolean;
   previewIsLoading: boolean;
+  createIsLoading: boolean;
 }
 
 export default function CreateDeliverablePageView({
@@ -48,6 +49,7 @@ export default function CreateDeliverablePageView({
   previewLink,
   previewError,
   previewIsLoading,
+  createIsLoading
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
@@ -184,14 +186,16 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={!title || !description || !originLink}
+            disabledCreate={!title || !description || !originLink || createIsLoading}
+            isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
         <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={!title || !description || !originLink}
+            disabledCreate={!title || !description || !originLink || createIsLoading}
+            isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
       </CustomContainer>
