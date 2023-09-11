@@ -36,6 +36,7 @@ export default function CreateDeliverablePage({
   const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
   const [createIsLoading, setCreateIsLoading] = useState<boolean>(false);
   const [previewError, setPreviewError] = useState<boolean>(false);
+  const [procotolError, setProtocolError] = useState<boolean>(false);
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   
@@ -75,13 +76,27 @@ export default function CreateDeliverablePage({
 
   const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
 
+  
+  function verifyProtocol(url: string): boolean {
+    const regex = /^(https?:\/\/)/;
+    return regex.test(url);
+  }
+
   function onChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
 
   function onChangeOriginLink(e: ChangeEvent<HTMLInputElement>) {
     setOriginLink(e.target.value);
-    debouncedPreviewUpdater(e.target.value);
+
+    if(verifyProtocol(e.target.value)){
+      debouncedPreviewUpdater(e.target.value)
+      setProtocolError(false)
+    } else {
+      setPreviewLink(undefined)
+      setProtocolError(true)
+    }
+
   }
 
   function onChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
@@ -156,6 +171,7 @@ export default function CreateDeliverablePage({
       checkButtonsOptions={checkButtonsOptions}
       checkButtonsOption={currentBounty?.type}
       createIsLoading={createIsLoading}
+      procotolError={procotolError}
     />
   );
 }

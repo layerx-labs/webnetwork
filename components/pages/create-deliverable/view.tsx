@@ -33,6 +33,7 @@ interface CreateDeliverablePageViewProps {
   previewError: boolean;
   previewIsLoading: boolean;
   createIsLoading: boolean;
+  procotolError: boolean;
 }
 
 export default function CreateDeliverablePageView({
@@ -49,9 +50,23 @@ export default function CreateDeliverablePageView({
   previewLink,
   previewError,
   previewIsLoading,
-  createIsLoading
+  createIsLoading,
+  procotolError,
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
+
+  function inputError(value: string) {
+    return (
+      <div className="mt-2 text-danger">
+        <InfoIconEmpty
+          className="text-danger mb-1 me-1"
+          width={13}
+          height={13}
+        />
+        {value}
+      </div>
+    );
+  }
 
   return (
     <div className="row justify-content-center mx-0">
@@ -90,21 +105,16 @@ export default function CreateDeliverablePageView({
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
                     "border border-1 border-danger border-radius-8":
-                      previewError,
+                      previewError || procotolError,
                   })}
                   placeholder={t("deliverable:create.placeholders.origin-link")}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
-                <If condition={previewError}>
-                  <div className="mt-2 text-danger">
-                    <InfoIconEmpty
-                      className="text-danger mb-1 me-1"
-                      width={13}
-                      height={13}
-                    />
-                    {t("deliverable:actions.preview.error")}
-                  </div>
+                <If condition={previewError || procotolError}>
+                  {previewError
+                    ? inputError(t("deliverable:actions.preview.error"))
+                    : inputError(t("deliverable:actions.preview.error-protocol"))}
                 </If>
               </div>
             </div>
@@ -186,7 +196,9 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={!title || !description || !originLink || createIsLoading}
+            disabledCreate={
+              !title || !description || !originLink || createIsLoading
+            }
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
@@ -194,7 +206,9 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={!title || !description || !originLink || createIsLoading}
+            disabledCreate={
+              !title || !description || !originLink || createIsLoading
+            }
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
