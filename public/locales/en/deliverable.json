@@ -15,10 +15,10 @@
     "loc": "LOC",
     "create": {
         "title": "Create Deliverable",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "description": "A deliverable is the work you have done to deliver what was asked by the bounty creator. By creating a deliverable you are indicating that you finished the work and it could be reviewed and proposed as solution by the curators.",
         "type": "Deliverable type",
-        "description-type": "Est quis sit irure exercitation id consequat cupidatat elit nulla velit amet ex.",
-        "info-type": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "description-type": "Indicate the type of work you have done.",
+        "info-type": "Provide a link to your work.",
         "markdown-helper": "Finding yourself lost with markdown language?",
         "markdown-link": "See how to use it",
         "labels": {
