@@ -11,7 +11,7 @@ export default function FooterButtons({
   handleBack: () => void;
   handleCreate: () => void;
 }) {
-  const { t } = useTranslation(["common", "bounty"]);
+  const { t } = useTranslation(["common", "deliverable"]);
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function FooterButtons({
             {t("common:misc.create")}
           </ResponsiveWrapper>
           <ResponsiveWrapper xs={false} md={true}>
-            {t("bounty:create-bounty")}
+            {t("deliverable:actions.create.title")}
           </ResponsiveWrapper>
         </ContractButton>
       </div>
