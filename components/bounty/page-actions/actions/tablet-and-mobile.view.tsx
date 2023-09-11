@@ -26,7 +26,7 @@ export default function TabletAndMobileButton({
 
   if (isCreatePr)
     actions.push({
-      label: "Pull Request",
+      label: "Deliverable",
       onClick: () => onCreateDeliverableClick(),
     });
 

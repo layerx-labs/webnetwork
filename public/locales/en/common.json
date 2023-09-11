@@ -343,7 +343,7 @@
     },
     "select-placeholder": "Select...",
     "select-placeholder-chain": "Select a supported chain",
-    "create-pull-request": {
+    "create-deliverable": {
       "title": {
         "label": "Title",
         "placeholder": "Your bounty title"
@@ -406,10 +406,10 @@
       "redeem-bounty": "Cancel bounty",
       "approve-settler": "Approve Network Token",
       "recognize-finished": "Recognize bounty as finished",
-      "create-deliverable": "Create Pull Request",
-      "make-deliverable-ready": "Make Pull Request Ready",
+      "create-deliverable": "Create Deliverable",
+      "make-deliverable-ready": "Make Deliverable Ready",
       "update-bounty-amount": "Update Bounty Amount",
-      "cancel-deliverable": "Cancel Pull Request",
+      "cancel-deliverable": "Cancel Deliverable",
       "refused-by-owner": "Refuse Bounty Proposal",
       "deploy-network-v2": "Deploy Network_v2",
       "set-dispatcher": "Set Dispatcher",

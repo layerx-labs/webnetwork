@@ -63,7 +63,7 @@
         "success": "Deliverable cancelled",
         "error": "Failed to cancel deliverable"
       },
-      "go-to-pull-request": "Go to Deliverable"
+      "go-to-deliverable": "Go to Deliverable"
     },
     "status": {
       "ready-to-merge": "Ready",
