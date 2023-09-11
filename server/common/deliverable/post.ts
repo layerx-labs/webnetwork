@@ -31,10 +31,6 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if (!issue) return res.status(404).json({ message: "issue not found" });
 
-    const user = await models.user.findByAddress(context.token.address)
-
-    if (!user) return res.status(404).json({ message: "user not found" });
-
     const { network, chain, githubId, repository_id } = issue
     const homeUrl = publicRuntimeConfig.urls.home
     const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/bounty?id=${githubId}&repoId=${repository_id}`
@@ -57,7 +53,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const deliverable = await models.deliverable.create({
       issueId: issue.id,
-      userId: user.id,
+      userId: context.user.id,
       network_id: issue?.network_id,
       ipfsLink,
       title,
