@@ -3,11 +3,16 @@ import { ChangeEvent } from "react";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
+import InfoIconEmpty from "assets/icons/info-icon-empty";
+
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
 import CustomContainer from "components/custom-container";
+import If from "components/If";
 import ResponsiveWrapper from "components/responsive-wrapper";
+
+import { metadata } from "interfaces/metadata";
 
 import { SelectOption } from "types/utils";
 
@@ -24,6 +29,9 @@ interface CreateDeliverablePageViewProps {
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
   onHandleCreate: () => void;
+  previewLink: metadata;
+  previewError: boolean;
+  previewIsLoading: boolean;
 }
 
 export default function CreateDeliverablePageView({
@@ -37,6 +45,9 @@ export default function CreateDeliverablePageView({
   onHandleCreate,
   checkButtonsOption,
   checkButtonsOptions,
+  previewLink,
+  previewError,
+  previewIsLoading,
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
@@ -76,12 +87,23 @@ export default function CreateDeliverablePageView({
                 <input
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
-                    "border border-1 border-danger border-radius-8": false,
+                    "border border-1 border-danger border-radius-8":
+                      previewError,
                   })}
                   placeholder={t("deliverable:create.placeholders.origin-link")}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
+                <If condition={previewError}>
+                  <div className="mt-2 text-danger">
+                    <InfoIconEmpty
+                      className="text-danger mb-1 me-1"
+                      width={13}
+                      height={13}
+                    />
+                    {t("deliverable:actions.preview.error")}
+                  </div>
+                </If>
               </div>
             </div>
           </div>
@@ -92,10 +114,27 @@ export default function CreateDeliverablePageView({
                 <BountyLabel className="mb-2 text-white">
                   {t("deliverable:create.labels.preview")}
                 </BountyLabel>
-                <div className="d-flex justify-content-center border-dotter border-radius-4 border-gray-800">
-                  <span className="p-5 text-gray-800">
-                    {t("deliverable:create.placeholders.preview")}
-                  </span>
+
+                <div className="d-flex justify-content-center border border-radius-4 border-gray-800 comment">
+                  {previewIsLoading ? (
+                    <span className="spinner-border spinner-border m-5" />
+                  ) : (
+                    <>
+                      {previewLink?.ogImage && (
+                        <img src={previewLink.ogImage} />
+                      )}
+                      {previewLink?.ogVideo && !previewLink?.ogImage && (
+                        <video src={previewLink.ogVideo} controls>
+                          {t("deliverable:actions.preview.video-error")}
+                        </video>
+                      )}
+                      {!previewLink?.ogImage && !previewLink?.ogVideo && (
+                        <span className="p-5 text-gray-800">
+                          {t("deliverable:create.placeholders.preview")}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -145,12 +184,14 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
+            disabledCreate={!title || !description || !originLink}
           />
         </ResponsiveWrapper>
         <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
+            disabledCreate={!title || !description || !originLink}
           />
         </ResponsiveWrapper>
       </CustomContainer>

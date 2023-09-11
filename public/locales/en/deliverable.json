@@ -38,6 +38,10 @@
         "success": "Created Deliverable",
         "error": "To create deliverable"
       },
+      "preview": {
+        "error": "Currently we do not support this embed",
+        "video-error": "Your browser does not support the video tag."
+      },
       "merge": {
         "title": "Merge",
         "success": "",

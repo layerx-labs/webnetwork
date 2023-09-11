@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useDebouncedCallback } from "use-debounce";
 
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
@@ -10,15 +11,16 @@ import { issueParser } from "helpers/issue";
 
 import { NetworkEvents } from "interfaces/enums/events";
 import { IssueData } from "interfaces/issue-data";
+import { metadata } from "interfaces/metadata";
 
 import DeletePreDeliverable from "x-hooks/api/deliverable/delete-pre-deliverable";
 import CreatePreDeliverable from "x-hooks/api/deliverable/post-pre-deliverable";
+import getMetadata from "x-hooks/api/get-metadata";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
 import CreateDeliverablePageView from "./view";
-
 
 interface CreateDeliverablePageProps {
   bounty: IssueData;
@@ -30,9 +32,12 @@ export default function CreateDeliverablePage({
   const { t } = useTranslation(["common", "deliverable", "bounty"]);
 
   const [originLink, setOriginLink] = useState<string>();
+  const [previewLink, setPreviewLink] = useState<metadata>();
+  const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
+  const [previewError, setPreviewError] = useState<boolean>(false);
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
-
+  
   const { dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
   const { push, query } = useRouter();
@@ -54,12 +59,28 @@ export default function CreateDeliverablePage({
     },
   ];
 
+  function handleMetadata(value: string) {
+    setPreviewIsLoading(true)
+    previewError && setPreviewError(false)
+    getMetadata({
+      url: value
+    }).then(setPreviewLink)
+    .catch(() => {
+      setPreviewLink(undefined)
+      setPreviewError(true)
+    })
+    .finally(() => setPreviewIsLoading(false))
+  }
+
+  const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
+
   function onChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
 
   function onChangeOriginLink(e: ChangeEvent<HTMLInputElement>) {
     setOriginLink(e.target.value);
+    debouncedPreviewUpdater(e.target.value);
   }
 
   function onChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
@@ -120,6 +141,9 @@ export default function CreateDeliverablePage({
   return (
     <CreateDeliverablePageView
       originLink={originLink}
+      previewLink={previewLink}
+      previewError={previewError}
+      previewIsLoading={previewIsLoading}
       onChangeOriginLink={onChangeOriginLink}
       title={title}
       onChangeTitle={onChangeTitle}
