@@ -19,7 +19,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 export default function PageActionsView({
   bounty,
   handleEditIssue,
-  handlePullrequest,
+  onCreateDeliverableClick,
   handleStartWorking,
   isWalletConnected,
   isCreatePr,
@@ -66,7 +66,7 @@ export default function PageActionsView({
 
                 <If condition={isCreatePr}>
                   <CreateDeliverableButton 
-                    onClick={handlePullrequest}
+                    onClick={onCreateDeliverableClick}
                     disabled={!isWalletConnected}
                   />
                 </If>
@@ -95,7 +95,7 @@ export default function PageActionsView({
                   isCreatePr={isCreatePr}
                   isCreateProposal={isCreateProposal}
                   isExecuting={isExecuting}
-                  handleShowPRModal={handlePullrequest}
+                  onCreateDeliverableClick={onCreateDeliverableClick}
                   handleShowPRProposal={setShowPRProposal}
                   handleActionWorking={handleActionWorking}
                 />

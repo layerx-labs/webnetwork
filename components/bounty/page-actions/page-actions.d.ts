@@ -2,7 +2,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 
 export interface PageActionsViewProps {
   handleEditIssue: () => void;
-  handlePullrequest: () => void;
+  onCreateDeliverableClick: () => void;
   handleStartWorking: () => Promise<void>;
   bounty: IssueBigNumberData;
   isWalletConnected: boolean;

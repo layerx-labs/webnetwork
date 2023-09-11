@@ -89,7 +89,7 @@ export default function PageActions({
       hasDeliverables,
   };
 
-  function handlePullrequest() {
+  function onCreateDeliverableClick() {
     push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
   }
 
@@ -125,7 +125,7 @@ export default function PageActions({
   return (
     <PageActionsView
       isExecuting={isExecuting}
-      handlePullrequest={handlePullrequest}
+      onCreateDeliverableClick={onCreateDeliverableClick}
       handleStartWorking={handleStartWorking}
       handleEditIssue={handleEditIssue}
       bounty={currentBounty}
