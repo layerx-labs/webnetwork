@@ -25,7 +25,7 @@ export default async function del(req: NextApiRequest, res: NextApiResponse) {
   if (deliverable.prContractId)
     return resJsonMessage("This deliverable already exists in the contract",
                           res,
-                          404);
+                          409);
 
   await deliverable.destroy();
 
