@@ -9,7 +9,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 
 import DeliverableButton from "./actions/deliverable-button";
 import DeliverableDescription from "./description/view";
-import DeliverableOriginLink from "./origin-link/view";
+import DeliverableOriginLink from "./origin-link/controller";
 
 interface DeliverableBodyViewProps {
   currentDeliverable: Deliverable;
