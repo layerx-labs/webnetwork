@@ -191,8 +191,9 @@ export default function CreateDeliverablePageView({
           </p>
         </div>
       </div>
-      <CustomContainer className="d-flex flex-column justify-content-end">
-        <ResponsiveWrapper className="row my-4" xs={false} md={true}>
+      <div className="row justify-content-center px-0 mx-0">
+      <div className="col-md-8 mx-0 px-0">
+      <ResponsiveWrapper className="d-flex justify-content-center my-4" xs={false} md={true}>
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
@@ -202,7 +203,7 @@ export default function CreateDeliverablePageView({
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
-        <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
+        <ResponsiveWrapper className="my-4 mx-1" xs={true} md={false}>
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
@@ -212,7 +213,9 @@ export default function CreateDeliverablePageView({
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
-      </CustomContainer>
+      </div>
+
+      </div>
     </div>
   );
 }

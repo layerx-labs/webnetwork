@@ -19,13 +19,13 @@ export default function FooterButtons({
 
   return (
     <>
-      <div className="col-6 ps-2">
+      <div className="col-6 mx-0 pe-3">
         <Button className="col-12 bounty-outline-button" onClick={handleBack}>
           {t("actions.cancel")}
         </Button>
       </div>
 
-      <div className="col-6 pe-2">
+      <div className="col-6 mx-0 ps-3">
         <ContractButton
           className="col-12 bounty-button"
           onClick={handleCreate}
