@@ -53,6 +53,7 @@ export default function DeliverableHeroView({
           </div>
 
           <div className="col row">
+
             <div className="row d-flex flex-wrap justify-content-between">
               <div className="col d-flex flex-wrap align-items-center mt-3">
                 <div className="d-inline-flex align-items-center justify-content-md-start gap-2 me-2">
@@ -72,7 +73,7 @@ export default function DeliverableHeroView({
                 </div>
               </div>
 
-              <div className="col-6">
+              <div className="col-sm-6">
                 <div className="d-flex flex-wrap justify-content-end">
                   <PriceConversor
                     currentValue={currentBounty?.amount}
@@ -84,6 +85,7 @@ export default function DeliverableHeroView({
                 </div>
               </div>
             </div>
+            <div><h4 className="text-truncate">{currentDeliverable?.title}</h4></div>
           </div>
 
           <div className="col row">
