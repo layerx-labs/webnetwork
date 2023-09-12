@@ -34,7 +34,7 @@ export default async function get(query: ParsedUrlQuery) {
                                         "=",
                                         Sequelize.fn("lower", Sequelize.col("distributions.recipient"))))
       ]),
-      getAssociation("deliverable"),
+      getAssociation("deliverable", undefined, false, undefined, [getAssociation("user")]),
       getAssociation("issue", undefined, true, undefined, [
         getAssociation("transactionalToken", ["name", "symbol"]),
       ]),
