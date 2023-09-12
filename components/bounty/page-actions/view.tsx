@@ -10,7 +10,7 @@ import TabletAndMobileButton from "components/bounty/page-actions/actions/tablet
 import UpdateAmountButton from "components/bounty/page-actions/actions/update-amount.view";
 import { PageActionsViewProps } from "components/bounty/page-actions/page-actions";
 import If from "components/If";
-import ProposalModal from "components/proposal/create-proposal-modal";
+import ProposalModal from "components/proposal/new-proposal-modal/controller";
 import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
