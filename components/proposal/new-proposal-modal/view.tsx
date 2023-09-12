@@ -119,7 +119,7 @@ export default function NewProposalModalView({
               </span>
             }
           >
-            {paymentInfos?.map(info => <PaymentInfo {...info} />)}
+            {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
           </If>
         </div>
 
