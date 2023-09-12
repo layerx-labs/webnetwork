@@ -65,7 +65,7 @@ export default function OpenGraphPreview({
               href={url}
               target="_blank"
               rel="noopener noreferer" 
-              className="text-decoration-none text-blue-200"
+              className="sm-regular text-decoration-none text-blue-200"
             >
               <span className="mr-1">
                 { openLinkText || "View Link" }
