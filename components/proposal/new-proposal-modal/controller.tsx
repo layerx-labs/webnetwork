@@ -15,6 +15,8 @@ import { truncateAddress } from "helpers/truncate-address";
 import {NetworkEvents} from "interfaces/enums/events";
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
+import { PaymentInfoProps } from "types/components";
+
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 
@@ -56,7 +58,7 @@ export default function ProposalModal({
                                                                         percentage: 100
                                                                       }
                                                                     ]) : null;
-  const paymentInfos = [
+  const paymentInfos: PaymentInfoProps[] = [
     {
       address: deliverableUserAddress,
       login: deliverableUserLogin,

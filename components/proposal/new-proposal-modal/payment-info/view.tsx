@@ -3,14 +3,7 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import { formatStringToCurrency } from "helpers/formatNumber";
 import { truncateAddress } from "helpers/truncate-address";
 
-interface PaymentInfoProps {
-  address: string;
-  login: string;
-  amount: string;
-  symbol: string;
-  percentage: string;
-  label: string;
-}
+import { PaymentInfoProps } from "types/components";
 
 export default function PaymentInfo({
   address,

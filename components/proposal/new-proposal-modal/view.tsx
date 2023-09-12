@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { components as RSComponents, SingleValueProps } from "react-select";
 
 import { useTranslation } from "next-i18next";
@@ -12,17 +13,25 @@ import OpenGraphPreview from "components/open-graph-preview/controller";
 import PaymentInfo from "components/proposal/new-proposal-modal/payment-info/view";
 import ReactSelect from "components/react-select";
 
+import { PaymentInfoProps } from "types/components";
+
+interface DeliverableOption {
+  value: number;
+  label: ReactNode;
+  spaceBetween: boolean;
+  postIcon: ReactNode;
+}
 interface NewProposalModalViewProps {
   show: boolean;
   isExecuting: boolean;
   isConnected: boolean;
-  selectedDeliverable: any;
-  deliverablesOptions: any;
+  selectedDeliverable: DeliverableOption;
+  deliverablesOptions: DeliverableOption[];
   deliverableUrl: string;
-  paymentInfos: any;
+  paymentInfos: PaymentInfoProps[];
   onClose: () => void;
   onSubmit: () => void;
-  onDeliverableChange: (value: any) => void;
+  onDeliverableChange: (value: DeliverableOption) => void;
 }
 
 function SingleValue (props: SingleValueProps<any>) {
