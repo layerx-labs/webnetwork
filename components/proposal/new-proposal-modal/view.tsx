@@ -110,7 +110,9 @@ export default function NewProposalModalView({
           {t("create-modal.payment")}
         </span>
 
-        <div className="mt-1 mb-2 d-flex flex-column align-items-center border border-radius-4 border-gray-800 comment">
+        <div 
+          className="mt-1 mb-2 d-flex flex-column align-items-center border border-radius-4 border-gray-800 comment"
+        >
           <If
             condition={!!deliverableUrl && !!paymentInfos}
             otherwise={
@@ -119,7 +121,9 @@ export default function NewProposalModalView({
               </span>
             }
           >
-            {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
+            <div className="p-2 line-between-children w-100 bg-gray-850">
+              {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
+            </div>
           </If>
         </div>
 

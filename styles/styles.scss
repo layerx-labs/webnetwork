@@ -2104,3 +2104,9 @@ input[type="color"] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.line-between-children {
+  > *:not(:last-child) {
+    border-bottom: 1px solid $gray-800;
+  }
+}

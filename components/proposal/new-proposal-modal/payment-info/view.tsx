@@ -23,9 +23,9 @@ export default function PaymentInfo({
   const user = login ? `@${login}` : truncateAddress(address);
 
   return(
-    <div className="d-flex flex-column bg-gray-850 w-100 p-2">
+    <div className="d-flex flex-column bg-gray-850 w-100 py-1">
       <div className="d-flex justify-content-between w-100">
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center mb-1 mx-n2">
           <AvatarOrIdenticon
             user={login}
             address={address}
