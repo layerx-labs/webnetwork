@@ -17,8 +17,8 @@ import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import { PaymentInfoProps } from "types/components";
 
-import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
+import useContractTransaction from "x-hooks/use-contract-transaction";
 
 interface ProposalModalProps {
   deliverables: Deliverable[];
@@ -36,16 +36,16 @@ export default function ProposalModal({
   updateBountyData
 }: ProposalModalProps) {
   const { t } = useTranslation("proposal");
-
-  const [executing, setExecuting] = useState<boolean>(false);
   const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
 
   const { state } = useAppState();
-  const { processEvent } = useApi();
   const { handleProposeMerge } = useBepro();
+  const [isExecuting, onCreateProposal] = useContractTransaction( NetworkEvents.ProposalCreated,
+                                                                  handleProposeMerge,
+                                                                  t("messages.proposal-created"),
+                                                                  t("errors.failed-to-create"));
 
   const { treasury, mergeCreatorFeeShare, proposerFeeShare } = state.Service?.network?.amounts || {};
-
   const deliverableUserAddress = currentDeliverable?.user?.address;
   const deliverableUserLogin = currentDeliverable?.user?.githubLogin;
   const distributedAmounts = treasury ? calculateDistributedAmounts(treasury,
@@ -80,19 +80,11 @@ export default function ProposalModal({
   async function handleClickCreate(): Promise<void> {
     if (!currentDeliverable) return;
 
-    const prCreator = currentDeliverable.user?.address;
+    const deliverableCreator = currentDeliverable.user?.address;
 
-    setExecuting(true);
-
-    handleProposeMerge(+currentBounty.contractId, +currentDeliverable.prContractId, [prCreator], [100])
-      .then(txInfo => {
-        const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-
-        return processEvent(NetworkEvents.ProposalCreated, undefined, { fromBlock });
-      })
+    onCreateProposal(+currentBounty.contractId, +currentDeliverable.prContractId, deliverableCreator)
       .then(() => {
         handleClose();
-        setExecuting(false);
         updateBountyData();
       });
   }
@@ -139,7 +131,7 @@ export default function ProposalModal({
   return(
     <NewProposalModalView
       show={show}
-      isExecuting={executing}
+      isExecuting={isExecuting}
       isConnected={!!state.currentUser?.walletAddress}
       selectedDeliverable={deliverableToOption(currentDeliverable)}
       deliverablesOptions={deliverables?.map(deliverableToOption)}
