@@ -32,12 +32,6 @@ export default function OpenGraphPreviewView({
         otherwise={<span className="spinner-border spinner-border m-5" />}
       >
         <If
-          condition={isImage}
-        >
-          
-        </If>
-
-        <If
           condition={!!preview}
           otherwise={
             <span className="p-5 sm-regular text-gray-600">
