@@ -10,17 +10,17 @@ import { HttpNotFoundError } from "server/errors/http-errors";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
-    id,
+    proposalId,
     network,
     chain,
   } = query;
 
-  if (!id|| !network || !chain)
+  if (!proposalId || !network || !chain)
     throw new HttpNotFoundError("Missing parameters");
 
   const proposal = await models.mergeProposal.findOne({
     where: {
-      id: id
+      id: proposalId
     },
     include: [
       getAssociation("disputes"),

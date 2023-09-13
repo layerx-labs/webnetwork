@@ -44,7 +44,7 @@ export default function ProposalPage() {
 
   const { state } = useAppState();
 
-  const proposalId = query?.id?.toString();
+  const proposalId = query?.proposalId?.toString();
   const proposalQueryKey = ["proposal", proposalId];
   const commentsQueryKey = ["proposal", "comments", proposalId];
 
