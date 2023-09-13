@@ -15,7 +15,6 @@ import UpdateBountyAmountModal from "components/update-bounty-amount-modal";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-
 export default function PageActionsView({
   bounty,
   handleEditIssue,
@@ -115,7 +114,6 @@ export default function PageActionsView({
           />
 
           <ProposalModal
-            amountTotal={bounty?.amount}
             deliverables={bounty?.deliverables}
             show={showPRProposal}
             onCloseClick={() => setShowPRProposal(false)}
