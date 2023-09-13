@@ -37,6 +37,7 @@ export default async function get(query: ParsedUrlQuery) {
       getAssociation("deliverable", undefined, false, undefined, [getAssociation("user")]),
       getAssociation("issue", undefined, true, undefined, [
         getAssociation("transactionalToken", ["name", "symbol"]),
+        getAssociation("user", ["address", "githubLogin"]),
       ]),
       getAssociation("network", [], true, {
         name: caseInsensitiveEqual("network.name", network?.toString())
