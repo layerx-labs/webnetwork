@@ -43,12 +43,13 @@ export function MyNetwork({
       });
   }
   
+  const networkQueryKey = ["network", state.currentUser?.walletAddress, chain?.chainId?.toString()];
   const {
     data: myNetwork,
     isFetching,
     isSuccess,
     invalidate
-  } = useReactQuery(["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
+  } = useReactQuery(networkQueryKey, 
                     getNetwork,
                     {
                       enabled: !!state.currentUser?.walletAddress && !!chain,
@@ -65,6 +66,7 @@ export function MyNetwork({
       myNetwork={myNetwork}
       bounties={bounties}
       updateEditingNetwork={invalidate}
+      networkQueryKey={networkQueryKey}
     />
   );
 }

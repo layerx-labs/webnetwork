@@ -13,12 +13,14 @@ import { SearchBountiesPaginated } from "types/api";
 interface MyNetworkPageViewProps {
   myNetwork: Network;
   bounties: SearchBountiesPaginated;
+  networkQueryKey: string[];
   updateEditingNetwork: () => Promise<void>;
 }
 
 export default function MyNetworkPageView({
   myNetwork,
   bounties,
+  networkQueryKey,
   updateEditingNetwork,
 }: MyNetworkPageViewProps) {
   const { t } = useTranslation(["common", "custom-network"]);
@@ -36,6 +38,7 @@ export default function MyNetworkPageView({
           <MyNetworkSettings
             bounties={bounties}
             network={myNetwork}
+            networkQueryKey={networkQueryKey}
             updateEditingNetwork={updateEditingNetwork}
           />
         </Col>

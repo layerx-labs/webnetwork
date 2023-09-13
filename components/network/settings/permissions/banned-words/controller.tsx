@@ -2,58 +2,46 @@ import {useState} from "react";
 
 import {useTranslation} from "next-i18next";
 
-import {useAppState} from "../../../../../contexts/app-state";
-import {toastError, toastSuccess} from "../../../../../contexts/reducers/change-toaster";
+import NetworkPermissionsView from "components/network/settings/permissions/banned-words/view";
 
-import {Network} from "../../../../../interfaces/network";
+import { useAppState } from "contexts/app-state";
+import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
-import {
-  CreateBannedWord,
-  getBannedWordsData,
-  RemoveBannedWord
-} from "../../../../../x-hooks/api/network/management/banned-words";
+import { Network } from "interfaces/network";
 
-import NetworkPermissionsView from "./view";
+import { CreateBannedWord, RemoveBannedWord } from "x-hooks/api/network/management/banned-words";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface NetworkPermissionsProps {
   network: Network;
+  networkQueryKey: string[];
 }
 
 export default function NetworkPermissions({
   network,
+  networkQueryKey,
 }: NetworkPermissionsProps) {
   const { t } = useTranslation(["custom-network"]);
-  const [currentDomains, setCurrentDomains] = useState<string[]>(network?.banned_domains);
+
   const [currentDomain, setCurrentDomain] = useState<string>();
 
   const { dispatch } = useAppState();
 
-  function onChangeDomain(v: string) {
-    setCurrentDomain(v);
-  }
-
-  function updateCurrentDomains() {
-    getBannedWordsData(network.id).then((value) => {
-      setCurrentDomains(value)
-    })
-  }
-
-  function handleAddDomain() {
-    CreateBannedWord(network.id, {
-      banned_domain: currentDomain,
-      networkAddress: network?.networkAddress?.toLowerCase(),
-    }).then(() => {
+  const { mutate: addBannedWord } = useReactQueryMutation({
+    queryKey: networkQueryKey,
+    mutationFn: CreateBannedWord,
+    onSuccess: () => {
       dispatch(toastSuccess(t("steps.permissions.domains.created-message")));
-      updateCurrentDomains()
-      setCurrentDomain("")
-    }).catch(err => {
-      if(err.response?.status === 409){
-        return dispatch(toastError(t("steps.permissions.domains.already-exists")));
-      }
-      console.debug("Error create banned word", err);
-      return dispatch(toastError(t("steps.permissions.domains.created-error")));
-    })
-  }
+      setCurrentDomain("");
+    },
+    onError: (error) => {
+      if(error.response?.status === 409)
+        dispatch(toastError(t("steps.permissions.domains.already-exists")));
+      else
+        dispatch(toastError(t("steps.permissions.domains.created-error")));
+      console.debug("Error create banned word", error);
+    }
+  });
 
   function handleRemoveDomain(domain: string) {
     RemoveBannedWord(network.id, {
@@ -61,7 +49,6 @@ export default function NetworkPermissions({
       networkAddress: network?.networkAddress?.toLowerCase(),
     }).then(() => {
       dispatch(toastSuccess(t("steps.permissions.domains.remove-message")));
-      updateCurrentDomains()
     }).catch(err => {
       if(err.response?.status === 404){
         return dispatch(toastError(t("steps.permissions.domains.remove-not-found")));
@@ -74,9 +61,13 @@ export default function NetworkPermissions({
   return (
     <NetworkPermissionsView
       domain={currentDomain}
-      domains={currentDomains}
-      onChangeDomain={onChangeDomain}
-      handleAddDomain={handleAddDomain}
+      domains={network?.banned_domains}
+      onChangeDomain={setCurrentDomain}
+      handleAddDomain={() => addBannedWord({
+        networkId: network?.id,
+        banned_domain: currentDomain,
+        networkAddress: network?.networkAddress?.toLowerCase(),
+      })}
       handleRemoveDomain={handleRemoveDomain}
     />
   );

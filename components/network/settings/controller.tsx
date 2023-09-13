@@ -24,12 +24,13 @@ import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
 
 import NetworkManagement from "./management/view";
-import NetworkPermissions from "./permissions/banned-words/controller";
 import AllowList from "./permissions/allow-list/allow-list-controller";
+import NetworkPermissions from "./permissions/banned-words/controller";
 
 interface MyNetworkSettingsProps {
   network: Network;
   bounties: SearchBountiesPaginated;
+  networkQueryKey: string[];
   updateEditingNetwork: () => Promise<void>;
 }
 
@@ -42,6 +43,7 @@ export interface TabsProps {
 export default function MyNetworkSettings({
   network,
   bounties,
+  networkQueryKey,
   updateEditingNetwork,
 }: MyNetworkSettingsProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
@@ -194,7 +196,7 @@ export default function MyNetworkSettings({
         title: t("custom-network:steps.permissions.title"),
         component: (
           <>
-            <NetworkPermissions network={network}/>
+            <NetworkPermissions network={network} networkQueryKey={networkQueryKey} />
             <AllowList networkId={network.id} />
           </>
         )
