@@ -83,7 +83,6 @@ export default function ProposalPage() {
 
   const isMergeable = [
     isWalletConnected,
-    pullRequest?.isMergeable,
     !issue?.isClosed,
     !parsedProposal?.isMerged,
     !parsedProposal?.isDisputed,
