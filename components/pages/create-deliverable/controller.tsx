@@ -8,7 +8,9 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { issueParser } from "helpers/issue";
+import { isValidUrl } from "helpers/validateUrl";
 
+import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 import { IssueData } from "interfaces/issue-data";
 import { metadata } from "interfaces/metadata";
@@ -36,11 +38,11 @@ export default function CreateDeliverablePage({
   const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
   const [createIsLoading, setCreateIsLoading] = useState<boolean>(false);
   const [previewError, setPreviewError] = useState<boolean>(false);
-  const [procotolError, setProtocolError] = useState<boolean>(false);
+  const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   
-  const { dispatch } = useAppState();
+  const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
   const { push, query } = useRouter();
   const { handleCreatePullRequest } = useBepro();
@@ -74,13 +76,28 @@ export default function CreateDeliverablePage({
     .finally(() => setPreviewIsLoading(false))
   }
 
-  const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
-
-  
-  function verifyProtocol(url: string): boolean {
-    const regex = /^(https?:\/\/)/;
-    return regex.test(url);
+  function validateBannedDomain(link: string) {
+    const bannedDomains = state.Service?.network?.active?.banned_domains || [];
+    return !!bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
+
+  const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
+  const validateDomainDebounced = useDebouncedCallback((link: string) => {
+    if (!link) {
+      setOriginLinkError(undefined);
+      return;
+    }
+    const isValid = isValidUrl(link);
+    const isBanned = validateBannedDomain(link);
+    if (!isValid)
+      setOriginLinkError(OriginLinkErrors.Invalid);
+    else if (isBanned) 
+      setOriginLinkError(OriginLinkErrors.Banned);
+    else {
+      setOriginLinkError(undefined);
+      debouncedPreviewUpdater(link);
+    }
+  }, 500);
 
   function onChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
@@ -88,15 +105,7 @@ export default function CreateDeliverablePage({
 
   function onChangeOriginLink(e: ChangeEvent<HTMLInputElement>) {
     setOriginLink(e.target.value);
-
-    if(verifyProtocol(e.target.value)){
-      debouncedPreviewUpdater(e.target.value)
-      setProtocolError(false)
-    } else {
-      setPreviewLink(undefined)
-      setProtocolError(true)
-    }
-
+    validateDomainDebounced(e.target.value);
   }
 
   function onChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
@@ -171,7 +180,7 @@ export default function CreateDeliverablePage({
       checkButtonsOptions={checkButtonsOptions}
       checkButtonsOption={currentBounty?.type}
       createIsLoading={createIsLoading}
-      procotolError={procotolError}
+      originLinkError={originLinkError}
     />
   );
 }

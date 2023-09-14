@@ -8,10 +8,11 @@ import InfoIconEmpty from "assets/icons/info-icon-empty";
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
-import CustomContainer from "components/custom-container";
+import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { metadata } from "interfaces/metadata";
 
 import { SelectOption } from "types/utils";
@@ -33,7 +34,7 @@ interface CreateDeliverablePageViewProps {
   previewError: boolean;
   previewIsLoading: boolean;
   createIsLoading: boolean;
-  procotolError: boolean;
+  originLinkError: OriginLinkErrors;
 }
 
 export default function CreateDeliverablePageView({
@@ -51,7 +52,7 @@ export default function CreateDeliverablePageView({
   previewError,
   previewIsLoading,
   createIsLoading,
-  procotolError,
+  originLinkError,
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
@@ -105,16 +106,26 @@ export default function CreateDeliverablePageView({
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
                     "border border-1 border-danger border-radius-8":
-                      previewError || procotolError,
+                      previewError || originLinkError,
                   })}
                   placeholder={t("deliverable:create.placeholders.origin-link")}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
-                <If condition={previewError || procotolError}>
-                  {previewError
-                    ? inputError(t("deliverable:actions.preview.error"))
-                    : inputError(t("deliverable:actions.preview.error-protocol"))}
+                <If condition={previewError && !originLinkError}>
+                  {inputError(t("deliverable:actions.preview.error"))}
+                </If>
+
+                <If condition={originLinkError === OriginLinkErrors.Banned}>
+                  <ContextualSpan context="danger" className="mt-2">
+                    {t("bounty:errors.banned-domain")}
+                  </ContextualSpan>
+                </If>
+
+                <If condition={originLinkError === OriginLinkErrors.Invalid}>
+                  <ContextualSpan context="danger" className="mt-2">
+                    {t("bounty:errors.invalid-link")}
+                  </ContextualSpan>
                 </If>
               </div>
             </div>
