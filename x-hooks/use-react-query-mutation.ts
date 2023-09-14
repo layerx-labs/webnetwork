@@ -3,13 +3,16 @@ import { useMutation, useQueryClient, UseMutationOptions } from "@tanstack/react
 import { useAppState } from "contexts/app-state";
 import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
-interface UseReactQueryMutationOptions<T> extends UseMutationOptions<T> {
+interface UseReactQueryMutationOptions {
   queryKey?: (string | number)[];
   toastSuccess?: string;
   toastError?: string;
 }
 
-export default function useReactQueryMutation<T>({ queryKey, ...rest }: UseReactQueryMutationOptions<T>) {
+export default function useReactQueryMutation<TData, TError, TVariables, TContext>({ 
+  queryKey, 
+  ...rest
+}: UseReactQueryMutationOptions & UseMutationOptions<TData, TError, TVariables, TContext>) {
   const { dispatch } = useAppState();
   const queryClient = useQueryClient();
 
@@ -17,19 +20,19 @@ export default function useReactQueryMutation<T>({ queryKey, ...rest }: UseReact
     return queryClient.invalidateQueries({ queryKey: queryKey });
   }
   
-  function onSuccess(data: T, variables: void, context: unknown) {
+  function onSuccess(data: TData, variables: TVariables, context: TContext) {
     rest?.onSuccess?.(data, variables, context);
     if (rest?.toastSuccess) dispatch(toastSuccess(rest?.toastSuccess));
     if (queryKey) invalidate();
   }
 
-  function onError(error: unknown, variables: void, context: unknown) {
+  function onError(error: TError, variables: TVariables, context: TContext) {
     rest?.onError?.(error, variables, context);
     if (rest?.toastError) dispatch(toastError(rest?.toastError));
     console.debug("useReactQueryMutation", queryKey, error);
   }
 
-  const mutation = useMutation({
+  const mutation = useMutation<TData, TError, TVariables, TContext>({
     ...rest,
     onSuccess: onSuccess,
     onError: onError
