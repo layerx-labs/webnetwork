@@ -3,6 +3,7 @@ import { api } from "services/api";
 interface payloadProps {
   banned_domain: string;
   networkAddress: string;
+  networkId: number;
 }
 
 /**
@@ -10,8 +11,8 @@ interface payloadProps {
  * @param query current url query
  * @returns new Banned Words on Network
  */
-export async function RemoveBannedWord(id, payload: payloadProps): Promise<string[]> {
+export async function RemoveBannedWord({ networkId, ...rest }: payloadProps): Promise<string[]> {
   return api
-    .patch<string[]>(`/network/management/banned-words/${id}`, payload)
+    .patch<string[]>(`/network/management/banned-words/${networkId}`, rest)
     .then(({ data }) => data)
 }
