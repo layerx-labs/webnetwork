@@ -28,7 +28,7 @@ export default function NetworkPermissions({
 
   const { dispatch } = useAppState();
 
-  const { mutate: addBannedWord } = useReactQueryMutation({
+  const { mutate: addBannedWord, isLoading: isAdding } = useReactQueryMutation({
     queryKey: networkQueryKey,
     mutationFn: () => CreateBannedWord({
       networkId: network?.id,
@@ -69,6 +69,7 @@ export default function NetworkPermissions({
       onChangeDomain={setCurrentDomain}
       handleAddDomain={addBannedWord}
       handleRemoveDomain={handleRemoveDomain}
+      isExecuting={isAdding}
     />
   );
 }

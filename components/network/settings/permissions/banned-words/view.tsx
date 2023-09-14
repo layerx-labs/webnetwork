@@ -8,6 +8,7 @@ import NetworkTabContainer from "../../tab-container/view";
 interface NetworkPermissionsViewProps {
   domain: string;
   domains: string[];
+  isExecuting?: boolean;
   onChangeDomain: (v: string) => void;
   handleAddDomain: () => void;
   handleRemoveDomain: (v: string) => void;
@@ -16,6 +17,7 @@ interface NetworkPermissionsViewProps {
 export default function NetworkPermissionsView({
   domain,
   domains,
+  isExecuting,
   onChangeDomain,
   handleAddDomain,
   handleRemoveDomain,
@@ -34,7 +36,7 @@ export default function NetworkPermissionsView({
           onChange={onChangeDomain}
           onClickAdd={handleAddDomain}
           placeholder={t("steps.permissions.domains.placeholder")}
-          disabledButton={!domain}
+          disabledButton={!domain || isExecuting}
         />
         {domains?.length > 0 ? (
           <div className="d-flex flex-column mt-4">
