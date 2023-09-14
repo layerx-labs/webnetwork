@@ -1,6 +1,7 @@
 import {useState} from "react";
 
-import {useTranslation} from "next-i18next";
+import { AxiosError } from "axios";
+import { useTranslation } from "next-i18next";
 
 import NetworkPermissionsView from "components/network/settings/permissions/banned-words/view";
 
@@ -29,17 +30,20 @@ export default function NetworkPermissions({
 
   const { mutate: addBannedWord } = useReactQueryMutation({
     queryKey: networkQueryKey,
-    mutationFn: CreateBannedWord,
+    mutationFn: () => CreateBannedWord({
+      networkId: network?.id,
+      banned_domain: currentDomain,
+      networkAddress: network?.networkAddress?.toLowerCase(),
+    }),
+    toastSuccess: t("steps.permissions.domains.created-message"),
     onSuccess: () => {
-      dispatch(toastSuccess(t("steps.permissions.domains.created-message")));
       setCurrentDomain("");
     },
     onError: (error) => {
-      if(error.response?.status === 409)
+      if((error as AxiosError).response?.status === 409)
         dispatch(toastError(t("steps.permissions.domains.already-exists")));
       else
         dispatch(toastError(t("steps.permissions.domains.created-error")));
-      console.debug("Error create banned word", error);
     }
   });
 
@@ -63,11 +67,7 @@ export default function NetworkPermissions({
       domain={currentDomain}
       domains={network?.banned_domains}
       onChangeDomain={setCurrentDomain}
-      handleAddDomain={() => addBannedWord({
-        networkId: network?.id,
-        banned_domain: currentDomain,
-        networkAddress: network?.networkAddress?.toLowerCase(),
-      })}
+      handleAddDomain={addBannedWord}
       handleRemoveDomain={handleRemoveDomain}
     />
   );
