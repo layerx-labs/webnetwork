@@ -19,7 +19,7 @@ import {changeLoadState} from "contexts/reducers/change-load";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import { useAddChain } from "x-hooks/api/chain";
+import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function ChainsSetup() {
@@ -43,6 +43,13 @@ export default function ChainsSetup() {
       setShowChainModal(null);
       setShowCustomAdd(false);
     }
+  });
+
+  const { mutate: mutateDeleteChain } = useReactQueryMutation({
+    queryKey: ["supportedChains"],
+    mutationFn: useDeleteChain,
+    toastSuccess: "Chain removed",
+    toastError: "Failed to remove chain"
   });
 
   function updateMiniChainInfo() {
@@ -83,7 +90,7 @@ export default function ChainsSetup() {
       return <Button outline><LoadingDots /></Button>;
 
     return <Button outline
-                   onClick={() => !exists ? setShowChainModal(chain) : api.deleteSupportedChain(chain)}
+                   onClick={() => !exists ? setShowChainModal(chain) : mutateDeleteChain(chain.chainId)}
                    textClass="text-white">
       {!exists ? <PlusIcon /> : <CloseIcon />}
     </Button>

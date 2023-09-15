@@ -22,15 +22,15 @@ import { DAPPKIT_LINK } from "helpers/constants";
 import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
 
 import {RegistryEvents} from "interfaces/enums/events";
-import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import { RegistryParameters } from "types/dappkit";
 
-import { useGetChains } from "x-hooks/api/chain";
+import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
 
 interface RegistrySetupProps { 
@@ -79,12 +79,20 @@ export function RegistrySetup({
   const { loadSettings } = useSettings();
   const { findSupportedChain } = useChain();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { patchSupportedChain, processEvent, updateChainRegistry, createToken } = useApi();
+  const { processEvent, createToken } = useApi();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
-  const { invalidate: invalidateChains } = useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+
+  useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
     dispatch(updateSupportedChains(chains));
     return chains; 
   }));
+
+  const { mutate: mudateUpdateChain } = useReactQueryMutation({
+    queryKey: ["supportedChains"],
+    mutationFn: useUpdateChain,
+    toastSuccess: "Chain registry updated",
+    toastError: "Failed to update chain registry"
+  });
 
   function isEmpty(value: string) {
     return value.trim() === "";
@@ -181,6 +189,8 @@ export function RegistrySetup({
 
     const registryObj = Service?.active?.registry;
 
+    if (!registryObj) return;
+
     setErc20(updatedValue(registryObj.token.contractAddress));
     setBountyToken(updatedValue(registryObj.bountyToken.contractAddress));
 
@@ -258,19 +268,11 @@ export function RegistrySetup({
       return;
 
     if (!isAddress(address)) {
-      dispatch(toastInfo('Registry address value must be an address; Can be 0x0'));
+      dispatch(toastInfo("Registry address value must be an address; Can't be 0x0"));
       return;
     }
 
-    return updateChainRegistry({...chain, registryAddress: address})
-      .then(result => {
-        if (!result) {
-          dispatch(toastError(`Failed to update chain ${chain.chainId} with ${address}`));
-          return;
-        }
-        dispatch(toastSuccess(`Updated chain ${chain.chainId} with ${address} `))
-        return invalidateChains();
-      })
+    mudateUpdateChain({ chainId: chain.chainId, registryAddress: address });
   }
 
   function _setRegistry(val) {
@@ -279,19 +281,6 @@ export function RegistrySetup({
 
     if (!hasRegistryAddress && value.validated)
       updateData(value.value);
-  }
-
-  function _patchSupportedChain(data: Partial<SupportedChainData>) {
-    const chain = supportedChains?.find(c => +connectedChain.id === c.chainId);
-    if (!chain)
-      return;
-
-    return patchSupportedChain(chain, data)
-      .then(result => {
-        if (result)
-          dispatch(toastSuccess('updated chain registry'));
-        else dispatch(toastError('failed to update chain registry'));
-      })
   }
 
   function setDefaults() {
@@ -398,7 +387,7 @@ export function RegistrySetup({
           action={registry?.value && isAddress(registry?.value) && !isZeroAddress(registry?.value) ? {
               label: t("registry.actions.save-registry"),
               executing: false, disabled: false,
-              onClick: () => _patchSupportedChain({registryAddress: registry.value}) } : null 
+              onClick: () => setChainRegistry(registry.value) } : null 
           }
         />
       </Row>
