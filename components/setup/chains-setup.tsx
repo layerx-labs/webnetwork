@@ -16,11 +16,11 @@ import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 
 import {useAppState} from "contexts/app-state";
 import {changeLoadState} from "contexts/reducers/change-load";
-import {toastError, toastSuccess} from "contexts/reducers/change-toaster";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import useApi from "x-hooks/use-api";
+import { useAddChain } from "x-hooks/api/chain";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);
@@ -32,8 +32,18 @@ export default function ChainsSetup() {
   const [filteredChains, setFilteredChains] = useState<MiniChainInfo[]>([]);
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
-  const api = useApi();
   const {state, dispatch} = useAppState();
+
+  const { mutate: mutateAddChain } = useReactQueryMutation({
+    queryKey: ["supportedChains"],
+    mutationFn: useAddChain,
+    toastSuccess: "Chain saved",
+    toastError: "Failed to add chain",
+    onSettled: () => {
+      setShowChainModal(null);
+      setShowCustomAdd(false);
+    }
+  });
 
   function updateMiniChainInfo() {
     if (chains.length)
@@ -64,26 +74,6 @@ export default function ChainsSetup() {
 
   function changeExistingState() {
     setExistingState(state?.supportedChains?.map(({chainId}) => chainId));
-  }
-
-  function addChain(chain: MiniChainInfo) {
-    if (!chain) {
-      setShowChainModal(null);
-      setShowCustomAdd(false);
-      return;
-    }
-
-    api.addSupportedChain(chain)
-      .then(success => {
-        if (success) {
-          dispatch(toastSuccess(`added chain ${chain.name}`));
-          setShowChainModal(null);
-        } else 
-        dispatch(toastError(`Failed to add chain ${chain.name}`));
-      })
-      .catch(() => {
-        dispatch(toastError(`Failed to add chain ${chain.name}`));
-      });
   }
 
   function makeAddRemoveButton(chain: MiniChainInfo) {
@@ -162,9 +152,8 @@ export default function ChainsSetup() {
       }
       <hr/>
       {((search.length > 0 ? filteredChains : chains).map(makeChainRow))}
-      <AddChainModal chain={showChainModal} show={!!showChainModal} add={addChain} />
-      <AddCustomChainModal show={showCustomAdd} add={addChain} />
+      <AddChainModal chain={showChainModal} show={!!showChainModal} add={mutateAddChain} />
+      <AddCustomChainModal show={showCustomAdd} add={mutateAddChain} />
     </div>
   </>
-
 }
