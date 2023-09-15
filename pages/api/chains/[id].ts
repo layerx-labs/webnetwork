@@ -4,16 +4,16 @@ import { AdminRoute } from "middleware";
 
 import { error as LogError } from "services/logging";
 
-import { get, post } from "server/common/chain";
+import { patch, del } from "server/common/chain";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method.toLowerCase()) {
-    case "get":
-      res.status(200).json(await get(req));
+    case "patch":
+      res.status(200).json(await patch(req));
       break;
-    case "post":
-      res.status(200).json(await post(req));
+    case "delete":
+      res.status(200).json(await del(req));
       break;
     default:
       res.status(405);
