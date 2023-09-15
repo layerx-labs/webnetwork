@@ -4,42 +4,46 @@ import { isAddress } from "web3-utils";
 
 import models from "db/models";
 
-import { isValidUrl } from "helpers/validateUrl";
+import { isHttps, isValidUrl } from "helpers/validateUrl";
 
 import { HttpBadRequestError, HttpNotFoundError } from "server/errors/http-errors";
 
 export async function patch(req: NextApiRequest) {
-  const { chainId } = req.body;
+  const { id } = req.query;
+  const { registryAddress, eventsApi, explorer } = req.body;
 
-  if (!chainId)
+  if (!id)
     throw new HttpBadRequestError("Missing chainId");
 
+  if ([registryAddress, eventsApi, explorer].every(p => !p))
+    throw new HttpBadRequestError("Missing parameters to update");
+
   const chain = await models.chain.findOne({
-    where: { chainId: chainId }
+    where: { chainId: id }
   });
 
   if (!chain)
     throw new HttpNotFoundError("Chain not found");
 
-  if (req.body.registryAddress) {
-    if (!isAddress(req.body.registryAddress) || isZeroAddress(req.body.registryAddress))
+  if (registryAddress) {
+    if (!isAddress(registryAddress) || isZeroAddress(registryAddress))
       throw new HttpBadRequestError("Invalid registry address provided");
 
-    chain.registryAddress = req.body.registryAddress;
+    chain.registryAddress = registryAddress;
   }
 
-  if (req.body.eventsApi) {
-    if (!isValidUrl(req.body.eventsApi) && !req.body.eventsApi.includes("https://"))
+  if (eventsApi) {
+    if (!isValidUrl(eventsApi) && !isHttps(eventsApi)) 
       throw new HttpBadRequestError("Invalid events url provided");
 
-    chain.eventsApi = req.body.eventsApi;
+    chain.eventsApi = eventsApi;
   }
 
-  if (req.body.explorer) {
-    if (!isValidUrl(req.body.explorer) && !req.body.explorer.includes("https://"))
+  if (explorer) {
+    if (!isValidUrl(explorer) && !isHttps(explorer))
       throw new HttpBadRequestError("Invalid block explorer url provided");
 
-    chain.blockScanner = req.body.explorer;
+    chain.blockScanner = explorer;
   }
 
   await chain.save();
