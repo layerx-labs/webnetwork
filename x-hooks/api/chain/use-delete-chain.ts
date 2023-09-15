@@ -1,5 +1,7 @@
 import { api } from "services/api";
 
-export async function useDeleteChain(chain) {
-  return api.delete("/chains", { params: { id: chain.chainId }});
+export async function useDeleteChain(chainId: number) {
+  return api
+    .delete(`/chains/${chainId}`)
+    .then(({ data }) => data);
 }

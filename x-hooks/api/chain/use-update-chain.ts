@@ -1,7 +1,14 @@
-import { SupportedChainData } from "interfaces/supported-chain-data";
-
 import { api } from "services/api";
 
-export async function useUpdateChain(payload: Partial<SupportedChainData>) {
-  return api.patch("chains", payload);
+interface UseUpdateChainParams {
+  chainId: number;
+  registryAddress?: string;
+  eventsApi?: string;
+  explorer?: string;
+}
+
+export async function useUpdateChain({ chainId, ...rest }: UseUpdateChainParams) {
+  return api
+    .patch(`/chains/${chainId}`, rest)
+    .then(({ data }) => data);
 }
