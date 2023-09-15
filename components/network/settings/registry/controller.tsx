@@ -14,6 +14,7 @@ import { Token } from "interfaces/token";
 import { RegistryParameters } from "types/dappkit";
 import { Field } from "types/utils";
 
+import { useAddToken } from "x-hooks/api/token";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -42,7 +43,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
   const {state} = useAppState();
-  const { processEvent, createToken } = useApi();
+  const { processEvent } = useApi();
   const { updateActiveNetwork } = useNetwork();
   const { 
     handleFeeSettings,
@@ -170,7 +171,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
       await Promise.all(toAdd.map(async (address) => {
         const currentToken = findMinAmount(isTransactional ? transactionalTokens : rewardTokens, address)
         if(currentToken?.minimum !== '0'){
-          return createToken({address, minAmount: currentToken?.minimum, chainId: +state.connectedChain.id})
+          return useAddToken({address, minAmount: currentToken?.minimum, chainId: +state.connectedChain.id})
         }
       }))
 

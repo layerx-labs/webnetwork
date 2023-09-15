@@ -26,6 +26,7 @@ import {RegistryEvents} from "interfaces/enums/events";
 import { RegistryParameters } from "types/dappkit";
 
 import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
+import { useAddToken } from "x-hooks/api/token";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
@@ -79,7 +80,7 @@ export function RegistrySetup({
   const { loadSettings } = useSettings();
   const { findSupportedChain } = useChain();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { processEvent, createToken } = useApi();
+  const { processEvent } = useApi();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
   useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
@@ -167,7 +168,7 @@ export function RegistrySetup({
       })
       .then(() => {
         const chain = findSupportedChain({ chainId: +connectedChain?.id, chainShortName: connectedChain?.shortName});
-        if (chain) createToken({address: erc20.value, minAmount: erc20MinAmount, chainId: chain?.chainId}) 
+        if (chain) useAddToken({address: erc20.value, minAmount: erc20MinAmount, chainId: chain?.chainId}) 
 
         loadSettings(true);
       })

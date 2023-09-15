@@ -1,41 +1,25 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Op } from "sequelize";
-
-import models from "db/models";
-
-import { handleCreateSettlerToken } from "helpers/handleNetworkTokens";
 
 import { AdminRoute } from "middleware";
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  const { address, minAmount, chainId } = req.body;
+import { error as LogError } from "services/logging";
 
-  if (!chainId)
-    return res.status(400).json({message: 'missing chain id'});
+import { post } from "server/common/token";
 
-  const where = {where: {chainId: {[Op.eq]: chainId}}};
-
-  const chain = await models.chain.findOne(where);
-
-  if (!chain)
-    return res.status(404).json({message: 'not found'});
-
-  await handleCreateSettlerToken(address, minAmount, chain.chainRpc, chain.chainId)
-
-  return res.status(200).json({message: 'ok'});
-}
-
-async function Token(req: NextApiRequest, res: NextApiResponse) {
-  switch (req.method.toLowerCase()) {
-  case "post":
-    await post(req, res);
-    break;
-
-  default:
-    res.status(405).json("Method not allowed");
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    switch (req.method.toLowerCase()) {
+    case "post":
+      res.status(200).json(await post(req));
+      break;
+    default:
+      res.status(405);
+    }
+  } catch (error) {
+    LogError(error);
+    res.status(error?.status || 500).json(error?.message || error?.toString());
   }
-
   res.end();
 }
 
-export default AdminRoute(Token);
+export default AdminRoute(handler);
