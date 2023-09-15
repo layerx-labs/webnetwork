@@ -9,7 +9,7 @@ import InfoIconEmpty from "assets/icons/info-icon-empty";
 
 import { trimString } from "helpers/string";
 
-import useApi from "x-hooks/use-api";
+import { useUploadFile } from "x-hooks/api/file";
 
 export interface IFilesProps extends File{
   name: string;
@@ -39,11 +39,10 @@ export default function DragAndDrop({
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [errors, setErrors] = useState<{file: File, error: FileError}[]>([])
   const { t } = useTranslation(["common"]);
-  const { uploadFiles } = useApi();
 
   const onDropAccepted = useCallback(async (dropedFiles) => {
     setIsUploading(true)
-    uploadFiles(dropedFiles)
+    useUploadFile(dropedFiles)
         .then(async (updateData) => {
           setFiles((oldFiles)=> {
             return oldFiles.map((file)=>{

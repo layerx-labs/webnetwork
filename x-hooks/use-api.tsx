@@ -11,12 +11,6 @@ import {api} from "services/api";
 import {toastError, toastSuccess} from "../contexts/reducers/change-toaster";
 import {SupportedChainData} from "../interfaces/supported-chain-data";
 
-type FileUploadReturn = {
-  hash: string;
-  fileName: string;
-  size: string;
-}[]
-
 export default function useApi() {
   const  {state, dispatch} = useAppState();
   const DEFAULT_NETWORK_NAME = state?.Service?.network?.active?.name
@@ -87,20 +81,6 @@ export default function useApi() {
       });
   }
 
-  async function uploadFiles(files: File | File[]): Promise<FileUploadReturn> {
-    const form = new FormData();
-    const isArray = Array.isArray(files);
-    if (isArray) {
-      files?.forEach(async (file, index) => {
-        form.append(`file${index + 1}`, file);
-      });
-    } else {
-      form.append("file", files);
-    }
-
-    return api.post("/files", form).then(({ data }) => data);
-  }
-
   async function resetUser(address: string, githubLogin: string) {
     return api.post("/user/reset", { address, githubLogin });
   }
@@ -149,7 +129,6 @@ export default function useApi() {
   return {
     createToken,
     processEvent,
-    uploadFiles,
     resetUser,
     createNFT,
     updateChainRegistry
