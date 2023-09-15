@@ -12,10 +12,5 @@ import { api } from "services/api";
 export async function useGetChains(query?: ParsedUrlQuery): Promise<SupportedChainData[]> {
   return api.get("/chains", {
     params: query
-  })
-    .then(({ data }) => {
-      if (data?.error) throw data?.error;
-
-      return data?.result;
-    });
+  }).then(({ data }) => data);
 }

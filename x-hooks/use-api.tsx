@@ -146,57 +146,12 @@ export default function useApi() {
       })
   }
 
-  async function addSupportedChain(chain) {
-    chain.loading = true;
-    return api.post(`chains`, chain)
-      .then(({status}) => status === 200)
-      .catch(e => {
-        console.error(`failed to addSupportedChain`, e);
-        return false;
-      })
-      .finally(() => {
-        chain.loading = false;
-      })
-  }
-
-  async function deleteSupportedChain(chain) {
-    chain.loading = true;
-
-    return api.delete(`chains?id=${chain.chainId}`)
-      .then(({status}) => {
-        dispatch(status === 200 ? toastSuccess('deleted chain') : toastError('failed to delete'));
-        return status === 200
-      })
-      .catch(e => {
-        console.error(`failed to addSupportedChain`, e);
-        return false;
-      })
-      .finally(() => {
-        chain.loading = false;
-      })
-  }
-
-  async function patchSupportedChain(chain, patch: Partial<SupportedChainData>) {
-    return api.patch(`chains`, {...chain, ...patch})
-      .then(({status}) => status === 200)
-      .catch(e => {
-        console.error(`failed to patchSupportedChain`, e);
-        return false;
-      })
-      .finally(() => {
-        chain.loading = false;
-      })
-  }
-
   return {
     createToken,
     processEvent,
     uploadFiles,
     resetUser,
     createNFT,
-    addSupportedChain,
-    deleteSupportedChain,
-    updateChainRegistry,
-    patchSupportedChain
+    updateChainRegistry
   };
 }
