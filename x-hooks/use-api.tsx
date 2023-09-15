@@ -1,5 +1,4 @@
 import axios from "axios";
-import {isZeroAddress} from "ethereumjs-util";
 
 import {useAppState} from "contexts/app-state";
 
@@ -8,12 +7,8 @@ import {NetworkEvents, RegistryEvents, StandAloneEvents} from "interfaces/enums/
 
 import {api} from "services/api";
 
-import {toastError, toastSuccess} from "../contexts/reducers/change-toaster";
-import {SupportedChainData} from "../interfaces/supported-chain-data";
-
 export default function useApi() {
-  const  {state, dispatch} = useAppState();
-  const DEFAULT_NETWORK_NAME = state?.Service?.network?.active?.name
+  const  { state } = useAppState();
 
   // api.interceptors.request.use(config => {
   //
@@ -35,13 +30,6 @@ export default function useApi() {
   //
   //   return config;
   // });
-
-  async function createToken(payload: {address: string; minAmount: string; chainId: number }) {
-    return api
-      .post("/token", { ...payload })
-      .then(({ data }) => data)
-      .catch(() => null);
-  }
 
   async function processEvent(event: NetworkEvents | RegistryEvents | StandAloneEvents,
                               address?: string,
@@ -81,51 +69,7 @@ export default function useApi() {
       });
   }
 
-  async function createNFT(issueContractId: number,
-                           proposalContractId: number,
-                           mergerAddress: string,
-                           networkName: string = DEFAULT_NETWORK_NAME) {
-    return api
-      .post("/nft", { issueContractId, proposalContractId, mergerAddress, networkName })
-      .then(({ data }) => data)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
-  async function updateChainRegistry(chain: SupportedChainData) {
-
-    const model: any = {
-      chainId: chain.chainId,
-      name: chain.chainName,
-      shortName: chain.chainShortName,
-      activeRPC: chain.chainRpc,
-      networkId: chain.chainId,
-      nativeCurrency: {
-        decimals: +chain.chainCurrencyDecimals,
-        name: chain.chainCurrencyName,
-        symbol: chain.chainCurrencySymbol
-      },
-      blockScanner: chain.blockScanner,
-      eventsApi: chain.eventsApi,
-      registryAddress: chain.registryAddress
-    }
-
-    return api.patch<{registryAddress?: string}>(`chains`, model)
-      .then(response =>
-        response.status === 200 &&
-        !!response.data?.registryAddress &&
-        !isZeroAddress(response.data?.registryAddress))
-      .catch((e) => {
-        console.log(`error patching registry`, e)
-        return false;
-      })
-  }
-
   return {
-    createToken,
-    processEvent,
-    createNFT,
-    updateChainRegistry
+    processEvent
   };
 }
