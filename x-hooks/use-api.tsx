@@ -81,10 +81,6 @@ export default function useApi() {
       });
   }
 
-  async function resetUser(address: string, githubLogin: string) {
-    return api.post("/user/reset", { address, githubLogin });
-  }
-
   async function createNFT(issueContractId: number,
                            proposalContractId: number,
                            mergerAddress: string,
@@ -129,7 +125,6 @@ export default function useApi() {
   return {
     createToken,
     processEvent,
-    resetUser,
     createNFT,
     updateChainRegistry
   };

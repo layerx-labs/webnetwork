@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
+import RemoveGithubAccountView from "components/connections/remove-github-modal/view";
+
 import { useAppState } from "contexts/app-state";
 import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
-import useApi from "x-hooks/use-api";
-
-import RemoveGithubAccountView from "./view";
+import { useRemoveGithub } from "x-hooks/api/user";
 
 interface RemoveGithubAccountProps {
   show: boolean;
@@ -27,13 +27,12 @@ export default function RemoveGithubAccount({
   const { t } = useTranslation(["profile", "common"]);
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const { resetUser } = useApi();
   const { dispatch } = useAppState();
 
   function handleClickRemove() {
     setIsExecuting(true);
 
-    resetUser(walletAddress, githubLogin)
+    useRemoveGithub(walletAddress, githubLogin)
       .then(onDisconnectGithub)
       .then(() => {
         dispatch(toastSuccess(t("modals.remove-github.success")));
