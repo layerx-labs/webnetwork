@@ -1,7 +1,7 @@
 export function isValidUrl(url: string) {
   try {
-    new URL(url);
-    return true;
+    const urlObject = new URL(url);
+    return ["http://", "https://"].includes(`${urlObject.protocol}//`);
   } catch (err) {
     return false;
   }
