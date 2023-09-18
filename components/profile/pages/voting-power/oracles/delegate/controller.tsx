@@ -11,7 +11,7 @@ import { TransactionStatus } from "interfaces/enums/transaction-status";
 import { TransactionTypes } from "interfaces/enums/transaction-types";
 import { OraclesDelegateProps } from "interfaces/oracles-state";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 
 import OraclesDelegateView from "./view";
 
@@ -33,8 +33,6 @@ export default function OraclesDelegate({
   const {
     state: { transactions, Service },
   } = useAppState();
-
-  const { processEvent } = useApi();
 
   const networkTokenDecimals =
     Service?.network?.active?.networkToken?.decimals || 18;
@@ -82,7 +80,7 @@ export default function OraclesDelegate({
   }
 
   function handleProcessEvent(blockNumber) {
-    processEvent(NetworkEvents.OraclesTransfer, undefined, {
+    useProcessEvent(NetworkEvents.OraclesTransfer, undefined, {
       fromBlock: blockNumber,
     }).catch(console.debug);
   }

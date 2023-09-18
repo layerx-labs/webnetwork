@@ -17,7 +17,7 @@ import {formatStringToCurrency} from "helpers/formatNumber";
 import { NetworkEvents } from "interfaces/enums/events";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
 
 import NetworkTxButton from "./common/network-tx-button/controller";
@@ -33,8 +33,6 @@ export default function UnlockBeproModal({
   const [amountToUnlock, setAmountToUnlock] = useState<BigNumber>();
 
   const {state} = useAppState();
-
-  const { processEvent } = useApi();
 
   const { updateWalletBalance } = useAuthentication();
 
@@ -71,7 +69,7 @@ export default function UnlockBeproModal({
   }
 
   function handleProcessEvent(blockNumber) {
-    processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+    useProcessEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
       .catch(console.debug);
   }
 

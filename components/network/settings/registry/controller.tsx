@@ -14,8 +14,8 @@ import { Token } from "interfaces/token";
 import { RegistryParameters } from "types/dappkit";
 import { Field } from "types/utils";
 
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
-import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
@@ -43,7 +43,6 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
   const {state} = useAppState();
-  const { processEvent } = useApi();
   const { updateActiveNetwork } = useNetwork();
   const { 
     handleFeeSettings,
@@ -231,7 +230,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
     if (tokensBlocks.length) {
       const ordered = [...tokensBlocks].sort();
 
-      await processEvent(RegistryEvents.ChangeAllowedTokens, undefined, { 
+      await useProcessEvent(RegistryEvents.ChangeAllowedTokens, undefined, { 
         fromBlock: ordered.shift(),
         toBlock: ordered.pop()
       });

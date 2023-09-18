@@ -16,14 +16,13 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "./api/events/use-process-event";
 
 const DIVISOR = 1000000;
 
 export default function useBepro() {
   const { t } = useTranslation("common");
 
-  const { processEvent } = useApi();
   const { dispatch, state } = useAppState();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
@@ -178,7 +177,7 @@ export default function useBepro() {
       await state.Service?.active.cancelBounty(contractId, funding)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
-          return processEvent(NetworkEvents.BountyCanceled, undefined, {
+          return useProcessEvent(NetworkEvents.BountyCanceled, undefined, {
             fromBlock: txInfo.blockNumber, id: contractId
           });
         })
@@ -206,7 +205,7 @@ export default function useBepro() {
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
 
-          return processEvent(NetworkEvents.BountyCanceled, undefined, {
+          return useProcessEvent(NetworkEvents.BountyCanceled, undefined, {
             fromBlock: txInfo.blockNumber, 
             id: contractId
           });
@@ -293,7 +292,7 @@ export default function useBepro() {
             throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
           dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]))
 
-          processEvent(NetworkEvents.OraclesTransfer, undefined, {
+          useProcessEvent(NetworkEvents.OraclesTransfer, undefined, {
             fromBlock: txInfo.blockNumber
           })
             .catch(console.debug);

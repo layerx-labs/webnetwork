@@ -9,7 +9,7 @@ import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "./api/events/use-process-event";
 
 interface ExecutionResult {
   tx: TransactionReceipt;
@@ -27,7 +27,6 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
   
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const { processEvent } = useApi();
   const { dispatch } = useAppState();
 
   function execute(...args: unknown[]): Promise<ExecutionResult> {
@@ -37,7 +36,7 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
 
         const tx = await method(...args);
 
-        const eventsLogs = await processEvent(event, undefined, { fromBlock: tx.blockNumber });
+        const eventsLogs = await useProcessEvent(event, undefined, { fromBlock: tx.blockNumber });
 
         if (successMessage) dispatch(toastSuccess(successMessage, t("actions.success")));
 

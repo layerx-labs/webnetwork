@@ -14,8 +14,8 @@ import { StandAloneEvents } from "interfaces/enums/events";
 import { Network } from "interfaces/network";
 import { Token } from "interfaces/token";
 
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/network";
-import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -39,7 +39,6 @@ export default function NetworkGovernanceSettings({
   const [isUpdating, setIsUpdating] = useState(false);
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
-  const { processEvent } = useApi();
   const { state, dispatch } = useAppState();
   const { updateActiveNetwork } = useNetwork();
   const { updateWalletBalance, signMessage } = useAuthentication();
@@ -214,11 +213,11 @@ export default function NetworkGovernanceSettings({
     if (successQuantity) {
       if(changedParameters.find(({ param }) => param === "draftTime"))
         await Promise.all([
-          processEvent(StandAloneEvents.UpdateBountiesToDraft),
-          processEvent(StandAloneEvents.BountyMovedToOpen)
+          useProcessEvent(StandAloneEvents.UpdateBountiesToDraft),
+          useProcessEvent(StandAloneEvents.BountyMovedToOpen)
         ]);
 
-      await processEvent(StandAloneEvents.UpdateNetworkParams)
+      await useProcessEvent(StandAloneEvents.UpdateNetworkParams)
         .catch(error => console.debug("Failed to update network parameters", error));
 
       dispatch(toastSuccess(t("custom-network:messages.updated-parameters", {

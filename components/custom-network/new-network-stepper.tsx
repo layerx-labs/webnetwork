@@ -36,8 +36,8 @@ import {psReadAsText} from "helpers/file-reader";
 
 import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/network";
-import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
@@ -56,7 +56,6 @@ function NewNetwork() {
   const { signMessage } = useSignature();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
-  const { processEvent } = useApi();
   const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
 
@@ -191,7 +190,7 @@ function NewNetwork() {
     }
 
     if (txBlocks.length)
-      await processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
+      await useProcessEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
         chainId: state.connectedChain?.id,
         fromBlock: Math.min(...txBlocks)
       })
@@ -208,7 +207,7 @@ function NewNetwork() {
 
     setCreatingNetwork(10);
     cleanStorage?.();
-    await processEvent(RegistryEvents.NetworkRegistered, state.connectedChain?.registry, {
+    await useProcessEvent(RegistryEvents.NetworkRegistered, state.connectedChain?.registry, {
       fromBlock: registrationTx.blockNumber
     })
       .then(() => router.push(getURLWithNetwork("/", {

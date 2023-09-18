@@ -17,8 +17,8 @@ import { metadata } from "interfaces/metadata";
 
 import DeletePreDeliverable from "x-hooks/api/deliverable/delete-pre-deliverable";
 import CreatePreDeliverable from "x-hooks/api/deliverable/post-pre-deliverable";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import getMetadata from "x-hooks/api/get-metadata";
-import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
@@ -46,7 +46,6 @@ export default function CreateDeliverablePage({
   const { getURLWithNetwork } = useNetwork();
   const { push, query } = useRouter();
   const { handleCreatePullRequest } = useBepro();
-  const { processEvent } = useApi();
   const currentBounty = issueParser(bounty);
   const checkButtonsOptions = [
     {
@@ -131,7 +130,7 @@ export default function CreateDeliverablePage({
         return res
       })
     }).then((txInfo) => {
-      return processEvent(NetworkEvents.PullRequestCreated, undefined, {
+      return useProcessEvent(NetworkEvents.PullRequestCreated, undefined, {
         fromBlock: (txInfo as { blockNumber: number }).blockNumber,
       });
     }).then(() => {

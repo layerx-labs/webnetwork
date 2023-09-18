@@ -12,7 +12,7 @@ import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
@@ -41,7 +41,6 @@ export default function DeliverableBody({
   const [isCancelling, setIsCancelling] = useState(false);
   const [isMakingReady, setIsMakingReady] = useState(false);
 
-  const { processEvent } = useApi();
   const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
@@ -77,7 +76,7 @@ export default function DeliverableBody({
     handleMakePullRequestReady(currentBounty.contractId, currentDeliverable.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return processEvent(NetworkEvents.PullRequestReady, undefined, {
+        return useProcessEvent(NetworkEvents.PullRequestReady, undefined, {
           fromBlock,
         });
       })
@@ -111,7 +110,7 @@ export default function DeliverableBody({
     handleCancelPullRequest(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return processEvent(NetworkEvents.PullRequestCanceled, undefined, {
+        return useProcessEvent(NetworkEvents.PullRequestCanceled, undefined, {
           fromBlock,
         });
       })

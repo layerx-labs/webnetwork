@@ -13,7 +13,7 @@ import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { OraclesActionsProps } from "interfaces/oracles-state";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useERC20 from "x-hooks/use-erc20";
 
 import OraclesActionsView from "./view";
@@ -38,8 +38,6 @@ export default function OraclesActions({
   const networkTokenERC20 = useERC20();
 
   const { state: { transactions, Service }} = useAppState();
-
-  const { processEvent } = useApi();
 
   const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;
@@ -155,7 +153,7 @@ export default function OraclesActions({
   }
 
   function handleProcessEvent(blockNumber) {
-    processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+    useProcessEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
       .catch(console.debug);
   }
 

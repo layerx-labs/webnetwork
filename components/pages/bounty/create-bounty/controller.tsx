@@ -31,8 +31,8 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import {useCreatePreBounty} from "x-hooks/api/bounty";
-import useApi from "x-hooks/use-api";
+import { useCreatePreBounty } from "x-hooks/api/bounty";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
@@ -89,7 +89,6 @@ export default function CreateBountyPage({
 
   const rewardERC20 = useERC20();
   const transactionalERC20 = useERC20();
-  const { processEvent } = useApi();
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
@@ -376,7 +375,7 @@ export default function CreateBountyPage({
                               transactionToast.payload[0] as SimpleBlockTransactionPayload),
         ]));
 
-        const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
+        const createdBounty = await useProcessEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
         }, currentNetwork?.name);
 

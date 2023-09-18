@@ -26,8 +26,8 @@ import {RegistryEvents} from "interfaces/enums/events";
 import { RegistryParameters } from "types/dappkit";
 
 import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
-import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
@@ -80,7 +80,6 @@ export function RegistrySetup({
   const { loadSettings } = useSettings();
   const { findSupportedChain } = useChain();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { processEvent } = useApi();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
   useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
@@ -241,7 +240,7 @@ export function RegistrySetup({
     handleChangeAllowedTokens([erc20.value], isTransactional)
       .then(txInfo => Promise.all([
         updateData(),
-        processEvent(RegistryEvents.ChangeAllowedTokens, connectedChain?.registry, { 
+        useProcessEvent(RegistryEvents.ChangeAllowedTokens, connectedChain?.registry, { 
           fromBlock: (txInfo as { blockNumber: number }).blockNumber 
         })
       ]))
