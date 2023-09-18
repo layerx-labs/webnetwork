@@ -4,6 +4,8 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
+import CreateDeliverablePageView from "components/pages/create-deliverable/view";
+
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
@@ -12,24 +14,17 @@ import { isValidUrl } from "helpers/validateUrl";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
-import { IssueData } from "interfaces/issue-data";
 import { metadata } from "interfaces/metadata";
 
+import { getBountyData } from "x-hooks/api/bounty";
 import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import getMetadata from "x-hooks/api/get-metadata";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
+import useReactQuery from "x-hooks/use-react-query";
 
-import CreateDeliverablePageView from "./view";
-
-interface CreateDeliverablePageProps {
-  bounty: IssueData;
-}
-
-export default function CreateDeliverablePage({
-  bounty,
-}: CreateDeliverablePageProps) {
+export default function CreateDeliverablePage() {
   const { push, query } = useRouter();
   const { t } = useTranslation(["common", "deliverable", "bounty"]);
 
@@ -46,8 +41,11 @@ export default function CreateDeliverablePage({
   const { getURLWithNetwork } = useNetwork();
   const { processEvent } = useProcessEvent();
   const { handleCreatePullRequest } = useBepro();
+  
+  const bountyQueryKey = ["bounty", query?.id?.toString()];
+  const { data: bountyData } = useReactQuery(bountyQueryKey, () => getBountyData(query));
 
-  const currentBounty = issueParser(bounty);
+  const currentBounty = issueParser(bountyData);
   const checkButtonsOptions = [
     {
       label: t("bounty:fields.deliverable-types.types.code"),
