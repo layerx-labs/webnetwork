@@ -7,10 +7,6 @@ export const api = axios.create({
   baseURL: `${publicRuntimeConfig?.urls?.api}/api`
 });
 
-export const eventsApi = axios.create({
-  baseURL: `${publicRuntimeConfig?.urls?.events}`
-});
-
 export const kycApi = axios.create({
   baseURL: `${publicRuntimeConfig?.urls?.kyc}`
 });
@@ -63,12 +59,6 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-eventsApi.interceptors.response.use((response) => response,
-                                    (error) => {
-                                      console.debug("[EventsApi] Failed", error);
-                                      throw error;
-                                    });
-
 kycApi.interceptors.request.use(function (config) {
   if (serverRuntimeConfig.kyc.key && serverRuntimeConfig.kyc.clientId) {
     config.headers["Api-Key"] = serverRuntimeConfig.kyc.key;
@@ -84,5 +74,5 @@ kycApi.interceptors.response.use((response) => response,
                                    throw error;
                                  });
                                     
-export default { api, eventsApi, kycApi };
+export default { api, kycApi };
 
