@@ -15,8 +15,7 @@ import { NetworkEvents } from "interfaces/enums/events";
 import { IssueData } from "interfaces/issue-data";
 import { metadata } from "interfaces/metadata";
 
-import DeletePreDeliverable from "x-hooks/api/deliverable/delete-pre-deliverable";
-import CreatePreDeliverable from "x-hooks/api/deliverable/post-pre-deliverable";
+import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import getMetadata from "x-hooks/api/get-metadata";
 import useBepro from "x-hooks/use-bepro";
