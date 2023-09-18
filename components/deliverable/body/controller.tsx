@@ -22,18 +22,16 @@ interface DeliverableBodyControllerProps {
   currentDeliverable: Deliverable;
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
-  updateBountyData: () => void;
+  updateDeliverableData: () => void;
   handleShowModal: () => void;
-  updateComments: () => void;
 }
 
 export default function DeliverableBody({
   currentDeliverable,
   currentBounty,
   isCreatingReview,
-  updateBountyData,
+  updateDeliverableData,
   handleShowModal,
-  updateComments
 }: DeliverableBodyControllerProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
@@ -81,7 +79,7 @@ export default function DeliverableBody({
         });
       })
       .then(() => {
-        return updateBountyData();
+        return updateDeliverableData();
       })
       .then(() => {
         setIsMakingReady(false);
@@ -115,7 +113,7 @@ export default function DeliverableBody({
         });
       })
       .then(() => {
-        updateBountyData();
+        updateDeliverableData();
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
@@ -151,7 +149,7 @@ export default function DeliverableBody({
       isCancelButton={isCancelButton}
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
-      updateComments={updateComments}
+      updateComments={updateDeliverableData}
       currentUser={state.currentUser}
       bountyId={currentBounty?.id}
     />
