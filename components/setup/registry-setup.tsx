@@ -19,6 +19,7 @@ import { updateSupportedChains } from "contexts/reducers/change-supported-chains
 import {toastError, toastInfo, toastSuccess} from "contexts/reducers/change-toaster";
 
 import { DAPPKIT_LINK } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
 import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
 
 import {RegistryEvents} from "interfaces/enums/events";
@@ -83,13 +84,13 @@ export function RegistrySetup({
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
-  useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
     dispatch(updateSupportedChains(chains));
     return chains; 
   }));
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({
-    queryKey: ["supportedChains"],
+    queryKey: QueryKeys.chains(),
     mutationFn: useUpdateChain,
     toastSuccess: "Chain registry updated",
     toastError: "Failed to update chain registry"

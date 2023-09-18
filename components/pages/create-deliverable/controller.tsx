@@ -10,6 +10,7 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { issueParser } from "helpers/issue";
+import { QueryKeys } from "helpers/query-keys";
 import { isValidUrl } from "helpers/validateUrl";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
@@ -42,7 +43,7 @@ export default function CreateDeliverablePage() {
   const { processEvent } = useProcessEvent();
   const { handleCreatePullRequest } = useBepro();
   
-  const bountyQueryKey = ["bounty", query?.id?.toString()];
+  const bountyQueryKey = QueryKeys.bounty(query?.id?.toString());
   const { data: bountyData } = useReactQuery(bountyQueryKey, () => getBountyData(query));
 
   const currentBounty = issueParser(bountyData);

@@ -1,0 +1,15 @@
+export const QueryKeys = {
+  bounty: (bountyId: string) => ["bounty", bountyId],
+  bountyComments: (bountyId: string) => ["bounty", "comments", bountyId],
+  proposal: (proposalId: string) => ["proposal", proposalId],
+  proposalComments: (proposalId: string) => ["proposal", "comments", proposalId],
+  deliverable: (deliverableId: string) => ["deliverable", deliverableId],
+  chains: () => ["supportedChains"],
+  networksByChain: (chainId: string) => ["networks", chainId],
+  networksByGovernor: (governorAddress: string, chainId: string) => ["network", governorAddress, chainId],
+  networkDefault: () => ["network", "default"],
+  tokensByChain: (chainId: string) => ["tokens", chainId],
+  tokensOf: (wallet: string) => ["tokens", wallet],
+  votingPowerOf: (wallet: string) => ["voting-power-multi", wallet],
+  votingPowerMultiOf: (wallet: string) => ["voting-power-multi", wallet],
+};

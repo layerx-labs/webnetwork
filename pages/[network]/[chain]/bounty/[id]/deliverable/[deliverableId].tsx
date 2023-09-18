@@ -15,6 +15,7 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { deliverableParser, issueParser } from "helpers/issue";
+import { QueryKeys } from "helpers/query-keys";
 
 import { getReactQueryClient } from "services/react-query";
 
@@ -33,7 +34,7 @@ export default function DeliverablePage() {
 
   const { state, dispatch } = useAppState();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
-  useReactQuery(["deliverable", +deliverableId], () => getDeliverable(+deliverableId));
+  useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
   
   const currentBounty = issueParser(deliverableData?.issue);
   const currentDeliverable = deliverableParser(deliverableData, currentBounty?.mergeProposals);
@@ -106,7 +107,8 @@ export default function DeliverablePage() {
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const queryClient = getReactQueryClient();
   const { deliverableId } = query;
-  await queryClient.prefetchQuery(["deliverable", deliverableId], () => getDeliverable(+deliverableId));
+  const deliverableKey = QueryKeys.deliverable(deliverableId?.toString());
+  await queryClient.prefetchQuery(deliverableKey, () => getDeliverable(+deliverableId));
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

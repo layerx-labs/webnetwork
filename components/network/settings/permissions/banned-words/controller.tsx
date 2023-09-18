@@ -8,25 +8,29 @@ import NetworkPermissionsView from "components/network/settings/permissions/bann
 import { useAppState } from "contexts/app-state";
 import { toastError } from "contexts/reducers/change-toaster";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import { Network } from "interfaces/network";
 
 import { CreateBannedWord, RemoveBannedWord } from "x-hooks/api/network/management/banned-words";
+import useChain from "x-hooks/use-chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface NetworkPermissionsProps {
   network: Network;
-  networkQueryKey: string[];
 }
 
 export default function NetworkPermissions({
-  network,
-  networkQueryKey,
+  network
 }: NetworkPermissionsProps) {
   const { t } = useTranslation(["custom-network"]);
 
   const [currentDomain, setCurrentDomain] = useState<string>();
 
-  const { dispatch } = useAppState();
+  const { chain } = useChain();
+  const { state, dispatch } = useAppState();
+
+  const networkQueryKey = QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chain?.chainId?.toString());
 
   const { mutate: addBannedWord, isLoading: isAdding } = useReactQueryMutation({
     queryKey: networkQueryKey,

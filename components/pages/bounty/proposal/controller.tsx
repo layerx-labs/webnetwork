@@ -12,6 +12,7 @@ import {useAppState} from "contexts/app-state";
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import { commentsParser, deliverableParser, issueParser, mergeProposalParser } from "helpers/issue";
 import { isProposalDisputable } from "helpers/proposal";
+import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
 import { IssueData } from "interfaces/issue-data";
@@ -43,9 +44,9 @@ export default function ProposalPage() {
 
   const { state } = useAppState();
 
-  const proposalId = query?.proposalId?.toString();
-  const proposalQueryKey = ["proposal", proposalId];
-  const commentsQueryKey = ["proposal", "comments", proposalId];
+  const proposalId = query?.id?.toString();
+  const proposalQueryKey = QueryKeys.proposal(proposalId);
+  const commentsQueryKey = QueryKeys.proposalComments(proposalId);
 
   const { data: proposalData } = useReactQuery(proposalQueryKey, () => getProposalData(query));
   const { data: comments, invalidate: invalidateComments } = 

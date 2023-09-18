@@ -30,7 +30,6 @@ import NetworkPermissions from "./permissions/banned-words/controller";
 interface MyNetworkSettingsProps {
   network: Network;
   bounties: SearchBountiesPaginated;
-  networkQueryKey: string[];
   updateEditingNetwork: () => Promise<void>;
 }
 
@@ -43,7 +42,6 @@ export interface TabsProps {
 export default function MyNetworkSettings({
   network,
   bounties,
-  networkQueryKey,
   updateEditingNetwork,
 }: MyNetworkSettingsProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
@@ -196,7 +194,7 @@ export default function MyNetworkSettings({
         title: t("custom-network:steps.permissions.title"),
         component: (
           <>
-            <NetworkPermissions network={network} networkQueryKey={networkQueryKey} />
+            <NetworkPermissions network={network} />
             <AllowList networkId={network.id} />
           </>
         )

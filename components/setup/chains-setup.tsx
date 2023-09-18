@@ -17,6 +17,8 @@ import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 import {useAppState} from "contexts/app-state";
 import {changeLoadState} from "contexts/reducers/change-load";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import {MiniChainInfo} from "interfaces/mini-chain";
 
 import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
@@ -35,7 +37,7 @@ export default function ChainsSetup() {
   const {state, dispatch} = useAppState();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({
-    queryKey: ["supportedChains"],
+    queryKey: QueryKeys.chains(),
     mutationFn: useAddChain,
     toastSuccess: "Chain saved",
     toastError: "Failed to add chain",
@@ -46,7 +48,7 @@ export default function ChainsSetup() {
   });
 
   const { mutate: mutateDeleteChain } = useReactQueryMutation({
-    queryKey: ["supportedChains"],
+    queryKey: QueryKeys.chains(),
     mutationFn: useDeleteChain,
     toastSuccess: "Chain removed",
     toastError: "Failed to remove chain"
