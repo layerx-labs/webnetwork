@@ -34,6 +34,7 @@ export default function UnlockBeproModal({
 
   const {state} = useAppState();
 
+  const { processEvent } = useProcessEvent();
   const { updateWalletBalance } = useAuthentication();
 
   const oraclesAvailable = state.currentUser?.balance?.oracles?.locked;
@@ -69,7 +70,7 @@ export default function UnlockBeproModal({
   }
 
   function handleProcessEvent(blockNumber) {
-    useProcessEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+    processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
       .catch(console.debug);
   }
 

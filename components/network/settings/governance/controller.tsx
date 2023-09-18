@@ -40,6 +40,7 @@ export default function NetworkGovernanceSettings({
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
   const { state, dispatch } = useAppState();
+  const { processEvent } = useProcessEvent();
   const { updateActiveNetwork } = useNetwork();
   const { updateWalletBalance, signMessage } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
@@ -213,11 +214,11 @@ export default function NetworkGovernanceSettings({
     if (successQuantity) {
       if(changedParameters.find(({ param }) => param === "draftTime"))
         await Promise.all([
-          useProcessEvent(StandAloneEvents.UpdateBountiesToDraft),
-          useProcessEvent(StandAloneEvents.BountyMovedToOpen)
+          processEvent(StandAloneEvents.UpdateBountiesToDraft),
+          processEvent(StandAloneEvents.BountyMovedToOpen)
         ]);
 
-      await useProcessEvent(StandAloneEvents.UpdateNetworkParams)
+      await processEvent(StandAloneEvents.UpdateNetworkParams)
         .catch(error => console.debug("Failed to update network parameters", error));
 
       dispatch(toastSuccess(t("custom-network:messages.updated-parameters", {

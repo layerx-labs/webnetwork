@@ -41,6 +41,7 @@ export default function DeliverableBody({
 
   const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
@@ -74,7 +75,7 @@ export default function DeliverableBody({
     handleMakePullRequestReady(currentBounty.contractId, currentDeliverable.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return useProcessEvent(NetworkEvents.PullRequestReady, undefined, {
+        return processEvent(NetworkEvents.PullRequestReady, undefined, {
           fromBlock,
         });
       })
@@ -108,7 +109,7 @@ export default function DeliverableBody({
     handleCancelPullRequest(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then((txInfo) => {
         const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return useProcessEvent(NetworkEvents.PullRequestCanceled, undefined, {
+        return processEvent(NetworkEvents.PullRequestCanceled, undefined, {
           fromBlock,
         });
       })

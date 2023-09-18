@@ -30,6 +30,7 @@ interface CreateDeliverablePageProps {
 export default function CreateDeliverablePage({
   bounty,
 }: CreateDeliverablePageProps) {
+  const { push, query } = useRouter();
   const { t } = useTranslation(["common", "deliverable", "bounty"]);
 
   const [originLink, setOriginLink] = useState<string>();
@@ -43,8 +44,9 @@ export default function CreateDeliverablePage({
   
   const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
-  const { push, query } = useRouter();
+  const { processEvent } = useProcessEvent();
   const { handleCreatePullRequest } = useBepro();
+
   const currentBounty = issueParser(bounty);
   const checkButtonsOptions = [
     {
@@ -124,12 +126,9 @@ export default function CreateDeliverablePage({
       issueId: +currentBounty?.id,
     }).then(({ cid, originCID, bountyId }) => {
       deliverableId = cid
-      return handleCreatePullRequest(bountyId, "", "", originCID, "", "", cid).then((res) => {
-        console.log("res", res)
-        return res
-      })
+      return handleCreatePullRequest(bountyId, "", "", originCID, "", "", cid);
     }).then((txInfo) => {
-      return useProcessEvent(NetworkEvents.PullRequestCreated, undefined, {
+      return processEvent(NetworkEvents.PullRequestCreated, undefined, {
         fromBlock: (txInfo as { blockNumber: number }).blockNumber,
       });
     }).then(() => {
@@ -142,6 +141,7 @@ export default function CreateDeliverablePage({
       return push(getURLWithNetwork("/bounty/[id]", query));
     })
     .catch((err) => {
+      console.debug("Failed to create deliverable", err);
       if (deliverableId) DeletePreDeliverable(deliverableId);
 
       if (err.response?.status === 422 && err.response?.data) {

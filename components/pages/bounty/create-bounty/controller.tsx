@@ -92,6 +92,7 @@ export default function CreateBountyPage({
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
 
   const {
@@ -375,7 +376,7 @@ export default function CreateBountyPage({
                               transactionToast.payload[0] as SimpleBlockTransactionPayload),
         ]));
 
-        const createdBounty = await useProcessEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
+        const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
         }, currentNetwork?.name);
 

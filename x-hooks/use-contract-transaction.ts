@@ -28,6 +28,7 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
   const [isExecuting, setIsExecuting] = useState(false);
 
   const { dispatch } = useAppState();
+  const { processEvent } = useProcessEvent();
 
   function execute(...args: unknown[]): Promise<ExecutionResult> {
     return new Promise(async (resolve, reject) => {
@@ -36,7 +37,7 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
 
         const tx = await method(...args);
 
-        const eventsLogs = await useProcessEvent(event, undefined, { fromBlock: tx.blockNumber });
+        const eventsLogs = await processEvent(event, undefined, { fromBlock: tx.blockNumber });
 
         if (successMessage) dispatch(toastSuccess(successMessage, t("actions.success")));
 

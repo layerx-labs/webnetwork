@@ -30,6 +30,7 @@ export default function OraclesDelegate({
   const [delegatedTo, setDelegatedTo] = useState<string>(defaultAddress || "");
   const [availableAmount, setAvailableAmount] = useState<BigNumber>();
 
+  const { processEvent } = useProcessEvent();
   const {
     state: { transactions, Service },
   } = useAppState();
@@ -80,7 +81,7 @@ export default function OraclesDelegate({
   }
 
   function handleProcessEvent(blockNumber) {
-    useProcessEvent(NetworkEvents.OraclesTransfer, undefined, {
+    processEvent(NetworkEvents.OraclesTransfer, undefined, {
       fromBlock: blockNumber,
     }).catch(console.debug);
   }

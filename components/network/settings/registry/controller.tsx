@@ -43,6 +43,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
   const {state} = useAppState();
+  const { processEvent } = useProcessEvent();
   const { updateActiveNetwork } = useNetwork();
   const { 
     handleFeeSettings,
@@ -230,7 +231,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
     if (tokensBlocks.length) {
       const ordered = [...tokensBlocks].sort();
 
-      await useProcessEvent(RegistryEvents.ChangeAllowedTokens, undefined, { 
+      await processEvent(RegistryEvents.ChangeAllowedTokens, undefined, { 
         fromBlock: ordered.shift(),
         toBlock: ordered.pop()
       });

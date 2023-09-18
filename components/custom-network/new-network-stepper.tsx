@@ -56,6 +56,7 @@ function NewNetwork() {
   const { signMessage } = useSignature();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
 
@@ -190,7 +191,7 @@ function NewNetwork() {
     }
 
     if (txBlocks.length)
-      await useProcessEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
+      await processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
         chainId: state.connectedChain?.id,
         fromBlock: Math.min(...txBlocks)
       })
@@ -207,7 +208,7 @@ function NewNetwork() {
 
     setCreatingNetwork(10);
     cleanStorage?.();
-    await useProcessEvent(RegistryEvents.NetworkRegistered, state.connectedChain?.registry, {
+    await processEvent(RegistryEvents.NetworkRegistered, state.connectedChain?.registry, {
       fromBlock: registrationTx.blockNumber
     })
       .then(() => router.push(getURLWithNetwork("/", {

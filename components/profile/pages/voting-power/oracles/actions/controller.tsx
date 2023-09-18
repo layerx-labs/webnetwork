@@ -36,7 +36,7 @@ export default function OraclesActions({
   const [tokenAmount, setTokenAmount] = useState<string>();
 
   const networkTokenERC20 = useERC20();
-
+  const { processEvent } = useProcessEvent();
   const { state: { transactions, Service }} = useAppState();
 
   const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
@@ -153,7 +153,7 @@ export default function OraclesActions({
   }
 
   function handleProcessEvent(blockNumber) {
-    useProcessEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+    processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
       .catch(console.debug);
   }
 

@@ -79,6 +79,7 @@ export function RegistrySetup({
 
   const { loadSettings } = useSettings();
   const { findSupportedChain } = useChain();
+  const { processEvent } = useProcessEvent();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
@@ -240,7 +241,7 @@ export function RegistrySetup({
     handleChangeAllowedTokens([erc20.value], isTransactional)
       .then(txInfo => Promise.all([
         updateData(),
-        useProcessEvent(RegistryEvents.ChangeAllowedTokens, connectedChain?.registry, { 
+        processEvent(RegistryEvents.ChangeAllowedTokens, connectedChain?.registry, { 
           fromBlock: (txInfo as { blockNumber: number }).blockNumber 
         })
       ]))

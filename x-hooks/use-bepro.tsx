@@ -24,6 +24,7 @@ export default function useBepro() {
   const { t } = useTranslation("common");
 
   const { dispatch, state } = useAppState();
+  const { processEvent } = useProcessEvent();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
 
@@ -177,7 +178,7 @@ export default function useBepro() {
       await state.Service?.active.cancelBounty(contractId, funding)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
-          return useProcessEvent(NetworkEvents.BountyCanceled, undefined, {
+          return processEvent(NetworkEvents.BountyCanceled, undefined, {
             fromBlock: txInfo.blockNumber, id: contractId
           });
         })
@@ -205,7 +206,7 @@ export default function useBepro() {
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
 
-          return useProcessEvent(NetworkEvents.BountyCanceled, undefined, {
+          return processEvent(NetworkEvents.BountyCanceled, undefined, {
             fromBlock: txInfo.blockNumber, 
             id: contractId
           });
@@ -292,7 +293,7 @@ export default function useBepro() {
             throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
           dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]))
 
-          useProcessEvent(NetworkEvents.OraclesTransfer, undefined, {
+          processEvent(NetworkEvents.OraclesTransfer, undefined, {
             fromBlock: txInfo.blockNumber
           })
             .catch(console.debug);

@@ -34,7 +34,7 @@ export default function UpdateBountyAmountModal({
   const { state, dispatch } = useAppState();
 
   const transactionalERC20 = useERC20();
-
+  const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
   
   const handleChange = params => setNewAmount(BigNumber(params.value));
@@ -67,7 +67,7 @@ export default function UpdateBountyAmountModal({
 
     handleUpdateBountyAmount(bountyId, newAmount.toFixed(), transactionalERC20?.symbol)
       .then(txInfo => {
-        return useProcessEvent(NetworkEvents.BountyUpdated, undefined, {
+        return processEvent(NetworkEvents.BountyUpdated, undefined, {
           fromBlock: (txInfo as { blockNumber: number }).blockNumber 
         });
       })
