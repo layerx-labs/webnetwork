@@ -7,21 +7,20 @@ import NetworkLogoAndColorsSettings from "components/network/settings/logo-and-c
 import NetworkRegistrySettings from "components/network/settings/registry/controller";
 import MyNetworkSettingsView from "components/network/settings/view";
 
-import {useAppState} from "contexts/app-state";
-import {useNetworkSettings} from "contexts/network-settings";
-import {toastError, toastSuccess} from "contexts/reducers/change-toaster";
+import { useAppState } from "contexts/app-state";
+import { useNetworkSettings } from "contexts/network-settings";
 
-import {IM_AM_CREATOR_NETWORK} from "helpers/constants";
-import {psReadAsText} from "helpers/file-reader";
+import { psReadAsText } from "helpers/file-reader";
+import { QueryKeys } from "helpers/query-keys";
 
 import {Network} from "interfaces/network";
 
 import {SearchBountiesPaginated} from "types/api";
 
-import {useUpdateNetwork} from "x-hooks/api/network";
-import {useAuthentication} from "x-hooks/use-authentication";
-import {useNetwork} from "x-hooks/use-network";
+import { useUpdateNetwork } from "x-hooks/api/network";
+import { useNetwork } from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import NetworkManagement from "./management/view";
 import AllowList from "./permissions/allow-list/allow-list-controller";
@@ -47,16 +46,22 @@ export default function MyNetworkSettings({
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
 
   const [errorBigImages, setErrorBigImages] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [isGovernorRegistry, setIsGovernorRegistry] = useState(false);
   const [tabs, setTabs] = useState<TabsProps[]>([]);
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
-  const { signMessage } = useAuthentication();
   const { updateActiveNetwork } = useNetwork();
   const { details, settings, forcedNetwork } = useNetworkSettings();
+
+  const chainId = state.connectedChain?.id;
+  const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
+    queryKey: QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chainId),
+    mutationFn: useUpdateNetwork,
+    toastSuccess: t("custom-network:messages.refresh-the-page"),
+    toastError: t("custom-network:errors.failed-to-update-network")
+  });
 
   const isCurrentNetwork =
     !!network &&
@@ -75,8 +80,6 @@ export default function MyNetworkSettings({
     )
       return;
 
-    setIsUpdating(true);
-
     const json = {
       description: details?.description || "",
       colors: settings.theme.colors,
@@ -90,28 +93,7 @@ export default function MyNetworkSettings({
       networkAddress: network.networkAddress
     };
 
-    const handleError = (error) => {
-      dispatch(toastError(t("custom-network:errors.failed-to-update-network", { error }),
-                          t("actions.failed")));
-      console.log(error);
-    }
-
-    signMessage(IM_AM_CREATOR_NETWORK)
-      .then(async () => {
-        await useUpdateNetwork(json)
-          .then(async () => {
-            if (isCurrentNetwork) updateActiveNetwork(true);
-
-            return updateEditingNetwork();
-          })
-          .then(() => {
-            dispatch(toastSuccess(t("custom-network:messages.refresh-the-page"),
-                                  t("actions.success")));
-          })
-          .catch(handleError);
-      })
-      .catch(handleError)
-      .finally(() => setIsUpdating(false));
+    await updateNetwork(json);
   }
 
   async function updateNetworkData() {
