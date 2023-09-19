@@ -55,7 +55,6 @@ export default function ItemRow({
       isDraft: isDraftDeliverable,
     });
     valueRedirect.deliverableId = (item as Deliverable)?.id;
-    valueRedirect.review = (item as Deliverable)?.markedReadyForReview;
   } else if (proposal) {
     if (isDisputed || isMerged) {
       status.push({
@@ -83,7 +82,10 @@ export default function ItemRow({
 
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     ev.preventDefault();
-    router.push(getURLWithNetwork(pathRedirect, valueRedirect));
+    router.push(getURLWithNetwork(pathRedirect, {
+      ...valueRedirect,
+      ... !isProposal ? { review: (item as Deliverable)?.markedReadyForReview } : {}
+    }));
   }
 
   return (
