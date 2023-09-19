@@ -46,6 +46,7 @@ export default function BountyBody({
     toastError: t("bounty:errors.failed-to-edit"),
     onSuccess: () => {
       cancelEditIssue();
+      setFiles([]);
       setIsPreview(false);
     }
   });
