@@ -4,6 +4,7 @@ export const QueryKeys = {
   proposal: (proposalId: string) => ["proposal", proposalId],
   proposalComments: (proposalId: string) => ["proposal", proposalId, "comments"],
   deliverable: (deliverableId: string) => ["deliverable", deliverableId],
+  deliverableComments: (deliverableId: string) => ["deliverable", deliverableId, "comments"],
   chains: () => ["supportedChains"],
   networksByChain: (chainId: string) => ["networks", chainId],
   networksByGovernor: (governorAddress: string, chainId: string) => ["network", governorAddress, chainId],
