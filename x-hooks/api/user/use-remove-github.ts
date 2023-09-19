@@ -1,6 +1,11 @@
 import { api } from "services/api";
 
-export  async function useRemoveGithub(address: string, githubLogin: string) {
+interface UseRemoveGithubParams {
+  address: string;
+  githubLogin: string;
+}
+
+export  async function useRemoveGithub(payload: UseRemoveGithubParams) {
   return api
-    .post("/user/reset", { address, githubLogin });
+    .patch("/user/reset", payload);
 }
