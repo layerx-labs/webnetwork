@@ -1,8 +1,8 @@
 export const QueryKeys = {
   bounty: (bountyId: string) => ["bounty", bountyId],
-  bountyComments: (bountyId: string) => ["bounty", "comments", bountyId],
+  bountyComments: (bountyId: string) => ["bounty", bountyId, "comments"],
   proposal: (proposalId: string) => ["proposal", proposalId],
-  proposalComments: (proposalId: string) => ["proposal", "comments", proposalId],
+  proposalComments: (proposalId: string) => ["proposal", proposalId, "comments"],
   deliverable: (deliverableId: string) => ["deliverable", deliverableId],
   chains: () => ["supportedChains"],
   networksByChain: (chainId: string) => ["networks", chainId],
