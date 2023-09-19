@@ -37,8 +37,9 @@ async function up(queryInterface, Sequelize) {
       const chain = chains.find(({ chainId }) => chainId === issue.chain_id);
       const network = networks.find(({ id }) => id === issue.network_id);
       const user = users.find(
-        ({ address }) =>
-          address?.toLowerCase() === pullRequest?.userAddress?.toLowerCase()
+        ({ address, githubLogin }) =>
+          address?.toLowerCase() === pullRequest?.userAddress?.toLowerCase() ||
+          githubLogin?.toLowerCase() === pullRequest?.githubLogin?.toLowerCase()
       );
       const repository = repositories.find(
         ({ id }) => id === issue.repository_id
