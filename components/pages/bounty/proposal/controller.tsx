@@ -49,7 +49,7 @@ export default function ProposalPage() {
   const commentsQueryKey = QueryKeys.proposalComments(proposalId);
 
   const { data: proposalData } = useReactQuery(proposalQueryKey, () => getProposalData(query));
-  const { data: comments, invalidate: invalidateComments } = 
+  const { data: comments } = 
     useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
   const parsedProposal = mergeProposalParser(proposalData, proposalData?.issue?.merged);
@@ -164,7 +164,6 @@ export default function ProposalPage() {
       isRefusable={isRefusable}
       isMergeable={isMergeable}
       comments={parsedComments}
-      updateComments={invalidateComments}
       userData={state.currentUser}
     />
   );

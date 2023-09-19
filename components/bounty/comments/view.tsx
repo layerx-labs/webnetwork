@@ -14,14 +14,12 @@ export default function BountyCommentsView({
   currentUser,
   type,
   ids,
-  updateData,
   disableCreateComment,
 }: {
   comments: IssueDataComment[];
   currentUser?: CurrentUserState;
   type: TypeComment;
   ids: IdsComment;
-  updateData: (updatePrData?: boolean) => void;
   disableCreateComment?: boolean;
 }) {
   const { t } = useTranslation("common");
@@ -43,7 +41,6 @@ export default function BountyCommentsView({
                   githubLogin={currentUser?.login}
                   type={type}
                   ids={ids}
-                  updateData={updateData}
                 />
               ) : null
             ) : (

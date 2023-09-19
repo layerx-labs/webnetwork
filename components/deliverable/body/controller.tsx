@@ -150,7 +150,6 @@ export default function DeliverableBody({
       isCancelButton={isCancelButton}
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
-      updateComments={updateDeliverableData}
       currentUser={state.currentUser}
       bountyId={currentBounty?.id}
     />

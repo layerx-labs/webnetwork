@@ -9,14 +9,12 @@ export default function Comments({
   currentUser,
   type,
   ids,
-  updateData,
   disableCreateComment
 }: {
   comments: IssueDataComment[];
   currentUser?: CurrentUserState;
   type: TypeComment;
   ids: IdsComment;
-  updateData: (updatePrData?: boolean) => void;
   disableCreateComment?: boolean;
 }) {
   return (
@@ -25,7 +23,6 @@ export default function Comments({
       currentUser={currentUser}
       type={type}
       ids={ids}
-      updateData={updateData}
       disableCreateComment={disableCreateComment}
     />
   );

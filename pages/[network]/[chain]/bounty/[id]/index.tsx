@@ -93,7 +93,6 @@ export default function PageIssue() {
 
         <Comments
           type="issue"
-          updateData={updateBountyData}
           ids={{
             issueId: +parsedBounty?.id
           }}
