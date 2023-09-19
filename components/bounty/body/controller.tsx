@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
@@ -71,6 +71,11 @@ export default function BountyBody({
       body?.length === 0
     );
   }
+
+  useEffect(() => {
+    if (isEditIssue) return;
+    setBody(currentBounty?.body);
+  }, [currentBounty?.body]);
 
   return (
     <BountyBodyView
