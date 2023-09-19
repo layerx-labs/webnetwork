@@ -7,7 +7,6 @@ import { useDebouncedCallback } from "use-debounce";
 import CreateDeliverablePageView from "components/pages/create-deliverable/view";
 
 import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import { issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
@@ -19,11 +18,12 @@ import { metadata } from "interfaces/metadata";
 
 import { getBountyData } from "x-hooks/api/bounty";
 import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
-import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import getMetadata from "x-hooks/api/get-metadata";
 import useBepro from "x-hooks/use-bepro";
+import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQuery from "x-hooks/use-react-query";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function CreateDeliverablePage() {
   const { push, query } = useRouter();
@@ -32,19 +32,38 @@ export default function CreateDeliverablePage() {
   const [originLink, setOriginLink] = useState<string>();
   const [previewLink, setPreviewLink] = useState<metadata>();
   const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
-  const [createIsLoading, setCreateIsLoading] = useState<boolean>(false);
   const [previewError, setPreviewError] = useState<boolean>(false);
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
-  const { processEvent } = useProcessEvent();
   const { handleCreatePullRequest } = useBepro();
   
   const bountyQueryKey = QueryKeys.bounty(query?.id?.toString());
   const { data: bountyData } = useReactQuery(bountyQueryKey, () => getBountyData(query));
+
+  const [isCreatingOnChain, createOnChain] = useContractTransaction(NetworkEvents.PullRequestCreated,
+                                                                    handleCreatePullRequest,
+                                                                    t("deliverable:actions.create.success"),
+                                                                    t("deliverable:actions.create.error"));
+
+  const { mutate: createPreDeliverable, isLoading: isCreatingPreDeliverable } = useReactQueryMutation({
+    queryKey: bountyQueryKey,
+    toastError: t("deliverable:actions.create.error"),
+    mutationFn: () => CreatePreDeliverable({
+      deliverableUrl: originLink,
+      title,
+      description,
+      issueId: +currentBounty?.id,
+    }),
+    onSuccess: ({ bountyId, originCID, cid }) => {
+      createOnChain(bountyId, originCID, cid)
+        .then(() => push(getURLWithNetwork("/bounty/[id]", query)))
+        .catch(() => DeletePreDeliverable(cid));
+    }
+  });
 
   const currentBounty = issueParser(bountyData);
   const checkButtonsOptions = [
@@ -115,52 +134,6 @@ export default function CreateDeliverablePage() {
     push(getURLWithNetwork("/bounty/[id]", query));
   }
 
-  async function onHandleCreate() {
-    let deliverableId: number;
-    setCreateIsLoading(true)
-    await CreatePreDeliverable({
-      deliverableUrl: originLink,
-      title,
-      description,
-      issueId: +currentBounty?.id,
-    }).then(({ cid, originCID, bountyId }) => {
-      deliverableId = cid
-      return handleCreatePullRequest(bountyId, "", "", originCID, "", "", cid);
-    }).then((txInfo) => {
-      return processEvent(NetworkEvents.PullRequestCreated, undefined, {
-        fromBlock: (txInfo as { blockNumber: number }).blockNumber,
-      });
-    }).then(() => {
-      dispatch(addToast({
-          type: "success",
-          title: t("actions.success"),
-          content: t("deliverable:actions.create.success"),
-      }));
-
-      return push(getURLWithNetwork("/bounty/[id]", query));
-    })
-    .catch((err) => {
-      console.debug("Failed to create deliverable", err);
-      if (deliverableId) DeletePreDeliverable(deliverableId);
-
-      if (err.response?.status === 422 && err.response?.data) {
-        err.response?.data?.map((item) =>
-          dispatch(addToast({
-              type: "danger",
-              title: t("actions.failed"),
-              content: item.message,
-          })));
-      } else {
-        dispatch(addToast({
-            type: "danger",
-            title: t("actions.failed"),
-            content: t("deliverable:actions.create.error"),
-        }));
-      }
-    })
-    .finally(() => setCreateIsLoading(false))
-  }
-
   return (
     <CreateDeliverablePageView
       originLink={originLink}
@@ -173,10 +146,10 @@ export default function CreateDeliverablePage() {
       description={description}
       onChangeDescription={onChangeDescription}
       onHandleBack={onHandleBack}
-      onHandleCreate={onHandleCreate}
+      onHandleCreate={createPreDeliverable}
       checkButtonsOptions={checkButtonsOptions}
       checkButtonsOption={currentBounty?.type}
-      createIsLoading={createIsLoading}
+      createIsLoading={isCreatingPreDeliverable || isCreatingOnChain}
       originLinkError={originLinkError}
     />
   );

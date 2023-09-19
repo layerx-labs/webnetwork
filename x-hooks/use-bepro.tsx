@@ -307,12 +307,8 @@ export default function useBepro() {
   }
 
   async function handleCreatePullRequest(bountyId: number,
-                                         originRepo: string,
-                                         originBranch: string,
                                          originCID: string,
-                                         userRepo: string,
-                                         userBranch: string,
-                                         cid: number ) {
+                                         cid: number ): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const tx = addTx([{
         type: TransactionTypes.createDeliverable,
@@ -320,14 +316,14 @@ export default function useBepro() {
       } as any]);
       dispatch(tx);
 
-      await state.Service?.active?.createPullRequest(bountyId,
-                                                     originRepo,
-                                                     originBranch,
-                                                     originCID,
-                                                     userRepo,
-                                                     userBranch,
-                                                     cid)
-        .then((txInfo: unknown) => {
+      await state.Service?.active?.createPullRequest( bountyId,
+                                                      "",
+                                                      "",
+                                                      originCID,
+                                                      "",
+                                                      "",
+                                                      cid)
+        .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
           resolve(txInfo);
         })
