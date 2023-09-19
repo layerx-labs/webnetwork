@@ -8,6 +8,7 @@ import { useAppState } from "contexts/app-state";
 
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import { addFilesToMarkdown } from "helpers/markdown";
+import { QueryKeys } from "helpers/query-keys";
 import { TAGS_OPTIONS } from "helpers/tags-options";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
@@ -21,14 +22,12 @@ interface BountyBodyControllerProps {
   isEditIssue: boolean;
   cancelEditIssue: () => void;
   currentBounty: IssueBigNumberData;
-  updateBountyData: (updatePrData?: boolean) => void;
 }
 
 export default function BountyBody({
   isEditIssue,
   cancelEditIssue,
-  currentBounty,
-  updateBountyData
+  currentBounty
 }: BountyBodyControllerProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -41,17 +40,13 @@ export default function BountyBody({
 
   const { state } = useAppState();
   const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
-    queryKey: ["bounty", currentBounty?.id],
+    queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: useEditBounty,
     toastSuccess: t("bounty:actions.edit-bounty"),
     toastError: t("bounty:errors.failed-to-edit"),
     onSuccess: () => {
-      updateBountyData();
       cancelEditIssue();
       setIsPreview(false);
-    },
-    onError: (error) => {
-      console.debug("Failed to edit issue", error);
     }
   });
 
