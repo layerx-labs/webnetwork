@@ -80,7 +80,7 @@ async function up(queryInterface, Sequelize) {
           issueId: issue.id,
           bountyId: issue.contractId,
           prContractId: pullRequest.contractId,
-          userId: user.id,
+          userId: user?.id,
           createdAt: pullRequest.createdAt,
           updatedAt: pullRequest.updatedAt,
         },
