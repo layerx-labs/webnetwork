@@ -136,7 +136,7 @@ export default function ProposalModal({
       isExecuting={isExecuting}
       isConnected={!!state.currentUser?.walletAddress}
       selectedDeliverable={deliverableToOption(currentDeliverable)}
-      deliverablesOptions={deliverables?.map(deliverableToOption)}
+      deliverablesOptions={deliverables?.filter(d => d?.markedReadyForReview)?.map(deliverableToOption)}
       deliverableUrl={currentDeliverable?.deliverableUrl}
       paymentInfos={distributedAmounts ? paymentInfos : null}
       onClose={handleClose}
