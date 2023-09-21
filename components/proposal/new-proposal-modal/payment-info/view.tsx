@@ -22,7 +22,7 @@ export default function PaymentInfo({
           <AvatarOrIdenticon
             user={login}
             address={address}
-            size="sm"
+            size="xsm"
           />
 
           <span className="xs-small text-gray-100 mt-1">

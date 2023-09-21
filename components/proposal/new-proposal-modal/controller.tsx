@@ -114,7 +114,7 @@ export default function ProposalModal({
                   <AvatarOrIdenticon
                     address={deliverable?.user?.address}
                     user={deliverable?.user?.githubLogin}
-                    size="sm"
+                    size="xsm"
                   />
                   <span className="xs-small text-gray-500 font-weight-normal text-capitalize">
                     {deliverable?.user?.githubLogin ?? truncateAddress(deliverable?.user?.address)}
