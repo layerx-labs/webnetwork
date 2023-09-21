@@ -11,7 +11,7 @@ export async function del(req: NextApiRequest) {
     throw new HttpBadRequestError("Missing id");
 
   const found = await models.chain.findOne({
-    where: { chainId: id }
+    where: { chainId: +id.toString() }
   });
 
   if (!found)
