@@ -130,7 +130,7 @@ export default function NewProposalModalView({
               </span>
             }
           >
-            <div className="px-2 pt-1 line-between-children w-100 bg-gray-850">
+            <div className="px-2 line-between-children w-100 bg-gray-850">
               {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
             </div>
           </If>

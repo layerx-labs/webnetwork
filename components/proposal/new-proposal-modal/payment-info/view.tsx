@@ -16,16 +16,16 @@ export default function PaymentInfo({
   const user = login ? `@${login}` : truncateAddress(address);
 
   return(
-    <div className="d-flex flex-column bg-gray-850 w-100 pb-2">
+    <div className="d-flex flex-column bg-gray-850 w-100 py-2">
       <div className="d-flex justify-content-between w-100">
-        <div className="d-flex align-items-center mb-1 mx-n2">
+        <div className="d-flex align-items-center mb-1 gap-2">
           <AvatarOrIdenticon
             user={login}
             address={address}
             size="sm"
           />
 
-          <span className="xs-small text-gray-100">
+          <span className="xs-small text-gray-100 mt-1">
             {user}
           </span>
         </div>

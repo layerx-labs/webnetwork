@@ -110,14 +110,12 @@ export default function ProposalModal({
                 <span className="sm-regular text-white text-capitalize text-overflow-ellipsis">
                   {deliverable?.title}
                 </span>
-                <div className="d-flex align-items-center mt-1 gap-1">
-                  <div className="mx-n1">
-                    <AvatarOrIdenticon
-                      address={deliverable?.user?.address}
-                      user={deliverable?.user?.githubLogin}
-                      size="sm"
-                    />
-                  </div>
+                <div className="d-flex align-items-center mt-1 gap-2">
+                  <AvatarOrIdenticon
+                    address={deliverable?.user?.address}
+                    user={deliverable?.user?.githubLogin}
+                    size="sm"
+                  />
                   <span className="xs-small text-gray-500 font-weight-normal text-capitalize">
                     {deliverable?.user?.githubLogin ?? truncateAddress(deliverable?.user?.address)}
                   </span>
