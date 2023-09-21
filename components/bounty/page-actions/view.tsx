@@ -27,7 +27,8 @@ export default function PageActionsView({
   isUpdateAmountButton,
   isStartWorkingButton,
   isEditButton,
-  updateBountyData
+  updateBountyData,
+  deliverables
 }: PageActionsViewProps) {
   const { t } = useTranslation([
     "common",
@@ -114,7 +115,7 @@ export default function PageActionsView({
           />
 
           <ProposalModal
-            deliverables={bounty?.deliverables}
+            deliverables={deliverables}
             show={showPRProposal}
             onCloseClick={() => setShowPRProposal(false)}
             currentBounty={bounty}
