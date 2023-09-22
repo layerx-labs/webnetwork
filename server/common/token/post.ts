@@ -28,7 +28,7 @@ export async function post(req: NextApiRequest) {
   const existentToken = await models.tokens.findOne({
     where: {
       address: caseInsensitiveEqual("address", address),
-      chainId: chainId
+      chain_id: chainId
     }
   });
 
