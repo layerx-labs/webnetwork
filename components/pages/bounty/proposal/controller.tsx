@@ -52,15 +52,15 @@ export default function ProposalPage() {
   const { data: comments } = 
     useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
-  const parsedProposal = mergeProposalParser(proposalData, proposalData?.issue?.merged);
-  const parsedComments = commentsParser(comments);
-  const issue = issueParser(parsedProposal?.issue as IssueData);
-  const deliverable = deliverableParser(parsedProposal?.deliverable);
+  const parsedProposal = proposalData ? mergeProposalParser(proposalData, proposalData?.issue?.merged) : null;
+  const parsedComments = comments ? commentsParser(comments) : null;
+  const issue = proposalData ? issueParser(parsedProposal?.issue as IssueData) : null;
+  const deliverable = proposalData ? deliverableParser(parsedProposal?.deliverable) : null;
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
 
-  const isUserAbleToDispute = isWalletConnected ? !parsedProposal.disputes?.some(({ address, weight }) => 
+  const isUserAbleToDispute = isWalletConnected ? !parsedProposal?.disputes?.some(({ address, weight }) => 
     lowerCaseCompare(address, state.currentUser?.walletAddress) && weight.gt(0)) : false;
 
   const isDisputable = [
@@ -103,7 +103,7 @@ export default function ProposalPage() {
                                                       mergeCreatorFeeShare,
                                                       proposerFeeShare,
                                                       amountTotal,
-                                                      parsedProposal.distributions);
+                                                      parsedProposal?.distributions);
 
     const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
       ...rest,
