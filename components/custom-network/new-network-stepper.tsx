@@ -37,11 +37,12 @@ import {psReadAsText} from "helpers/file-reader";
 
 import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
-import useCreateNetwork from "x-hooks/api/network/use-create-network";
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useCreateNetwork } from "x-hooks/api/network";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSignature from "x-hooks/use-signature";
 
 function NewNetwork() {
@@ -52,14 +53,16 @@ function NewNetwork() {
   const [hasNetwork, setHasNetwork] = useState(false);
   const [creatingNetwork, setCreatingNetwork] = useState<number>(-1);
 
-  const { state, dispatch } = useAppState();
-
   const { signMessage } = useSignature();
+  const { state, dispatch } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
-  const { processEvent } = useApi();
+  const { processEvent } = useProcessEvent();
   const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
+  const { mutateAsync: createNetwork } = useReactQueryMutation({
+    mutationFn: useCreateNetwork
+  });
 
   const isSetupPage = router?.pathname?.toString()?.includes("setup");
 
@@ -109,7 +112,7 @@ function NewNetwork() {
       signedMessage
     };
 
-    const networkCreated = await useCreateNetwork(payload)
+    const networkCreated = await createNetwork(payload)
       .catch((error) => {
         setCreatingNetwork(-1);
         dispatch(addToast({

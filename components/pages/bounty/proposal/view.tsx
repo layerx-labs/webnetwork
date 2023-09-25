@@ -29,7 +29,6 @@ interface ProposalPageViewProps extends ProposalPageProps {
   isRefusable: boolean;
   isMergeable: boolean;
   comments: IssueDataComment[];
-  updateComments: () => void;
   userData: CurrentUserState;
 }
 
@@ -46,7 +45,6 @@ export default function ProposalPageView({
   isRefusable,
   isMergeable,
   comments,
-  updateComments,
   userData
 }: ProposalPageViewProps) {
   return (
@@ -126,7 +124,6 @@ export default function ProposalPageView({
               proposalId: proposal?.id,
             }}
             currentUser={userData}
-            updateData={updateComments}
             disableCreateComment={issue?.isClosed}
           />
         </div>

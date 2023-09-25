@@ -15,6 +15,8 @@ import TabbedNavigation from "components/tabbed-navigation";
 
 import {useAppState} from "contexts/app-state";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import { useSearchNetworks } from "x-hooks/api/network";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -40,7 +42,7 @@ export default function SetupPage(){
       });
   }
 
-  const { data: defaultNetwork } = useReactQuery( ["network", "default"],
+  const { data: defaultNetwork } = useReactQuery( QueryKeys.networkDefault(),
                                                   searchForNetwork,
                                                   {
                                                     enabled: isConnected && isAdmin

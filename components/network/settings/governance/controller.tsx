@@ -15,8 +15,8 @@ import { StandAloneEvents } from "interfaces/enums/events";
 import { Network } from "interfaces/network";
 import { Token } from "interfaces/token";
 
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/network";
-import useApi from "x-hooks/use-api";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -41,8 +41,8 @@ export default function NetworkGovernanceSettings({
   const [isUpdating, setIsUpdating] = useState(false);
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
-  const { processEvent } = useApi();
   const { state, dispatch } = useAppState();
+  const { processEvent } = useProcessEvent();
   const { updateActiveNetwork } = useNetwork();
   const { updateWalletBalance, signMessage } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();

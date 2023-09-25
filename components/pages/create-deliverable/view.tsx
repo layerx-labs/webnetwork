@@ -28,7 +28,7 @@ interface CreateDeliverablePageViewProps {
   title: string;
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
-  onHandleCreate: () => void;
+  onHandleCreate: (...props) => void;
   createIsLoading: boolean;
   originLinkError: OriginLinkErrors;
   createdDeliverableId: number;

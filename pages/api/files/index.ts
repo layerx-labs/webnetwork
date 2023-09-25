@@ -1,11 +1,10 @@
-import formidable from "formidable";
-import fs from "fs";
 import {NextApiRequest, NextApiResponse} from "next";
 
 import { withProtected } from "middleware";
 
-import IpfsStorage from "services/ipfs-service";
-import {Logger} from "services/logging";
+import { Logger, error as LogError } from "services/logging";
+
+import { post } from "server/common/file/post";
 
 export const config = {
   api: {
@@ -13,43 +12,23 @@ export const config = {
   }
 };
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  const formData = await new Promise<{ fields; files: object }>((resolve, reject) => {
-    new formidable.IncomingForm().parse(req, (err, fields, files) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve({ fields, files });
-    });
-  });
-  const values = Object.values(formData.files);
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    switch (req.method.toLowerCase()) {
+    case "post":
+      res.status(200).json(await post(req));
+      break;
 
-  if (values.length < 1) {
-    return res.status(400).json("Undefined files");
-  }
-
-  const uploadFiles = [...values].map(async (file) =>
-       IpfsStorage.add(fs.readFileSync(file.filepath),
-                       false,
-                       file.originalFilename));
-  const files = await Promise.all(uploadFiles).catch((e) => {
-    return res.status(403).json(e);
-  });
-  return res.status(200).json(files);
-}
-
-async function FilesMethods (req: NextApiRequest, res: NextApiResponse) {
-  switch (req.method.toLowerCase()) {
-  case "post":
-    await post(req, res);
-    break;
-
-  default:
-    res.status(405).json("Method not allowed");
+    default:
+      res.status(405);
+    }
+  } catch (error) {
+    LogError(error);
+    res.status(error?.status || 500).json(error?.message || error?.toString());
   }
 
   res.end();
 }
 
 Logger.changeActionName(`Files`);
-export default withProtected(FilesMethods);
+export default withProtected(handler);
