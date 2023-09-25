@@ -12,6 +12,7 @@ import {useAppState} from "contexts/app-state";
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import { commentsParser, deliverableParser, issueParser, mergeProposalParser } from "helpers/issue";
 import { isProposalDisputable } from "helpers/proposal";
+import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
 import { IssueData } from "interfaces/issue-data";
@@ -44,22 +45,22 @@ export default function ProposalPage() {
   const { state } = useAppState();
 
   const proposalId = query?.proposalId?.toString();
-  const proposalQueryKey = ["proposal", proposalId];
-  const commentsQueryKey = ["proposal", "comments", proposalId];
+  const proposalQueryKey = QueryKeys.proposal(proposalId);
+  const commentsQueryKey = QueryKeys.proposalComments(proposalId);
 
   const { data: proposalData } = useReactQuery(proposalQueryKey, () => getProposalData(query));
-  const { data: comments, invalidate: invalidateComments } = 
+  const { data: comments } = 
     useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
-  const parsedProposal = mergeProposalParser(proposalData, proposalData?.issue?.merged);
-  const parsedComments = commentsParser(comments);
-  const issue = issueParser(parsedProposal?.issue as IssueData);
-  const deliverable = deliverableParser(parsedProposal?.deliverable);
+  const parsedProposal = proposalData ? mergeProposalParser(proposalData, proposalData?.issue?.merged) : null;
+  const parsedComments = comments ? commentsParser(comments) : null;
+  const issue = proposalData ? issueParser(parsedProposal?.issue as IssueData) : null;
+  const deliverable = proposalData ? deliverableParser(parsedProposal?.deliverable) : null;
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
 
-  const isUserAbleToDispute = isWalletConnected ? !parsedProposal.disputes?.some(({ address, weight }) => 
+  const isUserAbleToDispute = isWalletConnected ? !parsedProposal?.disputes?.some(({ address, weight }) => 
     lowerCaseCompare(address, state.currentUser?.walletAddress) && weight.gt(0)) : false;
 
   const isDisputable = [
@@ -102,7 +103,7 @@ export default function ProposalPage() {
                                                       mergeCreatorFeeShare,
                                                       proposerFeeShare,
                                                       amountTotal,
-                                                      parsedProposal.distributions);
+                                                      parsedProposal?.distributions);
 
     const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
       ...rest,
@@ -163,7 +164,6 @@ export default function ProposalPage() {
       isRefusable={isRefusable}
       isMergeable={isMergeable}
       comments={parsedComments}
-      updateComments={invalidateComments}
       userData={state.currentUser}
     />
   );

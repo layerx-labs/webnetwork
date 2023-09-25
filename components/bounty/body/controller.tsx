@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
 import { IFilesProps } from "components/drag-and-drop";
 
 import { useAppState } from "contexts/app-state";
-import { addToast, toastError } from "contexts/reducers/change-toaster";
 
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import { addFilesToMarkdown } from "helpers/markdown";
+import { QueryKeys } from "helpers/query-keys";
 import { TAGS_OPTIONS } from "helpers/tags-options";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useEditBounty } from "x-hooks/api/bounty";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyBodyView from "./view";
 
@@ -21,14 +22,12 @@ interface BountyBodyControllerProps {
   isEditIssue: boolean;
   cancelEditIssue: () => void;
   currentBounty: IssueBigNumberData;
-  updateBountyData: (updatePrData?: boolean) => void;
 }
 
 export default function BountyBody({
   isEditIssue,
   cancelEditIssue,
-  currentBounty,
-  updateBountyData
+  currentBounty
 }: BountyBodyControllerProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -39,7 +38,18 @@ export default function BountyBody({
     currentBounty?.tags?.includes(tag.value)).map((e) => e.value));
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
+  const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
+    queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
+    mutationFn: useEditBounty,
+    toastSuccess: t("bounty:actions.edit-bounty"),
+    toastError: t("bounty:errors.failed-to-edit"),
+    onSuccess: () => {
+      cancelEditIssue();
+      setFiles([]);
+      setIsPreview(false);
+    }
+  });
 
   function onUpdateFiles(files: IFilesProps[]) {
     return setFiles(files);
@@ -49,38 +59,6 @@ export default function BountyBody({
     return addFilesToMarkdown(str, files, state.Settings?.urls?.ipfs);
   }
 
-  function handleUpdateBounty() {
-    if (
-      (addFilesInDescription(body) === currentBounty?.body &&
-        selectedTags === currentBounty?.tags) ||
-      !currentBounty
-    )
-      return;
-    setIsUploading(true);
-    useEditBounty({
-      id: currentBounty?.id,
-      networkName: state.Service?.network?.active?.name,
-      chainName: state.Service?.network?.active?.chain?.chainShortName,
-      body: addFilesInDescription(body),
-      tags: selectedTags,
-    })
-      .then(() => {
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("bounty:actions.edit-bounty"),
-        }));
-        updateBountyData();
-        cancelEditIssue();
-        setIsPreview(false);
-      })
-      .catch(error => {
-        dispatch(toastError(t("errors.something-went-wrong"), t("actions.failed")));
-        console.debug("Failed to edit issue", error);
-      })
-      .finally(() => setIsUploading(false));
-  }
-
   function handleCancelEdit() {
     setIsPreview(false);
     cancelEditIssue();
@@ -88,18 +66,30 @@ export default function BountyBody({
 
   function isDisableUpdateIssue() {
     return (
+      isEditing ||
       isUploading ||
       addFilesInDescription(body)?.length > BODY_CHARACTERES_LIMIT ||
       body?.length === 0
     );
   }
 
+  useEffect(() => {
+    if (isEditIssue) return;
+    setBody(currentBounty?.body);
+  }, [currentBounty?.body]);
+
   return (
     <BountyBodyView
       walletAddress={state.currentUser?.walletAddress}
       isDisableUpdateIssue={isDisableUpdateIssue}
       handleCancelEdit={handleCancelEdit}
-      handleUpdateBounty={handleUpdateBounty}
+      handleUpdateBounty={() => editBounty({
+        id: currentBounty?.id,
+        networkName: state.Service?.network?.active?.name,
+        chainName: state.Service?.network?.active?.chain?.chainShortName,
+        body: addFilesInDescription(body),
+        tags: selectedTags,
+      })}
       handleBody={setBody}
       body={body}
       isEditIssue={isEditIssue}
@@ -109,7 +99,7 @@ export default function BountyBody({
       handleFiles={onUpdateFiles}
       selectedTags={selectedTags}
       handleSelectedTags={setSelectedTags}
-      isUploading={isUploading}
+      isUploading={isEditing || isUploading}
       handleIsUploading={setIsUploading}
       addFilesInDescription={addFilesInDescription}
       bounty={currentBounty}

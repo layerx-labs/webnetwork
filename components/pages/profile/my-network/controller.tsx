@@ -6,6 +6,7 @@ import { useAppState} from "contexts/app-state";
 import { NetworkSettingsProvider, useNetworkSettings } from "contexts/network-settings";
 
 import { MINUTE_IN_MS } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
 
 import { SearchBountiesPaginated } from "types/api";
 import { MyNetworkPageProps } from "types/pages";
@@ -43,12 +44,13 @@ export function MyNetwork({
       });
   }
   
+  const networkQueryKey = QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chain?.chainId?.toString());
   const {
     data: myNetwork,
     isFetching,
     isSuccess,
     invalidate
-  } = useReactQuery(["network", state.currentUser?.walletAddress, chain?.chainId?.toString()], 
+  } = useReactQuery(networkQueryKey, 
                     getNetwork,
                     {
                       enabled: !!state.currentUser?.walletAddress && !!chain,

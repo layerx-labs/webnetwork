@@ -7,10 +7,6 @@ export const api = axios.create({
   baseURL: `${publicRuntimeConfig?.urls?.api}/api`
 });
 
-export const eventsApi = axios.create({
-  baseURL: `${publicRuntimeConfig?.urls?.events}`
-});
-
 export const kycApi = axios.create({
   baseURL: `${publicRuntimeConfig?.urls?.kyc}`
 });
@@ -42,11 +38,26 @@ api.interceptors.response.use((response) => response,
                                 throw error;
                               });
 
-eventsApi.interceptors.response.use((response) => response,
-                                    (error) => {
-                                      console.debug("[EventsApi] Failed", error);
-                                      throw error;
-                                    });
+api.interceptors.request.use(config => {
+
+  if (typeof window === 'undefined')
+    return config;
+
+  const currentWallet = sessionStorage.getItem("currentWallet") || ''
+  const currentSignature = sessionStorage.getItem("currentSignature") || undefined;
+  const currentChainId = sessionStorage.getItem("currentChainId") || 0;
+
+  if (currentWallet)
+    config.headers["wallet"] = currentWallet;
+
+  if (currentSignature)
+    config.headers["signature"] = currentSignature;
+
+  if (+currentChainId)
+    config.headers["chain"] = +currentChainId;
+
+  return config;
+});
 
 kycApi.interceptors.request.use(function (config) {
   if (serverRuntimeConfig.kyc.key && serverRuntimeConfig.kyc.clientId) {
@@ -63,5 +74,5 @@ kycApi.interceptors.response.use((response) => response,
                                    throw error;
                                  });
                                     
-export default { api, eventsApi, kycApi };
+export default { api, kycApi };
 

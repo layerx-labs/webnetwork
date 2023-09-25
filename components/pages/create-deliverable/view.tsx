@@ -29,7 +29,7 @@ interface CreateDeliverablePageViewProps {
   title: string;
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
-  onHandleCreate: () => void;
+  onHandleCreate: (...props) => void;
   previewLink: metadata;
   previewError: boolean;
   previewIsLoading: boolean;

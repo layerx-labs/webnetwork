@@ -12,6 +12,7 @@ import ReactSelect from "components/react-select";
 import { useAppState } from "contexts/app-state";
 
 import { isOnNetworkPath } from "helpers/network";
+import { QueryKeys } from "helpers/query-keys";
 
 import { Network } from "interfaces/network";
 
@@ -42,7 +43,7 @@ export default function SelectNetwork({
   const chainIdToFilter = filterByConnectedChain || !isOnNetworkPath(pathname) ? 
     state.connectedChain?.id : chain?.chainId?.toString();
 
-  const { data: networks } = useReactQuery( ["networks", chainIdToFilter], 
+  const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
                                             () => useSearchNetworks({ chainId: chainIdToFilter }),
                                             {
                                               enabled: !!chainIdToFilter

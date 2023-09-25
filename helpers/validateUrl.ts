@@ -6,3 +6,7 @@ export function isValidUrl(url: string) {
     return false;
   }
 }
+
+export function isHttps(url: string) {
+  return url?.includes("https://");
+}

@@ -15,6 +15,7 @@ import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
 import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
 import { MINUTE_IN_MS, UNSUPPORTED_CHAIN } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
@@ -42,7 +43,7 @@ export default function WrongNetworkModal() {
     state: { connectedChain, currentUser, Service, supportedChains, loading, spinners }
   } = useAppState();
 
-  useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
     dispatch(updateSupportedChains(chains));
     return chains; 
   }), {

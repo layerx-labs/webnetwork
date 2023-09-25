@@ -3,7 +3,7 @@ import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 export interface PageActionsViewProps {
   handleEditIssue: () => void;
   onCreateDeliverableClick: () => void;
-  handleStartWorking: () => Promise<void>;
+  handleStartWorking: (...props) => void;
   bounty: IssueBigNumberData;
   isWalletConnected: boolean;
   isCreatePr: boolean;

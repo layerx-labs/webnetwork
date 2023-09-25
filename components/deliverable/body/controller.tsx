@@ -12,7 +12,7 @@ import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 
@@ -22,18 +22,16 @@ interface DeliverableBodyControllerProps {
   currentDeliverable: Deliverable;
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
-  updateBountyData: () => void;
+  updateDeliverableData: () => void;
   handleShowModal: () => void;
-  updateComments: () => void;
 }
 
 export default function DeliverableBody({
   currentDeliverable,
   currentBounty,
   isCreatingReview,
-  updateBountyData,
+  updateDeliverableData,
   handleShowModal,
-  updateComments
 }: DeliverableBodyControllerProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
@@ -41,9 +39,9 @@ export default function DeliverableBody({
   const [isCancelling, setIsCancelling] = useState(false);
   const [isMakingReady, setIsMakingReady] = useState(false);
 
-  const { processEvent } = useApi();
   const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
@@ -82,7 +80,7 @@ export default function DeliverableBody({
         });
       })
       .then(() => {
-        return updateBountyData();
+        return updateDeliverableData();
       })
       .then(() => {
         setIsMakingReady(false);
@@ -116,7 +114,7 @@ export default function DeliverableBody({
         });
       })
       .then(() => {
-        updateBountyData();
+        updateDeliverableData();
         dispatch(addToast({
             type: "success",
             title: t("actions.success"),
@@ -152,7 +150,6 @@ export default function DeliverableBody({
       isCancelButton={isCancelButton}
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
-      updateComments={updateComments}
       currentUser={state.currentUser}
       bountyId={currentBounty?.id}
     />
