@@ -41,7 +41,7 @@
       margin-bottom: 32px;
     }
 
-    a {
+    #bepro-network, #twitter, #instagram, #linkedin, #discord {
       color: #B6BECB;
       font-size: 14px;
       font-weight: 400;
@@ -49,11 +49,11 @@
       text-decoration: none;
     }
 
-    a:hover {
+    #bepro-network:hover, #twitter:hover, #instagram:hover, #linkedin:hover, #discord:hover {
       color: #6366F1;
     }
 
-    .verify-link {
+    #verify-link {
       text-decoration: none;
       background-color: #6366F1;
       display: block;
@@ -84,29 +84,29 @@
       Please verify your email by clicking on the link below.
     </p>
 
-    <a class="verify-link" href="{{verifyLink}}" target="_blank">
+    <a id="verify-link" href="{{verifyLink}}" target="_blank">
       Verify Email
     </a>
 
     <hr />
 
-    <a href="{{host}}" target="_blank">
+    <a id="bepro-network" class="social-link" href="{{host}}" target="_blank">
       Bepro Network
     </a>
 
-    <a href="{{twitter}}" target="_blank">
+    <a id="twitter" class="social-link" href="{{twitter}}" target="_blank">
       Twitter
     </a>
 
-    <a href="{{instagram}}" target="_blank">
+    <a id="instagram" class="social-link" href="{{instagram}}" target="_blank">
       Instagram
     </a>
 
-    <a href="{{linkedin}}" target="_blank">
+    <a id="linkedin" class="social-link" href="{{linkedin}}" target="_blank">
       LinkedIn
     </a>
 
-    <a href="{{discord}}" target="_blank">
+    <a id="discord" class="social-link" href="{{discord}}" target="_blank">
       Discord
     </a>
   </div>
