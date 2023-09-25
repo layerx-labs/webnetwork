@@ -3,7 +3,7 @@ import CustomContainer from "components/custom-container";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
-import { Deliverable } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -12,6 +12,7 @@ import DeliverableDescription from "./description/view";
 import DeliverableOriginLink from "./origin-link/controller";
 
 interface DeliverableBodyViewProps {
+  currentBounty: IssueBigNumberData;
   currentDeliverable: Deliverable;
   isCreatingReview: boolean;
   handleShowModal: () => void;
@@ -24,10 +25,10 @@ interface DeliverableBodyViewProps {
   isCancelling: boolean;
   isMakingReady: boolean;
   currentUser: CurrentUserState;
-  bountyId: string;
 }
 
 export default function DeliverableBodyView({
+  currentBounty,
   currentDeliverable,
   isCreatingReview,
   handleShowModal,
@@ -39,8 +40,7 @@ export default function DeliverableBodyView({
   isCancelling,
   isMakingReady,
   updateComments,
-  currentUser,
-  bountyId
+  currentUser
 }: DeliverableBodyViewProps) {  
   const { isMobileView, isTabletView } = useBreakPoint();
 
@@ -127,12 +127,12 @@ export default function DeliverableBodyView({
             type="deliverable"
             updateData={updateComments}
             ids={{
-              issueId: +bountyId,
+              issueId: +currentBounty?.id,
               deliverableId: currentDeliverable?.id,
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
-            disableCreateComment={currentDeliverable?.canceled}
+            disableCreateComment={currentDeliverable?.canceled || currentBounty?.isClosed}
           />
         )}
       </CustomContainer>
