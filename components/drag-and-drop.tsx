@@ -9,7 +9,8 @@ import InfoIconEmpty from "assets/icons/info-icon-empty";
 
 import { trimString } from "helpers/string";
 
-import useApi from "x-hooks/use-api";
+import { useUploadFile } from "x-hooks/api/file";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export interface IFilesProps extends File{
   name: string;
@@ -35,36 +36,31 @@ export default function DragAndDrop({
   disabled,
   border = false,
 }: IDragAndDropProps) {
-  const [files, setFiles] = useState<IFilesProps[]>(externalFiles ? externalFiles : [] as IFilesProps[]);
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [errors, setErrors] = useState<{file: File, error: FileError}[]>([])
   const { t } = useTranslation(["common"]);
-  const { uploadFiles } = useApi();
 
-  const onDropAccepted = useCallback(async (dropedFiles) => {
-    setIsUploading(true)
-    uploadFiles(dropedFiles)
-        .then(async (updateData) => {
-          setFiles((oldFiles)=> {
-            return oldFiles.map((file)=>{
-              const find = updateData?.find((el) => el.fileName === file.name)
-              if(find)
-                return{
-                  ...file,
-                  uploaded: true,
-                  hash: find?.hash
-                }
-                
-              return file;
-            });
-          });
-        })
-        .catch(() => {
-          setFiles((oldFiles) => oldFiles.filter((file) => file.uploaded));
-        })
-        .finally(()=> setIsUploading(false))
-  },
-    []);
+  const [errors, setErrors] = useState<{file: File, error: FileError}[]>([]);
+  const [files, setFiles] = useState<IFilesProps[]>(externalFiles ? externalFiles : [] as IFilesProps[]);
+
+  const { mutate: uploadFiles, isLoading: isUploading } = useReactQueryMutation({
+    mutationFn: useUploadFile,
+    onSuccess: (data) => {
+      setFiles((oldFiles)=> {
+        return oldFiles.map((file)=>{
+          const find = data?.find((el) => el.fileName === file.name);
+          if(find)
+            return{
+              ...file,
+              uploaded: true,
+              hash: find?.hash
+            }
+          return file;
+        });
+      });
+    },
+    onError: () => {
+      setFiles((oldFiles) => oldFiles.filter((file) => file.uploaded));
+    }
+  });
 
   const onDropRejected = useCallback((files)=>
     files.map(({file, errors})=> setErrors((oldErros)=>([...oldErros, {file, error: errors[0]}])))
@@ -118,7 +114,7 @@ export default function DragAndDrop({
     accept: "image/jpeg, image/png, application/pdf",
     validator,
     maxSize: 12288800, //32mb (max size ipfs)
-    onDropAccepted,
+    onDropAccepted: (files) => uploadFiles(files),
     onDrop,
     onDropRejected,
     disabled

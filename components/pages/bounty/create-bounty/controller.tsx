@@ -31,13 +31,14 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import {useCreatePreBounty} from "x-hooks/api/bounty";
-import useApi from "x-hooks/use-api";
+import { useCreatePreBounty } from "x-hooks/api/bounty";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
@@ -89,16 +90,18 @@ export default function CreateBountyPage({
 
   const rewardERC20 = useERC20();
   const transactionalERC20 = useERC20();
-  const { processEvent } = useApi();
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
-
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, },
+    state: { transactions, Settings, Service, currentUser, connectedChain, }
   } = useAppState();
+  const { mutateAsync: createPreBounty } = useReactQueryMutation({
+    mutationFn: useCreatePreBounty,
+  });
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -297,7 +300,7 @@ export default function CreateBountyPage({
         originLink
       };
 
-      const savedIssue = await useCreatePreBounty({
+      const savedIssue = await createPreBounty({
           title: payload.title,
           body: payload.body,
           creator: payload.githubUser,

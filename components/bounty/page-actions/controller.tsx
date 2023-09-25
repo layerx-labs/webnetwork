@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
@@ -7,12 +5,13 @@ import { PageActionsControllerProps } from "components/bounty/page-actions/page-
 import PageActionsView from "components/bounty/page-actions/view";
 
 import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import { getIssueState } from "helpers/handleTypeIssue";
+import { QueryKeys } from "helpers/query-keys";
 
 import { useStartWorking } from "x-hooks/api/bounty";
 import { useNetwork } from "x-hooks/use-network";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function PageActions({
   handleEditIssue,
@@ -20,22 +19,20 @@ export default function PageActions({
   currentBounty,
   updateBountyData
 }: PageActionsControllerProps) {
-  const { t } = useTranslation([
-    "common",
-    "deliverable",
-    "bounty",
-    "proposal",
-  ]);
+  const { t } = useTranslation(["common", "deliverable", "bounty", "proposal"]);
+  const { query, push } = useRouter();
 
-  const {
-    query,
-    push
-  } = useRouter();
-
-  const [isExecuting, setIsExecuting] = useState(false);
-
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
+  const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
+    queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
+    mutationFn: () => useStartWorking({
+      id: currentBounty?.id,
+      networkName: state.Service?.network?.active?.name
+    }),
+    toastSuccess: t("bounty:actions.start-working.success"),
+    toastError: t("bounty:actions.start-working.error")
+  });
 
   function getDeliverablesAbleToBeProposed() {
     const isProposalValid = p => !p?.isDisputed && !p?.isMerged && !p?.refusedByBountyOwner;
@@ -99,41 +96,12 @@ export default function PageActions({
   function onCreateDeliverableClick() {
     push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
   }
-
-  async function handleStartWorking() {
-    setIsExecuting(true);
-
-    useStartWorking({
-      id: currentBounty?.id,
-      networkName: state.Service?.network?.active?.name
-    })
-      .then(() => {
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("bounty:actions.start-working.success"),
-        }));
-
-        return updateBountyData();
-      })
-      .then(() => setIsExecuting(false))
-      .catch((error) => {
-        console.log("Failed to start working", error);
-        dispatch(addToast({
-            type: "danger",
-            title: t("actions.failed"),
-            content: t("bounty:actions.start-working.error"),
-        }));
-
-        setIsExecuting(false);
-      });
-  }
   
   return (
     <PageActionsView
       isExecuting={isExecuting}
       onCreateDeliverableClick={onCreateDeliverableClick}
-      handleStartWorking={handleStartWorking}
+      handleStartWorking={startWorking}
       handleEditIssue={handleEditIssue}
       bounty={currentBounty}
       updateBountyData={updateBountyData}

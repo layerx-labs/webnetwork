@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { SSRConfig, useTranslation } from "next-i18next";
+import { dehydrate } from "@tanstack/react-query";
+import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
@@ -13,25 +14,16 @@ import DeliverableHero from "components/deliverable/hero/controller";
 import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
-import { commentsParser, deliverableParser, issueParser } from "helpers/issue";
+import { deliverableParser, issueParser } from "helpers/issue";
+import { QueryKeys } from "helpers/query-keys";
 
-import {
-  Deliverable,
-  IssueBigNumberData,
-  IssueData,
-} from "interfaces/issue-data";
+import { getReactQueryClient } from "services/react-query";
 
-import { getCommentsData, CreateComment } from "x-hooks/api/comments";
+import { CreateComment } from "x-hooks/api/comments";
 import getDeliverable from "x-hooks/api/deliverable/get-deliverable";
 import useReactQuery from "x-hooks/use-react-query";
 
-interface PageDeliverableProps {
-  bounty: IssueData;
-  deliverable: Deliverable;
-  _nextI18Next?: SSRConfig;
-}
-
-export default function DeliverablePage({ deliverable, bounty }: PageDeliverableProps) {
+export default function DeliverablePage() {
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
 
@@ -41,33 +33,14 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
   useReactQuery(["deliverable", +deliverableId], () => getDeliverable(+deliverableId));  
 
   const [showModal, setShowModal] = useState(review === "true");
-  const [currentBounty, setCurrentBounty] = useState<IssueBigNumberData>(issueParser(bounty));
-  const [currentDeliverable, setCurrentDeliverable] = 
-    useState<Deliverable>(deliverableParser(deliverable, bounty?.mergeProposals));
 
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
   const { state, dispatch } = useAppState();
 
+  const currentBounty = issueParser(deliverableData?.issue);
+  const currentDeliverable = deliverableParser(deliverableData, currentBounty?.mergeProposals);
   const isDeliverableReady = !!currentDeliverable?.markedReadyForReview;
-
-  function updateBountyData() {
-    const { deliverableId } = router.query;
-
-    getDeliverable(+deliverableId)
-      .then(deliverable => {
-        setCurrentBounty(issueParser(deliverable?.issue));
-        setCurrentDeliverable(deliverableParser(deliverable, deliverable?.issue?.mergeProposals));
-      })
-  }
-
-  function updateCommentData() {
-    getCommentsData({ deliverableId: currentDeliverable?.id.toString() })
-     .then((comments) => setCurrentDeliverable({
-      ...currentDeliverable,
-      comments: commentsParser(comments)
-     }))
-  }
 
   function handleCreateReview(body: string) {
     if (!state.currentUser?.walletAddress) return;
@@ -85,7 +58,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
         title: t("actions.success"),
         content: t("deliverable:actions.review.success"),
       }));
-      updateCommentData()
+      invalidateDeliverable();
       setShowModal(false)
     }).catch(() => {
       dispatch(addToast({
@@ -115,8 +88,7 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
         currentDeliverable={currentDeliverable} 
         currentBounty={currentBounty} 
         isCreatingReview={isCreatingReview} 
-        updateBountyData={updateBountyData}
-        updateComments={updateCommentData}
+        updateDeliverableData={invalidateDeliverable}
         handleShowModal={handleShowModal}      
       />
 
@@ -135,13 +107,13 @@ export default function DeliverablePage({ deliverable, bounty }: PageDeliverable
 }
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
+  const queryClient = getReactQueryClient();
   const { deliverableId } = query;
-
-  const Dbdeliverable = await getDeliverable(+deliverableId);
+  const deliverableKey = QueryKeys.deliverable(deliverableId?.toString());
+  await queryClient.prefetchQuery(deliverableKey, () => getDeliverable(+deliverableId));
   return {
     props: {
-      bounty: Dbdeliverable.issue,
-      deliverable: Dbdeliverable,
+      dehydratedState: dehydrate(queryClient),
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",

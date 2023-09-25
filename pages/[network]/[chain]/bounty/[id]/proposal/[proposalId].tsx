@@ -4,6 +4,8 @@ import { GetServerSideProps } from "next/types";
 
 import ProposalPage from "components/pages/bounty/proposal/controller";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import { getReactQueryClient } from "services/react-query";
 
 import { getCommentsData } from "x-hooks/api/comments";
@@ -18,8 +20,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   const queryClient = getReactQueryClient();
   const proposalId = query.proposalId?.toString();
 
-  await queryClient.prefetchQuery(["proposal", proposalId], () => getProposalData(query));
-  await queryClient.prefetchQuery(["proposal", "comments", proposalId], () => getCommentsData({ proposalId }));
+  await queryClient.prefetchQuery(QueryKeys.proposal(proposalId), () => getProposalData(query));
+  await queryClient.prefetchQuery(QueryKeys.proposalComments(proposalId), () => getCommentsData({ proposalId }));
 
   return {
     props: {

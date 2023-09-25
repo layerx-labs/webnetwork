@@ -12,6 +12,7 @@ import ReactSelect from "components/react-select";
 import { useAppState } from "contexts/app-state";
 
 import { isOnNetworkPath } from "helpers/network";
+import { QueryKeys } from "helpers/query-keys";
 
 import { Network } from "interfaces/network";
 

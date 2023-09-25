@@ -17,7 +17,7 @@ export default function ProposalDeliverableDetails({
 
   const deliverableHref = getURLWithNetwork("/bounty/[id]/deliverable/[deliverableId]", {
     id: issue?.id,
-    deliverableId: deliverable.id,
+    deliverableId: deliverable?.id,
   });
 
   return(

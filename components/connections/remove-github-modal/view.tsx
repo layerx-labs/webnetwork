@@ -10,7 +10,7 @@ interface RemoveGithubAccountViewProps {
   githubLogin: string;
   walletAddress: string;
   onCloseClick: () => void;
-  onOkClick: () => void;
+  onOkClick: (...props) => void;
 }
 
 export default function RemoveGithubAccountView({

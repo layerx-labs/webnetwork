@@ -1,53 +1,26 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {getToken} from "next-auth/jwt";
-import {Sequelize} from "sequelize";
-
-import models from "db/models";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { withProtected } from "middleware";
 
-import { Logger } from "services/logging";
+import { error as LogError } from "services/logging";
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const token = await getToken({ req });
-
-    const githubLogin = token.login.toString();
-    const address = token.address.toString();
-
-    const user = await models.user.findOne({
-      where: {
-      address: address.toLowerCase(),
-      githubLogin: Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("githubLogin")), "=", githubLogin.toLowerCase())
-      }
-    });
-
-    if (!user) 
-      return res.status(404).json("User not found");
-
-    user.resetedAt = new Date();
-    user.githubLogin = null;
-
-    await user.save();
-
-    return res.status(200).json("User reseted sucessfully");
-  } catch(error) {
-    Logger.error(error, "Reset Account", { req, error });
-    return res.status(500).json(error);
-  }
-}
+import { patch } from "server/common/user/reset";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  switch (req.method.toLowerCase()) {
-  case "post":
-    await post(req, res);
-    break;
+  try {
+    switch (req.method.toLowerCase()) {
+    case "patch":
+      res.status(200).json(await patch(req));
+      break;
 
-  default:
-    res.status(405);
+    default:
+      res.status(405);
+    }
+  } catch (error) {
+    LogError(error);
+    res.status(error?.status || 500).json(error?.message || error?.toString());
   }
 
   res.end();
 }
-
 export default withProtected(handler);
