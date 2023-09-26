@@ -13,6 +13,7 @@
     "reviewWithCount_other": "{{count}} reviews",
     "find-a-bounty": "Find a bounty to work on",
     "loc": "LOC",
+    "make-ready-warning": "If the deliverable is ready to be reviewed by curators, please mark it as so by using the \"Make Ready for Review\" button.",
     "create": {
         "title": "Create Deliverable",
         "description": "A deliverable is the work you have done to deliver what was asked by the bounty creator. By creating a deliverable you are indicating that you finished the work and it could be reviewed and proposed as solution by the curators.",
