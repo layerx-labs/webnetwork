@@ -85,5 +85,14 @@
       "deliverable-participants": "Failed to get participants",
       "merge-commit": "This proposal can't be merged because the repository don't allow \"merge commits\". Please contact the network governor.",
       "approval": "Please contact repository admin for deliverable approval before merging is enabled."
+    },
+    "modals": {
+      "make-ready": {
+        "title": "Make Ready for Review",
+        "action": "Mark as ready",
+        "description": "If the deliverable is ready to be reviewed by curators, please mark it as so.",
+        "success": "Marked deliverable as ready.",
+        "error": "Failed to mark deliverable as ready."
+      }
     }
   }
