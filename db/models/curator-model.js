@@ -73,6 +73,14 @@ class Curators extends Model {
       targetKey: "address"
     });
   }
+
+  static findByAddress(address) {
+    return this.findOne({
+      where: {
+        address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("address")), address?.toLowerCase())
+      }
+    });
+  }
 }
 
 module.exports = Curators;
