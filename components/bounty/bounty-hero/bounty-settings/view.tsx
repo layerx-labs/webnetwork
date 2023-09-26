@@ -12,7 +12,6 @@ import Translation from "components/translation";
 import { ServiceNetwork } from "interfaces/application-state";
 
 interface BountySettingsViewProps {
-    handleEditIssue?: () => void;
     isEditIssue?: boolean;
     handleHardCancel?: () => void;
     handleRedeem?: () => void;
@@ -27,7 +26,6 @@ interface BountySettingsViewProps {
 }
   
 export default function BountySettingsView({
-    handleEditIssue,
     handleHardCancel,
     handleRedeem,
     isEditIssue,
@@ -67,20 +65,6 @@ export default function BountySettingsView({
     else document.removeEventListener("mousedown", handleClick);
   
     return () => document.removeEventListener("mousedown", handleClick);
-  }
-
-  function handleEditClick() {
-    handleHide();
-    handleEditIssue();
-  }
-  
-  function renderEditButton() {
-    if (isWalletConnected && isBountyInDraft && isBountyOwner)
-      return (
-          <span className="cursor-pointer" onClick={handleEditClick}>
-            <Translation ns="bounty" label="actions.edit-bounty" />
-          </span>
-      );
   }
 
   function handleCancelClick(isHard) {
@@ -123,15 +107,6 @@ export default function BountySettingsView({
       return Cancel(false);
   }
   
-  function renderActions() {
-    return (
-        <>
-          {renderEditButton()}
-          {renderCancel()}
-        </>
-    );
-  }
-  
   useEffect(loadOutsideClick, [show]);
   
   return (
@@ -152,7 +127,7 @@ export default function BountySettingsView({
             } justify-content-start align-items-stretch position-absolute`}
           >
             <div className="d-flex gap-2 flex-column bounty-settings p-2 bg-gray-950">
-              {renderActions()}
+              {renderCancel()}
             </div>
           </div>
         </div>
