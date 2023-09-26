@@ -85,7 +85,12 @@ export default function BountySettings({
       })();
   }, [state.Service?.active, currentBounty]);
 
-  if (!objViewProps.isBountyInDraft && !isGovernor || !isCancelable && isGovernor)
+  if (
+    (!objViewProps.isBountyInDraft && !isGovernor) ||
+    (!isCancelable && isGovernor) ||
+    isEditIssue ||
+    (!objViewProps.isBountyOwner && !isGovernor)
+  )
     return <></>;
 
   return (
