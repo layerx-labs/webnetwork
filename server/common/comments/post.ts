@@ -47,7 +47,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     if (deliverableId && ["deliverable", "review"].includes(type)){
       const curator = await models.curator.findByAddress(user.address)
 
-      if(!curator || !curator?.isCurrentlyCurator) return res.status(409).json({ message: `user is not a curator` });
+      if(!curator || !curator?.isCurrentlyCurator) return res.status(403).json({ message: `user is not a curator` });
       whereCondition.deliverableId = +deliverableId;
     }
       
