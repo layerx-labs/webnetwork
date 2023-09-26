@@ -46,6 +46,7 @@ export default function DeliverableBody({
   const { getURLWithNetwork } = useNetwork();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
 
+  const isCouncil = !!state?.Service?.network?.active?.isCouncil;
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isDeliverableReady = currentDeliverable?.markedReadyForReview;
   const isDeliverableCanceled = currentDeliverable?.canceled;
@@ -55,7 +56,8 @@ export default function DeliverableBody({
   const isMakeReviewButton =
     isWalletConnected &&
     isDeliverableReady &&
-    !isDeliverableCanceled;
+    !isDeliverableCanceled &&
+    isCouncil
 
   const isMakeReadyReviewButton =
     isWalletConnected &&
@@ -154,6 +156,7 @@ export default function DeliverableBody({
       isMakingReady={isMakingReady}
       updateComments={updateComments}
       currentUser={state.currentUser}
+      isCouncil={isCouncil}
       bountyId={currentBounty?.id}
     />
   );

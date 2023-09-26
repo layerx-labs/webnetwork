@@ -24,6 +24,7 @@ interface DeliverableBodyViewProps {
   isCancelling: boolean;
   isMakingReady: boolean;
   currentUser: CurrentUserState;
+  isCouncil: boolean;
   bountyId: string;
 }
 
@@ -40,6 +41,7 @@ export default function DeliverableBodyView({
   isMakingReady,
   updateComments,
   currentUser,
+  isCouncil,
   bountyId
 }: DeliverableBodyViewProps) {  
   const { isMobileView, isTabletView } = useBreakPoint();
@@ -132,7 +134,7 @@ export default function DeliverableBodyView({
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
-            disableCreateComment={currentDeliverable?.canceled}
+            disableCreateComment={currentDeliverable?.canceled || !isCouncil}
           />
         )}
       </CustomContainer>
