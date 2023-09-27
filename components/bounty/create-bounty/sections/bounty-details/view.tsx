@@ -34,6 +34,7 @@ interface BountyDetailsSectionViewProps {
   originLink: string;
   deliverableType: string;
   originLinkError: OriginLinkErrors;
+  originLinkPlaceHolder: string;
   onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
   onDescriptionchange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   onFilesChange: (files: IFilesProps[]) => void;
@@ -59,6 +60,7 @@ export default function BountyDetailsSectionView({
   kycOptions,
   deliverableTypeOptions,
   originLink,
+  originLinkPlaceHolder,
   deliverableType,
   originLinkError,
   onTitlechange,
@@ -73,16 +75,6 @@ export default function BountyDetailsSectionView({
   onOriginLinkchange,
 }: BountyDetailsSectionViewProps) {
   const { t } = useTranslation("bounty");
-  
-  function originLinkPlaceholder():string {
-    const placeholderPath = "fields.origin-link.placeholders"
-    t("fields.origin-link.placeholders.default")
-    if(deliverableType === 'code') return t(`${placeholderPath}.code`)
-    if(deliverableType === 'design') return t(`${placeholderPath}.design`)
-    if(deliverableType === 'other') return t(`${placeholderPath}.other`)
-
-    return  t(`${placeholderPath}.default`)
-  }
 
   return (
     <>
@@ -226,7 +218,7 @@ export default function BountyDetailsSectionView({
                 type="text"
                 name="origin-link"
                 id="origin-link"
-                placeholder={originLinkPlaceholder()}
+                placeholder={originLinkPlaceHolder}
                 className={`form-control ${originLinkError ? "is-invalid" : ""}`}
                 value={originLink}
                 onChange={onOriginLinkchange}
