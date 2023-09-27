@@ -3,8 +3,6 @@ import { WhereOptions } from "sequelize";
 
 import models from "db/models";
 
-import { isBountyClosed } from "helpers/is-bounty-closed";
-
 import { error as LogError } from "services/logging";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
@@ -23,9 +21,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const isValidNumber = (v) => /^\d+$/.test(v);
 
-    const foundOrValid = (v) => v ? 'found' : 'valid'
-
-    const closedBountyMessage = { message: "bounty has already been closed" };
+    const foundOrValid = (v) => v ? 'found' : 'valid';
 
     if (!["issue", "deliverable", "proposal", "review"].includes(type)) {
       return res.status(404).json({ message: "type does not exist" });
@@ -48,15 +44,20 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const whereCondition: WhereOptions = {};
 
-    if (deliverableId && ["deliverable", "review"].includes(type)){
-      if (await isBountyClosed(issueId)) return res.status(409).json(closedBountyMessage)
+    if (deliverableId && ["deliverable", "review"].includes(type))
       whereCondition.deliverableId = +deliverableId;
-    }
 
-    if (proposalId && type === "proposal"){
-      if (await isBountyClosed(issueId)) return res.status(409).json(closedBountyMessage)
+    if (proposalId && type === "proposal")
       whereCondition.proposalId = +proposalId;
-    }
+    
+    const bounty = await models.issue.findOne({where:{id: issueId}})
+
+    if(!bounty) return res.status(404).json({ message: "bounty not found" });
+
+    if (bounty.isClosed && ["deliverable", "review", "proposal"].includes(type))
+      return res
+      .status(409)
+      .json({ message: "bounty has already been closed" });
 
     const comments = await models.comments.create({
       issueId: +issueId,
