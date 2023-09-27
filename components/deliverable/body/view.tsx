@@ -45,7 +45,7 @@ export default function DeliverableBodyView({
   const { isMobileView, isTabletView } = useBreakPoint();
 
   function RenderMakeReviewButton({ className = "" }) {
-    if (isMakeReviewButton)
+    if (isMakeReviewButton && !currentBounty?.isClosed)
       return (
         <DeliverableButton
           type="review"
