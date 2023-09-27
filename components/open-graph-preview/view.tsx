@@ -8,10 +8,13 @@ interface OpenGraphPreviewViewProps {
   isFetching: boolean;
   isImage: boolean;
   previewPlaceholder?: string
+  errorPlaceholder?: string
   preview: string;
   showOpenLink?: boolean;
   url: string;
   openLinkText?: string;
+  noPreviewAvailable: boolean;
+  isError: boolean;
 }
 
 export default function OpenGraphPreviewView({
@@ -22,6 +25,9 @@ export default function OpenGraphPreviewView({
   showOpenLink,
   url,
   openLinkText,
+  noPreviewAvailable,
+  isError,
+  errorPlaceholder,
 }: OpenGraphPreviewViewProps) {
   const { t } = useTranslation("common");
 
@@ -35,7 +41,12 @@ export default function OpenGraphPreviewView({
           condition={!!preview}
           otherwise={
             <span className="p-5 sm-regular text-gray-600">
-              { previewPlaceholder || t("open-graph-preview.no-preview") }
+              <If
+                condition={!isError}
+                otherwise={errorPlaceholder || "Failed to get link preview"}
+              >
+                { noPreviewAvailable || !previewPlaceholder ? t("open-graph-preview.no-preview") : previewPlaceholder }
+              </If>
             </span>
           }
         >
