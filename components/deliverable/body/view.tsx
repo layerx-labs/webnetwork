@@ -7,6 +7,7 @@ import { Deliverable } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import DeliverableInfoCuratorCard from "../info-curator-card/controller";
 import DeliverableButton from "./actions/deliverable-button";
 import DeliverableDescription from "./description/view";
 import DeliverableOriginLink from "./origin-link/controller";
@@ -101,6 +102,7 @@ export default function DeliverableBodyView({
   return (
     <div className="mt-3">
       <CustomContainer>
+        <DeliverableInfoCuratorCard defaultShowValue={!isCouncil} />
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
             <RenderMakeReviewButton className="col-12 mb-3"/>
