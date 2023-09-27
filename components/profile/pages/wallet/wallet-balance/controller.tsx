@@ -10,6 +10,7 @@ import TokenIcon from "components/token-icon";
 
 import { useAppState } from "contexts/app-state";
 
+import { QueryKeys } from "helpers/query-keys";
 import { getPricesAndConvert } from "helpers/tokens";
 
 
@@ -125,11 +126,11 @@ export default function WalletBalance() {
       });
   }
 
-  const { data: tokensOracles } = useReactQuery(["voting-power-wallet", state.currentUser?.walletAddress],
+  const { data: tokensOracles } = useReactQuery(QueryKeys.votingPowerOf(state.currentUser?.walletAddress),
                                                 loadOracleBalance,
                                                 { enabled: !!state.currentUser?.walletAddress });
 
-  const { data: tokens } = useReactQuery( ["tokens-balance", state.currentUser?.walletAddress],
+  const { data: tokens } = useReactQuery( QueryKeys.tokensOf(state.currentUser?.walletAddress),
                                           loadTokensBalance,
                                           {
                                             enabled:  !!state.currentUser?.walletAddress && 

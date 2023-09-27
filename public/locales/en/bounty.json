@@ -109,7 +109,8 @@
     "bounty-update": "Bounty update failed",
     "banned-domain": "This domain is banned and cannot be used to open bounties.",
     "failed-to-cancel": "Bounty could not be canceled",
-    "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct."
+    "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct.",
+    "failed-to-edit": "Failed to edit bounty"
   },
   "title": "Create new Bounty",
   "fields": {

@@ -15,7 +15,7 @@ import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { NetworkEvents } from "interfaces/enums/events";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
@@ -33,9 +33,8 @@ export default function UpdateBountyAmountModal({
 
   const { state, dispatch } = useAppState();
 
-  const { processEvent } = useApi();
   const transactionalERC20 = useERC20();
-
+  const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
   
   const handleChange = params => setNewAmount(BigNumber(params.value));

@@ -18,5 +18,9 @@ interface CreatePreBounty {
 export function useCreatePreBounty(payload: CreatePreBounty): Promise<IssueData> {
   return api
     .post<IssueData>("/issue", payload)
-    .then(({ data }) => data);
+    .then(({ data }) => data)
+    .catch(error => {
+      console.debug("Failed to create pre bounty", error);
+      return null;
+    });
 }

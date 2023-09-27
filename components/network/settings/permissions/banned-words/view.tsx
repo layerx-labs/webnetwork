@@ -1,14 +1,14 @@
 import {useTranslation} from "next-i18next";
 
-import {Divider} from "../../../../divider";
-
-import NetworkTabContainer from "../../tab-container/view";
 import PermissionInput from "../../../../common/inputs/permission-input/permission-input";
 import PermissionListItem from "../../../../common/lists/permission-list/permission-list-item";
+import {Divider} from "../../../../divider";
+import NetworkTabContainer from "../../tab-container/view";
 
 interface NetworkPermissionsViewProps {
   domain: string;
   domains: string[];
+  isExecuting?: boolean;
   onChangeDomain: (v: string) => void;
   handleAddDomain: () => void;
   handleRemoveDomain: (v: string) => void;
@@ -17,6 +17,7 @@ interface NetworkPermissionsViewProps {
 export default function NetworkPermissionsView({
   domain,
   domains,
+  isExecuting,
   onChangeDomain,
   handleAddDomain,
   handleRemoveDomain,
@@ -35,13 +36,14 @@ export default function NetworkPermissionsView({
           onChange={onChangeDomain}
           onClickAdd={handleAddDomain}
           placeholder={t("steps.permissions.domains.placeholder")}
-          disabledButton={!domain}
+          disabledButton={!domain || isExecuting}
         />
         {domains?.length > 0 ? (
           <div className="d-flex flex-column mt-4">
             <span className="mb-4">{t("steps.permissions.domains.list")}</span>
             {domains.map((value, key) => (
               <PermissionListItem
+                key={key}
                 value={value}
                 id={key}
                 onTrashClick={handleRemoveDomain}

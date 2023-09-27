@@ -1,13 +1,11 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-
 import { NetworkEvents } from "interfaces/enums/events";
 import { IssueBigNumberData, IssueData } from "interfaces/issue-data";
 import { DistributedAmounts, Proposal } from "interfaces/proposal";
 
-import useApi from "x-hooks/use-api";
+import { useCreateNft } from "x-hooks/api/nft";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import useRefresh from "x-hooks/use-refresh";
@@ -37,8 +35,6 @@ export default function ProposalActionsButtons({
 }: ProposalActionsButtonsProps) {
   const { t } = useTranslation(["common", "proposal"]);
 
-  const { createNFT } = useApi();
-  const { state } = useAppState();
   const { refresh } = useRefresh();
   const { handlerDisputeProposal, handleCloseIssue, handleRefuseByOwner } = useBepro();
 
@@ -79,9 +75,10 @@ export default function ProposalActionsButtons({
     try {
       setIsMerging(true);
       
-      const { url } = await createNFT(issue?.contractId,
-                                      proposal.contractId,
-                                      state.currentUser?.walletAddress);
+      const { url } = await useCreateNft({
+        issueId: +issue.id,
+        proposalId: proposal.id
+      });
 
       await onMerge(+issue?.contractId, +proposal.contractId, url);
 

@@ -11,6 +11,8 @@ import Step from "components/step";
 import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import {StepWrapperProps} from "interfaces/stepper";
 import {Token} from "interfaces/token";
 
@@ -51,7 +53,7 @@ export default function TokenConfiguration({
     setAllowedRewardTokens(reward);
   }
 
-  useReactQuery(["tokens", connectedChainId],
+  useReactQuery(QueryKeys.tokensByChain(connectedChainId),
                 () => useGetTokens(connectedChainId),
                 {
                   enabled: !!connectedChainId,
