@@ -80,6 +80,8 @@ export default function ItemRow({
     ? "actions.view-deliverable"
     : "actions.review";
 
+  const isCurator = !!state?.Service?.network?.active?.isCouncil;
+
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     ev.preventDefault();
     router.push(getURLWithNetwork(pathRedirect, {
@@ -96,6 +98,7 @@ export default function ItemRow({
       href={getURLWithNetwork(pathRedirect, valueRedirect)}
       handleBtn={handleBtn}
       isProposal={isProposal}
+      isCurator={isCurator}
       status={status}
       btnLabel={btnLabel}
       proposal={proposal}
