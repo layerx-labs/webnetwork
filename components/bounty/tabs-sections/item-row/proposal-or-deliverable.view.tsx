@@ -21,7 +21,6 @@ interface ItemRowProps {
   isDisputed: boolean;
   isMerged: boolean;
   totalToBeDisputed: BigNumber;
-  isCurator: boolean;
 }
 
 export default function ProposalOrDeliverableView({
@@ -32,7 +31,6 @@ export default function ProposalOrDeliverableView({
   proposal,
   isDisputed,
   isMerged,
-  isCurator,
   totalToBeDisputed,
 }: ItemRowProps) {
   return (
@@ -53,22 +51,21 @@ export default function ProposalOrDeliverableView({
           reviewers={(item as Deliverable)?.comments?.filter(e => e.type === 'review')?.length || 0}
         />
       )}
-      {!isCurator && btnLabel === "actions.review" ? null : (
-        <ReadOnlyButtonWrapper>
-          <div className="row align-items-center d-none d-xl-block">
-            <div className="d-flex">
-              <Button
-                className="read-only-button text-truncate ms-1"
-                onClick={handleBtn}
-              >
-                <span className="label-m text-white">
-                  <Translation label={btnLabel} />
-                </span>
-              </Button>
-            </div>
+
+      <ReadOnlyButtonWrapper>
+        <div className="row align-items-center d-none d-xl-block">
+          <div className="d-flex">
+            <Button
+              className="read-only-button text-truncate ms-1"
+              onClick={handleBtn}
+            >
+              <span className="label-m text-white">
+                <Translation label={btnLabel} />
+              </span>
+            </Button>
           </div>
-        </ReadOnlyButtonWrapper>
-      )}
+        </div>
+      </ReadOnlyButtonWrapper>
     </>
   );
 }

@@ -74,13 +74,13 @@ export default function ItemRow({
     .multipliedBy(state.Service?.network?.amounts?.totalNetworkToken)
     .dividedBy(100);
 
+  const isCurator = !!state?.Service?.network?.active?.isCouncil;
+
   const btnLabel = isProposal
     ? "actions.view-proposal"
-    : isDraftDeliverable
+    : (isDraftDeliverable || !isCurator)
     ? "actions.view-deliverable"
     : "actions.review";
-
-  const isCurator = !!state?.Service?.network?.active?.isCouncil;
 
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     ev.preventDefault();
@@ -98,7 +98,6 @@ export default function ItemRow({
       href={getURLWithNetwork(pathRedirect, valueRedirect)}
       handleBtn={handleBtn}
       isProposal={isProposal}
-      isCurator={isCurator}
       status={status}
       btnLabel={btnLabel}
       proposal={proposal}

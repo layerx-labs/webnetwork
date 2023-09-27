@@ -30,7 +30,6 @@ interface ItemRowProps {
   isDisputed: boolean;
   isMerged: boolean;
   totalToBeDisputed: BigNumber;
-  isCurator: boolean;
 }
 
 export default function ItemRowView({
@@ -44,7 +43,6 @@ export default function ItemRowView({
   proposal,
   isDisputed,
   isMerged,
-  isCurator,
   totalToBeDisputed,
 }: ItemRowProps) {
   function RenderProposalOrDeliverable() {
@@ -55,7 +53,6 @@ export default function ItemRowView({
         proposal={proposal}
         isDisputed={isDisputed}
         isMerged={isMerged}
-        isCurator={isCurator}
         totalToBeDisputed={totalToBeDisputed} 
         isProposal={isProposal} 
         item={item}      />
