@@ -11,14 +11,13 @@ import DescriptionAndPreview from "components/common/description-and-preview/con
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import MakeDeliverableRedyModal from "components/modals/make-deliverable-ready/controller";
+import OpenGraphPreview from "components/open-graph-preview/controller";
+import FooterButtons from "components/pages/create-deliverable/footer-buttons/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
-import { metadata } from "interfaces/metadata";
 
 import { SelectOption } from "types/utils";
-
-import FooterButtons from "./footer-buttons/view";
 
 interface CreateDeliverablePageViewProps {
   checkButtonsOptions: SelectOption[];
@@ -31,13 +30,13 @@ interface CreateDeliverablePageViewProps {
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
   onHandleCreate: () => void;
-  previewLink: metadata;
-  previewError: boolean;
-  previewIsLoading: boolean;
   createIsLoading: boolean;
   originLinkError: OriginLinkErrors;
   createdDeliverableId: number;
   bountyContractId: number;
+  previewError?: boolean;
+  previewLoading?: boolean;
+  onPreviewStatusChange?: (status: string) => void;
 }
 
 export default function CreateDeliverablePageView({
@@ -51,28 +50,18 @@ export default function CreateDeliverablePageView({
   onHandleCreate,
   checkButtonsOption,
   checkButtonsOptions,
-  previewLink,
-  previewError,
-  previewIsLoading,
   createIsLoading,
   originLinkError,
   createdDeliverableId,
   bountyContractId,
+  onPreviewStatusChange,
+  previewError,
+  previewLoading,
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
-  function inputError(value: string) {
-    return (
-      <div className="mt-2 text-danger">
-        <InfoIconEmpty
-          className="text-danger mb-1 me-1"
-          width={13}
-          height={13}
-        />
-        {value}
-      </div>
-    );
-  }
+  const isCreateButtonDisabled = !title || !description || !originLink || createIsLoading || 
+    previewError || previewLoading;
 
   return (
     <div className="row justify-content-center mx-0">
@@ -107,19 +96,16 @@ export default function CreateDeliverablePageView({
                 <BountyLabel className="mb-2 text-white" required>
                   {t("deliverable:create.labels.origin-link")}
                 </BountyLabel>
+
                 <input
                   type="text"
                   className={clsx("form-control bg-gray-850 rounded-lg", {
-                    "border border-1 border-danger border-radius-8":
-                      previewError || originLinkError,
+                    "border border-1 border-danger border-radius-8": originLinkError || previewError,
                   })}
                   placeholder={t("deliverable:create.placeholders.origin-link")}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
-                <If condition={previewError && !originLinkError}>
-                  {inputError(t("deliverable:actions.preview.error"))}
-                </If>
 
                 <If condition={originLinkError === OriginLinkErrors.Banned}>
                   <ContextualSpan context="danger" className="mt-2">
@@ -143,27 +129,12 @@ export default function CreateDeliverablePageView({
                   {t("deliverable:create.labels.preview")}
                 </BountyLabel>
 
-                <div className="d-flex justify-content-center border border-radius-4 border-gray-800 comment">
-                  {previewIsLoading ? (
-                    <span className="spinner-border spinner-border m-5" />
-                  ) : (
-                    <>
-                      {previewLink?.ogImage && (
-                        <img src={previewLink.ogImage} />
-                      )}
-                      {previewLink?.ogVideo && !previewLink?.ogImage && (
-                        <video src={previewLink.ogVideo} controls>
-                          {t("deliverable:actions.preview.video-error")}
-                        </video>
-                      )}
-                      {!previewLink?.ogImage && !previewLink?.ogVideo && (
-                        <span className="p-5 text-gray-800">
-                          {t("deliverable:create.placeholders.preview")}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </div>
+                <OpenGraphPreview
+                  url={originLink}
+                  onStatusChange={onPreviewStatusChange}
+                  previewPlaceholder={t("deliverable:create.placeholders.preview")}
+                  errorPlaceholder={t("deliverable:actions.preview.video-error")}
+                />
               </div>
             </div>
           </div>
@@ -214,9 +185,7 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={
-              !title || !description || !originLink || createIsLoading
-            }
+            disabledCreate={isCreateButtonDisabled}
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>
@@ -224,9 +193,7 @@ export default function CreateDeliverablePageView({
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
-            disabledCreate={
-              !title || !description || !originLink || createIsLoading
-            }
+            disabledCreate={isCreateButtonDisabled}
             isLoadingCreate={createIsLoading}
           />
         </ResponsiveWrapper>

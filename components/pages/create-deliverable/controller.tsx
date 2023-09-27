@@ -13,11 +13,9 @@ import { isValidUrl } from "helpers/validateUrl";
 import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 import { IssueData } from "interfaces/issue-data";
-import { metadata } from "interfaces/metadata";
 
 import DeletePreDeliverable from "x-hooks/api/deliverable/delete-pre-deliverable";
 import CreatePreDeliverable from "x-hooks/api/deliverable/post-pre-deliverable";
-import getMetadata from "x-hooks/api/get-metadata";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -34,11 +32,9 @@ export default function CreateDeliverablePage({
   const { t } = useTranslation(["common", "deliverable", "bounty"]);
 
   const [originLink, setOriginLink] = useState<string>();
-  const [previewLink, setPreviewLink] = useState<metadata>();
-  const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
   const [createIsLoading, setCreateIsLoading] = useState<boolean>(false);
-  const [previewError, setPreviewError] = useState<boolean>(false);
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
+  const [previewStatus, setPreviewStatus] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [createdDeliverableId, setCreatedDeliverableId] = useState<number>();
@@ -64,25 +60,11 @@ export default function CreateDeliverablePage({
     },
   ];
 
-  function handleMetadata(value: string) {
-    setPreviewIsLoading(true)
-    previewError && setPreviewError(false)
-    getMetadata({
-      url: value
-    }).then(setPreviewLink)
-    .catch(() => {
-      setPreviewLink(undefined)
-      setPreviewError(true)
-    })
-    .finally(() => setPreviewIsLoading(false))
-  }
-
   function validateBannedDomain(link: string) {
     const bannedDomains = state.Service?.network?.active?.banned_domains || [];
     return !!bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 
-  const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
   const validateDomainDebounced = useDebouncedCallback((link: string) => {
     if (!link) {
       setOriginLinkError(undefined);
@@ -96,7 +78,6 @@ export default function CreateDeliverablePage({
       setOriginLinkError(OriginLinkErrors.Banned);
     else {
       setOriginLinkError(undefined);
-      debouncedPreviewUpdater(link);
     }
   }, 500);
 
@@ -165,9 +146,6 @@ export default function CreateDeliverablePage({
   return (
     <CreateDeliverablePageView
       originLink={originLink}
-      previewLink={previewLink}
-      previewError={previewError}
-      previewIsLoading={previewIsLoading}
       onChangeOriginLink={onChangeOriginLink}
       title={title}
       onChangeTitle={onChangeTitle}
@@ -181,6 +159,9 @@ export default function CreateDeliverablePage({
       originLinkError={originLinkError}
       createdDeliverableId={createdDeliverableId}
       bountyContractId={currentBounty?.contractId}
+      onPreviewStatusChange={setPreviewStatus}
+      previewError={previewStatus === "error"}
+      previewLoading={previewStatus === "loading"}
     />
   );
 }
