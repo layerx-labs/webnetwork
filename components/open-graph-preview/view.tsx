@@ -49,7 +49,7 @@ export default function OpenGraphPreviewView({
           </If>
         </If>
 
-        <If condition={showOpenLink && !!preview}>
+        <If condition={showOpenLink}>
           <div className="w-100 text-left mt-3">
             <a
               href={url}
@@ -58,7 +58,7 @@ export default function OpenGraphPreviewView({
               className="sm-regular text-decoration-none text-blue-200"
             >
               <span className="mr-1">
-                { openLinkText || t("open-graph-preview.view-link") }
+                { openLinkText || t("open-graph-preview.open-link") }
               </span>
 
               <ArrowUpRight />
