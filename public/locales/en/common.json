@@ -493,6 +493,7 @@
   },
   "open-graph-preview": {
     "no-preview": "No preview available",
-    "view-link": "View Link"
+    "view-link": "View Link",
+    "open-link": "Open Link"
   }
 }
