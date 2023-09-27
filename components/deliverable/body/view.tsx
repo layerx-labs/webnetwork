@@ -102,7 +102,10 @@ export default function DeliverableBodyView({
   return (
     <div className="mt-3">
       <CustomContainer>
-        <DeliverableInfoCuratorCard defaultShowValue={!isCouncil} />
+        <If condition={!isCouncil}>
+          <DeliverableInfoCuratorCard />
+        </If>
+
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
             <RenderMakeReviewButton className="col-12 mb-3"/>
