@@ -3,16 +3,15 @@ import { useTranslation } from "next-i18next";
 import Comments from "components/bounty/comments/controller";
 import { ContextualSpan } from "components/contextual-span";
 import CustomContainer from "components/custom-container";
+import DeliverableButton from "components/deliverable/body/actions/deliverable-button";
+import DeliverableDescription from "components/deliverable/body/description/view";
+import DeliverableOriginLink from "components/deliverable/body/origin-link/view";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
 import { Deliverable } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
-
-import DeliverableButton from "./actions/deliverable-button";
-import DeliverableDescription from "./description/view";
-import DeliverableOriginLink from "./origin-link/controller";
 
 interface DeliverableBodyViewProps {
   currentDeliverable: Deliverable;
