@@ -107,6 +107,12 @@ export default function CreateDeliverablePageView({
                   onChange={onChangeOriginLink}
                 />
 
+                <If condition={previewError && !originLinkError}>
+                  <ContextualSpan context="danger" className="mt-2">
+                    {t("deliverable:actions.preview.failed-to-get")}
+                  </ContextualSpan>
+                </If>
+
                 <If condition={originLinkError === OriginLinkErrors.Banned}>
                   <ContextualSpan context="danger" className="mt-2">
                     {t("bounty:errors.banned-domain")}
@@ -133,7 +139,6 @@ export default function CreateDeliverablePageView({
                   url={originLink}
                   onStatusChange={onPreviewStatusChange}
                   previewPlaceholder={t("deliverable:create.placeholders.preview")}
-                  errorPlaceholder={t("deliverable:actions.preview.video-error")}
                 />
               </div>
             </div>
