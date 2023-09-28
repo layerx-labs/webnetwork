@@ -3,8 +3,6 @@ import { ChangeEvent } from "react";
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
-import InfoIconEmpty from "assets/icons/info-icon-empty";
-
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
