@@ -76,7 +76,7 @@ async function up(queryInterface, Sequelize) {
           title: pullRequestGithub.title,
           description: pullRequestGithub.body,
           canceled: pullRequest.status === "canceled" ? true : false,
-          markedReadyForReview: pullRequest.status === "ready" ? true : false,
+          markedReadyForReview: (pullRequest.status === "ready" || pullRequestGithub.merged) ? true : false,
           accepted: pullRequestGithub.merged ? true : false,
           issueId: issue.id,
           bountyId: issue.contractId,
