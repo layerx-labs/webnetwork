@@ -43,7 +43,7 @@ export default function OpenGraphPreviewView({
             <span className="p-5 sm-regular text-gray-600">
               <If
                 condition={!isError}
-                otherwise={errorPlaceholder || "Failed to get link preview"}
+                otherwise={errorPlaceholder || t("open-graph-preview.failed-to-get")}
               >
                 { noPreviewAvailable || !previewPlaceholder ? t("open-graph-preview.no-preview") : previewPlaceholder }
               </If>
@@ -53,7 +53,9 @@ export default function OpenGraphPreviewView({
           <If
             condition={isImage}
             otherwise={
-              <video src={preview} controls></video>
+              <video src={preview} controls>
+                {t("open-graph-preview.video-not-supported")}
+              </video>
             }
           >
             <img src={preview} className="border-radius-8" />
