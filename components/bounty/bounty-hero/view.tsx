@@ -73,7 +73,6 @@ export default function BountyHeroView({
                 <BountySettings
                   currentBounty={bounty}
                   updateBountyData={updateBountyData}
-                  handleEditIssue={handleEditIssue}
                   isEditIssue={isEditIssue}
                 />
               </div>
