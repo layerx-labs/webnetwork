@@ -10,6 +10,7 @@ import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
 import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
+import MakeDeliverableRedyModal from "components/modals/make-deliverable-ready/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
@@ -23,6 +24,7 @@ interface CreateDeliverablePageViewProps {
   checkButtonsOptions: SelectOption[];
   checkButtonsOption: string;
   originLink: string;
+  originLinkPlaceHolder: string;
   onChangeOriginLink: (v: ChangeEvent<HTMLInputElement>) => void;
   description: string;
   onChangeDescription: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -35,10 +37,13 @@ interface CreateDeliverablePageViewProps {
   previewIsLoading: boolean;
   createIsLoading: boolean;
   originLinkError: OriginLinkErrors;
+  createdDeliverableId: number;
+  bountyContractId: number;
 }
 
 export default function CreateDeliverablePageView({
   originLink,
+  originLinkPlaceHolder,
   onChangeOriginLink,
   title,
   onChangeTitle,
@@ -53,6 +58,8 @@ export default function CreateDeliverablePageView({
   previewIsLoading,
   createIsLoading,
   originLinkError,
+  createdDeliverableId,
+  bountyContractId,
 }: CreateDeliverablePageViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable"]);
 
@@ -108,7 +115,7 @@ export default function CreateDeliverablePageView({
                     "border border-1 border-danger border-radius-8":
                       previewError || originLinkError,
                   })}
-                  placeholder={t("deliverable:create.placeholders.origin-link")}
+                  placeholder={originLinkPlaceHolder}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
@@ -228,6 +235,11 @@ export default function CreateDeliverablePageView({
       </div>
 
       </div>
+
+      <MakeDeliverableRedyModal
+        bountyContractId={bountyContractId}
+        deliverableId={createdDeliverableId}
+      />
     </div>
   );
 }

@@ -2,16 +2,17 @@ import React from "react";
 
 import BigNumber from "bignumber.js";
 
+import ReviewsNumberView from "components/bounty/tabs-sections/reviews-number.view";
 import Button from "components/button";
 import { IPRLabel } from "components/deliverable/labels/controller";
+import If from "components/If";
+
 import ProposalProgressSmall from "components/proposal-progress-small";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";
 
 import { Deliverable } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
-
-import ReviewsNumberView from "../reviews-number.view";
 
 interface ItemRowProps {
   isProposal: boolean;
@@ -38,22 +39,23 @@ export default function ProposalOrDeliverableView({
 }: ItemRowProps) {
   return (
     <>
-      {isProposal && proposal ? (
-        <>
-          <div className="d-flex align-items-center text-center col-md-8">
-            <ProposalProgressSmall
-              color={isDisputed ? "danger" : isMerged ? "success" : "purple"}
-              value={proposal?.disputeWeight}
-              total={totalToBeDisputed}
-            />
-          </div>
-        </>
-      ) : (
-        <ReviewsNumberView
-          className="d-none d-xl-block"
-          reviewers={(item as Deliverable)?.comments?.filter(e => e.type === 'review')?.length || 0}
-        />
-      )}
+      <If 
+        condition={!!isProposal && !!proposal}
+        otherwise={
+          <ReviewsNumberView
+            className="d-none d-xl-block"
+            reviewers={(item as Deliverable)?.comments?.filter(e => e.type === 'review')?.length || 0}
+          />
+        }
+      >
+        <div className="d-flex align-items-center text-center col-md-8">
+          <ProposalProgressSmall
+            color={isDisputed ? "danger" : isMerged ? "success" : "purple"}
+            value={proposal?.disputeWeight}
+            total={totalToBeDisputed}
+          />
+        </div>
+      </If>
 
       {(item as Deliverable)?.comments && !status?.find(e => e.isMergeable) ? null : (
         <ReadOnlyButtonWrapper>

@@ -8,6 +8,7 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { issueParser } from "helpers/issue";
+import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 import { isValidUrl } from "helpers/validateUrl";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
@@ -41,6 +42,7 @@ export default function CreateDeliverablePage({
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
+  const [createdDeliverableId, setCreatedDeliverableId] = useState<number>();
   
   const { state, dispatch } = useAppState();
   const { getURLWithNetwork } = useNetwork();
@@ -99,12 +101,6 @@ export default function CreateDeliverablePage({
     }
   }, 500);
 
-  
-  function verifyProtocol(url: string): boolean {
-    const regex = /^(https?:\/\/)/;
-    return regex.test(url);
-  }
-
   function onChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
@@ -132,10 +128,7 @@ export default function CreateDeliverablePage({
       issueId: +currentBounty?.id,
     }).then(({ cid, originCID, bountyId }) => {
       deliverableId = cid
-      return handleCreatePullRequest(bountyId, "", "", originCID, "", "", cid).then((res) => {
-        console.log("res", res)
-        return res
-      })
+      return handleCreatePullRequest(bountyId, "", "", originCID, "", "", cid);
     }).then((txInfo) => {
       return processEvent(NetworkEvents.PullRequestCreated, undefined, {
         fromBlock: (txInfo as { blockNumber: number }).blockNumber,
@@ -147,7 +140,7 @@ export default function CreateDeliverablePage({
           content: t("deliverable:actions.create.success"),
       }));
 
-      return push(getURLWithNetwork("/bounty/[id]", query));
+      setCreatedDeliverableId(deliverableId);
     })
     .catch((err) => {
       if (deliverableId) DeletePreDeliverable(deliverableId);
@@ -173,6 +166,7 @@ export default function CreateDeliverablePage({
   return (
     <CreateDeliverablePageView
       originLink={originLink}
+      originLinkPlaceHolder={getOriginLinkPlaceholder(t, bounty?.type)}
       previewLink={previewLink}
       previewError={previewError}
       previewIsLoading={previewIsLoading}
@@ -187,6 +181,8 @@ export default function CreateDeliverablePage({
       checkButtonsOption={currentBounty?.type}
       createIsLoading={createIsLoading}
       originLinkError={originLinkError}
+      createdDeliverableId={createdDeliverableId}
+      bountyContractId={currentBounty?.contractId}
     />
   );
 }
