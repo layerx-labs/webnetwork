@@ -6,15 +6,17 @@ import CustomContainer from "components/custom-container";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
-import { Deliverable } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import DeliverableInfoCuratorCard from "../info-curator-card/controller";
 import DeliverableButton from "./actions/deliverable-button";
 import DeliverableDescription from "./description/view";
 import DeliverableOriginLink from "./origin-link/controller";
 
 interface DeliverableBodyViewProps {
+  currentBounty: IssueBigNumberData;
   currentDeliverable: Deliverable;
   isCreatingReview: boolean;
   showMakeReadyWarning: boolean;
@@ -28,10 +30,11 @@ interface DeliverableBodyViewProps {
   isCancelling: boolean;
   isMakingReady: boolean;
   currentUser: CurrentUserState;
-  bountyId: string;
+  isCouncil: boolean;
 }
 
 export default function DeliverableBodyView({
+  currentBounty,
   currentDeliverable,
   isCreatingReview,
   showMakeReadyWarning,
@@ -45,13 +48,13 @@ export default function DeliverableBodyView({
   isMakingReady,
   updateComments,
   currentUser,
-  bountyId
+  isCouncil
 }: DeliverableBodyViewProps) {  
   const { t } = useTranslation("deliverable");
   const { isMobileView, isTabletView } = useBreakPoint();
 
   function RenderMakeReviewButton({ className = "" }) {
-    if (isMakeReviewButton)
+    if (isMakeReviewButton && !currentBounty?.isClosed)
       return (
         <DeliverableButton
           type="review"
@@ -105,6 +108,10 @@ export default function DeliverableBodyView({
   return (
     <div className="mt-3">
       <CustomContainer>
+        <If condition={!isCouncil}>
+          <DeliverableInfoCuratorCard />
+        </If>
+
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
             <RenderMakeReviewButton className="col-12 mb-3"/>
@@ -146,12 +153,12 @@ export default function DeliverableBodyView({
             type="deliverable"
             updateData={updateComments}
             ids={{
-              issueId: +bountyId,
+              issueId: +currentBounty?.id,
               deliverableId: currentDeliverable?.id,
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
-            disableCreateComment={currentDeliverable?.canceled}
+            disableCreateComment={currentDeliverable?.canceled || currentBounty?.isClosed || !isCouncil}
           />
         )}
       </CustomContainer>
