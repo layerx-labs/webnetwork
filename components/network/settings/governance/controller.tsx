@@ -85,7 +85,6 @@ export default function NetworkGovernanceSettings({
   function handleCloseMyNetwork() {
     if (
       !state.Service?.network?.active ||
-      !state.currentUser?.accessToken ||
       !state.currentUser?.walletAddress ||
       !state.Service?.active
     )
@@ -235,7 +234,6 @@ export default function NetworkGovernanceSettings({
       creator: state.currentUser.walletAddress,
       githubLogin: state.currentUser.login,
       networkAddress: network.networkAddress,
-      accessToken: state.currentUser.accessToken,
       allowedTokens: {
         transactional: settingsTokens?.allowedTransactions?.map((token) => token?.id).filter((v) => v),
         reward: settingsTokens?.allowedRewards?.map((token) => token?.id).filter((v) => v)
