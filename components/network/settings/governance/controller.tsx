@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 
 import NetworkGovernanceSettingsView from "components/network/settings/governance/view";
@@ -33,6 +34,7 @@ export default function NetworkGovernanceSettings({
   address,
   updateEditingNetwork
 }: GovernanceProps) {
+  const { update: updateSession } = useSession();
   const { t } = useTranslation(["common", "custom-network"]);
 
   const [isClosing, setIsClosing] = useState(false);
@@ -102,9 +104,8 @@ export default function NetworkGovernanceSettings({
       })
       .then(() => {
         updateWalletBalance(true);
-
         if (isCurrentNetwork) updateActiveNetwork(true);
-
+        updateSession();
         return updateEditingNetwork();
       })
       .then(() =>
