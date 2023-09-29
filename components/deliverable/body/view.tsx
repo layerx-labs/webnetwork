@@ -1,4 +1,7 @@
+import { useTranslation } from "next-i18next";
+
 import Comments from "components/bounty/comments/controller";
+import { ContextualSpan } from "components/contextual-span";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 
@@ -15,6 +18,7 @@ import DeliverableOriginLink from "./origin-link/controller";
 interface DeliverableBodyViewProps {
   currentDeliverable: Deliverable;
   isCreatingReview: boolean;
+  showMakeReadyWarning: boolean;
   handleShowModal: () => void;
   handleCancel: () => void;
   handleMakeReady: () => void;
@@ -32,6 +36,7 @@ interface DeliverableBodyViewProps {
 export default function DeliverableBodyView({
   currentDeliverable,
   isCreatingReview,
+  showMakeReadyWarning,
   handleShowModal,
   handleCancel,
   handleMakeReady,
@@ -45,6 +50,7 @@ export default function DeliverableBodyView({
   isCouncil,
   bountyId
 }: DeliverableBodyViewProps) {  
+  const { t } = useTranslation("deliverable");
   const { isMobileView, isTabletView } = useBreakPoint();
 
   function RenderMakeReviewButton({ className = "" }) {
@@ -127,8 +133,21 @@ export default function DeliverableBodyView({
               </div>
           </div>
         </div>
+
+        <If condition={showMakeReadyWarning}>
+          <ContextualSpan
+            context="warning"
+            className="mt-2 mb-3"
+            isAlert
+          >
+            {t("make-ready-warning")}
+          </ContextualSpan>
+        </If>
+
         <DeliverableOriginLink url={currentDeliverable.deliverableUrl} />
+
         <DeliverableDescription description={currentDeliverable.description}/>
+
         {currentDeliverable?.markedReadyForReview && (
           <Comments
             type="deliverable"
