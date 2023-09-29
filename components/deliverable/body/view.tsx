@@ -10,6 +10,7 @@ import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import DeliverableInfoCuratorCard from "../info-curator-card/controller";
 import DeliverableButton from "./actions/deliverable-button";
 import DeliverableDescription from "./description/view";
 import DeliverableOriginLink from "./origin-link/controller";
@@ -29,6 +30,7 @@ interface DeliverableBodyViewProps {
   isCancelling: boolean;
   isMakingReady: boolean;
   currentUser: CurrentUserState;
+  isCouncil: boolean;
 }
 
 export default function DeliverableBodyView({
@@ -45,7 +47,8 @@ export default function DeliverableBodyView({
   isCancelling,
   isMakingReady,
   updateComments,
-  currentUser
+  currentUser,
+  isCouncil
 }: DeliverableBodyViewProps) {  
   const { t } = useTranslation("deliverable");
   const { isMobileView, isTabletView } = useBreakPoint();
@@ -105,6 +108,10 @@ export default function DeliverableBodyView({
   return (
     <div className="mt-3">
       <CustomContainer>
+        <If condition={!isCouncil}>
+          <DeliverableInfoCuratorCard />
+        </If>
+
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
             <RenderMakeReviewButton className="col-12 mb-3"/>
@@ -151,7 +158,7 @@ export default function DeliverableBodyView({
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
-            disableCreateComment={currentDeliverable?.canceled || currentBounty?.isClosed}
+            disableCreateComment={currentDeliverable?.canceled || currentBounty?.isClosed || !isCouncil}
           />
         )}
       </CustomContainer>
