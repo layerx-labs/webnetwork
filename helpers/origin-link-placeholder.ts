@@ -4,12 +4,11 @@ import { TFunction } from "next-i18next";
 export function getOriginLinkPlaceholder(translation: TFunction, type: string) {
   const placeholderPath = "bounty:fields.origin-link.placeholders";
 
-  const placeholder =
-    {
-      code: translation(`${placeholderPath}.code`),
-      design: translation(`${placeholderPath}.design`),
-      other: translation(`${placeholderPath}.other`),
-    }[type] || translation(`${placeholderPath}.default`);
+  const placeholder = {
+    code: translation(`${placeholderPath}.code`),
+    design: translation(`${placeholderPath}.design`),
+    other: translation(`${placeholderPath}.other`),
+  };
 
-  return placeholder;
+  return placeholder[type] || translation(`${placeholderPath}.default`);
 }
