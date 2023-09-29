@@ -12,6 +12,7 @@ import {
   BOUNTY_TITLE_LIMIT,
   MAX_TAGS,
 } from "helpers/constants";
+import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 
 import { BountyDetailsSectionProps } from "interfaces/create-bounty";
 
@@ -60,16 +61,6 @@ export default function BountyDetailsSection({
     { label: t("fields.deliverable-types.types.design"), value: "design" },
     { label: t("fields.deliverable-types.types.other"), value: "other" }
   ];
-  
-  function handleOriginLinkPlaceholder():string {
-    const placeholderPath = "fields.origin-link.placeholders"
-
-    if(deliverableType === 'code') return t(`${placeholderPath}.code`)
-    if(deliverableType === 'design') return t(`${placeholderPath}.design`)
-    if(deliverableType === 'other') return t(`${placeholderPath}.other`)
-
-    return  t(`${placeholderPath}.default`)
-  }
 
   function handleChangeTitle(e: ChangeEvent<HTMLInputElement>) {
     updateTitle(e.target.value);
@@ -140,7 +131,7 @@ export default function BountyDetailsSection({
       deliverableType={deliverableType}
       originLink={originLink}
       originLinkError={originLinkError}
-      originLinkPlaceHolder={handleOriginLinkPlaceholder()}
+      originLinkPlaceHolder={getOriginLinkPlaceholder(t, deliverableType)}
       onTitlechange={handleChangeTitle}
       onDescriptionchange={handleChangeDescription}
       onFilesChange={updateFiles}
