@@ -14,7 +14,7 @@ export default function DeliverableInfoCardView({
   const { t } = useTranslation("deliverable");
 
   return (
-    <ContextualSpan isAlert isDismissable context='info' className="bg-info-10">
+    <ContextualSpan isAlert isDismissable context='info' className="bg-info-10 mb-2">
     {t("deliverable:infos.curators")}
       <Link href={votingPowerHref}>
         <a className="text-primary">
