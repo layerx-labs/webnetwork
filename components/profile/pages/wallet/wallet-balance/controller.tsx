@@ -17,6 +17,7 @@ import { TokensOracles } from "interfaces/oracles-state";
 import { Token } from "interfaces/token";
 
 import { getCoinInfoByContract } from "services/coingecko";
+import DAO from "services/dao-service";
 
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetTokens } from "x-hooks/api/token";
@@ -42,15 +43,14 @@ export default function WalletBalance() {
   const getAddress = (token: string | Token) =>
     typeof token === "string" ? token : token?.address;
 
-  async function processToken(token: string | Token) {
+  async function processToken(token: string | Token, service: DAO) {
     const [tokenData, balance] = await Promise.all([
       typeof token === "string"
-        ? state.Service?.active?.getERC20TokenData(token)
+        ? service.getERC20TokenData(token)
         : token,
-      state.Service?.active?.getTokenBalance(getAddress(token),
-                                             state?.currentUser?.walletAddress),
+      service.getTokenBalance(getAddress(token),
+                              state?.currentUser?.walletAddress),
     ]);
-
     const tokenInformation = await getCoinInfoByContract(tokenData?.symbol);
 
     return {
@@ -115,11 +115,28 @@ export default function WalletBalance() {
     });
   }
 
+  function loadDaoService(chainRpc: string) {
+    const daoService: DAO = new DAO({
+      web3Host: chainRpc,
+      skipWindowAssignment: true,
+    })
+  
+    daoService.start()
+
+    return daoService
+  }
+
   function loadTokensBalance(): Promise<TokenBalanceType[]> {
-    return useGetTokens(state?.connectedChain?.id)
-      .then((tokens) => {
+    return useGetTokens()
+      .then(async (tokens) => {
+        const chains = state.supportedChains.map(({ chainRpc, chainId }) => ({
+          web3Connection: loadDaoService(chainRpc),
+          chainId 
+        }))
+
         return Promise.all(tokens?.map(async (token) => {
-          const tokenData = await processToken(token?.address);
+          const chain = chains.find(({ chainId }) => chainId === token.chain_id)
+          const tokenData = await processToken(token?.address, chain.web3Connection);
           return { networks: token?.networks, ...tokenData };
         }));
       });
@@ -133,8 +150,7 @@ export default function WalletBalance() {
                                           loadTokensBalance,
                                           {
                                             enabled:  !!state.currentUser?.walletAddress && 
-                                                      !!state.connectedChain &&
-                                                      !!state.Service?.active
+                                                      !!state.supportedChains
                                           });
 
   useEffect(() => {
