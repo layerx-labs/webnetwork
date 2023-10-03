@@ -111,7 +111,7 @@ export default function MobileFiltersModal({
         <SelectNetwork
           isCurrentDefault={isOnNetwork}
           onlyProfileFilters={onlyProfileFilters}
-          filterByConnectedChain
+          filterByConnectedChain={isOnNetwork ? true : false}
         />
       </If>
 
