@@ -10,7 +10,7 @@ import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 import IssueMobileFilters from "components/issue-filters/mobile-filters";
-import ChainSelector from "components/navigation/chain-selector/controller";
+import ChainFilter from "components/lists/filters/chain/controller";
 import NothingFound from "components/nothing-found";
 import { TokenBalanceType } from "components/profile/token-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -19,6 +19,7 @@ import TokenIcon from "components/token-icon";
 import { formatStringToCurrency } from "helpers/formatNumber";
 
 import { TokensOracles } from "interfaces/oracles-state";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import NetworkItem from "../../../network-item/controller";
 
@@ -35,6 +36,7 @@ interface WalletBalanceViewProps {
   onSearchInputChange: (event) => void;
   onEnterPressed: (event) => void;
   onClearSearch: () => void;
+  chains: SupportedChainData[]
 }
 
 export default function WalletBalanceView({
@@ -43,6 +45,7 @@ export default function WalletBalanceView({
   hasNoConvertedToken,
   defaultFiat,
   tokens,
+  chains,
   tokensOracles,
   searchString,
   onSearchClick,
@@ -89,16 +92,19 @@ export default function WalletBalanceView({
         </div>
         <div className="col-auto">
           <ResponsiveWrapper xs={true} md={false}>
-            <IssueMobileFilters onlyProfileFilters={true} hideSort showChainSelector/>
+            <IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />
           </ResponsiveWrapper>
           <ResponsiveWrapper xs={false} md={true}>
             <div className="d-flex align-items-center me-3">
               <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
                 {t("misc.chain")}
               </label>
-              <ChainSelector />
+              <ChainFilter
+                chains={chains}
+                label={false}
+              />
             </div>
-            <SelectNetwork isCurrentDefault={isOnNetwork} filterByConnectedChain/>
+            <SelectNetwork isCurrentDefault={isOnNetwork} filterByConnectedChain={isOnNetwork ? true : false} />
           </ResponsiveWrapper>
         </div>
       </div>
