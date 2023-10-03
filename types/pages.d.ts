@@ -2,6 +2,7 @@ import { IssueData } from "interfaces/issue-data";
 import { Network } from "interfaces/network";
 import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
+import { Token } from "interfaces/token";
 
 import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated, NetworkPaymentsData } from "types/api";
 
@@ -45,5 +46,9 @@ export interface MyNetworkPageProps {
 
 export interface PaymentsPageProps {
   payments: NetworkPaymentsData[];
+  chains: SupportedChainData[];
+}
+export interface WalletPageProps {
+  tokens: Token[];
   chains: SupportedChainData[];
 }
