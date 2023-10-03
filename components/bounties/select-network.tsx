@@ -104,6 +104,7 @@ export default function SelectNetwork({
         onChange={onChange}
         selectedIndex={options?.findIndex((opt) =>
             opt?.value?.networkAddress === selected?.value?.networkAddress)}
+        isClearable
       >
         <ReactSelect
           value={selected}
