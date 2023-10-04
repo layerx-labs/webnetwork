@@ -16,6 +16,22 @@ import { SimpleBlockTransactionPayload } from "interfaces/transaction";
 
 import useBepro from "x-hooks/use-bepro";
 
+export interface useERC20 {
+  name: string;
+  symbol: string;
+  balance: BigNumber;
+  address: string;
+  decimals: number;
+  loadError: boolean;
+  allowance: BigNumber;
+  totalSupply: BigNumber;
+  approve: (amount: string) => Promise<void>;
+  setAddress: (_address: string) => void;
+  setSpender: (_address: string) => void;
+  deploy: (name: string, symbol: string, cap: string, ownerAddress: string) => Promise<TransactionReceipt>;
+  updateAllowanceAndBalance: () => void;
+}
+
 export default function useERC20() {
   const [name, setName] = useState<string>();
   const [decimals, setDecimals] = useState(18);
@@ -141,7 +157,7 @@ export default function useERC20() {
       setSpender(_address);
   }
 
-  return {
+  const ERC20data: useERC20 = {
     name,
     symbol,
     balance,
@@ -155,5 +171,7 @@ export default function useERC20() {
     setSpender: _setSpender,
     deploy,
     updateAllowanceAndBalance
-  };
+  }
+
+  return ERC20data
 }
