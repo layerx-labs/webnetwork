@@ -19,9 +19,9 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ message: "Invalid URL" });
     }
 
-    const html = await axios.get(url).then(({data}) => data).catch(() => undefined);
+    const html = await axios.get(url).then(({data}) => data).catch(() => undefined)
 
-    if(!html) return res.status(400).json({ message: "Invalid URL" });
+    if(!html) return res.status(400).json({ message: "Invalid URL" })
 
     const loadHtml = cheerio.load(html)
 

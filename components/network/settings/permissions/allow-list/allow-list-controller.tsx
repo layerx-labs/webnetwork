@@ -11,9 +11,9 @@ import useDeleteAllowListEntry
 import useGetAllowList from "x-hooks/api/network/management/allow-list/use-get-allow-list";
 import useReactQuery from "x-hooks/use-react-query";
 
-type AllowListProps = {networkId: number};
+type AllowListProps = {networkId: number, networkAddress: string};
 
-export default function AllowList({networkId}: AllowListProps) {
+export default function AllowList({networkId, networkAddress}: AllowListProps) {
   const {data: allowListOfNetwork, isFetching, isLoading, invalidate} =
     useReactQuery<string[]>(['allow-list', networkId], () => useGetAllowList(networkId));
   const [address, setAddress] = useState("");
@@ -36,7 +36,7 @@ export default function AllowList({networkId}: AllowListProps) {
     if (inputError())
       return;
     try {
-      await useAddAllowListEntry(networkId, dAddress);
+      await useAddAllowListEntry(networkId, dAddress, networkAddress);
       await invalidate();
       setAddress("");
     } catch (e) {

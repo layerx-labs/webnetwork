@@ -21,7 +21,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const isValidNumber = (v) => /^\d+$/.test(v);
 
-    const foundOrValid = (v) => v ? 'found' : 'valid'
+    const foundOrValid = (v) => v ? 'found' : 'valid';
 
     if (!["issue", "deliverable", "proposal", "review"].includes(type)) {
       return res.status(404).json({ message: "type does not exist" });
@@ -44,10 +44,24 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const whereCondition: WhereOptions = {};
 
-    if (deliverableId && ["deliverable", "review"].includes(type))
+    if (deliverableId && ["deliverable", "review"].includes(type)){
+      const curator = await models.curator.findByAddress(user.address)
+
+      if(!curator || !curator?.isCurrentlyCurator) return res.status(403).json({ message: `user is not a curator` });
       whereCondition.deliverableId = +deliverableId;
+    }
+      
     if (proposalId && type === "proposal")
       whereCondition.proposalId = +proposalId;
+    
+    const bounty = await models.issue.findOne({where:{id: issueId}})
+
+    if(!bounty) return res.status(404).json({ message: "bounty not found" });
+
+    if (bounty.isClosed && ["deliverable", "review", "proposal"].includes(type))
+      return res
+      .status(409)
+      .json({ message: "bounty has already been closed" });
 
     const comments = await models.comments.create({
       issueId: +issueId,

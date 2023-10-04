@@ -8,6 +8,7 @@ import { useAppState } from "contexts/app-state";
 import { addToast } from "contexts/reducers/change-toaster";
 
 import { issueParser } from "helpers/issue";
+import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 import { isValidUrl } from "helpers/validateUrl";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
@@ -146,6 +147,7 @@ export default function CreateDeliverablePage({
   return (
     <CreateDeliverablePageView
       originLink={originLink}
+      originLinkPlaceHolder={getOriginLinkPlaceholder(t, bounty?.type)}
       onChangeOriginLink={onChangeOriginLink}
       title={title}
       onChangeTitle={onChangeTitle}

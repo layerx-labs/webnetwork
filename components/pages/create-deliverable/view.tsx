@@ -21,6 +21,7 @@ interface CreateDeliverablePageViewProps {
   checkButtonsOptions: SelectOption[];
   checkButtonsOption: string;
   originLink: string;
+  originLinkPlaceHolder: string;
   onChangeOriginLink: (v: ChangeEvent<HTMLInputElement>) => void;
   description: string;
   onChangeDescription: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -39,6 +40,7 @@ interface CreateDeliverablePageViewProps {
 
 export default function CreateDeliverablePageView({
   originLink,
+  originLinkPlaceHolder,
   onChangeOriginLink,
   title,
   onChangeTitle,
@@ -100,7 +102,7 @@ export default function CreateDeliverablePageView({
                   className={clsx("form-control bg-gray-850 rounded-lg", {
                     "border border-1 border-danger border-radius-8": originLinkError || previewError,
                   })}
-                  placeholder={t("deliverable:create.placeholders.origin-link")}
+                  placeholder={originLinkPlaceHolder}
                   value={originLink}
                   onChange={onChangeOriginLink}
                 />
