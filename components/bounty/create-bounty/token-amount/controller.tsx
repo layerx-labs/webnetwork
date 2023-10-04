@@ -109,12 +109,6 @@ export default function CreateBountyTokenAmount({
     setDistributions(distributions)
   }
 
-  useEffect(() => {
-    if(issueAmount?.value && !rewardAmount?.value){
-      debouncedDistributionsUpdater(issueAmount.value, 'total')
-    }
-  }, [issueAmount])
-
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
     const setType = type === 'reward' ? setRewardAmount : updateIssueAmount
 
@@ -157,6 +151,12 @@ export default function CreateBountyTokenAmount({
   }
 
   useEffect(handleUpdateToken, [currentToken?.minimum]);
+
+  useEffect(() => {
+    if(issueAmount?.value && !rewardAmount?.value){
+      debouncedDistributionsUpdater(issueAmount.value, 'total')
+    }
+  }, [issueAmount])
 
   return (
     <CreateBountyTokenAmountView
