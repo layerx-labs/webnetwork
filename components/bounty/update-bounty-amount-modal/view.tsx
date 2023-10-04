@@ -1,25 +1,33 @@
 import { NumberFormatValues } from "react-number-format";
 
-import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
 import ContractButton from "components/contract-button";
-import InputNumber from "components/input-number";
 import Modal from "components/modal";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
+import { DistributionsProps } from "interfaces/proposal";
+
 import { useERC20 } from "x-hooks/use-erc20";
+
+import AmountTokenInformation from "../amount-token-information/view";
 
 interface UpdateBountyAmountModalViewProps {
   show: boolean;
   needsApproval: boolean;
   isExecuting: boolean;
   exceedsBalance: boolean;
-  newAmount: BigNumber;
   transactionalERC20: useERC20;
-  handleChange: (values: NumberFormatValues) => void;
+  rewardAmount: NumberFormatValues;
+  issueAmount: NumberFormatValues;
+  inputError: string;
+  distributions: DistributionsProps;
+  onIssueAmountValueChange: (
+    values: NumberFormatValues,
+    type: "reward" | "total"
+  ) => void;
   handleSubmit: () => Promise<void>;
   handleClose: () => void;
   handleApprove: () => void;
@@ -30,14 +38,17 @@ export default function UpdateBountyAmountModalView({
   needsApproval,
   isExecuting,
   exceedsBalance,
-  newAmount,
   transactionalERC20,
-  handleChange,
+  rewardAmount,
+  issueAmount,
+  inputError,
+  distributions,
+  onIssueAmountValueChange,
   handleSubmit,
   handleClose,
   handleApprove,
 }: UpdateBountyAmountModalViewProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "bounty"]);
 
   return (
     <Modal
@@ -61,8 +72,8 @@ export default function UpdateBountyAmountModalView({
             </Button>
           ) : (
             <ContractButton
-              disabled={isExecuting || exceedsBalance || !newAmount}
-              withLockIcon={exceedsBalance || !newAmount}
+              disabled={isExecuting || exceedsBalance || !issueAmount || !!inputError}
+              withLockIcon={exceedsBalance || !issueAmount || !!inputError}
               onClick={handleSubmit}
               isLoading={isExecuting}
             >
@@ -73,24 +84,26 @@ export default function UpdateBountyAmountModalView({
       }
     >
       <div className="container">
-        <div className="form-group">
-          <InputNumber
-            label={t("modals.update-bounty-amount.fields.amount.label")}
-            max={transactionalERC20.balance.toFixed()}
-            error={exceedsBalance}
-            value={newAmount?.toFixed()}
-            min={0}
-            onValueChange={handleChange}
-            thousandSeparator
-            decimalSeparator="."
-            decimalScale={transactionalERC20.decimals}
-            helperText={
-              <>
-                {formatStringToCurrency(transactionalERC20.balance.toFixed())}{" "}
-                {transactionalERC20.symbol} {t("misc.available")}
-              </>
-            }
-          />
+        <AmountTokenInformation
+          isFunding={false}
+          currentToken={{
+            name: transactionalERC20.name,
+            symbol: transactionalERC20.symbol,
+            address: transactionalERC20.address,
+          }}
+          rewardAmount={rewardAmount}
+          issueAmount={issueAmount}
+          tokenBalance={transactionalERC20.balance}
+          decimals={transactionalERC20.decimals}
+          inputError={inputError}
+          distributions={distributions}
+          onIssueAmountValueChange={onIssueAmountValueChange}
+          classNameInputs="col-md-6 col-12 mt-1"
+        />
+        <div className="d-flex justify-content-end">
+          <span className="text-gray me-1">{t('bounty:balance')}</span>
+          {formatStringToCurrency(transactionalERC20.balance.toFixed())}{" "}
+          {transactionalERC20.symbol}
         </div>
       </div>
     </Modal>
