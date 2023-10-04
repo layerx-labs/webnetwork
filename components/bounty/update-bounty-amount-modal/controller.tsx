@@ -1,17 +1,10 @@
 import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
-import {useTranslation} from "next-i18next";
-
-import Button from "components/button";
-import ContractButton from "components/contract-button";
-import InputNumber from "components/input-number";
-import Modal from "components/modal";
 
 import {useAppState} from "contexts/app-state";
 import {toastError} from "contexts/reducers/change-toaster";
 
-import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { NetworkEvents } from "interfaces/enums/events";
 
@@ -19,15 +12,23 @@ import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
+import UpdateBountyAmountModalView from "./view";
+
+interface UpdateBountyAmountModalProps {
+  show: boolean;
+  transactionalAddress: string,
+  handleClose: () => void;
+  bountyId: number;
+  updateBountyData: () => void;
+}
+
 export default function UpdateBountyAmountModal({
   show,
   transactionalAddress,
   handleClose = undefined,
   bountyId,
   updateBountyData
-}) {
-  const { t } = useTranslation("common");
-
+}: UpdateBountyAmountModalProps) {
   const [isExecuting, setIsExecuting] = useState(false);
   const [newAmount, setNewAmount] = useState<BigNumber>();
 
@@ -90,58 +91,17 @@ export default function UpdateBountyAmountModal({
   }, [transactionalAddress, state.Service?.active, state.currentUser, show]);
 
   return (
-    <Modal 
+    <UpdateBountyAmountModalView 
       show={show} 
-      onCloseClick={handleClose} 
-      title={t("modals.update-bounty-amount.title")} 
-      titlePosition="center"
-      footer={(
-        <div className="d-flex pt-2 justify-content-between">
-          <Button color="dark-gray" onClick={handleClose}>
-              {t("actions.cancel")}
-          </Button>
-          {needsApproval ? 
-            <Button 
-              onClick={handleApprove} 
-              disabled={isExecuting || exceedsBalance}
-              withLockIcon={exceedsBalance}
-              isLoading={isExecuting}
-            >
-              <span>{t("actions.approve")}</span>
-            </Button> :
-            <ContractButton
-                disabled={isExecuting || exceedsBalance || !newAmount}
-                withLockIcon={exceedsBalance || !newAmount}
-                onClick={handleSubmit}
-                isLoading={isExecuting}
-            >
-              <span>{t("actions.confirm")}</span>
-            </ContractButton>
-          }
-        </div>
-      )}
-      >
-      <div className="container">
-        <div className="form-group">
-          <InputNumber
-            label={t("modals.update-bounty-amount.fields.amount.label")}
-            max={transactionalERC20.balance.toFixed()}
-            error={exceedsBalance}
-            value={newAmount?.toFixed()}
-            min={0}
-            onValueChange={handleChange}
-            thousandSeparator
-            decimalSeparator="."
-            decimalScale={transactionalERC20.decimals}
-            helperText={
-              <>
-                {formatStringToCurrency(transactionalERC20.balance.toFixed())}{" "}
-                {transactionalERC20.symbol} Available
-              </>
-            }
-          />
-        </div>
-      </div>
-    </Modal>
+      needsApproval={needsApproval} 
+      isExecuting={isExecuting} 
+      exceedsBalance={exceedsBalance} 
+      newAmount={newAmount} 
+      transactionalERC20={transactionalERC20} 
+      handleChange={handleChange} 
+      handleSubmit={handleSubmit} 
+      handleClose={handleClose} 
+      handleApprove={handleApprove}    
+    />
   );
 }
