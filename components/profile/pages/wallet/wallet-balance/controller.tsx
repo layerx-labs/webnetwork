@@ -90,8 +90,6 @@ export default function WalletBalance({
         chain.chainId === chainId &&
         hasChainName?.toString().toLowerCase() ===
           chain.chainShortName.toLowerCase());
-
-    console.log('filters', name, symbol, hasNetworkName, hasChainName)
     
     return (
       (name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
