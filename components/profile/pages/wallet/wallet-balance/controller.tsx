@@ -21,18 +21,17 @@ import { getCoinInfoByContract } from "services/coingecko";
 import DAO from "services/dao-service";
 
 import { useSearchCurators } from "x-hooks/api/curator";
+import { useGetTokens } from "x-hooks/api/token";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQuery from "x-hooks/use-react-query";
 
 import WalletBalanceView from "./view";
 
 interface WalletBalanceProps {
-  dbTokens: Token[];
   chains: SupportedChainData[];
 }
 
 export default function WalletBalance({
-  dbTokens,
   chains
 }: WalletBalanceProps) {
   const { t } = useTranslation(["common", "profile"]);
@@ -147,11 +146,18 @@ export default function WalletBalance({
       chainId 
     }))
 
-    return Promise.all(dbTokens?.map(async (token) => {
-      const chain = currentChains.find(({ chainId }) => chainId === token.chain_id)
-      const tokenData = await processToken(token?.address, chain.web3Connection);
-      return { networks: token?.networks, ...tokenData, chain_id: token.chain_id };
-    }));
+    return useGetTokens().then((tokens) => {
+      return Promise.all(tokens?.map(async (token) => {
+        const chain = currentChains.find(({ chainId }) => chainId === token.chain_id);
+        const tokenData = await processToken(token?.address,
+                                             chain.web3Connection);
+        return {
+                  networks: token?.networks,
+                  ...tokenData,
+                  chain_id: token.chain_id,
+        };
+      }));
+    });
   }
 
   const { data: tokensOracles } = useReactQuery(["voting-power-wallet", state.currentUser?.walletAddress],
