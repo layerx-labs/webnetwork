@@ -109,7 +109,7 @@ export default function WalletBalanceView({
         </span>
       </FlexRow>
       <FlexRow className="d-flex flex-wrap justify-content-between align-items-center mb-2">
-        <span className="text-white mt-2">{t("labels.recivedintotal")}</span>
+        <span className="text-white mt-2">{t("profile:balances-transactional-tokens")}</span>
         <div className="d-flex mt-2 caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium">
           {formatStringToCurrency(totalAmount)}
           <span className="text-white-30 ml-1 mr-2">
