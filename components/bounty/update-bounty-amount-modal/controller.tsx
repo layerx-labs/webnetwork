@@ -51,8 +51,8 @@ export default function UpdateBountyAmountModal({
     dispatch,
   } = useAppState();
 
-  const { processEvent } = useProcessEvent();
   const transactionalERC20 = useERC20();
+  const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
 
   const currentToken = {
