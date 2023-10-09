@@ -6,7 +6,6 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import Button from "components/button";
 import Switch from "components/common/switch/view";
-import GithubConnectionState from "components/connections/github-connection-state/controller";
 import RemoveGithubAccount from "components/connections/remove-github-modal/controller";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
@@ -140,6 +139,16 @@ export default function ProfilePageView({
                 className="caption border border-purple text-purple border-radius-8 mt-3"
               />
             )}
+            {onHandleClickDisconnect && (
+              <Button
+                outline
+                color="danger"
+                className="mt-3 col-lg-3 col-md-4 col-12"
+                onClick={onHandleClickDisconnect}
+              >
+                {t("profile:actions.remove-github-account")}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -232,12 +241,6 @@ export default function ProfilePageView({
         </div>
 
         <Divider bg="gray-850" />
-
-        <div className="row mt-4 mb-3">
-          <span className="caption text-white text-capitalize font-weight-medium">{t("profile:connections")}</span>
-        </div>
-
-        <GithubConnectionState onHandleClickDisconnect={onHandleClickDisconnect} />
 
         <RemoveGithubAccount
           show={showRemoveModal}
