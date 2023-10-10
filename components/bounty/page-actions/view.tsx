@@ -115,7 +115,7 @@ export default function PageActionsView({
           />
 
           <ProposalModal
-            deliverables={deliverables}
+            deliverables={deliverables.filter(({ canceled }) => !canceled)}
             show={showPRProposal}
             onCloseClick={() => setShowPRProposal(false)}
             currentBounty={bounty}
