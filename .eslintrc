@@ -11,7 +11,8 @@
     "react-hooks",
     "@typescript-eslint",
     "eslint-plugin-import-helpers",
-    "import"
+    "import",
+    "jest"
   ],
   "rules": {
     "indent-legacy": [

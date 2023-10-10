@@ -33,11 +33,11 @@
     "deploy:bitgert": "node ./scripts/deploy-v2 -n bitgert",
     "deploy:bsc": "node ./scripts/deploy-v2 -n bsc",
     "deploy:apollodorus": "node ./scripts/deploy-v2 -n apollodorus",
-    "ganache:dev": "ganache -h 0.0.0.0 -p 8545 -b 1 -a 50  -s 0x6d2119524d65ea0b15b214ef260d3acdf8ca0ec6ec68045b5785d970f5ad97bd3d0025d212e625a8a21920852cc165c10faa6d8387a0c2530d1ffc0d265d92935749"
+    "ganache:dev": "ganache -h 0.0.0.0 -p 8545 -b 1 -a 50  -s 0x6d2119524d65ea0b15b214ef260d3acdf8ca0ec6ec68045b5785d970f5ad97bd3d0025d212e625a8a21920852cc165c10faa6d8387a0c2530d1ffc0d265d92935749",
+    "test-dev": "jest --watch",
+    "test": "jest"
   },
   "dependencies": {
-    "@elastic/apm-rum": "^5.14.0",
-    "@elastic/apm-rum-core": "^5.19.0",
     "@elastic/elasticsearch": "^8.2.1",
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/jazzicon": "^2.0.0",
@@ -118,6 +118,7 @@
     "eslint": "8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-import-helpers": "^1.2.1",
+    "eslint-plugin-jest": "^27.4.2",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
     "jest": "^29.7.0",
