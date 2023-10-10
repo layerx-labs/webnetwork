@@ -74,7 +74,9 @@
           ["/^templates/"],
           ["/^types/"],
           ["/^x-hooks/"],
-          ["parent", "sibling", "index"]
+          ["parent", "sibling", "index"],
+          ["/^__mocks__/"],
+          ["/^__tests__/"]
         ],
         "alphabetize": { "order": "asc", "ignoreCase": true }
       }
