@@ -5,7 +5,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import router from "next/router";
 
 import NetworksStep from "components/administration/networks-step";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import Stepper from "components/stepper";
 
 import {Network} from "interfaces/network";

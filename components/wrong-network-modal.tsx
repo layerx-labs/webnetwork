@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import Button from "components/button";
 import TermsAndConditions from "components/common/terms-and-conditions/view";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import Modal from "components/modal";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
