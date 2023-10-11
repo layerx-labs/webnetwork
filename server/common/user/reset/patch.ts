@@ -10,8 +10,6 @@ import { HttpNotFoundError } from "server/errors/http-errors";
 export async function patch(req: NextApiRequest) {
   const token = await getToken({ req });
 
-  console.log('token', token)
-
   const githubLogin = token.login.toString();
   const address = token.address.toString();
 
