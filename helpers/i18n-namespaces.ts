@@ -7,7 +7,6 @@ export enum I18nNamespaces {
   connectAccount = "connect-account",
   council = "council",
   developers = "developers",
-  parity = "parity",
   proposal = "proposal",
   common = "common"
 }
