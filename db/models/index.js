@@ -23,6 +23,7 @@ import KycSession from './kyc-session.model'
 import Delegation from './delegation.model'
 import Comments from './comments.model'
 import Deliverables from './deliverable.model'
+import UserLockedRegistry from './user-locked-registry'
 
 const Database = { sequelize: null };
 
@@ -53,6 +54,7 @@ Database.kycSession = KycSession;
 Database.delegation = Delegation;
 Database.comments = Comments;
 Database.deliverable = Deliverables;
+Database.userLockedRegistry = UserLockedRegistry;
 
 
 Object.values(Database).forEach((model) => {
