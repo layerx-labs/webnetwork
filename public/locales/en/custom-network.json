@@ -313,7 +313,7 @@
     "updating-values": "Error updating marketplace values",
     "updated-parameters": "Failed to update {{failed}} params",
     "network-not-registered": "This marketplace has yet to be registered to be usable, please do so.",
-    "failed-to-update-network-id": "Failed to update marketplace chain id",
+    "failed-to-update-network-id": "Failed to update marketplace network id",
     "you-dont-have-a-custom-network": "You don't have a custom marketplace created"
   },
   "tabs": {

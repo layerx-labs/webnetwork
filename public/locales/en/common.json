@@ -169,7 +169,7 @@
     "details": "Details",
     "forks": "Forks",
     "title": "Title",
-    "chain": "Chain",
+    "chain": "Network",
     "github": "Github",
     "metamask": "Metamask",
     "by-connecting": "By connecting, you accept",
@@ -220,7 +220,7 @@
     "learn-more": "Learn More",
     "origin": "Origin",
     "type": "Type",
-    "all-chains": "All Chains"
+    "all-chains": "All Networks"
   },
   "modals": {
     "help-modal": {
@@ -297,7 +297,7 @@
     },
     "wrong-network": {
       "please-connect": "Please, connect to a supported marketplace",
-      "connect-to-network-chain": "To interact with this marketplace, please connect to the chain below",
+      "connect-to-network-chain": "To interact with this marketplace, please connect to the network below",
       "network": "marketplace",
       "on-your-wallet": "on your metamask wallet",
       "change-network": "Change Marketplace",
@@ -324,7 +324,7 @@
     "already-has-network": {
       "title": "Marketplace already exists",
       "button-label": "My marketplace",
-      "content": "Connected wallet already has a marketplace on this chain."
+      "content": "Connected wallet already has a marketplace on this network."
     },
     "settings-not-loaded": {
       "title": "Failed to load settings",
@@ -342,7 +342,7 @@
       "required": "Field is required"
     },
     "select-placeholder": "Select...",
-    "select-placeholder-chain": "Select a supported chain",
+    "select-placeholder-chain": "Select a supported network",
     "create-deliverable": {
       "title": {
         "label": "Title",
@@ -367,7 +367,7 @@
     "failed-update-bounty": "Failed to update bounty!",
     "read-only-network": "This marketplace is closed. It is set to read-only mode.",
     "results-truncated": "Results Truncated",
-    "not-available-chain": "Marketplace not present on this chain",
+    "not-available-chain": "Marketplace not present on this network",
     "something-went-wrong": "Something went wrong"
   },
   "404": {
@@ -481,7 +481,7 @@
     "button-label": "Accept"
   },
   "placeholders": {
-    "select-chain": "Select Chain",
+    "select-chain": "Select Network",
     "select-latest": "Select Latest"
   },
   "comments": {

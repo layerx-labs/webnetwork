@@ -36,7 +36,7 @@
     "github": "Github Information"
   },
   "descriptions": {
-    "select-network": "Select the chain and marketplace you want to create your bounty",
+    "select-network": "Select the network and marketplace you want to create your bounty",
     "details": "Enter the necessary information to understand your bounty",
     "github": "Inform the repository and the branch where the solution will be made",
     "reward": "When creating a new bounty, you have two options regarding the reward:",
@@ -105,7 +105,7 @@
     "exceeds-minimum-amount": "Minimum amount is {{amount}}",
     "title-character-limit": "Exceeds allowed limit of 130 characters: {{value}}", 
     "description-limit": "Exceeds allowed limit of characters and files: {{value}}",
-    "no-networks-chain": "The selected chain has no active marketplaces",
+    "no-networks-chain": "The selected network has no active marketplaces",
     "bounty-update": "Bounty update failed",
     "banned-domain": "This domain is banned and cannot be used to open bounties.",
     "failed-to-cancel": "Bounty could not be canceled",
