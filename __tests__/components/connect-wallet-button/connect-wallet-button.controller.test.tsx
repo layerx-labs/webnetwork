@@ -46,6 +46,7 @@ describe("ConnectWalletButton", () => {
       <ConnectWalletButton><span data-testid="address">{defaultAddress}</span></ConnectWalletButton>
       </I18nextProvider>);
 
+    expect(screen.queryByRole("button")).toBeNull();
     expect(screen.getByTestId("address").textContent).toBe(defaultAddress);
   });
 });
