@@ -139,7 +139,7 @@ export default function ProfilePageView({
                 className="caption border border-purple text-purple border-radius-8 mt-3"
               />
             )}
-            {onHandleClickDisconnect && (
+            {onHandleClickDisconnect && userLogin && walletAddress && (
               <Button
                 outline
                 color="danger"
