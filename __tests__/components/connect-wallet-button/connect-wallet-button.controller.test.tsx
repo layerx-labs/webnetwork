@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
-import { I18nextProvider } from 'react-i18next';
 
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import i18n from 'jest.i18next.mjs';
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
 import ethereum from "__mocks__/ethereum";
+
+import i18NextProviderTests from '__tests__/utils/i18next-provider';
 
 const defaultAddress = "0x000000";
 
@@ -33,20 +33,38 @@ jest.mock("x-hooks/use-authentication", () => ({
 describe("ConnectWalletButton", () => {
   beforeEach(() => {
     window.ethereum = ethereum as any;
+    state.currentUser.walletAddress = null;
   });
 
   it("Should render children if connect succeeds", async () => {
-    const { rerender } = render(<I18nextProvider i18n={i18n}>
-      <ConnectWalletButton><span data-testid="address">{defaultAddress}</span></ConnectWalletButton>
-      </I18nextProvider>);
+    const result = render(<ConnectWalletButton>
+      <span data-testid="address">{defaultAddress}</span>
+      </ConnectWalletButton>, {
+      wrapper: i18NextProviderTests
+      });
 
-    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(result.getByRole("button"));
 
-    rerender(<I18nextProvider i18n={i18n}>
-      <ConnectWalletButton><span data-testid="address">{defaultAddress}</span></ConnectWalletButton>
-      </I18nextProvider>);
+    result.rerender(<ConnectWalletButton>
+      <span data-testid="address">{defaultAddress}</span>
+      </ConnectWalletButton>);
 
-    expect(screen.queryByRole("button")).toBeNull();
-    expect(screen.getByTestId("address").textContent).toBe(defaultAddress);
+    expect(result.queryByRole("button")).toBeNull();
+    expect(result.getByTestId("address").textContent).toBe(defaultAddress);
+  });
+
+  it("Should not call signInWallet if ethereum is not available", async () => {
+    window.ethereum = null;
+    
+    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
+      wrapper: i18NextProviderTests
+    });
+
+    const mockedUseAuthentication = jest.requireMock("x-hooks/use-authentication").useAuthentication();
+    const signInWalletSpy = jest.spyOn(mockedUseAuthentication, "signInWallet");
+
+    await userEvent.click(result.getByRole("button"));
+
+    expect(signInWalletSpy).not.toHaveBeenCalled();
   });
 });
