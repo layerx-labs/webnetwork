@@ -1,5 +1,5 @@
 import nextJest from "next/jest.js"
- 
+
 const createJestConfig = nextJest({
   dir: "./",
 });
@@ -17,7 +17,7 @@ const config = {
   testMatch: [ "**/?(*.)+(spec|test).[jt]s?(x)" ],
   collectCoverageFrom: [
     "components/**/*.{ts,tsx}",
-  ],
+  ]
 };
 
 export default createJestConfig(config);
