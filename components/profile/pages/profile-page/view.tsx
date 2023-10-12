@@ -145,16 +145,20 @@ export default function ProfilePageView({
 
         <If condition={!userLogin}>
           <ResponsiveWrapper md={false} xs={true}>
-            <Button onClick={onChangeMyHandleClick}>
-              {t("profile:actions.change-my-handle")}
-            </Button>
+            <div className="col">
+              <div className="row mx-0">
+                <Button onClick={onChangeMyHandleClick}>
+                  {t("profile:actions.change-my-handle")}
+                </Button>
+              </div>
+            </div>
           </ResponsiveWrapper>
         </If>
 
         <Divider bg="gray-850" />
 
         <div className="row mb-4 mt-4">
-          <div className="col-8">
+          <div className="col-12 col-lg-8">
             <div className="d-flex align-items-center justify-content-between mb-1">
               <span className="base-medium text-white">{t("profile:notifications-form.title")}</span>
 
