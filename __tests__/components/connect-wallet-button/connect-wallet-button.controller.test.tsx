@@ -5,6 +5,8 @@ import userEvent from "@testing-library/user-event";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
+import { changeShowWeb3 } from 'contexts/reducers/update-show-prop';
+
 import ethereum from "__mocks__/ethereum";
 
 import i18NextProviderTests from '__tests__/utils/i18next-provider';
@@ -19,7 +21,7 @@ const state = {
 
 jest.mock("contexts/app-state", () => ({
   useAppState: () => ({
-    dispatch: () => {},
+    dispatch: (action) => console.log(action),
     state
   })
 }));
@@ -53,18 +55,33 @@ describe("ConnectWalletButton", () => {
     expect(result.getByTestId("address").textContent).toBe(defaultAddress);
   });
 
-  it("Should not call signInWallet if ethereum is not available", async () => {
+  it.only("Should not call signInWallet if ethereum is not available", async () => {
+    window.ethereum = null;
+    
+    const mockedUseAuthentication = jest.requireMock("x-hooks/use-authentication");
+    const signInWalletSpy = jest.spyOn(mockedUseAuthentication, "signInWallet");
+
+    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
+      wrapper: i18NextProviderTests
+    });
+
+    await userEvent.click(result.getByRole("button"));
+
+    expect(signInWalletSpy).toHaveBeenCalled();
+  });
+
+  it("Should change no-metamask-modal visibility if ethereum is not available", async () => {
     window.ethereum = null;
     
     const result = render(<ConnectWalletButton></ConnectWalletButton>, {
       wrapper: i18NextProviderTests
     });
 
-    const mockedUseAuthentication = jest.requireMock("x-hooks/use-authentication").useAuthentication();
-    const signInWalletSpy = jest.spyOn(mockedUseAuthentication, "signInWallet");
+    const mockedUseAppState = jest.requireMock("contexts/app-state").useAppState();
+    const dispatchSpy = jest.spyOn(mockedUseAppState, "dispatch");
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(signInWalletSpy).not.toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledWith(changeShowWeb3(true));
   });
 });
