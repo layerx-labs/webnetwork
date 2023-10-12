@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -14,28 +14,38 @@ import i18NextProviderTests from '__tests__/utils/i18next-provider';
 const defaultAddress = "0x000000";
 
 const state = {
+  Service: {
+    active: jest.fn()
+  },
   currentUser: {
     walletAddress: null
   }
 };
 
+const mockedDispatch = jest.fn();
+
 jest.mock("contexts/app-state", () => ({
   useAppState: () => ({
-    dispatch: (action) => console.log(action),
+    dispatch: mockedDispatch,
     state
   })
 }));
 
+const mockedSignInWallet = jest.fn(() => {
+  state.currentUser.walletAddress = defaultAddress;
+});
+
 jest.mock("x-hooks/use-authentication", () => ({
-  useAuthentication: () => ({ signInWallet: async () => {
-    state.currentUser.walletAddress = defaultAddress;
-  }})
+  useAuthentication: () => ({ 
+    signInWallet: mockedSignInWallet
+  })
 }));
 
 describe("ConnectWalletButton", () => {
   beforeEach(() => {
     window.ethereum = ethereum as any;
     state.currentUser.walletAddress = null;
+    jest.clearAllMocks();
   });
 
   it("Should render children if connect succeeds", async () => {
@@ -55,33 +65,35 @@ describe("ConnectWalletButton", () => {
     expect(result.getByTestId("address").textContent).toBe(defaultAddress);
   });
 
-  it.only("Should not call signInWallet if ethereum is not available", async () => {
-    window.ethereum = null;
-    
-    const mockedUseAuthentication = jest.requireMock("x-hooks/use-authentication");
-    const signInWalletSpy = jest.spyOn(mockedUseAuthentication, "signInWallet");
-
-    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
+  it("Should call useAuthentication().signInWallet if forceLogin is true", async () => {
+    render(<ConnectWalletButton forceLogin={true}></ConnectWalletButton>, {
       wrapper: i18NextProviderTests
     });
 
-    await userEvent.click(result.getByRole("button"));
-
-    expect(signInWalletSpy).toHaveBeenCalled();
+    expect(mockedSignInWallet).toHaveBeenCalled();
   });
 
-  it("Should change no-metamask-modal visibility if ethereum is not available", async () => {
+  it("Should not call useAuthentication().signInWallet if ethereum is not available", async () => {
+    window.ethereum = null;
+
+    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
+      wrapper: i18NextProviderTests
+    });
+
+    await userEvent.click(result.getByRole("button"));
+
+    expect(mockedSignInWallet).not.toHaveBeenCalled();
+  });
+
+  it("Should change NoMetamaskModal visibility if ethereum is not available", async () => {
     window.ethereum = null;
     
     const result = render(<ConnectWalletButton></ConnectWalletButton>, {
       wrapper: i18NextProviderTests
     });
 
-    const mockedUseAppState = jest.requireMock("contexts/app-state").useAppState();
-    const dispatchSpy = jest.spyOn(mockedUseAppState, "dispatch");
-
     await userEvent.click(result.getByRole("button"));
 
-    expect(dispatchSpy).toHaveBeenCalledWith(changeShowWeb3(true));
+    expect(mockedDispatch).toHaveBeenCalledWith(changeShowWeb3(true));
   });
 });
