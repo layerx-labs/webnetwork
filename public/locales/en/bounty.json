@@ -95,9 +95,9 @@
   "errors": {
     "fetching": "Error fetching task",
     "no-workers": "No one is working",
-    "no-bounties": "No bounties",
-    "no-bounties-in-draft": "No bounties in draft",
-    "no-bounties-to-merge": "No bounties ready to merge",
+    "no-bounties": "No tasks",
+    "no-bounties-in-draft": "No tasks in draft",
+    "no-bounties-to-merge": "No tasks ready to merge",
     "creating-bounty": "Error creating task",
     "bounty-canceled": "Task creation canceled",
     "sync": "The task was created, but something went wrong while reading the blockchain, please go to the home page while we try to get your task",
@@ -107,7 +107,7 @@
     "description-limit": "Exceeds allowed limit of characters and files: {{value}}",
     "no-networks-chain": "The selected network has no active marketplaces",
     "bounty-update": "Task update failed",
-    "banned-domain": "This domain is banned and cannot be used to open bounties.",
+    "banned-domain": "This domain is banned and cannot be used to open tasks.",
     "failed-to-cancel": "Task could not be canceled",
     "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct."
   },
@@ -168,19 +168,19 @@
   "create-bounty": "Create Task", 
   "create-funding": "Create Funding Request", 
   "not-found-funding": "Funding requests make the community itself fund ideas they would like for their applications",
-  "not-found-bounty": "Not found recent bounties",
+  "not-found-bounty": "Not found recent tasks",
   "next-step": "Next Step",
   "bounty-created": "Task created",
-  "in-bounties": "in Bounties",
+  "in-bounties": "in Tasks",
   "distributed": "distributed",
   "title-bounties": "Task Hall",
-  "sub-title-bounties": "A collection of the most recent bounties and MVP Marketplaces on our ecosystem",
+  "sub-title-bounties": "A collection of the most recent tasks and MVP Marketplaces on our ecosystem",
   "most-active-networks": "Most Active Marketplaces",
-  "recent-bounties": "Recent Bounties",
+  "recent-bounties": "Recent Tasks",
   "recent-funding": "Recent Funding requests",
-  "all-bounties": "All Bounties",
+  "all-bounties": "All Tasks",
   "explore-all": "Explore All",
-  "recent-bounties-empty": "Not found recent bounties",
+  "recent-bounties-empty": "Not found recent tasks",
   "edit-text": "You are currently editing a task",
   "save-changes": "Save Changes",
   "cancel-changes": "Cancel Changes",
@@ -237,7 +237,7 @@
     },
     "allow-list": {
       "title": "Not allowed",
-      "content": "Creation of bounties is restricted on this marketplace to a curated list of addresses. Please, select another marketplace or contact the marketplace governor."
+      "content": "Creation of tasks is restricted on this marketplace to a curated list of addresses. Please, select another marketplace or contact the marketplace governor."
     }
   },
   "allow-list": {

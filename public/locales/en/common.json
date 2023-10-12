@@ -46,7 +46,7 @@
     "in-progress": "Tasks in progress",
     "bounties": {
       "title": "Tasks",
-      "subtitle": "find a bounty that you want to work on, create a solution and get paid"
+      "subtitle": "find a task that you want to work on, create a solution and get paid"
     },
     "bounties-closed": "Closed tasks",
     "in-network": "In the Marketplace",
@@ -211,7 +211,7 @@
     "owner": "Owner",
     "apply": "apply",
     "create": "Create",
-    "bounty": "Bounty",
+    "bounty": "Task",
     "choose-one": "Choose one",
     "networks": "Marketplaces",
     "copied": "Copied",
@@ -402,8 +402,8 @@
       "removing-delegation": "Removing Delegation",
       "dispute": "Dispute task",
       "propose": "Propose merge request",
-      "close-bounty": "Close bounty",
-      "redeem-bounty": "Cancel bounty",
+      "close-bounty": "Close task",
+      "redeem-bounty": "Cancel task",
       "approve-settler": "Approve Marketplace Token",
       "recognize-finished": "Recognize task as finished",
       "create-deliverable": "Create Deliverable",
@@ -440,8 +440,8 @@
     "types": {
       "newest": "Newest",
       "oldest": "Oldest",
-      "highest-bounty": "Highest Bounty",
-      "lowest-bounty": "Lowest Bounty"
+      "highest-bounty": "Highest Reward",
+      "lowest-bounty": "Lowest Reward"
     }
   },
   "drag-and-drop":{
