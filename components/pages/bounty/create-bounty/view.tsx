@@ -221,7 +221,7 @@ export default function CreateBountyPageView({
 
       <If condition={isReviewSection}>
         <div className="mx-5">
-          <div className="d-flex justify-content-center col-12 mt-4">
+          <div className="d-flex justify-content-center text-center col-12 mt-4">
             <p className="">
               {t("bounty:creating-this-bounty")}{" "}
               <a href={TERMS_AND_CONDITIONS_LINK} target="_blank">
