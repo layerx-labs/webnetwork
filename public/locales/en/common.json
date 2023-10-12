@@ -296,11 +296,11 @@
       "message": "It seems that you don't have a MetaMask account selected. If using MetaMask, please make sure that your wallet is unlocked and that you have at least one account in your accounts list."
     },
     "wrong-network": {
-      "please-connect": "Please, connect to a supported marketplace",
+      "please-connect": "Please, connect to a supported network",
       "connect-to-network-chain": "To interact with this marketplace, please connect to the network below",
       "network": "marketplace",
       "on-your-wallet": "on your metamask wallet",
-      "change-network": "Change Marketplace",
+      "change-network": "Change Network",
       "error-invalid-rpcUrl": "rpcUrls error expected an array with at least one valid string HTTPS url",
       "error-failed-rpcUrl": "Request rpcUrl failed"
     },
@@ -411,7 +411,7 @@
       "update-bounty-amount": "Update Bounty Amount",
       "cancel-deliverable": "Cancel Deliverable",
       "refused-by-owner": "Refuse Bounty Proposal",
-      "deploy-network-v2": "Deploy Marketplace_v2",
+      "deploy-network-v2": "Deploy Marketplace",
       "set-dispatcher": "Set Dispatcher",
       "register-network": "Register Marketplace",
       "deploy-bounty-token": "Deploy Bounty Token",
@@ -428,7 +428,7 @@
       "withdraw-fund-reward-bounty": "Withdraw Reward Bounty Fund",
       "deploy-erc20-token": "Deploy ERC20 Token",
       "config-fees": "Config Fees",
-      "deploy-registry": "Deploy Marketplace Registry",
+      "deploy-registry": "Deploy Registry",
       "change-allowed-tokens": "Change Allowed Tokens",
       "close-network": "Close Marketplace",
       "amount-for-network-creation": "Amount For Marketplace Creation",

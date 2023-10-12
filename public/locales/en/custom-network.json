@@ -265,18 +265,18 @@
       "being-prepared": "Your marketplace is being prepared",
       "dont-close-window": "Please, don't close this window",
       "steps": {
-        "deploy-network": "Deploying Marketplace_v2",
-        "changing-draft-time": "Deploying Marketplace_v2 (Changing draft time)",
-        "changing-disputable-time": "Deploying Marketplace_v2 (Changing disputable time)",
-        "changing-dispute-percentage": "Deploying Marketplace_v2 (Changing dispute percentage)",
-        "changing-council-amount": "Deploying Marketplace_v2 (Changing curator amount)",
-        "changing-cancelable-time": "Deploying Marketplace_v2 (Changing cancelable time)",
-        "changing-oracle-exchange-rate": "Deploying Marketplace_v2 (Changing oracle exchange rate)",
-        "changing-merger-fee": "Deploying Marketplace_v2 (Changing merger fee)",
-        "changing-proposer-fee": "Deploying Marketplace_v2 (Changing proposer fee)",
+        "deploy-network": "Deploying Marketplace",
+        "changing-draft-time": "Deploying Marketplace (Changing draft time)",
+        "changing-disputable-time": "Deploying Marketplace (Changing disputable time)",
+        "changing-dispute-percentage": "Deploying Marketplace (Changing dispute percentage)",
+        "changing-council-amount": "Deploying Marketplace (Changing curator amount)",
+        "changing-cancelable-time": "Deploying Marketplace (Changing cancelable time)",
+        "changing-oracle-exchange-rate": "Deploying Marketplace (Changing oracle exchange rate)",
+        "changing-merger-fee": "Deploying Marketplace (Changing merger fee)",
+        "changing-proposer-fee": "Deploying Marketplace (Changing proposer fee)",
         "set-dispatcher": "Setting Bounty Token Dispatcher",
-        "add-to-registry": "Registering Marketplace_v2",
-        "sync-web-network": "Synchronizing Web-marketplace"
+        "add-to-registry": "Registering Marketplace",
+        "sync-web-network": "Synchronizing Marketplace"
       }
     },
     "update-github-token": {
