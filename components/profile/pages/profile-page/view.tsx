@@ -176,7 +176,7 @@ export default function ProfilePageView({
             </div>
 
             <If condition={isNotificationEnabled}>
-              <div className="row mt-3">
+              <div className="row mt-3 align-items-center gap-2 gap-md-0">
                 <div className="col-12 col-md-6">
                   <input 
                     type="text" 
@@ -191,14 +191,16 @@ export default function ProfilePageView({
                   </If>
                 </div>
 
-                <div className="col-12 col-md-6">
-                  <Button
-                    onClick={onSave}
-                    disabled={isSaveButtonDisabled}
-                    isLoading={isExecuting}
-                  >
-                    {t("actions.save")}
-                  </Button>
+                <div className="col-12 col-md-auto">
+                  <div className="row mx-0">
+                    <Button
+                      onClick={onSave}
+                      disabled={isSaveButtonDisabled}
+                      isLoading={isExecuting}
+                    >
+                      {t("actions.save")}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
