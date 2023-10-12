@@ -23,5 +23,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
-
 export default UserRoute(handler);
