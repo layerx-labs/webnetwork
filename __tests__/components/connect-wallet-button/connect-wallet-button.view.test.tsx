@@ -4,14 +4,20 @@ import { render } from "@testing-library/react";
 
 import ConnectWalletButtonView from "components/connections/connect-wallet-button/connect-wallet-button.view";
 
+import useBreakPointMocked from "__mocks__/x-hooks/use-breapoint";
+
 import i18NextProviderTests from '__tests__/utils/i18next-provider';
 
-import "../styles/styles.scss";
+jest.mock("x-hooks/use-breakpoint", () => ({
+  __esModule: true,
+  default: (prop) => useBreakPointMocked(prop)
+}));
 
 describe("ConnectWalletButtonView", () => {
   let defaultProps;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     defaultProps = {
       asModal: false,
       isLoading: false,
@@ -50,6 +56,7 @@ describe("ConnectWalletButtonView", () => {
 
   it("Should render modal if asModal is true and isLoading is false", () => {
     defaultProps.asModal = true;
+    defaultProps.isModalVisible = true;
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
@@ -57,5 +64,20 @@ describe("ConnectWalletButtonView", () => {
                           </ConnectWalletButtonView>, {
                             wrapper: i18NextProviderTests
                           });
+    expect(result.queryByTestId("connect-wallet-modal")).toBeVisible();
+  });
+
+  it("Should render modal if asModal is true and isLoading is false", () => {
+    defaultProps.asModal = true;
+    defaultProps.isModalVisible = true;
+    defaultProps.isLoading = true;
+    const result = render(<ConnectWalletButtonView
+                            {...defaultProps}
+                          >
+                            <span data-testid="address">address</span>
+                          </ConnectWalletButtonView>, {
+                            wrapper: i18NextProviderTests
+                          });
+    expect(result.queryByTestId("connect-wallet-modal")).not.toBeVisible();
   });
 });
