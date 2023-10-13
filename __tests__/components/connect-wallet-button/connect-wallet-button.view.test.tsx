@@ -41,6 +41,22 @@ describe("ConnectWalletButtonView", () => {
     expect(result.queryByTestId("address")).toBeNull();
   });
 
+  it("Should render button with responsive labels", () => {
+    const result = render(<ConnectWalletButtonView
+                            {...defaultProps}
+                          >
+                          </ConnectWalletButtonView>, {
+                            wrapper: i18NextProviderTests
+                          });
+    const button = result.queryByRole("button");
+    const mobileLabel = button.firstChild.firstChild;
+    const desktopLabel = button.firstChild.lastChild;
+    expect(mobileLabel).toHaveClass("d-flex d-xl-none");
+    expect(mobileLabel.textContent).toBe("Connect");
+    expect(desktopLabel).toHaveClass("d-none d-xl-flex");
+    expect(desktopLabel.textContent).toBe("Connect Wallet");
+  });
+
   it("Should render children if wallet is connected", () => {
     defaultProps.isConnected = true;
     const result = render(<ConnectWalletButtonView
@@ -54,30 +70,39 @@ describe("ConnectWalletButtonView", () => {
     expect(result.queryByTestId("address").textContent).toBe("address");
   });
 
-  it("Should render modal if asModal is true and isLoading is false", () => {
+  it("Should render modal if is modal variant and wallet is not connected", () => {
     defaultProps.asModal = true;
     defaultProps.isModalVisible = true;
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                            <span data-testid="address">address</span>
                           </ConnectWalletButtonView>, {
                             wrapper: i18NextProviderTests
                           });
     expect(result.queryByTestId("connect-wallet-modal")).toBeVisible();
   });
 
-  it("Should render modal if asModal is true and isLoading is false", () => {
+  it("Should not render modal if is modal variant and application is loading", () => {
     defaultProps.asModal = true;
     defaultProps.isModalVisible = true;
     defaultProps.isLoading = true;
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                            <span data-testid="address">address</span>
                           </ConnectWalletButtonView>, {
                             wrapper: i18NextProviderTests
                           });
-    expect(result.queryByTestId("connect-wallet-modal")).not.toBeVisible();
+    expect(result.queryByTestId("connect-wallet-modal")).toBeNull();
+  });
+
+  it("Should not render modal if is modal variant and wallet is connected", () => {
+    defaultProps.asModal = true;
+    const result = render(<ConnectWalletButtonView
+                            {...defaultProps}
+                          >
+                          </ConnectWalletButtonView>, {
+                            wrapper: i18NextProviderTests
+                          });
+    expect(result.queryByTestId("connect-wallet-modal")).toBeNull();
   });
 });
