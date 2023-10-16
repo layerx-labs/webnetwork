@@ -39,7 +39,7 @@ export default function NetworksStep({
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
   const {state, dispatch} = useAppState();
-  const { loadNetwork, isNetworkGovernor: isNetworkGovernorDao } = useBepro();
+  const { loadNetwork, isNetworkGovernor: isNetworkGovernorDao, getNetworkParameter } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
@@ -152,13 +152,13 @@ export default function NetworksStep({
         .catch(error => console.log(error));
 
       await Promise.all([
-        state.Service?.active.getNetworkParameter("councilAmount"),
-        state.Service?.active.getNetworkParameter("disputableTime"),
-        state.Service?.active.getNetworkParameter("draftTime"),
-        state.Service?.active.getNetworkParameter("oracleExchangeRate"),
-        state.Service?.active.getNetworkParameter("mergeCreatorFeeShare"),
-        state.Service?.active.getNetworkParameter("proposerFeeShare"),
-        state.Service?.active.getNetworkParameter("percentageNeededForDispute"),
+        getNetworkParameter("councilAmount"),
+        getNetworkParameter("disputableTime"),
+        getNetworkParameter("draftTime"),
+        getNetworkParameter("oracleExchangeRate"),
+        getNetworkParameter("mergeCreatorFeeShare"),
+        getNetworkParameter("proposerFeeShare"),
+        getNetworkParameter("percentageNeededForDispute"),
         state.Service?.active.network?.treasuryInfo(),
         state.Service?.active.getSettlerTokenData()
       ])
