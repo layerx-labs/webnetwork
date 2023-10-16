@@ -685,6 +685,10 @@ export default function useBepro() {
     return state.Service?.active.getNetworkParameter(parameter)
   }
 
+  function getSettlerTokenData() {
+    return state.Service?.active.getSettlerTokenData()
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -717,6 +721,7 @@ export default function useBepro() {
     getTokenBalance,
     getTimeChain,
     getNetworkParameter,
+    getSettlerTokenData,
     isAddress,
     isNetworkGovernor,
     loadNetwork,
