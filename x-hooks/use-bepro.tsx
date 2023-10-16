@@ -720,6 +720,10 @@ export default function useBepro() {
   function getRegistryCreatorAmount() {
     return state.Service?.active.getRegistryCreatorAmount()
   }
+
+  function getAllowance(tokenAddress: string, walletAddress: string, spenderAddress: string) {
+    return state.Service?.active.getAllowance(tokenAddress, walletAddress, spenderAddress)
+  }
   
   return {
     handlerDisputeProposal,
@@ -757,6 +761,7 @@ export default function useBepro() {
     getNetworkAdressByCreator,
     getTokensLockedInRegistryByAddress,
     getRegistryCreatorAmount,
+    getAllowance,
     setNetworkParameter,
     isAddress,
     isNetworkGovernor,
