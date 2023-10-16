@@ -28,7 +28,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
-  const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance } = useBepro();
+  const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -116,7 +116,7 @@ export default function useERC20() {
 
       dispatch(transaction);
 
-      await state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
+      await deployERC20Token(name, symbol, cap, ownerAddress)
         .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
           resolve(txInfo);
