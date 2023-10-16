@@ -56,7 +56,12 @@ function NewNetwork() {
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
   const { processEvent } = useProcessEvent();
-  const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
+  const {
+    handleDeployNetworkV2,
+    handleAddNetworkToRegistry,
+    handleChangeNetworkParameter,
+    getNetworkAdressByCreator,
+  } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
   const { mutateAsync: createNetwork } = useReactQueryMutation({
     mutationFn: useCreateNetwork
@@ -235,7 +240,7 @@ function NewNetwork() {
   function checkHasNetwork() {
     dispatch(changeLoadState(true));
 
-    state.Service?.active.getNetworkAdressByCreator(state.currentUser.walletAddress)
+    getNetworkAdressByCreator(state.currentUser.walletAddress)
       .then(networkAddress => setHasNetwork(!isZeroAddress(networkAddress)))
       .catch(console.debug)
       .finally(() => dispatch(changeLoadState(false)));
