@@ -724,6 +724,10 @@ export default function useBepro() {
   function getAllowance(tokenAddress: string, walletAddress: string, spenderAddress: string) {
     return state.Service?.active.getAllowance(tokenAddress, walletAddress, spenderAddress)
   }
+
+  function deployERC20Token(name: string, symbol: string, cap: string, ownerAddress: string) {
+    return state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
+  }
   
   return {
     handlerDisputeProposal,
@@ -769,6 +773,7 @@ export default function useBepro() {
     loadNetwork,
     lockInRegistry,
     approveTokenInRegistry,
-    unlockFromRegistry
+    unlockFromRegistry,
+    deployERC20Token
   };
 }
