@@ -681,6 +681,10 @@ export default function useBepro() {
     return state.Service?.active.isNetworkGovernor(walletAddress);
   }
 
+  function getNetworkParameter(parameter: NetworkParameters) {
+    return state.Service?.active.getNetworkParameter(parameter)
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -712,6 +716,7 @@ export default function useBepro() {
     getCancelableTime,
     getTokenBalance,
     getTimeChain,
+    getNetworkParameter,
     isAddress,
     isNetworkGovernor,
     loadNetwork,
