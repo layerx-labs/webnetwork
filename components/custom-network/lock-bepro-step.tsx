@@ -30,6 +30,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import { UserRoleUtils } from "server/utils/jwt";
 
 import {useAuthentication} from "x-hooks/use-authentication";
+import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
 export default function LockBeproStep({ activeStep, index, handleClick, validated }: StepWrapperProps) {
@@ -46,6 +47,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state, dispatch } = useAppState();
+  const { lockInRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
 
@@ -101,7 +103,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(lockTxAction)
     setIsLocking(true);
 
-    state.Service?.active.lockInRegistry(amount.toFixed())
+    lockInRegistry(amount.toFixed())
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
