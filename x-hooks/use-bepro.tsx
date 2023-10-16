@@ -673,6 +673,10 @@ export default function useBepro() {
     return state.Service?.active.getTokenBalance(tokenAddress, userAddress)
   }
 
+  function loadNetwork(networkAddress: string, skipAssignment?: boolean) {
+    return state.Service?.active.loadNetwork(networkAddress, skipAssignment);
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -703,7 +707,8 @@ export default function useBepro() {
     getERC20TokenData,
     getCancelableTime,
     getTokenBalance,
+    getTimeChain,
     isAddress,
-    getTimeChain
+    loadNetwork,
   };
 }
