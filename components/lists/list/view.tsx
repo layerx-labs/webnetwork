@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { useTranslation } from "next-i18next";
 
 import SelectNetwork from "components/bounties/select-network";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";

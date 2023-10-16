@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import Button from "components/button";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import GithubLink from "components/github-link";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 

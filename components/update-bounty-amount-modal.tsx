@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import Button from "components/button";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import InputNumber from "components/input-number";
 import Modal from "components/modal";
 

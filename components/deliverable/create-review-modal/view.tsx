@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import GithubInfo from "components/github-info";
 import Modal from "components/modal";
 

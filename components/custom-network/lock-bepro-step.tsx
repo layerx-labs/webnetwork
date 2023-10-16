@@ -7,7 +7,7 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import AmountWithPreview from "components/custom-network/amount-with-preview";
 import InputNumber from "components/input-number";
 import Step from "components/step";
