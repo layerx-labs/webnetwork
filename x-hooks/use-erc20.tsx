@@ -28,7 +28,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
-  const { handleApproveToken } = useBepro();
+  const { handleApproveToken, getERC20TokenData } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -82,7 +82,7 @@ export default function useERC20() {
       if (name)
         setDefaults();
     } else if (address && !name && isServiceReady && state.connectedChain?.matchWithNetworkChain !== false)
-      state.Service?.active.getERC20TokenData(address)
+      getERC20TokenData(address)
         .then(async ({ name, symbol, decimals, totalSupply }) => {
           setName(name);
           setSymbol(symbol);
