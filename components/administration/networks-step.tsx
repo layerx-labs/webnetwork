@@ -21,6 +21,7 @@ import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
 import { useAuthentication } from "x-hooks/use-authentication";
+import useBepro from "x-hooks/use-bepro";
 
 const {publicRuntimeConfig: {urls: {homeURL}}} = getConfig();
 
@@ -38,6 +39,7 @@ export default function NetworksStep({
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
   const {state, dispatch} = useAppState();
+  const { loadNetwork } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
@@ -143,7 +145,7 @@ export default function NetworksStep({
         .then(({ rows }) => rows[0]);
 
       if (network.networkAddress !== state.Service?.active.network.contractAddress)
-        await state.Service?.active.loadNetwork(network.networkAddress);
+        await loadNetwork(network.networkAddress);
 
       state.Service?.active.isNetworkGovernor(state.currentUser.walletAddress)
         .then(setIsNetworkGovernor)
