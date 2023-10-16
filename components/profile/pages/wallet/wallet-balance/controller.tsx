@@ -40,7 +40,7 @@ export default function WalletBalance() {
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
   const { query, push, pathname, asPath } = useRouter();
-  const { getERC20TokenData } = useBepro();
+  const { getERC20TokenData, getTokenBalance } = useBepro();
 
   const getAddress = (token: string | Token) =>
     typeof token === "string" ? token : token?.address;
@@ -50,8 +50,8 @@ export default function WalletBalance() {
       typeof token === "string"
         ? getERC20TokenData(token)
         : token,
-      state.Service?.active?.getTokenBalance(getAddress(token),
-                                             state?.currentUser?.walletAddress),
+      getTokenBalance(getAddress(token),
+                      state?.currentUser?.walletAddress),
     ]);
 
     const tokenInformation = await getCoinInfoByContract(tokenData?.symbol);

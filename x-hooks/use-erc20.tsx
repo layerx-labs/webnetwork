@@ -28,7 +28,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
-  const { handleApproveToken, getERC20TokenData } = useBepro();
+  const { handleApproveToken, getERC20TokenData, getTokenBalance } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -46,7 +46,7 @@ export default function useERC20() {
         !isServiceReady ||
         state.connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
-    state.Service?.active.getTokenBalance(address, state.currentUser.walletAddress)
+    getTokenBalance(address, state.currentUser.walletAddress)
       .then(setBalance)
       .catch(error => console.debug("useERC20:getTokenBalance", logData, error));
 
