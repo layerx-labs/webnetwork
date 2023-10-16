@@ -47,7 +47,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state, dispatch } = useAppState();
-  const { lockInRegistry, approveTokenInRegistry } = useBepro();
+  const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
 
@@ -129,7 +129,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(unlockTxAction)
     setIsUnlocking(true);
 
-    state.Service?.active.unlockFromRegistry()
+    unlockFromRegistry()
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
