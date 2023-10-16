@@ -689,6 +689,10 @@ export default function useBepro() {
     return state.Service?.active.getSettlerTokenData()
   }
 
+  function setNetworkParameter(parameter: NetworkParameters, value: string | number) {
+    return state.Service?.active.setNetworkParameter(parameter, value)
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -722,6 +726,7 @@ export default function useBepro() {
     getTimeChain,
     getNetworkParameter,
     getSettlerTokenData,
+    setNetworkParameter,
     isAddress,
     isNetworkGovernor,
     loadNetwork,
