@@ -696,6 +696,10 @@ export default function useBepro() {
   function lockInRegistry(amount: string) {
     return state.Service?.active.lockInRegistry(amount)
   }
+  
+  function approveTokenInRegistry(amount: string) {
+    return state.Service?.active.approveTokenInRegistry(amount)
+  }
 
   return {
     handlerDisputeProposal,
@@ -735,5 +739,6 @@ export default function useBepro() {
     isNetworkGovernor,
     loadNetwork,
     lockInRegistry,
+    approveTokenInRegistry,
   };
 }
