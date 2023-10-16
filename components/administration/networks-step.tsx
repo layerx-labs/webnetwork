@@ -39,7 +39,7 @@ export default function NetworksStep({
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
   const {state, dispatch} = useAppState();
-  const { loadNetwork, isNetworkGovernor: isNetworkGovernorDao, getNetworkParameter } = useBepro();
+  const { loadNetwork, isNetworkGovernor: isNetworkGovernorDao, getNetworkParameter, getSettlerTokenData } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
@@ -160,7 +160,7 @@ export default function NetworksStep({
         getNetworkParameter("proposerFeeShare"),
         getNetworkParameter("percentageNeededForDispute"),
         state.Service?.active.network?.treasuryInfo(),
-        state.Service?.active.getSettlerTokenData()
+        getSettlerTokenData()
       ])
       .then(([councilAmount, 
               disputableTime, 
