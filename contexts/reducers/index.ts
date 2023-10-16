@@ -32,10 +32,5 @@ export default function loadApplicationStateReducers() {
     changeSupportedChains
   ].forEach(addReducer);
 
-  // console.debug(`Loaded State Reducers`);
-  // console.table(Actions
-  //     .map(({id, stateKey}) => ({id, stateKey}))
-  //     .reduce((p, c) => ({...p, [c.id]: c.stateKey}), {}));
-
   loaded = true;
 }
