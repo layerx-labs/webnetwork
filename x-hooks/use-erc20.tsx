@@ -28,7 +28,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
-  const { handleApproveToken, getERC20TokenData, getTokenBalance } = useBepro();
+  const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -53,7 +53,7 @@ export default function useERC20() {
     const realSpender = spender || state.Service?.active?.network?.contractAddress;
 
     if (realSpender)
-      state.Service?.active.getAllowance(address, state.currentUser.walletAddress, realSpender)
+      getAllowance(address, state.currentUser.walletAddress, realSpender)
         .then(setAllowance)
         .catch(error => console.debug("useERC20:getAllowance", logData, error));
   }
