@@ -18,6 +18,7 @@ import {Network} from "interfaces/network";
 import {SearchBountiesPaginated} from "types/api";
 
 import { useUpdateNetwork } from "x-hooks/api/network";
+import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -51,6 +52,7 @@ export default function MyNetworkSettings({
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
   const { state } = useAppState();
+  const { isRegistryGovernor } = useBepro();
   const { colorsToCSS } = useNetworkTheme();
   const { updateActiveNetwork } = useNetwork();
   const { details, settings, forcedNetwork } = useNetworkSettings();
@@ -126,8 +128,7 @@ export default function MyNetworkSettings({
         !state.currentUser?.walletAddress ||
         !state.connectedChain?.id) return;
 
-    state.Service?.active
-      .isRegistryGovernor(state.currentUser?.walletAddress)
+    isRegistryGovernor(state.currentUser?.walletAddress)
       .then(setIsGovernorRegistry);
   }, [state.currentUser?.walletAddress, state.Service?.active?.registry?.contractAddress, state.connectedChain?.id]);
 
