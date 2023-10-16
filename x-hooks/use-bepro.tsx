@@ -10,6 +10,7 @@ import {parseTransaction} from "helpers/transactions";
 import { NetworkEvents } from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
+import { Token } from "interfaces/token";
 import {SimpleBlockTransactionPayload, TransactionCurrency} from "interfaces/transaction";
 
 import DAO from "services/dao-service";
@@ -652,6 +653,14 @@ export default function useBepro() {
     });
   }
 
+  async function getERC20TokenData(address:string): Promise<Token> {
+    return state.Service?.active.getERC20TokenData(address)
+  }
+
+  function isAddress(address: string): boolean {
+    return state.Service?.active.isAddress(address)
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -678,6 +687,8 @@ export default function useBepro() {
     handleChangeAllowedTokens,
     handleCloseNetwork,
     handleFeeNetworkCreation,
-    handleAmountNetworkCreation
+    handleAmountNetworkCreation,
+    getERC20TokenData,
+    isAddress
   };
 }
