@@ -701,6 +701,10 @@ export default function useBepro() {
     return state.Service?.active.approveTokenInRegistry(amount)
   }
 
+  function unlockFromRegistry() {
+    return state.Service?.active.unlockFromRegistry()
+  }
+  
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -740,5 +744,6 @@ export default function useBepro() {
     loadNetwork,
     lockInRegistry,
     approveTokenInRegistry,
+    unlockFromRegistry
   };
 }
