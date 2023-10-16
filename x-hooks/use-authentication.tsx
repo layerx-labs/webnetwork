@@ -43,6 +43,8 @@ import {useNetwork} from "x-hooks/use-network";
 import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
 
+import useBepro from "./use-bepro";
+
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
 const { publicRuntimeConfig } = getConfig();
@@ -53,6 +55,7 @@ export function useAuthentication() {
 
   const { connect } = useDao();
   const { chain } = useChain();
+  const { isNetworkGovernor } = useBepro();
   const transactions = useTransactions();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { state, dispatch } = useAppState();
@@ -130,7 +133,7 @@ export function useAuthentication() {
       .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
       // not balance, but related to address, no need for a second useEffect()
       state.Service.active.isCouncil(state.currentUser.walletAddress),
-      state.Service.active.isNetworkGovernor(state.currentUser.walletAddress)
+      isNetworkGovernor(state.currentUser.walletAddress)
     ])
       .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {
         update({oracles, bepro, staked});

@@ -39,7 +39,7 @@ export default function NetworksStep({
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
   const {state, dispatch} = useAppState();
-  const { loadNetwork } = useBepro();
+  const { loadNetwork, isNetworkGovernor: isNetworkGovernorDao } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
@@ -147,7 +147,7 @@ export default function NetworksStep({
       if (network.networkAddress !== state.Service?.active.network.contractAddress)
         await loadNetwork(network.networkAddress);
 
-      state.Service?.active.isNetworkGovernor(state.currentUser.walletAddress)
+      isNetworkGovernorDao(state.currentUser.walletAddress)
         .then(setIsNetworkGovernor)
         .catch(error => console.log(error));
 
