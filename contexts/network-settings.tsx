@@ -34,6 +34,7 @@ import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
 import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import useBepro from "x-hooks/use-bepro";
 import useNetworkTheme from "x-hooks/use-network-theme";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
@@ -57,6 +58,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
+  const { getERC20TokenData } = useBepro();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
   const LIMITS = {
@@ -504,7 +506,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   useEffect(() => {
     if (state.Service?.active?.registry?.contractAddress && state.connectedChain?.name !== UNSUPPORTED_CHAIN)
-      state.Service.active.getERC20TokenData(state.Service.active.registry.token.contractAddress)
+      getERC20TokenData(state.Service.active.registry.token.contractAddress)
         .then(setRegistryToken)
         .catch(error => console.debug("Failed to load registry token", error));
   }, [state.Service?.active?.registry?.contractAddress, state.connectedChain?.name]);
