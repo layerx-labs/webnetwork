@@ -47,7 +47,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state, dispatch } = useAppState();
-  const { lockInRegistry } = useBepro();
+  const { lockInRegistry, approveTokenInRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
 
@@ -175,7 +175,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(approveTxAction);
     setIsApproving(true);
 
-    state.Service?.active.approveTokenInRegistry(amount?.toFixed())
+    approveTokenInRegistry(amount?.toFixed())
       .then((tx) => {
         registryToken.updateAllowanceAndBalance();
         dispatch(updateTx([parseTransaction(tx, approveTxAction.payload[0] as SimpleBlockTransactionPayload)]));
