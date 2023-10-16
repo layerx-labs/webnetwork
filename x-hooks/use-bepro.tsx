@@ -669,12 +669,16 @@ export default function useBepro() {
     return state.Service?.active.getTimeChain()
   }
 
-  function getTokenBalance(tokenAddress: string, userAddress: string): Promise<BigNumber> {
-    return state.Service?.active.getTokenBalance(tokenAddress, userAddress)
+  function getTokenBalance(tokenAddress: string, walletAddress: string): Promise<BigNumber> {
+    return state.Service?.active.getTokenBalance(tokenAddress, walletAddress)
   }
 
   function loadNetwork(networkAddress: string, skipAssignment?: boolean) {
     return state.Service?.active.loadNetwork(networkAddress, skipAssignment);
+  }
+
+  function isNetworkGovernor(walletAddress: string) {
+    return state.Service?.active.isNetworkGovernor(walletAddress);
   }
 
   return {
@@ -709,6 +713,7 @@ export default function useBepro() {
     getTokenBalance,
     getTimeChain,
     isAddress,
+    isNetworkGovernor,
     loadNetwork,
   };
 }
