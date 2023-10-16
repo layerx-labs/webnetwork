@@ -693,6 +693,10 @@ export default function useBepro() {
     return state.Service?.active.setNetworkParameter(parameter, value)
   }
 
+  function lockInRegistry(amount: string) {
+    return state.Service?.active.lockInRegistry(amount)
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -730,5 +734,6 @@ export default function useBepro() {
     isAddress,
     isNetworkGovernor,
     loadNetwork,
+    lockInRegistry,
   };
 }
