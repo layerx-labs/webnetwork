@@ -58,7 +58,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
-  const { getERC20TokenData } = useBepro();
+  const { getERC20TokenData, getTokensLockedInRegistryByAddress } = useBepro();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
   const LIMITS = {
@@ -311,7 +311,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   async function getTokenBalance() {
     const [tokensLockedInRegistry, registryCreatorAmount] = await Promise.all([
-      state.Service?.active?.getTokensLockedInRegistryByAddress(state.currentUser?.walletAddress),
+      getTokensLockedInRegistryByAddress(state.currentUser?.walletAddress),
       state.Service?.active?.getRegistryCreatorAmount()
     ])
 
