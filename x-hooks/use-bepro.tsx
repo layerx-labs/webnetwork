@@ -716,6 +716,10 @@ export default function useBepro() {
   function getTokensLockedInRegistryByAddress(walletAddress: string) {
     return state.Service?.active.getTokensLockedInRegistryByAddress(walletAddress)
   }
+
+  function getRegistryCreatorAmount() {
+    return state.Service?.active.getRegistryCreatorAmount()
+  }
   
   return {
     handlerDisputeProposal,
@@ -752,6 +756,7 @@ export default function useBepro() {
     getSettlerTokenData,
     getNetworkAdressByCreator,
     getTokensLockedInRegistryByAddress,
+    getRegistryCreatorAmount,
     setNetworkParameter,
     isAddress,
     isNetworkGovernor,
