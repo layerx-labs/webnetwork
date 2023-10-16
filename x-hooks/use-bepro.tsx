@@ -704,6 +704,10 @@ export default function useBepro() {
   function unlockFromRegistry() {
     return state.Service?.active.unlockFromRegistry()
   }
+
+  function getNetworkAdressByCreator(walletAddress: string) {
+    return state.Service?.active.getNetworkAdressByCreator(walletAddress)
+  }
   
   return {
     handlerDisputeProposal,
@@ -738,6 +742,7 @@ export default function useBepro() {
     getTimeChain,
     getNetworkParameter,
     getSettlerTokenData,
+    getNetworkAdressByCreator,
     setNetworkParameter,
     isAddress,
     isNetworkGovernor,
