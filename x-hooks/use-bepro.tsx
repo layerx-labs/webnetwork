@@ -669,6 +669,10 @@ export default function useBepro() {
     return state.Service?.active.getTimeChain()
   }
 
+  function getTokenBalance(tokenAddress: string, userAddress: string): Promise<BigNumber> {
+    return state.Service?.active.getTokenBalance(tokenAddress, userAddress)
+  }
+
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -698,6 +702,7 @@ export default function useBepro() {
     handleAmountNetworkCreation,
     getERC20TokenData,
     getCancelableTime,
+    getTokenBalance,
     isAddress,
     getTimeChain
   };
