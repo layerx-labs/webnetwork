@@ -17,7 +17,10 @@ const config = {
   testMatch: [ "**/?(*.)+(spec|test).[jt]s?(x)" ],
   collectCoverageFrom: [
     "components/**/*.{ts,tsx}",
-  ]
+  ],
+  moduleNameMapper: {
+    "^uuid$": "uuid"
+  }
 };
 
 export default createJestConfig(config);
