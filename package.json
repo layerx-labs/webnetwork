@@ -39,6 +39,8 @@
     "test": "jest --verbose"
   },
   "dependencies": {
+    "@elastic/apm-rum": "^5.14.0",
+    "@elastic/apm-rum-core": "^5.19.0",
     "@elastic/elasticsearch": "^8.2.1",
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/jazzicon": "^2.0.0",
