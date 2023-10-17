@@ -32,6 +32,7 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import { useUpdateBountyVisibility } from "x-hooks/api/network";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
 import NetworkBadge from "./network/badge/view";
@@ -62,6 +63,14 @@ export default function IssueListItem({
   
   const { getURLWithNetwork } = useNetwork();
   const { handleHardCancelBounty } = useBepro();
+  const { mutate: updateVisibility } = useReactQueryMutation({
+    mutationFn: useUpdateBountyVisibility,
+    toastSuccess: t("bounty:actions.update-bounty"),
+    toastError: t("common:errors.failed-update-bounty"),
+    onSuccess: () => {
+      setVisible(!isVisible);
+    }
+  });
 
   const isVisible = visible !== undefined ? visible : issue?.visible;
 
@@ -88,6 +97,14 @@ export default function IssueListItem({
     }));
   }
 
+  function handleUpdateVisibility() {
+    updateVisibility({
+      id: issue?.id,
+      networkAddress: issue?.network?.networkAddress,
+      visible: !isVisible
+    });
+  }
+
   function handleToastError(err?: string) {
     dispatch(addToast({
       type: "danger",
@@ -95,23 +112,6 @@ export default function IssueListItem({
       content: t("common:errors.failed-update-bounty")
     }));
     console.debug(t("common:errors.failed-update-bounty"), err);
-  }
-
-  async function handleHideBounty() {
-    useUpdateBountyVisibility({
-      id: issue?.id,
-      networkAddress: issue?.network?.networkAddress,
-      visible: !isVisible
-    })
-      .then(() => {
-        dispatch(addToast({
-          type: "success",
-          title: t("common:actions.success"),
-          content: t("bounty:actions.update-bounty")
-        }));
-        setVisible(!isVisible)
-      })
-      .catch(handleToastError);
   }
 
   function handleHardCancel() {
@@ -305,7 +305,7 @@ export default function IssueListItem({
 
           <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
             <FlexColumn className="justify-content-center">
-                <div className="cursor-pointer" onClick={handleHideBounty}>
+                <div className="cursor-pointer" onClick={handleUpdateVisibility}>
                   {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
                 </div>
             </FlexColumn>
@@ -325,7 +325,7 @@ export default function IssueListItem({
             <MoreActionsDropdown
               actions={[
                 { content: "Task Link", onClick: handleClickCard},
-                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleHideBounty},
+                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleUpdateVisibility},
                 { content: "Cancel", onClick: () => setShowHardCancelModal(true)},
               ]}
             />

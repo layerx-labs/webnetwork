@@ -5,7 +5,7 @@ import MakeDeliverableRedyModalView from "components/modals/make-deliverable-rea
 
 import { NetworkEvents } from "interfaces/enums/events";
 
-import getDeliverable from "x-hooks/api/deliverable/get-deliverable";
+import { getDeliverable } from "x-hooks/api/deliverable/get-deliverable";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";

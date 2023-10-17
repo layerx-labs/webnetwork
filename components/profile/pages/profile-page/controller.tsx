@@ -18,6 +18,7 @@ import { CustomSession } from "interfaces/custom-session";
 import { useUpdateEmail } from "x-hooks/api/user";
 import { useAuthentication } from "x-hooks/use-authentication";
 import { useNetwork } from "x-hooks/use-network";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function ProfilePage() {
   const { query } = useRouter();
@@ -25,7 +26,6 @@ export default function ProfilePage() {
   const { data: sessionData, update: updateSession } = useSession();
 
   const [inputEmail, setInputEmail] = useState("");
-  const [isExecuting, setIsExecuting] = useState(false);
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -38,6 +38,13 @@ export default function ProfilePage() {
   const { goToProfilePage } = useNetwork();
   const { state, dispatch } = useAppState();
   const { signInGithub } = useAuthentication();
+  const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
+    mutationFn: useUpdateEmail,
+    toastError: t("email-errors.failed-to-update"),
+    onSuccess: () => {
+      updateSession();
+    }
+  });
 
   const sessionUser = (sessionData as CustomSession)?.user;
   const userEmail = sessionUser?.email || "";
@@ -55,35 +62,22 @@ export default function ProfilePage() {
     emailValidator(e.target.value);
   }
 
-  function handleUpdateEmail(email: string) {
-    setIsExecuting(true);
-
-    return useUpdateEmail(email)
-      .catch(error => {
-        dispatch(toastError(t("email-errors.try-again-later"), t("email-errors.failed-to-update")));
-        console.debug("Failed to update user email", error);
-      })
-      .finally(() => {
-        setIsExecuting(false);
-        updateSession();
-      });
-  }
-
   function onSave() {
-    handleUpdateEmail(inputEmail);
+    updateEmail(inputEmail);
   }
 
   function onResend() {
-    handleUpdateEmail(userEmail)
-      .then(() => {
+    updateEmail(userEmail, {
+      onSuccess: () => {
         goToProfilePage("profile", { emailVerificationError: "" });
-      });
+      }
+    });
   }
 
   function onSwitchChange(newValue: boolean) {
     if (!newValue) {
       if (!isExecuting && userEmail !== "")
-        handleUpdateEmail("");
+        updateEmail("");
       else
         setIsNotificationEnabled(false);
     } else

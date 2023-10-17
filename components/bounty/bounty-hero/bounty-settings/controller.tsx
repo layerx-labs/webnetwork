@@ -13,12 +13,10 @@ import useBepro from "x-hooks/use-bepro";
 import BountySettingsView from "./view";
 
 export default function BountySettings({
-  handleEditIssue,
   isEditIssue,
   currentBounty,
   updateBountyData
 }: {
-  handleEditIssue?: () => void;
   isEditIssue?: boolean;
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
@@ -87,14 +85,18 @@ export default function BountySettings({
       })();
   }, [state.Service?.active, currentBounty]);
 
-  if (!objViewProps.isBountyInDraft && !isGovernor || !isCancelable && isGovernor)
+  if (
+    (!objViewProps.isBountyInDraft && !isGovernor) ||
+    (!isCancelable && isGovernor) ||
+    isEditIssue ||
+    (!objViewProps.isBountyOwner && !isGovernor)
+  )
     return <></>;
 
   return (
     <BountySettingsView
       isCancelable={isCancelable}
       network={state.Service?.network}
-      handleEditIssue={handleEditIssue}
       handleHardCancel={handleHardCancel}
       handleRedeem={handleRedeem}
       isEditIssue={isEditIssue}

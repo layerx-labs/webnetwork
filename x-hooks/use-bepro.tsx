@@ -16,15 +16,15 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "./api/events/use-process-event";
 
 const DIVISOR = 1000000;
 
 export default function useBepro() {
   const { t } = useTranslation("common");
 
-  const { processEvent } = useApi();
   const { dispatch, state } = useAppState();
+  const { processEvent } = useProcessEvent();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
 
@@ -307,12 +307,8 @@ export default function useBepro() {
   }
 
   async function handleCreatePullRequest(bountyId: number,
-                                         originRepo: string,
-                                         originBranch: string,
                                          originCID: string,
-                                         userRepo: string,
-                                         userBranch: string,
-                                         cid: number ) {
+                                         cid: number ): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const tx = addTx([{
         type: TransactionTypes.createDeliverable,
@@ -320,14 +316,14 @@ export default function useBepro() {
       } as any]);
       dispatch(tx);
 
-      await state.Service?.active?.createPullRequest(bountyId,
-                                                     originRepo,
-                                                     originBranch,
-                                                     originCID,
-                                                     userRepo,
-                                                     userBranch,
-                                                     cid)
-        .then((txInfo: unknown) => {
+      await state.Service?.active?.createPullRequest( bountyId,
+                                                      "",
+                                                      "",
+                                                      originCID,
+                                                      "",
+                                                      "",
+                                                      cid)
+        .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
           resolve(txInfo);
         })

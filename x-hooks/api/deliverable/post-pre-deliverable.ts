@@ -5,7 +5,7 @@ import { api } from "services/api";
  * @param query current url query
  * @returns created deliverable
  */
-export default async function CreatePreDeliverable(payload: {
+export async function CreatePreDeliverable(payload: {
   deliverableUrl: string;
   title: string;
   description: string;

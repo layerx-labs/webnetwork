@@ -1,13 +1,13 @@
-import { useState } from "react";
-
+import { AxiosError } from "axios";
 import { useTranslation } from "next-i18next";
 
+import RemoveGithubAccountView from "components/connections/remove-github-modal/view";
+
 import { useAppState } from "contexts/app-state";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
+import { toastError } from "contexts/reducers/change-toaster";
 
-import useApi from "x-hooks/use-api";
-
-import RemoveGithubAccountView from "./view";
+import { useRemoveGithub } from "x-hooks/api/user";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface RemoveGithubAccountProps {
   show: boolean;
@@ -25,34 +25,31 @@ export default function RemoveGithubAccount({
   onDisconnectGithub,
 }: RemoveGithubAccountProps) {
   const { t } = useTranslation(["profile", "common"]);
-  const [isExecuting, setIsExecuting] = useState(false);
 
-  const { resetUser } = useApi();
   const { dispatch } = useAppState();
+  const { mutate: removeGithub, isLoading: isExecuting } = useReactQueryMutation({
+    mutationFn: () => useRemoveGithub({
+      address: walletAddress,
+      githubLogin
+    }),
+    toastSuccess: t("modals.remove-github.success"),
+    onSuccess: () => {
+      onDisconnectGithub();
+      onCloseClick();
+    },
+    onError: (error: AxiosError) => {
+      if (error?.response?.status === 409) {
+        const message = {
+          PULL_REQUESTS_OPEN: t("modals.remove-github.errors.deliverables-open"),
+        };
 
-  function handleClickRemove() {
-    setIsExecuting(true);
-
-    resetUser(walletAddress, githubLogin)
-      .then(onDisconnectGithub)
-      .then(() => {
-        dispatch(toastSuccess(t("modals.remove-github.success")));
-        onCloseClick();
-      })
-      .catch((error) => {
-        if (error?.response?.status === 409) {
-          const message = {
-            PULL_REQUESTS_OPEN: t("modals.remove-github.errors.deliverables-open"),
-          };
-
-          dispatch(toastError(message[error.response.data],
-                              t("modals.remove-github.errors.failed-to-remove")));
-        } else
-          dispatch(toastError(t("modals.remove-github.errors.check-requirements"),
-                              t("modals.remove-github.errors.failed-to-remove")));
-      })
-      .finally(() => setIsExecuting(false));
-  }
+        dispatch(toastError(message[error?.response?.data?.toString()],
+                            t("modals.remove-github.errors.failed-to-remove")));
+      } else
+        dispatch(toastError(t("modals.remove-github.errors.check-requirements"),
+                            t("modals.remove-github.errors.failed-to-remove")));
+    }
+  });
 
   return (
     <RemoveGithubAccountView
@@ -61,7 +58,7 @@ export default function RemoveGithubAccount({
       githubLogin={githubLogin}
       walletAddress={walletAddress}
       onCloseClick={onCloseClick}
-      onOkClick={handleClickRemove}
+      onOkClick={removeGithub}
     />
   );
 }

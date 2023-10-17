@@ -2,57 +2,52 @@ import { ChangeEvent, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
+import InputCommentView from "components/bounty/comments/input-comment/view";
+
+import { QueryKeys } from "helpers/query-keys";
 
 import { IdsComment, TypeComment } from "interfaces/comments";
 
 import { CreateComment } from "x-hooks/api/comments";
-
-import InputCommentView from "./view";
-
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function InputComment({
   githubLogin,
   userAddress,
   type,
-  ids,
-  updateData
+  ids
 }: {
   githubLogin?: string;
   userAddress: string;
   type: TypeComment;
   ids: IdsComment;
-  updateData: (updatePrData?: boolean) => void;
 }) {
   const { t } = useTranslation(["common", "bounty"]);
+
   const [comment, setComment] = useState<string>();
-  const { dispatch } = useAppState();
 
-  function onCommentChange(e: ChangeEvent<HTMLTextAreaElement>) {
-    setComment(e.target.value)
-  }
+  const queryKey = {
+    issue: QueryKeys.bountyComments(ids?.issueId?.toString()),
+    deliverable: QueryKeys.deliverable(ids?.deliverableId?.toString()),
+    proposal: QueryKeys.proposalComments(ids?.proposalId?.toString())
+  }[type];
 
-  async function onCommentSubmit() {
-    await CreateComment({
+  const { mutate: addComment } = useReactQueryMutation({
+    queryKey: queryKey,
+    mutationFn: () => CreateComment({
       comment,
       ...ids,
       type
-    }).then(() => {
-      dispatch(addToast({
-        type: "success",
-        title: t("actions.success"),
-        content: t("bounty:actions.comment.success"),
-      }));
-      updateData()
-      setComment("")
-    }).catch(() => {
-      dispatch(addToast({
-        type: "danger",
-        title: t("actions.success"),
-        content: t("bounty:actions.comment.error"),
-      }));
-    })
+    }),
+    toastSuccess: t("bounty:actions.comment.success"),
+    toastError: t("bounty:actions.comment.error"),
+    onSuccess: () => {
+      setComment("");
+    }
+  });
+
+  function onCommentChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    setComment(e.target.value)
   }
 
   return (
@@ -61,7 +56,7 @@ export default function InputComment({
       userAddress={userAddress}
       comment={comment}
       onCommentChange={onCommentChange}
-      onCommentSubmit={onCommentSubmit}
+      onCommentSubmit={addComment}
     />
   );
 }

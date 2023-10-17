@@ -18,6 +18,7 @@ import { useAppState } from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import { commentsParser, issueParser } from "helpers/issue";
+import { QueryKeys } from "helpers/query-keys";
 
 import { IssueData } from "interfaces/issue-data";
 
@@ -30,13 +31,11 @@ import useReactQuery from "x-hooks/use-react-query";
 export default function PageIssue() {
   const { query } = useRouter();
 
-  const bountyId = query?.id;
-  const bountyQueryKey = ["bounty", bountyId.toString()];
-  const commentsQueryKey = ["bounty", "comments", bountyId.toString()];
-
-  const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
+  const bountyId = query?.id?.toString();
+  const { data: bounty, invalidate: invalidateBounty } = 
+    useReactQuery(QueryKeys.bounty(bountyId), () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 
-    useReactQuery(commentsQueryKey, () => getCommentsData({ issueId: bountyId, type: "issue" }));
+    useReactQuery(QueryKeys.bountyComments(bountyId), () => getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
@@ -62,9 +61,9 @@ export default function PageIssue() {
     <BountyEffectsProvider currentBounty={bounty}>
       <BountyHero 
         currentBounty={parsedBounty}
-        updateBountyData={updateBountyData}
         handleEditIssue={handleEditIssue}
         isEditIssue={isEditIssue}
+        updateBountyData={invalidateBounty}
       />
     
       <CustomContainer>
@@ -88,14 +87,12 @@ export default function PageIssue() {
 
         <BountyBody 
           currentBounty={parsedBounty}
-          updateBountyData={updateBountyData}
           isEditIssue={isEditIssue} 
           cancelEditIssue={handleCancelEditIssue}
         />
 
         <Comments
           type="issue"
-          updateData={updateBountyData}
           ids={{
             issueId: +parsedBounty?.id
           }}
@@ -109,12 +106,12 @@ export default function PageIssue() {
 
 export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
   const queryClient = getReactQueryClient();
-  const bountyId = query.id;
+  const bountyId = query.id?.toString();
 
   const bountyData = await getBountyData(query);
 
-  await queryClient.setQueryData(["bounty", bountyId], bountyData);
-  await queryClient.prefetchQuery(["bounty", "comments", bountyId], () => 
+  await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
+  await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () => 
     getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const seoData: Partial<IssueData> = {

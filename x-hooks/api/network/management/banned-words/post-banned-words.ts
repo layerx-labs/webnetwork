@@ -3,6 +3,7 @@ import { api } from "services/api";
 interface payloadProps {
   banned_domain: string;
   networkAddress: string;
+  networkId: number;
 }
 
 /**
@@ -10,8 +11,8 @@ interface payloadProps {
  * @param query current url query
  * @returns created Banned Word on Network
  */
-export async function CreateBannedWord(id, payload: payloadProps): Promise<string[]> {
+export async function CreateBannedWord({ networkId, ...rest }: payloadProps): Promise<string[]> {
   return api
-    .post<string[]>(`/network/management/banned-words/${id}`, payload)
+    .post<string[]>(`/network/management/banned-words/${networkId}`, rest)
     .then(({ data }) => data);
 }

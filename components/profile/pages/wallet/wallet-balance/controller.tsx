@@ -9,6 +9,7 @@ import TokenIcon from "components/token-icon";
 
 import { useAppState } from "contexts/app-state";
 
+import { QueryKeys } from "helpers/query-keys";
 import { getPricesAndConvert } from "helpers/tokens";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
