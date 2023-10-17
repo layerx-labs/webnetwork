@@ -6,7 +6,6 @@ import ReviewsNumberView from "components/bounty/tabs-sections/reviews-number.vi
 import Button from "components/button";
 import { IPRLabel } from "components/deliverable/labels/controller";
 import If from "components/If";
-
 import ProposalProgressSmall from "components/proposal-progress-small";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";

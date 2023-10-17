@@ -13,7 +13,7 @@ import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import { NetworkEvents } from "interfaces/enums/events";
 import { DistributionsProps } from "interfaces/proposal";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
@@ -51,7 +51,7 @@ export default function UpdateBountyAmountModal({
     dispatch,
   } = useAppState();
 
-  const { processEvent } = useApi();
+  const { processEvent } = useProcessEvent();
   const transactionalERC20 = useERC20();
 
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();

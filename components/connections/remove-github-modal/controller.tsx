@@ -43,7 +43,7 @@ export default function RemoveGithubAccount({
           PULL_REQUESTS_OPEN: t("modals.remove-github.errors.deliverables-open"),
         };
 
-        dispatch(toastError(message[error.response.data],
+        dispatch(toastError(message[error?.response?.data?.toString()],
                             t("modals.remove-github.errors.failed-to-remove")));
       } else
         dispatch(toastError(t("modals.remove-github.errors.check-requirements"),

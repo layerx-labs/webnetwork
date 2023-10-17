@@ -1,15 +1,16 @@
 import BigNumber from "bignumber.js";
 import {NextApiRequest, NextApiResponse} from "next";
 import {Op, WhereOptions} from "sequelize";
+import {isAddress} from "web3-utils";
 
 import models from "db/models";
 
 import {paginateArray} from "helpers/paginate";
+import {lowerCaseIncludes} from "helpers/string";
 
 import {withCORS} from "middleware";
-import {lowerCaseIncludes} from "../../../../helpers/string";
-import {HttpBadRequestError} from "../../../../server/errors/http-errors";
-import {isAddress} from "web3-utils";
+
+import {HttpBadRequestError} from "server/errors/http-errors";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const whereCondition: WhereOptions = {};
