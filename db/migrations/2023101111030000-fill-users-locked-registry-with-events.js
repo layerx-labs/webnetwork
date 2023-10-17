@@ -118,17 +118,20 @@ module.exports = {
                 }
             ); 
 
-            await queryInterface.insert(UserLockedRegistry, "users_locked_registry", {
+            if(dbToken[0]){
+              await queryInterface.insert(UserLockedRegistry, "users_locked_registry", {
                 address: user,
-                userId: dbUser[0].id,
+                userId: dbUser[0]?.id || null,
                 amountLocked: newUserAmount?.toFixed(),
                 chainId: chain.chainId,
-                tokenId: dbToken[0].id,
+                tokenId: dbToken[0]?.id,
                 createdAt: new Date(),
                 updatedAt: new Date(),
               });
 
-            UsersLockedRegistryUpdated += 1
+              UsersLockedRegistryUpdated += 1
+            } else console.log(`token not found - userAddress: ${user} - tokenAddress: ${contractToken.contractAddress}` )
+           
           }
   
           await sleep();
