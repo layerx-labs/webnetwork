@@ -5,8 +5,7 @@ import {
   } from "react";
   
 import { useTranslation } from "next-i18next";
-  
-import Button from "components/button";
+
 import ContractButton from "components/contract-button";
 import Modal from "components/modal";
 import Translation from "components/translation";
