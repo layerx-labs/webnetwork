@@ -1,12 +1,12 @@
 import BigNumber from "bignumber.js";
-import {NextApiRequest} from "next";
-import {Op, Sequelize} from "sequelize";
+import { NextApiRequest } from "next";
+import { Op, Sequelize } from "sequelize";
 
 import models from "db/models";
 import Issue from "db/models/issue.model";
 
-import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
-import {chainFromHeader} from "helpers/chain-from-header";
+import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
+import { chainFromHeader } from "helpers/chain-from-header";
 
 import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 

@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { dehydrate } from "@tanstack/react-query";
-import BigNumber from "bignumber.js";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
@@ -18,7 +17,6 @@ import If from "components/If";
 import { useAppState } from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
-import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
 import { commentsParser, issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -44,19 +42,7 @@ export default function PageIssue() {
     useReactQuery(QueryKeys.bountyComments(bountyId?.toString()), () => 
       getCommentsData({ issueId: bountyId, type: "issue" }));
 
-  const treasury = state.Service?.network?.amounts?.treasury;
-  const mergeCreatorFeeShare = state.Service?.network?.amounts?.mergeCreatorFeeShare;
-  const proposerFeeShare = state.Service?.network?.amounts?.proposerFeeShare;
-
-  const developerAmount = getDeveloperAmount( treasury,
-                                              mergeCreatorFeeShare,
-                                              proposerFeeShare,
-                                              BigNumber(bounty?.amount));
-
-  const parsedBounty = issueParser({
-    ...bounty,
-    developerAmount
-  });
+  const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
 
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
