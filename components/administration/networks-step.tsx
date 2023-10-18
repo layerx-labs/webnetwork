@@ -45,6 +45,7 @@ export default function NetworksStep({
     getNetworkParameter,
     getSettlerTokenData,
     setNetworkParameter,
+    treasuryInfo
   } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
@@ -165,7 +166,7 @@ export default function NetworksStep({
         getNetworkParameter("mergeCreatorFeeShare"),
         getNetworkParameter("proposerFeeShare"),
         getNetworkParameter("percentageNeededForDispute"),
-        state.Service?.active.network?.treasuryInfo(),
+        treasuryInfo(),
         getSettlerTokenData()
       ])
       .then(([councilAmount, 
