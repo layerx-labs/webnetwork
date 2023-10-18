@@ -3,7 +3,7 @@ import { NumberFormatValues } from "react-number-format";
 import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import Modal from "components/modal";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
