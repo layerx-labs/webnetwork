@@ -21,6 +21,8 @@ import {WinStorage} from "services/win-storage";
 import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
 
+import useBepro from "./use-bepro";
+
 export function useNetwork() {
   const {query, replace, push} = useRouter();
 
@@ -30,6 +32,7 @@ export function useNetwork() {
 
   const {state, dispatch} = useAppState();
   const { findSupportedChain } = useChain();
+  const { getNetworkParameter, treasuryInfo } = useBepro();
 
   function getStorageKey(networkName: string, chainId: string | number) {
     return `bepro.network:${networkName}:${chainId}`;
@@ -174,16 +177,14 @@ export function useNetwork() {
     if (!state?.Service?.active?.network)
       return;
 
-    const network = state.Service.active?.network;
-
     Promise.all([
-        network.councilAmount(),
-        network.mergeCreatorFeeShare(),
-        network.proposerFeeShare(),
-        network.percentageNeededForDispute(),
-        network.oracleExchangeRate(),
-        network.treasuryInfo(),
-        network.totalNetworkToken()
+        getNetworkParameter('councilAmount'),
+        getNetworkParameter('mergeCreatorFeeShare'),
+        getNetworkParameter('proposerFeeShare'),
+        getNetworkParameter('percentageNeededForDispute'),
+        getNetworkParameter('oracleExchangeRate'),
+        treasuryInfo(),
+        getNetworkParameter('totalNetworkToken'),
     ])
       .then(([councilAmount,
               mergeCreatorFeeShare,
