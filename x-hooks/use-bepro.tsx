@@ -18,6 +18,7 @@ import DAO from "services/dao-service";
 import {NetworkParameters} from "types/dappkit";
 
 import { useProcessEvent } from "./api/events/use-process-event";
+import { TreasuryInfo } from "@taikai/dappkit";
 
 const DIVISOR = 1000000;
 
@@ -728,6 +729,10 @@ export default function useBepro() {
   function deployERC20Token(name: string, symbol: string, cap: string, ownerAddress: string) {
     return state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
   }
+
+  function treasuryInfo(): Promise<TreasuryInfo> {
+    return state.Service?.active.network?.treasuryInfo()
+  }
   
   return {
     handlerDisputeProposal,
@@ -774,6 +779,7 @@ export default function useBepro() {
     lockInRegistry,
     approveTokenInRegistry,
     unlockFromRegistry,
-    deployERC20Token
+    deployERC20Token,
+    treasuryInfo
   };
 }
