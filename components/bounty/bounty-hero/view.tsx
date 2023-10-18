@@ -30,7 +30,6 @@ interface BountyHeroProps {
 }
 
 export default function BountyHeroView({
-  handleEditIssue,
   isEditIssue,
   bounty,
   updateBountyData,

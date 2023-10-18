@@ -18,15 +18,15 @@ import ConnectWalletButton from "components/connect-wallet-button";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
+import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
+import {WarningSpan} from "components/warning-span";
 
 import {TERMS_AND_CONDITIONS_LINK} from "helpers/constants";
 
 import {BountyDetailsSectionProps} from "interfaces/create-bounty";
 
 import {RewardInformationSectionProps} from "types/components";
-import Modal from "../../../modal";
-import {WarningSpan} from "../../../warning-span";
 
 interface CreateBountyPageViewProps 
   extends SelectNetworkSectionProps, 
@@ -221,7 +221,7 @@ export default function CreateBountyPageView({
 
       <If condition={isReviewSection}>
         <div className="mx-5">
-          <div className="d-flex justify-content-center col-12 mt-4">
+          <div className="d-flex justify-content-center text-center col-12 mt-4">
             <p className="">
               {t("bounty:creating-this-bounty")}{" "}
               <a href={TERMS_AND_CONDITIONS_LINK} target="_blank">

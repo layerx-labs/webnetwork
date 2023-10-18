@@ -1,27 +1,19 @@
 import { NextApiRequest } from "next";
-import { getToken } from "next-auth/jwt";
 
 import models from "db/models";
-
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
 
 import { HttpNotFoundError } from "server/errors/http-errors";
 
 export async function patch(req: NextApiRequest) {
-  const token = await getToken({ req });
-
-  const githubLogin = token.login.toString();
-  const address = token.address.toString();
+  const { id } = req.body.context.user;
 
   const user = await models.user.findOne({
     where: {
-    address: caseInsensitiveEqual("address", address),
-    githubLogin: caseInsensitiveEqual("githubLogin", githubLogin)
-    }
+      id,
+    },
   });
 
-  if (!user) 
-    throw new HttpNotFoundError("User not found");
+  if (!user) throw new HttpNotFoundError("User not found");
 
   user.resetedAt = new Date();
   user.githubLogin = null;

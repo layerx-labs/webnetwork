@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { withProtected } from "middleware";
+import { UserRoute } from "middleware";
 
 import { error as LogError } from "services/logging";
 
@@ -23,4 +23,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
-export default withProtected(handler);
+export default UserRoute(handler);

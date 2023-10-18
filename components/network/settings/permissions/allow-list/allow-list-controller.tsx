@@ -1,16 +1,19 @@
-import useReactQuery from "../../../../../x-hooks/use-react-query";
 import {useState} from "react";
+
 import {useDebounce} from "use-debounce";
 import {isAddress} from "web3-utils";
-import AllowListView from "./allow-list-view";
-import useGetAllowList from "../../../../../x-hooks/api/network/management/allow-list/use-get-allow-list";
+
+import AllowListView from "components/network/settings/permissions/allow-list/allow-list-view";
+
+import useAddAllowListEntry from "x-hooks/api/network/management/allow-list/use-add-allow-list-entry";
 import useDeleteAllowListEntry
-  from "../../../../../x-hooks/api/network/management/allow-list/use-delete-allow-list-entry";
-import useAddAllowListEntry from "../../../../../x-hooks/api/network/management/allow-list/use-add-allow-list-entry";
+  from "x-hooks/api/network/management/allow-list/use-delete-allow-list-entry";
+import useGetAllowList from "x-hooks/api/network/management/allow-list/use-get-allow-list";
+import useReactQuery from "x-hooks/use-react-query";
 
-type AllowListProps = {networkId: number};
+type AllowListProps = {networkId: number, networkAddress: string};
 
-export default function AllowList({networkId}: AllowListProps) {
+export default function AllowList({networkId, networkAddress}: AllowListProps) {
   const {data: allowListOfNetwork, isFetching, isLoading, invalidate} =
     useReactQuery<string[]>(['allow-list', networkId], () => useGetAllowList(networkId));
   const [address, setAddress] = useState("");
@@ -33,7 +36,7 @@ export default function AllowList({networkId}: AllowListProps) {
     if (inputError())
       return;
     try {
-      await useAddAllowListEntry(networkId, dAddress);
+      await useAddAllowListEntry(networkId, dAddress, networkAddress);
       await invalidate();
       setAddress("");
     } catch (e) {

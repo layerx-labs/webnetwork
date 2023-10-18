@@ -6,7 +6,6 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import Button from "components/button";
 import Switch from "components/common/switch/view";
-import GithubConnectionState from "components/connections/github-connection-state/controller";
 import RemoveGithubAccount from "components/connections/remove-github-modal/controller";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
@@ -140,21 +139,35 @@ export default function ProfilePageView({
                 className="caption border border-purple text-purple border-radius-8 mt-3"
               />
             )}
+            {onHandleClickDisconnect && userLogin && walletAddress && (
+              <Button
+                outline
+                color="danger"
+                className="mt-3 col-lg-3 col-md-4 col-12"
+                onClick={onHandleClickDisconnect}
+              >
+                {t("profile:actions.remove-github-account")}
+              </Button>
+            )}
           </div>
         </div>
 
         <If condition={!userLogin}>
           <ResponsiveWrapper md={false} xs={true}>
-            <Button onClick={onChangeMyHandleClick}>
-              {t("profile:actions.change-my-handle")}
-            </Button>
+            <div className="col">
+              <div className="row mx-0">
+                <Button onClick={onChangeMyHandleClick}>
+                  {t("profile:actions.change-my-handle")}
+                </Button>
+              </div>
+            </div>
           </ResponsiveWrapper>
         </If>
 
         <Divider bg="gray-850" />
 
         <div className="row mb-4 mt-4">
-          <div className="col-8">
+          <div className="col-12 col-lg-8">
             <div className="d-flex align-items-center justify-content-between mb-1">
               <span className="base-medium text-white">{t("profile:notifications-form.title")}</span>
 
@@ -172,7 +185,7 @@ export default function ProfilePageView({
             </div>
 
             <If condition={isNotificationEnabled}>
-              <div className="row mt-3">
+              <div className="row mt-3 align-items-center gap-2 gap-md-0">
                 <div className="col-12 col-md-6">
                   <input 
                     type="text" 
@@ -187,14 +200,16 @@ export default function ProfilePageView({
                   </If>
                 </div>
 
-                <div className="col-12 col-md-6">
-                  <Button
-                    onClick={onSave}
-                    disabled={isSaveButtonDisabled}
-                    isLoading={isExecuting}
-                  >
-                    {t("actions.save")}
-                  </Button>
+                <div className="col-12 col-md-auto">
+                  <div className="row mx-0">
+                    <Button
+                      onClick={onSave}
+                      disabled={isSaveButtonDisabled}
+                      isLoading={isExecuting}
+                    >
+                      {t("actions.save")}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
@@ -232,12 +247,6 @@ export default function ProfilePageView({
         </div>
 
         <Divider bg="gray-850" />
-
-        <div className="row mt-4 mb-3">
-          <span className="caption text-white text-capitalize font-weight-medium">{t("profile:connections")}</span>
-        </div>
-
-        <GithubConnectionState onHandleClickDisconnect={onHandleClickDisconnect} />
 
         <RemoveGithubAccount
           show={showRemoveModal}

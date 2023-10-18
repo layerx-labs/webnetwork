@@ -9,16 +9,15 @@ import CreateDeliverablePageView from "components/pages/create-deliverable/view"
 import { useAppState } from "contexts/app-state";
 
 import { issueParser } from "helpers/issue";
+import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 import { QueryKeys } from "helpers/query-keys";
 import { isValidUrl } from "helpers/validateUrl";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
-import { metadata } from "interfaces/metadata";
 
 import { getBountyData } from "x-hooks/api/bounty";
 import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
-import getMetadata from "x-hooks/api/get-metadata";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";
@@ -30,12 +29,11 @@ export default function CreateDeliverablePage() {
   const { t } = useTranslation(["common", "deliverable", "bounty"]);
 
   const [originLink, setOriginLink] = useState<string>();
-  const [previewLink, setPreviewLink] = useState<metadata>();
-  const [previewIsLoading, setPreviewIsLoading] = useState<boolean>(false);
-  const [previewError, setPreviewError] = useState<boolean>(false);
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
+  const [previewStatus, setPreviewStatus] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
+  const [createdDeliverableId, setCreatedDeliverableId] = useState<number>();
   
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
@@ -59,6 +57,7 @@ export default function CreateDeliverablePage() {
       issueId: +currentBounty?.id,
     }),
     onSuccess: ({ bountyId, originCID, cid }) => {
+      setCreatedDeliverableId(cid);
       createOnChain(bountyId, originCID, cid)
         .then(() => push(getURLWithNetwork("/bounty/[id]", query)))
         .catch(() => DeletePreDeliverable(cid));
@@ -81,25 +80,11 @@ export default function CreateDeliverablePage() {
     },
   ];
 
-  function handleMetadata(value: string) {
-    setPreviewIsLoading(true)
-    previewError && setPreviewError(false)
-    getMetadata({
-      url: value
-    }).then(setPreviewLink)
-    .catch(() => {
-      setPreviewLink(undefined)
-      setPreviewError(true)
-    })
-    .finally(() => setPreviewIsLoading(false))
-  }
-
   function validateBannedDomain(link: string) {
     const bannedDomains = state.Service?.network?.active?.banned_domains || [];
     return !!bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 
-  const debouncedPreviewUpdater = useDebouncedCallback((value) => handleMetadata(value), 500);
   const validateDomainDebounced = useDebouncedCallback((link: string) => {
     if (!link) {
       setOriginLinkError(undefined);
@@ -113,7 +98,6 @@ export default function CreateDeliverablePage() {
       setOriginLinkError(OriginLinkErrors.Banned);
     else {
       setOriginLinkError(undefined);
-      debouncedPreviewUpdater(link);
     }
   }, 500);
 
@@ -137,9 +121,7 @@ export default function CreateDeliverablePage() {
   return (
     <CreateDeliverablePageView
       originLink={originLink}
-      previewLink={previewLink}
-      previewError={previewError}
-      previewIsLoading={previewIsLoading}
+      originLinkPlaceHolder={getOriginLinkPlaceholder(t, currentBounty?.type)}
       onChangeOriginLink={onChangeOriginLink}
       title={title}
       onChangeTitle={onChangeTitle}
@@ -151,6 +133,11 @@ export default function CreateDeliverablePage() {
       checkButtonsOption={currentBounty?.type}
       createIsLoading={isCreatingPreDeliverable || isCreatingOnChain}
       originLinkError={originLinkError}
+      createdDeliverableId={createdDeliverableId}
+      bountyContractId={currentBounty?.contractId}
+      onPreviewStatusChange={setPreviewStatus}
+      previewError={previewStatus === "error"}
+      previewLoading={previewStatus === "loading"}
     />
   );
 }

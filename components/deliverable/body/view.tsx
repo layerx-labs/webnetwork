@@ -1,19 +1,24 @@
+import { useTranslation } from "next-i18next";
+
 import Comments from "components/bounty/comments/controller";
+import { ContextualSpan } from "components/contextual-span";
 import CustomContainer from "components/custom-container";
+import DeliverableButton from "components/deliverable/body/actions/deliverable-button";
+import DeliverableDescription from "components/deliverable/body/description/view";
+import DeliverableOriginLink from "components/deliverable/body/origin-link/view";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
-import { Deliverable } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import DeliverableButton from "./actions/deliverable-button";
-import DeliverableDescription from "./description/view";
-import DeliverableOriginLink from "./origin-link/controller";
-
+import DeliverableInfoCuratorCard from "../info-curator-card/controller";
 interface DeliverableBodyViewProps {
+  currentBounty: IssueBigNumberData;
   currentDeliverable: Deliverable;
   isCreatingReview: boolean;
+  showMakeReadyWarning: boolean;
   handleShowModal: () => void;
   handleCancel: () => void;
   handleMakeReady: () => void;
@@ -23,12 +28,14 @@ interface DeliverableBodyViewProps {
   isCancelling: boolean;
   isMakingReady: boolean;
   currentUser: CurrentUserState;
-  bountyId: string;
+  isCouncil: boolean;
 }
 
 export default function DeliverableBodyView({
+  currentBounty,
   currentDeliverable,
   isCreatingReview,
+  showMakeReadyWarning,
   handleShowModal,
   handleCancel,
   handleMakeReady,
@@ -38,12 +45,13 @@ export default function DeliverableBodyView({
   isCancelling,
   isMakingReady,
   currentUser,
-  bountyId
+  isCouncil
 }: DeliverableBodyViewProps) {  
+  const { t } = useTranslation("deliverable");
   const { isMobileView, isTabletView } = useBreakPoint();
 
   function RenderMakeReviewButton({ className = "" }) {
-    if (isMakeReviewButton)
+    if (isMakeReviewButton && !currentBounty?.isClosed)
       return (
         <DeliverableButton
           type="review"
@@ -97,6 +105,10 @@ export default function DeliverableBodyView({
   return (
     <div className="mt-3">
       <CustomContainer>
+        <If condition={!isCouncil}>
+          <DeliverableInfoCuratorCard />
+        </If>
+
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
             <RenderMakeReviewButton className="col-12 mb-3"/>
@@ -118,18 +130,31 @@ export default function DeliverableBodyView({
               </div>
           </div>
         </div>
+
+        <If condition={showMakeReadyWarning}>
+          <ContextualSpan
+            context="warning"
+            className="mt-2 mb-3"
+            isAlert
+          >
+            {t("make-ready-warning")}
+          </ContextualSpan>
+        </If>
+
         <DeliverableOriginLink url={currentDeliverable.deliverableUrl} />
+
         <DeliverableDescription description={currentDeliverable.description}/>
+
         {currentDeliverable?.markedReadyForReview && (
           <Comments
             type="deliverable"
             ids={{
-              issueId: +bountyId,
+              issueId: +currentBounty?.id,
               deliverableId: currentDeliverable?.id,
             }}
             comments={currentDeliverable?.comments}
             currentUser={currentUser}
-            disableCreateComment={currentDeliverable?.canceled}
+            disableCreateComment={currentDeliverable?.canceled || currentBounty?.isClosed || !isCouncil}
           />
         )}
       </CustomContainer>

@@ -17,6 +17,9 @@ export default function Comments({
   ids: IdsComment;
   disableCreateComment?: boolean;
 }) {
+
+  if(!comments?.length && disableCreateComment) return null;
+  
   return (
     <BountyCommentsView
       comments={comments}

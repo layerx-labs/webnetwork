@@ -1,22 +1,18 @@
-import React, { useState } from "react";
-
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
+import DeliverableBodyView from "components/deliverable/body/view";
+
 import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import { lowerCaseCompare } from "helpers/string";
 
-import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
-import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
+import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";
-
-import DeliverableBodyView from "./view";
 
 interface DeliverableBodyControllerProps {
   currentDeliverable: Deliverable;
@@ -36,24 +32,30 @@ export default function DeliverableBody({
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
 
-  const [isCancelling, setIsCancelling] = useState(false);
-  const [isMakingReady, setIsMakingReady] = useState(false);
-
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
-  const { processEvent } = useProcessEvent();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
+  const [isMakingReady, onMakeReady] = useContractTransaction(NetworkEvents.PullRequestReady,
+                                                              handleMakePullRequestReady,
+                                                              t("deliverable:actions.make-ready.success"),
+                                                              t("deliverable:actions.make-ready.error"));
+  const [isCancelling, onCancel] = useContractTransaction(NetworkEvents.PullRequestCanceled,
+                                                          handleCancelPullRequest,
+                                                          t("deliverable:actions.cancel.success"),
+                                                          t("deliverable:actions.cancel.error"));
 
+  const isCouncil = !!state?.Service?.network?.active?.isCouncil;
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isDeliverableReady = currentDeliverable?.markedReadyForReview;
   const isDeliverableCanceled = currentDeliverable?.canceled;
   const isDeliverableCancelable = currentDeliverable?.isCancelable;
   const isDeliverableCreator = lowerCaseCompare(currentDeliverable?.user?.address, state.currentUser?.walletAddress);
-
+  const showMakeReadyWarning = !isDeliverableReady && isDeliverableCreator;
   const isMakeReviewButton =
     isWalletConnected &&
     isDeliverableReady &&
-    !isDeliverableCanceled;
+    !isDeliverableCanceled &&
+    isCouncil
 
   const isMakeReadyReviewButton =
     isWalletConnected &&
@@ -69,79 +71,28 @@ export default function DeliverableBody({
 
   function handleMakeReady() {
     if (!currentBounty || !currentDeliverable) return;
-
-    setIsMakingReady(true);
-
-    handleMakePullRequestReady(currentBounty.contractId, currentDeliverable.prContractId)
-      .then((txInfo) => {
-        const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return processEvent(NetworkEvents.PullRequestReady, undefined, {
-          fromBlock,
-        });
-      })
-      .then(() => {
-        return updateDeliverableData();
-      })
-      .then(() => {
-        setIsMakingReady(false);
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("deliverable:actions.make-ready.success"),
-        }));
-      })
-      .catch((error) => {
-        setIsMakingReady(false);
-
-        if (error?.code === MetamaskErrors.UserRejected) return;
-
-        dispatch(addToast({
-            type: "danger",
-            title: t("actions.failed"),
-            content: t("deliverable:actions.make-ready.error"),
-        }));
-      });
+    onMakeReady(currentBounty.contractId, currentDeliverable.prContractId)
+      .then(() => updateDeliverableData())
+      .catch(error => console.debug("Failed to make ready for review", error.toString()));
   }
 
   function handleCancel() {
-    setIsCancelling(true);
-
-    handleCancelPullRequest(currentBounty?.contractId, currentDeliverable?.prContractId)
-      .then((txInfo) => {
-        const { blockNumber: fromBlock } = txInfo as { blockNumber: number };
-        return processEvent(NetworkEvents.PullRequestCanceled, undefined, {
-          fromBlock,
-        });
-      })
+    onCancel(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then(() => {
         updateDeliverableData();
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("deliverable:actions.cancel.success"),
-        }));
-
         router.push(getURLWithNetwork("/bounty/[id]", {
-            id: currentBounty.id
+          id: currentBounty.id
         }));
       })
-      .catch((error) => {
-        if (error?.code !== MetamaskErrors.UserRejected)
-          dispatch(addToast({
-              type: "danger",
-              title: t("actions.failed"),
-              content: t("deliverable:actions.cancel.error"),
-          }));
-      })
-      .finally(() => {
-        setIsCancelling(false);
-      });
+      .catch(error => console.debug("Failed to cancel", error.toString()));
   }
 
   return (
     <DeliverableBodyView
+      currentBounty={currentBounty}
       currentDeliverable={currentDeliverable}
       isCreatingReview={isCreatingReview}
+      showMakeReadyWarning={showMakeReadyWarning}
       handleShowModal={handleShowModal}
       handleCancel={handleCancel}
       handleMakeReady={handleMakeReady}
@@ -151,7 +102,7 @@ export default function DeliverableBody({
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
       currentUser={state.currentUser}
-      bountyId={currentBounty?.id}
+      isCouncil={isCouncil}
     />
   );
 }
