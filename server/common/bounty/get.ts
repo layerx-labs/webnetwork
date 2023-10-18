@@ -11,7 +11,12 @@ import {chainFromHeader} from "helpers/chain-from-header";
 import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
 export async function get(req: NextApiRequest): Promise<Issue> {
-  const { ids: [id, networkName, chainName], chainId } = req.query;
+  const { ids, chainId } = req.query;
+
+  if (!ids?.length)
+    throw new HttpBadRequestError("Missing params");
+
+  const [id, networkName, chainName] = ids;
 
   let network_id: number;
 
