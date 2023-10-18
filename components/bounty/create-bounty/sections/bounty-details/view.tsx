@@ -17,7 +17,7 @@ import ReactSelect from "components/react-select";
 
 import { OriginLinkErrors } from "interfaces/enums/Errors";
 
-import { SelectOption } from "types/utils";
+import { GroupedSelectOption, SelectOption } from "types/utils";
 
 interface BountyDetailsSectionViewProps {
   title: string;
@@ -25,7 +25,7 @@ interface BountyDetailsSectionViewProps {
   files: IFilesProps[];
   bodyLength: number;
   tags: SelectOption[];
-  tagsOptions: SelectOption[];
+  tagsOptions: GroupedSelectOption[];
   titleExceedsLimit: boolean;
   isKycEnabled: boolean;
   kycCheck: boolean;
@@ -34,6 +34,7 @@ interface BountyDetailsSectionViewProps {
   originLink: string;
   deliverableType: string;
   originLinkError: OriginLinkErrors;
+  originLinkPlaceHolder: string;
   onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
   onDescriptionchange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   onFilesChange: (files: IFilesProps[]) => void;
@@ -59,6 +60,7 @@ export default function BountyDetailsSectionView({
   kycOptions,
   deliverableTypeOptions,
   originLink,
+  originLinkPlaceHolder,
   deliverableType,
   originLinkError,
   onTitlechange,
@@ -216,7 +218,7 @@ export default function BountyDetailsSectionView({
                 type="text"
                 name="origin-link"
                 id="origin-link"
-                placeholder={t("fields.origin-link.placeholder")}
+                placeholder={originLinkPlaceHolder}
                 className={`form-control ${originLinkError ? "is-invalid" : ""}`}
                 value={originLink}
                 onChange={onOriginLinkchange}

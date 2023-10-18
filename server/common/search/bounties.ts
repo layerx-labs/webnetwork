@@ -176,7 +176,7 @@ export default async function get(query: ParsedUrlQuery) {
 
     sort.push(...columns);
   } else
-    sort.push("updatedAt");
+    sort.push("createdAt");
 
   const useSubQuery = isMergeableState || isDisputableState ? false : undefined;
 
@@ -196,8 +196,9 @@ export default async function get(query: ParsedUrlQuery) {
   const totalBounties = await models.issue.count({
     where: {
       state: {
-        [Op.notIn]: ["pending", "canceled"]
-      }
+        [Op.notIn]: ["pending", "canceled"],
+      },
+      visible: true,
     }
   });
 

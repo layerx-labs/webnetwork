@@ -124,6 +124,7 @@ export default function ProposalPageView({
               proposalId: proposal?.id,
             }}
             currentUser={userData}
+            disableCreateComment={issue?.isClosed}
           />
         </div>
       </CustomContainer>

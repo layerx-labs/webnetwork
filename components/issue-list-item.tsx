@@ -324,8 +324,8 @@ export default function IssueListItem({
           <ResponsiveWrapper xs={true} md={false} className="col-auto d-flex justify-content-center">
             <MoreActionsDropdown
               actions={[
-                { content: "Bounty Link", onClick: handleClickCard},
-                { content: isVisible ? "Hide Bounty" : "Show Bounty", onClick: handleUpdateVisibility},
+                { content: "Task Link", onClick: handleClickCard},
+                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleUpdateVisibility},
                 { content: "Cancel", onClick: () => setShowHardCancelModal(true)},
               ]}
             />

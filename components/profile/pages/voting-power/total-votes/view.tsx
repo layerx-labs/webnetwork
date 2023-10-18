@@ -40,7 +40,7 @@ export default function TotalVotes({
           infoTooltip={t("profile:tips.total-oracles", {
             tokenName: tokenName,
           })}
-          total={votesLocked?.plus(votesDelegatedToMe).toFixed()} 
+          total={votesLocked?.plus(votesDelegatedToMe)?.toFixed()} 
           votesSymbol={votesSymbol} 
           variant={variant} 
           tokenColor={tokenColor}        

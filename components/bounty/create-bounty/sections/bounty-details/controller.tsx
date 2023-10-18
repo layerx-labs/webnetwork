@@ -2,16 +2,16 @@ import { useEffect, useState, ChangeEvent } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import { PROGRAMMING_LANGUAGES } from "assets/bounty-labels";
-
 import BountyDetailsSectionView from "components/bounty/create-bounty/sections/bounty-details/view";
 
 import { useAppState } from "contexts/app-state";
 
 import {
+  BOUNTY_TAGS,
   BOUNTY_TITLE_LIMIT,
   MAX_TAGS,
 } from "helpers/constants";
+import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 
 import { BountyDetailsSectionProps } from "interfaces/create-bounty";
 
@@ -45,9 +45,12 @@ export default function BountyDetailsSection({
     state: { Settings },
   } = useAppState();
 
-  const TAGS_OPTIONS = PROGRAMMING_LANGUAGES.map(({ tag }) => ({
-    label: tag,
-    value: tag,
+  const TAGS_OPTIONS = BOUNTY_TAGS.map(({ type, tags }) => ({
+    label: type,
+    options: tags.map((tag) => ({
+      label: tag,
+      value: tag,
+    }))
   }));
 
   const kycTierOptions = Settings?.kyc?.tierList?.map((i) => ({
@@ -130,6 +133,7 @@ export default function BountyDetailsSection({
       deliverableType={deliverableType}
       originLink={originLink}
       originLinkError={originLinkError}
+      originLinkPlaceHolder={getOriginLinkPlaceholder(t, deliverableType)}
       onTitlechange={handleChangeTitle}
       onDescriptionchange={handleChangeDescription}
       onFilesChange={updateFiles}

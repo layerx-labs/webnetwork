@@ -615,7 +615,7 @@ export default function CreateBountyPage({
       updateRewardAmount={setRewardAmount} 
       updateIsFundingType={setIsFundingType}
       payload={{
-        network: currentNetwork?.name,
+        marketplace: currentNetwork?.name,
         title: bountyTitle,
         description: addFilesInDescription(bountyDescription),
         tags: selectedTags && selectedTags,
