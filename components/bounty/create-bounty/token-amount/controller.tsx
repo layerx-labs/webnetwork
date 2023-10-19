@@ -9,6 +9,7 @@ import {useDebouncedCallback} from "use-debounce";
 import {useAppState} from "contexts/app-state";
 
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
+import { CHAIN_DEFAULT_DECIMALS } from "helpers/constants";
 
 import {DistributionsProps} from "interfaces/proposal";
 import {Token} from "interfaces/token";
