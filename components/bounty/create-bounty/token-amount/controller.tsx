@@ -119,7 +119,6 @@ export default function CreateBountyTokenAmount({
     }
 
     const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
 
     const amountOfType =
       BigNumber(type === "reward"
