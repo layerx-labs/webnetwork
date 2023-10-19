@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {NumberFormatValues} from "react-number-format";
 
-import { Defaults } from "@taikai/dappkit";
+import {Defaults} from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 import {useDebouncedCallback} from "use-debounce";
