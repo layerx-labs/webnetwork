@@ -268,19 +268,16 @@ function NewNetwork() {
 
       <If condition={hasNetwork}>
         <div className="d-flex flex-col align-items-center justify-content-center mb-3">
-          <ContextualSpan context="info" children={t("modals.already-has-network.content")} className="text-center"/>
-        </div>
-        <div className="d-flex justify-content-center">
-          <ChainSelector />
+          <ContextualSpan context="info" children={t("modals.already-has-network.content")} />
         </div>
       </If>
 
       <Stepper dark={isSetupPage} disableActiveStep={hasNetwork}>
         <LockBeproStep validated={tokensLocked?.validated} />
 
-          <NetworkInformationStep validated={details?.validated} />
+        <NetworkInformationStep validated={details?.validated} />
 
-          <NetworkSettingsStep validated={settings?.validated} />
+        <NetworkSettingsStep validated={settings?.validated} />
 
         <TokenConfiguration
           validated={isSettingsValidated}
