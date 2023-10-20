@@ -270,14 +270,17 @@ function NewNetwork() {
         <div className="d-flex flex-col align-items-center justify-content-center mb-3">
           <ContextualSpan context="info" children={t("modals.already-has-network.content")} />
         </div>
+        <div className="d-flex justify-content-center">
+          <ChainSelector />
+        </div>
       </If>
 
       <Stepper dark={isSetupPage} disableActiveStep={hasNetwork}>
         <LockBeproStep validated={tokensLocked?.validated} />
 
-        <NetworkInformationStep validated={details?.validated} />
+          <NetworkInformationStep validated={details?.validated} />
 
-        <NetworkSettingsStep validated={settings?.validated} />
+          <NetworkSettingsStep validated={settings?.validated} />
 
         <TokenConfiguration
           validated={isSettingsValidated}
