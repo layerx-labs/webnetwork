@@ -17,6 +17,7 @@ import { Token } from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/network";
+import useUpdateCouncilAmountChange from "x-hooks/api/network/management/update/council/use-update-council-change";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -225,6 +226,14 @@ export default function NetworkGovernanceSettings({
           updated: successQuantity,
           total: promises.length,
       })));
+
+      if (success["councilAmount"]) {
+        useUpdateCouncilAmountChange({ networkId: network.id })
+          .then(() =>
+            dispatch(toastSuccess(t("custom-network:messages.updated-council-change"))))
+          .catch(() =>
+            toastError(t("custom-network:errors.failed-to-updated-council-change")));
+      }
     }
 
     const hasChangedTokens = !!getChangedTokens().length;
