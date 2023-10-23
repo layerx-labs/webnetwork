@@ -39,7 +39,6 @@
   "descriptions": {
     "select-network": "Select the network and marketplace you want to create your task",
     "details": "Enter the necessary information to understand your task",
-    "github": "Inform the repository and the branch where the solution will be made",
     "reward": "When creating a new task, you have two options regarding the reward:",
     "reward-1": "Self-fund: You use your own money to create the task. This means you will be responsible for providing the reward money that will be given to the person who successfully completes the task.",
     "reward-2": "Seek funding: You can seek funding for the task. This means you can look for other individuals who are willing to contribute to the reward money.",
