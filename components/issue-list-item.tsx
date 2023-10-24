@@ -62,7 +62,7 @@ export default function IssueListItem({
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
   
   const { getURLWithNetwork } = useNetwork();
-  const { handleHardCancelBounty, getCancelableTime } = useBepro();
+  const { handleHardCancelBounty } = useBepro();
   const { mutate: updateVisibility } = useReactQueryMutation({
     mutationFn: useUpdateBountyVisibility,
     toastSuccess: t("bounty:actions.update-bounty"),
@@ -132,7 +132,7 @@ export default function IssueListItem({
   useEffect(() => {
     if (state.Service?.active && issue && variant === "management")
       Promise.all([
-        getCancelableTime(),
+        state.Service?.active.getCancelableTime(),
         state.Service?.active.getTimeChain()
       ])
         .then(([cancelableTime, chainTime]) => {

@@ -27,7 +27,7 @@ export default function BountySettings({
 
   const { state, dispatch } = useAppState();
   const { updateWalletBalance } = useAuthentication();
-  const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
+  const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
   const isGovernor = state.Service?.network?.active?.isGovernor;
   const objViewProps = {
@@ -77,7 +77,7 @@ export default function BountySettings({
   useEffect(() => {
     if (state.Service?.active && currentBounty)
       (async () => {
-        const cancelableTime = await getCancelableTime();
+        const cancelableTime = await state.Service?.active.getCancelableTime();
         const canceable =
           +new Date() >=
           +new Date(+currentBounty.createdAt + cancelableTime);
