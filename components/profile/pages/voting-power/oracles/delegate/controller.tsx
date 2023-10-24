@@ -12,7 +12,6 @@ import { TransactionTypes } from "interfaces/enums/transaction-types";
 import { OraclesDelegateProps } from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import useBepro from "x-hooks/use-bepro";
 
 import OraclesDelegateView from "./view";
 
@@ -35,7 +34,6 @@ export default function OraclesDelegate({
   const {
     state: { transactions, Service },
   } = useAppState();
-  const { isAddress } = useBepro();
 
   const networkTokenDecimals =
     Service?.network?.active?.networkToken?.decimals || 18;
@@ -63,7 +61,7 @@ export default function OraclesDelegate({
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {
-        const isValid = isAddress(params.target.value);
+        const isValid = Service.active.isAddress(params.target.value);
         if (!isValid) setAddressError(t("my-oracles:errors.invalid-wallet"));
       }, 500);
     }
