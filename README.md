@@ -53,7 +53,6 @@ _`* These steps are mandatory`_
 - `*` [MetaMask Setup](./docs/METAMASK.md)
 - [Ganache](./docs/GANACHE.md)
 - `*` [Authentication Setup](./docs/AUTHENTICATION.md)
-- `*` [Github Gateway](./docs/GITHUB-GATEWAY.md)
 - `*` [IPFS/Infura Host](./docs/IPFS.md)
 - `*` [Past Events MicroService](https://github.com/taikai/webnetwork-events)
 - `*` [Deploy Smart Contract](./docs/DEPLOY-SMART-CONTRACT.md)
