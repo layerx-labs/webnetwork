@@ -14,6 +14,7 @@
     "funded": "Funded",
     "working": "Users working",
     "deliverable": "Deliverable",
+    "deliverables_one": "Deliverable",
     "deliverables_other": "Deliverables",
     "proposals_one": "proposal",
     "proposals_other": "proposals",
@@ -137,7 +138,7 @@
       "max": "Use max"
     },
     "conversion-token": {
-      "not-found": "Can't convert because not found"
+      "not-found": "Error when trying to search Coingecko"
     },
     "deliverable-types": {
       "label": "Deliverable Types",
@@ -174,7 +175,7 @@
   "in-bounties": "in Tasks",
   "distributed": "distributed",
   "title-bounties": "Task Hall",
-  "sub-title-bounties": "A collection of the most recent tasks and MVP Marketplaces on our ecosystem",
+  "sub-title-bounties": "A collection of the most recent tasks and Marketplaces on our ecosystem",
   "most-active-networks": "Most Active Marketplaces",
   "recent-bounties": "Recent Tasks",
   "recent-funding": "Recent Funding requests",
@@ -242,5 +243,16 @@
   },
   "allow-list": {
     "not-allowed": "Task creation is not allowed with this address"
-  }
+  },
+  "review-section": {
+    "marketplace": "Marketplace",
+    "title": "Title",
+    "description": "Description",
+    "tags": "Tags",
+    "originLink": "Origin Link",
+    "deliverableType": "Deliverable Type",
+    "totalAmount": "Total Amount",
+    "fundersReward": "Funders Reward"
+  },
+  "approximated-values-warning": "Defining the Reward amount will result in approximate values in the contract. If you want exact values, set the Total Amount first."
 }

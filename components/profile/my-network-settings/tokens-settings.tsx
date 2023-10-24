@@ -118,7 +118,7 @@ export default function TokensSettings({
   useEffect(() => {
     if (!state.Service?.active || !state.connectedChain?.id || !dbTokens) return;
     getAllowedTokensContract();
-  }, [state.Service?.active, state.connectedChain?.id, isGovernorRegistry]);
+  }, [state.Service?.active, state.connectedChain?.id, isGovernorRegistry, dbTokens]);
 
   useEffect(() => {
     if (defaultSelectedTokens?.length > 0) {
