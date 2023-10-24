@@ -18,7 +18,6 @@ import { getCoinInfoByContract } from "services/coingecko";
 import DAO from "services/dao-service";
 
 import { useGetTokens } from "x-hooks/api/token";
-import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
 
 import WalletBalanceView from "./view";
@@ -38,7 +37,6 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
-  const { getERC20TokenData } = useBepro();
 
   const getAddress = (token: string | Token) =>
     typeof token === "string" ? token : token?.address;
@@ -46,7 +44,7 @@ export default function WalletBalance({
   async function processToken(token: string | Token, service: DAO) {
     const [tokenData, balance] = await Promise.all([
       typeof token === "string"
-        ? getERC20TokenData(token)
+        ? state.Service?.active?.getERC20TokenData(token)
         : token,
       service.getTokenBalance(getAddress(token),
                               state?.currentUser?.walletAddress),
