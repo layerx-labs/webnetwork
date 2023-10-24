@@ -44,7 +44,7 @@ export default function WalletBalance({
   async function processToken(token: string | Token, service: DAO) {
     const [tokenData, balance] = await Promise.all([
       typeof token === "string"
-        ? state.Service?.active?.getERC20TokenData(token)
+        ? service.getERC20TokenData(token)
         : token,
       service.getTokenBalance(getAddress(token),
                               state?.currentUser?.walletAddress),
