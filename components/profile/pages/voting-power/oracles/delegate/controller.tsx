@@ -63,8 +63,7 @@ export default function OraclesDelegate({
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {
-        const isValid = isAddress(params.target.value);
-        if (!isValid) setAddressError(t("my-oracles:errors.invalid-wallet"));
+        if (!isAddress(params.target.value)) setAddressError(t("my-oracles:errors.invalid-wallet"));
       }, 500);
     }
   }
