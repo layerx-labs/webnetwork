@@ -661,10 +661,6 @@ export default function useBepro() {
     return state.Service?.active.isAddress(address)
   }
 
-  function getCancelableTime(): Promise<number> {
-    return state.Service?.active.getCancelableTime()
-  }
-
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -693,7 +689,6 @@ export default function useBepro() {
     handleFeeNetworkCreation,
     handleAmountNetworkCreation,
     getERC20TokenData,
-    getCancelableTime,
     isAddress
   };
 }
