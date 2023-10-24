@@ -9,6 +9,8 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { networkId } = req.query;
 
+    if(!networkId) return res.status(400).json({ message: 'Error bad parameters' }) 
+
     const network = await models.network.findOne({
       where: {
         id: +networkId,
