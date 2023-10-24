@@ -69,6 +69,7 @@
     "open-bounties": "Open tasks"
   },
   "steps": {
+    "create-marketplace": "Create Marketplace",
     "lock": {
       "title": "Lock {{currency}}",
       "you-need-to-lock": "To create a marketplace you will need to lock {{creatorAmount}} {{currency}}",
