@@ -14,7 +14,6 @@
   },
   "filters": {
     "filters": "Filter",
-    "search-repositories": "Search repositories",
     "all": "All",
     "no-records-found": "No records found",
     "clear-filter": "Clear filter",

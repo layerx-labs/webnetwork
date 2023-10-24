@@ -161,10 +161,6 @@
   },
   "reward-funders": "Set Funders Reward",
   "reward-funders-description": "Reward anyone who funds this task.",
-  "review": {
-    "repository": "Repository",
-    "branch": "Branch"
-  },
   "create-bounty": "Create Task", 
   "create-funding": "Create Funding Request", 
   "not-found-funding": "Funding requests make the community itself fund ideas they would like for their applications",
