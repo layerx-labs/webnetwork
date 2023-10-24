@@ -5,7 +5,7 @@
 <h3 align="center">
   A tool to attach in Git Protocol Centralized SDKs to create incentives for developers to decentralize development in a liquid and scalable manner.
   <br>
-  Learn more <a href="https://bepronetwork.medium.com/what-is-bepro-network-6ec4054d2020">about</a>.
+  Learn more <a href="https://bepro.network/">about</a>.
 </h3>
 
 <p align="center">
