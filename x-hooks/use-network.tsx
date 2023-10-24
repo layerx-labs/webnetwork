@@ -8,8 +8,6 @@ import {changeMatchWithNetworkChain} from "contexts/reducers/change-chain";
 import {
   changeActiveAvailableChains,
   changeActiveNetwork,
-  changeActiveNetworkAmounts,
-  changeActiveNetworkTimes,
   changeNetworkLastVisited
 } from "contexts/reducers/change-service";
 
@@ -154,57 +152,6 @@ export function useNetwork() {
     }, `/${path}`);
   }
 
-  function loadNetworkTimes() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    const network = state.Service.active?.network;
-
-    Promise.all([network.draftTime(), network.disputableTime()])
-      .then(([draftTime, disputableTime]) => {
-        dispatch(changeActiveNetworkTimes({
-          draftTime: +draftTime / 1000,
-          disputableTime: +disputableTime / 1000
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkTimes", error));
-  }
-
-  function loadNetworkAmounts() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    const network = state.Service.active?.network;
-
-    Promise.all([
-        network.councilAmount(),
-        network.mergeCreatorFeeShare(),
-        network.proposerFeeShare(),
-        network.percentageNeededForDispute(),
-        network.oracleExchangeRate(),
-        network.treasuryInfo(),
-        network.totalNetworkToken()
-    ])
-      .then(([councilAmount,
-              mergeCreatorFeeShare,
-              proposerFeeShare,
-              percentageNeededForDispute,
-              oracleExchangeRate,
-              treasury,
-              totalNetworkToken]) => {
-        dispatch(changeActiveNetworkAmounts({
-          councilAmount: councilAmount.toString(),
-          oracleExchangeRate: +oracleExchangeRate,
-          mergeCreatorFeeShare: +mergeCreatorFeeShare,
-          proposerFeeShare: +proposerFeeShare,
-          percentageNeededForDispute: +percentageNeededForDispute,
-          treasury,
-          totalNetworkToken
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkAmounts", error));
-  }
-
   function updateNetworkAndChainMatch() {
     const connectedChainId = state.connectedChain?.id;
     const networkChainId = state?.Service?.network?.active?.chain_id;
@@ -224,8 +171,6 @@ export function useNetwork() {
     updateActiveNetwork,
     getURLWithNetwork,
     clearNetworkFromStorage,
-    loadNetworkTimes,
-    loadNetworkAmounts,
     goToProfilePage,
     updateNetworkAndChainMatch
   }
