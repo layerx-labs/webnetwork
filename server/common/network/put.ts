@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import Database from "db/models";
 
 import { chainFromHeader } from "helpers/chain-from-header";
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { handleRemoveTokens, handlefindOrCreateTokens } from "helpers/handleNetworkTokens";
 
 import DAO from "services/dao-service";
@@ -31,11 +32,9 @@ export async function put(req: NextApiRequest) {
   const network = await Database.network.findOne({
     where: {
       ...(isAdminOverriding ? {} : {
-        creatorAddress: {[Op.iLike]: creator}
+        creatorAddress: caseInsensitiveEqual("creatorAddress", creator.toString())
       }),
-      networkAddress: {
-        [Op.iLike]: networkAddress
-      },
+      networkAddress: caseInsensitiveEqual("networkAddress", networkAddress.toString()),
       chain_id: chain.chainId
     },
     include: [{ association: "repositories" }]
