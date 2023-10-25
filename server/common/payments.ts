@@ -77,9 +77,7 @@ export default async function get(query: ParsedUrlQuery) {
       },
     ],
     where: {
-      address: {
-        [Op.iLike]: wallet
-      },
+      address: caseInsensitiveEqual("address", wallet.toString()),
       transactionHash: {
         [Op.not]: null
       },
