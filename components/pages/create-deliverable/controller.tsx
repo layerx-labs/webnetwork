@@ -57,8 +57,8 @@ export default function CreateDeliverablePage() {
       issueId: +currentBounty?.id,
     }),
     onSuccess: ({ bountyId, originCID, cid }) => {
-      setCreatedDeliverableId(cid);
       createOnChain(bountyId, originCID, cid)
+        .then(() => setCreatedDeliverableId(cid))
         .catch(() => {
           setCreatedDeliverableId(undefined);
           DeletePreDeliverable(cid);
