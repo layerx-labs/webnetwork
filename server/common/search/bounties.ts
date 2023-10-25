@@ -112,7 +112,12 @@ export default async function get(query: ParsedUrlQuery) {
                     !!proposer || !!proposalId || isMergeableState || isDisputableState, 
                     {
                       contractId: { [Op.not]: null },
-                      ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
+                      ...(proposer
+                        ? {
+                            creator: caseInsensitiveEqual("mergeProposals.creator",
+                                                          proposer.toString()),
+                        }
+                        : {}),
                       ... proposalId ? { id: proposalId } : {},
                       ... isMergeableState || isDisputableState ? {
                         [Op.and]: [
@@ -136,7 +141,7 @@ export default async function get(query: ParsedUrlQuery) {
                     false, 
                     { prContractId: { [Op.not]: null } },
                     [getAssociation("user", undefined, !!deliverabler, deliverabler ? {
-                      address: { [Op.iLike]: deliverabler?.toString() }
+                      address: caseInsensitiveEqual("user.address", deliverabler.toString())
                     }: {})]);
 
   const networkAssociation = 
@@ -156,15 +161,20 @@ export default async function get(query: ParsedUrlQuery) {
                       networkName: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", ["chainId", "chainShortName", "color"], true, chain ? {
-                      chainShortName: { [Op.iLike]: chain.toString()}
+                      chainShortName: caseInsensitiveEqual("chain.chainShortName",chain.toString())
                     } : {})]);
 
-  const transactionalTokenAssociation = 
-    getAssociation( "transactionalToken", 
-                    ["address", "name", "symbol"], 
-                    !!transactionalTokenAddress, 
-                    transactionalTokenAddress ? { address: { [Op.iLike]: transactionalTokenAddress.toString() } } : {});
+  const transactionalTokenAssociation = getAssociation("transactionalToken",
+                      ["address", "name", "symbol"],
+                                                       !!transactionalTokenAddress,
+                                                       transactionalTokenAddress
+                        ? {
+                            address: caseInsensitiveEqual("transactionalToken.address",
+                                                          transactionalTokenAddress.toString()),
+                        }
+                        : {});
 
+                    
   const userAssociation = getAssociation("user", undefined, !!creator, creator ? {
     address: caseInsensitiveEqual("user.address", creator.toString())
   } : {});
