@@ -143,7 +143,7 @@ export default async function get(query: ParsedUrlQuery) {
   const deliverableAssociation = 
     getAssociation( "deliverables", 
                     undefined, 
-                    !!deliverabler, 
+                    !!deliverabler,
                     { prContractId: { [Op.not]: null } },
                     [getAssociation("user", undefined, !!deliverabler, deliverabler ? {
                       address: caseInsensitiveEqual("address", deliverabler.toString())
@@ -160,9 +160,9 @@ export default async function get(query: ParsedUrlQuery) {
                       "fullLogo",
                       "mergeCreatorFeeShare",
                       "proposerFeeShare"
-                    ], 
+                    ],
                     true, 
-                    networkName === 'all' ? {} : (networkName || network) ? { 
+                    networkName === 'all' ? {} : (networkName || network) ? {
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", 
@@ -230,8 +230,8 @@ export default async function get(query: ParsedUrlQuery) {
         ...result,
         rows
       }
-    }); 
-  
+    });
+
   const actions = {
       deliverabler: async () => {
         return models.deliverable.count({
@@ -242,8 +242,8 @@ export default async function get(query: ParsedUrlQuery) {
               address: caseInsensitiveEqual("address", deliverabler.toString())
             }: {}),
             getAssociation("issue", undefined, true, {}, [
-              getAssociation("network", undefined, true, networkName === 'all' ? {} : networkName || network ? 
-              { 
+              getAssociation("network", undefined, true, networkName === 'all' ? {} : networkName || network ?
+              {
                 name: caseInsensitiveEqual("name", (networkName || network).toString())
               } : {}, [])])
           ]
