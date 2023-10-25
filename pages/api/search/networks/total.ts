@@ -3,6 +3,8 @@ import {Op, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
+
 import { withCORS } from "middleware";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
@@ -11,7 +13,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const { creatorAddress, name, isClosed, isRegistered } = req.query || {};
 
   if (creatorAddress)
-    whereCondition.creatorAddress = { [Op.iLike]: String(creatorAddress) };
+    whereCondition.creatorAddress = caseInsensitiveEqual("creatorAddress", creatorAddress?.toString());
   
   if (isClosed)
     whereCondition.isClosed = isClosed;
