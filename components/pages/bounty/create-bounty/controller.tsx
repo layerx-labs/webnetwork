@@ -15,6 +15,7 @@ import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { formatStringToCurrency } from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -25,6 +26,7 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
+import { DistributionsProps } from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
@@ -58,6 +60,7 @@ export default function CreateBountyPage({
   networks: allNetworks
 }: CreateBountyPageProps) {
   const { query } = useRouter();
+  const session = useSession();
   const { t } = useTranslation(["common", "bounty"]);
 
   const [files, setFiles] = useState<IFilesProps[]>([]);
@@ -85,7 +88,8 @@ export default function CreateBountyPage({
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [userCanCreateBounties, setUserCanCreateBounties] = useState<boolean>(true);
   const [showCannotCreateBountyModal, setShowCannotCreateBountyModal] = useState<boolean>(true);
-  const session = useSession();
+  const [previewAmount, setPreviewAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
+  const [distributions, setDistributions] = useState<DistributionsProps>();
 
 
   const rewardERC20 = useERC20();
@@ -250,12 +254,12 @@ export default function CreateBountyPage({
     setIsLoadingApprove(true);
 
     let tokenAddress = transactionalToken.address;
-    let bountyValue = issueAmount.value;
+    let bountyValue = issueAmount.formattedValue;
     let tokenERC20 = transactionalERC20;
 
     if (rewardChecked && rewardToken?.address && rewardAmount.floatValue > 0) {
       tokenAddress = rewardToken.address;
-      bountyValue = rewardAmount.value;
+      bountyValue = rewardAmount.formattedValue;
       tokenERC20 = rewardERC20;
     }
 
@@ -293,7 +297,7 @@ export default function CreateBountyPage({
       const payload = {
         title: bountyTitle,
         body: addFilesInDescription(bountyDescription),
-        amount: issueAmount.value,
+        amount: issueAmount.formattedValue,
         creatorAddress: currentUser.walletAddress,
         githubUser: currentUser?.login,
         deliverableType,
@@ -338,14 +342,14 @@ export default function CreateBountyPage({
 
       if (isFundingType && !rewardChecked) {
         bountyPayload.tokenAmount = "0";
-        bountyPayload.fundingAmount = issueAmount.value;
+        bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
       if (isFundingType && rewardChecked) {
         bountyPayload.tokenAmount = "0";
-        bountyPayload.rewardAmount = rewardAmount.value;
+        bountyPayload.rewardAmount = rewardAmount.formattedValue;
         bountyPayload.rewardToken = rewardToken.address;
-        bountyPayload.fundingAmount = issueAmount.value;
+        bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
       const networkBounty = await Service?.active
@@ -469,10 +473,10 @@ export default function CreateBountyPage({
 
     if (!isFundingType)
       approved = isAmountApproved(transactionalERC20.allowance,
-                                  BigNumber(issueAmount.value));
+                                  BigNumber(issueAmount.formattedValue));
     else if (rewardChecked)
       approved = isAmountApproved(rewardERC20.allowance,
-                                  BigNumber(rewardAmount.value));
+                                  BigNumber(rewardAmount.formattedValue));
 
     setIsTokenApproved(approved);
   }, [
@@ -619,16 +623,20 @@ export default function CreateBountyPage({
         title: bountyTitle,
         description: addFilesInDescription(bountyDescription),
         tags: selectedTags && selectedTags,
-        origin_link: originLink,
-        deliverable_type: deliverableType,
-        reward: `${issueAmount.value} ${transactionalToken?.symbol}`,
-        funders_reward:
+        originLink: originLink,
+        deliverableType: deliverableType,
+        totalAmount: `${formatStringToCurrency(issueAmount.value)} ${transactionalToken?.symbol}`,
+        fundersReward:
           (rewardAmount.value && isFundingType) &&
-          `${rewardAmount.value} ${rewardToken?.symbol}`,
+          `${formatStringToCurrency(rewardAmount.value)} ${rewardToken?.symbol}`,
       }}
       allowCreateBounty={userCanCreateBounties}
       showCannotCreateBountyModal={showCannotCreateBountyModal}
       closeCannotCreateBountyModal={() => setShowCannotCreateBountyModal(false)}
+      previewAmount={previewAmount}
+      setPreviewAmount={setPreviewAmount}
+      distributions={distributions}
+      setDistributions={setDistributions}
     />
   );
 }

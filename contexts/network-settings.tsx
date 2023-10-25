@@ -459,8 +459,7 @@ export const NetworkSettingsProvider = ({ children }) => {
       cancelableTime: +cancelableTime / 1000,
       oracleExchangeRate: oracleExchangeRate,
       proposerFeeShare: proposerFeeShare,
-      mergeCreatorFeeShare: mergeCreatorFeeShare,
-      allowMerge: network?.allowMerge,
+      mergeCreatorFeeShare: mergeCreatorFeeShare
     }));
 
     setNetworkSettings(defaultState);

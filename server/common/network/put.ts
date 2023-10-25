@@ -37,8 +37,7 @@ export async function put(req: NextApiRequest) {
         [Op.iLike]: networkAddress
       },
       chain_id: chain.chainId
-    },
-    include: [{ association: "repositories" }]
+    }
   });
 
   if (!network)

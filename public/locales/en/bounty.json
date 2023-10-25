@@ -14,6 +14,7 @@
     "funded": "Funded",
     "working": "Users working",
     "deliverable": "Deliverable",
+    "deliverables_one": "Deliverable",
     "deliverables_other": "Deliverables",
     "proposals_one": "proposal",
     "proposals_other": "proposals",
@@ -38,7 +39,6 @@
   "descriptions": {
     "select-network": "Select the network and marketplace you want to create your task",
     "details": "Enter the necessary information to understand your task",
-    "github": "Inform the repository and the branch where the solution will be made",
     "reward": "When creating a new task, you have two options regarding the reward:",
     "reward-1": "Self-fund: You use your own money to create the task. This means you will be responsible for providing the reward money that will be given to the person who successfully completes the task.",
     "reward-2": "Seek funding: You can seek funding for the task. This means you can look for other individuals who are willing to contribute to the reward money.",
@@ -138,7 +138,7 @@
       "max": "Use max"
     },
     "conversion-token": {
-      "not-found": "Can't convert because not found"
+      "not-found": "Error when trying to search Coingecko"
     },
     "deliverable-types": {
       "label": "Deliverable Types",
@@ -162,10 +162,6 @@
   },
   "reward-funders": "Set Funders Reward",
   "reward-funders-description": "Reward anyone who funds this task.",
-  "review": {
-    "repository": "Repository",
-    "branch": "Branch"
-  },
   "create-bounty": "Create Task", 
   "create-funding": "Create Funding Request", 
   "not-found-funding": "Funding requests make the community itself fund ideas they would like for their applications",
@@ -175,7 +171,7 @@
   "in-bounties": "in Tasks",
   "distributed": "distributed",
   "title-bounties": "Task Hall",
-  "sub-title-bounties": "A collection of the most recent tasks and MVP Marketplaces on our ecosystem",
+  "sub-title-bounties": "A collection of the most recent tasks and Marketplaces on our ecosystem",
   "most-active-networks": "Most Active Marketplaces",
   "recent-bounties": "Recent Tasks",
   "recent-funding": "Recent Funding requests",
@@ -243,5 +239,16 @@
   },
   "allow-list": {
     "not-allowed": "Task creation is not allowed with this address"
-  }
+  },
+  "review-section": {
+    "marketplace": "Marketplace",
+    "title": "Title",
+    "description": "Description",
+    "tags": "Tags",
+    "originLink": "Origin Link",
+    "deliverableType": "Deliverable Type",
+    "totalAmount": "Total Amount",
+    "fundersReward": "Funders Reward"
+  },
+  "approximated-values-warning": "Defining the Reward amount will result in approximate values in the contract. If you want exact values, set the Total Amount first."
 }

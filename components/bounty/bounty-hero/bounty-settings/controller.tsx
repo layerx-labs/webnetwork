@@ -74,6 +74,16 @@ export default function BountySettings({
       });
   }
 
+  function checkRender() {
+    const { isBountyOwner, isBountyInDraft } = objViewProps
+
+    const isOwner = (isGovernor && isBountyOwner) ? true : isBountyOwner
+    const isHardCancel = (isCancelable && isGovernor)
+    const isOwnerCancel = (isBountyInDraft && isOwner)
+
+    return (isOwnerCancel || isHardCancel)
+  }
+
   useEffect(() => {
     if (state.Service?.active && currentBounty)
       (async () => {
@@ -85,18 +95,13 @@ export default function BountySettings({
       })();
   }, [state.Service?.active, currentBounty]);
 
-  if (
-    (!objViewProps.isBountyInDraft && !isGovernor) ||
-    (!isCancelable && isGovernor) ||
-    isEditIssue ||
-    (!objViewProps.isBountyOwner && !isGovernor)
-  )
+  if (!checkRender())
     return <></>;
 
   return (
     <BountySettingsView
       isCancelable={isCancelable}
-      network={state.Service?.network}
+      isGovernor={isGovernor}
       handleHardCancel={handleHardCancel}
       handleRedeem={handleRedeem}
       isEditIssue={isEditIssue}

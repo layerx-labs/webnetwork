@@ -1,8 +1,7 @@
-import { ProposalDetail } from "@taikai/dappkit";
-import { Defaults } from "@taikai/dappkit";
+import {Defaults, ProposalDetail} from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 
-import { DistributedAmounts, ProposalDistribution } from "interfaces/proposal";
+import {DistributedAmounts, ProposalDistribution} from "interfaces/proposal";
 
 const bigNumberPercentage = 
   (value1: BigNumber, value2: BigNumber) => value1.dividedBy(value2).multipliedBy(100).toFixed(2);
@@ -47,4 +46,38 @@ export default function calculateDistributedAmounts(treasury,
       }
     }),
   };
+}
+
+export function getDeveloperAmount( mergerFee: string | number,
+                                    proposerFee: string | number,
+                                    bountyAmount: BigNumber): string {
+  const distributedAmounts = calculateDistributedAmounts( { treasury: "0x123", closeFee: 10 },
+                                                          mergerFee, 
+                                                          proposerFee, 
+                                                          bountyAmount, 
+                                                          [{recipient: "0x00", percentage: 100}]);
+  return distributedAmounts?.proposals?.at(0)?.value;
+}
+
+export function calculateTotalAmountFromGivenReward(reward: number,
+                                                    networkFee: number,
+                                                    mergerFee: number,
+                                                    proposerFee: number) {
+  const _reward = BigNumber(reward);
+  const _networkFee = BigNumber(networkFee);
+  const _mergerFee = BigNumber(mergerFee);
+  const _proposerFee = BigNumber(proposerFee);
+  const _one = BigNumber(1);
+
+  return _reward.div(_one
+    .minus(_networkFee)
+    .minus(_one
+      .minus(_networkFee)
+      .times(_mergerFee))
+    .minus(_one
+      .minus(_networkFee)
+      .minus(_one
+        .minus(_networkFee)
+        .times(_mergerFee))
+      .times(_proposerFee)));
 }

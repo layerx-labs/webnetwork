@@ -48,7 +48,7 @@ export default function ChainSelector({
       return;
     }
 
-    const needsRedirect = ["bounty", "pull-request", "proposal"].includes(pathname.replace("/[network]/[chain]/", ""));
+    const needsRedirect = ["bounty", "deliverable", "proposal"].includes(pathname.replace("/[network]/[chain]/", ""));
     const newPath = needsRedirect ? "/" : pathname;
     const newAsPath = needsRedirect ? `/${query.network}/${chain.chainShortName}` :
       asPath.replace(query.chain.toString(), chain.chainShortName);

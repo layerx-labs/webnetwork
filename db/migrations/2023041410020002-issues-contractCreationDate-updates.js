@@ -5,7 +5,6 @@ const ChainModel = require("../models/chain.model");
 const NetworkModel = require("../models/network.model");
 const IssueModel = require("../models/issue.model");
 const TokenModel = require("../models/tokens.model");
-const RepositoryModel = require("../models/repositories.model");
 const MergeProposalModel = require("../models/mergeproposal");
 const CuratorsModel = require("../models/curator-model");
 const BenefactorModel = require("../models/benefactor.model");
@@ -24,7 +23,6 @@ async function up(queryInterface, Sequelize) {
     NetworkModel,
     IssueModel,
     CuratorsModel,
-    RepositoryModel,
     MergeProposalModel,
     TokenModel,
     BenefactorModel,

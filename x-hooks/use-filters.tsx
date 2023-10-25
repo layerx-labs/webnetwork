@@ -6,7 +6,7 @@ import {useAppState} from "contexts/app-state";
 
 import {IssueFilterBoxOption} from "interfaces/filters";
 
-type FiltersTypes = "time" | "repo" | "state";
+type FiltersTypes = "time" | "state";
 
 type FilterStateUpdater = (
   opts: IssueFilterBoxOption[],
@@ -26,7 +26,6 @@ export default function useFilters(): [
   const router = useRouter();
 
   const [timeFilters, setTimeFilters] = useState<IssueFilterBoxOption[]>([]);
-  const [repoFilters, setRepoFilters] = useState<IssueFilterBoxOption[]>([]);
   const [stateFilters, setStateFilters] = useState<IssueFilterBoxOption[]>([]);
 
   const {state} = useAppState();
@@ -41,13 +40,11 @@ export default function useFilters(): [
   function updateRouterQuery() {
     const state = getActiveFiltersOf(stateFilters);
     const time = getActiveFiltersOf(timeFilters);
-    const repoId = getActiveFiltersOf(repoFilters);
 
     const query = {
       ...router.query,
       ...(state !== "" ? { state } : { state: undefined }),
       ...(time !== "" ? { time } : { time: undefined }),
-      ...(repoId !== "" ? { repoId } : { repoId: undefined}),
       page: "1"
     };
 
@@ -82,7 +79,7 @@ export default function useFilters(): [
   function updateOpt(opts: IssueFilterBoxOption[],
                      opt: IssueFilterBoxOption,
                      checked: boolean,
-                     type: "time" | "repo" | "state",
+                     type: "time" | "state",
                      multi = false): void {
     const tmp: IssueFilterBoxOption[] = [...opts];
 
@@ -92,7 +89,6 @@ export default function useFilters(): [
 
     if (type === "time") setTimeFilters(tmp);
     else if (type === "state") setStateFilters(tmp);
-    else setRepoFilters(tmp);
 
     updateRouterQuery();
   }
@@ -106,7 +102,6 @@ export default function useFilters(): [
     }));
 
     const checker = {
-      repo: () => setRepoFilters(updateChecked(option, repoFilters)),
       time: () => setTimeFilters(updateChecked(option, timeFilters)),
       state: () => setStateFilters(updateChecked(option, stateFilters)),
     }
@@ -126,5 +121,5 @@ export default function useFilters(): [
     router.push({ pathname: router.pathname, query }, router.asPath, { shallow: false, scroll: false });
   }
 
-  return [[repoFilters, stateFilters, timeFilters], updateOpt, clearFilters, checkOption, updateRouterQuery];
+  return [[stateFilters, timeFilters], updateOpt, clearFilters, checkOption, updateRouterQuery];
 }

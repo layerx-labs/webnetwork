@@ -15,7 +15,7 @@ class Network extends Model {
           type: DataTypes.STRING,
           unique: "network_chain_unique"
         },
-        description: DataTypes.STRING,
+        description: DataTypes.TEXT,
         colors: DataTypes.JSON,
         networkAddress: {
           type: DataTypes.STRING,
@@ -91,10 +91,6 @@ class Network extends Model {
           type: DataTypes.FLOAT,
           allowNull: true
         },
-        allowMerge: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: true
-        },
         banned_domains: {
           type: DataTypes.ARRAY(DataTypes.STRING),
           defaultValue: []
@@ -120,11 +116,6 @@ class Network extends Model {
       sourceKey: "id",
       as: "openIssues"
     });
-    this.hasMany(models.repositories, {
-      foreignKey: "network_id",
-      sourceKey: "id"
-    });
-
     this.hasMany(models.mergeProposal, {
       foreignKey: "network_id",
       sourceKey: "id",

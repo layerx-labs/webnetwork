@@ -14,8 +14,6 @@
   },
   "filters": {
     "filters": "Filter",
-    "search-repositories": "Search repositories",
-    "repository": "Repository",
     "all": "All",
     "no-records-found": "No records found",
     "clear-filter": "Clear filter",
@@ -55,10 +53,6 @@
     "delegated-oracles": "Delegated bv{{token}}",
     "delegated-by-others": "Delegated by Other"
   },
-  "connect-states": {
-    "github": "",
-    "wallet": {}
-  },
   "main-nav": {
     "curators": "Curators",
     "leaderboard": "Leaderboard",
@@ -72,7 +66,9 @@
     "new-network": "New Marketplace",
     "my-network": "My Marketplace",
     "networks": "Marketplaces",
+    "marketplaces": "Marketplaces",
     "bounties": "Tasks",
+    "tasks": "Tasks",
     "nav-avatar": {
       "my-profile": "My profile",
       "profile": "Profile",
@@ -91,10 +87,7 @@
       "disconnect-wallet": "Disconnect"
     }
   },
-  "select-a-repository": "Select a repository",
-  "select-a-branch": "Select a branch",
   "select-a-network": "Select a marketplace",
-  "support-text-branch": "If you’re unsure of what branch to choose, ask",
   "the-community": "the community",
   "select-multiple": {
     "allowed-transactional-tokens": "Allowed Transactional tokens",
@@ -129,15 +122,12 @@
     "merge": "Merge",
     "done": "Done",
     "failed": "Failed",
-    "fork-repository": "Fork this Repository",
     "redeem": "Redeem",
-    "reply-on-github": "Reply on Github",
     "review": "Review",
     "view-proposal": "View Proposal",
     "view-deliverable": "View Deliverable",
     "make-a-review": "Make a Review",
     "success": "Success",
-    "view-on-github": "View on Github",
     "update": "Update",
     "take-back": "Take Back",
     "install": "Install",
@@ -155,7 +145,9 @@
     "clear-all": "Clear All",
     "apply": "Apply",
     "clear": "Clear",
-    "save": "Save"
+    "save": "Save",
+    "accept": "Accept",
+    "reload": "Reload"
   },
   "misc": {
     "by": "by",
@@ -167,11 +159,11 @@
     "created-at": "Created at",
     "description": "Description",
     "details": "Details",
-    "forks": "Forks",
     "title": "Title",
     "chain": "Network",
     "github": "Github",
     "metamask": "Metamask",
+    "options": "Options",
     "by-connecting": "By connecting, you accept",
     "terms-and-conditions": "Terms & Conditions",
     "privacy-policy": "Privacy Policy",
@@ -193,7 +185,6 @@
     "seconds": "seconds",
     "on": "on",
     "next-step": "Next Step",
-    "fork": "Fork",
     "organization": "Organization",
     "total": "Total",
     "clear": "Clear",
@@ -205,8 +196,6 @@
     "votes": "Votes",
     "changing": "Changing",
     "save-changes": "Save Changes",
-    "repository": "Repository",
-    "branch": "Branch",
     "opened-on": "Opened on",
     "owner": "Owner",
     "apply": "apply",
@@ -295,6 +284,10 @@
       "eth-not-available": "No ETH account available",
       "message": "It seems that you don't have a MetaMask account selected. If using MetaMask, please make sure that your wallet is unlocked and that you have at least one account in your accounts list."
     },
+    "missing-metamask": {
+      "title": "Metamask communication problem",
+      "description": "The application could not communicate properly with the Metamask extension, please disable other wallets that you might have"
+    },
     "wrong-network": {
       "please-connect": "Please, connect to a supported network",
       "connect-to-network-chain": "To interact with this marketplace, please connect to the network below",
@@ -351,9 +344,6 @@
       "description": {
         "label": "Description",
         "placeholder": "Type a description..."
-      },
-      "branch": {
-        "label": "Select a branch"
       }
     }
   },
@@ -363,7 +353,6 @@
   },
   "errors": {
     "approve-transaction": "Failed to approve transaction",
-    "creating-issue": "Failed to create github issue!",
     "failed-update-bounty": "Failed to update task!",
     "read-only-network": "This marketplace is closed. It is set to read-only mode.",
     "results-truncated": "Results Truncated",

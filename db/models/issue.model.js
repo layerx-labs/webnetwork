@@ -6,13 +6,6 @@ class Issue extends Model {
   static init(sequelize) {
     super.init({
       state: DataTypes.STRING,
-      creatorAddress: {
-        type: DataTypes.STRING,
-        get() {
-          return getValueToLowerCase(this, "creatorAddress");
-        }
-      },
-      creatorGithub: DataTypes.STRING,
       amount: DataTypes.STRING,
       fundingAmount: {
         type: DataTypes.STRING,
@@ -28,7 +21,6 @@ class Issue extends Model {
       },
       title: DataTypes.TEXT,
       body: DataTypes.TEXT,
-      branch: DataTypes.STRING,
       working: DataTypes.ARRAY(DataTypes.STRING),
       merged: DataTypes.STRING,
       seoImage: DataTypes.STRING,
@@ -146,11 +138,6 @@ class Issue extends Model {
       foreignKey: "issueId",
       sourceKey: "id",
       as: "payments"
-    });
-    this.belongsTo(models.repositories, {
-      foreignKey: "repository_id",
-      sourceKey: "id",
-      as: "repository"
     });
     this.belongsTo(models.network, {
       foreignKey: "network_id",
