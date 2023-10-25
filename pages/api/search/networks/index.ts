@@ -37,7 +37,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     whereCondition.creatorAddress = caseInsensitiveEqual("creatorAddress", creatorAddress?.toString());
 
   if (networkAddress)
-    whereCondition.networkAddress = caseInsensitiveEqual("creatorAddress", networkAddress?.toString());
+    whereCondition.networkAddress = caseInsensitiveEqual("networkAddress", networkAddress?.toString());
   
   if (isClosed)
     whereCondition.isClosed = isClosed;
