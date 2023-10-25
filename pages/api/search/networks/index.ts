@@ -4,6 +4,7 @@ import {Fn, Literal} from "sequelize/types/utils";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import {paginateArray} from "helpers/paginate";
 
 import { withCORS } from "middleware";
@@ -33,10 +34,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     };
 
   if (creatorAddress)
-    whereCondition.creatorAddress = { [Op.iLike]: String(creatorAddress) };
+    whereCondition.creatorAddress = caseInsensitiveEqual("creatorAddress", creatorAddress?.toString());
 
   if (networkAddress)
-    whereCondition.networkAddress = { [Op.iLike]: String(networkAddress) };
+    whereCondition.networkAddress = caseInsensitiveEqual("creatorAddress", networkAddress?.toString());
   
   if (isClosed)
     whereCondition.isClosed = isClosed;
