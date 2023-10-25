@@ -1,5 +1,6 @@
 "use strict";
 const { getValueToLowerCase } = require("../../helpers/db/getters");
+
 const { Model, DataTypes } = require("sequelize");
 
 class UserLockedRegistry extends Model {

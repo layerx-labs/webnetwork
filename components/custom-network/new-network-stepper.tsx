@@ -282,7 +282,7 @@ function NewNetwork() {
         <TokenConfiguration
           validated={isSettingsValidated}
           handleFinish={handleCreateNetwork}
-          finishLabel={t("custom-network:steps.repositories.submit-label")}
+          finishLabel={t("custom-network:steps.create-marketplace")}
         />
       </Stepper>
     </div>

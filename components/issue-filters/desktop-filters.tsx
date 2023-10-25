@@ -16,7 +16,7 @@ export default function IssueDesktopFilters({ onlyTimeFrame = false }) {
   const node = useRef();
   const [show, setShow] = useState(false);
   const [
-    [, stateOptions, timeOptions],
+    [stateOptions, timeOptions],
     updateOptions,
     clearFilters,
   ] = useFilters();

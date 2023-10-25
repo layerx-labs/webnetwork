@@ -1,5 +1,3 @@
-import { ReviewTypes } from "types/octokit";
-
 export interface RequestParams {
   networkName?: string;
   wallet?: string;
@@ -49,32 +47,8 @@ export interface SearchActiveNetworkParams {
   isRegistered?: boolean;
   name?: string;
 }
-
-export interface CreatePrePullRequestParams extends RequestParams {
-  repoId: string;
-  issueGithubID: string;
-  title: string;
-  description: string;
-  branch: string;
-}
-
-export interface CancelPrePullRequestParams extends RequestParams {
-  bountyId: string;
-  pullRequestId: string;
-  customNetworkName: string;
-  creator: string;
-}
-
 export interface StartWorkingParams extends RequestParams {
   id: string;
-}
-
-export interface CreateReviewParams extends RequestParams {
-  issueId: string;
-  pullRequestId: string;
-  githubLogin: string;
-  body: string;
-  event?: ReviewTypes;
 }
 
 export interface PatchUserParams extends RequestParams {

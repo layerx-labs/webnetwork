@@ -110,33 +110,6 @@ export interface Deliverable {
   updatedAt: Date;
   issue?: IssueData;
 }
-export interface PullRequest {
-  createdAt: Date;
-  githubId: string;
-  githubLogin: string;
-  id: number;
-  isMergeable: boolean;
-  issueId: number;
-  state: string;
-  userAddress: string;
-  merged: boolean;
-  updatedAt: Date;
-  issue?: IssueData;
-  comments?: IssueDataComment[];
-  status?: string;
-  reviewers?: string[];
-  contractId?: number;
-  userBranch?: string;
-  userRepo?: string;
-  network_id: number;
-  hash?: string;
-  approvals?: {
-    total: number;
-  };
-  isCanceled: boolean;
-  isReady: boolean;
-  isCancelable: boolean;
-}
 
 export interface IssueDataComment {
   id: number;
@@ -152,10 +125,6 @@ export interface IssueDataComment {
   updatedAt: Date;
   createdAt: Date;
   user: User;
-}
-
-export interface GithubUser {
-  login: string;
 }
 
 export interface fundingBenefactor {
