@@ -7,11 +7,11 @@ import {useAppState} from "contexts/app-state";
 import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
 import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service";
 import {changeChangingChain, changeConnecting} from "contexts/reducers/change-spinners";
-import {changeMissingMetamask} from "contexts/reducers/update-show-prop";
+import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import handleEthereumProvider from "helpers/handle-ethereum-provider";
-import {lowerCaseCompare} from "helpers/string";
+import { lowerCaseCompare } from "helpers/string";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 

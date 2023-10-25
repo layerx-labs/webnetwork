@@ -33,11 +33,13 @@ export default function PageIssue() {
 
   const { state } = useAppState();
 
-  const bountyId = query?.id?.toString();
-  const { data: bounty, invalidate: invalidateBounty } = 
-    useReactQuery(QueryKeys.bounty(bountyId), () => getBountyData(query));
+  const bountyId = query?.id;
+  const bountyQueryKey = ["bounty", bountyId?.toString()];
+
+  const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 
-    useReactQuery(QueryKeys.bountyComments(bountyId), () => getCommentsData({ issueId: bountyId, type: "issue" }));
+    useReactQuery(QueryKeys.bountyComments(bountyId?.toString()), () => 
+      getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
