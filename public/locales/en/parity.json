@@ -7,7 +7,6 @@
   "deploy-settler-token": "Deploy settler token",
   "change-redeem-time": "Change redeem time to 1min",
   "change-disputable-time": "Change disputable time to 1min",
-  "select-a-repository": "Select a repository to add it to the microservice list",
   "will=cost": "Will cost",
   "create-bounties": "Create Tasks",
   "list-bounties": "List Tasks",

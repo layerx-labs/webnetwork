@@ -5,7 +5,7 @@
 <h3 align="center">
   A tool to attach in Git Protocol Centralized SDKs to create incentives for developers to decentralize development in a liquid and scalable manner.
   <br>
-  Learn more <a href="https://bepronetwork.medium.com/what-is-bepro-network-6ec4054d2020">about</a>.
+  Learn more <a href="https://bepro.network/">about</a>.
 </h3>
 
 <p align="center">
@@ -53,7 +53,6 @@ _`* These steps are mandatory`_
 - `*` [MetaMask Setup](./docs/METAMASK.md)
 - [Ganache](./docs/GANACHE.md)
 - `*` [Authentication Setup](./docs/AUTHENTICATION.md)
-- `*` [Github Gateway](./docs/GITHUB-GATEWAY.md)
 - `*` [IPFS/Infura Host](./docs/IPFS.md)
 - `*` [Past Events MicroService](https://github.com/taikai/webnetwork-events)
 - `*` [Deploy Smart Contract](./docs/DEPLOY-SMART-CONTRACT.md)

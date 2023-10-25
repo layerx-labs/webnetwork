@@ -14,8 +14,6 @@
   },
   "filters": {
     "filters": "Filter",
-    "search-repositories": "Search repositories",
-    "repository": "Repository",
     "all": "All",
     "no-records-found": "No records found",
     "clear-filter": "Clear filter",
@@ -55,10 +53,6 @@
     "delegated-oracles": "Delegated bv{{token}}",
     "delegated-by-others": "Delegated by Other"
   },
-  "connect-states": {
-    "github": "",
-    "wallet": {}
-  },
   "main-nav": {
     "curators": "Curators",
     "leaderboard": "Leaderboard",
@@ -93,10 +87,7 @@
       "disconnect-wallet": "Disconnect"
     }
   },
-  "select-a-repository": "Select a repository",
-  "select-a-branch": "Select a branch",
   "select-a-network": "Select a marketplace",
-  "support-text-branch": "If you’re unsure of what branch to choose, ask",
   "the-community": "the community",
   "select-multiple": {
     "allowed-transactional-tokens": "Allowed Transactional tokens",
@@ -131,15 +122,12 @@
     "merge": "Merge",
     "done": "Done",
     "failed": "Failed",
-    "fork-repository": "Fork this Repository",
     "redeem": "Redeem",
-    "reply-on-github": "Reply on Github",
     "review": "Review",
     "view-proposal": "View Proposal",
     "view-deliverable": "View Deliverable",
     "make-a-review": "Make a Review",
     "success": "Success",
-    "view-on-github": "View on Github",
     "update": "Update",
     "take-back": "Take Back",
     "install": "Install",
@@ -171,7 +159,6 @@
     "created-at": "Created at",
     "description": "Description",
     "details": "Details",
-    "forks": "Forks",
     "title": "Title",
     "chain": "Network",
     "github": "Github",
@@ -198,7 +185,6 @@
     "seconds": "seconds",
     "on": "on",
     "next-step": "Next Step",
-    "fork": "Fork",
     "organization": "Organization",
     "total": "Total",
     "clear": "Clear",
@@ -210,8 +196,6 @@
     "votes": "Votes",
     "changing": "Changing",
     "save-changes": "Save Changes",
-    "repository": "Repository",
-    "branch": "Branch",
     "opened-on": "Opened on",
     "owner": "Owner",
     "apply": "apply",
@@ -360,9 +344,6 @@
       "description": {
         "label": "Description",
         "placeholder": "Type a description..."
-      },
-      "branch": {
-        "label": "Select a branch"
       }
     }
   },
@@ -372,7 +353,6 @@
   },
   "errors": {
     "approve-transaction": "Failed to approve transaction",
-    "creating-issue": "Failed to create github issue!",
     "failed-update-bounty": "Failed to update task!",
     "read-only-network": "This marketplace is closed. It is set to read-only mode.",
     "results-truncated": "Results Truncated",

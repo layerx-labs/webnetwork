@@ -194,7 +194,6 @@ export default async function get(query: ParsedUrlQuery) {
 
   const issues = await models.issue.findAndCountAll(paginate({
     subQuery: useSubQuery,
-    logging: console.log,
     where: whereCondition,
     include: [
       networkAssociation,

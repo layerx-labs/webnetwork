@@ -50,7 +50,6 @@ export interface Network {
   countIssues?: number;
   chain?: SupportedChainData;
   issues?: IssueData[];
-  allowMerge: boolean;
   banned_domains: string[];
 }
 
@@ -106,7 +105,6 @@ export interface NetworkSettings {
   cleanStorage?: () => void;
   tokensLocked?: TokensLocked;
   details?: {
-    allowMerge: boolean;
     name: Field<string>;
     description: string;
     iconLogo?: Field<Icon>;
