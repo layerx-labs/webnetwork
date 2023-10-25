@@ -3,6 +3,7 @@ import {Op, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { getAssociation } from "helpers/db/models";
 import { resJsonMessage } from "helpers/res-json-message";
 
@@ -38,9 +39,7 @@ async function getTotal(req: NextApiRequest, res: NextApiResponse) {
 
   const userAssociation = getAssociation("user", undefined, !!address, {
     where: {
-      address: {
-        [Op.iLike]: `%${address.toString()}%`
-      }
+      address: caseInsensitiveEqual("user.address", address.toString())
     }
   });
 
