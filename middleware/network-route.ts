@@ -3,6 +3,7 @@ import {Op} from "sequelize";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { isAdmin } from "helpers/is-admin";
 import { resJsonMessage } from "helpers/res-json-message";
 
@@ -21,12 +22,12 @@ export const NetworkRoute = (handler: NextApiHandler, methods: string[] = [ `PUT
       return handler(req, res);
 
     const headers = req.headers;
-    const wallet = (headers.wallet as string)?.toLowerCase();
+    const wallet = (headers.wallet as string);
     const chainId = (headers.chain as string);
 
     const network = await models.network.findOne({
       where: {
-        creatorAddress: {[Op.iLike]: wallet},
+        creatorAddress: caseInsensitiveEqual("creatorAddress", wallet),
         chain_id: chainId
       }
     });
