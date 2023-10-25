@@ -1,30 +1,43 @@
-import { NextApiRequest } from "next";
-import { Op, Sequelize } from "sequelize";
+import BigNumber from "bignumber.js";
+import {NextApiRequest} from "next";
+import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 import Issue from "db/models/issue.model";
 
-import { chainFromHeader } from "helpers/chain-from-header";
+import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
+import {chainFromHeader} from "helpers/chain-from-header";
 
-import { HttpBadRequestError, HttpNotFoundError } from "server/errors/http-errors";
+import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
 export async function get(req: NextApiRequest): Promise<Issue> {
   const { ids: [id, networkName, chainName], chainId } = req.query;
 
   let network_id: number;
 
+  if (isNaN(+id) || typeof networkName !== "string")
+    throw new HttpBadRequestError("wrong parameters values");
+
   const include = [
     { association: "developers" },
-    { association: "deliverables", where: { prContractId: { [Op.not]: null } }, required: false,
+    { 
+      association: "deliverables", 
+      where: { prContractId: { [Op.not]: null } }, 
+      required: false,
       include: [{ association: "user" }, { association: "comments"}]
     },
-    { association: "mergeProposals", include: [{ association: "distributions" }, { association: "disputes" }]  },
+    { 
+      association: "mergeProposals", 
+      where: { contractId: { [Op.not]: null } },
+      include: [{ association: "distributions" }, { association: "disputes" }],
+      required: false
+    },
     { association: "transactionalToken" },
     { association: "rewardToken" },
     { association: "benefactors" },
     { association: "disputes" },
     { association: "user" },
-    { association: "network", include: [{ association: "chain", attributes: [ "chainShortName" ] }] },
+    {  association: "network", include: [ { association: "chain", attributes: [ "chainShortName" ] } ] },
   ];
 
   const chainHeader = await chainFromHeader(req);
@@ -63,6 +76,10 @@ export async function get(req: NextApiRequest): Promise<Issue> {
 
   if (!issue)
     throw new HttpNotFoundError("Issue not found");
+
+  issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+                                                        issue.network.proposerFeeShare,
+                                                        BigNumber(issue?.amount));
 
   return issue;
 }

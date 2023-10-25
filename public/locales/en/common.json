@@ -72,7 +72,9 @@
     "new-network": "New Marketplace",
     "my-network": "My Marketplace",
     "networks": "Marketplaces",
+    "marketplaces": "Marketplaces",
     "bounties": "Tasks",
+    "tasks": "Tasks",
     "nav-avatar": {
       "my-profile": "My profile",
       "profile": "Profile",
@@ -155,7 +157,9 @@
     "clear-all": "Clear All",
     "apply": "Apply",
     "clear": "Clear",
-    "save": "Save"
+    "save": "Save",
+    "accept": "Accept",
+    "reload": "Reload"
   },
   "misc": {
     "by": "by",
@@ -172,6 +176,7 @@
     "chain": "Network",
     "github": "Github",
     "metamask": "Metamask",
+    "options": "Options",
     "by-connecting": "By connecting, you accept",
     "terms-and-conditions": "Terms & Conditions",
     "privacy-policy": "Privacy Policy",
@@ -294,6 +299,10 @@
       "title": "MetaMask not Detected",
       "eth-not-available": "No ETH account available",
       "message": "It seems that you don't have a MetaMask account selected. If using MetaMask, please make sure that your wallet is unlocked and that you have at least one account in your accounts list."
+    },
+    "missing-metamask": {
+      "title": "Metamask communication problem",
+      "description": "The application could not communicate properly with the Metamask extension, please disable other wallets that you might have"
     },
     "wrong-network": {
       "please-connect": "Please, connect to a supported network",
