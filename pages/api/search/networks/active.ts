@@ -5,6 +5,7 @@ import {isAddress} from "web3-utils";
 
 import models from "db/models";
 
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import {paginateArray} from "helpers/paginate";
 import {lowerCaseIncludes} from "helpers/string";
 
@@ -21,7 +22,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     throw new HttpBadRequestError("provided creator address is not an address")
 
   if (creatorAddress)
-    whereCondition.creatorAddress = { [Op.iLike]: String(creatorAddress) };
+    whereCondition.creatorAddress = caseInsensitiveEqual("creatorAddress", creatorAddress?.toString());
   
   if (isClosed)
     whereCondition.isClosed = isClosed === "true";
