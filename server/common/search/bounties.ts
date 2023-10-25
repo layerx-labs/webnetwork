@@ -1,9 +1,11 @@
+import BigNumber from "bignumber.js";
 import {subHours, subMonths, subWeeks, subYears} from "date-fns";
 import {ParsedUrlQuery} from "querystring";
 import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
 import {caseInsensitiveEqual} from "helpers/db/conditionals";
 import {getAssociation} from "helpers/db/models";
 import paginate, {calculateTotalPages} from "helpers/paginate";
@@ -109,6 +111,7 @@ export default async function get(query: ParsedUrlQuery) {
                     undefined, 
                     !!proposer || !!proposalId || isMergeableState || isDisputableState, 
                     {
+                      contractId: { [Op.not]: null },
                       ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
                       ... proposalId ? { id: proposalId } : {},
                       ... isMergeableState || isDisputableState ? {
@@ -131,14 +134,23 @@ export default async function get(query: ParsedUrlQuery) {
     getAssociation( "deliverables", 
                     undefined, 
                     false, 
-                    {},
+                    { prContractId: { [Op.not]: null } },
                     [getAssociation("user", undefined, !!deliverabler, deliverabler ? {
                       address: { [Op.iLike]: deliverabler?.toString() }
                     }: {})]);
 
   const networkAssociation = 
     getAssociation( "network", 
-                    ["colors", "name", "networkAddress", "disputableTime", "logoIcon", "fullLogo"], 
+                    [
+                      "colors",
+                      "name",
+                      "networkAddress",
+                      "disputableTime",
+                      "logoIcon",
+                      "fullLogo",
+                      "mergeCreatorFeeShare",
+                      "proposerFeeShare"
+                    ], 
                     true, 
                     networkName || network ? { 
                       networkName: caseInsensitiveEqual("network.name", (networkName || network).toString())
@@ -191,7 +203,20 @@ export default async function get(query: ParsedUrlQuery) {
       transactionalTokenAssociation,
       userAssociation,
     ]
-  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
+  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT))
+    .then(result => {
+      const rows = result.rows.map(issue => {
+        issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+                                                              issue.network.proposerFeeShare,
+                                                              BigNumber(issue?.amount));
+        return issue;
+      });
+
+      return {
+        ...result,
+        rows
+      }
+    });
 
   const totalBounties = await models.issue.count({
     where: {
