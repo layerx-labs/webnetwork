@@ -113,13 +113,13 @@ export async function post(req: NextApiRequest) {
   if(pullRequest.canceled || !pullRequest.ready)
     throw new HttpConflictError("Pull request canceled or not ready");
 
-  const [{treasury}, creatorFee, proposerFee] = await Promise.all([ 
+  const [treasuryInfo, creatorFee, proposerFee] = await Promise.all([ 
     DAOService?.getTreasury(),
     DAOService?.getMergeCreatorFee(),
     DAOService?.getProposerFee()
   ]);
 
-  const distributions = calculateDistributedAmounts(treasury,
+  const distributions = calculateDistributedAmounts(treasuryInfo,
                                                     creatorFee,
                                                     proposerFee,
                                                     BigNumber(networkBounty.tokenAmount),
