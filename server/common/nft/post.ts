@@ -7,6 +7,7 @@ import { Op } from "sequelize";
 import models from "db/models";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import { formatNumberToNScale } from "helpers/formatNumber";
 
 import DAO from "services/dao-service";
@@ -126,7 +127,7 @@ export async function post(req: NextApiRequest) {
                                                     networkProposal.details);
 
   const getNftParticipant = async (address, amounts) => {
-    const user = await models.user.findOne({ where: { address: { [Op.iLike]: String(address) } } });
+    const user = await models.user.findOne({ where: { address: caseInsensitiveEqual("address", address.toString()) } });
 
     return NftParticipant(user?.githubLogin || '', amounts.percentage, address, amounts.value);
   }
