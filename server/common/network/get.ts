@@ -5,6 +5,7 @@ import Database from "db/models";
 import Network from "db/models/network.model";
 
 import { chainFromHeader } from "helpers/chain-from-header";
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
 
 import { HttpNotFoundError } from "server/errors/http-errors";
 
@@ -23,15 +24,13 @@ export async function get(req: NextApiRequest): Promise<Network> {
       }
     } || {},
     ... creatorAddress && {
-      creatorAddress: {
-        [Op.iLike]: String(creatorAddress)
-      }
+      creatorAddress: caseInsensitiveEqual("creatorAddress", creatorAddress.toString())
     } || {},
     ... isDefault && {
       isDefault: isTrue(isDefault.toString())
     } || {},
     ... address && {
-      networkAddress: { [Op.iLike]: String(address) },
+      networkAddress: caseInsensitiveEqual("networkAddress", address.toString()),
     } || {}
   };
 
@@ -43,15 +42,13 @@ export async function get(req: NextApiRequest): Promise<Network> {
       { association: "networkToken" },
       { 
         association: "chain",
+        required: !!chainName,
         ... chainName ? {
           where: {
-            chainShortName: Sequelize.where(Sequelize.fn("LOWER", Sequelize.col("chain.chainShortName")), 
-                                            "=",
-                                            chainName.toString().toLowerCase())
-          }
-        } : {},
-        required: !!chainName
-      },
+            chainShortName: caseInsensitiveEqual("chain.chainShortName", chainName.toString())
+          },
+        }: {},
+      }
     ],
     where
   });
