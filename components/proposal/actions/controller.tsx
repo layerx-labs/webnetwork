@@ -49,7 +49,7 @@ export default function ProposalActions({
       issue={issue}
       distributedAmounts={distributedAmounts}
       percentageNeededForDispute={
-        +state.Service?.network?.amounts?.percentageNeededForDispute
+        +state.Service?.network?.active?.percentageNeededForDispute
       }
       warnings={warnings}
       isUserAbleToDispute={isUserAbleToDispute}
