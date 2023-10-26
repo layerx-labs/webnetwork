@@ -1,17 +1,17 @@
-import { useEffect } from "react";
+import {useEffect} from "react";
 
 import MyNetworkPageView from "components/pages/profile/my-network/view";
 
-import { useAppState} from "contexts/app-state";
-import { NetworkSettingsProvider, useNetworkSettings } from "contexts/network-settings";
+import {useAppState} from "contexts/app-state";
+import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 
 import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
-import { SearchBountiesPaginated } from "types/api";
-import { MyNetworkPageProps } from "types/pages";
+import {SearchBountiesPaginated} from "types/api";
+import {MyNetworkPageProps} from "types/pages";
 
-import { useSearchNetworks } from "x-hooks/api/network";
+import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -32,7 +32,8 @@ export function MyNetwork({
     return useSearchNetworks({
       creatorAddress: state.currentUser.walletAddress,
       isClosed: false,
-      chainId: chainId
+      chainId: chainId,
+      name: state.Service?.network?.active?.name
     })
       .then(({ count , rows }) => {
         const savedNetwork = count > 0 ? rows[0] : undefined;
