@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 
+import BigNumber from "bignumber.js";
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
 
@@ -11,6 +12,9 @@ import {
   changeNetworkLastVisited
 } from "contexts/reducers/change-service";
 
+import { MINUTE_IN_MS } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
+
 import {Network} from "interfaces/network";
 import {ProfilePages} from "interfaces/utils";
 
@@ -18,6 +22,9 @@ import {WinStorage} from "services/win-storage";
 
 import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
+
+import getNetworkOverviewData from "./api/get-overview-data";
+import useReactQuery from "./use-react-query";
 
 export function useNetwork() {
   const {query, replace, push} = useRouter();
@@ -163,6 +170,18 @@ export function useNetwork() {
       dispatch(changeMatchWithNetworkChain(null));
   }
 
+  function getTotalNetworkToken() {
+    const network = query?.network?.toString();
+    const chain = query?.chain?.toString();
+    return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
+                          () => getNetworkOverviewData(query)
+                            .then(overview => BigNumber(overview?.curators?.tokensLocked || 0)),
+                          {
+                            enabled: !!network && !!chain,
+                            staleTime: MINUTE_IN_MS
+                          });
+  }
+
   useEffect(() => { setNetworkName(query?.network?.toString() || ''); }, [query?.network]);
 
   return {
@@ -172,7 +191,8 @@ export function useNetwork() {
     getURLWithNetwork,
     clearNetworkFromStorage,
     goToProfilePage,
-    updateNetworkAndChainMatch
+    updateNetworkAndChainMatch,
+    getTotalNetworkToken
   }
 
 }
