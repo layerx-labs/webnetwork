@@ -11,7 +11,7 @@ import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
 import { BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN } from "helpers/constants";
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
 import { parseTransaction } from "helpers/transactions";
@@ -27,7 +27,7 @@ import { AllowListTypes } from "interfaces/enums/marketplace";
 import { TransactionStatus } from "interfaces/enums/transaction-status";
 import { TransactionTypes } from "interfaces/enums/transaction-types";
 import { Network } from "interfaces/network";
-import { DistributionsProps } from "interfaces/proposal";
+import {DistributionsProps} from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 import { SimpleBlockTransactionPayload } from "interfaces/transaction";
@@ -49,6 +49,9 @@ import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
+import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
+import {EventName} from "../../../../interfaces/analytics";
+import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 
 const ZeroNumberFormatValues = {
   value: "",
