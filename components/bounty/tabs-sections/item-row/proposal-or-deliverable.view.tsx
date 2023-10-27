@@ -56,8 +56,7 @@ export default function ProposalOrDeliverableView({
         </div>
       </If>
 
-      {(item as Deliverable)?.comments && !status?.find(e => e.isMergeable) ? null : (
-        <ReadOnlyButtonWrapper>
+      <ReadOnlyButtonWrapper>
           <div className="row align-items-center d-none d-xl-block">
             <div className="d-flex">
               <Button
@@ -71,7 +70,6 @@ export default function ProposalOrDeliverableView({
             </div>
           </div>
         </ReadOnlyButtonWrapper>
-      )}
     </>
   );
 }

@@ -54,7 +54,7 @@ export default function ItemRow({
         (item as Deliverable)?.markedReadyForReview &&
         !currentBounty?.deliverables?.find((d) => d.accepted) &&
         !(item as Deliverable)?.canceled,
-      isDraft: isDraftDeliverable,
+      isDraft: isDraftDeliverable
     });
     valueRedirect.deliverableId = (item as Deliverable)?.id;
   } else if (proposal) {
@@ -80,7 +80,7 @@ export default function ItemRow({
 
   const btnLabel = isProposal
     ? "actions.view-proposal"
-    : (isDraftDeliverable || isCanceledDeliverable || !isCurator)
+    : (isDraftDeliverable || isCanceledDeliverable || !isCurator || !!currentBounty?.isClosed)
     ? "actions.view-deliverable"
     : "actions.review";
 
