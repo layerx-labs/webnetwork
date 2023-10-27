@@ -27,7 +27,8 @@ export default function ItemRow({
   const { state } = useAppState();
 
   const router = useRouter();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork, getTotalNetworkToken } = useNetwork();
+  const { data: totalNetworkToken } = getTotalNetworkToken();
 
   const pathRedirect = isProposal ? "bounty/[id]/proposal/[proposalId]" : "bounty/[id]/deliverable/[deliverableId]";
   const valueRedirect: {
@@ -71,8 +72,8 @@ export default function ItemRow({
     ? (item as Proposal)?.contractId + 1
     : (item as Deliverable)?.id;
 
-  const totalToBeDisputed = BigNumber(state.Service?.network?.amounts?.percentageNeededForDispute)
-    .multipliedBy(state.Service?.network?.amounts?.totalNetworkToken)
+  const totalToBeDisputed = BigNumber(state.Service?.network?.active?.percentageNeededForDispute)
+    .multipliedBy(totalNetworkToken || 0)
     .dividedBy(100);
 
   const isCurator = !!state?.Service?.network?.active?.isCouncil;
