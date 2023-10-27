@@ -8,7 +8,7 @@ import Modal from "components/modal";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import useApi from "x-hooks/use-api";
+import { useUploadFile } from "x-hooks/api/file";
 
 interface AddCustomChainModalProps {
   show: boolean;
@@ -32,8 +32,6 @@ export default function AddCustomChainModal({show, add}: AddCustomChainModalProp
     raw: undefined as File
   });
 
-  const { uploadFiles } = useApi();
-
   function getChainModel(): MiniChainInfo {
     return {
       name,
@@ -54,7 +52,7 @@ export default function AddCustomChainModal({show, add}: AddCustomChainModalProp
   }
 
   async function handleAddChain() {
-    const result = logo?.raw ? await uploadFiles(logo?.raw).catch(() => null) : null;
+    const result = logo?.raw ? await useUploadFile(logo?.raw).catch(() => null) : null;
     const ipfsHash = result?.at(0)?.hash;
     add({...getChainModel(), icon: ipfsHash });
   }

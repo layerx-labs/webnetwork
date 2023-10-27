@@ -8,7 +8,7 @@ import ReactSelect from "components/react-select";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import useApi from "x-hooks/use-api";
+import { useUploadFile } from "x-hooks/api/file";
 
 interface AddChainModalProps {
   chain: MiniChainInfo;
@@ -33,15 +33,13 @@ export default function AddChainModal({
     raw: undefined as File
   });
 
-  const { uploadFiles } = useApi();
-
   function validUrl(url: string) {
     try { return new URL(url)?.protocol?.search(/https?:/) > -1}
     catch { return false; }
   }
 
   async function handleAddChain() {
-    const result = logo?.raw ? await uploadFiles(logo?.raw).catch(() => null) : null;
+    const result = logo?.raw ? await useUploadFile(logo?.raw).catch(() => null) : null;
     const ipfsHash = result?.at(0)?.hash;
     add({...chain, activeRPC, eventsApi, explorer, color, icon: ipfsHash })
   }
