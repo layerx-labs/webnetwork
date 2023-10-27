@@ -11,7 +11,7 @@ const settings = getSettingsFromSessionStorage();
 
 const { publicRuntimeConfig } = getConfig();
 
-const COINGECKO_API = axios.create({baseURL: "https://api.coingecko.com/api/v3"});
+export const COINGECKO_API = axios.create({baseURL: "https://api.coingecko.com/api/v3"});
 
 const DEFAULT_TOKEN = settings?.currency?.defaultToken || "bepro-network";
 
