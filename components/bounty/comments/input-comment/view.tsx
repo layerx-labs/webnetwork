@@ -17,7 +17,7 @@ export default function InputCommentView({
   githubLogin?: string;
   userAddress: string;
   comment: string;
-  onCommentSubmit: () => void;
+  onCommentSubmit: (...props) => void;
   onCommentChange : (e: ChangeEvent<HTMLTextAreaElement>) => void
 }) {
   const { t } = useTranslation("common");

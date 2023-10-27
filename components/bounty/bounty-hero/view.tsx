@@ -30,7 +30,6 @@ interface BountyHeroProps {
 }
 
 export default function BountyHeroView({
-  handleEditIssue,
   isEditIssue,
   bounty,
   updateBountyData,
@@ -45,7 +44,7 @@ export default function BountyHeroView({
   function renderPriceConversor() {
     return (
       <PriceConversor
-        currentValue={bounty?.amount}
+        currentValue={currentState === "funding" ? bounty?.amount : bounty?.developerAmount }
         currency={
           bounty?.transactionalToken?.symbol ||
           t("common:misc.token")
@@ -73,7 +72,6 @@ export default function BountyHeroView({
                 <BountySettings
                   currentBounty={bounty}
                   updateBountyData={updateBountyData}
-                  handleEditIssue={handleEditIssue}
                   isEditIssue={isEditIssue}
                 />
               </div>

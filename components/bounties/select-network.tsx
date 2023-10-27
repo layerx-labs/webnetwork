@@ -12,6 +12,7 @@ import ReactSelect from "components/react-select";
 import { useAppState } from "contexts/app-state";
 
 import { isOnNetworkPath } from "helpers/network";
+import { QueryKeys } from "helpers/query-keys";
 
 import { Network } from "interfaces/network";
 
@@ -42,8 +43,11 @@ export default function SelectNetwork({
   const chainIdToFilter = filterByConnectedChain ? !isOnNetworkPath(pathname) ? 
       state.connectedChain?.id : chain?.chainId?.toString() : undefined
 
-  const { data: networks } = useReactQuery( ["networks", chainIdToFilter], 
-                                            () => useSearchNetworks({ chainId: chainIdToFilter }));
+  const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
+                                            () => useSearchNetworks({ chainId: chainIdToFilter }),
+                                            {
+                                              enabled: !!chainIdToFilter
+                                            });
 
   function networkToOption(network: Network) {
     return {
@@ -68,23 +72,26 @@ export default function SelectNetwork({
       const newQuery = {
         ...query,
         page: "1",
-        networkName: newValue?.value?.name || null
+        networkName: newValue?.value?.name || "all"
       };
 
       push({ pathname: pathname, query: newQuery }, asPath);
     }
   }
 
-  function handleSelectedWithNetworkName(options) {
-    const opt = options?.find(({ value }) => value?.name === query?.networkName)
-    if(opt) setSelected(opt)
+  function handleSelectedWithNetworkName(options, name) {
+    const opt = options?.find(({ value }) => value?.name === name)
+    setSelected(opt);
   }
 
   useEffect(() => {
     const options = networks?.rows?.map(networkToOption);
     setOptions(options || [])
-    handleSelectedWithNetworkName(options);
-  }, [networks]);
+    if(query?.networkName)
+      handleSelectedWithNetworkName(options, query?.networkName);
+    if(query?.network && !query?.networkName)
+      handleSelectedWithNetworkName(options, query?.network);
+  }, [networks, query]);
 
   useEffect(() => {
     if (state.Service?.network?.active && !selected && isCurrentDefault)

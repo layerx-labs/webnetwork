@@ -32,6 +32,7 @@ import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 import { useUpdateBountyVisibility } from "x-hooks/api/network";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
 import NetworkBadge from "./network/badge/view";
@@ -62,6 +63,14 @@ export default function IssueListItem({
   
   const { getURLWithNetwork } = useNetwork();
   const { handleHardCancelBounty } = useBepro();
+  const { mutate: updateVisibility } = useReactQueryMutation({
+    mutationFn: useUpdateBountyVisibility,
+    toastSuccess: t("bounty:actions.update-bounty"),
+    toastError: t("common:errors.failed-update-bounty"),
+    onSuccess: () => {
+      setVisible(!isVisible);
+    }
+  });
 
   const isVisible = visible !== undefined ? visible : issue?.visible;
 
@@ -88,6 +97,14 @@ export default function IssueListItem({
     }));
   }
 
+  function handleUpdateVisibility() {
+    updateVisibility({
+      id: issue?.id,
+      networkAddress: issue?.network?.networkAddress,
+      visible: !isVisible
+    });
+  }
+
   function handleToastError(err?: string) {
     dispatch(addToast({
       type: "danger",
@@ -95,23 +112,6 @@ export default function IssueListItem({
       content: t("common:errors.failed-update-bounty")
     }));
     console.debug(t("common:errors.failed-update-bounty"), err);
-  }
-
-  async function handleHideBounty() {
-    useUpdateBountyVisibility({
-      id: issue?.id,
-      networkAddress: issue?.network?.networkAddress,
-      visible: !isVisible
-    })
-      .then(() => {
-        dispatch(addToast({
-          type: "success",
-          title: t("common:actions.success"),
-          content: t("bounty:actions.update-bounty")
-        }));
-        setVisible(!isVisible)
-      })
-      .catch(handleToastError);
   }
 
   function handleHardCancel() {
@@ -305,7 +305,7 @@ export default function IssueListItem({
 
           <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
             <FlexColumn className="justify-content-center">
-                <div className="cursor-pointer" onClick={handleHideBounty}>
+                <div className="cursor-pointer" onClick={handleUpdateVisibility}>
                   {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
                 </div>
             </FlexColumn>
@@ -325,7 +325,7 @@ export default function IssueListItem({
             <MoreActionsDropdown
               actions={[
                 { content: "Task Link", onClick: handleClickCard},
-                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleHideBounty},
+                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleUpdateVisibility},
                 { content: "Cancel", onClick: () => setShowHardCancelModal(true)},
               ]}
             />
@@ -408,49 +408,53 @@ export default function IssueListItem({
           </ResponsiveWrapper>
 
           <div className="row align-items-center border-xl-top border-gray-850 pt-3">
-            <ResponsiveWrapper xs={false} xl={true}>
-              <div className="row w-100 align-items-center justify-content-md-start">
-                <BountyItemLabel label="ID" className="col-auto">
-                  <IssueTag />
-                </BountyItemLabel>
+            <div className="col-12">
+              <ResponsiveWrapper xs={false} xl={true} className="row">
+                <div className="col-12">
+                  <div className="row align-items-center justify-content-md-start">
+                    <BountyItemLabel label="ID" className="col-auto">
+                      <IssueTag />
+                    </BountyItemLabel>
 
-                <BountyItemLabel label="Type" className="col-auto">
-                  <span className="text-gray text-truncate text-capitalize">
-                    {issue?.type}
-                  </span>
-                </BountyItemLabel>
+                    <BountyItemLabel label="Type" className="col-auto">
+                      <span className="text-gray text-truncate text-capitalize">
+                        {issue?.type}
+                      </span>
+                    </BountyItemLabel>
 
-                <ResponsiveWrapper xs={false} xxl={true} className="col-auto">
-                  <RenderIssueData state={issueState} />
-                </ResponsiveWrapper>
+                    <ResponsiveWrapper xs={false} xxl={true} className="col-auto">
+                      <RenderIssueData state={issueState} />
+                    </ResponsiveWrapper>
 
-                <BountyItemLabel
-                  label={t("info.opened-on")}
-                  className="col-auto"
-                >
-                  <span className="text-gray text-truncate">
-                    {issue?.createdAt?.toLocaleDateString("PT")}
-                  </span>
-                </BountyItemLabel>
+                    <BountyItemLabel
+                      label={t("info.opened-on")}
+                      className="col-auto"
+                    >
+                      <span className="text-gray text-truncate">
+                        {issue?.createdAt?.toLocaleDateString("PT")}
+                      </span>
+                    </BountyItemLabel>
 
-                <div className="col d-flex justify-content-end">
+                    <div className="col d-flex justify-content-end">
+                      <BountyAmount bounty={issue} size={size} />
+                    </div>
+                  </div>
+                </div>
+              </ResponsiveWrapper>
+              <ResponsiveWrapper
+                xs={true}
+                xl={false}
+                className="row align-items-center justify-content-between"
+              >
+                <div className="col mw-50-auto network-name">
+                  <BountyTagsView tags={[issue?.network?.name]} />
+                </div>
+
+                <div className="col-auto">
                   <BountyAmount bounty={issue} size={size} />
                 </div>
-              </div>
-            </ResponsiveWrapper>
-            <ResponsiveWrapper
-              xs={true}
-              xl={false}
-              className="row align-items-center justify-content-between"
-            >
-              <div className="col mw-50-auto network-name">
-                <BountyTagsView tags={[issue?.network?.name]} />
-              </div>
-
-              <div className="col-auto px-0">
-                <BountyAmount bounty={issue} size={size} />
-              </div>
-            </ResponsiveWrapper>
+              </ResponsiveWrapper>
+            </div>
           </div>
         </div>
       </div>

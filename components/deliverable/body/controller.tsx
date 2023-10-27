@@ -18,18 +18,16 @@ interface DeliverableBodyControllerProps {
   currentDeliverable: Deliverable;
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
-  updateBountyData: () => void;
+  updateDeliverableData: () => void;
   handleShowModal: () => void;
-  updateComments: () => void;
 }
 
 export default function DeliverableBody({
   currentDeliverable,
   currentBounty,
   isCreatingReview,
-  updateBountyData,
+  updateDeliverableData,
   handleShowModal,
-  updateComments
 }: DeliverableBodyControllerProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
@@ -74,14 +72,14 @@ export default function DeliverableBody({
   function handleMakeReady() {
     if (!currentBounty || !currentDeliverable) return;
     onMakeReady(currentBounty.contractId, currentDeliverable.prContractId)
-      .then(() => updateBountyData())
+      .then(() => updateDeliverableData())
       .catch(error => console.debug("Failed to make ready for review", error.toString()));
   }
 
   function handleCancel() {
     onCancel(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then(() => {
-        updateBountyData();
+        updateDeliverableData();
         router.push(getURLWithNetwork("/bounty/[id]", {
           id: currentBounty.id
         }));
@@ -103,7 +101,6 @@ export default function DeliverableBody({
       isCancelButton={isCancelButton}
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
-      updateComments={updateComments}
       currentUser={state.currentUser}
       isCouncil={isCouncil}
     />

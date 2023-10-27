@@ -119,14 +119,18 @@ export default function CreateBountyPageView({
             bountyTokens={rest.bountyTokens} 
             rewardTokens={rest.rewardTokens} 
             rewardBalance={rest.rewardBalance} 
-            bountyBalance={rest.bountyBalance} 
+            bountyBalance={rest.bountyBalance}
+            previewAmount={rest.previewAmount}
+            distributions={rest.distributions}
             updateRewardToken={rest.updateRewardToken} 
             updateTransactionalToken={rest.updateTransactionalToken} 
             addToken={rest.addToken} 
             handleRewardChecked={rest.handleRewardChecked} 
             updateIssueAmount={rest.updateIssueAmount} 
             updateRewardAmount={rest.updateRewardAmount} 
-            updateIsFundingType={rest.updateIsFundingType}          
+            updateIsFundingType={rest.updateIsFundingType}    
+            setPreviewAmount={rest.setPreviewAmount}  
+            setDistributions={rest.setDistributions}   
           />
       );
 
@@ -221,7 +225,7 @@ export default function CreateBountyPageView({
 
       <If condition={isReviewSection}>
         <div className="mx-5">
-          <div className="d-flex justify-content-center col-12 mt-4">
+          <div className="d-flex justify-content-center text-center col-12 mt-4">
             <p className="">
               {t("bounty:creating-this-bounty")}{" "}
               <a href={TERMS_AND_CONDITIONS_LINK} target="_blank">

@@ -6,6 +6,8 @@ import VotingPowerMultiNetworkView from "components/profile/pages/voting-power/m
 
 import { useAppState } from "contexts/app-state";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import { Curator } from "interfaces/curators";
 
 import { useSearchCurators } from "x-hooks/api/curator";
@@ -27,7 +29,7 @@ export default function VotingPowerMultiNetwork() {
       .then(({ rows }) => rows);
   }
 
-  const { data: networks } = useReactQuery( ["voting-power-multi", state.currentUser?.walletAddress],
+  const { data: networks } = useReactQuery( QueryKeys.votingPowerMultiOf(state.currentUser?.walletAddress),
                                             getNetworksVotingPower,
                                             { enabled: !!state.currentUser?.walletAddress });
 

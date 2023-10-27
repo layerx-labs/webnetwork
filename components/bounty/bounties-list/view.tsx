@@ -111,18 +111,35 @@ export default function BountiesListView({
     }
   ];
 
+  function CountComponent({ count }: { count?: number }) {
+    return (
+      <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
+        {count || 0}
+      </span>
+    );
+  }
+
   return (
     <div className="px-0 mx-0 mb-4">
       <If condition={isBountyHall || isProfile || isManagement}>
         <div className="d-flex flex-wrap justify-content-between">
-          <div className="d-flex flex-row flex-wrap align-items-center gap-3">
+          <div className="d-flex flex-row flex-wrap align-items-center gap-2">
+            <div className="d-flex gap-2 align-items-center">
             <h4 className="text-capitalize font-weight-medium">
               {listTitleByType[type]}
             </h4>
-
-            <span className="p family-Regular text-gray-400 bg-gray-850 border-radius-4 p-1 px-2">
-              {bounties?.count || 0}
-            </span>
+            {["deliverables", "proposals"].includes(type) ? (
+                <>
+                  <CountComponent count={bounties?.totalBounties} />
+                  <span className="caption-small text-gray font-weight-medium mt-1">
+                    {t("bounty:label", { count: bounties?.count })}{" "}
+                    {bounties?.count}
+                  </span>
+                </>
+              ) : (
+                <CountComponent count={bounties?.count} />
+              )}
+            </div>
           </div>
 
           <If condition={isProfile && isOnNetwork}>
@@ -153,7 +170,7 @@ export default function BountiesListView({
           className={"row align-items-center list-actions sticky-top bg-body"}
         >
           <div className="col">
-            <InputGroup className="border-radius-8">
+            <InputGroup className="border-radius-4">
               <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
                 <SearchIcon />
               </InputGroup.Text>
@@ -168,7 +185,7 @@ export default function BountiesListView({
 
               <If condition={showClearButton}>
                 <button
-                  className="btn bg-gray-900 border-0 py-0 px-3"
+                  className="btn bg-gray-850 border-0 py-0 px-3"
                   onClick={onClearSearch}
                 >
                   <CloseIcon width={10} height={10} />

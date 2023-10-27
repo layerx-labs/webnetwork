@@ -37,11 +37,7 @@ const serverRuntimeConfig = {
   },
   github: {
     clientId: process.env.NEXT_GH_CLIENT_ID,
-    secret: process.env.NEXT_GH_SECRET,
-    token: process.env.NEXT_GH_TOKEN,
-    mainBranch: process.env.NEXT_GH_MAINBRANCH,
-    owner: process.env.NEXT_GH_OWNER,
-    repository: process.env.NEXT_GH_REPO,
+    secret: process.env.NEXT_GH_SECRET
   },
   kyc:{
     clientId: process.env.NEXT_SYNAPS_CLIENT_ID,

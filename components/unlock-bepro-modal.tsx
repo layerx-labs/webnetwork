@@ -14,10 +14,10 @@ import {useAppState} from "contexts/app-state";
 
 import {formatStringToCurrency} from "helpers/formatNumber";
 
-import { NetworkEvents } from "interfaces/enums/events";
+import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 
-import useApi from "x-hooks/use-api";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
 
 import NetworkTxButton from "./common/network-tx-button/controller";
@@ -34,8 +34,7 @@ export default function UnlockBeproModal({
 
   const {state} = useAppState();
 
-  const { processEvent } = useApi();
-
+  const { processEvent } = useProcessEvent();
   const { updateWalletBalance } = useAuthentication();
 
   const oraclesAvailable = state.currentUser?.balance?.oracles?.locked;
@@ -59,7 +58,7 @@ export default function UnlockBeproModal({
 
   function handleError(e) {
     setDefaults();
-    console.debug('error', e);
+    console.debug('error unlocking', e);
   }
 
   function setToMax() {

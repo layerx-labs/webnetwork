@@ -22,7 +22,6 @@ interface DeliverableBodyViewProps {
   handleShowModal: () => void;
   handleCancel: () => void;
   handleMakeReady: () => void;
-  updateComments: () => void;
   isMakeReviewButton: boolean;
   isMakeReadyReviewButton: boolean;
   isCancelButton: boolean;
@@ -45,7 +44,6 @@ export default function DeliverableBodyView({
   isCancelButton,
   isCancelling,
   isMakingReady,
-  updateComments,
   currentUser,
   isCouncil
 }: DeliverableBodyViewProps) {  
@@ -150,7 +148,6 @@ export default function DeliverableBodyView({
         {currentDeliverable?.markedReadyForReview && (
           <Comments
             type="deliverable"
-            updateData={updateComments}
             ids={{
               issueId: +currentBounty?.id,
               deliverableId: currentDeliverable?.id,

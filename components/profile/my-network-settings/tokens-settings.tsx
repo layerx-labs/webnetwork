@@ -10,6 +10,8 @@ import {WarningSpan} from "components/warning-span";
 import {useAppState} from "contexts/app-state";
 import { useNetworkSettings } from "contexts/network-settings";
 
+import { QueryKeys } from "helpers/query-keys";
+
 import {Token, TokenType} from "interfaces/token";
 
 import { useGetTokens } from "x-hooks/api/token";
@@ -38,7 +40,7 @@ export default function TokensSettings({
   const { fields } = useNetworkSettings();
 
   const connectedChainId = state.connectedChain?.id;
-  const { data: dbTokens } = useReactQuery( ["tokens", connectedChainId],
+  const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(connectedChainId),
                                             () => useGetTokens(connectedChainId),
                                             {
                                               enabled: !!connectedChainId
@@ -116,7 +118,7 @@ export default function TokensSettings({
   useEffect(() => {
     if (!state.Service?.active || !state.connectedChain?.id || !dbTokens) return;
     getAllowedTokensContract();
-  }, [state.Service?.active, state.connectedChain?.id, isGovernorRegistry]);
+  }, [state.Service?.active, state.connectedChain?.id, isGovernorRegistry, dbTokens]);
 
   useEffect(() => {
     if (defaultSelectedTokens?.length > 0) {

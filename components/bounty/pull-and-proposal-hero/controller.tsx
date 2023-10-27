@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 
 import PullAndProposalHeroView from "components/bounty/pull-and-proposal-hero/view";
 
-import { PullRequest } from "interfaces/issue-data";
+import { Deliverable } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 
 interface PullAndProposalHeroPRops {
   proposal?: Proposal;
-  pullRequest?: PullRequest;
+  pullRequest?: Deliverable;
 }
 
 export default function PullAndProposalHero({
@@ -19,8 +19,10 @@ export default function PullAndProposalHero({
   const { back } = useRouter();
 
   const isProposal = !!proposal;
-  const { contractId, githubLogin, createdAt, issue } = proposal || pullRequest || {};
-  const creatorAddress = proposal?.creator || pullRequest?.userAddress || nativeZeroAddress;
+  const { createdAt, issue } = proposal || pullRequest || {};
+  const contractId = isProposal ? proposal?.contractId : pullRequest?.prContractId;
+  const githubLogin = isProposal ? proposal?.githubLogin : pullRequest?.user?.githubLogin;
+  const creatorAddress = proposal?.creator || pullRequest?.user?.address || nativeZeroAddress;
 
   return (
     <PullAndProposalHeroView
@@ -31,7 +33,7 @@ export default function PullAndProposalHero({
       issueTitle={issue?.title}
       issueId={issue?.id}
       isProposal={isProposal}
-      issueAmount={BigNumber(issue?.amount)}
+      issueAmount={BigNumber(issue?.developerAmount)}
       transactionalTokenSymbol={issue?.transactionalToken?.symbol}
       onBackClick={back}
     />

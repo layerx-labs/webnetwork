@@ -7,6 +7,6 @@ import { api } from "services/api";
  * @param query current url query
  * @returns get deliverable
  */
-export default async function getDeliverable(id: number): Promise<Deliverable> {
+export async function getDeliverable(id: number): Promise<Deliverable> {
   return api.get(`/deliverable/${id}`).then(({data}) => data)
 }

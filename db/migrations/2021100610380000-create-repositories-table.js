@@ -1,4 +1,3 @@
-const { RepositoriesModel } = require("../models/repositories.model");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface

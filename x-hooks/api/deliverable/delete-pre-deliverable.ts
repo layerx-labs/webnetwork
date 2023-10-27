@@ -5,6 +5,6 @@ import { api } from "services/api";
  * @param query current url query
  * @returns deleted pre-deliverable
  */
-export default async function DeletePreDeliverable(id: number) {
+export async function DeletePreDeliverable(id: number) {
   return api.delete(`/deliverable/${id}`).then(({data}) => data)
 }

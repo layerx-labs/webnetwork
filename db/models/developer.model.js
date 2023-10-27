@@ -26,7 +26,7 @@ class Developer extends Model {
 
   static associate(models) {
     // define association here
-    this.hasOne(models.issue, {
+    this.belongsTo(models.issue, {
       foreignKey: "issueId",
       sourceKey: "id",
       as: "issue"

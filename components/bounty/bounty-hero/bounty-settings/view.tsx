@@ -5,18 +5,16 @@ import {
   } from "react";
   
 import { useTranslation } from "next-i18next";
-  
+
+import ContractButton from "components/contract-button";
 import Modal from "components/modal";
 import Translation from "components/translation";
 
-import { ServiceNetwork } from "interfaces/application-state";
-
 interface BountySettingsViewProps {
-    handleEditIssue?: () => void;
     isEditIssue?: boolean;
     handleHardCancel?: () => void;
     handleRedeem?: () => void;
-    network: ServiceNetwork;
+    isGovernor: boolean;
     isWalletConnected: boolean;
     isBountyInDraft: boolean;
     isBountyOwner: boolean;
@@ -27,11 +25,10 @@ interface BountySettingsViewProps {
 }
   
 export default function BountySettingsView({
-    handleEditIssue,
     handleHardCancel,
     handleRedeem,
     isEditIssue,
-    network,
+    isGovernor,
     isWalletConnected,
     isBountyInDraft,
     isBountyOwner,
@@ -69,20 +66,6 @@ export default function BountySettingsView({
     return () => document.removeEventListener("mousedown", handleClick);
   }
 
-  function handleEditClick() {
-    handleHide();
-    handleEditIssue();
-  }
-  
-  function renderEditButton() {
-    if (isWalletConnected && isBountyInDraft && isBountyOwner)
-      return (
-          <span className="cursor-pointer" onClick={handleEditClick}>
-            <Translation ns="bounty" label="actions.edit-bounty" />
-          </span>
-      );
-  }
-
   function handleCancelClick(isHard) {
     return () => {
       if (isHard)
@@ -95,18 +78,20 @@ export default function BountySettingsView({
   
   function renderCancel() {
     const Cancel = (isHard: boolean) => (
-        <span
-          className="cursor-pointer"
+        <ContractButton
+          className="px-0 mx-0 p font-weight-normal text-capitalize"
+          transparent
+          align="left"
           onClick={handleCancelClick(isHard)}
         >
           <Translation
             ns={isHard ? "common" : "bounty"}
             label={isHard ? "actions.cancel" : "actions.owner-cancel"}
           />
-        </span>
+        </ContractButton>
       );
-  
-    if (network?.active?.isGovernor && isCancelable)
+
+    if (isGovernor && isCancelable)
       return Cancel(true);
   
     const isDraftOrNotFunded = isFundingRequest
@@ -123,27 +108,18 @@ export default function BountySettingsView({
       return Cancel(false);
   }
   
-  function renderActions() {
-    return (
-        <>
-          {renderEditButton()}
-          {renderCancel()}
-        </>
-    );
-  }
-  
   useEffect(loadOutsideClick, [show]);
   
   return (
       <>
         <div className="position-relative d-flex justify-content-end" ref={node}>
           <div
-            className={`cursor-pointer border ${
+            className={`cursor-pointer hover-white border ${
               (show && "border-primary") || "border-gray-850"
             } border-radius-8 d-flex`}
             onClick={() => setShow(!show)}
           >
-            <span className="mx-2 mb-2">. . .</span>
+            <span className="mx-2 my-1">{t("common:misc.options")}</span>
           </div>
   
           <div
@@ -152,7 +128,7 @@ export default function BountySettingsView({
             } justify-content-start align-items-stretch position-absolute`}
           >
             <div className="d-flex gap-2 flex-column bounty-settings p-2 bg-gray-950">
-              {renderActions()}
+              {renderCancel()}
             </div>
           </div>
         </div>

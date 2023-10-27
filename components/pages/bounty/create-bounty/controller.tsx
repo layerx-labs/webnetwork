@@ -15,6 +15,7 @@ import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { formatStringToCurrency } from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -25,19 +26,21 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
+import { DistributionsProps } from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import {useCreatePreBounty} from "x-hooks/api/bounty";
-import useApi from "x-hooks/use-api";
+import { useCreatePreBounty } from "x-hooks/api/bounty";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
@@ -57,6 +60,7 @@ export default function CreateBountyPage({
   networks: allNetworks
 }: CreateBountyPageProps) {
   const { query } = useRouter();
+  const session = useSession();
   const { t } = useTranslation(["common", "bounty"]);
 
   const [files, setFiles] = useState<IFilesProps[]>([]);
@@ -84,21 +88,24 @@ export default function CreateBountyPage({
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [userCanCreateBounties, setUserCanCreateBounties] = useState<boolean>(true);
   const [showCannotCreateBountyModal, setShowCannotCreateBountyModal] = useState<boolean>(true);
-  const session = useSession();
+  const [previewAmount, setPreviewAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
+  const [distributions, setDistributions] = useState<DistributionsProps>();
 
 
   const rewardERC20 = useERC20();
   const transactionalERC20 = useERC20();
-  const { processEvent } = useApi();
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
+  const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
-
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, },
+    state: { transactions, Settings, Service, currentUser, connectedChain, }
   } = useAppState();
+  const { mutateAsync: createPreBounty } = useReactQueryMutation({
+    mutationFn: useCreatePreBounty,
+  });
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -247,12 +254,12 @@ export default function CreateBountyPage({
     setIsLoadingApprove(true);
 
     let tokenAddress = transactionalToken.address;
-    let bountyValue = issueAmount.value;
+    let bountyValue = issueAmount.formattedValue;
     let tokenERC20 = transactionalERC20;
 
     if (rewardChecked && rewardToken?.address && rewardAmount.floatValue > 0) {
       tokenAddress = rewardToken.address;
-      bountyValue = rewardAmount.value;
+      bountyValue = rewardAmount.formattedValue;
       tokenERC20 = rewardERC20;
     }
 
@@ -290,14 +297,14 @@ export default function CreateBountyPage({
       const payload = {
         title: bountyTitle,
         body: addFilesInDescription(bountyDescription),
-        amount: issueAmount.value,
+        amount: issueAmount.formattedValue,
         creatorAddress: currentUser.walletAddress,
         githubUser: currentUser?.login,
         deliverableType,
         originLink
       };
 
-      const savedIssue = await useCreatePreBounty({
+      const savedIssue = await createPreBounty({
           title: payload.title,
           body: payload.body,
           creator: payload.githubUser,
@@ -335,14 +342,14 @@ export default function CreateBountyPage({
 
       if (isFundingType && !rewardChecked) {
         bountyPayload.tokenAmount = "0";
-        bountyPayload.fundingAmount = issueAmount.value;
+        bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
       if (isFundingType && rewardChecked) {
         bountyPayload.tokenAmount = "0";
-        bountyPayload.rewardAmount = rewardAmount.value;
+        bountyPayload.rewardAmount = rewardAmount.formattedValue;
         bountyPayload.rewardToken = rewardToken.address;
-        bountyPayload.fundingAmount = issueAmount.value;
+        bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
       const networkBounty = await Service?.active
@@ -466,10 +473,10 @@ export default function CreateBountyPage({
 
     if (!isFundingType)
       approved = isAmountApproved(transactionalERC20.allowance,
-                                  BigNumber(issueAmount.value));
+                                  BigNumber(issueAmount.formattedValue));
     else if (rewardChecked)
       approved = isAmountApproved(rewardERC20.allowance,
-                                  BigNumber(rewardAmount.value));
+                                  BigNumber(rewardAmount.formattedValue));
 
     setIsTokenApproved(approved);
   }, [
@@ -616,16 +623,20 @@ export default function CreateBountyPage({
         title: bountyTitle,
         description: addFilesInDescription(bountyDescription),
         tags: selectedTags && selectedTags,
-        origin_link: originLink,
-        deliverable_type: deliverableType,
-        reward: `${issueAmount.value} ${transactionalToken?.symbol}`,
-        funders_reward:
+        originLink: originLink,
+        deliverableType: deliverableType,
+        totalAmount: `${formatStringToCurrency(issueAmount.value)} ${transactionalToken?.symbol}`,
+        fundersReward:
           (rewardAmount.value && isFundingType) &&
-          `${rewardAmount.value} ${rewardToken?.symbol}`,
+          `${formatStringToCurrency(rewardAmount.value)} ${rewardToken?.symbol}`,
       }}
       allowCreateBounty={userCanCreateBounties}
       showCannotCreateBountyModal={showCannotCreateBountyModal}
       closeCannotCreateBountyModal={() => setShowCannotCreateBountyModal(false)}
+      previewAmount={previewAmount}
+      setPreviewAmount={setPreviewAmount}
+      distributions={distributions}
+      setDistributions={setDistributions}
     />
   );
 }
