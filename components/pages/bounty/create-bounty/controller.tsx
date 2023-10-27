@@ -14,7 +14,7 @@ import {useAppState} from "contexts/app-state";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -25,7 +25,7 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
-import { DistributionsProps } from "interfaces/proposal";
+import {DistributionsProps} from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
@@ -45,6 +45,9 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
+import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
+import {EventName} from "../../../../interfaces/analytics";
+import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -100,6 +103,8 @@ export default function CreateBountyPage({
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
+  const { pushAnalytic } = useAnalyticEvents();
+
   const {
     dispatch,
     state: { transactions, Settings, Service, currentUser, connectedChain, }
@@ -509,7 +514,11 @@ export default function CreateBountyPage({
     }
   }, [currentNetwork?.tokens]);
 
-  useEffect(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), [currentSection])
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    pushAnalytic(`${EventName.TASK_SECTION_CHANGE}_${CreateTaskSections[currentSection]}` as unknown as EventName)
+  }, [currentSection])
+
   useEffect(() => handleMinAmount('transactional'), [issueAmount])
   useEffect(() => handleMinAmount('reward'), [rewardAmount])
   useEffect(() => {
