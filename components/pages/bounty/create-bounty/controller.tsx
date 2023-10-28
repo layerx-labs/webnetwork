@@ -310,7 +310,9 @@ export default function CreateBountyPage({
         originLink
       };
 
-      const savedIssue = await createPreBounty({
+      pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
+
+      const savedIssue = await useCreatePreBounty({
           title: payload.title,
           body: payload.body,
           creator: payload.githubUser,
@@ -324,9 +326,12 @@ export default function CreateBountyPage({
       });
 
       if (!savedIssue) {
+        pushAnalytic(EventName.CREATE_PRE_TASK, {error: true})
         addError(t("actions.failed"), t("bounty:errors.creating-bounty"));
         return;
       }
+
+      pushAnalytic(EventName.CREATE_PRE_TASK, {saved: true, id: savedIssue.id, finished: true})
 
       const transactionToast = addTx([
         {
@@ -382,6 +387,14 @@ export default function CreateBountyPage({
 
           return { ...e, error: true };
         });
+
+      pushAnalytic(EventName.CREATED_TASK, {
+        contractId: networkBounty.logs[0].args.id,
+        id: networkBounty.logs[0].args.cid,
+        transaction: networkBounty.transactionHash,
+        error: !!networkBounty?.error,
+        errorCode: networkBounty?.code,
+      })
 
       if (networkBounty?.error !== true) {
         dispatch(updateTx([
