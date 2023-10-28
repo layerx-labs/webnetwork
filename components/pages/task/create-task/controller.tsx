@@ -261,7 +261,7 @@ export default function CreateTaskPage ({
     handleApproveToken(tokenAddress, bountyValue, undefined, transactionalToken?.symbol)
       .then(() =>
         tokenERC20.updateAllowanceAndBalance()
-          .then(({ allowance }) => {
+          .then(({allowance}) => {
             pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
               neededAmount: bountyValue,
               currentAllowance: allowance.toFixed(),
