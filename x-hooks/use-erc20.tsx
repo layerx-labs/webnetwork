@@ -6,13 +6,13 @@ import BigNumber from "bignumber.js";
 import {useAppState} from "contexts/app-state";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import {UNSUPPORTED_CHAIN} from "helpers/constants";
 import {parseTransaction} from "helpers/transactions";
 
 import {MetamaskErrors} from "interfaces/enums/Errors";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
-import { SimpleBlockTransactionPayload } from "interfaces/transaction";
+import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import useBepro from "x-hooks/use-bepro";
 
@@ -26,11 +26,11 @@ export interface useERC20 {
   loadError: boolean;
   allowance: BigNumber;
   totalSupply: BigNumber;
-  approve: (amount: string) => Promise<void>;
+  approve: (amount: string) => Promise<{ balance: BigNumber, allowance: BigNumber }>;
   setAddress: (_address: string) => void;
   setSpender: (_address: string) => void;
   deploy: (name: string, symbol: string, cap: string, ownerAddress: string) => Promise<TransactionReceipt>;
-  updateAllowanceAndBalance: () => void;
+  updateAllowanceAndBalance: () => Promise<{ balance: BigNumber, allowance: BigNumber }>;
 }
 
 export default function useERC20() {
@@ -57,23 +57,38 @@ export default function useERC20() {
 
   const isServiceReady = !state.Service?.starting && !state.spinners?.switchingChain && state.Service?.active;
 
-  function updateAllowanceAndBalance() {
+  async function updateAllowanceAndBalance() {
     if (!state.currentUser?.walletAddress ||
         !address ||
         !name ||
         !isServiceReady ||
         state.connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
-    getTokenBalance(address, state.currentUser.walletAddress)
-      .then(setBalance)
-      .catch(error => console.debug("useERC20:getTokenBalance", logData, error));
+    const balance = await getTokenBalance(address, state.currentUser.walletAddress)
+      .then(b => {
+        setBalance(b);
+        return b;
+      })
+      .catch(error => {
+        console.debug("useERC20:getTokenBalance", logData, error);
+        return BigNumber(0);
+      });
 
     const realSpender = spender || state.Service?.active?.network?.contractAddress;
 
+    let allowance = BigNumber(0);
     if (realSpender)
-      getAllowance(address, state.currentUser.walletAddress, realSpender)
-        .then(setAllowance)
-        .catch(error => console.debug("useERC20:getAllowance", logData, error));
+      allowance = await getAllowance(address, state.currentUser.walletAddress, realSpender)
+        .then(a => {
+          setAllowance(a);
+          return a;
+        })
+        .catch(error => {
+          console.debug("useERC20:getAllowance", logData, error)
+          return BigNumber(0)
+        });
+
+    return {balance, allowance}
   }
 
   function approve(amount: string) {

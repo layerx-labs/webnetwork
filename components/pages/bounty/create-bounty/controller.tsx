@@ -269,11 +269,29 @@ export default function CreateBountyPage({
       tokenERC20 = rewardERC20;
     }
 
+    pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+      neededAmount: bountyValue,
+      currentAllowance: tokenERC20.allowance.toFixed()
+    })
+
     handleApproveToken(tokenAddress, bountyValue, undefined, transactionalToken?.symbol)
-      .then(() => {
-        return tokenERC20.updateAllowanceAndBalance();
+      .then(() =>
+        tokenERC20.updateAllowanceAndBalance()
+          .then(({allowance}) => {
+            pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+              neededAmount: bountyValue,
+              currentAllowance: allowance.toFixed(),
+              finished: true
+            })
+          }))
+      .catch(error => {
+        console.debug("Failed to approve", error)
+        pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+          neededAmount: bountyValue,
+          error: true,
+          errorMsg: error.toString(),
+        })
       })
-      .catch(error => console.debug("Failed to approve", error))
       .finally(() => setIsLoadingApprove(false));
   }
 
