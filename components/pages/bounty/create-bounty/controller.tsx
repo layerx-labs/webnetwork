@@ -305,6 +305,17 @@ export default function CreateBountyPage({
         originLink
       };
 
+      const preTaskPayload = {
+        ...payload,
+        tags: selectedTags,
+        isKyc: isKyc,
+        tierList: tierList?.length ? tierList : null,
+        amount: issueAmount.value,
+        networkName: currentNetwork?.name
+      }
+
+      pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
+
       const savedIssue = await useCreatePreBounty({
           title: payload.title,
           body: payload.body,
@@ -319,9 +330,12 @@ export default function CreateBountyPage({
       });
 
       if (!savedIssue) {
+        pushAnalytic(EventName.CREATE_PRE_TASK, {error: true})
         dispatch(toastError(t("bounty:errors.creating-bounty")))
         return;
       }
+
+      pushAnalytic(EventName.CREATE_PRE_TASK, {saved: true, id: savedIssue.id, finished: true})
 
       const transactionToast = addTx([
         {
@@ -377,6 +391,14 @@ export default function CreateBountyPage({
 
           return { ...e, error: true };
         });
+
+      pushAnalytic(EventName.CREATED_TASK, {
+        contractId: networkBounty.logs[0].args.id,
+        id: networkBounty.logs[0].args.cid,
+        transaction: networkBounty.transactionHash,
+        error: !!networkBounty?.error,
+        errorCode: networkBounty?.code,
+      })
 
       if (networkBounty?.error !== true) {
         dispatch(updateTx([
