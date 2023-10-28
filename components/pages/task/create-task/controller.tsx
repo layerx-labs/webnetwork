@@ -49,9 +49,6 @@ import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
-import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
-import {EventName} from "../../../../interfaces/analytics";
-import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -390,11 +387,9 @@ export default function CreateTaskPage ({
           return { ...e, error: true };
         });
 
-      const returnValues = networkBounty?.events?.BountyCreated?.returnValues;
-
       pushAnalytic(EventName.CREATED_TASK, {
-        contractId: returnValues?.id,
-        id: returnValues?.cid,
+        contractId: networkBounty.logs[0].args.id,
+        id: networkBounty.logs[0].args.cid,
         transaction: networkBounty.transactionHash,
         error: !!networkBounty?.error,
         errorCode: networkBounty?.code,
