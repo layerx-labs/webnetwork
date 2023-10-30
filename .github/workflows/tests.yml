@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - dev
-      - 2.19
+      - next
   push:
     branches:
       - dev
