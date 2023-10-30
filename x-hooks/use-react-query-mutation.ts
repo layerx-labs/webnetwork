@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient, UseMutationOptions } from "@tanstack/react-query";
 
-import { useAppState } from "contexts/app-state";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 
 interface UseReactQueryMutationOptions {
   queryKey?: (string | number)[];
@@ -13,8 +12,8 @@ export default function useReactQueryMutation<TData, TError, TVariables, TContex
   queryKey, 
   ...rest
 }: UseReactQueryMutationOptions & UseMutationOptions<TData, TError, TVariables, TContext>) {
-  const { dispatch } = useAppState();
   const queryClient = useQueryClient();
+  const { addError, addSuccess } = useToastStore();
 
   function invalidate() {
     return queryClient.invalidateQueries({ queryKey: queryKey });
@@ -22,13 +21,13 @@ export default function useReactQueryMutation<TData, TError, TVariables, TContex
   
   function onSuccess(data: TData, variables: TVariables, context: TContext) {
     rest?.onSuccess?.(data, variables, context);
-    if (rest?.toastSuccess) dispatch(toastSuccess(rest?.toastSuccess));
+    if (rest?.toastSuccess) addSuccess("", rest?.toastSuccess);
     if (queryKey) invalidate();
   }
 
   function onError(error: TError, variables: TVariables, context: TContext) {
     rest?.onError?.(error, variables, context);
-    if (rest?.toastError) dispatch(toastError(rest?.toastError));
+    if (rest?.toastError) addError("", rest?.toastError);
     console.debug("useReactQueryMutation", queryKey, error);
   }
 

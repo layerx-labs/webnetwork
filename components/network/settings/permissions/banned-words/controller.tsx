@@ -6,13 +6,13 @@ import { useTranslation } from "next-i18next";
 import NetworkPermissionsView from "components/network/settings/permissions/banned-words/view";
 
 import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
 
 import { QueryKeys } from "helpers/query-keys";
 
 import { Network } from "interfaces/network";
 
 import { CreateBannedWord, RemoveBannedWord } from "x-hooks/api/network/management/banned-words";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useChain from "x-hooks/use-chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -28,7 +28,8 @@ export default function NetworkPermissions({
   const [currentDomain, setCurrentDomain] = useState<string>();
 
   const { chain } = useChain();
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
+  const { addError } = useToastStore();
 
   const networkQueryKey = QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chain?.chainId?.toString());
 
@@ -41,9 +42,9 @@ export default function NetworkPermissions({
     },
     onError: (error) => {
       if((error as AxiosError).response?.status === 409)
-        dispatch(toastError(t("steps.permissions.domains.already-exists")));
+        addError("", t("steps.permissions.domains.already-exists"));
       else
-        dispatch(toastError(t("steps.permissions.domains.created-error")));
+        addError("", t("steps.permissions.domains.created-error"));
     }
   });
 
@@ -60,9 +61,9 @@ export default function NetworkPermissions({
     },
     onError: (error) => {
       if((error as AxiosError).response?.status === 404)
-        dispatch(toastError(t("steps.permissions.domains.remove-not-found")));
+        addError("", t("steps.permissions.domains.remove-not-found"));
       else
-      dispatch(toastError(t("steps.permissions.domains.remove-error")));
+      addError("", t("steps.permissions.domains.remove-error"));
     }
   });
 

@@ -8,7 +8,6 @@ import { useDebouncedCallback } from "use-debounce";
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
 import { useAppState } from "contexts/app-state";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
@@ -16,6 +15,7 @@ import { isValidEmail } from "helpers/validators/email";
 import { CustomSession } from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -35,9 +35,10 @@ export default function ProfilePage() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
+  const { state } = useAppState();
   const { goToProfilePage } = useNetwork();
-  const { state, dispatch } = useAppState();
   const { signInGithub } = useAuthentication();
+  const { addError, addSuccess } = useToastStore();
   const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
     toastError: t("email-errors.failed-to-update"),
@@ -93,10 +94,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (query?.emailVerification === "success")
-      dispatch(toastSuccess(t("notifications-form.success-toast.content"), 
-                            t("notifications-form.success-toast.title")));
+      addSuccess(t("notifications-form.success-toast.title"), t("notifications-form.success-toast.content"));
     if (query?.isGithubLoginExist === "true")
-      dispatch(toastError(t("modals.connect-github.errors.github-already-exists")));
+      addError("", t("modals.connect-github.errors.github-already-exists"));
   }, [query]);
 
   return (

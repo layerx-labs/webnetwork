@@ -8,22 +8,24 @@ import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
 
 import { useAppState } from "contexts/app-state";
 import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
-import { toastError, toastWarning } from "contexts/reducers/change-toaster";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
+
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 
 export default function ContractButton({
   onClick,
   children,
   ...rest
 }: ButtonProps) {
+  const { query } = useRouter();
   const { t } = useTranslation(["common"]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { state, dispatch } = useAppState();
-  const { query } = useRouter();
+  const { addError, addWarning } = useToastStore();
 
   function onCloseModal() {
     setIsModalVisible(false);
@@ -66,7 +68,7 @@ export default function ContractButton({
   async function validateDao() {
     if(state.Service?.active) return true
 
-    dispatch(toastError(t("errors.failed-load-dao")))
+    addError("", t("errors.failed-load-dao"));
 
     return false
   }
@@ -74,12 +76,12 @@ export default function ContractButton({
   async function validateLoadNetwork() {
     if (query?.network) {
       if (state.Service?.starting) {
-        dispatch(toastWarning(t("warnings.await-load-network")));
+        addWarning("", t("warnings.await-load-network"));
         return false;
       }
 
       if (!state.Service?.starting && !state.Service?.active.network) {
-        dispatch(toastError(t("errors.failed-load-network")));
+        addError("", t("errors.failed-load-network"));
         return false;
       }
     }

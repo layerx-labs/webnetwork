@@ -7,7 +7,6 @@ import NetworkGovernanceSettingsView from "components/network/settings/governanc
 
 import { useAppState } from "contexts/app-state";
 import { useNetworkSettings } from "contexts/network-settings";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
 
 import { IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH } from "helpers/constants";
 
@@ -17,6 +16,7 @@ import { Token } from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/network";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -41,9 +41,10 @@ export default function NetworkGovernanceSettings({
   const [isUpdating, setIsUpdating] = useState(false);
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { processEvent } = useProcessEvent();
   const { updateActiveNetwork } = useNetwork();
+  const { addError, addSuccess } = useToastStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
   const {
@@ -108,12 +109,8 @@ export default function NetworkGovernanceSettings({
         updateSession();
         return updateEditingNetwork();
       })
-      .then(() =>
-        dispatch(toastSuccess(t("custom-network:messages.network-closed"),
-                              t("actions.success"))))
-      .catch((error) =>
-        dispatch(toastError(t("custom-network:errors.failed-to-close-network", { error }),
-                            t("actions.failed"))))
+      .then(() => addSuccess(t("actions.success"), t("custom-network:messages.network-closed")))
+      .catch((error) => addError(t("actions.failed"), t("custom-network:errors.failed-to-close-network", { error })))
       .finally(() => {
         setIsClosing(false);
       });
@@ -202,10 +199,9 @@ export default function NetworkGovernanceSettings({
     });
 
     if (failed.length) {
-      dispatch(toastError(t("custom-network:errors.updated-parameters", {
+      addError(t("custom-network:errors.updating-values"), t("custom-network:errors.updated-parameters", {
             failed: failed.length,
-      }),
-                          t("custom-network:errors.updating-values")));
+      }));
       console.error(failed);
     }
 
@@ -221,10 +217,10 @@ export default function NetworkGovernanceSettings({
       await processEvent(StandAloneEvents.UpdateNetworkParams)
         .catch(error => console.debug("Failed to update network parameters", error));
 
-      dispatch(toastSuccess(t("custom-network:messages.updated-parameters", {
+      addSuccess("", t("custom-network:messages.updated-parameters", {
           updated: successQuantity,
           total: promises.length,
-      })));
+      }));
     }
 
     const hasChangedTokens = !!getChangedTokens().length;
@@ -242,8 +238,7 @@ export default function NetworkGovernanceSettings({
     };
 
     const handleError = (error) => {
-      dispatch(toastError(t("custom-network:errors.failed-to-update-network", { error }),
-                          t("actions.failed")));
+      addError(t("actions.failed"), t("custom-network:errors.failed-to-update-network", { error }));
       console.log(error);
     }
 
@@ -256,8 +251,7 @@ export default function NetworkGovernanceSettings({
             return updateEditingNetwork();
           })
           .then(() => {
-            dispatch(toastSuccess(t("custom-network:messages.refresh-the-page"),
-                                  t("actions.success")));
+            addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
           })
           .catch(handleError);
       })

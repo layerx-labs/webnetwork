@@ -16,7 +16,6 @@ import {DeployERC20Modal} from "components/setup/deploy-erc20-modal";
 
 import {useAppState} from "contexts/app-state";
 import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
-import {toastError, toastInfo, toastSuccess} from "contexts/reducers/change-toaster";
 
 import { DAPPKIT_LINK } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
@@ -29,6 +28,7 @@ import { RegistryParameters } from "types/dappkit";
 import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
@@ -81,6 +81,7 @@ export function RegistrySetup({
   const { loadSettings } = useSettings();
   const { findSupportedChain } = useChain();
   const { processEvent } = useProcessEvent();
+  const { addError, addSuccess, addInfo } = useToastStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
@@ -173,9 +174,9 @@ export function RegistrySetup({
 
         loadSettings(true);
       })
-      .then(() => dispatch(toastSuccess(t("registry.success.deploy.content"), t("registry.success.deploy.title"))))
+      .then(() => addSuccess(t("registry.success.deploy.title"), t("registry.success.deploy.content")))
       .catch(error => {
-        dispatch(toastError(t("registry.errors.deploy")));
+        addError("", t("registry.errors.deploy"));
         console.debug("Failed to deploy network registry", error);
       })
       .finally(() => setisDeployingRegistry(false));
@@ -230,9 +231,9 @@ export function RegistrySetup({
 
     handleSetDispatcher(bountyToken.value, registryAddress)
       .then(() => updateData())
-      .then(() => dispatch(toastSuccess(t("registry.success.dispatcher-setted"))))
+      .then(() => addSuccess("", t("registry.success.dispatcher-setted")))
       .catch(error => {
-        dispatch(toastError(t("registry.errors.dispatcher")));
+        addError("", t("registry.errors.dispatcher"));
         console.debug("Failed to set dispatcher", error);
       })
       .finally(() => setIsSettingDisptacher(false));
@@ -246,9 +247,9 @@ export function RegistrySetup({
           fromBlock: (txInfo as { blockNumber: number }).blockNumber 
         })
       ]))
-      .then(() => dispatch(toastSuccess(t("registry.success.allow"))))
+      .then(() => addSuccess("", t("registry.success.allow")))
       .catch(error => {
-        dispatch(toastError(t("registry.errors.allow")));
+        addError("", t("registry.errors.allow"));
         console.debug("Failed to allow token", error);
       })
       .finally(() => setIsAllowingToken(undefined));
@@ -270,7 +271,7 @@ export function RegistrySetup({
       return;
 
     if (!isAddress(address)) {
-      dispatch(toastInfo("Registry address value must be an address; Can't be 0x0"));
+      addInfo("", "Registry address value must be an address; Can't be 0x0");
       return;
     }
 
