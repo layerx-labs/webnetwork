@@ -102,7 +102,7 @@ export default function useERC20() {
         setDefaults();
     } else if (address && !name && isServiceReady && state.connectedChain?.matchWithNetworkChain !== false)
       state.Service?.active.getERC20TokenData(address)
-        .then(async ({ name, symbol, decimals, totalSupply, minimum }) => {
+        .then(async ({ name, symbol, decimals, totalSupply }) => {
           setName(name);
           setSymbol(symbol);
           setDecimals(decimals);

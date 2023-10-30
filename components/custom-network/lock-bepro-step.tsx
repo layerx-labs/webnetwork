@@ -22,6 +22,7 @@ import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber
 import {parseTransaction} from "helpers/transactions";
 
 import { CustomSession } from "interfaces/custom-session";
+import { RegistryEvents } from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {StepWrapperProps} from "interfaces/stepper";
@@ -29,6 +30,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import { UserRoleUtils } from "server/utils/jwt";
 
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useERC20 from "x-hooks/use-erc20";
 
@@ -48,6 +50,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const { state, dispatch } = useAppState();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
+  const { processEvent } = useProcessEvent();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
 
@@ -107,7 +110,10 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, lockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
-        return updateTokenBalance()
+        updateTokenBalance()
+        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+          fromBlock: tx.blockNumber
+        })
       })
       .catch((error) => {
         failTx(error, lockTxAction)
@@ -133,7 +139,10 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, unlockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
-        return updateTokenBalance();
+        updateTokenBalance();
+        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+          fromBlock: tx.blockNumber
+        })
       })
       .catch((error) => {
         failTx(error, unlockTxAction);

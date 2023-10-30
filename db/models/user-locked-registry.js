@@ -1,4 +1,6 @@
 "use strict";
+const { getValueToLowerCase } = require("../../helpers/db/getters");
+
 const { Model, DataTypes } = require("sequelize");
 
 class UserLockedRegistry extends Model {
@@ -6,21 +8,24 @@ class UserLockedRegistry extends Model {
     super.init(
       {
         id: {
-          autoIncrement: true,
           type: DataTypes.INTEGER,
-          allowNull: false,
+          autoIncrement: true,
           primaryKey: true,
+          unique: true,
         },
         address: {
-          type: DataTypes.STRING(255),
+          type: DataTypes.STRING,
           allowNull: false,
+          get() {
+            return getValueToLowerCase(this, "address");
+          },
         },
         amountLocked: {
-          type: DataTypes.STRING(255),
+          type: DataTypes.STRING,
           allowNull: false,
         },
         tokenId: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: false,
           references: {
             model: "tokens",
@@ -29,9 +34,8 @@ class UserLockedRegistry extends Model {
         },
         chainId: {
           type: DataTypes.INTEGER,
-          allowNull: false,
           references: {
-            model: "chains",
+            model: "chain",
             key: "chainId",
           },
         },
@@ -43,15 +47,42 @@ class UserLockedRegistry extends Model {
             key: "id",
           },
         },
+        createdAt: {
+          allowNull: false,
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          allowNull: false,
+          type: DataTypes.DATE,
+        },
       },
       {
         sequelize,
-        tableName: "users_locked_registry",
         modelName: "userLockedRegistry",
+        tableName: "users_locked_registry",
       }
     );
   }
-  static associate(models) {}
+
+  static associate(models) {
+    this.belongsTo(models.tokens, {
+      foreignKey: "tokenId",
+      sourceKey: "id",
+      as: "token",
+    });
+
+    this.belongsTo(models.chain, {
+      foreignKey: "chainId",
+      targetKey: "chainId",
+      as: "chain",
+    });
+
+    this.belongsTo(models.user, {
+      foreignKey: "userId",
+      sourceKey: "id",
+      as: "user",
+    });
+  }
 }
 
 module.exports = UserLockedRegistry;

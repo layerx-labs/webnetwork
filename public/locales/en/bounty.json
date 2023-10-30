@@ -111,7 +111,8 @@
     "bounty-update": "Task update failed",
     "banned-domain": "This domain is banned and cannot be used to open tasks.",
     "failed-to-cancel": "Task could not be canceled",
-    "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct."
+    "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct.",
+    "failed-to-edit": "Failed to edit bounty"
   },
   "title": "Create new Task",
   "fields": {
