@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {ContextualSpan} from "components/contextual-span";
 import CreatingNetworkLoader from "components/creating-network-loader";
 import LockBeproStep from "components/custom-network/lock-bepro-step";

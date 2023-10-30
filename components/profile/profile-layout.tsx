@@ -1,4 +1,4 @@
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import ProfileSide from "components/profile/profile-side";
 
 export default function ProfileLayout({ children, childrenClassName = "" }) {

@@ -14,7 +14,7 @@ import SelectNetworkSection, {
   SelectNetworkSectionProps
 } from "components/bounty/create-bounty/sections/select-network/view";
 import Button from "components/button";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";

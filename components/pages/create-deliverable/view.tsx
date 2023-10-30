@@ -29,11 +29,11 @@ interface CreateDeliverablePageViewProps {
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
   onHandleCreate: (...props) => void;
+  previewError: boolean;
   createIsLoading: boolean;
   originLinkError: OriginLinkErrors;
   createdDeliverableId: number;
   bountyContractId: number;
-  previewError?: boolean;
   previewLoading?: boolean;
   onPreviewStatusChange?: (status: string) => void;
 }
