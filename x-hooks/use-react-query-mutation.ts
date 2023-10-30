@@ -21,13 +21,13 @@ export default function useReactQueryMutation<TData, TError, TVariables, TContex
   
   function onSuccess(data: TData, variables: TVariables, context: TContext) {
     rest?.onSuccess?.(data, variables, context);
-    if (rest?.toastSuccess) addSuccess("", rest?.toastSuccess);
+    if (rest?.toastSuccess) addSuccess("Success", rest?.toastSuccess);
     if (queryKey) invalidate();
   }
 
   function onError(error: TError, variables: TVariables, context: TContext) {
     rest?.onError?.(error, variables, context);
-    if (rest?.toastError) addError("", rest?.toastError);
+    if (rest?.toastError) addError("Failed", rest?.toastError);
     console.debug("useReactQueryMutation", queryKey, error);
   }
 

@@ -59,7 +59,7 @@ export function RegistrySetup({
   isVisible,
   registryAddress
 } : RegistrySetupProps) {
-  const { t } = useTranslation("setup");
+  const { t } = useTranslation(["setup", "common"]);
 
   const [treasury, setTreasury] = useState("");
   const [erc20, setErc20] = useState(defaultContractField);
@@ -176,7 +176,7 @@ export function RegistrySetup({
       })
       .then(() => addSuccess(t("registry.success.deploy.title"), t("registry.success.deploy.content")))
       .catch(error => {
-        addError("", t("registry.errors.deploy"));
+        addError(t("common:actions.failed"), t("registry.errors.deploy"));
         console.debug("Failed to deploy network registry", error);
       })
       .finally(() => setisDeployingRegistry(false));
@@ -231,9 +231,9 @@ export function RegistrySetup({
 
     handleSetDispatcher(bountyToken.value, registryAddress)
       .then(() => updateData())
-      .then(() => addSuccess("", t("registry.success.dispatcher-setted")))
+      .then(() => addSuccess(t("common:actions.success"), t("registry.success.dispatcher-setted")))
       .catch(error => {
-        addError("", t("registry.errors.dispatcher"));
+        addError(t("common:actions.failed"), t("registry.errors.dispatcher"));
         console.debug("Failed to set dispatcher", error);
       })
       .finally(() => setIsSettingDisptacher(false));
@@ -247,9 +247,9 @@ export function RegistrySetup({
           fromBlock: (txInfo as { blockNumber: number }).blockNumber 
         })
       ]))
-      .then(() => addSuccess("", t("registry.success.allow")))
+      .then(() => addSuccess(t("common:actions.success"), t("registry.success.allow")))
       .catch(error => {
-        addError("", t("registry.errors.allow"));
+        addError(t("common:actions.failed"), t("registry.errors.allow"));
         console.debug("Failed to allow token", error);
       })
       .finally(() => setIsAllowingToken(undefined));
@@ -271,7 +271,7 @@ export function RegistrySetup({
       return;
 
     if (!isAddress(address)) {
-      addInfo("", "Registry address value must be an address; Can't be 0x0");
+      addInfo(t("common:actions.info"), "Registry address value must be an address; Can't be 0x0");
       return;
     }
 

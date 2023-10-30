@@ -42,10 +42,10 @@ export function DeployBountyTokenModal({
 
       onChange(tx.contractAddress, true);
       handleClose();
-      addSuccess("", t("registry.modals.deploy-bounty-token.success.deploy"));
+      addSuccess(t("actions.success"), t("registry.modals.deploy-bounty-token.success.deploy"));
     } catch (error) {
       if (error?.code !== MetamaskErrors.UserRejected)
-        addError("", t("registry.modals.deploy-bounty-token.errors.deploy"));
+        addError(t("actions.failed"), t("registry.modals.deploy-bounty-token.errors.deploy"));
     } finally {
       setIsExecuting(false);
     }

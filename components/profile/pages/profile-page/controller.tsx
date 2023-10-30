@@ -96,7 +96,7 @@ export default function ProfilePage() {
     if (query?.emailVerification === "success")
       addSuccess(t("notifications-form.success-toast.title"), t("notifications-form.success-toast.content"));
     if (query?.isGithubLoginExist === "true")
-      addError("", t("modals.connect-github.errors.github-already-exists"));
+      addError(t("actions.failed"), t("modals.connect-github.errors.github-already-exists"));
   }, [query]);
 
   return (

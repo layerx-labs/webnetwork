@@ -68,7 +68,7 @@ export default function ContractButton({
   async function validateDao() {
     if(state.Service?.active) return true
 
-    addError("", t("errors.failed-load-dao"));
+    addError(t("actions.failed"), t("errors.failed-load-dao"));
 
     return false
   }
@@ -76,12 +76,12 @@ export default function ContractButton({
   async function validateLoadNetwork() {
     if (query?.network) {
       if (state.Service?.starting) {
-        addWarning("", t("warnings.await-load-network"));
+        addWarning(t("actions.warning"), t("warnings.await-load-network"));
         return false;
       }
 
       if (!state.Service?.starting && !state.Service?.active.network) {
-        addError("", t("errors.failed-load-network"));
+        addError(t("actions.failed"), t("errors.failed-load-network"));
         return false;
       }
     }

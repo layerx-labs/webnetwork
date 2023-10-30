@@ -23,7 +23,7 @@ interface NetworkPermissionsProps {
 export default function NetworkPermissions({
   network
 }: NetworkPermissionsProps) {
-  const { t } = useTranslation(["custom-network"]);
+  const { t } = useTranslation(["custom-network", "common"]);
 
   const [currentDomain, setCurrentDomain] = useState<string>();
 
@@ -42,9 +42,9 @@ export default function NetworkPermissions({
     },
     onError: (error) => {
       if((error as AxiosError).response?.status === 409)
-        addError("", t("steps.permissions.domains.already-exists"));
+        addError(t("common:actions.failed"), t("steps.permissions.domains.already-exists"));
       else
-        addError("", t("steps.permissions.domains.created-error"));
+        addError(t("common:actions.failed"), t("steps.permissions.domains.created-error"));
     }
   });
 
@@ -61,9 +61,9 @@ export default function NetworkPermissions({
     },
     onError: (error) => {
       if((error as AxiosError).response?.status === 404)
-        addError("", t("steps.permissions.domains.remove-not-found"));
+        addError(t("common.actions.failed"), t("steps.permissions.domains.remove-not-found"));
       else
-      addError("", t("steps.permissions.domains.remove-error"));
+      addError(t("common.actions.failed"), t("steps.permissions.domains.remove-error"));
     }
   });
 

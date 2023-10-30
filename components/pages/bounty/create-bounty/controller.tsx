@@ -319,7 +319,7 @@ export default function CreateBountyPage({
       });
 
       if (!savedIssue) {
-        addError("", t("bounty:errors.creating-bounty"));
+        addError(t("actions.failed"), t("bounty:errors.creating-bounty"));
         return;
       }
 
@@ -367,11 +367,11 @@ export default function CreateBountyPage({
           ]));
 
           if (e?.code === MetamaskErrors.ExceedAllowance)
-            addError("", t("bounty:errors.exceeds-allowance"));
+            addError(t("actions.failed"), t("bounty:errors.exceeds-allowance"));
           else if (e?.code === MetamaskErrors.UserRejected)
-            addError("", t("bounty:errors.bounty-canceled"));
+            addError(t("actions.failed"), t("bounty:errors.bounty-canceled"));
           else
-            addError("", e.message || t("bounty:errors.creating-bounty"));
+            addError(t("actions.failed"), e.message || t("bounty:errors.creating-bounty"));
 
           console.debug(e);
 
@@ -389,7 +389,7 @@ export default function CreateBountyPage({
         }, currentNetwork?.name);
 
         if (!createdBounty) {
-          addWarning("", t("bounty:errors.sync"));
+          addWarning(t("actions.warning"), t("bounty:errors.sync"));
         }
 
         if (createdBounty?.[savedIssue.id]) {

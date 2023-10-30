@@ -88,7 +88,7 @@ export default function TransactionModal({
 
   function copyValue(value: string) {
     CopyValue(value);
-    addInfo("", t("transactions.copied", { value }));
+    addInfo(t("actions.info"), t("transactions.copied", { value }));
   }
 
   function getTransactionId() {

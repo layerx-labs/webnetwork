@@ -217,7 +217,7 @@ export default function NetworkGovernanceSettings({
       await processEvent(StandAloneEvents.UpdateNetworkParams)
         .catch(error => console.debug("Failed to update network parameters", error));
 
-      addSuccess("", t("custom-network:messages.updated-parameters", {
+      addSuccess(t("actions.success"), t("custom-network:messages.updated-parameters", {
           updated: successQuantity,
           total: promises.length,
       }));
