@@ -15,6 +15,9 @@ export async function get(req: NextApiRequest): Promise<Issue> {
 
   let network_id: number;
 
+  if ([id, networkName, chainName].some(k => k === "undefined" || k === undefined))
+    throw new HttpBadRequestError("wrong parameters values");
+
   if (isNaN(+id) || typeof networkName !== "string")
     throw new HttpBadRequestError("wrong parameters values");
 
