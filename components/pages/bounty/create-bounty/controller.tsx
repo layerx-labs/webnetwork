@@ -42,12 +42,12 @@ import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
+import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
+import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
-import {EventName} from "../../../../interfaces/analytics";
-import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -406,9 +406,11 @@ export default function CreateBountyPage({
           return { ...e, error: true };
         });
 
+      const returnValues = networkBounty?.events?.BountyCreated?.returnValues;
+
       pushAnalytic(EventName.CREATED_TASK, {
-        contractId: networkBounty.logs[0].args.id,
-        id: networkBounty.logs[0].args.cid,
+        contractId: returnValues?.id,
+        id: returnValues?.cid,
         transaction: networkBounty.transactionHash,
         error: !!networkBounty?.error,
         errorCode: networkBounty?.code,
