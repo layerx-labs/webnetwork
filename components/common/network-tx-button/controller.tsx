@@ -75,7 +75,7 @@ export default function NetworkTxButton({
   function checkForTxMethod() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    if (!txMethod || typeof getActiveNetwork[txMethod] !== "function")
+    if (!txMethod || typeof getActiveNetwork(txMethod) !== "function")
       throw new Error("Wrong txMethod");
   }
 
