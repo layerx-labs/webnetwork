@@ -95,7 +95,8 @@
     "tiny-emitter": "^2.1.0",
     "use-debounce": "^9.0.4",
     "uuid": "^9.0.1",
-    "yargs": "^17.4.0"
+    "yargs": "^17.4.0",
+    "zustand": "^4.4.4"
   },
   "devDependencies": {
     "@metamask/providers": "^8.1.1",
