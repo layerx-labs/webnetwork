@@ -13,7 +13,7 @@ const CACHE_MINUTES = 5;
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { tokenAddress, chainId } = req.body;
-
+    debugger;
     const missingValues = [
       [chainId, "chainId"],
       [tokenAddress, "Token Address"]
@@ -32,7 +32,9 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     if(!dbtoken) return res.status(404).json({ message: `token not found`})
 
-    if(addMinutes(new Date(dbtoken?.last_price_used?.updatedAt), CACHE_MINUTES) < new Date()){
+    const dataTokenPrice = dbtoken?.last_price_used?.updatedAt
+
+    if(!dataTokenPrice || addMinutes(new Date(dataTokenPrice), CACHE_MINUTES) < new Date()){
       const priceDbTokens = await FillPriceTokensDatabase()
       const price = priceDbTokens.find(({ id }) => id === dbtoken.id)
 
