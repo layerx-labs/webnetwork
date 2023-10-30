@@ -41,7 +41,7 @@ import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
 import useSignature from "x-hooks/use-signature";
-import {useTransactions} from "x-hooks/use-transactions";
+import {useStorageTransactions} from "./use-storage-transactions";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
@@ -53,7 +53,7 @@ export function useAuthentication() {
 
   const { connect } = useDao();
   const { chain } = useChain();
-  const transactions = useTransactions();
+  const transactions = useStorageTransactions();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { state, dispatch } = useAppState();
   const { loadNetworkAmounts } = useNetwork();
