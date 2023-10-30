@@ -4,6 +4,8 @@ import models from "db/models";
 
 import { COINGECKO_API } from "services/coingecko";
 
+import { HttpConflictError, HttpServerError } from "server/errors/http-errors";
+
 const {publicRuntimeConfig: {
     currency
   }} = getConfig();
@@ -41,14 +43,14 @@ export default async function FillPriceTokensDatabase() {
     return uniqueSymbol;
   });
 
-  if(!coinsExistInDb?.length) throw new Error("coingecko did not find the id for the tokens");
+  if(!coinsExistInDb?.length) throw new HttpConflictError("coingecko did not find the id for the tokens");
 
   const ids = coinsExistInDb.map(({ id }) => id).join();
 
   const price = await COINGECKO_API.get(`/simple/price?ids=${ids}&vs_currencies=${currencys}`);
 
   if (!price?.data) {
-    throw new Error("Error to get prices coingecko");
+    throw new HttpServerError("Error to get prices coingecko");
   }
 
   const pricesBySymbol = coinsExistInDb.reduce((res, { symbol, id }) => {
@@ -61,8 +63,7 @@ export default async function FillPriceTokensDatabase() {
     const coinsByTokenSymbol = coinsExistInDb.filter(v => v.symbol.toLowerCase() === token.symbol.toLowerCase())
 
     if (coinsByTokenSymbol.length === 1) {
-      const price = pricesBySymbol[lowercaseSymbol];
-      await updateToken(token, price, currencys, new Date());
+      await updateToken(token, pricesBySymbol[lowercaseSymbol][currencys], currencys, new Date());
     }
 
     if(coinsByTokenSymbol.length > 1) {
