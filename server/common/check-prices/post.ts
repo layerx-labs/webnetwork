@@ -1,5 +1,6 @@
 import { addMinutes } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
+import getConfig from "next/config";
 
 import models from "db/models";
 
@@ -10,10 +11,16 @@ import { error as LogError } from "services/logging";
 
 const CACHE_MINUTES = 5;
 
+const {publicRuntimeConfig: {
+  currency
+}} = getConfig();
+
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { tokenAddress, chainId } = req.body;
-    debugger;
+
+    const NoPriceMessage = `No price for this token`
+
     const missingValues = [
       [chainId, "chainId"],
       [tokenAddress, "Token Address"]
@@ -38,10 +45,12 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       const priceDbTokens = await FillPriceTokensDatabase()
       const price = priceDbTokens.find(({ id }) => id === dbtoken.id)
 
-      if(!price?.last_price_used) return res.status(404).json({ message: `no price for this token` })
+      if(!price?.last_price_used[currency]) return res.status(404).json({ message: NoPriceMessage })
 
       return res.status(200).json(price.last_price_used);
     }
+
+    if(!dbtoken?.last_price_used[currency]) return res.status(404).json({ message: NoPriceMessage })
         
     return res.status(200).json(dbtoken.last_price_used);
 

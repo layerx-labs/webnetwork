@@ -8,6 +8,14 @@ const {publicRuntimeConfig: {
     currency
   }} = getConfig();
 
+async function updateToken (token, price: object, currencys: string, updatedAt: Date) {
+  token.last_price_used = {
+      [currencys]: price,
+      updatedAt,
+  };
+  await token.save();
+}
+
 export default async function FillPriceTokensDatabase() {
   const currencys = currency || "usd";
 
@@ -18,23 +26,20 @@ export default async function FillPriceTokensDatabase() {
   const dbSymbols = [...new Set(tokens.map(({ symbol }) => symbol?.toLowerCase()))]
   const coinsBySymbolOnDb = coins.filter((token) => dbSymbols.includes(token.symbol?.toLowerCase()));
 
-  const coinsExistInDb = []
- 
-  if(coinsBySymbolOnDb?.length !== dbSymbols?.length){
-    for(const coinBySymbolOnDb of coinsBySymbolOnDb){
-      const uniqueSymbol = coinsBySymbolOnDb.filter(v => v.symbol === coinBySymbolOnDb.symbol)?.length === 1
-      const platforms: { [key: string]: string } = coinBySymbolOnDb.platforms
-
-      if(!uniqueSymbol){
-        for (const [, value] of Object.entries(platforms)) { 
-          if(tokens.find(t => t?.address?.toLowerCase() === value?.toLowerCase()))
-            coinsExistInDb.push(coinBySymbolOnDb)
+  const coinsExistInDb = coinsBySymbolOnDb.filter((coin) => {
+    const uniqueSymbol = coinsBySymbolOnDb.filter((v) => v.symbol === coin.symbol).length === 1;
+    const platforms: { [key: string]: string } = coin.platforms;
+  
+    if (!uniqueSymbol) {
+      for (const [, value] of Object.entries(platforms)) {
+        if (tokens.find((t) => t?.address?.toLowerCase() === value?.toLowerCase())) {
+          return true;
         }
       }
-      
-      if(uniqueSymbol) coinsExistInDb.push(coinBySymbolOnDb)
     }
-  }
+  
+    return uniqueSymbol;
+  });
 
   if(!coinsExistInDb?.length) throw new Error("coingecko did not find the id for the tokens");
 
@@ -52,30 +57,27 @@ export default async function FillPriceTokensDatabase() {
   }, {});
 
   for (const token of tokens) {
+    const lowercaseSymbol = token.symbol.toLowerCase();
     const coinsByTokenSymbol = coinsExistInDb.filter(v => v.symbol.toLowerCase() === token.symbol.toLowerCase())
-    const uniqueSymbol = coinsByTokenSymbol?.length === 1
 
-    if (pricesBySymbol[token.symbol.toLowerCase()] && uniqueSymbol) {
-      token.last_price_used = {
-        ...pricesBySymbol[token.symbol.toLowerCase()],
-        updatedAt: new Date(),
-      };
-      await token.save();
+    if (coinsByTokenSymbol.length === 1) {
+      const price = pricesBySymbol[lowercaseSymbol];
+      await updateToken(token, price, currencys, new Date());
     }
 
-    if(!uniqueSymbol) {
+    if(coinsByTokenSymbol.length > 1) {
       for(const ctoken of coinsExistInDb){
         const platforms: { [key: string]: string } = ctoken.platforms
         for(const [, value] of Object.entries(platforms)){
           if(value.toLowerCase() === token.address.toLowerCase()){
-            token.last_price_used = {
-              [currencys]: price?.data?.[ctoken.id]?.[currencys],
-              updatedAt: new Date(),
-            }
-            await token.save();
+            await updateToken(token, price?.data?.[ctoken.id]?.[currencys], currencys, new Date());
           }
         }
       }
+    }
+
+    if(coinsByTokenSymbol?.length === 0) {
+      await updateToken(token, undefined, undefined, new Date());
     }
   }
 
