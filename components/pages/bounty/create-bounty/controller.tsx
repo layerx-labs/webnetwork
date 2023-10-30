@@ -323,15 +323,6 @@ export default function CreateBountyPage({
         originLink
       };
 
-      const preTaskPayload = {
-        ...payload,
-        tags: selectedTags,
-        isKyc: isKyc,
-        tierList: tierList?.length ? tierList : null,
-        amount: issueAmount.value,
-        networkName: currentNetwork?.name
-      }
-
       pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
 
       const savedIssue = await useCreatePreBounty({
