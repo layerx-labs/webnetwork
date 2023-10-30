@@ -14,7 +14,6 @@ import leaderboard from "public/locales/en/leaderboard.json";
 import myOracles from "public/locales/en/my-oracles.json";
 import profile from "public/locales/en/profile.json";
 import proposal from "public/locales/en/proposal.json";
-import pullRequest from "public/locales/en/pull-request.json";
 import setup from "public/locales/en/setup.json";
 
 i18n
@@ -48,7 +47,6 @@ i18n
         "my-oracles": myOracles,
         profile,
         proposal,
-        "pull-request": pullRequest,
         setup
       }
     },
