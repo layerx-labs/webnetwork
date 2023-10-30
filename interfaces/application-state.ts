@@ -1,13 +1,12 @@
 import {Dispatch} from "react";
 
-import {TreasuryInfo} from "@taikai/dappkit";
-import { Web3Connection } from "@taikai/dappkit";
+import {TreasuryInfo, Web3Connection} from "@taikai/dappkit";
 
-import { Spinners } from "contexts/reducers/change-spinners";
+import {Spinners} from "contexts/reducers/change-spinners";
 import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
-import { MatchAccountsStatus } from "interfaces/enums/api";
+import {MatchAccountsStatus} from "interfaces/enums/api";
 import {IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
 import {kycSession} from "interfaces/kyc-session";
 import {LoadingState} from "interfaces/loading-state";
@@ -15,7 +14,6 @@ import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {ToastNotification} from "interfaces/toast-notification";
 import {Token} from "interfaces/token";
-import {BlockTransaction, SimpleBlockTransactionPayload, UpdateBlockTransaction} from "interfaces/transaction";
 
 import DAO from "services/dao-service";
 
@@ -91,7 +89,6 @@ export interface State {
   Service: ServiceState | null,
   loading: LoadingState | null;
   toaster: ToastNotification[];
-  transactions: (SimpleBlockTransactionPayload | BlockTransaction | UpdateBlockTransaction)[];
   currentUser: CurrentUserState | null,
   connectedChain: ConnectedChain | null,
   currentBounty: CurrentBounty | null,
