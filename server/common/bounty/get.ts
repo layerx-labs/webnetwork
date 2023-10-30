@@ -3,14 +3,15 @@ import {NextApiRequest} from "next";
 import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
-import Issue from "db/models/issue.model";
 
 import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
 import {chainFromHeader} from "helpers/chain-from-header";
 
+import { IssueData } from "interfaces/issue-data";
+
 import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
-export async function get(req: NextApiRequest): Promise<Issue> {
+export async function get(req: NextApiRequest): Promise<IssueData> {
   const { ids, chainId } = req.query;
 
   if (!ids?.length)

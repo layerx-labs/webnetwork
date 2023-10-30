@@ -7,11 +7,22 @@ jest.mock("services/ipfs-service");
 jest.mock("helpers/chain-from-header");
 jest.mock("db/models", () => ({
   issue: {
-    findOne: jest.fn().mockImplementation(() => ({ id: 1 }))
+    findOne: jest.fn().mockImplementation(() => ({ 
+      id: 1,
+      dataValues: {
+      },
+      network: {
+        mergeCreatorFeeShare: 1,
+        proposerFeeShare: 1
+      }
+    }))
   },
   chain: {
     findOne: jest.fn()
   }
+}));
+jest.mock("helpers/calculateDistributedAmounts", () => ({
+  getDeveloperAmount: () => jest.fn().mockReturnValue(0)
 }));
 
 describe("server/common/bounty/get", () => {
@@ -23,13 +34,13 @@ describe("server/common/bounty/get", () => {
     await expect(() => get(request)).rejects.toThrow(new HttpBadRequestError("Missing params"));
   });
 
-  it("Should get issue without filter network and chain", async () => {
+  it("Should get issue", async () => {
     const request = {
       query: {
-        ids: ["1"]
+        ids: ["1", "network", "chain"]
       }
     } as unknown as NextApiRequest;
     const output = await get(request);
-    console.log(output)
+    expect(output.id).toBe(1);
   });
 });
