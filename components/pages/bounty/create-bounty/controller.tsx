@@ -12,10 +12,9 @@ import CreateBountyPageView from "components/pages/bounty/create-bounty/view";
 
 import {useAppState} from "contexts/app-state";
 import {toastError, toastWarning} from "contexts/reducers/change-toaster";
-import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -26,15 +25,15 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
-import { DistributionsProps } from "interfaces/proposal";
+import {DistributionsProps} from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import { useCreatePreBounty } from "x-hooks/api/bounty";
-import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import {useCreatePreBounty} from "x-hooks/api/bounty";
+import {useProcessEvent} from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
@@ -45,6 +44,7 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
+import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -101,11 +101,13 @@ export default function CreateBountyPage({
   const { handleAddNetwork } = useNetworkChange();
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, }
+    state: { Settings, Service, currentUser, connectedChain, }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });
+
+  const {add: addTx, update: updateTx, list: transactions} = transactionStore()
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -322,16 +324,13 @@ export default function CreateBountyPage({
         return;
       }
 
-      const transactionToast = addTx([
-        {
+      const transactionToast = addTx({
           type: TransactionTypes.openIssue,
           amount: payload.amount,
           network: currentNetwork,
           currency: transactionalToken?.symbol
-        },
-      ]);
+      });
 
-      dispatch(transactionToast);
 
       const bountyPayload: BountyPayload = {
         cid: savedIssue.ipfsUrl,
@@ -355,15 +354,13 @@ export default function CreateBountyPage({
       const networkBounty = await Service?.active
         .openBounty(bountyPayload)
         .catch((e) => {
-          dispatch(updateTx([
-              {
-                ...transactionToast.payload[0],
-                status:
-                  e?.code === MetamaskErrors.UserRejected
-                    ? TransactionStatus.failed
-                    : TransactionStatus.failed,
-              },
-          ]));
+          updateTx({
+            ...transactionToast,
+            status:
+              e?.code === MetamaskErrors.UserRejected
+                ? TransactionStatus.failed
+                : TransactionStatus.failed,
+          } as SimpleBlockTransactionPayload);
 
           if (e?.code === MetamaskErrors.ExceedAllowance)
             dispatch(toastError(t("bounty:errors.exceeds-allowance")));
@@ -378,10 +375,7 @@ export default function CreateBountyPage({
         });
 
       if (networkBounty?.error !== true) {
-        dispatch(updateTx([
-            parseTransaction( networkBounty,
-                              transactionToast.payload[0] as SimpleBlockTransactionPayload),
-        ]));
+        updateTx(parseTransaction( networkBounty, transactionToast as SimpleBlockTransactionPayload));
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber

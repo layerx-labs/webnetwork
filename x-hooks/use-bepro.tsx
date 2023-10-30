@@ -3,11 +3,10 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import {useAppState} from "contexts/app-state";
-import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {parseTransaction} from "helpers/transactions";
 
-import { NetworkEvents } from "interfaces/enums/events";
+import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {SimpleBlockTransactionPayload, TransactionCurrency} from "interfaces/transaction";
@@ -16,24 +15,26 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
-import { useProcessEvent } from "./api/events/use-process-event";
+import {useProcessEvent} from "./api/events/use-process-event";
+import {transactionStore} from "./stores/transaction-list/transaction.store";
 
 const DIVISOR = 1000000;
 
 export default function useBepro() {
   const { t } = useTranslation("common");
 
-  const { dispatch, state } = useAppState();
+  const { state } = useAppState();
   const { processEvent } = useProcessEvent();
+  const {add: addTx, update: updateTx} = transactionStore();
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
 
   const failTx = (err, tx, reject?) => {
 
-    dispatch(updateTx([{
+    updateTx({
       ...tx.payload[0],
       status: err?.message?.search("User denied") > -1 ? TransactionStatus.rejected : TransactionStatus.failed
-    }]));
+    });
 
     reject?.(err);
     console.error("Tx error", err);
@@ -46,10 +47,10 @@ export default function useBepro() {
         type: TransactionTypes.dispute,
         network: state.Service?.network?.active,
       }] as any);
-      dispatch(disputeTxAction);
+
       await state.Service?.active.disputeProposal(+issueContractId, +proposalContractId)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, disputeTxAction.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, disputeTxAction as SimpleBlockTransactionPayload))
           resolve?.(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -60,16 +61,14 @@ export default function useBepro() {
 
   async function handleFeeSettings(closeFee: number, cancelFee: number): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.configFees,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.updateConfigFees(closeFee, cancelFee)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -80,16 +79,14 @@ export default function useBepro() {
 
   async function handleAmountNetworkCreation(amount: string | number): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.amountForNetworkCreation,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.updateAmountNetworkCreation(amount)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -100,16 +97,14 @@ export default function useBepro() {
 
   async function handleFeeNetworkCreation(amount: number): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.feeForNetworkCreation,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.updateFeeNetworkCreation(amount)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -122,15 +117,14 @@ export default function useBepro() {
                                   proposalContractId: number,
                                   tokenUri: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const closeIssueTx = addTx([{
+      const closeIssueTx = addTx({
         type: TransactionTypes.closeIssue,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(closeIssueTx);
+      });
 
       await state.Service?.active.closeBounty(+bountyId, +proposalContractId, tokenUri)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, closeIssueTx.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, closeIssueTx as SimpleBlockTransactionPayload))
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -143,18 +137,16 @@ export default function useBepro() {
                                           amount: string,
                                           currency: string): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.updateBountyAmount,
         network: state.Service?.network?.active,
         amount: amount,
         currency: currency
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.updateBountyAmount(bountyId, amount)
       .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
-        dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]))
+        updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
         resolve(txInfo);
       })
       .catch((err: { message: string; }) => {
@@ -167,11 +159,10 @@ export default function useBepro() {
                                     issueId: string, 
                                     funding = false): Promise<{ blockNumber: number; } | Error> {
     return new Promise(async (resolve, reject) => {
-      const redeemTx = addTx([{
+      const redeemTx = addTx({
         type: TransactionTypes.redeemIssue,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(redeemTx);
+      });
 
       let tx: { blockNumber: number; }
 
@@ -184,7 +175,7 @@ export default function useBepro() {
         })
         .then((canceledBounties) => {
           if (!canceledBounties?.[issueId]) throw new Error('Failed');
-          dispatch(updateTx([parseTransaction(tx, redeemTx.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(tx, redeemTx as SimpleBlockTransactionPayload))
           resolve(tx);
         })
         .catch((err: { message: string; }) => {
@@ -195,11 +186,11 @@ export default function useBepro() {
   
   async function handleHardCancelBounty(contractId?: number, issueId?: string): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.redeemIssue,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(transaction);
+      });
+
       let tx: { blockNumber: number; }
 
       await state.Service?.active.hardCancel(contractId)
@@ -213,7 +204,7 @@ export default function useBepro() {
         })
         .then((canceledBounties) => {
           if (!canceledBounties?.[issueId]) throw new Error('Failed');
-          dispatch(updateTx([parseTransaction(tx, transaction.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(tx, transaction as SimpleBlockTransactionPayload))
           resolve(canceledBounties);
         })
         .catch((err: { message: string; }) => {
@@ -228,16 +219,15 @@ export default function useBepro() {
 
     return new Promise(async (resolve, reject) => {
 
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.proposeMerge,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(tx);
+      });
 
       await state.Service?.active
         .createProposal(bountyId, pullRequestId, [recipient], [100])
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -256,15 +246,14 @@ export default function useBepro() {
       const type = tokenType === "transactional" ?
         TransactionTypes.approveTransactionalERC20Token : TransactionTypes.approveSettlerToken ;
 
-      const tx = addTx([{ type, network: state.Service?.network?.active, amount, currency } as any]);
-      dispatch(tx);
+      const tx = addTx({ type, network: state.Service?.network?.active, amount, currency });
 
       await state.Service?.active.approveToken(tokenAddress, amount)
       .then((txInfo) => {
         if (!txInfo)
           throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
 
-        dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]))
+        updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
         resolve(txInfo);
       })
         .catch((err) => {
@@ -278,20 +267,19 @@ export default function useBepro() {
                                 currency: TransactionCurrency): Promise<{ blockNumber: number; } | Error> {
 
     return new Promise(async (resolve, reject) => {
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.takeBackOracles,
         amount,
         currency,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(tx);
+      });
 
       await state.Service?.active
         .takeBackDelegation(delegationId)
         .then((txInfo: { blockNumber: number; }) => {
           if (!txInfo)
             throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
-          dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]))
+          updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
 
           processEvent(NetworkEvents.OraclesTransfer, undefined, {
             fromBlock: txInfo.blockNumber
@@ -310,11 +298,10 @@ export default function useBepro() {
                                          originCID: string,
                                          cid: number ): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.createDeliverable,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(tx);
+      });
 
       await state.Service?.active?.createPullRequest( bountyId,
                                                       "",
@@ -324,7 +311,7 @@ export default function useBepro() {
                                                       "",
                                                       cid)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((error: { message: string; }) => {
@@ -335,15 +322,15 @@ export default function useBepro() {
 
   async function handleMakePullRequestReady(bountyId: number, pullRequestId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.makeDeliverableReady,
         network: state.Service?.network?.active
-      } as any]);
-      dispatch(tx);
+      });
+
 
       await state.Service?.active.setPullRequestReadyToReview(bountyId, pullRequestId)
       .then((txInfo: TransactionReceipt) => {
-        dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
       })
       .catch((error: { message: string; }) => {
@@ -354,15 +341,13 @@ export default function useBepro() {
 
   async function handleCancelPullRequest(bountyId: number, pullRequestId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.cancelDeliverable,
-        network: state.Service?.network?.active} as any]);
-
-      dispatch(tx);
+        network: state.Service?.network?.active});
 
       await state.Service?.active.cancelPullRequest(bountyId, pullRequestId)
       .then((txInfo: TransactionReceipt) => {
-        dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
       })
       .catch((error: { message: string; }) => {
@@ -373,15 +358,14 @@ export default function useBepro() {
 
   async function handleRefuseByOwner(bountyId: number, proposalId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const tx = addTx([{
+      const tx = addTx({
         type: TransactionTypes.refuseProposal,
         network: state.Service?.network?.active
-      } as any])
-      dispatch(tx);
+      })
 
       await state.Service?.active.refuseProposal(bountyId, proposalId)
       .then((txInfo: TransactionReceipt) => {
-        dispatch(updateTx([parseTransaction(txInfo, tx.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
       })
       .catch((error: { message: string; }) => {
@@ -392,16 +376,14 @@ export default function useBepro() {
 
   async function handleDeployNetworkV2(networkToken: string): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.deployNetworkV2,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.deployNetworkV2(networkToken)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -418,12 +400,10 @@ export default function useBepro() {
                                       cancelFee: string,
                                       bountyToken: string): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.deployNetworkRegistry,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.deployNetworkRegistry(erc20,
                                                         lockAmountForNetworkCreation,
@@ -433,7 +413,7 @@ export default function useBepro() {
                                                         BigNumber(cancelFee).multipliedBy(DIVISOR).toString(),
                                                         bountyToken)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -444,16 +424,14 @@ export default function useBepro() {
 
   async function handleSetDispatcher(nftToken: string, networkAddress: string): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.setNFTDispatcher,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.setNFTTokenDispatcher(nftToken, networkAddress)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -464,16 +442,14 @@ export default function useBepro() {
 
   async function handleAddNetworkToRegistry(networkAddress: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.addNetworkToRegistry,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.addNetworkToRegistry(networkAddress)
         .then(txInfo => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch(err => {
@@ -484,16 +460,14 @@ export default function useBepro() {
 
   async function handleDeployBountyToken(name: string, symbol: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.deployBountyToken,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.deployBountyToken(name, symbol)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -517,15 +491,12 @@ export default function useBepro() {
         await service.loadNetwork(networkAddress);
       }
 
-      const transaction = addTx([
-        { type: TransactionTypes[`set${parameter[0].toUpperCase() + parameter.slice(1)}`] } as any
-      ]);
-
-      dispatch(transaction);
+      const transaction =
+        addTx({ type: TransactionTypes[`set${parameter[0].toUpperCase() + parameter.slice(1)}`] });
 
       await service.setNetworkParameter(parameter, value)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -539,18 +510,16 @@ export default function useBepro() {
                                   currency?: string, 
                                   tokenDecimals?: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.fundBounty,
         amount,
         currency,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.fundBounty(bountyId, amount, tokenDecimals)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -564,18 +533,16 @@ export default function useBepro() {
                                           amount?: string,
                                           currency?: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.retractFundBounty,
         amount,
         currency,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.retractFundBounty(bountyId, fundingId)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -589,18 +556,16 @@ export default function useBepro() {
                                                 amount?: string,
                                                 currency?: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.withdrawFundRewardBounty,
         amount,
         currency,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.withdrawFundRewardBounty(bountyId, fundingId)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -614,16 +579,14 @@ export default function useBepro() {
                                            add = true): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
 
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.changeAllowedTokens,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active[( add ? 'addAllowedTokens' : 'removeAllowedTokens')](addresses, isTransactional)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {
@@ -634,16 +597,14 @@ export default function useBepro() {
 
   async function handleCloseNetwork() {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.closeNetwork,
         network: state.Service?.network?.active
-      } as any]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active?.unlockFromRegistry()
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err: { message: string; }) => {

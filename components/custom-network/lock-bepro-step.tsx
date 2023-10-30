@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {ProgressBar} from "react-bootstrap";
 
 import BigNumber from "bignumber.js";
-import { useSession } from "next-auth/react";
+import {useSession} from "next-auth/react";
 import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
@@ -15,24 +15,24 @@ import UnlockBeproModal from "components/unlock-bepro-modal";
 
 import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
-import {addTx, TxList, updateTx} from "contexts/reducers/change-tx-list";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import {UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber";
 import {parseTransaction} from "helpers/transactions";
 
-import { CustomSession } from "interfaces/custom-session";
+import {CustomSession} from "interfaces/custom-session";
 import { RegistryEvents } from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {StepWrapperProps} from "interfaces/stepper";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import { UserRoleUtils } from "server/utils/jwt";
+import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useERC20 from "x-hooks/use-erc20";
+import {transactionStore} from "../../x-hooks/stores/transaction-list/transaction.store";
 
 export default function LockBeproStep({ activeStep, index, handleClick, validated }: StepWrapperProps) {
   const session = useSession();
@@ -47,10 +47,11 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const [hasNetworkRegistered, setHasNetworkRegistered] = useState(false);
 
   const registryToken = useERC20();
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
+  const {add: addTx, update: updateTx} = transactionStore();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
 
@@ -84,10 +85,10 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const failTx = (err, tx) => {
 
-    dispatch(updateTx([{
-      ...tx.payload[0],
+    updateTx({
+      ...tx,
       status: err?.message?.search("User denied") > -1 ? TransactionStatus.rejected : TransactionStatus.failed
-    }]));
+    });
 
     console.error("Tx error", err);
   }
@@ -95,13 +96,13 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   async function handleLock() {
     if (!state.Service?.active || !amount) return;
 
-    const lockTxAction = addTx([{ 
+    const lockTxAction = addTx({
       type: TransactionTypes.lock,
       amount: amount.toFixed(),
       currency: registryTokenSymbol
-    }]);
+    });
 
-    dispatch(lockTxAction)
+
     setIsLocking(true);
 
     state.Service?.active.lockInRegistry(amount.toFixed())
@@ -109,7 +110,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
-        dispatch(updateTx([parseTransaction(tx, lockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(tx, lockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance()
         return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
@@ -124,13 +125,12 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   async function handleUnLock() {
     if (!state.Service?.active) return;
 
-    const unlockTxAction = addTx([{ 
+    const unlockTxAction = addTx({
       type: TransactionTypes.unlock,
       amount: amountLocked.toFixed(),
       currency: t("$oracles", { token: registryTokenSymbol })  
-    }]);
+    })
 
-    dispatch(unlockTxAction)
     setIsUnlocking(true);
 
     state.Service?.active.unlockFromRegistry()
@@ -138,7 +138,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
-        dispatch(updateTx([parseTransaction(tx, unlockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(tx, unlockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance();
         return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
@@ -177,15 +177,15 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   function handleApproval() {
     if (amountNeeded?.lte(0) || isApproving) return;
 
-    const approveTxAction = addTx([{ type: TransactionTypes.approveTransactionalERC20Token }] as TxList);
-    
-    dispatch(approveTxAction);
+    const approveTxAction =
+      addTx({ type: TransactionTypes.approveTransactionalERC20Token } as SimpleBlockTransactionPayload);
+
     setIsApproving(true);
 
     state.Service?.active.approveTokenInRegistry(amount?.toFixed())
       .then((tx) => {
         registryToken.updateAllowanceAndBalance();
-        dispatch(updateTx([parseTransaction(tx, approveTxAction.payload[0] as SimpleBlockTransactionPayload)]));
+        updateTx(parseTransaction(tx, approveTxAction as SimpleBlockTransactionPayload));
       })
       .catch((err) => {
         failTx(err, approveTxAction);

@@ -4,17 +4,17 @@ import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core"
 import BigNumber from "bignumber.js";
 
 import {useAppState} from "contexts/app-state";
-import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import {UNSUPPORTED_CHAIN} from "helpers/constants";
 import {parseTransaction} from "helpers/transactions";
 
 import {MetamaskErrors} from "interfaces/enums/Errors";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
-import { SimpleBlockTransactionPayload } from "interfaces/transaction";
+import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import useBepro from "x-hooks/use-bepro";
+import {transactionStore} from "./stores/transaction-list/transaction.store";
 
 export interface useERC20 {
   name: string;
@@ -45,8 +45,9 @@ export default function useERC20() {
   const [allowance, setAllowance] = useState(BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const { handleApproveToken } = useBepro();
+  const {add: addTx, update: updateTx} = transactionStore();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -129,23 +130,21 @@ export default function useERC20() {
                         cap: string,
                         ownerAddress: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const transaction = addTx([{
+      const transaction = addTx({
         type: TransactionTypes.deployERC20Token,
         network: state.Service?.network?.active
-      }]);
-
-      dispatch(transaction);
+      });
 
       await state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
         .then((txInfo: TransactionReceipt) => {
-          dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })
         .catch((err) => {
-          dispatch(updateTx([{
-            ...transaction.payload[0],
+          updateTx({
+            ...transaction,
             status: err?.code === MetamaskErrors.UserRejected ? TransactionStatus.rejected : TransactionStatus.failed,
-          }]));
+          } as SimpleBlockTransactionPayload);
           reject(err);
         });
     });

@@ -79,14 +79,12 @@ export default function NetworkTxButton({
   function makeTx() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    const tmpTransaction = {
+    const tmpTransaction = addTx({
       type: txType,
       amount: txParams?.tokenAmount || "0",
       currency: txCurrency || t("misc.$token"),
       network: state.Service?.network?.active
-    }
-
-    addTx(tmpTransaction);
+    })
     
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
@@ -118,10 +116,10 @@ export default function NetworkTxButton({
       })
       .catch((e) => {
 
-        dispatch(updateTx([{
-          ...tmpTransaction.payload[0],
+        updateTx({
+          ...tmpTransaction,
           status: e?.code === MetamaskErrors.UserRejected ? TransactionStatus.rejected : TransactionStatus.failed,
-        }]));
+        } as SimpleBlockTransactionPayload)
 
         console.error(`Failed network-tx-button`, e);
 

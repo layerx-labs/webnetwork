@@ -19,11 +19,11 @@ export const transactionStore =
       set(() => /** prepend the entry like [].shift() */
         ({list: [_entry, ...get().list]}))
 
-      return _entry;
+      return _entry; /** return the added entry so we can updated it later */
     },
     update: (entry: Transaction) =>
       set(() => {
-        const index = get().list.indexOf(entry);
+        const index = get().list.findIndex(_entry => _entry.id === entry.id);
         if (index < 0)
           return {list: get().list};
         return {list: get().list.splice(index, 1, entry)}
