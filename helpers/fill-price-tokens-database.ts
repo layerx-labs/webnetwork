@@ -37,13 +37,17 @@ export default async function FillPriceTokensDatabase() {
     return uniqueSymbol;
   });
 
-  if(!coinsExistInDb?.length) throw new HttpConflictError("coingecko did not find the id for the tokens");
+  if(!coinsExistInDb?.length) {
+    for(const t of tokens) await updateToken(t, undefined, new Date());
+    throw new HttpConflictError("coingecko did not find the id for the tokens");
+  }
 
   const ids = coinsExistInDb.map(({ id }) => id).join();
 
   const price = await COINGECKO_API.get(`/simple/price?ids=${ids}&vs_currencies=${currencys.join()}`);
 
   if (!price?.data) {
+    for(const t of tokens) await updateToken(t, undefined, new Date());
     throw new HttpServerError("Error to get prices coingecko");
   }
   
