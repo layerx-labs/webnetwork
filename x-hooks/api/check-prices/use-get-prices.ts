@@ -1,6 +1,6 @@
 import { api } from "services/api";
 
-interface useGetPricesProps {
+interface tokens {
   address: string;
   chainId: number;
 }
@@ -10,6 +10,6 @@ interface useGetPricesProps {
  * @param address and @param chainId
  * @returns list of filtered chains
  */
-export async function useGetPrices(payload: useGetPricesProps[]) {
-  return api.post("/check-prices", payload).then(({ data }) => data);
+export async function useGetPrices(tokens: tokens[]) {
+  return api.post("/check-prices", { tokens }).then(({ data }) => data);
 }
