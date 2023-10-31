@@ -44,6 +44,7 @@ export default function PriceConversorView({
     <PriceConversorModal
         value={currentValue}
         token={token}
+        symbol={currency}
         show={isVisible}
         onClose={() => handleIsVisible(false)}
       />

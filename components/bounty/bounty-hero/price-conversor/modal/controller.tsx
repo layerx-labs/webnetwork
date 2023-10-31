@@ -15,6 +15,7 @@ interface IPriceConversiorModalProps {
   onClose: ()=> void;
   value?: BigNumber;
   token: Token;
+  symbol: string;
 }
 interface Options {
   value: string;
@@ -27,7 +28,8 @@ export default function PriceConversorModal({
   show,
   onClose,
   value,
-  token
+  token,
+  symbol
 }:IPriceConversiorModalProps) {
 
   const [options, setOptions] = useState<Options[]>(defaultValue);
@@ -79,7 +81,7 @@ export default function PriceConversorModal({
     <PriceConversorModalView 
       show={show} 
       onClose={onClose} 
-      symbol={token.symbol} 
+      symbol={symbol} 
       currentValue={currentValue} 
       handleCurrentValue={setValue} 
       currentPrice={currentPrice} 
