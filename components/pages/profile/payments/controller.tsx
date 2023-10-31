@@ -13,6 +13,8 @@ import { getPricesAndConvert } from "helpers/tokens";
 import { PaymentsPageProps } from "types/pages";
 import { TotalFiatNetworks } from "types/utils";
 
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+
 export default function PaymentsPage({ 
   payments,
   chains,
@@ -24,6 +26,7 @@ export default function PaymentsPage({
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
   const { state } = useAppState();
+  const { getPriceFor } = useCoingeckoPrice();
 
   const isNetworkPayments = !!router?.query?.networkName && !!payments?.length;
   const fiatSymbol = state?.Settings?.currency?.defaultFiat?.toUpperCase();
@@ -42,7 +45,7 @@ export default function PaymentsPage({
       token: payment.issue.transactionalToken
     })));
 
-    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat)
+    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat, getPriceFor)
       .then(({ converted, noConverted, totalConverted }) => {      
         setTotalFiatNetworks(converted);
         setTotalFiat(totalConverted.toNumber());
