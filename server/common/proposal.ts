@@ -36,7 +36,7 @@ export default async function get(query: ParsedUrlQuery) {
       ]),
       getAssociation("deliverable", undefined, false, undefined, [getAssociation("user")]),
       getAssociation("issue", undefined, true, undefined, [
-        getAssociation("transactionalToken", ["name", "symbol"]),
+        getAssociation("transactionalToken", ["name", "symbol", "address", "chain_id"]),
         getAssociation("user", ["address", "githubLogin"]),
       ]),
       getAssociation("network", [], true, {

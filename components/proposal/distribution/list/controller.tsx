@@ -8,18 +8,18 @@ import ProposalDistributionListView from "components/proposal/distribution/list/
 import { useAppState } from "contexts/app-state";
 
 import { DistributedAmounts } from "interfaces/proposal";
-import { TokenInfo } from "interfaces/token";
+import { Token, TokenInfo } from "interfaces/token";
 
-import { getCoinInfoByContract } from "services/coingecko";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 
 interface ProposalDistributionListProps {
   distributedAmounts: DistributedAmounts;
-  transactionalTokenSymbol: string;
+  token: Token;
 }
 
 export default function ProposalDistributionList({
   distributedAmounts,
-  transactionalTokenSymbol,
+  token,
 }: ProposalDistributionListProps) {
   const { t } = useTranslation(["common", "proposal"]);
 
@@ -27,19 +27,26 @@ export default function ProposalDistributionList({
 
   const { state } = useAppState();
 
-  const defaultFiat = state.Settings?.currency?.defaultFiat;
+  const { getPriceFor } = useCoingeckoPrice();
+
+  const defaultFiat = state.Settings?.currency?.defaultFiat || 'usd';
 
   async function getCoinInfo() {
-    await getCoinInfoByContract(state.Service?.network?.active?.networkToken?.symbol)
-      .then((tokenInfo) => {
-        setCoinInfo(tokenInfo);
-      })
-      .catch((error) => console.debug("getCoinInfo", error));
+    if(!token) return;
+    const { address, chain_id } = token
+    
+    await getPriceFor([{ address, chainId: chain_id }])
+      .then((prices) => {
+        setCoinInfo({
+          ...token,
+          prices: prices[0]
+        })
+      }).catch((error) => console.debug("getCoinInfo", error));      
   }
 
   const handleConversion = (value) =>
     BigNumber(value)
-      .multipliedBy(coinInfo?.prices[defaultFiat] || 0)
+      .multipliedBy(coinInfo?.prices[defaultFiat?.toLowerCase()] || 0)
       .toFixed(4);
 
   useEffect(() => {
@@ -49,7 +56,7 @@ export default function ProposalDistributionList({
   return (
     <ProposalDistributionListView
       distributedAmounts={distributedAmounts}
-      transactionalTokenSymbol={transactionalTokenSymbol || t("common:misc.token")}
+      transactionalTokenSymbol={token.symbol || t("common:misc.token")}
       fiatSymbol={defaultFiat}
       convertValue={handleConversion}
     />
