@@ -726,10 +726,6 @@ export default function useBepro() {
     return state.Service?.active.getAllowance(tokenAddress, walletAddress, spenderAddress)
   }
 
-  function getActiveNetwork(params: string) {
-    return state.Service?.active.network[params]
-  }
-
   function deployERC20Token(name: string, symbol: string, cap: string, ownerAddress: string) {
     return state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
   }
@@ -775,7 +771,6 @@ export default function useBepro() {
     getTokensLockedInRegistryByAddress,
     getRegistryCreatorAmount,
     getAllowance,
-    getActiveNetwork,
     setNetworkParameter,
     isAddress,
     isNetworkGovernor,

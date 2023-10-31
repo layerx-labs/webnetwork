@@ -14,7 +14,6 @@ import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 
 import {useAuthentication} from "x-hooks/use-authentication";
-import useBepro from "x-hooks/use-bepro";
 
 import {addTx, updateTx} from "../../../contexts/reducers/change-tx-list";
 import {MetamaskErrors} from "../../../interfaces/enums/Errors";
@@ -70,12 +69,10 @@ export default function NetworkTxButton({
 
   const { updateWalletBalance } = useAuthentication();
 
-  const { getActiveNetwork } = useBepro();
-
   function checkForTxMethod() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    if (!txMethod || typeof getActiveNetwork(txMethod) !== "function")
+    if (!txMethod || typeof state.Service?.active?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
@@ -94,7 +91,7 @@ export default function NetworkTxButton({
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
     
-    getActiveNetwork[txMethod](txParams.tokenAmount, txParams.from)
+    state.Service?.active?.network[txMethod](txParams.tokenAmount, txParams.from)
       .then(answer => {
         if (answer.status) {
           onSuccess && onSuccess();
