@@ -15,7 +15,7 @@ async function getPricesAndConvert<T>(items: ConvertableItem[],
   
   const prices = items.map((item, key) => ({
     ...item,
-    price: coingeckoPrices[key][fiatSymbol] || 0
+    price: coingeckoPrices[key][fiatSymbol?.toLowerCase()] || 0
   }));
 
   const convert = ({ value, price}) => BigNumber(value * price);
