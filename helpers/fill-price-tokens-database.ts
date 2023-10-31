@@ -1,25 +1,19 @@
-import getConfig from "next/config";
-
 import models from "db/models";
 
 import { COINGECKO_API } from "services/coingecko";
 
 import { HttpConflictError, HttpServerError } from "server/errors/http-errors";
 
-const {publicRuntimeConfig: {
-    currency
-  }} = getConfig();
-
-async function updateToken (token, price: object, currencys: string, updatedAt: Date) {
+async function updateToken (token, prices, updatedAt: Date) {
   token.last_price_used = {
-      [currencys]: price,
+      ...prices,
       updatedAt,
   };
   await token.save();
 }
 
 export default async function FillPriceTokensDatabase() {
-  const currencys = currency || "usd";
+  const currencys = ['usd', 'btc', 'eth', 'eur']
 
   const coins = await COINGECKO_API.get(`/coins/list?include_platform=true`).then((value) => value.data);
 
@@ -47,23 +41,25 @@ export default async function FillPriceTokensDatabase() {
 
   const ids = coinsExistInDb.map(({ id }) => id).join();
 
-  const price = await COINGECKO_API.get(`/simple/price?ids=${ids}&vs_currencies=${currencys}`);
+  const price = await COINGECKO_API.get(`/simple/price?ids=${ids}&vs_currencies=${currencys.join()}`);
 
   if (!price?.data) {
     throw new HttpServerError("Error to get prices coingecko");
   }
-
+  
   const pricesBySymbol = coinsExistInDb.reduce((res, { symbol, id }) => {
-    res[symbol.toLowerCase()] = { [currencys]: price?.data?.[id]?.[currencys] };
+    res[symbol.toLowerCase()] = currencys.reduce((accumulator, value) => {
+      accumulator[value] = price?.data?.[id]?.[value];
+      return accumulator;
+    }, {})
     return res;
   }, {});
 
   for (const token of tokens) {
     const lowercaseSymbol = token.symbol.toLowerCase();
     const coinsByTokenSymbol = coinsExistInDb.filter(v => v.symbol.toLowerCase() === token.symbol.toLowerCase())
-
     if (coinsByTokenSymbol.length === 1) {
-      await updateToken(token, pricesBySymbol[lowercaseSymbol][currencys], currencys, new Date());
+      await updateToken(token, pricesBySymbol[lowercaseSymbol], new Date());
     }
 
     if(coinsByTokenSymbol.length > 1) {
@@ -71,14 +67,19 @@ export default async function FillPriceTokensDatabase() {
         const platforms: { [key: string]: string } = ctoken.platforms
         for(const [, value] of Object.entries(platforms)){
           if(value.toLowerCase() === token.address.toLowerCase()){
-            await updateToken(token, price?.data?.[ctoken.id]?.[currencys], currencys, new Date());
+            await updateToken(token,
+                              currencys.reduce((accumulator, value) => {
+                                accumulator[value] = price?.data?.[ctoken.id]?.[value];
+                                return accumulator;
+                              }, {}),
+                              new Date());
           }
         }
       }
     }
 
     if(coinsByTokenSymbol?.length === 0) {
-      await updateToken(token, undefined, undefined, new Date());
+      await updateToken(token, undefined, new Date());
     }
   }
 
