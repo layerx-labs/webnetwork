@@ -17,27 +17,29 @@ const {publicRuntimeConfig: {
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { tokenAddress, chainId } = req.body;
+    const { tokens }: { tokens: { address: string; chainId: number }[] } = req.body;
 
     const NoPriceMessage = `No price for this token`
 
-    const missingValues = [
-      [chainId, "chainId"],
-      [tokenAddress, "Token Address"]
-    ]
-      .filter(([value]) => !value)
-      .map(([,error]) => error);
+    const missingValues = tokens
+    .filter(({ chainId, address }) => !chainId || !address)
+    .map(({ chainId }) => !chainId ? 'chainId' : 'token Address',);
 
     if(missingValues.length) return res.status(400).json({ message: `Missing parameters: ${missingValues.join(", ")}`})
 
-    const dbtoken = await models.tokens.findOne({
-      where: {
-        chain_id: chainId,
-        address: caseInsensitiveEqual('address', tokenAddress)
-      }
-    })
+    const dbTokens = []
+    for (const token of tokens) {
+      const dbtoken = await models.tokens.findOne({
+        where: {
+          chain_id: token.chainId,
+          address: caseInsensitiveEqual('address', token.address)
+        }
+      })
+  
+      if(!dbtoken) return res.status(404).json({ message: `token not found`})
 
-    if(!dbtoken) return res.status(404).json({ message: `token not found`})
+      dbTokens.push(dbtoken)
+    }
 
     const dataTokenPrice = dbtoken?.last_price_used?.updatedAt
 
