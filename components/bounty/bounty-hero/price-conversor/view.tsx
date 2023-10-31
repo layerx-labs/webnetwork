@@ -6,6 +6,7 @@ import PriceConversorModal from "components/bounty/bounty-hero/price-conversor/m
 import { formatStringToCurrency } from "helpers/formatNumber";
 
 import { Currency } from "interfaces/currency";
+import { Token } from "interfaces/token";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -14,6 +15,7 @@ interface IPriceConversorProps {
   currency: Currency | string;
   isVisible: boolean;
   handleIsVisible: (v: boolean) => void;
+  token: Token;
 }
 
 const { publicRuntimeConfig } = getConfig();
@@ -22,6 +24,7 @@ export default function PriceConversorView({
   currentValue,
   currency,
   isVisible,
+  token,
   handleIsVisible
 }: IPriceConversorProps) {
   const { isDesktopView } = useBreakPoint();
@@ -40,7 +43,7 @@ export default function PriceConversorView({
     </div>
     <PriceConversorModal
         value={currentValue}
-        symbol={currency}
+        token={token}
         show={isVisible}
         onClose={() => handleIsVisible(false)}
       />

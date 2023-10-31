@@ -4,7 +4,9 @@ import BigNumber from "bignumber.js";
 
 import {useAppState} from "contexts/app-state";
 
-import {getCoinInfoByContract} from "services/coingecko";
+import { Token } from "interfaces/token";
+
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 
 import PriceConversorModalView from "./view";
 
@@ -12,7 +14,7 @@ interface IPriceConversiorModalProps {
   show: boolean;
   onClose: ()=> void;
   value?: BigNumber;
-  symbol: string;
+  token: Token;
 }
 interface Options {
   value: string;
@@ -25,7 +27,7 @@ export default function PriceConversorModal({
   show,
   onClose,
   value,
-  symbol
+  token
 }:IPriceConversiorModalProps) {
 
   const [options, setOptions] = useState<Options[]>(defaultValue);
@@ -37,20 +39,28 @@ export default function PriceConversorModal({
 
   const {state} = useAppState();
 
+  const { getPriceFor } = useCoingeckoPrice();
+
   async function handlerChange({value, label}: Options){
-    if (!symbol) return;
+    const currency = value.toLowerCase()
+    if (!token) return;
 
-    const data = 
-      await getCoinInfoByContract(symbol)
-        .catch((err) => {
-          if(err) setErrorCoinInfo(true)
-          return ({ prices: { [value]: 0 } })
-        });
+    const data = await getPriceFor([
+      { address: token.address, chainId: token.chain_id },
+    ])
+      .then((prices) => {
+        if (!prices[0][currency]) setErrorCoinInfo(true);
+        return { prices: prices[0][currency] || 0 };
+      })
+      .catch((err) => {
+        if (err) setErrorCoinInfo(true);
+        return { prices: { [currency]: 0 } };
+      });
 
-    if(data.prices[value] > 0) setErrorCoinInfo(false)
+    if(data.prices[currency] > 0) setErrorCoinInfo(false)
     setCurrentCurrency({value, label});
     setCurrentToken(value.toUpperCase())
-    setCurrentPrice(data.prices[value]);
+    setCurrentPrice(data.prices);
   }
 
   useEffect(()=>{
@@ -69,7 +79,7 @@ export default function PriceConversorModal({
     <PriceConversorModalView 
       show={show} 
       onClose={onClose} 
-      symbol={symbol} 
+      symbol={token.symbol} 
       currentValue={currentValue} 
       handleCurrentValue={setValue} 
       currentPrice={currentPrice} 
