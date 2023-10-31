@@ -19,6 +19,7 @@ import { getCoinInfoByContract } from "services/coingecko";
 import DAO from "services/dao-service";
 
 import { useGetTokens } from "x-hooks/api/token";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 import useReactQuery from "x-hooks/use-react-query";
 
 import WalletBalanceView from "./view";
@@ -38,6 +39,7 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
+  const { getPriceFor } = useCoingeckoPrice();
 
   const getAddress = (token: string | Token) =>
     typeof token === "string" ? token : token?.address;
@@ -147,7 +149,7 @@ export default function WalletBalance({
       token: token
     }))
 
-    getPricesAndConvert(convertableItems, state?.Settings?.currency?.defaultFiat)
+    getPricesAndConvert(convertableItems, state?.Settings?.currency?.defaultFiat, getPriceFor)
     .then(({ noConverted, totalConverted }) => {  
       const totalTokens = tokens.reduce((acc, token) => BigNumber(token.balance).plus(acc),
                                         BigNumber(0));          
