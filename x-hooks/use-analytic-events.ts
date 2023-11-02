@@ -20,7 +20,7 @@ export default function useAnalyticEvents() {
   function pushAnalytic(eventName: EventName, details: {[options: string]: string | boolean} = {}) {
 
     function getCallback({type}: Analytic) {
-      // console.debug(`Trying to push ${eventName} with type ${type}`, details)
+      console.debug(`Trying to push ${eventName} with type ${type}`, details)
 
       const reject = (message: string) => (a: string, b: any) => Promise.reject(message)
 
@@ -57,20 +57,20 @@ export default function useAnalyticEvents() {
       return Promise.all(analyticEvents[eventName]
             .map(getCallback)
             .map(call => {
-              // console.debug(`Pushing ${eventName}`)
+              console.debug(`Pushing ${eventName}`)
               return call(eventName, details);
             }))
         .then(() => {
-          // console.debug(`Event published ${eventName}`, details);
+          console.debug(`Event published ${eventName}`, details);
           return true;
         })
         .catch(e => {
-          // console.error(`Failed to push events`, e?.message || e?.toString() || "could not get error");
+          console.error(`Failed to push events`, e?.message || e?.toString() || "could not get error");
           return false;
         });
     else {
       // eslint-disable-next-line no-console
-      // console.info(`Add event ${eventName} to analyticEvents index!`)
+      console.debug(`Add event ${eventName} to analyticEvents index!`)
     }
 
     return false;
