@@ -78,7 +78,8 @@
       "disputed": "Disputed",
       "failed": "Failed",
       "needs-approval": "Pending approval",
-      "canceled": "Canceled"
+      "canceled": "Canceled",
+      "refused": "refused"
     },
     "errors": {
       "not-found": "No deliverables found",

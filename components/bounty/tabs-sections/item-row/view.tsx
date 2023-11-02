@@ -31,6 +31,7 @@ interface ItemRowProps {
   isDisputed: boolean;
   isMerged: boolean;
   totalToBeDisputed: BigNumber;
+  isRefused?: boolean;
 }
 
 export default function ItemRowView({
@@ -45,6 +46,7 @@ export default function ItemRowView({
   isDisputed,
   isMerged,
   totalToBeDisputed,
+  isRefused
 }: ItemRowProps) {
   const userGithubLogin = (item as Deliverable)?.user?.githubLogin; 
   const userAddress = (item as Deliverable)?.user?.address || (item as Proposal)?.creator;
@@ -56,6 +58,7 @@ export default function ItemRowView({
         btnLabel={btnLabel}
         proposal={proposal}
         isDisputed={isDisputed}
+        isRefused={isRefused}
         isMerged={isMerged}
         totalToBeDisputed={totalToBeDisputed} 
         isProposal={isProposal} 

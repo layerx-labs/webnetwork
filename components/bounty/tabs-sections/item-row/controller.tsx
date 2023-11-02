@@ -44,7 +44,8 @@ export default function ItemRow({
   const proposal = currentBounty?.mergeProposals?.find((proposal) => 
                                                         proposal.contractId === +(item as Proposal)?.contractId);
   const isDisputed = !!proposal?.isDisputed;
-  const isMerged = (item as Proposal)?.isMerged;
+  const isMerged = !!(item as Proposal)?.isMerged;
+  const isRefused = !!(item as Proposal)?.refusedByBountyOwner;
   const isCanceledDeliverable = !!(item as Deliverable)?.canceled;
   const isDraftDeliverable = !isCanceledDeliverable && !(item as Deliverable)?.markedReadyForReview;
   if (!isProposal) {
@@ -63,7 +64,7 @@ export default function ItemRow({
         label: isDisputed ? "disputed" : "accepted",
       });
     }
-    if (proposal.refusedByBountyOwner) status.push({ label: "failed" });
+    if (proposal.refusedByBountyOwner) status.push({ label: "refused" });
 
     valueRedirect.proposalId = item?.id;
   }
@@ -106,6 +107,7 @@ export default function ItemRow({
       isDisputed={isDisputed}
       isMerged={isMerged}
       totalToBeDisputed={totalToBeDisputed}
+      isRefused={isRefused}
     />
   );
 }

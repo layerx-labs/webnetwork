@@ -6,7 +6,6 @@ import ReviewsNumberView from "components/bounty/tabs-sections/reviews-number.vi
 import Button from "components/button";
 import { IPRLabel } from "components/deliverable/labels/controller";
 import If from "components/If";
-
 import ProposalProgressSmall from "components/proposal-progress-small";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import Translation from "components/translation";
@@ -24,6 +23,7 @@ interface ItemRowProps {
   isMerged: boolean;
   totalToBeDisputed: BigNumber;
   status?: IPRLabel[];
+  isRefused?: boolean;
 }
 
 export default function ProposalOrDeliverableView({
@@ -35,7 +35,8 @@ export default function ProposalOrDeliverableView({
   isDisputed,
   isMerged,
   totalToBeDisputed,
-  status
+  status,
+  isRefused
 }: ItemRowProps) {
   return (
     <>
@@ -50,7 +51,7 @@ export default function ProposalOrDeliverableView({
       >
         <div className="d-flex align-items-center text-center col-md-8">
           <ProposalProgressSmall
-            color={isDisputed ? "danger" : isMerged ? "success" : "purple"}
+            color={isDisputed || isRefused ? "danger" : isMerged ? "success" : "purple"}
             value={proposal?.disputeWeight}
             total={totalToBeDisputed}
           />
