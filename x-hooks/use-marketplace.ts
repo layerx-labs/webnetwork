@@ -26,6 +26,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   const { data: searchData, isError, isFetching, isStale, invalidate } = 
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
       name: marketplace,
+      isNeedCountsAndTokensLocked: true,
       sortBy: "id",
       order: "ASC"
     }), {
