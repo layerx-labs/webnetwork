@@ -66,10 +66,6 @@ export default function useAnalyticEvents() {
           console.error(`Failed to push events`, e?.message || e?.toString() || "could not get error");
           return false;
         });
-    else {
-      // eslint-disable-next-line no-console
-      console.debug(`Add event ${eventName} to analyticEvents index!`)
-    }
 
     return false;
   }
