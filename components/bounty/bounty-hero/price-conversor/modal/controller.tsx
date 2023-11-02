@@ -43,26 +43,33 @@ export default function PriceConversorModal({
 
   const { getPriceFor } = useCoingeckoPrice();
 
+  const { data: prices, isFetching, isError } = getPriceFor([
+    { address: token.address, chainId: token.chain_id },
+  ])
+
   async function handlerChange({value, label}: Options){
     const currency = value.toLowerCase()
-    if (!token) return;
+    if (!token || !prices) return;
 
+    if (!prices[0][currency] || isError) setErrorCoinInfo(true);
+
+    /*
     const data = await getPriceFor([
       { address: token.address, chainId: token.chain_id },
     ])
       .then((prices) => {
-        if (!prices[0][currency]) setErrorCoinInfo(true);
+        
         return { prices: prices[0][currency] || 0 };
       })
       .catch((err) => {
         if (err) setErrorCoinInfo(true);
         return { prices: { [currency]: 0 } };
-      });
+      })*/
 
-    if(data.prices[currency] > 0) setErrorCoinInfo(false)
+    if(prices[currency] > 0) setErrorCoinInfo(false)
     setCurrentCurrency({value, label});
     setCurrentToken(value.toUpperCase())
-    setCurrentPrice(data.prices);
+    setCurrentPrice(prices[0][currency] || 0);
   }
 
   useEffect(()=>{
@@ -82,6 +89,7 @@ export default function PriceConversorModal({
       show={show} 
       onClose={onClose} 
       symbol={symbol} 
+      isLoadingPrice={isFetching}
       currentValue={currentValue} 
       handleCurrentValue={setValue} 
       currentPrice={currentPrice} 
