@@ -53,19 +53,6 @@ export default function PriceConversorModal({
 
     if (!prices[0][currency] || isError) setErrorCoinInfo(true);
 
-    /*
-    const data = await getPriceFor([
-      { address: token.address, chainId: token.chain_id },
-    ])
-      .then((prices) => {
-        
-        return { prices: prices[0][currency] || 0 };
-      })
-      .catch((err) => {
-        if (err) setErrorCoinInfo(true);
-        return { prices: { [currency]: 0 } };
-      })*/
-
     if(prices[currency] > 0) setErrorCoinInfo(false)
     setCurrentCurrency({value, label});
     setCurrentToken(value.toUpperCase())
@@ -73,15 +60,15 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-    if (!state.Settings?.currency?.conversionList) return;
+    if (!state.Settings?.currency?.conversionList && !prices) return;
 
     const { conversionList } = state.Settings.currency
 
     const opt = conversionList.map(currency=>({value: currency?.value, label: currency?.label}))
     setOptions(opt)
-    handlerChange(opt[0])
+    handlerChange(opt.find(v => v.value === defaultValue[0].value) || opt[0])
     
-  },[state.Settings?.currency?.conversionList])
+  },[state.Settings?.currency?.conversionList, prices])
 
 
   return (
