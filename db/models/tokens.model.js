@@ -49,7 +49,11 @@ class Tokens extends Model {
         },
         last_price_used: {
           type: DataTypes.JSON
-        }
+        },
+        icon: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
       },
       {
         sequelize,
