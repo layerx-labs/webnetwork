@@ -6,12 +6,13 @@ import If from "components/If";
 import ProposalMerge from "components/proposal-merge";
 
 import { DistributedAmounts, Proposal } from "interfaces/proposal";
+import { Token } from "interfaces/token";
 
 interface ProposalActionsButtonsViewProps {
   proposal: Proposal;
   issueAmount: BigNumber;
   issueDbId: string;
-  transactionalTokenSymbol: string;
+  token: Token;
   isAbleToMerge: boolean;
   isAbleToDispute: boolean;
   isAbleToRefuse: boolean;
@@ -29,7 +30,7 @@ export default function ProposalActionsButtonsView({
   proposal,
   issueAmount,
   issueDbId,
-  transactionalTokenSymbol,
+  token,
   isAbleToMerge,
   isAbleToDispute,
   isAbleToRefuse,
@@ -55,7 +56,7 @@ export default function ProposalActionsButtonsView({
           <div className="row">
             <ProposalMerge
               amountTotal={issueAmount}
-              tokenSymbol={transactionalTokenSymbol}
+              token={token}
               proposal={proposal}
               isMerging={isMerging}
               idBounty={issueDbId}
