@@ -71,15 +71,12 @@ const getCoinInfoByContract = async (search: string): Promise<TokenInfo> => {
 
   const { data } = await COINGECKO_API.get(`/coins/${coinEntry.id}`);
 
-  const currencies = 
-    DEFAULT_CURRENCIES.map(currency => ([ currency.value, data?.market_data?.current_price?.[currency.value]]));
-
   const info: TokenInfo = {
     name: data?.name,
     symbol: data?.symbol,
     address: coinEntry?.address,
     icon: data?.image?.thumb,
-    prices: Object.fromEntries(currencies)
+    prices: undefined
   };
 
   storage.value = info;
