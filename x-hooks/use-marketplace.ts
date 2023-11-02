@@ -75,7 +75,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     const chain = query?.chain?.toString();
     return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
                           () => getNetworkOverviewData(query)
-                            .then(({ data }) => BigNumber(data?.curators?.tokensLocked || 0)),
+                            .then(overview => BigNumber(overview?.curators?.tokensLocked || 0)),
                           {
                             enabled: !!network && !!chain,
                             staleTime: MINUTE_IN_MS
