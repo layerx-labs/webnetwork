@@ -40,9 +40,16 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
-  const { getPriceFor } = useCoingeckoPrice();
 
-  const defaultFiat = state?.Settings?.currency?.defaultFiat;
+  const {
+    data: prices,
+    isLoading: isLoadingPrices,
+    isSuccess: isSucessPrices,
+  } = useCoingeckoPrice(
+    tokens.map(({ address, chain_id }) => ({ address, chainId: chain_id }))
+  );
+
+  const defaultFiat = state?.Settings?.currency?.defaultFiat?.toLowerCase();
 
   function toTokenWithBalance(token) {
     return {
@@ -56,11 +63,9 @@ export default function WalletBalance({
     typeof token === "string" ? token : token?.address;
 
   async function processToken(token: Token, service: DAO) {
-    const [tokenInformation, prices, balance] = await Promise.all([
+    const [tokenInformation, balance] = await Promise.all([
       getCoinInfoByContract(token?.symbol)
         .catch(() => ({ icon: null })),
-      getPriceFor([{ address: token.address, chainId: token.chain_id }])
-        .catch(() => ({ prices: null })),
       service
         .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
         .catch(() => BigNumber(0)),
@@ -69,7 +74,6 @@ export default function WalletBalance({
     return {
       ...token,
       balance,
-      price: prices[0]?.[defaultFiat] || null,
       icon: <TokenIcon src={tokenInformation?.icon as string} />,
     };
   }
@@ -147,22 +151,41 @@ export default function WalletBalance({
                     enabled: !!state.currentUser?.walletAddress && !!state.supportedChains,
                     staleTime: MINUTE_IN_MS
                   });
-
+  
   useEffect(() => {
     if (!isLoading && isSuccess) {
       const filteredTokens = tokensData
         .map(token => toTokenWithBalance(token))
-        .filter(({ name, symbol, networks, chain_id }) => handleSearchFilter(name, symbol, networks, chain_id))
+
       setTokensWithBalance(filteredTokens);
-      const hasNoConverted = filteredTokens.some(token => !token?.price);
-      setHasNoConvertedToken(hasNoConverted);
-      const total = hasNoConverted ? 
-        filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0)) :
-        filteredTokens.reduce((acc, token) => 
-          BigNumber(token.balance).multipliedBy(token.price).plus(acc), BigNumber(0));
-      setTotalAmount(total.toFixed());
+
+      if(!isLoadingPrices && isSucessPrices){
+        const tokensPrices = tokens.map((token, key) => ({
+          ...token,
+          price: prices[key][defaultFiat]
+        }))
+
+        const filteredTokensPrices = filteredTokens.map(t => ({
+          ...t,
+          price: tokensPrices.find(({ id }) => id === t.id)?.price
+        }))
+
+        const hasNoConverted = filteredTokensPrices.some(token => !token?.price);
+
+        setHasNoConvertedToken(hasNoConverted);
+        const total = hasNoConverted ? 
+          filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0)) :
+          filteredTokensPrices.reduce((acc, token) => 
+            BigNumber(token.balance).multipliedBy(token.price).plus(acc), BigNumber(0));
+        setTotalAmount(total.toFixed());
+
+      } else {
+        setHasNoConvertedToken(true)
+        const totalNoConverted = filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0))
+        setTotalAmount(totalNoConverted.toFixed())
+      }
     }
-  }, [tokensData, query?.networkName, query?.networkChain]);
+  }, [tokensData, prices, query?.networkName, query?.networkChain]);
 
   useEffect(() => {
     if(!query?.networkName && query?.network){
@@ -180,7 +203,9 @@ export default function WalletBalance({
       isOnNetwork={!!query?.network}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-      tokens={tokensWithBalance}
+      tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
+        handleSearchFilter(name, symbol, networks, chain_id)
+      )}
       searchString={searchState}
       onSearchClick={updateSearch}
       onSearchInputChange={handleSearchChange}

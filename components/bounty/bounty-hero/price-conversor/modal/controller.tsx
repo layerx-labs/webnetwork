@@ -41,10 +41,8 @@ export default function PriceConversorModal({
 
   const {state} = useAppState();
 
-  const { getPriceFor } = useCoingeckoPrice();
-
-  const { data: prices, isFetching, isError } = getPriceFor([
-    { address: token.address, chainId: token.chain_id },
+  const { data: prices, isFetching, isError } = useCoingeckoPrice([
+    { address: token?.address, chainId: token?.chain_id },
   ])
 
   async function handlerChange({value, label}: Options){

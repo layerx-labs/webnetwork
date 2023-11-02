@@ -26,32 +26,48 @@ export default function PaymentsPage({
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
   const { state } = useAppState();
-  const { getPriceFor } = useCoingeckoPrice();
 
   const isNetworkPayments = !!router?.query?.networkName && !!payments?.length;
   const fiatSymbol = state?.Settings?.currency?.defaultFiat?.toUpperCase();
 
+  const {
+    data: prices,
+    isLoading,
+    isSuccess,
+  } = useCoingeckoPrice(payments.flatMap(({ payments }) => payments.map(payment => ({
+    address: payment?.issue?.transactionalToken.address,
+    chainId: payment?.issue?.transactionalToken.chain_id
+  })).reduce((acc, value) => acc.concat(value), [])));
+
   useEffect(() => {
-    if (!payments?.length) {
+    if (!payments?.length || !prices) {
       setTotalFiatNetworks([]);
       setTotalFiat(0);
       return;
     }
 
-    const convertableItems = payments.flatMap(({ id, payments }) => payments.map(payment => ({
-      tokenAddress: payment?.issue?.transactionalToken?.address,
-      networkId: id,
-      value: BigNumber(payment.ammount),
-      token: payment.issue.transactionalToken
-    })));
+    if (!isLoading && isSuccess) {
+      const convertableItems = payments.flatMap(({ id, payments }) =>
+        payments.map((payment) => ({
+          tokenAddress: payment?.issue?.transactionalToken?.address,
+          networkId: id,
+          value: BigNumber(payment.ammount),
+          token: payment.issue.transactionalToken,
+        }))
+      );
 
-    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat, getPriceFor)
-      .then(({ converted, noConverted, totalConverted }) => {      
-        setTotalFiatNetworks(converted);
-        setTotalFiat(totalConverted.toNumber());
-        setHasNoConvertedToken(!!noConverted.length);
-      });
-  }, [payments]);
+      const { converted, noConverted, totalConverted } =
+        getPricesAndConvert<TotalFiatNetworks>(
+          convertableItems,
+          state?.Settings?.currency?.defaultFiat?.toLowerCase(),
+          prices
+        );
+
+      setTotalFiatNetworks(converted);
+      setTotalFiat(totalConverted.toNumber());
+      setHasNoConvertedToken(!!noConverted.length);
+    }
+  }, [payments, prices]);
 
   if (isNetworkPayments)
     return(

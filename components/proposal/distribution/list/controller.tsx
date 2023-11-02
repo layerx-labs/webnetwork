@@ -27,22 +27,11 @@ export default function ProposalDistributionList({
 
   const { state } = useAppState();
 
-  const { getPriceFor } = useCoingeckoPrice();
+  const { data: prices } = useCoingeckoPrice([
+    { address: token?.address, chainId: token?.chain_id },
+  ]);
 
-  const defaultFiat = state.Settings?.currency?.defaultFiat || 'usd';
-
-  async function getCoinInfo() {
-    if(!token) return;
-    const { address, chain_id } = token
-    
-    await getPriceFor([{ address, chainId: chain_id }])
-      .then((prices) => {
-        setCoinInfo({
-          ...token,
-          prices: prices[0]
-        })
-      }).catch((error) => console.debug("getCoinInfo", error));      
-  }
+  const defaultFiat = state.Settings?.currency?.defaultFiat || "usd";
 
   const handleConversion = (value) =>
     BigNumber(value)
@@ -50,8 +39,13 @@ export default function ProposalDistributionList({
       .toFixed(4);
 
   useEffect(() => {
-    if (state.Service?.network?.amounts) getCoinInfo();
-  }, [state.Service?.network?.amounts]);
+    if (!token || !prices) return;
+
+    setCoinInfo({
+      ...token,
+      prices: prices[0],
+    });
+  }, [token, prices]);
 
   return (
     <ProposalDistributionListView

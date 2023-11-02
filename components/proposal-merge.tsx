@@ -21,7 +21,6 @@ import ProposalDistributionList from "./proposal/distribution/list/view";
 interface props {
   amountTotal: BigNumber;
   token?: Token;
-  proposal: Proposal;
   onClickMerge: () => void;
   canMerge: boolean;
   idBounty: string;
@@ -32,7 +31,6 @@ interface props {
 export default function ProposalMerge({
   amountTotal,
   token,
-  proposal,
   onClickMerge,
   canMerge,
   idBounty,
@@ -46,26 +44,15 @@ export default function ProposalMerge({
   
   const {state} = useAppState();
 
-  const { getPriceFor } = useCoingeckoPrice();
   const amountTotalConverted = BigNumber(handleConversion(amountTotal));
   const currentTokenSymbol = token.symbol ||  t("common:misc.token")
 
+  const { data: prices } = useCoingeckoPrice([
+    { address: token?.address, chainId: token?.chain_id },
+  ])
+
   function handleConversion(value) {
     return BigNumber(value).multipliedBy(coinInfo?.prices[state.Settings?.currency?.defaultFiat]).toFixed(4);
-  }
-
-  async function getCoinInfo() { 
-    getPriceFor([
-      {
-        address: token?.address,
-        chainId: token?.chain_id,
-      },
-    ]).then((prices) => {
-      setCoinInfo({
-        ...token,
-        prices: prices[0]
-      })
-    }).catch(error => console.debug("getCoinInfo", error));
   }
 
   function handleMerge() {
@@ -74,11 +61,13 @@ export default function ProposalMerge({
   }
 
   useEffect(() => {
-    if (!proposal ||!state.Service?.network?.amounts)
-      return;
+    if (!token || !prices) return;
 
-    getCoinInfo()
-  }, [proposal, amountTotal]);
+    setCoinInfo({
+      ...token,
+      prices: prices[0],
+    });
+  }, [token, prices]);
 
   return (
     <>
