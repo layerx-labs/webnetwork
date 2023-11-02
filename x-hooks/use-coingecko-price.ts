@@ -8,18 +8,14 @@ export interface getPriceParams {
   chainId: number;
 }
 
-export default function useCoingeckoPrice() {
-
-  function getPriceFor(tokens: getPriceParams[]) {                                      
-    return useReactQuery(QueryKeys.pricesByCoingecko(tokens),
-      async () => useGetPrices(tokens),
-      {
-        enabled: !!tokens,
-        staleTime: MINUTE_IN_MS
-      });
-  }
-
-  return {
-    getPriceFor,
-  };
+export default function useCoingeckoPrice(tokens: getPriceParams[]) {
+  return useReactQuery(
+    QueryKeys.pricesByCoingecko(tokens || []),
+    async () => useGetPrices(tokens),
+    {
+      enabled: !!tokens,
+      staleTime: MINUTE_IN_MS
+    }
+  );
+ 
 }
