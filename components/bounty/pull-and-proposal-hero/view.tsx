@@ -12,6 +12,8 @@ import GithubInfo from "components/github-info";
 
 import { truncateAddress } from "helpers/truncate-address";
 
+import { Token } from "interfaces/token";
+
 interface PullAndProposalHeroViewPRops {
   contractId: number;
   githubLogin: string;
@@ -20,7 +22,7 @@ interface PullAndProposalHeroViewPRops {
   issueTitle: string;
   issueId: string;
   issueAmount: BigNumber;
-  transactionalTokenSymbol: string;
+  token: Token;
   isProposal: boolean;
   onBackClick: () => void;
 }
@@ -34,7 +36,7 @@ export default function PullAndProposalHeroView({
   issueId,
   isProposal,
   issueAmount,
-  transactionalTokenSymbol,
+  token,
   onBackClick,
 }: PullAndProposalHeroViewPRops) {
   const { t } = useTranslation([isProposal ? "proposal" : "deliverable", "common"]);
@@ -82,7 +84,8 @@ export default function PullAndProposalHeroView({
           <div className="col-auto">
             <PriceConversor
               currentValue={issueAmount}
-              currency={transactionalTokenSymbol || t("common:misc.token")}
+              currency={token.symbol || t("common:misc.token")} 
+              token={token}            
             />
           </div>
         </div>
