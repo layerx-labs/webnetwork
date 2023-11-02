@@ -87,7 +87,8 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     const active = searchData.rows.find(network => lowerCaseCompare(network.chain?.chainShortName, chain));
     if (!searchData.count || !active) {
       clear();
-      push("/marketplaces");
+      if (!!marketplace || !!chain) push("/marketplaces");
+      return;
     }
     const lastVisited = marketplace;
     const availableChains = searchData.rows.map(network => network.chain);
