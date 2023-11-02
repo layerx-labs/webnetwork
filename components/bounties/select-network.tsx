@@ -11,6 +11,7 @@ import ReactSelect from "components/react-select";
 
 import { useAppState } from "contexts/app-state";
 
+import { MINUTE_IN_MS } from "helpers/constants";
 import { isOnNetworkPath } from "helpers/network";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -44,15 +45,14 @@ export default function SelectNetwork({
   const { connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 
-  const chainIdToFilter = filterByConnectedChain ? !isOnNetworkPath(pathname) ? 
-        connectedChain?.id : chain?.chainId?.toString() : undefined
+  const chainIdToFilter = filterByConnectedChain ? (!isOnNetworkPath(pathname) ? 
+      connectedChain?.id : chain?.chainId?.toString()) : undefined;
 
-  const { data: networks } = useReactQuery(QueryKeys.networksByChain(chainIdToFilter),
-                                           () =>
-      useSearchNetworks(chainIdToFilter ? { chainId: chainIdToFilter } : {}),
-                                           {
-      enabled: chainIdToFilter ? !!chainIdToFilter : true,
-                                           });
+  const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
+                                            () => useSearchNetworks({ chainId: chainIdToFilter }),
+                                            {
+                                              staleTime: MINUTE_IN_MS
+                                            });
 
   function networkToOption(network: Network) {
     return {
