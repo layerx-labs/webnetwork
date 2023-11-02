@@ -85,12 +85,14 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
 
   useEffect(() => {
     if (isFetching || isError || isStale) return;
-    const active = searchData.rows.find(network => lowerCaseCompare(network.chain?.chainShortName, chain));
-    if (!searchData.count || !active) {
+    const marketplaces = !!marketplace && !chain ? 
+      searchData.rows : searchData.rows.filter(network => lowerCaseCompare(network.chain?.chainShortName, chain));
+    if (!searchData.count || !marketplaces) {
       clear();
       if (!!marketplace || !!chain) push("/marketplaces");
       return;
     }
+    const active = marketplaces.at(0);
     const lastVisited = marketplace;
     const availableChains = searchData.rows.map(network => network.chain);
     const transactionalTokens = active.tokens.filter(token => token.network_tokens.isTransactional);
