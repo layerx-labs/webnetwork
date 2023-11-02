@@ -4,6 +4,9 @@ import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 
+import { useAppState } from "contexts/app-state";
+import { changeCurrentUserisCouncil, changeCurrentUserisGovernor } from "contexts/reducers/change-current-user";
+
 import { FIVE_MINUTES_IN_MS, MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
@@ -22,6 +25,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   const marketplace = marketplaceName || query?.network?.toString();
   const chain = chainName || query?.chain?.toString();
 
+  const { state, dispatch } = useAppState();
   const { data, clear, update } = useMarketplaceStore();
   const { data: searchData, isError, isFetching, isStale, invalidate } = 
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
@@ -103,7 +107,15 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       availableChains,
       transactionalTokens,
       rewardTokens
-    })
+    });
+    if (state.currentUser?.walletAddress) {
+      const userAddress = state.currentUser.walletAddress;
+      const isCurator = !!active.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
+      const isGovernor = lowerCaseCompare(active.creatorAddress, userAddress);
+
+      dispatch(changeCurrentUserisCouncil(isCurator));
+      dispatch(changeCurrentUserisGovernor(isGovernor));
+    }
   }, [searchData, isError, isFetching, isStale]);
 
   return {

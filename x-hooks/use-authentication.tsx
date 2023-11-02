@@ -11,8 +11,6 @@ import {
   changeCurrentUserConnected,
   changeCurrentUserId,
   changeCurrentUserisAdmin,
-  changeCurrentUserisCouncil,
-  changeCurrentUserisGovernor,
   changeCurrentUserKycSession,
   changeCurrentUserLogin,
   changeCurrentUserMatch,
@@ -131,15 +129,10 @@ export function useAuthentication() {
         networkName: marketplace?.active?.name,
         chainShortName: chain.chainShortName
       })
-      .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
-      // not balance, but related to address, no need for a second useEffect()
-      daoService.isCouncil(state.currentUser.walletAddress),
-      isNetworkGovernor(state.currentUser.walletAddress)
+      .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value))
     ])
-      .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {
+      .then(([oracles, bepro, staked]) => {
         update({oracles, bepro, staked});
-        dispatch(changeCurrentUserisCouncil(isCouncil));
-        dispatch(changeCurrentUserisGovernor(isGovernor));
       })
       .catch(error => console.debug("Failed to updateWalletBalance", error))
   }
