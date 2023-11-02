@@ -195,7 +195,7 @@ export default function OraclesActions({
   function getCurrentLabel() {
     return action === t("my-oracles:actions.lock.label")
       ? networkTokenSymbol
-      : t("token-votes", { token: "" });
+      : t("token-votes", { token: networkTokenSymbol });
   }
 
   function getMaxAmount(trueValue = false): string {
