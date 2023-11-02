@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 
+import BigNumber from "bignumber.js";
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
 
@@ -8,10 +9,11 @@ import {changeMatchWithNetworkChain} from "contexts/reducers/change-chain";
 import {
   changeActiveAvailableChains,
   changeActiveNetwork,
-  changeActiveNetworkAmounts,
-  changeActiveNetworkTimes,
   changeNetworkLastVisited
 } from "contexts/reducers/change-service";
+
+import { MINUTE_IN_MS } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
 
 import {Network} from "interfaces/network";
 import {ProfilePages} from "interfaces/utils";
@@ -20,6 +22,9 @@ import {WinStorage} from "services/win-storage";
 
 import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
+
+import getNetworkOverviewData from "./api/get-overview-data";
+import useReactQuery from "./use-react-query";
 
 export function useNetwork() {
   const {query, replace, push} = useRouter();
@@ -154,57 +159,6 @@ export function useNetwork() {
     }, `/${path}`);
   }
 
-  function loadNetworkTimes() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    const network = state.Service.active?.network;
-
-    Promise.all([network.draftTime(), network.disputableTime()])
-      .then(([draftTime, disputableTime]) => {
-        dispatch(changeActiveNetworkTimes({
-          draftTime: +draftTime / 1000,
-          disputableTime: +disputableTime / 1000
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkTimes", error));
-  }
-
-  function loadNetworkAmounts() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    const network = state.Service.active?.network;
-
-    Promise.all([
-        network.councilAmount(),
-        network.mergeCreatorFeeShare(),
-        network.proposerFeeShare(),
-        network.percentageNeededForDispute(),
-        network.oracleExchangeRate(),
-        network.treasuryInfo(),
-        network.totalNetworkToken()
-    ])
-      .then(([councilAmount,
-              mergeCreatorFeeShare,
-              proposerFeeShare,
-              percentageNeededForDispute,
-              oracleExchangeRate,
-              treasury,
-              totalNetworkToken]) => {
-        dispatch(changeActiveNetworkAmounts({
-          councilAmount: councilAmount.toString(),
-          oracleExchangeRate: +oracleExchangeRate,
-          mergeCreatorFeeShare: +mergeCreatorFeeShare,
-          proposerFeeShare: +proposerFeeShare,
-          percentageNeededForDispute: +percentageNeededForDispute,
-          treasury,
-          totalNetworkToken
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkAmounts", error));
-  }
-
   function updateNetworkAndChainMatch() {
     const connectedChainId = state.connectedChain?.id;
     const networkChainId = state?.Service?.network?.active?.chain_id;
@@ -216,6 +170,18 @@ export function useNetwork() {
       dispatch(changeMatchWithNetworkChain(null));
   }
 
+  function getTotalNetworkToken() {
+    const network = query?.network?.toString();
+    const chain = query?.chain?.toString();
+    return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
+                          () => getNetworkOverviewData(query)
+                            .then(overview => BigNumber(overview?.curators?.tokensLocked || 0)),
+                          {
+                            enabled: !!network && !!chain,
+                            staleTime: MINUTE_IN_MS
+                          });
+  }
+
   useEffect(() => { setNetworkName(query?.network?.toString() || ''); }, [query?.network]);
 
   return {
@@ -224,10 +190,9 @@ export function useNetwork() {
     updateActiveNetwork,
     getURLWithNetwork,
     clearNetworkFromStorage,
-    loadNetworkTimes,
-    loadNetworkAmounts,
     goToProfilePage,
-    updateNetworkAndChainMatch
+    updateNetworkAndChainMatch,
+    getTotalNetworkToken
   }
 
 }

@@ -1,4 +1,4 @@
-import {Defaults, ProposalDetail} from "@taikai/dappkit";
+import {ProposalDetail} from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 
 import {DistributedAmounts, ProposalDistribution} from "interfaces/proposal";
@@ -7,17 +7,13 @@ const bigNumberPercentage =
   (value1: BigNumber, value2: BigNumber) => value1.dividedBy(value2).multipliedBy(100).toFixed(2);
 
 
-export default function calculateDistributedAmounts(treasury,
+export default function calculateDistributedAmounts(closeFee: string | number,
                                                     mergerFee: string | number,
                                                     proposerFee: string | number,
                                                     bountyAmount: BigNumber,
                                                     proposalPercents: ProposalDetail[] | ProposalDistribution[]): 
                                                     DistributedAmounts {
-  let treasuryAmount = BigNumber(0);
-  
-  if (treasury.treasury && treasury.treasury !== Defaults.nativeZeroAddress)
-    treasuryAmount = bountyAmount.dividedBy(100).multipliedBy(treasury.closeFee);
-
+  const treasuryAmount = bountyAmount.dividedBy(100).multipliedBy(closeFee);
   const realAmount = bountyAmount.minus(treasuryAmount);
 
   const mergerAmount =  realAmount.dividedBy(100).multipliedBy(mergerFee);
@@ -48,10 +44,11 @@ export default function calculateDistributedAmounts(treasury,
   };
 }
 
-export function getDeveloperAmount( mergerFee: string | number,
+export function getDeveloperAmount( closeFee: string | number,
+                                    mergerFee: string | number,
                                     proposerFee: string | number,
                                     bountyAmount: BigNumber): string {
-  const distributedAmounts = calculateDistributedAmounts( { treasury: "0x123", closeFee: 10 },
+  const distributedAmounts = calculateDistributedAmounts( closeFee,
                                                           mergerFee, 
                                                           proposerFee, 
                                                           bountyAmount, 

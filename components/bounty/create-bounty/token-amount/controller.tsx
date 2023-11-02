@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {NumberFormatValues} from "react-number-format";
 
-import {Defaults} from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 import {useDebouncedCallback} from "use-debounce";
@@ -79,12 +78,11 @@ export default function CreateBountyTokenAmount({
 
 
   function calculateRewardAmountGivenTotalAmount(value: number) {
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
 
     const _value = BigNumber(value);
 
-    const treasuryAmount = _value.times(networkFee/100);
+    const treasuryAmount = _value.times(chain.closeFeePercentage/100);
     const mergerFee = _value.minus(treasuryAmount).times(+mergeCreatorFeeShare/100);
     const proposerFee = _value.minus(treasuryAmount).minus(mergerFee).times(+proposerFeeShare/100);
 
@@ -92,11 +90,10 @@ export default function CreateBountyTokenAmount({
   }
 
   function _calculateTotalAmountFromGivenReward(reward: number) {
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
 
     return calculateTotalAmountFromGivenReward( reward, 
-                                                +networkFee/100,
+                                                +chain.closeFeePercentage/100,
                                                 +mergeCreatorFeeShare/100,
                                                 +proposerFeeShare/100)
   }
@@ -108,7 +105,7 @@ export default function CreateBountyTokenAmount({
   });
 
   function handleDistributions(value, type) {
-    if (!Service?.network?.amounts) return;
+    if (!Service?.network?.active) return;
     if (!value) {
       setDistributions(undefined);
       if (type === "reward")
@@ -118,14 +115,14 @@ export default function CreateBountyTokenAmount({
       return;
     }
 
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = Service.network.active;
 
     const amountOfType =
       BigNumber(type === "reward"
         ? _calculateTotalAmountFromGivenReward(value)
         : value);
   
-    const initialDistributions = calculateDistributedAmounts( treasury,
+    const initialDistributions = calculateDistributedAmounts( chain.closeFeePercentage,
                                                               mergeCreatorFeeShare,
                                                               proposerFeeShare,
                                                               amountOfType,

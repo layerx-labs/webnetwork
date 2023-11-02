@@ -58,7 +58,7 @@ export default function useBepro() {
     });
   }
 
-  async function handleFeeSettings(closeFee: number, cancelFee: number): Promise<TransactionReceipt | Error> {
+  async function handleFeeSettings(closeFee: number, cancelFee: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx([{
         type: TransactionTypes.configFees,
@@ -78,7 +78,7 @@ export default function useBepro() {
     });
   }
 
-  async function handleAmountNetworkCreation(amount: string | number): Promise<TransactionReceipt | Error> {
+  async function handleAmountNetworkCreation(amount: string | number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx([{
         type: TransactionTypes.amountForNetworkCreation,
@@ -98,7 +98,7 @@ export default function useBepro() {
     });
   }
 
-  async function handleFeeNetworkCreation(amount: number): Promise<TransactionReceipt | Error> {
+  async function handleFeeNetworkCreation(amount: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx([{
         type: TransactionTypes.feeForNetworkCreation,

@@ -43,8 +43,8 @@ export default function ProposalDistributionList({
       .toFixed(4);
 
   useEffect(() => {
-    if (state.Service?.network?.amounts) getCoinInfo();
-  }, [state.Service?.network?.amounts]);
+    if (state.Service?.network?.active) getCoinInfo();
+  }, [state.Service?.network?.active]);
 
   return (
     <ProposalDistributionListView
