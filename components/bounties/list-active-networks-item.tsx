@@ -10,7 +10,7 @@ import { formatNumberToNScale } from "helpers/formatNumber";
 
 import { Network } from "interfaces/network";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -23,7 +23,7 @@ export default function ListActiveNetworksItem({
 } : ListActiveNetworksItemProps) {
   const { t } = useTranslation("bounty");
 
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   return(
     <Link

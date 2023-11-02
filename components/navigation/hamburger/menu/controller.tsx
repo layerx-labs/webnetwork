@@ -12,7 +12,7 @@ import {isOnNetworkPath} from "helpers/network";
 import {Link} from "types/utils";
 
 import {useAuthentication} from "x-hooks/use-authentication";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface MenuDrawerProps {
   show: boolean;
@@ -29,7 +29,7 @@ export default function HamburgerMenu({
   
   const { state } = useAppState();
   const { signOut } = useAuthentication();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   const isOnNetwork = isOnNetworkPath(pathname);
 

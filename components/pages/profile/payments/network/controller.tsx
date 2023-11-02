@@ -6,7 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import { NetworkPaymentsData } from "types/api";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface PaymentsNetworkProps {
   networkPayments: NetworkPaymentsData;
@@ -22,7 +22,7 @@ export default function PaymentsNetwork({
   const { push } = useRouter();
 
   const { state } = useAppState();
-  const { goToProfilePage, getURLWithNetwork } = useNetwork();
+  const { goToProfilePage, getURLWithNetwork } = useMarketplace();
 
   function handleBack() {
     goToProfilePage("payments", {

@@ -23,7 +23,7 @@ import { isValidUrl } from "helpers/validateUrl";
 import {BlockTransaction, Transaction} from "interfaces/transaction";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function TransactionModal({
   transaction = null,
@@ -40,7 +40,8 @@ export default function TransactionModal({
 
   const { state } = useAppState();
   const { addInfo } = useToastStore();
-  const { getURLWithNetwork } = useNetwork();
+
+  const { getURLWithNetwork } = useMarketplace();
 
   function updateAddresses() {
     if (!transaction) return;

@@ -41,7 +41,7 @@ import { useCreateNetwork } from "x-hooks/api/marketplace/use-create-network";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSignature from "x-hooks/use-signature";
@@ -59,7 +59,7 @@ function NewNetwork() {
   const { signMessage } = useSignature();
   const { state, dispatch } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();
   const {

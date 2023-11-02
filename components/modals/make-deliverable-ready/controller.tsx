@@ -8,7 +8,7 @@ import { NetworkEvents } from "interfaces/enums/events";
 import { getDeliverable } from "x-hooks/api/deliverable/get-deliverable";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 interface MakeDeliverableRedyModalProps {
@@ -23,7 +23,7 @@ export default function MakeDeliverableRedyModal({
   const { query, push } = useRouter();
   const { t } = useTranslation("deliverable");
 
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { handleMakePullRequestReady } = useBepro();
   const [isMakingReady, onMakeReady] = useContractTransaction(NetworkEvents.PullRequestReady, 
                                                               handleMakePullRequestReady,

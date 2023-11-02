@@ -11,7 +11,7 @@ import { QueryKeys } from "helpers/query-keys";
 import { Curator } from "interfaces/curators";
 
 import { useSearchCurators } from "x-hooks/api/curator";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function VotingPowerMultiNetwork() {
@@ -20,7 +20,7 @@ export default function VotingPowerMultiNetwork() {
   const [network, setNetwork] = useState<Curator>();
 
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   function getNetworksVotingPower() {
     return useSearchCurators({
