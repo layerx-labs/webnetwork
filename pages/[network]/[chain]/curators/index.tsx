@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next/types";
 
 import NetworkCurators from "components/pages/network-curators/controller";
 
-import { emptyBountiesPaginated, emptyCuratorsPaginated, emptyNetworkOverview } from "helpers/api";
+import { emptyBountiesPaginated, emptyCuratorsPaginated } from "helpers/api";
 
 import { getBountiesListData } from "x-hooks/api/bounty";
 import { getCuratorsListData } from "x-hooks/api/curator";
@@ -30,8 +30,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
       .then(({ data }) => data)
       .catch(() => emptyCuratorsPaginated),
     getNetworkOverviewData(query)
-      .then(({ data }) => data)
-      .catch(() => emptyNetworkOverview)
   ]);
     
   return {

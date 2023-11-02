@@ -39,7 +39,6 @@ import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
-import {useNetwork} from "x-hooks/use-network";
 import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
 
@@ -56,7 +55,6 @@ export function useAuthentication() {
   const transactions = useTransactions();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { state, dispatch } = useAppState();
-  const { loadNetworkAmounts } = useNetwork();
   const { pushAnalytic } = useAnalyticEvents();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
@@ -141,8 +139,6 @@ export function useAuthentication() {
         dispatch(changeSpinners.update({balance: false}));
         //console.debug(`should have updated state`, state.currentUser.balance)
       });
-
-    loadNetworkAmounts();
   }
 
   async function syncUserDataWithSession() {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NumberFormatValues } from "react-number-format";
 
-import { Defaults } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
@@ -134,18 +133,10 @@ export default function UpdateBountyAmountModal({
 
 
   function handleDistributions(value, type) {
-    if (!Service?.network?.amounts) return;
-    if (!value) {
-      setDistributions(undefined);
-      if (type === "reward")
-        updateIssueAmount(ZeroNumberFormatValues);
-      else
-        setRewardAmount(ZeroNumberFormatValues);
-      return;
-    }
+    if (!value || !Service?.network?.active) return;
 
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
+    const networkFee = chain.closeFeePercentage;
     const amountOfType =
       BigNumber(type === "reward"
         ? calculateTotalAmountFromGivenReward(value, 
@@ -154,7 +145,7 @@ export default function UpdateBountyAmountModal({
                                               +proposerFeeShare/100)
         : value);
 
-    const initialDistributions = calculateDistributedAmounts( treasury,
+    const initialDistributions = calculateDistributedAmounts( chain.closeFeePercentage,
                                                               mergeCreatorFeeShare,
                                                               proposerFeeShare,
                                                               amountOfType,

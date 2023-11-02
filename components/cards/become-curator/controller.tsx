@@ -24,7 +24,7 @@ export default function BecomeCuratorCard({
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
 
-  const councilAmount = formatNumberToNScale(+state.Service?.network?.amounts?.councilAmount);
+  const councilAmount = formatNumberToNScale(+state.Service?.network?.active?.councilAmount);
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("common:misc.token");
   const votingPowerHref = getURLWithNetwork("/profile/voting-power");
 

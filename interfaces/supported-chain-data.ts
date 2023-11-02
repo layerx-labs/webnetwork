@@ -13,4 +13,8 @@ export interface SupportedChainData {
   isDefault: boolean;
   color?: string;
   icon?: string;
+  lockAmountForNetworkCreation?: string;
+  networkCreationFeePercentage?: number;
+  closeFeePercentage?: number;
+  cancelFeePercentage?: number;
 }

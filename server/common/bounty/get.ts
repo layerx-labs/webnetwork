@@ -43,7 +43,12 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
     { association: "benefactors" },
     { association: "disputes" },
     { association: "user" },
-    {  association: "network", include: [ { association: "chain", attributes: [ "chainShortName" ] } ] },
+    { 
+      association: "network", 
+      include: [ 
+        { association: "chain", attributes: [ "chainShortName", "closeFeePercentage" ] } 
+      ] 
+    },
   ];
 
   const chainHeader = await chainFromHeader(req);
@@ -83,7 +88,9 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
   if (!issue)
     throw new HttpNotFoundError("Issue not found");
 
-  issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+  const closeFee = issue.network.chain.closeFeePercentage;
+  issue.dataValues.developerAmount = getDeveloperAmount(closeFee,
+                                                        issue.network.mergeCreatorFeeShare,
                                                         issue.network.proposerFeeShare,
                                                         BigNumber(issue?.amount));
 

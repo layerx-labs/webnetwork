@@ -3,15 +3,12 @@ import { Web3Connection } from "@taikai/dappkit";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import {
-  NetworkAmounts,
-  NetworkTimes,
   ServiceNetwork,
   ServiceState,
   State
 } from "../../interfaces/application-state";
 import {AppStateReduceId} from "../../interfaces/enums/app-state-reduce-id";
 import {Network} from "../../interfaces/network";
-import {Token} from "../../interfaces/token";
 import DAO from "../../services/dao-service";
 import {SimpleAction} from "./reducer";
 
@@ -49,8 +46,6 @@ export const changeActiveDAO = (active: DAO) => changeServiceProp.update(active,
 export const changeNetworkLastVisited = (lastVisited: string) => changeNetwork.update({lastVisited});
 
 export const changeActiveNetwork = (active: Network) => changeNetwork.update({active});
-export const changeActiveNetworkTimes = (times: NetworkTimes) => changeNetwork.update({times});
-export const changeActiveNetworkAmounts = (amounts: NetworkAmounts) => changeNetwork.update({amounts});
 export const changeActiveAvailableChains = 
   (availableChains: SupportedChainData[]) => changeNetwork.update({availableChains});
 
