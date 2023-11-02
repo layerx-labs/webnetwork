@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {ContextualSpan} from "components/contextual-span";
 import CreatingNetworkLoader from "components/creating-network-loader";
 import LockBeproStep from "components/custom-network/lock-bepro-step";
@@ -14,6 +14,7 @@ import NetworkInformationStep from "components/custom-network/network-informatio
 import NetworkSettingsStep from "components/custom-network/network-settings-step";
 import TokenConfiguration from "components/custom-network/token-configuration";
 import If from "components/If";
+import ChainSelector from "components/navigation/chain-selector/controller";
 import Stepper from "components/stepper";
 
 import {useAppState} from "contexts/app-state";
@@ -112,17 +113,15 @@ function NewNetwork() {
       signedMessage
     };
 
-    const networkCreated = await createNetwork(payload)
-      .catch((error) => {
+    const networkCreated = await useCreateNetwork(payload)
+      .catch(error => {
+        console.debug("useCreateNetwork", error);
         setCreatingNetwork(-1);
         dispatch(addToast({
             type: "danger",
             title: t("actions.failed"),
-            content: t("custom-network:errors.failed-to-create-network", {
-              error,
-            }),
+            content: t("custom-network:errors.something-went-wrong"),
         }));
-
         return false;
       });
 
@@ -273,7 +272,7 @@ function NewNetwork() {
         </div>
       </If>
 
-      <Stepper dark={isSetupPage}>
+      <Stepper dark={isSetupPage} disableActiveStep={hasNetwork}>
         <LockBeproStep validated={tokensLocked?.validated} />
 
         <NetworkInformationStep validated={details?.validated} />
@@ -283,7 +282,7 @@ function NewNetwork() {
         <TokenConfiguration
           validated={isSettingsValidated}
           handleFinish={handleCreateNetwork}
-          finishLabel={t("custom-network:steps.repositories.submit-label")}
+          finishLabel={t("custom-network:steps.create-marketplace")}
         />
       </Stepper>
     </div>

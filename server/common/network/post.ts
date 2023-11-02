@@ -94,10 +94,10 @@ export async function post(req: NextApiRequest) {
     throw new HttpConflictError("Already exists a network registered for this wallet");
   
   if (tokens?.settler && tokens?.settlerTokenMinAmount) {
-    handleCreateSettlerToken( tokens?.settler,
-                              tokens?.settlerTokenMinAmount,
-                              chain.chainRpc,
-                              +chain?.chainId);
+    await handleCreateSettlerToken( tokens?.settler,
+                                    tokens?.settlerTokenMinAmount,
+                                    chain.chainRpc,
+                                    +chain?.chainId);
   }
 
   // Uploading logos to IPFS
@@ -128,7 +128,7 @@ export async function post(req: NextApiRequest) {
     chain_id: +chain?.chainId
   });
 
-  if(tokens?.allowedTransactions?.length > 0){
+  if(tokens?.allowedTransactions?.length > 0) {
     for (const token of tokens.allowedTransactions) {
       await handlefindOrCreateTokens(token.id, network.id, 'transactional');
     }

@@ -89,7 +89,7 @@ export default function ProposalMerge({
         isLoading={isMerging}
         withLockIcon={!canMerge || isMerging}
       >
-        <span>{t("actions.merge")}</span>
+        <span>{t("actions.accept")}</span>
       </ContractButton>
 
       <Modal

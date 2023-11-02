@@ -15,7 +15,7 @@ import {
 } from "components/bounty/funding-section/minimals.view";
 import RetractOrWithdrawModal from "components/bounty/funding-section/retract-or-withdraw-modal/controller";
 import Collapsable from "components/collapsable";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import ContractButton from "components/contract-button";
 import If from "components/If";
 
@@ -128,7 +128,7 @@ export default function FundingSectionView({
               <CaptionMedium text={t("funding:current-funding")} color="gray-600" />
             }
             col2={
-              <CaptionMedium text={t("funding:total-amount")} color="gray-600" />
+              <CaptionMedium text={t("funding:gross-total-amount")} color="gray-600" />
             }
           />
 

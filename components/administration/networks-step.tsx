@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {FormCheck} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 import getConfig from "next/config";
@@ -123,10 +122,6 @@ export default function NetworksStep({
       label: "councilAmount", 
       value: floatValue
     });
-  }
-
-  function changeAllowMergeCheckbox(ele) {
-    fields.allowMerge.setter(ele?.target?.value || false);
   }
 
   function showTextOrDefault(text: string, defaultText: string) {
@@ -466,18 +461,6 @@ export default function NetworksStep({
                 </div>
               </div>
             )}
-
-            <div className="d-flex row ">
-              <div className="col-md-12">
-                <FormCheck
-                  className="form-control-md pb-0"
-                  type="checkbox"
-                  label={t("custom-network:allow-merge")}
-                  onChange={changeAllowMergeCheckbox}
-                  checked={details?.allowMerge}
-                />
-              </div>
-            </div>
 
             {(canSubmit && (
               <div className="d-flex flex-row justify-content-center mt-3 mb-2">

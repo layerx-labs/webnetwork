@@ -1,6 +1,6 @@
 import Comments from "components/bounty/comments/controller";
 import PullAndProposalHero from "components/bounty/pull-and-proposal-hero/controller";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import ProposalActionsButtons from "components/proposal/actions/buttons/controller";
@@ -49,7 +49,9 @@ export default function ProposalPageView({
 }: ProposalPageViewProps) {
   return (
     <>
-      <PullAndProposalHero proposal={proposal} />
+      <PullAndProposalHero
+        proposal={proposal}
+      />
 
       <CustomContainer>
         <If condition={isMergeable}>

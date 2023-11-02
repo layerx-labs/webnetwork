@@ -31,18 +31,20 @@ import useReactQuery from "x-hooks/use-react-query";
 export default function PageIssue() {
   const { query } = useRouter();
 
-  const bountyId = query?.id?.toString();
-  const { data: bounty, invalidate: invalidateBounty } = 
-    useReactQuery(QueryKeys.bounty(bountyId), () => getBountyData(query));
+  const { state } = useAppState();
+
+  const bountyId = query?.id;
+  const bountyQueryKey = ["bounty", bountyId?.toString()];
+
+  const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 
-    useReactQuery(QueryKeys.bountyComments(bountyId), () => getCommentsData({ issueId: bountyId, type: "issue" }));
+    useReactQuery(QueryKeys.bountyComments(bountyId?.toString()), () => 
+      getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
 
   const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
-
-  const { state } = useAppState();
 
   async function updateBountyData() {
     invalidateBounty();
@@ -108,7 +110,19 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
   const queryClient = getReactQueryClient();
   const bountyId = query.id?.toString();
 
-  const bountyData = await getBountyData(query);
+  const bountyData = await getBountyData(query).catch(error => {
+    console.log("getBountyData error", error.toString());
+    return null;
+  });
+
+  if (!bountyData)
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${query?.network}/${query?.chain}/bounties`,
+      },
+      props:{},
+    };
 
   await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
   await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () => 

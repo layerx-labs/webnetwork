@@ -1,9 +1,11 @@
+import BigNumber from "bignumber.js";
 import {subHours, subMonths, subWeeks, subYears} from "date-fns";
 import {ParsedUrlQuery} from "querystring";
 import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
 import {caseInsensitiveEqual} from "helpers/db/conditionals";
 import {getAssociation} from "helpers/db/models";
 import paginate, {calculateTotalPages} from "helpers/paginate";
@@ -109,6 +111,7 @@ export default async function get(query: ParsedUrlQuery) {
                     undefined, 
                     !!proposer || !!proposalId || isMergeableState || isDisputableState, 
                     {
+                      contractId: { [Op.not]: null },
                       ... proposer ? { creator: { [Op.iLike]: proposer.toString() } } : {},
                       ... proposalId ? { id: proposalId } : {},
                       ... isMergeableState || isDisputableState ? {
@@ -130,18 +133,27 @@ export default async function get(query: ParsedUrlQuery) {
   const deliverableAssociation = 
     getAssociation( "deliverables", 
                     undefined, 
-                    false, 
-                    {},
+                    !!deliverabler, 
+                    { prContractId: { [Op.not]: null } },
                     [getAssociation("user", undefined, !!deliverabler, deliverabler ? {
-                      address: { [Op.iLike]: deliverabler?.toString() }
+                      address: caseInsensitiveEqual("address", deliverabler.toString())
                     }: {})]);
 
   const networkAssociation = 
     getAssociation( "network", 
-                    ["colors", "name", "networkAddress", "disputableTime", "logoIcon", "fullLogo"], 
+                    [
+                      "colors",
+                      "name",
+                      "networkAddress",
+                      "disputableTime",
+                      "logoIcon",
+                      "fullLogo",
+                      "mergeCreatorFeeShare",
+                      "proposerFeeShare"
+                    ], 
                     true, 
-                    networkName || network ? { 
-                      networkName: caseInsensitiveEqual("network.name", (networkName || network).toString())
+                    networkName === 'all' ? {} : (networkName || network) ? { 
+                      name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", ["chainId", "chainShortName", "color"], true, chain ? {
                       chainShortName: { [Op.iLike]: chain.toString()}
@@ -178,11 +190,10 @@ export default async function get(query: ParsedUrlQuery) {
   } else
     sort.push("createdAt");
 
-  const useSubQuery = isMergeableState || isDisputableState ? false : undefined;
+  const useSubQuery = isMergeableState || isDisputableState || deliverabler ? false : undefined;
 
   const issues = await models.issue.findAndCountAll(paginate({
     subQuery: useSubQuery,
-    logging: console.log,
     where: whereCondition,
     include: [
       networkAssociation,
@@ -191,21 +202,67 @@ export default async function get(query: ParsedUrlQuery) {
       transactionalTokenAssociation,
       userAssociation,
     ]
-  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT));
+  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT))
+    .then(result => {
+      const rows = result.rows.map(issue => {
+        issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+                                                              issue.network.proposerFeeShare,
+                                                              BigNumber(issue?.amount));
+        return issue;
+      });
 
-  const totalBounties = await models.issue.count({
-    where: {
-      state: {
-        [Op.notIn]: ["pending", "canceled"],
+      return {
+        ...result,
+        rows
+      }
+    }); 
+  
+  const actions = {
+      deliverabler: async () => {
+        return models.deliverable.count({
+          subQuery: false,
+          where: { prContractId: { [Op.not]: null } },
+          include: [
+            getAssociation("user", undefined, !!deliverabler, deliverabler ? {
+              address: caseInsensitiveEqual("address", deliverabler.toString())
+            }: {}),
+            getAssociation("issue", undefined, true, {}, [
+              getAssociation("network", undefined, true, networkName === 'all' ? {} : networkName || network ? 
+              { 
+                name: caseInsensitiveEqual("name", (networkName || network).toString())
+              } : {}, [])])
+          ]
+        });
       },
-      visible: true,
-    }
-  });
+      proposer: async () => {
+        return models.mergeProposal.count({
+          where: {
+            ...proposer ? { creator: caseInsensitiveEqual("creator", proposer.toString()) } : {}
+          },
+          include: [
+            networkAssociation
+          ]
+        });
+      },
+      default: async () => {
+        return models.issue.count({
+          where: {
+            state: {
+              [Op.notIn]: ["pending", "canceled"],
+            },
+            visible: true,
+          }
+        });
+      },
+  };
+
+  const action = actions[deliverabler && 'deliverabler' || proposer && 'proposer' || 'default'];
+  const total = await action();
 
   return {
     ...issues,
     currentPage: PAGE,
     pages: calculateTotalPages(issues.count, RESULTS_LIMIT),
-    totalBounties
+    totalBounties: total
   };
 }

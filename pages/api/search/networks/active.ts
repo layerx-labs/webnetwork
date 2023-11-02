@@ -59,19 +59,23 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   })
 
   const result = networks.map((network) => {
+    const tokensLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.tokensLocked || 0),
+                                                   BigNumber(0))
+    const delegatedLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.delegatedToMe || 0),
+                                                      BigNumber(0))                                       
+
     return {
             name: network?.name,
             fullLogo: network?.fullLogo,
             logoIcon: network?.logoIcon,
-            totalValueLock: network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.tokensLocked || 0),
-                                                      BigNumber(0)),
+            totalValueLock: tokensLocked?.plus(delegatedLocked),
             totalIssues: network?.issues?.length || 0,
             countIssues: network?.issues?.length || 0,
             chain: network?.chain
     };
   })
 
-  const compare = (networkOne, networkTwo) => (networkOne?.totalValueLock.gt(networkTwo?.totalValueLock) ? -1 : 0 )
+  const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 )
   
   const paginatedData = paginateArray(result
           .sort(compare)

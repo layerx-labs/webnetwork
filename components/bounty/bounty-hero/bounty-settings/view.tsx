@@ -5,17 +5,16 @@ import {
   } from "react";
   
 import { useTranslation } from "next-i18next";
-  
+
+import ContractButton from "components/contract-button";
 import Modal from "components/modal";
 import Translation from "components/translation";
-
-import { ServiceNetwork } from "interfaces/application-state";
 
 interface BountySettingsViewProps {
     isEditIssue?: boolean;
     handleHardCancel?: () => void;
     handleRedeem?: () => void;
-    network: ServiceNetwork;
+    isGovernor: boolean;
     isWalletConnected: boolean;
     isBountyInDraft: boolean;
     isBountyOwner: boolean;
@@ -29,7 +28,7 @@ export default function BountySettingsView({
     handleHardCancel,
     handleRedeem,
     isEditIssue,
-    network,
+    isGovernor,
     isWalletConnected,
     isBountyInDraft,
     isBountyOwner,
@@ -79,18 +78,20 @@ export default function BountySettingsView({
   
   function renderCancel() {
     const Cancel = (isHard: boolean) => (
-        <span
-          className="cursor-pointer"
+        <ContractButton
+          className="px-0 mx-0 p font-weight-normal text-capitalize"
+          transparent
+          align="left"
           onClick={handleCancelClick(isHard)}
         >
           <Translation
             ns={isHard ? "common" : "bounty"}
             label={isHard ? "actions.cancel" : "actions.owner-cancel"}
           />
-        </span>
+        </ContractButton>
       );
-  
-    if (network?.active?.isGovernor && isCancelable)
+
+    if (isGovernor && isCancelable)
       return Cancel(true);
   
     const isDraftOrNotFunded = isFundingRequest
@@ -113,12 +114,12 @@ export default function BountySettingsView({
       <>
         <div className="position-relative d-flex justify-content-end" ref={node}>
           <div
-            className={`cursor-pointer border ${
+            className={`cursor-pointer hover-white border ${
               (show && "border-primary") || "border-gray-850"
             } border-radius-8 d-flex`}
             onClick={() => setShow(!show)}
           >
-            <span className="mx-2 mb-2">. . .</span>
+            <span className="mx-2 my-1">{t("common:misc.options")}</span>
           </div>
   
           <div

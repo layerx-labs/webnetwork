@@ -34,10 +34,10 @@ export default function CreateBountyReviewSection({
         return (
           <ContainerTypeFlex key={key}>
             <div className="col-md-3 text-gray text-capitalize">
-              {name.replace("_", " ")}
+              {t(`review-section.${name}`)}
             </div>
 
-            <div className="col-md-9 text-truncate">
+            <div className="col text-wrap">
               { Array.isArray(value) ?
                 <div className="d-flex flex-wrap">
                   {value.map((item, key) => (

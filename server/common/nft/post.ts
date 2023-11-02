@@ -109,21 +109,21 @@ export async function post(req: NextApiRequest) {
       await network.isProposalDisputed(+issue.contractId, +proposal.contractId))
     throw new HttpConflictError("Proposal failed on chain");
 
-  const pullRequest = networkBounty.pullRequests.find(pr=> pr.id === proposal.prId)
-
+  const pullRequest = networkBounty.pullRequests.find(pr=> pr.id === networkProposal.prId);
   if(pullRequest.canceled || !pullRequest.ready)
     throw new HttpConflictError("Pull request canceled or not ready");
 
-  const [{treasury}, creatorFee, proposerFee] = await Promise.all([ DAOService?.getTreasury(),
-                                                                    DAOService?.getMergeCreatorFee(),
-                                                                    DAOService?.getProposerFee()
+  const [treasuryInfo, creatorFee, proposerFee] = await Promise.all([ 
+    DAOService?.getTreasury(),
+    DAOService?.getMergeCreatorFee(),
+    DAOService?.getProposerFee()
   ]);
 
-  const distributions = calculateDistributedAmounts(treasury,
+  const distributions = calculateDistributedAmounts(treasuryInfo,
                                                     creatorFee,
                                                     proposerFee,
                                                     BigNumber(networkBounty.tokenAmount),
-                                                    proposal.details);
+                                                    networkProposal.details);
 
   const getNftParticipant = async (address, amounts) => {
     const user = await models.user.findOne({ where: { address: { [Op.iLike]: String(address) } } });
@@ -133,7 +133,7 @@ export async function post(req: NextApiRequest) {
 
   const merger = await getNftParticipant(mergerAddress, distributions.mergerAmount);
 
-  const participants = await Promise.all(proposal.details.map(async(detail: ProposalDetail, i) => {
+  const participants = await Promise.all(networkProposal.details.map(async(detail: ProposalDetail, i) => {
     if(!detail.recipient) return;
 
     return getNftParticipant(detail.recipient, distributions.proposals[i]);

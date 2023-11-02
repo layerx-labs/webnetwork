@@ -14,7 +14,7 @@ import SelectNetworkSection, {
   SelectNetworkSectionProps
 } from "components/bounty/create-bounty/sections/select-network/view";
 import Button from "components/button";
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import ContractButton from "components/contract-button";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -119,14 +119,18 @@ export default function CreateBountyPageView({
             bountyTokens={rest.bountyTokens} 
             rewardTokens={rest.rewardTokens} 
             rewardBalance={rest.rewardBalance} 
-            bountyBalance={rest.bountyBalance} 
+            bountyBalance={rest.bountyBalance}
+            previewAmount={rest.previewAmount}
+            distributions={rest.distributions}
             updateRewardToken={rest.updateRewardToken} 
             updateTransactionalToken={rest.updateTransactionalToken} 
             addToken={rest.addToken} 
             handleRewardChecked={rest.handleRewardChecked} 
             updateIssueAmount={rest.updateIssueAmount} 
             updateRewardAmount={rest.updateRewardAmount} 
-            updateIsFundingType={rest.updateIsFundingType}          
+            updateIsFundingType={rest.updateIsFundingType}    
+            setPreviewAmount={rest.setPreviewAmount}  
+            setDistributions={rest.setDistributions}   
           />
       );
 

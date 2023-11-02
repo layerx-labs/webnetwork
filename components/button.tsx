@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from "react";
+import React, { ButtonHTMLAttributes, ReactNode } from "react";
 
 import LockedIcon from "assets/icons/locked-icon";
 
@@ -15,6 +15,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   withLockIcon?: boolean;
   align?: "left" | "center" | "right";
+  children?: ReactNode;
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void
 }
 

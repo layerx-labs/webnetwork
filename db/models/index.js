@@ -6,7 +6,6 @@ import Developers from "./developer.model";
 import Issues from "./issue.model";
 import MergeProposals from "./mergeproposal";
 import Network from "./network.model";
-import Repositories from "./repositories.model";
 import User from "./user";
 import Tokens from "./tokens.model";
 import NetworkTokens from "./network-tokens.model";
@@ -23,6 +22,7 @@ import KycSession from './kyc-session.model'
 import Delegation from './delegation.model'
 import Comments from './comments.model'
 import Deliverables from './deliverable.model'
+import UserLockedRegistry from './user-locked-registry'
 
 const Database = { sequelize: null };
 
@@ -35,7 +35,6 @@ Database.user = User;
 Database.developer = Developers;
 Database.issue = Issues;
 Database.mergeProposal = MergeProposals;
-Database.repositories = Repositories;
 Database.chainEvents = ChainEvents;
 Database.network = Network;
 Database.tokens = Tokens;
@@ -53,6 +52,7 @@ Database.kycSession = KycSession;
 Database.delegation = Delegation;
 Database.comments = Comments;
 Database.deliverable = Deliverables;
+Database.userLockedRegistry = UserLockedRegistry;
 
 
 Object.values(Database).forEach((model) => {
