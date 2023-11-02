@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import getConfig from "next/config";
 
 import PriceConversorModal from "components/bounty/bounty-hero/price-conversor/modal/controller";
 
@@ -16,24 +15,24 @@ interface IPriceConversorProps {
   isVisible: boolean;
   handleIsVisible: (v: boolean) => void;
   token: Token;
+  userWalletAddress: string;
 }
-
-const { publicRuntimeConfig } = getConfig();
 
 export default function PriceConversorView({
   currentValue,
   currency,
   isVisible,
   token,
+  userWalletAddress,
   handleIsVisible
 }: IPriceConversorProps) {
   const { isDesktopView } = useBreakPoint();
 
   return (
     <>
-    <div onClick={()=> handleIsVisible(publicRuntimeConfig?.enableCoinGecko && true)}
+    <div onClick={()=> handleIsVisible(!!userWalletAddress)}
         className={
-          `${(!isDesktopView || !publicRuntimeConfig?.enableCoinGecko) && 
+          `${(!isDesktopView || !userWalletAddress) && 
             'read-only-button-mobile'} py-1 px-2 border border-gray-850 border-radius-4 
             d-flex align-items-center cursor-pointer`}>
       <span className="text-white caption-large font-weight-normal">
