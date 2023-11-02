@@ -126,7 +126,8 @@ export default function TokensDropdown({
   }, [token, options, defaultToken]);
 
   function SelectOptionComponent({ innerProps, innerRef, data }) {
-    const { currentValue, symbol ,address, tokenInfo, name } = data.value;
+    const { currentValue, symbol ,address, tokenInfo, name, icon } = data.value;
+
     return (
       <div
         ref={innerRef}
@@ -141,7 +142,7 @@ export default function TokensDropdown({
           <>
             <span className="mx-2">
               <TokenIcon
-                src={tokenInfo.icon}
+                src={icon}
                 size="14"
               />
             </span>
@@ -176,7 +177,7 @@ export default function TokensDropdown({
         <div className="flex-grow-0 proposal__select-options d-flex align-items-center text-center p-small p-1">
           <span className="mx-2">
             <TokenIcon
-              src={data?.tokenInfo?.icon}
+              src={data?.icon}
               size="14"
             />
           </span>

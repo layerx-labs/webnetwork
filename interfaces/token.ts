@@ -25,6 +25,7 @@ export interface Token {
   isAllowed?: boolean;
   isReward?: boolean;
   minimum?: string;
+  icon?: string | ReactElement;
 }
 
 export interface NetworkToken {
@@ -36,7 +37,6 @@ export interface NetworkToken {
 }
 
 export interface TokenInfo extends Partial<Token> {
-    icon?: string | ReactElement;
     prices: TokenPrice;
 }
 
