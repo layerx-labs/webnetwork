@@ -14,7 +14,6 @@ import { MINUTE_IN_MS } from "helpers/constants";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
-import { getCoinInfoByContract } from "services/coingecko";
 import DAO from "services/dao-service";
 
 import useReactQuery from "x-hooks/use-react-query";
@@ -63,18 +62,14 @@ export default function WalletBalance({
     typeof token === "string" ? token : token?.address;
 
   async function processToken(token: Token, service: DAO) {
-    const [tokenInformation, balance] = await Promise.all([
-      getCoinInfoByContract(token?.symbol)
-        .catch(() => ({ icon: null })),
-      service
-        .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
-        .catch(() => BigNumber(0)),
-    ]);
-
+    const balance = await service
+      .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
+      .catch(() => BigNumber(0));
+  
     return {
       ...token,
       balance,
-      icon: <TokenIcon src={tokenInformation?.icon as string} />,
+      icon: <TokenIcon src={token?.icon as string} />,
     };
   }
 
@@ -127,7 +122,7 @@ export default function WalletBalance({
     return daoService
   }
 
-  function loadTokensBalance(): Promise<(TokenBalanceType & { price?: number })[]> {
+  function loadTokensBalance(): Promise<TokenBalanceType[]> {
     const currentChains = chains.map(({ chainRpc, chainId }) => ({
       web3Connection: loadDaoService(chainRpc),
       chainId 

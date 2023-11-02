@@ -31,8 +31,6 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import {getCoinInfoByContract, getCoinList} from "services/coingecko";
-
 import { useCreatePreBounty } from "x-hooks/api/bounty";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
@@ -121,14 +119,7 @@ export default function CreateBountyPage({
     BigNumber(v).isLessThan(BigNumber(min));
 
   async function addToken(newToken: Token) {
-    await getCoinInfoByContract(newToken?.symbol)
-      .then((tokenInfo) => {
-        setCustomTokens([...customTokens, { ...newToken, tokenInfo }]);
-      })
-      .catch((err) => {
-        console.error("coinErro", err);
-        setCustomTokens([...customTokens, newToken]);
-      });
+    setCustomTokens([...customTokens, newToken]);
   }
 
   function validateBannedDomain(link: string) {
@@ -153,17 +144,6 @@ export default function CreateBountyPage({
   function handleOriginLinkChange(newLink: string) {
     setOriginLink(newLink);
     validateDomainDebounced(newLink);
-  }
-
-  async function handleCustomTokens(tokens: Token[]) {
-    await getCoinList() // ask for list so it we don't do that on the loop;
-
-    Promise.all(tokens?.map(async (token) => {
-      const newTokens = await getCoinInfoByContract(token?.symbol)
-        .then((tokenInfo) => ({ ...token, tokenInfo }))
-        .catch(() => token);
-      return newTokens
-    })).then(t => setCustomTokens(t))
   }
 
   function onUpdateFiles(files: IFilesProps[]) {
@@ -504,7 +484,7 @@ export default function CreateBountyPage({
       }
 
       if (tokens.length !== customTokens.length)
-        handleCustomTokens(tokens)
+        setCustomTokens(tokens)
     }
   }, [currentNetwork?.tokens]);
 
