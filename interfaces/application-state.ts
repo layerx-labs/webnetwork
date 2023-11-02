@@ -9,23 +9,11 @@ import {MatchAccountsStatus} from "interfaces/enums/api";
 import {IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
 import {kycSession} from "interfaces/kyc-session";
 import {LoadingState} from "interfaces/loading-state";
-import {Network} from "interfaces/network";
-import {SupportedChainData} from "interfaces/supported-chain-data";
-import {Token} from "interfaces/token";
 
 import {SettingsType, Tier} from "types/settings";
 
-export interface ServiceNetwork {
-  lastVisited: string;
-  active: Network | null;
-  noDefaultNetwork?: boolean;
-  availableChains?: SupportedChainData[];
-  tokens: {transactional: Token[]; reward: Token[];} | null;
-}
-
 export interface ServiceState {
   microReady: boolean | null;
-  network: ServiceNetwork | null;
   web3Connection: Web3Connection
 }
 
@@ -52,6 +40,8 @@ export interface CurrentUserState {
   kyc?: kycSession;
   kycSession?: kycSession;
   id?: number;
+  isCouncil?: boolean;
+  isGovernor?: boolean;
 }
 
 export interface CurrentBounty {
