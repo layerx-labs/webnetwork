@@ -161,6 +161,7 @@ export default function TransactionModal({
             href={getURLWithNetwork("/", {
               network: transaction?.network?.name
             })}
+            onClick={onCloseClick}
             style={{ color: `${transaction?.network?.colors?.primary}` }}
             brand
             transparent
