@@ -2,13 +2,13 @@ import { useTranslation } from "next-i18next";
 
 import ProposalActionsView from "components/proposal/actions/view";
 
-import { useAppState } from "contexts/app-state";
-
 import {
   IssueBigNumberData,
   IssueData,
 } from "interfaces/issue-data";
 import { DistributedAmounts, Proposal } from "interfaces/proposal";
+
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalActionsProps {
   proposal: Proposal;
@@ -35,7 +35,7 @@ export default function ProposalActions({
 }: ProposalActionsProps) {
   const { t } = useTranslation(["common", "deliverable", "proposal"]);
 
-  const { state } = useAppState();
+  const marketplace = useMarketplace();
 
   const warnings = [
     isDisputableOnChain && t("proposal:messages.in-disputable-time", {
@@ -49,7 +49,7 @@ export default function ProposalActions({
       issue={issue}
       distributedAmounts={distributedAmounts}
       percentageNeededForDispute={
-        +state.Service?.network?.active?.percentageNeededForDispute
+        +marketplace?.active?.percentageNeededForDispute
       }
       warnings={warnings}
       isUserAbleToDispute={isUserAbleToDispute}

@@ -19,13 +19,16 @@ import DAO from "services/dao-service";
 import useChain from "x-hooks/use-chain";
 
 import { useDaoStore } from "./stores/dao/dao.store";
+import useMarketplace from "./use-marketplace";
 import useSupportedChain from "./use-supported-chain";
+
 
 export function useDao() {
   const [isLoadingChangingChain, setIsLoadingChangingChain] = useState(false);
   const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
+  const marketplace = useMarketplace();
   const { state, dispatch } = useAppState();
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
@@ -72,8 +75,8 @@ export function useDao() {
    * @param networkAddress
    */
   async function changeNetwork(chainId = '', address = '') {
-    const networkAddress = address || state.Service?.network?.active?.networkAddress;
-    const chain_id = +(chainId || state.Service?.network?.active?.chain_id);
+    const networkAddress = address || marketplace?.active?.networkAddress;
+    const chain_id = +(chainId || marketplace?.active?.chain_id);
 
     if (!daoService ||
         !networkAddress ||
@@ -135,7 +138,7 @@ export function useDao() {
       return;
     }
 
-    const networkChainId = state.Service?.network?.active?.chain_id;
+    const networkChainId = marketplace?.active?.chain_id;
     const isOnNetwork = pathname?.includes("[network]");
 
     if (isOnNetwork && !networkChainId) {
@@ -143,7 +146,7 @@ export function useDao() {
       return;
     }
 
-    const activeNetworkChainId = state.Service?.network?.active?.chain_id;
+    const activeNetworkChainId = marketplace?.active?.chain_id;
 
     const chainIdToConnect = isOnNetwork && activeNetworkChainId ? activeNetworkChainId : 
       (connectedChain?.name === UNSUPPORTED_CHAIN ? undefined : connectedChain?.id);

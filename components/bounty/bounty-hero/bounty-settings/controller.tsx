@@ -32,7 +32,7 @@ export default function BountySettings({
   const { updateWalletBalance } = useAuthentication();
   const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
 
-  const isGovernor = state.Service?.network?.active?.isGovernor;
+  const isGovernor = state.currentUser?.isGovernor;
   const objViewProps = {
     isWalletConnected: !!state.currentUser?.walletAddress,
     isBountyInDraft: !!currentBounty?.isDraft,

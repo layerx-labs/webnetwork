@@ -18,7 +18,7 @@ import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 type Executing = "bountyFees" | "creationFee" | "creationAmount" | "transactional" | "reward";
@@ -47,7 +47,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const {state} = useAppState();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();
-  const { updateActiveNetwork } = useNetwork();
+  const marketplace = useMarketplace();
   const { 
     handleFeeSettings,
     handleAmountNetworkCreation,
@@ -256,7 +256,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
     setExecutingTx(undefined);
 
-    await updateActiveNetwork(true);
+    await marketplace.refresh();
     await updateRegistryParameters();
   }
 

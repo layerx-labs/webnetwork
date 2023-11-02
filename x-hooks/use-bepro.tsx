@@ -17,9 +17,10 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
-import {useProcessEvent} from "x-hooks/api/events/use-process-event";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { transactionStore } from "x-hooks/stores/transaction-list/transaction.store";
+import useMarketplace from "x-hooks/use-marketplace";
 
 const DIVISOR = 1000000;
 
@@ -27,11 +28,13 @@ export default function useBepro() {
   const { t } = useTranslation("common");
 
   const { state } = useAppState();
-  const { service: daoService } = useDaoStore();
+  const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
+  const { service: daoService } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
 
-  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.$token");
+  const activeMarketplace = marketplace?.active;
 
   const failTx = (err, tx, reject?) => {
     updateTx({
@@ -48,7 +51,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const disputeTxAction = addTx({
         type: TransactionTypes.dispute,
-        network: state.Service?.network?.active,
+        network: activeMarketplace,
       });
 
       await daoService.disputeProposal(+issueContractId, +proposalContractId)
@@ -66,7 +69,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.configFees,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.updateConfigFees(closeFee, cancelFee)
@@ -84,7 +87,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.amountForNetworkCreation,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.updateAmountNetworkCreation(amount)
@@ -102,7 +105,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.feeForNetworkCreation,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.updateFeeNetworkCreation(amount)
@@ -122,7 +125,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const closeIssueTx = addTx({
         type: TransactionTypes.closeIssue,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.closeBounty(+bountyId, +proposalContractId, tokenUri)
@@ -142,7 +145,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.updateBountyAmount,
-        network: state.Service?.network?.active,
+        network: activeMarketplace,
         amount: amount,
         currency: currency
       });
@@ -164,7 +167,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const redeemTx = addTx({
         type: TransactionTypes.redeemIssue,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       let tx: { blockNumber: number; }
@@ -191,7 +194,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.redeemIssue,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       let tx: { blockNumber: number; }
@@ -224,7 +227,7 @@ export default function useBepro() {
 
       const tx = addTx({
         type: TransactionTypes.proposeMerge,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService
@@ -249,7 +252,7 @@ export default function useBepro() {
       const type = tokenType === "transactional" ?
         TransactionTypes.approveTransactionalERC20Token : TransactionTypes.approveSettlerToken ;
 
-      const tx = addTx({ type, network: state.Service?.network?.active, amount, currency });
+      const tx = addTx({ type, network: activeMarketplace, amount, currency });
 
       await daoService.approveToken(tokenAddress, amount)
       .then((txInfo) => {
@@ -274,7 +277,7 @@ export default function useBepro() {
         type: TransactionTypes.takeBackOracles,
         amount,
         currency,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService
@@ -303,7 +306,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
         type: TransactionTypes.createDeliverable,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService?.createPullRequest( bountyId,
@@ -327,7 +330,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
         type: TransactionTypes.makeDeliverableReady,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
 
@@ -346,7 +349,8 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
         type: TransactionTypes.cancelDeliverable,
-        network: state.Service?.network?.active});
+        network: activeMarketplace
+      });
 
       await daoService.cancelPullRequest(bountyId, pullRequestId)
       .then((txInfo: TransactionReceipt) => {
@@ -363,7 +367,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
         type: TransactionTypes.refuseProposal,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       })
 
       await daoService.refuseProposal(bountyId, proposalId)
@@ -381,7 +385,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.deployNetworkV2,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.deployNetworkV2(networkToken)
@@ -405,7 +409,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.deployNetworkRegistry,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.deployNetworkRegistry(erc20,
@@ -429,7 +433,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.setNFTDispatcher,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.setNFTTokenDispatcher(nftToken, networkAddress)
@@ -447,7 +451,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.addNetworkToRegistry,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.addNetworkToRegistry(networkAddress)
@@ -465,7 +469,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.deployBountyToken,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.deployBountyToken(name, symbol)
@@ -517,7 +521,7 @@ export default function useBepro() {
         type: TransactionTypes.fundBounty,
         amount,
         currency,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.fundBounty(bountyId, amount, tokenDecimals)
@@ -540,7 +544,7 @@ export default function useBepro() {
         type: TransactionTypes.retractFundBounty,
         amount,
         currency,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.retractFundBounty(bountyId, fundingId)
@@ -563,7 +567,7 @@ export default function useBepro() {
         type: TransactionTypes.withdrawFundRewardBounty,
         amount,
         currency,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService.withdrawFundRewardBounty(bountyId, fundingId)
@@ -584,7 +588,7 @@ export default function useBepro() {
 
       const transaction = addTx({
         type: TransactionTypes.changeAllowedTokens,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService[( add ? 'addAllowedTokens' : 'removeAllowedTokens')](addresses, isTransactional)
@@ -602,7 +606,7 @@ export default function useBepro() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.closeNetwork,
-        network: state.Service?.network?.active
+        network: activeMarketplace
       });
 
       await daoService?.unlockFromRegistry()

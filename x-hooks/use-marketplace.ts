@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 
+import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 
-import { FIVE_MINUTES_IN_MS } from "helpers/constants";
+import { FIVE_MINUTES_IN_MS, MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
@@ -12,6 +13,8 @@ import { ProfilePages } from "interfaces/utils";
 import { useSearchNetworks } from "x-hooks/api/network";
 import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
 import useReactQuery from "x-hooks/use-react-query";
+
+import getNetworkOverviewData from "./api/get-overview-data";
 
 export default function useMarketplace(marketplaceName?: string, chainName?: string) {
   const { query, push } = useRouter();
@@ -67,6 +70,18 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     }, `/${path}`);
   }
 
+  function getTotalNetworkToken() {
+    const network = query?.network?.toString();
+    const chain = query?.chain?.toString();
+    return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
+                          () => getNetworkOverviewData(query)
+                            .then(({ data }) => BigNumber(data?.curators?.tokensLocked || 0)),
+                          {
+                            enabled: !!network && !!chain,
+                            staleTime: MINUTE_IN_MS
+                          });
+  }
+
   useEffect(() => {
     if (isFetching || isError || isStale) return;
     const active = searchData.rows.find(network => lowerCaseCompare(network.chain?.chainShortName, chain));
@@ -92,5 +107,6 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     refresh: invalidate,
     getURLWithNetwork,
     goToProfilePage,
+    getTotalNetworkToken,
   };
 }

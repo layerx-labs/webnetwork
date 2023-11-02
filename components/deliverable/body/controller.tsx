@@ -12,7 +12,7 @@ import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface DeliverableBodyControllerProps {
   currentDeliverable: Deliverable;
@@ -33,7 +33,7 @@ export default function DeliverableBody({
   const { t } = useTranslation(["common", "deliverable"]);
 
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
   const [isMakingReady, onMakeReady] = useContractTransaction(NetworkEvents.PullRequestReady,
                                                               handleMakePullRequestReady,
@@ -44,7 +44,7 @@ export default function DeliverableBody({
                                                           t("deliverable:actions.cancel.success"),
                                                           t("deliverable:actions.cancel.error"));
 
-  const isCouncil = !!state?.Service?.network?.active?.isCouncil;
+  const isCouncil = !!state?.currentUser?.isCouncil;
   const isWalletConnected = !!state.currentUser?.walletAddress;
   const isDeliverableReady = currentDeliverable?.markedReadyForReview;
   const isDeliverableCanceled = currentDeliverable?.canceled;

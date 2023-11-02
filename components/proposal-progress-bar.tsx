@@ -6,7 +6,7 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import TokenSymbolView from "./common/token-symbol/view";
 
@@ -21,14 +21,15 @@ export default function ProposalProgressBar({
 }) {
   const { t } = useTranslation("proposal");
 
+  const {state} = useAppState();
+  const marketplace = useMarketplace();
+
   const [issueState, setIssueState] = useState<string>("");
   const [issueColor, setIssueColor] = useState<string>("");
   const [percentage, setPercentage] = useState<number>(0);
   const [_columns, setColumns] = useState<number[]>([]);
-  
-  const { state } = useAppState();
-  const { getTotalNetworkToken } = useNetwork();
-  const { data: totalNetworkToken } = getTotalNetworkToken();
+
+  const { data: totalNetworkToken } = marketplace.getTotalNetworkToken();
 
   function toPercent(value = 0, total = 0, decimals = 2) {
     const percent = +((value / total) * 100).toFixed(decimals)
@@ -136,7 +137,7 @@ export default function ProposalProgressBar({
             </span>{" "}
             <span className="me-1">/{formatNumberToNScale(totalNetworkToken?.toFixed() || 0)}{" "}</span>
             <TokenSymbolView 
-              name={t("common:$oracles", { token: state.Service?.network?.active?.networkToken?.symbol })}
+              name={t("common:$oracles", { token: marketplace?.active?.networkToken?.symbol })}
             />
              {" "}
             <span className={`text-${issueColor}`}> ({percentage}%)</span>

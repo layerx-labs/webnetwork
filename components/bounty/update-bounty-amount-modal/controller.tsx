@@ -18,6 +18,7 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import UpdateBountyAmountModalView from "./view";
 
@@ -52,6 +53,7 @@ export default function UpdateBountyAmountModal({
   } = useAppState();
   const { addError } = useToastStore();
   const { service: daoService } = useDaoStore();
+  const marketplace = useMarketplace();
   const transactionalERC20 = useERC20();
   const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
@@ -135,14 +137,21 @@ export default function UpdateBountyAmountModal({
 
 
   function handleDistributions(value, type) {
-    if (!value || !Service?.network?.active) return;
+    if (!marketplace?.active) return;
+    if (!value) {
+      setDistributions(undefined);
+      if (type === "reward")
+        updateIssueAmount(ZeroNumberFormatValues);
+      else
+        setRewardAmount(ZeroNumberFormatValues);
+      return;
+    }
 
-    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
-    const networkFee = chain.closeFeePercentage;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = marketplace?.active || {};
     const amountOfType =
       BigNumber(type === "reward"
         ? calculateTotalAmountFromGivenReward(value, 
-                                              +networkFee/100,
+                                              +chain.closeFeePercentage/100,
                                               +mergeCreatorFeeShare/100,
                                               +proposerFeeShare/100)
         : value);

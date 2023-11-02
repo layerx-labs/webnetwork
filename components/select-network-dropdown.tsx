@@ -11,6 +11,7 @@ import {useAppState} from "contexts/app-state";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface SelectNetworkDropdownProps {
@@ -45,6 +46,7 @@ export default function SelectNetworkDropdown({
 
   const { state: { Service, currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
+  const marketplace = useMarketplace();
 
   function chainToOption(chain: SupportedChainData | Partial<SupportedChainData>, isDisabled?: boolean): ChainOption { 
     return { 
@@ -77,8 +79,8 @@ export default function SelectNetworkDropdown({
   function updateSelectedChainMatchConnected() {
     let chain = undefined;
     
-    if (isOnNetwork && Service?.network?.active?.chain)
-      chain = Service?.network?.active?.chain;
+    if (isOnNetwork && marketplace?.active?.chain)
+      chain = marketplace?.active?.chain;
     else
       chain = 
         options?.find(({ value: { chainId } }) => chainId === +(defaultChain?.chainId || connectedChain.id))?.value;
@@ -93,27 +95,27 @@ export default function SelectNetworkDropdown({
   }
 
   function updateOptions() {
-    if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains)) return;
+    if (!supportedChains || (isOnNetwork && !marketplace?.availableChains)) return;
 
     const configuredChains = supportedChains.filter(isChainConfigured);
 
     if (isOnNetwork)
       setOptions(configuredChains.map(chain => 
-        chainToOption(chain, !Service?.network?.availableChains?.find(({ chainId }) => chainId === chain.chainId))));
+        chainToOption(chain, !marketplace?.availableChains?.find(({ chainId }) => chainId === chain.chainId))));
     else
       setOptions(configuredChains.map(chain => chainToOption(chain)));
   }
 
   useEffect(updateOptions, [
     isOnNetwork,
-    Service?.network?.availableChains,
+    marketplace?.availableChains,
     supportedChains,
     currentUser?.isAdmin
   ]);
 
   useEffect(updateSelectedChainMatchConnected, [
     options,
-    Service?.network?.active?.chain,
+    marketplace?.active?.chain,
     connectedChain?.id
   ]);
 

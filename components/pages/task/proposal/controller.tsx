@@ -5,8 +5,6 @@ import { addSeconds, formatDistance } from "date-fns";
 import {useTranslation} from "next-i18next";
 import { useRouter } from "next/router";
 
-
-
 import {useAppState} from "contexts/app-state";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
@@ -22,6 +20,7 @@ import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 import ProposalPageView from "./view";
@@ -49,6 +48,7 @@ export default function ProposalPage() {
   const { state } = useAppState();
   const { getTimeChain } = useBepro();
   const { service: daoService } = useDaoStore();
+  const marketplace = useMarketplace();
 
   const proposalId = query?.proposalId?.toString();
   const proposalQueryKey = QueryKeys.proposal(proposalId);
@@ -62,7 +62,7 @@ export default function ProposalPage() {
   const parsedComments = comments ? commentsParser(comments) : null;
   const issue = proposalData ? issueParser(parsedProposal?.issue as IssueData) : null;
   const deliverable = proposalData ? deliverableParser(parsedProposal?.deliverable) : null;
-  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.token");
 
   const isWalletConnected = !!state.currentUser?.walletAddress;
 
@@ -72,7 +72,7 @@ export default function ProposalPage() {
   const isDisputable = [
     isWalletConnected,
     isProposalDisputable( parsedProposal?.contractCreationDate,
-                          BigNumber(state.Service?.network?.active?.disputableTime).toNumber(),
+                          BigNumber(marketplace?.active?.disputableTime).toNumber(),
                           chaintime),
     !parsedProposal?.isDisputed,
     !parsedProposal?.refusedByBountyOwner,
@@ -100,10 +100,10 @@ export default function ProposalPage() {
   ].every((v) => v);
 
   async function getDistributedAmounts() {
-    if (!parsedProposal?.distributions || !state?.Service?.network?.active) return;
+    if (!parsedProposal?.distributions || !marketplace?.active) return;
 
     const amountTotal = BigNumber.maximum(issue?.amount || 0, issue?.fundingAmount || 0);
-    const { mergeCreatorFeeShare, proposerFeeShare, chain } = state.Service.network.active;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = marketplace?.active || {};
 
     const distributions = calculateDistributedAmounts(chain.closeFeePercentage,
                                                       mergeCreatorFeeShare,
@@ -126,13 +126,13 @@ export default function ProposalPage() {
   function changeMissingDisputableTime() {
     if (
       !chaintime ||
-      !state.Service?.network?.active?.disputableTime ||
+      !marketplace?.active?.disputableTime ||
       !parsedProposal?.contractCreationDate
     )
       return;
 
     const target = addSeconds(new Date(parsedProposal?.contractCreationDate), 
-                              +state.Service?.network.active.disputableTime);
+                              +marketplace?.active?.disputableTime);
     const missingTime = formatDistance(new Date(chaintime), target, {
       includeSeconds: true,
     });
@@ -144,7 +144,7 @@ export default function ProposalPage() {
   useEffect(changeMissingDisputableTime, [
     parsedProposal?.contractCreationDate,
     chaintime,
-    state.Service?.network?.active?.disputableTime,
+    marketplace?.active?.disputableTime,
   ]);
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function ProposalPage() {
 
   useEffect(() => {
     getDistributedAmounts();
-  }, [state?.Service?.network?.active?.networkAddress]);
+  }, [marketplace?.active]);
 
   return (
     <ProposalPageView

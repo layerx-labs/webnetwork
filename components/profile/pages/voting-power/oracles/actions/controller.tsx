@@ -16,6 +16,7 @@ import {OraclesActionsProps} from "interfaces/oracles-state";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useERC20 from "x-hooks/use-erc20";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import OraclesActionsView from "./view";
 import {transactionStore} from "../../../../../../x-hooks/stores/transaction-list/transaction.store";
@@ -38,14 +39,15 @@ export default function OraclesActions({
   const [tokenAmount, setTokenAmount] = useState<string>();
 
   const networkTokenERC20 = useERC20();
+  const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { state: { Service }} = useAppState();
   const { service: daoService } = useDaoStore();
   const {list: transactions} = transactionStore();
 
-  const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;
-  const oracleExchangeRate = Service?.network?.active?.oracleExchangeRate || 1;
+  const oracleExchangeRate = marketplace?.active?.oracleExchangeRate || 1;
   const oracleAmount = action === t("my-oracles:actions.lock.label") ?
     BigNumber(tokenAmount || 0).multipliedBy(oracleExchangeRate).toFixed() :
     BigNumber(tokenAmount || 0).dividedBy(oracleExchangeRate).toFixed();
@@ -65,11 +67,11 @@ export default function OraclesActions({
       description:
              t("my-oracles:actions.lock.description", {
                currency: networkTokenSymbol,
-               token: Service?.network?.active?.networkToken?.symbol
+               token: networkTokenSymbol
              }),
       label: t("my-oracles:actions.lock.get-amount-oracles", {
         amount: formatNumberToNScale(oracleAmount, undefined, ""),
-        token: Service?.network?.active?.networkToken?.symbol
+        token: networkTokenSymbol
       }),
       caption: (
         <>
@@ -86,7 +88,7 @@ export default function OraclesActions({
           amount: formatNumberToNScale(tokenAmount, undefined, ""),
           oracleAmount: formatNumberToNScale(oracleAmount, undefined, ""),
           currency: networkTokenSymbol,
-          token: Service?.network?.active?.networkToken?.symbol
+          token: networkTokenSymbol
         }),
       params() {
         return { tokenAmount };
@@ -98,19 +100,19 @@ export default function OraclesActions({
       description:
         t("my-oracles:actions.unlock.description", {
           currency: networkTokenSymbol,
-          token: Service?.network?.active?.networkToken?.symbol
+          token: networkTokenSymbol
         }),
       label: t("my-oracles:actions.unlock.get-amount-bepro", {
         amount: formatNumberToNScale(oracleAmount),
         currency: networkTokenSymbol,
-        token: Service?.network?.active?.networkToken?.symbol
+        token: networkTokenSymbol
       }),
       caption: (
         <>
           {t("misc.get")} <span className="text-primary">
             { networkTokenSymbol}</span>{" "}
           {t("misc.from")} <span className="text-purple">
-                            {t("$oracles", { token: Service?.network?.active?.networkToken?.symbol })}
+                            {t("$oracles", { token: networkTokenSymbol })}
                            </span>
         </>
       ),
@@ -118,7 +120,7 @@ export default function OraclesActions({
         amount: formatNumberToNScale(tokenAmount),
         oracleAmount: formatNumberToNScale(oracleAmount),
         currency: networkTokenSymbol,
-        token: Service?.network?.active?.networkToken?.symbol
+        token: networkTokenSymbol
       }),
       params(from: string) {
         return { tokenAmount, from };
@@ -236,7 +238,7 @@ export default function OraclesActions({
         handleAction={setAction} 
         renderInfo={renderInfo} 
         currentLabel={getCurrentLabel()} 
-        networkTokenSymbol={Service?.network?.active?.networkToken?.symbol} 
+        networkTokenSymbol={networkTokenSymbol} 
         error={error} 
         tokenAmount={tokenAmount} 
         handleChangeToken={handleChangeToken} 

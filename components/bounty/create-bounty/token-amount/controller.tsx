@@ -13,6 +13,8 @@ import { Network } from "interfaces/network";
 import {DistributionsProps} from "interfaces/proposal";
 import {Token} from "interfaces/token";
 
+import useMarketplace from "x-hooks/use-marketplace";
+
 import CreateBountyTokenAmountView from "./view";
 
 const ZeroNumberFormatValues = {
@@ -69,8 +71,10 @@ export default function CreateBountyTokenAmount({
   const { t } = useTranslation(["bounty", "common", "proposal"]);
   const [show, setShow] = useState<boolean>(false);
   const [inputError, setInputError] = useState("");
+
+  const marketplace = useMarketplace();
   const {
-    state: { currentUser, Service },
+    state: { currentUser },
   } = useAppState();
 
   const debouncedDistributionsUpdater =
