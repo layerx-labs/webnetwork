@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import { NumericFormat  } from "react-number-format";
+import NumericFormat  from "react-number-format";
 
 import clsx from "clsx";
 import { kebabCase } from "lodash";
