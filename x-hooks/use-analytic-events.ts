@@ -20,7 +20,7 @@ export default function useAnalyticEvents() {
   function pushAnalytic(eventName: EventName, details: {[options: string]: string | boolean} = {}) {
 
     function getCallback({type}: Analytic) {
-      console.debug(`Trying to push ${eventName} with type ${type}`, details)
+      // console.debug(`Trying to push ${eventName} with type ${type}`, details)
 
       const reject = (message: string) => (a: string, b: any) => Promise.reject(message)
 
