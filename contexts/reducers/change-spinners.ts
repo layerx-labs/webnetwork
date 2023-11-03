@@ -13,7 +13,6 @@ export interface Spinners {
   bountyDatabase: boolean;
   matching: boolean;
   connectingGH: boolean;
-  switchingChain: boolean;
 }
 
 class ChangeSpinners extends SimpleAction<Spinners|Partial<Spinners>> {

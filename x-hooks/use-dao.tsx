@@ -34,7 +34,7 @@ export function useDao() {
   }
 
   function isServiceReady() {
-    return !state.Service?.starting && !state.spinners?.switchingChain;
+    return !state.Service?.starting && !isLoadingChangingChain;
   }
 
   /**
@@ -76,7 +76,7 @@ export function useDao() {
     if (!state.Service?.active ||
         !networkAddress ||
         !chain_id ||
-        state.spinners.switchingChain ||
+        isLoadingChangingChain ||
         state.Service?.starting)
       return;
 

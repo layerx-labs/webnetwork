@@ -55,7 +55,7 @@ export default function useERC20() {
     service: state.Service?.active
   };
 
-  const isServiceReady = !state.Service?.starting && !state.spinners?.switchingChain && state.Service?.active;
+  const isServiceReady = !state.Service?.starting && state.Service?.active;
 
   function updateAllowanceAndBalance() {
     if (!state.currentUser?.walletAddress ||

@@ -11,8 +11,6 @@ export default function useNetworkChange() {
   async function handleAddNetwork(chosenSupportedChain: SupportedChainData = state.Service?.network?.active?.chain) {
     const chainId = toHex(chosenSupportedChain.chainId);
 
-    dispatch(changeSpinners.update({ switchingChain: true }));
-
     return window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [
@@ -45,7 +43,6 @@ export default function useNetworkChange() {
 
         throw new Error(error);
       })
-      .finally(() => dispatch(changeSpinners.update({ switchingChain: false })))
   }
 
   return {
