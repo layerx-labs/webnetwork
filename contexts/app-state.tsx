@@ -17,7 +17,6 @@ const appState: AppState = {
     connectedChain: null,
     currentBounty: null,
     show: {},
-    spinners: {},
     transactions: [],
     toaster: [],
     supportedChains: null

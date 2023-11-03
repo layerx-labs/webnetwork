@@ -49,7 +49,7 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, supportedChains, connectedChain, currentUser, spinners } } = useAppState();
+  const { state: { Service, supportedChains, connectedChain, currentUser } } = useAppState();
 
   const placeholder = 
     !shouldMatchChain ? t("misc.all-chains") : placeHolder ? placeHolder : t("forms.select-placeholder");
@@ -145,7 +145,6 @@ export default function SelectChainDropdown({
     options,
     Service?.network?.active?.chain,
     connectedChain?.id,
-    spinners,
     shouldMatchChain
   ]);
 
