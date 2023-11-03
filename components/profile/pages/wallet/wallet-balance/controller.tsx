@@ -44,9 +44,7 @@ export default function WalletBalance({
     data: prices,
     isLoading: isLoadingPrices,
     isSuccess: isSucessPrices,
-  } = useCoingeckoPrice(
-    tokens.map(({ address, chain_id }) => ({ address, chainId: chain_id }))
-  );
+  } = useCoingeckoPrice(tokens.map(({ address, chain_id }) => ({ address, chainId: chain_id })));
 
   const defaultFiat = state?.Settings?.currency?.defaultFiat?.toLowerCase();
 
@@ -199,8 +197,7 @@ export default function WalletBalance({
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
       tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
-        handleSearchFilter(name, symbol, networks, chain_id)
-      )}
+        handleSearchFilter(name, symbol, networks, chain_id))}
       searchString={searchState}
       onSearchClick={updateSearch}
       onSearchInputChange={handleSearchChange}

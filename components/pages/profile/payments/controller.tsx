@@ -53,15 +53,12 @@ export default function PaymentsPage({
           networkId: id,
           value: BigNumber(payment.ammount),
           token: payment.issue.transactionalToken,
-        }))
-      );
+        })));
 
       const { converted, noConverted, totalConverted } =
-        getPricesAndConvert<TotalFiatNetworks>(
-          convertableItems,
-          state?.Settings?.currency?.defaultFiat?.toLowerCase(),
-          prices
-        );
+        getPricesAndConvert<TotalFiatNetworks>(convertableItems,
+                                               state?.Settings?.currency?.defaultFiat?.toLowerCase(),
+                                               prices);
 
       setTotalFiatNetworks(converted);
       setTotalFiat(totalConverted.toNumber());
