@@ -11,10 +11,9 @@ import Modal from "components/modal";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
-import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
 import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
-import { MINUTE_IN_MS, UNSUPPORTED_CHAIN } from "helpers/constants";
+import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
@@ -26,12 +25,19 @@ import useReactQuery from "x-hooks/use-react-query";
 
 type typeError = { code?: number; message?: string }
 
-export default function WrongNetworkModal() {
+export default function WrongNetworkModal({
+  show,
+  isRequired = false,
+  onClose
+}: {
+  show: boolean;
+  isRequired?: boolean;
+  onClose: () => void;
+}) {
   const { t } = useTranslation("common");
-  const { query, pathname } = useRouter();
+  const { query } = useRouter();
 
   const [error, setError] = useState<string>("");
-  const [_showModal, setShowModal] = useState(false);
   const [isAddingNetwork, setIsAddingNetwork] = useState(false);
   const [networkChain, setNetworkChain] = useState<SupportedChainData>(null);
   const [chosenSupportedChain, setChosenSupportedChain] = useState<SupportedChainData>(null);
@@ -40,7 +46,7 @@ export default function WrongNetworkModal() {
   const { handleAddNetwork } = useNetworkChange();
   const {
     dispatch,
-    state: { connectedChain, currentUser, Service, supportedChains, loading, spinners }
+    state: { currentUser, Service, supportedChains }
   } = useAppState();
 
   useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
@@ -50,25 +56,8 @@ export default function WrongNetworkModal() {
     staleTime: MINUTE_IN_MS
   });
 
-  const isRequired = [
-    pathname?.includes("new-network"),
-    pathname?.includes("/[network]/[chain]/profile")
-  ].some(c => c);
 
   const canBeHided = !isRequired;
-
-  function changeShowModal() {
-    if (!supportedChains?.length || loading?.isLoading) {
-      setShowModal(false);
-      return;
-    }
-
-    setShowModal([
-      spinners?.needsToChangeChain,
-      connectedChain?.matchWithNetworkChain === false && isRequired,
-      connectedChain?.name === UNSUPPORTED_CHAIN && isRequired
-    ].some(c => c));
-  }
 
   async function selectSupportedChain(chain: SupportedChainData) {
     if (!chain)
@@ -95,7 +84,7 @@ export default function WrongNetworkModal() {
       })
       .finally(() => {
         setIsAddingNetwork(false);
-        dispatch(changeNeedsToChangeChain(false));
+        onClose()
       });
   }
 
@@ -110,24 +99,12 @@ export default function WrongNetworkModal() {
       setNetworkChain(null);
   }
 
-  function handleHideModal() {
-    dispatch(changeNeedsToChangeChain(false));
-  }
-
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
   useEffect(updateNetworkChain, [Service?.network?.active?.chain_id, supportedChains, query?.network]);
-  useEffect(changeShowModal, [
-    currentUser?.walletAddress,
-    connectedChain?.matchWithNetworkChain,
-    connectedChain?.id,
-    supportedChains,
-    loading,
-    spinners,
-    isRequired
-  ]);
 
-  if ((spinners?.needsToChangeChain || _showModal) && !currentUser?.walletAddress)
+
+  if (show && !currentUser?.walletAddress)
     return <ConnectWalletButton asModal={true} />;
 
   return (
@@ -135,8 +112,8 @@ export default function WrongNetworkModal() {
       title={t("modals.wrong-network.change-network")}
       titlePosition="center"
       titleClass="h4 text-white bg-opacity-100"
-      show={_showModal}
-      onCloseClick={canBeHided ? handleHideModal : undefined}
+      show={show}
+      onCloseClick={canBeHided ? onClose : undefined}
     >
       <div className="d-flex flex-column text-center align-items-center">
         <strong className="caption-small d-block text-uppercase text-white-50 mb-3 pb-1">
