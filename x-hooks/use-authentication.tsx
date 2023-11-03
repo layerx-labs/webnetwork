@@ -18,7 +18,6 @@ import {
   changeCurrentUserWallet
 } from "contexts/reducers/change-current-user";
 import {changeActiveNetwork} from "contexts/reducers/change-service";
-import {changeSpinners} from "contexts/reducers/change-spinners";
 import {addToast} from "contexts/reducers/change-toaster";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
@@ -115,8 +114,6 @@ export function useAuthentication() {
     const updateNetwork = newParameters =>
       dispatch(changeActiveNetwork(Object.assign(state.Service.network.active || {} as any, newParameters)));
 
-    dispatch(changeSpinners.update({balance: true}))
-
     Promise.all([
       state.Service.active.getOraclesResume(state.currentUser.walletAddress),
 
@@ -136,10 +133,6 @@ export function useAuthentication() {
         updateNetwork({isCouncil, isGovernor});
       })
       .catch(error => console.debug("Failed to updateWalletBalance", error))
-      .finally(() => {
-        dispatch(changeSpinners.update({balance: false}));
-        //console.debug(`should have updated state`, state.currentUser.balance)
-      });
   }
 
   async function syncUserDataWithSession() {
