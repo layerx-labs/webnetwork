@@ -14,7 +14,6 @@ export interface Spinners {
   matching: boolean;
   connectingGH: boolean;
   switchingChain: boolean;
-  needsToChangeChain: boolean;
 }
 
 class ChangeSpinners extends SimpleAction<Spinners|Partial<Spinners>> {
@@ -33,6 +32,3 @@ class ChangeSpinners extends SimpleAction<Spinners|Partial<Spinners>> {
 }
 
 export const changeSpinners = new ChangeSpinners();
-
-export const changeNeedsToChangeChain = (needsToChangeChain: boolean) =>
-  changeSpinners.update({needsToChangeChain});
