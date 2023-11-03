@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { UserRoute } from "middleware";
+import { withCORS } from "middleware";
 
 import post from "server/common/check-prices/post";
 
@@ -17,4 +17,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-export default UserRoute(handler);
+export default withCORS(handler);
