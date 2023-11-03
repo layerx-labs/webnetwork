@@ -14,8 +14,6 @@ export interface Spinners {
   matching: boolean;
   connecting: boolean;
   connectingGH: boolean;
-  changingChain: boolean;
-  signingMessage: boolean;
   switchingChain: boolean;
   needsToChangeChain: boolean;
 }
@@ -39,9 +37,6 @@ export const changeSpinners = new ChangeSpinners();
 
 export const changeConnecting = (connecting: boolean) =>
   changeSpinners.update({connecting});
-
-export const changeChangingChain = (changingChain: boolean) =>
-  changeSpinners.update({changingChain});
 
 export const changeNeedsToChangeChain = (needsToChangeChain: boolean) =>
   changeSpinners.update({needsToChangeChain});
