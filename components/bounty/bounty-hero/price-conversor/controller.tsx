@@ -6,7 +6,6 @@ import { Currency } from "interfaces/currency";
 import { Token } from "interfaces/token";
 
 import PriceConversorView from "./view";
-import { useAppState } from "contexts/app-state";
 
 interface IPriceConversorProps {
   currentValue: BigNumber;
@@ -21,15 +20,12 @@ export default function PriceConversor({
 }: IPriceConversorProps) {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  const {state} = useAppState();
-
   return (
     <PriceConversorView
       currentValue={currentValue}
       currency={currency}
       token={token}
       isVisible={isVisible}
-      userWalletAddress={state.currentUser?.walletAddress}
       handleIsVisible={setIsVisible}
     />
   );

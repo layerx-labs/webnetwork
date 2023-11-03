@@ -15,7 +15,6 @@ interface IPriceConversorProps {
   isVisible: boolean;
   handleIsVisible: (v: boolean) => void;
   token: Token;
-  userWalletAddress: string;
 }
 
 export default function PriceConversorView({
@@ -23,16 +22,15 @@ export default function PriceConversorView({
   currency,
   isVisible,
   token,
-  userWalletAddress,
   handleIsVisible
 }: IPriceConversorProps) {
   const { isDesktopView } = useBreakPoint();
 
   return (
     <>
-    <div onClick={()=> handleIsVisible(!!userWalletAddress)}
+    <div onClick={()=> handleIsVisible(true)}
         className={
-          `${(!isDesktopView || !userWalletAddress) && 
+          `${(!isDesktopView) && 
             'read-only-button-mobile'} py-1 px-2 border border-gray-850 border-radius-4 
             d-flex align-items-center cursor-pointer`}>
       <span className="text-white caption-large font-weight-normal">
