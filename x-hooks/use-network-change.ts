@@ -1,12 +1,11 @@
 import {toHex} from "web3-utils";
 
 import { useAppState } from "contexts/app-state";
-import { changeSpinners } from "contexts/reducers/change-spinners";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 export default function useNetworkChange() {
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   
   async function handleAddNetwork(chosenSupportedChain: SupportedChainData = state.Service?.network?.active?.chain) {
     const chainId = toHex(chosenSupportedChain.chainId);
