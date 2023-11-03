@@ -272,7 +272,14 @@ export function RegistrySetup({
       return;
     }
 
-    mudateUpdateChain({ chainId: chain.chainId, registryAddress: address });
+    mudateUpdateChain({
+      chainId: chain.chainId,
+      registryAddress: address,
+      lockAmountForNetworkCreation,
+      networkCreationFeePercentage,
+      closeFeePercentage,
+      cancelFeePercentage,
+    });
   }
 
   function _setRegistry(val) {

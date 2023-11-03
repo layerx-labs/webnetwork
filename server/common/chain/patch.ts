@@ -10,7 +10,15 @@ import { HttpBadRequestError, HttpNotFoundError } from "server/errors/http-error
 
 export async function patch(req: NextApiRequest) {
   const { id } = req.query;
-  const { registryAddress, eventsApi, explorer } = req.body;
+  const {
+    registryAddress,
+    eventsApi,
+    explorer,
+    lockAmountForNetworkCreation,
+    networkCreationFeePercentage,
+    closeFeePercentage,
+    cancelFeePercentage,
+  } = req.body;
 
   if (!id)
     throw new HttpBadRequestError("Missing chainId");
@@ -45,6 +53,11 @@ export async function patch(req: NextApiRequest) {
 
     chain.blockScanner = explorer;
   }
+
+  if (lockAmountForNetworkCreation) chain.lockAmountForNetworkCreation = lockAmountForNetworkCreation;
+  if (networkCreationFeePercentage) chain.networkCreationFeePercentage = networkCreationFeePercentage;
+  if (closeFeePercentage) chain.closeFeePercentage = closeFeePercentage;
+  if (cancelFeePercentage) chain.cancelFeePercentage = cancelFeePercentage;
 
   await chain.save();
 
