@@ -198,13 +198,6 @@ function NewNetwork() {
                                                                   deployedNetworkAddress)));
     }
 
-    if (txBlocks.length)
-      await processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
-        chainId: connectedChain?.id,
-        fromBlock: Math.min(...txBlocks)
-      })
-        .catch(error => console.debug("Failed to update network parameters", error));
-
     setCreatingNetwork(9);
 
     const registrationTx = await handleAddNetworkToRegistry(deployedNetworkAddress)
@@ -216,9 +209,16 @@ function NewNetwork() {
 
     setCreatingNetwork(10);
     cleanStorage?.();
-    await processEvent(RegistryEvents.NetworkRegistered, connectedChain?.registry, {
-      fromBlock: registrationTx.blockNumber
-    })
+    await Promise.all([
+      processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
+        chainId: connectedChain?.id,
+        fromBlock: Math.min(...txBlocks, 0)
+      })
+        .catch(error => console.debug("Failed to update network parameters", error)),
+      processEvent(RegistryEvents.NetworkRegistered, connectedChain?.registry, {
+        fromBlock: registrationTx.blockNumber
+      })
+    ])
       .then(() => {
         updateSession();
         router.push(getURLWithNetwork("/", {
