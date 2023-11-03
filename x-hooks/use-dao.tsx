@@ -6,7 +6,6 @@ import {isAddress} from "web3-utils";
 import {useAppState} from "contexts/app-state";
 import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
 import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service";
-import {changeConnecting} from "contexts/reducers/change-spinners";
 import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -44,8 +43,6 @@ export function useDao() {
   function connect(): Promise<string | null> {
     if (!state.Service?.web3Connection) return;
 
-    dispatch(changeConnecting(true));
-
     return state.Service?.web3Connection?.connect()
       .then((connected) => {
         if (!connected) {
@@ -66,9 +63,6 @@ export function useDao() {
         console.debug(`Failed to connect`, error);
         return null;
       })
-      .finally(() => {
-        dispatch(changeConnecting(false));
-      });
   }
 
   /**
