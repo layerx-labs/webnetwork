@@ -167,7 +167,9 @@ export function RegistrySetup({
       })
       .then(() => {
         const chain = findSupportedChain({ chainId: +connectedChain?.id, chainShortName: connectedChain?.shortName});
-        if (chain) useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: chain?.chainId}) 
+        if (chain) 
+          useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: chain?.chainId})
+            .catch(error => console.debug("useAddToken: ", error));
 
         loadSettings(true);
       })
