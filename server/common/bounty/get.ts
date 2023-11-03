@@ -88,7 +88,7 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
   if (!issue)
     throw new HttpNotFoundError("Issue not found");
 
-  const closeFee = issue.network.chain.closeFeePercentage;
+  const closeFee = issue?.network?.chain?.closeFeePercentage;
   issue.dataValues.developerAmount = getDeveloperAmount(closeFee,
                                                         issue.network.mergeCreatorFeeShare,
                                                         issue.network.proposerFeeShare,
