@@ -47,6 +47,7 @@ export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
+  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
   const session = useSession();
   const { asPath } = useRouter();
 
@@ -200,7 +201,7 @@ export function useAuthentication() {
       if (!state?.currentUser?.walletAddress ||
           !state?.connectedChain?.id ||
           state.Service?.starting ||
-          state.spinners?.signingMessage) {
+          isLoadingSigningMessage) {
         reject("Wallet not connected, service not started or already signing a message");
         return;
       }
@@ -236,11 +237,11 @@ export function useAuthentication() {
         return;
       }
 
-      dispatch(changeSpinners.update({ signingMessage: true }));
+      setIsLoadingSigningMessage(true)
 
       await _signMessage(messageToSign)
         .then(signature => {
-          dispatch(changeSpinners.update({ signingMessage: false }));
+          setIsLoadingSigningMessage(false)
 
           if (signature) {
             dispatch(changeCurrentUserSignature(signature));
