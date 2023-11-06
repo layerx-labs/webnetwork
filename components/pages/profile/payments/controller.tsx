@@ -37,7 +37,7 @@ export default function PaymentsPage({
   } = useCoingeckoPrice(payments.flatMap(({ payments }) => payments.map(payment => ({
     address: payment?.issue?.transactionalToken.address,
     chainId: payment?.issue?.transactionalToken.chain_id
-  })).reduce((acc, value) => acc.concat(value), [])));
+  }))));
 
   useEffect(() => {
     if (!payments?.length || !prices) {
