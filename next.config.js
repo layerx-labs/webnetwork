@@ -123,6 +123,25 @@ module.exports = () => {
           ]
         }
       ];
+    },
+    async redirects() {
+      return [
+        {
+          source: '/:network/:chain/bounties',
+          destination: '/:network/:chain/tasks',
+          permanent: true,
+        },
+        {
+          source: '/:network/:chain/profile/my-network',
+          destination: '/:network/:chain/profile/my-marketplace',
+          permanent: true,
+        },
+        {
+          source: '/new-network',
+          destination: '/new-marketplace',
+          permanent: true,
+        },
+      ]
     }
   };
 };
