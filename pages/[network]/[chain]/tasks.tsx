@@ -24,7 +24,7 @@ interface BountiesPageProps {
   protocolMembers: number;
 }
 
-export default function BountiesPage({
+export default function TasksPage({
   bounties,
   bountiesInProgress,
   bountiesClosed,

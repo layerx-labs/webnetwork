@@ -32,7 +32,7 @@ export default function VotingPowerMultiNetwork() {
                                             { enabled: !!state.currentUser?.walletAddress });
 
   function goToNetwork(network) {
-    push(getURLWithNetwork("/bounties", {
+    push(getURLWithNetwork("/tasks", {
           network: network?.name,
           chain: network?.chain?.chainShortName,
     }));

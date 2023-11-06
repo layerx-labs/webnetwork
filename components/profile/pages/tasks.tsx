@@ -3,13 +3,13 @@ import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
 
-interface BountiesPageProps {
+interface TasksPageProps {
   bounties: SearchBountiesPaginated;
 }
 
-export default function BountiesPage({
+export default function TasksPage({
   bounties
-}: BountiesPageProps) {
+}: TasksPageProps) {
   return(
     <ProfileLayout>
       <BountiesList 

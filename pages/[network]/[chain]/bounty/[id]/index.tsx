@@ -120,7 +120,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
     return {
       redirect: {
         permanent: false,
-        destination: `/${query?.network}/${query?.chain}/bounties`,
+        destination: `/${query?.network}/${query?.chain}/tasks`,
       },
       props:{},
     };
