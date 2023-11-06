@@ -41,9 +41,13 @@ export default function PriceConversorModal({
 
   const {state} = useAppState();
 
-  const { data: prices, isFetching, isError } = useCoingeckoPrice([
-    { address: token?.address, chainId: token?.chain_id },
-  ])
+  const {
+    data: prices,
+    isFetching,
+    isError,
+  } = useCoingeckoPrice(token?.address && token?.chain_id
+      ? [{ address: token?.address, chainId: token?.chain_id }]
+      : null);
 
   async function handlerChange({value, label}: Options){
     const currency = value.toLowerCase()
