@@ -12,6 +12,8 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 
 import {Token} from "interfaces/token";
 
+import useBepro from "x-hooks/use-bepro";
+
 import {useAppState} from "../contexts/app-state";
 import TokenIcon from "./token-icon";
 
@@ -61,6 +63,7 @@ export default function TokensDropdown({
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {state} = useAppState();
+  const {getTokenBalance} = useBepro();
 
   const formatCreateLabel = (inputValue: string) =>
     canAddToken
@@ -85,7 +88,7 @@ export default function TokensDropdown({
   async function handleAddOption(newToken: Token) {
     addToken(newToken);
     setToken(newToken);
-    await state.Service?.active.getTokenBalance(newToken.address, userAddress)
+    await getTokenBalance(newToken.address, userAddress)
       .then((value) =>
         setOption(tokenToOption({ ...newToken, currentValue: value.toFixed() })))
       .catch(() => setOption(tokenToOption(newToken)));
@@ -94,7 +97,7 @@ export default function TokensDropdown({
   async function getBalanceTokens() {
     Promise.all(tokens?.map(async (token) => {
       if (token?.address && userAddress) {
-        const value = await state.Service?.active?.getTokenBalance(token.address, userAddress);
+        const value = await getTokenBalance(token.address, userAddress);
 
         return { ...token, currentValue: value.toFixed() };
       }

@@ -20,6 +20,7 @@ import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
 import { useAuthentication } from "x-hooks/use-authentication";
+import useBepro from "x-hooks/use-bepro";
 
 const {publicRuntimeConfig: {urls: {homeURL}}} = getConfig();
 
@@ -37,6 +38,14 @@ export default function NetworksStep({
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
   const {state, dispatch} = useAppState();
+  const {
+    loadNetwork,
+    isNetworkGovernor: isNetworkGovernorDao,
+    getNetworkParameter,
+    getSettlerTokenData,
+    setNetworkParameter,
+    treasuryInfo
+  } = useBepro();
   const { signMessage } = useAuthentication();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
@@ -138,22 +147,22 @@ export default function NetworksStep({
         .then(({ rows }) => rows[0]);
 
       if (network.networkAddress !== state.Service?.active.network.contractAddress)
-        await state.Service?.active.loadNetwork(network.networkAddress);
+        await loadNetwork(network.networkAddress);
 
-      state.Service?.active.isNetworkGovernor(state.currentUser.walletAddress)
+      isNetworkGovernorDao(state.currentUser.walletAddress)
         .then(setIsNetworkGovernor)
         .catch(error => console.log(error));
 
       await Promise.all([
-        state.Service?.active.getNetworkParameter("councilAmount"),
-        state.Service?.active.getNetworkParameter("disputableTime"),
-        state.Service?.active.getNetworkParameter("draftTime"),
-        state.Service?.active.getNetworkParameter("oracleExchangeRate"),
-        state.Service?.active.getNetworkParameter("mergeCreatorFeeShare"),
-        state.Service?.active.getNetworkParameter("proposerFeeShare"),
-        state.Service?.active.getNetworkParameter("percentageNeededForDispute"),
-        state.Service?.active.network?.treasuryInfo(),
-        state.Service?.active.getSettlerTokenData()
+        getNetworkParameter("councilAmount"),
+        getNetworkParameter("disputableTime"),
+        getNetworkParameter("draftTime"),
+        getNetworkParameter("oracleExchangeRate"),
+        getNetworkParameter("mergeCreatorFeeShare"),
+        getNetworkParameter("proposerFeeShare"),
+        getNetworkParameter("percentageNeededForDispute"),
+        treasuryInfo(),
+        getSettlerTokenData()
       ])
       .then(([councilAmount, 
               disputableTime, 
@@ -232,19 +241,19 @@ export default function NetworksStep({
 
 
     if (forcedNetwork.draftTime !== parameters.draftTime.value)
-      await state.Service?.active.setNetworkParameter("draftTime", parameters.draftTime.value).catch(console.log);
+      await setNetworkParameter("draftTime", parameters.draftTime.value).catch(console.log);
 
     if (forcedNetwork.disputableTime !== parameters.disputableTime.value)
-      await state.Service?.active.setNetworkParameter("disputableTime", parameters.disputableTime.value)
+      await setNetworkParameter("disputableTime", parameters.disputableTime.value)
         .catch(console.log);
 
     if (+forcedNetwork.councilAmount !== parameters.councilAmount.value)
-      await state.Service?.active.setNetworkParameter("councilAmount", parameters.councilAmount.value)
+      await setNetworkParameter("councilAmount", parameters.councilAmount.value)
         .catch(console.log);
 
     if (forcedNetwork.percentageNeededForDispute !== parameters.percentageNeededForDispute.value)
-      await state.Service?.active.setNetworkParameter("percentageNeededForDispute",
-                                                      parameters.percentageNeededForDispute.value).catch(console.log);
+      await setNetworkParameter("percentageNeededForDispute",
+                                parameters.percentageNeededForDispute.value).catch(console.log);
   }
  
   return (

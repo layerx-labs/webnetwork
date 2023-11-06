@@ -16,6 +16,7 @@ import { Token } from "interfaces/token";
 
 import DAO from "services/dao-service";
 
+import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
 
 import WalletBalanceView from "./view";
@@ -39,6 +40,7 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
+  const { getERC20TokenData, getTokenBalance } = useBepro();
 
   const {
     data: prices,
@@ -63,7 +65,7 @@ export default function WalletBalance({
     const balance = await service
       .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
       .catch(() => BigNumber(0));
-  
+    
     return {
       ...token,
       balance,

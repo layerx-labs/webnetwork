@@ -46,7 +46,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
-  const { handleApproveToken } = useBepro();
+  const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -64,14 +64,14 @@ export default function useERC20() {
         !isServiceReady ||
         state.connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
-    state.Service?.active.getTokenBalance(address, state.currentUser.walletAddress)
+    getTokenBalance(address, state.currentUser.walletAddress)
       .then(setBalance)
       .catch(error => console.debug("useERC20:getTokenBalance", logData, error));
 
     const realSpender = spender || state.Service?.active?.network?.contractAddress;
 
     if (realSpender)
-      state.Service?.active.getAllowance(address, state.currentUser.walletAddress, realSpender)
+      getAllowance(address, state.currentUser.walletAddress, realSpender)
         .then(setAllowance)
         .catch(error => console.debug("useERC20:getAllowance", logData, error));
   }
@@ -101,7 +101,7 @@ export default function useERC20() {
       if (name)
         setDefaults();
     } else if (address && !name && isServiceReady && state.connectedChain?.matchWithNetworkChain !== false)
-      state.Service?.active.getERC20TokenData(address)
+      getERC20TokenData(address)
         .then(async ({ name, symbol, decimals, totalSupply }) => {
           setName(name);
           setSymbol(symbol);
@@ -136,7 +136,7 @@ export default function useERC20() {
 
       dispatch(transaction);
 
-      await state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
+      await deployERC20Token(name, symbol, cap, ownerAddress)
         .then((txInfo: TransactionReceipt) => {
           dispatch(updateTx([parseTransaction(txInfo, transaction.payload[0] as SimpleBlockTransactionPayload)]));
           resolve(txInfo);

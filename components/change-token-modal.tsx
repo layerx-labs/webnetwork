@@ -9,7 +9,8 @@ import Modal from "components/modal";
 
 import {Token} from "interfaces/token";
 
-import {useAppState} from "../contexts/app-state";
+import useBepro from "x-hooks/use-bepro";
+
 import { FormGroup } from "./form-group";
 
 export default function ChangeTokenModal({
@@ -32,7 +33,7 @@ export default function ChangeTokenModal({
   const [symbol, setSymbol] = useState('');
   const [minAmount, setMinAmount] = useState('');
 
-  const {state} = useAppState();
+  const {getERC20TokenData, isAddress} = useBepro();
 
   async function loadContract() {
     if (address.trim() === "") {
@@ -44,12 +45,12 @@ export default function ChangeTokenModal({
     try {
       setIsExecuting(true);
 
-      if (!state.Service?.active.isAddress(address)) {
+      if (!isAddress(address)) {
         setIsValidAddress(false);
         return;
       } 
       
-      const token = await state.Service?.active.getERC20TokenData(address)
+      const token = await getERC20TokenData(address)
       setName(token.name);
       setSymbol(token.symbol);
       setIsValidAddress(true);

@@ -19,7 +19,7 @@ const betweenIn =
 
 const limits = (min?: StrOrNmb, max?: StrOrNmb) => ({ min, max });
 
-export const NETWORK_LIMITS: NetworkLimits = {
+export const NETWORK_LIMITS: Partial<NetworkLimits> = {
   councilAmount: limits(1, 100000000000),
   disputableTime: limits(60, 1728000),
   draftTime: limits(60, 1728000),

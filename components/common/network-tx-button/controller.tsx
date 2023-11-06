@@ -72,7 +72,7 @@ export default function NetworkTxButton({
   function checkForTxMethod() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    if (!txMethod || typeof state.Service?.active.network[txMethod] !== "function")
+    if (!txMethod || typeof state.Service?.active?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
@@ -91,7 +91,7 @@ export default function NetworkTxButton({
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
     
-    state.Service?.active.network[txMethod](txParams.tokenAmount, txParams.from)
+    state.Service?.active?.network[txMethod](txParams.tokenAmount, txParams.from)
       .then(answer => {
         if (answer.status) {
           onSuccess && onSuccess();
