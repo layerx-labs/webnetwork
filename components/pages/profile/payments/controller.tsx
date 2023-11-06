@@ -30,14 +30,16 @@ export default function PaymentsPage({
   const isNetworkPayments = !!router?.query?.networkName && !!payments?.length;
   const fiatSymbol = state?.Settings?.currency?.defaultFiat?.toUpperCase();
 
+  const tokens = payments.flatMap(({ payments }) => payments.map(payment => ({
+    address: payment?.issue?.transactionalToken.address,
+    chainId: payment?.issue?.transactionalToken.chain_id
+  })))
+
   const {
     data: prices,
     isLoading,
     isSuccess,
-  } = useCoingeckoPrice(payments.flatMap(({ payments }) => payments.map(payment => ({
-    address: payment?.issue?.transactionalToken.address,
-    chainId: payment?.issue?.transactionalToken.chain_id
-  }))));
+  } = useCoingeckoPrice(tokens.length > 0 ? tokens : null);
 
   useEffect(() => {
     if (!payments?.length || !prices) {
