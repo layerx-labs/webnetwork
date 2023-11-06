@@ -78,10 +78,6 @@ export default function DeliverableHeroView({
                   <PriceConversor
                     currentValue={currentBounty?.developerAmount}
                     token={currentBounty?.transactionalToken}
-                    currency={
-                      currentBounty?.transactionalToken?.symbol ||
-                      t("misc.token")
-                    }
                   />
                 </div>
               </div>

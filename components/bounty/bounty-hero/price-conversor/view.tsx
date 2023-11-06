@@ -1,17 +1,16 @@
 import BigNumber from "bignumber.js";
+import { useTranslation } from "next-i18next";
 
 import PriceConversorModal from "components/bounty/bounty-hero/price-conversor/modal/controller";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
-import { Currency } from "interfaces/currency";
 import { Token } from "interfaces/token";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface IPriceConversorProps {
   currentValue: BigNumber;
-  currency: Currency | string;
   isVisible: boolean;
   handleIsVisible: (v: boolean) => void;
   token: Token;
@@ -19,13 +18,14 @@ interface IPriceConversorProps {
 
 export default function PriceConversorView({
   currentValue,
-  currency,
   isVisible,
   token,
   handleIsVisible
 }: IPriceConversorProps) {
+  const { t } = useTranslation("common");
   const { isDesktopView } = useBreakPoint();
-
+  const currency = token.symbol || t("common:misc.token")
+  
   return (
     <>
     <div onClick={()=> handleIsVisible(true)}

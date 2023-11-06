@@ -84,7 +84,6 @@ export default function PullAndProposalHeroView({
           <div className="col-auto">
             <PriceConversor
               currentValue={issueAmount}
-              currency={token.symbol || t("common:misc.token")} 
               token={token}            
             />
           </div>
