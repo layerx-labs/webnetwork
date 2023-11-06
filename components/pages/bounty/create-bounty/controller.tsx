@@ -15,7 +15,7 @@ import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -26,7 +26,7 @@ import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {Network} from "interfaces/network";
-import { DistributionsProps } from "interfaces/proposal";
+import {DistributionsProps} from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
@@ -41,9 +41,12 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 
+import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
+import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
+import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -98,6 +101,7 @@ export default function CreateBountyPage({
   const { changeNetwork, start } = useDao();
   const { getURLWithNetwork } = useNetwork();
   const { handleAddNetwork } = useNetworkChange();
+  const { pushAnalytic } = useAnalyticEvents();
 
   const {
     dispatch,
@@ -260,11 +264,29 @@ export default function CreateBountyPage({
       tokenERC20 = rewardERC20;
     }
 
+    pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+      neededAmount: bountyValue,
+      currentAllowance: tokenERC20.allowance.toFixed()
+    })
+
     handleApproveToken(tokenAddress, bountyValue, undefined, transactionalToken?.symbol)
-      .then(() => {
-        return tokenERC20.updateAllowanceAndBalance();
+      .then(() =>
+        tokenERC20.updateAllowanceAndBalance()
+          .then(({allowance}) => {
+            pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+              neededAmount: bountyValue,
+              currentAllowance: allowance.toFixed(),
+              finished: true
+            })
+          }))
+      .catch(error => {
+        console.debug("Failed to approve", error)
+        pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
+          neededAmount: bountyValue,
+          error: true,
+          errorMsg: error.toString(),
+        })
       })
-      .catch(error => console.debug("Failed to approve", error))
       .finally(() => setIsLoadingApprove(false));
   }
 
@@ -301,6 +323,8 @@ export default function CreateBountyPage({
         originLink
       };
 
+      pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
+
       const savedIssue = await useCreatePreBounty({
           title: payload.title,
           body: payload.body,
@@ -315,9 +339,12 @@ export default function CreateBountyPage({
       });
 
       if (!savedIssue) {
+        pushAnalytic(EventName.CREATE_PRE_TASK, {error: true})
         dispatch(toastError(t("bounty:errors.creating-bounty")))
         return;
       }
+
+      pushAnalytic(EventName.CREATE_PRE_TASK, {saved: true, id: savedIssue.id, finished: true})
 
       const transactionToast = addTx([
         {
@@ -373,6 +400,16 @@ export default function CreateBountyPage({
 
           return { ...e, error: true };
         });
+
+      const returnValues = networkBounty?.events?.BountyCreated?.returnValues;
+
+      pushAnalytic(EventName.CREATED_TASK, {
+        contractId: returnValues?.id,
+        id: returnValues?.cid,
+        transaction: networkBounty.transactionHash,
+        error: !!networkBounty?.error,
+        errorCode: networkBounty?.code,
+      })
 
       if (networkBounty?.error !== true) {
         dispatch(updateTx([
@@ -505,7 +542,11 @@ export default function CreateBountyPage({
     }
   }, [currentNetwork?.tokens]);
 
-  useEffect(() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), [currentSection])
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    pushAnalytic(`${EventName.TASK_SECTION_CHANGE}_${CreateTaskSections[currentSection]}` as unknown as EventName)
+  }, [currentSection])
+
   useEffect(() => handleMinAmount('transactional'), [issueAmount])
   useEffect(() => handleMinAmount('reward'), [rewardAmount])
   useEffect(() => {
