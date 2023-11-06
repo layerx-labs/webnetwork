@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import If from "components/If";
 import ProposalMerge from "components/proposal-merge";
 

@@ -4,7 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import {FormGroup} from "components/form-group";
 
 import {useAppState} from "contexts/app-state";

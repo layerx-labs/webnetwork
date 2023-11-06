@@ -7,7 +7,7 @@ import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
 
 import {ContextualSpan} from "components/contextual-span";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import {FormGroup} from "components/form-group";
 import {CallToAction} from "components/setup/call-to-action";
 import {ContractField, ContractInput} from "components/setup/contract-input";

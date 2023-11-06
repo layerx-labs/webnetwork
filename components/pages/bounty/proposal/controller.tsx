@@ -20,6 +20,7 @@ import { DistributedAmounts } from "interfaces/proposal";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
+import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
 
 const defaultAmount = {
@@ -43,6 +44,7 @@ export default function ProposalPage() {
     });
 
   const { state } = useAppState();
+  const { getTimeChain } = useBepro();
 
   const proposalId = query?.proposalId?.toString();
   const proposalQueryKey = QueryKeys.proposal(proposalId);
@@ -143,7 +145,7 @@ export default function ProposalPage() {
 
   useEffect(() => {
     if (state.Service?.active)
-      state.Service?.active.getTimeChain().then(setChainTime);
+      getTimeChain().then(setChainTime);
   }, [state.Service?.active]);
 
   useEffect(() => {

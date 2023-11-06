@@ -5,7 +5,8 @@ export type NetworkParameters = "councilAmount" |
   "mergeCreatorFeeShare" | 
   "proposerFeeShare" |
   "percentageNeededForDispute" |
-  "cancelableTime";
+  "cancelableTime" |
+  "totalNetworkToken"
 
 export type RegistryParameters = "networkCreationFeePercentage" | 
   "lockAmountForNetworkCreation" | 

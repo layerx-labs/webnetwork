@@ -10,6 +10,7 @@ import {parseTransaction} from "helpers/transactions";
 import { NetworkEvents } from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
+import { Token } from "interfaces/token";
 import {SimpleBlockTransactionPayload, TransactionCurrency} from "interfaces/transaction";
 
 import DAO from "services/dao-service";
@@ -17,6 +18,7 @@ import DAO from "services/dao-service";
 import {NetworkParameters} from "types/dappkit";
 
 import { useProcessEvent } from "./api/events/use-process-event";
+import { TreasuryInfo } from "@taikai/dappkit";
 
 const DIVISOR = 1000000;
 
@@ -652,6 +654,86 @@ export default function useBepro() {
     });
   }
 
+  async function getERC20TokenData(address:string): Promise<Token> {
+    return state.Service?.active.getERC20TokenData(address)
+  }
+
+  function isAddress(address: string): boolean {
+    return state.Service?.active.isAddress(address)
+  }
+
+  function getCancelableTime(): Promise<number> {
+    return state.Service?.active.getCancelableTime()
+  }
+
+  function getTimeChain(): Promise<number> {
+    return state.Service?.active.getTimeChain()
+  }
+
+  function getTokenBalance(tokenAddress: string, walletAddress: string): Promise<BigNumber> {
+    return state.Service?.active.getTokenBalance(tokenAddress, walletAddress)
+  }
+
+  function loadNetwork(networkAddress: string, skipAssignment?: boolean) {
+    return state.Service?.active.loadNetwork(networkAddress, skipAssignment);
+  }
+
+  function isNetworkGovernor(walletAddress: string) {
+    return state.Service?.active.isNetworkGovernor(walletAddress);
+  }
+
+  function getNetworkParameter(parameter: NetworkParameters) {
+    return state.Service?.active.getNetworkParameter(parameter)
+  }
+
+  function getSettlerTokenData() {
+    return state.Service?.active.getSettlerTokenData()
+  }
+
+  function setNetworkParameter(parameter: NetworkParameters, value: string | number) {
+    return state.Service?.active.setNetworkParameter(parameter, value)
+  }
+
+  function lockInRegistry(amount: string) {
+    return state.Service?.active.lockInRegistry(amount)
+  }
+  
+  function approveTokenInRegistry(amount: string) {
+    return state.Service?.active.approveTokenInRegistry(amount)
+  }
+
+  function unlockFromRegistry() {
+    return state.Service?.active.unlockFromRegistry()
+  }
+
+  function getNetworkAdressByCreator(walletAddress: string) {
+    return state.Service?.active.getNetworkAdressByCreator(walletAddress)
+  }
+
+  function isRegistryGovernor(walletAddress: string) {
+    return state.Service?.active.isRegistryGovernor(walletAddress)
+  }
+
+  function getTokensLockedInRegistryByAddress(walletAddress: string) {
+    return state.Service?.active.getTokensLockedInRegistryByAddress(walletAddress)
+  }
+
+  function getRegistryCreatorAmount() {
+    return state.Service?.active.getRegistryCreatorAmount()
+  }
+
+  function getAllowance(tokenAddress: string, walletAddress: string, spenderAddress: string) {
+    return state.Service?.active.getAllowance(tokenAddress, walletAddress, spenderAddress)
+  }
+
+  function deployERC20Token(name: string, symbol: string, cap: string, ownerAddress: string) {
+    return state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
+  }
+
+  function treasuryInfo(): Promise<TreasuryInfo> {
+    return state.Service?.active.network?.treasuryInfo()
+  }
+  
   return {
     handlerDisputeProposal,
     handleCloseIssue,
@@ -678,6 +760,26 @@ export default function useBepro() {
     handleChangeAllowedTokens,
     handleCloseNetwork,
     handleFeeNetworkCreation,
-    handleAmountNetworkCreation
+    handleAmountNetworkCreation,
+    getERC20TokenData,
+    getCancelableTime,
+    getTokenBalance,
+    getTimeChain,
+    getNetworkParameter,
+    getSettlerTokenData,
+    getNetworkAdressByCreator,
+    getTokensLockedInRegistryByAddress,
+    getRegistryCreatorAmount,
+    getAllowance,
+    setNetworkParameter,
+    isAddress,
+    isNetworkGovernor,
+    isRegistryGovernor,
+    loadNetwork,
+    lockInRegistry,
+    approveTokenInRegistry,
+    unlockFromRegistry,
+    deployERC20Token,
+    treasuryInfo
   };
 }

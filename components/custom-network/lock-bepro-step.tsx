@@ -7,7 +7,7 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import AmountWithPreview from "components/custom-network/amount-with-preview";
 import InputNumber from "components/input-number";
 import Step from "components/step";
@@ -32,6 +32,7 @@ import { UserRoleUtils } from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
+import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
 export default function LockBeproStep({ activeStep, index, handleClick, validated }: StepWrapperProps) {
@@ -48,6 +49,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state, dispatch } = useAppState();
+  const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
@@ -104,7 +106,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(lockTxAction)
     setIsLocking(true);
 
-    state.Service?.active.lockInRegistry(amount.toFixed())
+    lockInRegistry(amount.toFixed())
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
@@ -133,7 +135,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(unlockTxAction)
     setIsUnlocking(true);
 
-    state.Service?.active.unlockFromRegistry()
+    unlockFromRegistry()
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
@@ -182,7 +184,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     dispatch(approveTxAction);
     setIsApproving(true);
 
-    state.Service?.active.approveTokenInRegistry(amount?.toFixed())
+    approveTokenInRegistry(amount?.toFixed())
       .then((tx) => {
         registryToken.updateAllowanceAndBalance();
         dispatch(updateTx([parseTransaction(tx, approveTxAction.payload[0] as SimpleBlockTransactionPayload)]));
