@@ -14,6 +14,7 @@ import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useDao } from "x-hooks/use-dao";
 
 export default function ContractButton({
   onClick,
@@ -24,6 +25,7 @@ export default function ContractButton({
   const { t } = useTranslation(["common"]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const { changeNetwork } = useDao();
   const { state, dispatch } = useAppState();
   const { addError, addWarning } = useToastStore();
 
@@ -66,7 +68,7 @@ export default function ContractButton({
   }
 
   async function validateDao() {
-    if(state.Service?.active) return true
+    if(state.Service?.active) return true;
 
     addError(t("actions.failed"), t("errors.failed-load-dao"));
 
@@ -81,8 +83,11 @@ export default function ContractButton({
       }
 
       if (!state.Service?.starting && !state.Service?.active.network) {
-        addError(t("actions.failed"), t("errors.failed-load-network"));
-        return false;
+        const started = 
+          await changeNetwork(state.Service?.network?.active?.chain_id, state.Service?.network?.active?.networkAddress);
+        if (!started)
+          addError(t("actions.failed"), t("errors.failed-load-network"));
+        return started;
       }
     }
 
