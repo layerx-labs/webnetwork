@@ -15,11 +15,13 @@ interface Action {
 interface CreateNetworkBountyButtonViewProps {
   isOnNetwork: boolean;
   actions: Action[];
+  label?: string;
 }
 
 export default function CreateNetworkBountyButtonView({
   isOnNetwork,
-  actions
+  actions,
+  label
 }: CreateNetworkBountyButtonViewProps) {
   const { t } = useTranslation("common");
 
@@ -39,7 +41,7 @@ export default function CreateNetworkBountyButtonView({
         <InternalLink
           href={"/create-bounty"}
           icon={<PlusIcon />}
-          label={t("main-nav.new-bounty") as string}
+          label={label ? label : t("main-nav.new-bounty") as string}
           iconBefore
           uppercase
         />
