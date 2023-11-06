@@ -113,7 +113,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, lockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
         updateTokenBalance()
-        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -142,7 +142,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, unlockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
         updateTokenBalance();
-        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
