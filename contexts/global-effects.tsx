@@ -8,7 +8,6 @@ import {useAppState} from "contexts/app-state";
 import { changeWeb3Connection } from "contexts/reducers/change-service";
 
 import {useAuthentication} from "x-hooks/use-authentication";
-import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
 import {useSettings} from "x-hooks/use-settings";
@@ -21,10 +20,9 @@ export const GlobalEffectsProvider = ({children}) => {
 
   const {query} = useRouter();
   const session = useSession();
-  
+
   const dao = useDao();
   const network = useNetwork();
-  const { chain } = useChain();
   const settings = useSettings();
   const auth = useAuthentication();
   const transactions = useTransactions();
@@ -74,8 +72,6 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(() => {
     network.updateActiveNetwork();
   }, [query?.network, query?.chain]);
-  useEffect(network.loadNetworkTimes, [Service?.active?.network]);
-  useEffect(network.loadNetworkAmounts, [Service?.active?.network?.contractAddress, chain]);
   useEffect(network.updateNetworkAndChainMatch, [
     connectedChain?.id,
     query?.network,

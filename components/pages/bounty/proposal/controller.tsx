@@ -68,7 +68,7 @@ export default function ProposalPage() {
   const isDisputable = [
     isWalletConnected,
     isProposalDisputable( parsedProposal?.contractCreationDate,
-                          BigNumber(state.Service?.network?.times?.disputableTime).toNumber(),
+                          BigNumber(state.Service?.network?.active?.disputableTime).toNumber(),
                           chaintime),
     !parsedProposal?.isDisputed,
     !parsedProposal?.refusedByBountyOwner,
@@ -96,12 +96,12 @@ export default function ProposalPage() {
   ].every((v) => v);
 
   async function getDistributedAmounts() {
-    if (!parsedProposal?.distributions || !state?.Service?.network?.amounts) return;
+    if (!parsedProposal?.distributions || !state?.Service?.network?.active) return;
 
     const amountTotal = BigNumber.maximum(issue?.amount || 0, issue?.fundingAmount || 0);
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = state.Service.network.amounts;
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = state.Service.network.active;
 
-    const distributions = calculateDistributedAmounts(treasury,
+    const distributions = calculateDistributedAmounts(chain.closeFeePercentage,
                                                       mergeCreatorFeeShare,
                                                       proposerFeeShare,
                                                       amountTotal,
@@ -122,13 +122,13 @@ export default function ProposalPage() {
   function changeMissingDisputableTime() {
     if (
       !chaintime ||
-      !state.Service?.network?.times?.disputableTime ||
+      !state.Service?.network?.active?.disputableTime ||
       !parsedProposal?.contractCreationDate
     )
       return;
 
     const target = addSeconds(new Date(parsedProposal?.contractCreationDate), 
-                              +state.Service?.network.times.disputableTime);
+                              +state.Service?.network.active.disputableTime);
     const missingTime = formatDistance(new Date(chaintime), target, {
       includeSeconds: true,
     });
@@ -140,7 +140,7 @@ export default function ProposalPage() {
   useEffect(changeMissingDisputableTime, [
     parsedProposal?.contractCreationDate,
     chaintime,
-    state.Service?.network?.times?.disputableTime,
+    state.Service?.network?.active?.disputableTime,
   ]);
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export default function ProposalPage() {
 
   useEffect(() => {
     getDistributedAmounts();
-  }, [state?.Service?.network?.amounts]);
+  }, [state?.Service?.network?.active?.networkAddress]);
 
   return (
     <ProposalPageView

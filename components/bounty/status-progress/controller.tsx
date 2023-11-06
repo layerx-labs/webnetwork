@@ -117,7 +117,7 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
       isCanceled={isCanceled}
       isClosed={isClosed}
       chainTime={chainTime}
-      draftTime={state.Service?.network?.times?.draftTime}
+      draftTime={state.Service?.network?.active?.draftTime}
       currentStep={currentStep}
     />
   );

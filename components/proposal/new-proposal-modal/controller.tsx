@@ -45,19 +45,19 @@ export default function ProposalModal({
                                                                   t("messages.proposal-created"),
                                                                   t("errors.failed-to-create"));
 
-  const { treasury, mergeCreatorFeeShare, proposerFeeShare } = state.Service?.network?.amounts || {};
+  const { chain, mergeCreatorFeeShare, proposerFeeShare } = state.Service?.network?.active || {};
   const deliverableUserAddress = currentDeliverable?.user?.address;
   const deliverableUserLogin = currentDeliverable?.user?.githubLogin;
-  const distributedAmounts = treasury ? calculateDistributedAmounts(treasury,
-                                                                    mergeCreatorFeeShare,
-                                                                    proposerFeeShare,
-                                                                    BigNumber(currentBounty?.amount),
-                                                                    [
-                                                                      {
-                                                                        recipient: deliverableUserAddress, 
-                                                                        percentage: 100
-                                                                      }
-                                                                    ]) : null;
+  const distributedAmounts = chain ? calculateDistributedAmounts( chain.closeFeePercentage,
+                                                                  mergeCreatorFeeShare,
+                                                                  proposerFeeShare,
+                                                                  BigNumber(currentBounty?.amount),
+                                                                  [
+                                                                    {
+                                                                      recipient: deliverableUserAddress, 
+                                                                      percentage: 100
+                                                                    }
+                                                                  ]) : null;
   const paymentInfos: PaymentInfoProps[] = [
     {
       address: deliverableUserAddress,

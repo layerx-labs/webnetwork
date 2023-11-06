@@ -35,7 +35,6 @@ export default function PageIssue() {
 
   const bountyId = query?.id;
   const bountyQueryKey = ["bounty", bountyId?.toString()];
-  const commentsQueryKey = ["bounty", "comments", bountyId.toString()];
 
   const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 

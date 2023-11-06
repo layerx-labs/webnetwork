@@ -75,7 +75,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     };
   })
 
-  const compare = (networkOne, networkTwo) => (networkOne?.totalValueLock.gt(networkTwo?.totalValueLock) ? -1 : 0 )
+  const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 )
   
   const paginatedData = paginateArray(result
           .sort(compare)

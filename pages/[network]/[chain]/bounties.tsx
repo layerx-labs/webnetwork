@@ -8,7 +8,7 @@ import CustomContainer from "components/custom-container";
 
 import {useAppState} from "contexts/app-state";
 
-import { emptyBountiesPaginated, emptyNetworkOverview } from "helpers/api";
+import { emptyBountiesPaginated } from "helpers/api";
 
 import { SearchBountiesPaginated } from "types/api";
 
@@ -80,8 +80,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
       .then(({ data }) => data)
       .catch(() => emptyBountiesPaginated),
     getNetworkOverviewData(query)
-      .then(({ data }) => data)
-      .catch(() => emptyNetworkOverview)
   ]);
 
   const { 

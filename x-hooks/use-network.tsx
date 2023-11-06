@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 
+import BigNumber from "bignumber.js";
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
 
@@ -8,10 +9,11 @@ import {changeMatchWithNetworkChain} from "contexts/reducers/change-chain";
 import {
   changeActiveAvailableChains,
   changeActiveNetwork,
-  changeActiveNetworkAmounts,
-  changeActiveNetworkTimes,
   changeNetworkLastVisited
 } from "contexts/reducers/change-service";
+
+import { MINUTE_IN_MS } from "helpers/constants";
+import { QueryKeys } from "helpers/query-keys";
 
 import {Network} from "interfaces/network";
 import {ProfilePages} from "interfaces/utils";
@@ -21,7 +23,8 @@ import {WinStorage} from "services/win-storage";
 import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
 
-import useBepro from "./use-bepro";
+import getNetworkOverviewData from "./api/get-overview-data";
+import useReactQuery from "./use-react-query";
 
 export function useNetwork() {
   const {query, replace, push} = useRouter();
@@ -32,7 +35,6 @@ export function useNetwork() {
 
   const {state, dispatch} = useAppState();
   const { findSupportedChain } = useChain();
-  const { getNetworkParameter, treasuryInfo } = useBepro();
 
   function getStorageKey(networkName: string, chainId: string | number) {
     return `bepro.network:${networkName}:${chainId}`;
@@ -77,35 +79,35 @@ export function useNetwork() {
 
     await useSearchNetworks({
       name: queryNetworkName,
-      isNeedCountsAndTokensLocked: true
+      isNeedCountsAndTokensLocked: true,
+      sortBy: "id",
+      order: "ASC"
     })
       .then(({count, rows}) => {
         if (count === 0) {
           throw new Error("No networks found");
         }
 
-        if (queryChainName) {
-          const data = rows.find((network) =>
+        const data = queryChainName ? rows.find((network) =>
               network?.chain?.chainShortName?.toLowerCase() ===
-              queryChainName?.toLowerCase());
+              queryChainName?.toLowerCase()) : rows[0];
 
-          if (!data.isRegistered) {
-            if (state.currentUser?.walletAddress === data.creatorAddress)
-              return replace(getURLWithNetwork("/profile/my-network", {
-                network: data.name,
-                chain: data.chain.chainShortName
-              }));
-            else
-              throw new Error("Network not registered");
-          }
-
-          const newCachedData = new WinStorage(getStorageKey(data.name, data.chain.chainId), 3600, `sessionStorage`);
-          newCachedData.value = data;
-          setActiveNetworkId(data.id);
-
-          dispatch(changeNetworkLastVisited(queryNetworkName));
-          dispatchNetworkContextUpdates(newCachedData.value);
+        if (!data.isRegistered && !!queryChainName) {
+          if (state.currentUser?.walletAddress === data.creatorAddress)
+            return replace(getURLWithNetwork("/profile/my-network", {
+              network: data.name,
+              chain: data.chain.chainShortName
+            }));
+          else
+            throw new Error("Network not registered");
         }
+
+        const newCachedData = new WinStorage(getStorageKey(data.name, data.chain.chainId), 3600, `sessionStorage`);
+        newCachedData.value = data;
+        setActiveNetworkId(data.id);
+
+        dispatch(changeNetworkLastVisited(queryNetworkName));
+        dispatchNetworkContextUpdates(newCachedData.value);
 
         const available = rows
           .filter(({ isRegistered, isClosed }) => isRegistered && !isClosed)
@@ -157,55 +159,6 @@ export function useNetwork() {
     }, `/${path}`);
   }
 
-  function loadNetworkTimes() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    const network = state.Service.active?.network;
-
-    Promise.all([network.draftTime(), network.disputableTime()])
-      .then(([draftTime, disputableTime]) => {
-        dispatch(changeActiveNetworkTimes({
-          draftTime: +draftTime / 1000,
-          disputableTime: +disputableTime / 1000
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkTimes", error));
-  }
-
-  function loadNetworkAmounts() {
-    if (!state?.Service?.active?.network)
-      return;
-
-    Promise.all([
-        getNetworkParameter('councilAmount'),
-        getNetworkParameter('mergeCreatorFeeShare'),
-        getNetworkParameter('proposerFeeShare'),
-        getNetworkParameter('percentageNeededForDispute'),
-        getNetworkParameter('oracleExchangeRate'),
-        treasuryInfo(),
-        getNetworkParameter('totalNetworkToken'),
-    ])
-      .then(([councilAmount,
-              mergeCreatorFeeShare,
-              proposerFeeShare,
-              percentageNeededForDispute,
-              oracleExchangeRate,
-              treasury,
-              totalNetworkToken]) => {
-        dispatch(changeActiveNetworkAmounts({
-          councilAmount: councilAmount.toString(),
-          oracleExchangeRate: +oracleExchangeRate,
-          mergeCreatorFeeShare: +mergeCreatorFeeShare,
-          proposerFeeShare: +proposerFeeShare,
-          percentageNeededForDispute: +percentageNeededForDispute,
-          treasury,
-          totalNetworkToken
-        }));
-      })
-      .catch(error => console.debug("Failed to loadNetworkAmounts", error));
-  }
-
   function updateNetworkAndChainMatch() {
     const connectedChainId = state.connectedChain?.id;
     const networkChainId = state?.Service?.network?.active?.chain_id;
@@ -217,6 +170,18 @@ export function useNetwork() {
       dispatch(changeMatchWithNetworkChain(null));
   }
 
+  function getTotalNetworkToken() {
+    const network = query?.network?.toString();
+    const chain = query?.chain?.toString();
+    return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
+                          () => getNetworkOverviewData(query)
+                            .then(overview => BigNumber(overview?.curators?.tokensLocked || 0)),
+                          {
+                            enabled: !!network && !!chain,
+                            staleTime: MINUTE_IN_MS
+                          });
+  }
+
   useEffect(() => { setNetworkName(query?.network?.toString() || ''); }, [query?.network]);
 
   return {
@@ -225,10 +190,9 @@ export function useNetwork() {
     updateActiveNetwork,
     getURLWithNetwork,
     clearNetworkFromStorage,
-    loadNetworkTimes,
-    loadNetworkAmounts,
     goToProfilePage,
-    updateNetworkAndChainMatch
+    updateNetworkAndChainMatch,
+    getTotalNetworkToken
   }
 
 }

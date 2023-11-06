@@ -6,7 +6,7 @@ import {useTranslation} from "next-i18next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {CallToAction} from "components/setup/call-to-action";
 import ChainsSetup from "components/setup/chains-setup";
 import {NetworkSetup} from "components/setup/network-setup";

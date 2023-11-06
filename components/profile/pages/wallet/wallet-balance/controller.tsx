@@ -10,9 +10,6 @@ import TokenIcon from "components/token-icon";
 import { useAppState } from "contexts/app-state";
 
 import { MINUTE_IN_MS } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
-
-import { getPricesAndConvert } from "helpers/tokens";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";

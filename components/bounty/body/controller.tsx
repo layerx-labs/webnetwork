@@ -9,7 +9,6 @@ import { useAppState } from "contexts/app-state";
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { QueryKeys } from "helpers/query-keys";
-import { TAGS_OPTIONS } from "helpers/tags-options";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 

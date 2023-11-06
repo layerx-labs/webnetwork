@@ -6,6 +6,8 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
 
+import { useNetwork } from "x-hooks/use-network";
+
 import TokenSymbolView from "./common/token-symbol/view";
 
 export default function ProposalProgressBar({
@@ -19,15 +21,14 @@ export default function ProposalProgressBar({
 }) {
   const { t } = useTranslation("proposal");
 
-  const {state} = useAppState();
-
   const [issueState, setIssueState] = useState<string>("");
   const [issueColor, setIssueColor] = useState<string>("");
   const [percentage, setPercentage] = useState<number>(0);
-
   const [_columns, setColumns] = useState<number[]>([]);
-
-  const totalNetworkToken = state.Service?.network?.amounts?.totalNetworkToken;
+  
+  const { state } = useAppState();
+  const { getTotalNetworkToken } = useNetwork();
+  const { data: totalNetworkToken } = getTotalNetworkToken();
 
   function toPercent(value = 0, total = 0, decimals = 2) {
     const percent = +((value / total) * 100).toFixed(decimals)
@@ -66,7 +67,7 @@ export default function ProposalProgressBar({
   function loadDisputeState() {
     setIssueState(getStateText());
     setIssueColor(getStateColor());
-    setPercentage(+toPercent(issueDisputeAmount, +totalNetworkToken));
+    setPercentage(+toPercent(issueDisputeAmount, +totalNetworkToken?.toFixed() || 0));
   }
 
   function renderColumn(dotLabel, index) {
@@ -133,7 +134,7 @@ export default function ProposalProgressBar({
             <span className={`text-${issueColor} text-uppercase`}>
               {formatNumberToNScale(issueDisputeAmount)}{" "}
             </span>{" "}
-            <span className="me-1">/{formatNumberToNScale(totalNetworkToken || 0)}{" "}</span>
+            <span className="me-1">/{formatNumberToNScale(totalNetworkToken?.toFixed() || 0)}{" "}</span>
             <TokenSymbolView 
               name={t("common:$oracles", { token: state.Service?.network?.active?.networkToken?.symbol })}
             />

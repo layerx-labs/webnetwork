@@ -65,11 +65,10 @@ export default function ProposalMerge({
   }
 
   useEffect(() => {
-    if (!proposal ||!state.Service?.network?.amounts)
+    if (!proposal ||!state.Service?.network?.active)
       return;
-
     getCoinInfo()
-  }, [proposal,amountTotal]);
+  }, [proposal, amountTotal]);
 
   return (
     <>

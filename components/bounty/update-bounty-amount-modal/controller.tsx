@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NumberFormatValues } from "react-number-format";
 
-import { Defaults } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
@@ -12,6 +11,7 @@ import { toastError } from "contexts/reducers/change-toaster";
 import calculateDistributedAmounts, { calculateTotalAmountFromGivenReward } from "helpers/calculateDistributedAmounts";
 
 import { NetworkEvents } from "interfaces/enums/events";
+import { IssueBigNumberData } from "interfaces/issue-data";
 import { DistributionsProps } from "interfaces/proposal";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
@@ -27,17 +27,15 @@ const ZeroNumberFormatValues = {
 };
 interface UpdateBountyAmountModalProps {
   show: boolean;
-  transactionalAddress: string;
+  bounty: IssueBigNumberData;
   handleClose: () => void;
-  bountyId: number;
   updateBountyData: () => void;
 }
 
 export default function UpdateBountyAmountModal({
   show,
-  transactionalAddress,
+  bounty,
   handleClose = undefined,
-  bountyId,
   updateBountyData,
 }: UpdateBountyAmountModalProps) {
   const { t } = useTranslation(["common", "bounty"]);
@@ -52,9 +50,8 @@ export default function UpdateBountyAmountModal({
     dispatch,
   } = useAppState();
 
-  const { processEvent } = useProcessEvent();
   const transactionalERC20 = useERC20();
-
+  const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
 
   const currentToken = {
@@ -62,26 +59,37 @@ export default function UpdateBountyAmountModal({
     minimum: transactionalERC20.minimum,
   };
 
-  const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type),
-                                                             500);
+  const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 500);
 
-  const amountIsGtBalance = (v: string | number, balance: BigNumber) =>
-    BigNumber(v).gt(balance);
+  const amountIsGtBalance = (v: string | number, balance: BigNumber) => BigNumber(v).gt(balance);
 
-  const needsApproval = !!BigNumber(issueAmount.floatValue)?.gt(transactionalERC20.allowance);
-  const exceedsBalance = !!BigNumber(issueAmount.floatValue)?.gt(transactionalERC20.balance);
+  const transactionalAddress = bounty?.transactionalToken?.address;
+  const bountyId = bounty?.contractId;
+  const walletBalanceWithTaskAmount = transactionalERC20.balance?.plus(bounty?.amount);
+  const totalAmountMinusBountyAmount = BigNumber(issueAmount.formattedValue).minus(bounty?.amount);
+  const isIncreasingAmount = BigNumber(issueAmount.formattedValue)?.gt(bounty?.amount);
+  const needsApproval = 
+    isIncreasingAmount ? !!totalAmountMinusBountyAmount?.gt(transactionalERC20.allowance) : false;
+  const exceedsBalance = !!BigNumber(issueAmount.formattedValue)?.gt(walletBalanceWithTaskAmount);
+  const isSameValue = BigNumber(issueAmount.formattedValue)?.eq(bounty?.amount);
+
+  function onCloseModalClick() {
+    resetValues();
+    handleClose();
+  }
 
   const resetValues = () => {
-    updateIssueAmount(ZeroNumberFormatValues)
-    setRewardAmount(ZeroNumberFormatValues)
-    setDistributions(undefined)
+    updateIssueAmount(ZeroNumberFormatValues);
+    setRewardAmount(ZeroNumberFormatValues);
+    setDistributions(undefined);
+    setInputError(undefined);
   };
 
   const handleApprove = async () => {
     setIsExecuting(true);
 
     handleApproveToken( transactionalAddress,
-                        issueAmount.formattedValue,
+                        BigNumber(issueAmount.formattedValue).minus(bounty?.amount).toFixed(),
                         undefined,
                         transactionalERC20?.symbol)
       .then(() => {
@@ -125,10 +133,10 @@ export default function UpdateBountyAmountModal({
 
 
   function handleDistributions(value, type) {
-    if (!value || !Service?.network?.amounts) return;
+    if (!value || !Service?.network?.active) return;
 
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
+    const networkFee = chain.closeFeePercentage;
     const amountOfType =
       BigNumber(type === "reward"
         ? calculateTotalAmountFromGivenReward(value, 
@@ -137,7 +145,7 @@ export default function UpdateBountyAmountModal({
                                               +proposerFeeShare/100)
         : value);
 
-    const initialDistributions = calculateDistributedAmounts( treasury,
+    const initialDistributions = calculateDistributedAmounts( chain.closeFeePercentage,
                                                               mergeCreatorFeeShare,
                                                               proposerFeeShare,
                                                               amountOfType,
@@ -164,8 +172,8 @@ export default function UpdateBountyAmountModal({
     if (type === "reward") {
       const total = totalServiceFees.plus(rewardAmount?.value);
       updateIssueAmount(handleNumberFormat(total));
-      amountIsGtBalance(total.toNumber(), transactionalERC20.balance) &&
-        setInputError(t("bounty:errors.exceeds-allowance"));
+      amountIsGtBalance(total.toNumber(), walletBalanceWithTaskAmount) &&
+        setInputError(t("bounty:errors.exceeds-balance"));
     }
 
     if (type === "total") {
@@ -176,12 +184,11 @@ export default function UpdateBountyAmountModal({
     setDistributions(distributions);
   }
 
-  function handleIssueAmountOnValueChange(values: NumberFormatValues,
-                                          type: "reward" | "total") {
+  function handleIssueAmountOnValueChange(values: NumberFormatValues, type: "reward" | "total") {
     const setType = type === "reward" ? setRewardAmount : updateIssueAmount;
 
-    if (amountIsGtBalance(values.floatValue, transactionalERC20.balance)) {
-      setInputError(t("bounty:errors.exceeds-allowance"));
+    if (amountIsGtBalance(values.floatValue, walletBalanceWithTaskAmount)) {
+      setInputError(t("bounty:errors.exceeds-available"));
       setType(values);
     } else if (+values.floatValue > +currentToken?.currentValue) {
       setType(ZeroNumberFormatValues);
@@ -192,13 +199,13 @@ export default function UpdateBountyAmountModal({
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
-      setType(values);
+      setType(handleNumberFormat(BigNumber(values.value)));
       setInputError(t("bounty:errors.exceeds-minimum-amount", {
           amount: currentToken?.minimum,
       }));
     } else {
       debouncedDistributionsUpdater(values.value, type);
-      setType(values);
+      setType(handleNumberFormat(BigNumber(values.value)));
       if (inputError) setInputError("");
     }
   }
@@ -233,6 +240,7 @@ export default function UpdateBountyAmountModal({
       return;
 
     transactionalERC20.setAddress(transactionalAddress);
+    transactionalERC20.updateAllowanceAndBalance();
   }, [transactionalAddress, Service?.active, currentUser, show]);
 
   return (
@@ -243,12 +251,14 @@ export default function UpdateBountyAmountModal({
       exceedsBalance={exceedsBalance}
       transactionalERC20={transactionalERC20}
       handleSubmit={handleSubmit}
-      handleClose={handleClose}
+      handleClose={onCloseModalClick}
       handleApprove={handleApprove} 
       rewardAmount={rewardAmount} 
       issueAmount={issueAmount} 
       inputError={inputError} 
       distributions={distributions} 
+      taskAmount={bounty?.amount}
+      isSameValue={isSameValue}
       onIssueAmountValueChange={handleIssueAmountOnValueChange}    
       />
   );

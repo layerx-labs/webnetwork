@@ -1,6 +1,5 @@
 import {Dispatch} from "react";
 
-import {TreasuryInfo} from "@taikai/dappkit";
 import { Web3Connection } from "@taikai/dappkit";
 
 import { Spinners } from "contexts/reducers/change-spinners";
@@ -21,26 +20,9 @@ import DAO from "services/dao-service";
 
 import {SettingsType, Tier} from "types/settings";
 
-export interface NetworkTimes {
-  disputableTime: string|number;
-  draftTime: string|number;
-}
-
-export interface NetworkAmounts {
-  councilAmount: string | number;
-  mergeCreatorFeeShare: string | number;
-  proposerFeeShare: string | number;
-  percentageNeededForDispute: string | number;
-  oracleExchangeRate: string | number;
-  treasury: TreasuryInfo;
-  totalNetworkToken: string | number;
-}
-
 export interface ServiceNetwork {
   lastVisited: string;
   active: Network | null;
-  times: NetworkTimes;
-  amounts: NetworkAmounts;
   noDefaultNetwork?: boolean;
   availableChains?: SupportedChainData[];
   tokens: {transactional: Token[]; reward: Token[];} | null;

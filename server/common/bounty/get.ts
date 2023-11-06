@@ -3,15 +3,21 @@ import {NextApiRequest} from "next";
 import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
-import Issue from "db/models/issue.model";
 
 import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
 import {chainFromHeader} from "helpers/chain-from-header";
 
+import { IssueData } from "interfaces/issue-data";
+
 import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
-export async function get(req: NextApiRequest): Promise<Issue> {
-  const { ids: [id, networkName, chainName], chainId } = req.query;
+export async function get(req: NextApiRequest): Promise<IssueData> {
+  const { ids, chainId } = req.query;
+
+  if (!ids?.length)
+    throw new HttpBadRequestError("Missing params");
+
+  const [id, networkName, chainName] = ids;
 
   let network_id: number;
 
@@ -37,7 +43,12 @@ export async function get(req: NextApiRequest): Promise<Issue> {
     { association: "benefactors" },
     { association: "disputes" },
     { association: "user" },
-    {  association: "network", include: [ { association: "chain", attributes: [ "chainShortName" ] } ] },
+    { 
+      association: "network", 
+      include: [ 
+        { association: "chain", attributes: [ "chainShortName", "closeFeePercentage" ] } 
+      ] 
+    },
   ];
 
   const chainHeader = await chainFromHeader(req);
@@ -77,7 +88,9 @@ export async function get(req: NextApiRequest): Promise<Issue> {
   if (!issue)
     throw new HttpNotFoundError("Issue not found");
 
-  issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+  const closeFee = issue.network.chain.closeFeePercentage;
+  issue.dataValues.developerAmount = getDeveloperAmount(closeFee,
+                                                        issue.network.mergeCreatorFeeShare,
                                                         issue.network.proposerFeeShare,
                                                         BigNumber(issue?.amount));
 

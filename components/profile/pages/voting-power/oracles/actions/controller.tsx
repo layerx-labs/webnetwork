@@ -41,7 +41,7 @@ export default function OraclesActions({
 
   const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;
-  const oracleExchangeRate = Service?.network?.amounts?.oracleExchangeRate || 1;
+  const oracleExchangeRate = Service?.network?.active?.oracleExchangeRate || 1;
   const oracleAmount = action === t("my-oracles:actions.lock.label") ?
     BigNumber(tokenAmount || 0).multipliedBy(oracleExchangeRate).toFixed() :
     BigNumber(tokenAmount || 0).dividedBy(oracleExchangeRate).toFixed();

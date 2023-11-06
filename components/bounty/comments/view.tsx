@@ -1,6 +1,6 @@
 import { useTranslation } from "next-i18next";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
 import { CurrentUserState } from "interfaces/application-state";
 import { IdsComment, TypeComment } from "interfaces/comments";

@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
@@ -11,7 +12,8 @@
     "react-hooks",
     "@typescript-eslint",
     "eslint-plugin-import-helpers",
-    "import"
+    "import",
+    "jest"
   ],
   "rules": {
     "indent-legacy": [
@@ -72,7 +74,9 @@
           ["/^templates/"],
           ["/^types/"],
           ["/^x-hooks/"],
-          ["parent", "sibling", "index"]
+          ["parent", "sibling", "index"],
+          ["/^__mocks__/"],
+          ["/^__tests__/"]
         ],
         "alphabetize": { "order": "asc", "ignoreCase": true }
       }
