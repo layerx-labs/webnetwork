@@ -16,7 +16,7 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
   const { network } = query;
 
   const [ numberOfNetworks, bounties, recentBounties, recentFunding, activeNetworks ] = await Promise.all([
-    api.get("/search/networks/total", { params: { name: network } })
+    api.get("/search/marketplaces/total", { params: { name: network } })
       .then(({ data }) => data)
       .catch(() => 0),
     getBountiesListData(query)
