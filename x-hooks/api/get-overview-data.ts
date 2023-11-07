@@ -10,7 +10,7 @@ import { NetworkOverviewData } from "types/api";
  * @returns overview data
  */
 export default async function getNetworkOverviewData(query: ParsedUrlQuery) {
-  return api.get<NetworkOverviewData>("/overview/network", {
+  return api.get<NetworkOverviewData>("/overview/marketplace", {
     params: query
   });
 }
