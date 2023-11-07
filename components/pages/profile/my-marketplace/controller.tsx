@@ -5,8 +5,6 @@ import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 
-import {MINUTE_IN_MS} from "helpers/constants";
-
 import { Network } from "interfaces/network";
 
 import {SearchBountiesPaginated} from "types/api";
