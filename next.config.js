@@ -151,6 +151,21 @@ module.exports = () => {
           destination: '/:network/:chain/task/:id',
           permanent: true,
         },
+        {
+          source: '/:network/:chain/bounty/:id/deliverable/:deliverableId',
+          destination: '/:network/:chain/task/:id/deliverable/:deliverableId',
+          permanent: true,
+        },
+        {
+          source: '/:network/:chain/bounty/:id/proposal/:proposalId',
+          destination: '/:network/:chain/task/:id/proposal/:proposalId',
+          permanent: true,
+        },
+        {
+          source: '/:network/:chain/bounty/:id/create-deliverable',
+          destination: '/:network/:chain/task/:id/create-deliverable',
+          permanent: true,
+        },
       ]
     }
   };
