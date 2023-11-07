@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import CreateTaskPage from "components/pages/bounty/create-task/controller";
+import CreateTaskPage from "components/pages/task/create-task/controller";
 
 import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 

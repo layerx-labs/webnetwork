@@ -8,7 +8,6 @@ import router, {useRouter} from "next/router";
 import {useDebouncedCallback} from "use-debounce";
 
 import {IFilesProps} from "components/drag-and-drop";
-import CreateBountyPageView from "components/pages/bounty/create-task/view";
 
 import {useAppState} from "contexts/app-state";
 import {toastError, toastWarning} from "contexts/reducers/change-toaster";
@@ -47,6 +46,7 @@ import {CreateTaskSections} from "../../../../interfaces/enums/create-task-secti
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
+import CreateTaskPageView from "./view";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -602,7 +602,7 @@ export default function CreateTaskPage({
 
 
   return(
-    <CreateBountyPageView
+    <CreateTaskPageView
       isConnected={!!currentUser?.walletAddress}
       deliverableType={deliverableType}
       currentSection={currentSection}

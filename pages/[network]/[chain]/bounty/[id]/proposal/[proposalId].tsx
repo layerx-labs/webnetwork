@@ -2,7 +2,7 @@ import { dehydrate } from "@tanstack/react-query";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from "next/types";
 
-import ProposalPage from "components/pages/bounty/proposal/controller";
+import ProposalPage from "components/pages/task/proposal/controller";
 
 import { getReactQueryClient } from "services/react-query";
 

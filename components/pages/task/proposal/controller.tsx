@@ -5,7 +5,7 @@ import { addSeconds, formatDistance } from "date-fns";
 import {useTranslation} from "next-i18next";
 import { useRouter } from "next/router";
 
-import ProposalPageView from "components/pages/bounty/proposal/view";
+
 
 import {useAppState} from "contexts/app-state";
 
@@ -20,6 +20,8 @@ import { DistributedAmounts } from "interfaces/proposal";
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
 import useReactQuery from "x-hooks/use-react-query";
+
+import ProposalPageView from "./view";
 
 const defaultAmount = {
   value: "0",
