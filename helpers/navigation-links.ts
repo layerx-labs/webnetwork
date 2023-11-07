@@ -37,7 +37,7 @@ export function getProfileLinks(translation: TFunction, isOnNetwork = false) {
     { label: translation("common:main-nav.nav-avatar.wallet") , href: 'wallet', icon: WalletIcon },
     { label: translation("common:main-nav.nav-avatar.voting-power") , href: 'voting-power', icon: VotingPowerIcon},
     { label: translation("common:main-nav.nav-avatar.payments") , href: 'payments', icon: PaymentsIcon},
-    { label: translation("common:main-nav.nav-avatar.bounties") , href: 'bounties', icon:BountiesIcon},
+    { label: translation("common:main-nav.nav-avatar.bounties") , href: 'tasks', icon:BountiesIcon},
     { label: translation("common:main-nav.nav-avatar.deliverables") , href: 'deliverables', icon:DeliverableIcon},
     { label: translation("common:main-nav.nav-avatar.proposals") , href: 'proposals', icon:ProposalsIcon},
     { label: translation("common:main-nav.nav-avatar.my-network") , href: 'my-marketplace', icon:CustomNetworkIcon},
