@@ -16,7 +16,7 @@ export async function getBountyData(query: ParsedUrlQuery): Promise<IssueData | 
     return null;
 
   return api
-    .get<IssueData>(`/issue/${id}/${networkName}/${chainName}`)
+    .get<IssueData>(`/task/${id}/${networkName}/${chainName}`)
     .then(({ data }) => data)
     .catch(() => null);
 }

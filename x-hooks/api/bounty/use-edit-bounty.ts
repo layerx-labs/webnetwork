@@ -10,6 +10,6 @@ export async function useEditBounty({
   ...rest
 }: updateIssueParams) {
   return api
-    .put<IssueData>(`/issue/${id}/${networkName}/${chainName}`, rest)
+    .put<IssueData>(`/task/${id}/${networkName}/${chainName}`, rest)
     .then(({ data }) => data);
 }
