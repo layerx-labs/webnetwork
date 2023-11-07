@@ -67,7 +67,7 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(auth.verifyReAuthorizationNeed, [currentUser?.walletAddress]);
   useEffect(() => {
     auth.syncUserDataWithSession();
-  }, [session]);
+  }, [Service?.active, session]);
   
   useEffect(() => {
     network.updateActiveNetwork();

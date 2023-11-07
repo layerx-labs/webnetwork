@@ -147,7 +147,9 @@
     "clear": "Clear",
     "save": "Save",
     "accept": "Accept",
-    "reload": "Reload"
+    "reload": "Reload",
+    "warning": "Warning",
+    "info": "Info"
   },
   "misc": {
     "by": "by",

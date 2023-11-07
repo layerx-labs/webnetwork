@@ -22,7 +22,6 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
 
 import {useAppState} from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import {getIssueState} from "helpers/handleTypeIssue";
@@ -30,6 +29,7 @@ import {getIssueState} from "helpers/handleTypeIssue";
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
 import { useUpdateBountyVisibility } from "x-hooks/api/network";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -54,15 +54,16 @@ export default function IssueListItem({
   const router = useRouter();
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
   
-  const {state,dispatch} = useAppState();
   const [visible, setVisible] = useState<boolean>();
   const [isCancelable, setIsCancelable] = useState(false);
   const [hideTrashIcon, setHideTrashIcon] = useState<boolean>();
   const [showHardCancelModal, setShowHardCancelModal] = useState(false);
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
   
+  const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
   const { handleHardCancelBounty, getCancelableTime, getTimeChain } = useBepro();
+  const { addError, addSuccess } = useToastStore();
   const { mutate: updateVisibility } = useReactQueryMutation({
     mutationFn: useUpdateBountyVisibility,
     toastSuccess: t("bounty:actions.update-bounty"),
@@ -106,11 +107,7 @@ export default function IssueListItem({
   }
 
   function handleToastError(err?: string) {
-    dispatch(addToast({
-      type: "danger",
-      title: t("common:actions.failed"),
-      content: t("common:errors.failed-update-bounty")
-    }));
+    addError(t("common:actions.failed"), t("common:errors.failed-update-bounty"));
     console.debug(t("common:errors.failed-update-bounty"), err);
   }
 
@@ -118,11 +115,7 @@ export default function IssueListItem({
     setIsLoadingHardCancel(true)
     handleHardCancelBounty(issue?.contractId, issue?.id)
     .then(() => {
-      dispatch(addToast({
-        type: "success",
-        title: t("common:actions.success"),
-        content: t("bounty:actions.canceled-bounty")
-      }));
+      addSuccess(t("common:actions.success"), t("bounty:actions.canceled-bounty"));
       setShowHardCancelModal(false)
       setHideTrashIcon(true)
     }).catch(handleToastError)

@@ -11,7 +11,6 @@ import Step from "components/step";
 
 import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
-import {addToast} from "contexts/reducers/change-toaster";
 
 import { IM_AM_CREATOR_NETWORK } from "helpers/constants";
 import {psReadAsText} from "helpers/file-reader";
@@ -19,6 +18,7 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 
@@ -37,7 +37,7 @@ export default function NetworksStep({
   const [ isNetworkGovernor, setIsNetworkGovernor ] = useState(false);
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
-  const {state, dispatch} = useAppState();
+  const {state} = useAppState();
   const {
     loadNetwork,
     isNetworkGovernor: isNetworkGovernorDao,
@@ -47,6 +47,7 @@ export default function NetworksStep({
     treasuryInfo
   } = useBepro();
   const { signMessage } = useAuthentication();
+  const { addError, addSuccess } = useToastStore();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
   const MAX_PERCENTAGE_FOR_DISPUTE = +state.Settings?.networkParametersLimits?.disputePercentage?.max;
@@ -213,12 +214,8 @@ export default function NetworksStep({
     };
 
     const handleError = (error) => {
-      dispatch(addToast({
-          type: "danger",
-          title: t("actions.failed"),
-          content: t("custom-network:errors.failed-to-update-network", {
-            error
-          })
+      addError(t("actions.failed"), t("custom-network:errors.failed-to-update-network", {
+        error
       }));
       console.log(error);
     }
@@ -226,12 +223,7 @@ export default function NetworksStep({
     await signMessage(IM_AM_CREATOR_NETWORK).then(async () => {
       await useUpdateNetwork(json)
       .then(() => {
-        dispatch(addToast({
-            type: "success",
-            title: t("actions.success"),
-            content: t("custom-network:messages.refresh-the-page")
-        }));
-
+        addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
         setIsUpdatingNetwork(false);
       })
       .catch(handleError)
