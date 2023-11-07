@@ -4,8 +4,8 @@ import {api} from "services/api";
 
 import {ExplorePageProps} from "types/pages";
 
-import {getBountiesListData} from "x-hooks/api/bounty";
-import {useSearchActiveNetworks} from "x-hooks/api/network";
+import {useSearchActiveNetworks} from "x-hooks/api/marketplace";
+import {getBountiesListData} from "x-hooks/api/task";
 
 /**
  * Get explore page data from api based on the current url query

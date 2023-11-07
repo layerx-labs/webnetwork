@@ -12,8 +12,8 @@ import { emptyBountiesPaginated, emptyNetworkOverview } from "helpers/api";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import { getBountiesListData } from "x-hooks/api/bounty";
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
+import { getBountiesListData } from "x-hooks/api/task";
 import {useBounty} from "x-hooks/use-bounty";
 
 interface BountiesPageProps {

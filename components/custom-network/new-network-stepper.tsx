@@ -38,7 +38,7 @@ import {psReadAsText} from "helpers/file-reader";
 
 import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
-import useCreateNetwork from "x-hooks/api/network/use-create-network";
+import useCreateNetwork from "x-hooks/api/marketplace/use-create-network";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";

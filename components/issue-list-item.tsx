@@ -29,7 +29,7 @@ import {getIssueState} from "helpers/handleTypeIssue";
 
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
-import { useUpdateBountyVisibility } from "x-hooks/api/network";
+import { useUpdateBountyVisibility } from "x-hooks/api/marketplace";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 

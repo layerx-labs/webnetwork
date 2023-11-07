@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next/types";
 
-import { getBountyData } from "x-hooks/api/bounty";
+import { getBountyData } from "x-hooks/api/task";
 
 export default () => null;
 

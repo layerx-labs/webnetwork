@@ -5,7 +5,7 @@ import { WithValidChainId } from "middleware/with-valid-chain-id";
 
 import { error as LogError } from "services/logging";
 
-import get from "server/common/search/bounties";
+import get from "server/common/search/tasks";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

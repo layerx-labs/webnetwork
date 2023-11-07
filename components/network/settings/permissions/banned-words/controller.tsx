@@ -13,7 +13,7 @@ import {
   CreateBannedWord,
   getBannedWordsData,
   RemoveBannedWord
-} from "x-hooks/api/network/management/banned-words";
+} from "x-hooks/api/marketplace/management/banned-words";
 
 interface NetworkPermissionsProps {
   network: Network;

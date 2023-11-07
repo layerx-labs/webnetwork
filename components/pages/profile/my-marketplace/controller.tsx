@@ -10,7 +10,7 @@ import {MINUTE_IN_MS} from "helpers/constants";
 import {SearchBountiesPaginated} from "types/api";
 import {MyMarketplacePageProps} from "types/pages";
 
-import {useSearchNetworks} from "x-hooks/api/network";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
 

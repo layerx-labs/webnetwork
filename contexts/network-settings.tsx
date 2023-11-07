@@ -33,7 +33,7 @@ import {Token} from "interfaces/token";
 import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import useNetworkTheme from "x-hooks/use-network-theme";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);

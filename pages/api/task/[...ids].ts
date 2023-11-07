@@ -4,7 +4,7 @@ import { IssueRoute } from "middleware";
 
 import { Logger } from "services/logging";
 
-import { get, put } from "server/common/bounty";
+import { get, put } from "server/common/task";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

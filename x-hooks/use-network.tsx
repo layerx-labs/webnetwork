@@ -18,7 +18,7 @@ import {ProfilePages} from "interfaces/utils";
 
 import {WinStorage} from "services/win-storage";
 
-import {useSearchNetworks} from "x-hooks/api/network";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 
 export function useNetwork() {

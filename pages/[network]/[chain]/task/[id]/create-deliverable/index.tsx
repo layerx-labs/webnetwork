@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next/types";
 
 import CreateDeliverablePage from "components/pages/create-deliverable/controller";
 
-import { getBountyData } from "x-hooks/api/bounty/get-bounty-data";
+import { getBountyData } from "x-hooks/api/task/get-bounty-data";
 
 export default CreateDeliverablePage;
 

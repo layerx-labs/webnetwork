@@ -23,8 +23,8 @@ import { IssueData } from "interfaces/issue-data";
 
 import { getReactQueryClient } from "services/react-query";
 
-import { getBountyData } from "x-hooks/api/bounty";
 import { getCommentsData } from "x-hooks/api/comments";
+import { getBountyData } from "x-hooks/api/task";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function TaskPage() {

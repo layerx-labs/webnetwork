@@ -32,7 +32,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import {useCreatePreBounty} from "x-hooks/api/bounty";
+import {useCreatePreBounty} from "x-hooks/api/task";
 import useApi from "x-hooks/use-api";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -44,7 +44,7 @@ import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
-import useGetIsAllowed from "../../../../x-hooks/api/network/management/allow-list/use-get-is-allowed";
+import useGetIsAllowed from "../../../../x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
 import CreateTaskPageView from "./view";
 

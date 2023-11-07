@@ -3,7 +3,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import CreateTaskPage from "components/pages/task/create-task/controller";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 
 export default CreateTaskPage;
 

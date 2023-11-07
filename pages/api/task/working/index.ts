@@ -4,7 +4,7 @@ import { UserRoute, WithValidChainId } from "middleware";
 
 import { Logger } from "services/logging";
 
-import put from "server/common/bounty/start-working/put";
+import put from "server/common/task/start-working/put";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
