@@ -146,6 +146,11 @@ module.exports = () => {
           destination: '/create-task',
           permanent: true,
         },
+        {
+          source: '/:network/:chain/bounty/:id',
+          destination: '/:network/:chain/task/:id',
+          permanent: true,
+        },
       ]
     }
   };
