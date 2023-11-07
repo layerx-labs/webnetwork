@@ -28,7 +28,7 @@ export default function AdministrationPage() {
     if (!state.Service?.network?.active) return;
 
     if (!state.Service?.network?.active?.isGovernor)
-      router.push("/networks");
+      router.push("/marketplaces");
     else
       useSearchNetworks({})
         .then(({ count, rows }) => {
