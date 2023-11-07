@@ -250,12 +250,13 @@ export default function NetworkGovernanceSettings({
     }
 
     signMessage(IM_AM_CREATOR_NETWORK)
-      .then(async () => {
-        await useUpdateNetwork(json)
-          .then(async () => {
-            if (isCurrentNetwork) updateActiveNetwork(true);
-
-            return updateEditingNetwork();
+      .then(() => {
+        return useUpdateNetwork(json)
+          .then(() => {
+            return Promise.all([
+              updateEditingNetwork(),
+              updateActiveNetwork(true)
+            ]);
           })
           .then(() => {
             dispatch(toastSuccess(t("custom-network:messages.refresh-the-page"),

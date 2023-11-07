@@ -60,11 +60,13 @@ export function MyMarketplace({
     isFetching,
     isSuccess,
     invalidate
-  } = useReactQuery(["network", state.Service?.network?.active?.name, state.currentUser?.walletAddress, chain?.chainId?.toString()],
+  } = useReactQuery([ "network", 
+                      state.Service?.network?.active?.name, 
+                      state.currentUser?.walletAddress, 
+                      chain?.chainId?.toString()],
                     getNetwork,
                     {
                       enabled: !!state.currentUser?.walletAddress && !!chain,
-                      staleTime: MINUTE_IN_MS
                     });
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export function MyMarketplace({
 
   return(
     <MyNetworkPageView
-      myNetwork={convertTimes(myNetwork)}
+      myNetwork={myNetwork}
       bounties={bounties}
       updateEditingNetwork={invalidate}
     />
