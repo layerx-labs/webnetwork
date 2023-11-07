@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 
-import MyNetworkPageView from "components/pages/profile/my-network/view";
+import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 
 import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
@@ -8,19 +8,19 @@ import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-sett
 import {MINUTE_IN_MS} from "helpers/constants";
 
 import {SearchBountiesPaginated} from "types/api";
-import {MyNetworkPageProps} from "types/pages";
+import {MyMarketplacePageProps} from "types/pages";
 
 import {useSearchNetworks} from "x-hooks/api/network";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
 
-interface MyNetworkProps {
+interface MyMarketplaceProps {
   bounties: SearchBountiesPaginated;
 }
 
-export function MyNetwork({
+export function MyMarketplace({
   bounties
-}: MyNetworkProps) {
+}: MyMarketplaceProps) {
   const { chain } = useChain();
   const { state } = useAppState();
   const { setForcedNetwork } = useNetworkSettings();
@@ -70,12 +70,12 @@ export function MyNetwork({
   );
 }
 
-export default function MyNetworkPage({
+export default function MyMarketplacePage({
   bounties
-}: MyNetworkPageProps) {
+}: MyMarketplacePageProps) {
   return(
     <NetworkSettingsProvider>
-      <MyNetwork bounties={bounties} />
+      <MyMarketplace bounties={bounties} />
     </NetworkSettingsProvider>
   );
 }

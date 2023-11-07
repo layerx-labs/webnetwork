@@ -10,17 +10,17 @@ import { Network } from "interfaces/network";
 
 import { SearchBountiesPaginated } from "types/api";
 
-interface MyNetworkPageViewProps {
+interface MyMarketplacePageViewProps {
   myNetwork: Network;
   bounties: SearchBountiesPaginated;
   updateEditingNetwork: () => Promise<void>;
 }
 
-export default function MyNetworkPageView({
+export default function MyMarketplacePageView({
   myNetwork,
   bounties,
   updateEditingNetwork,
-}: MyNetworkPageViewProps) {
+}: MyMarketplacePageViewProps) {
   const { t } = useTranslation(["common", "custom-network"]);
 
   return(
