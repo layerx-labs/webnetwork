@@ -7,6 +7,8 @@ import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-sett
 
 import {MINUTE_IN_MS} from "helpers/constants";
 
+import { Network } from "interfaces/network";
+
 import {SearchBountiesPaginated} from "types/api";
 import {MyMarketplacePageProps} from "types/pages";
 
@@ -43,6 +45,15 @@ export function MyMarketplace({
         return savedNetwork;
       });
   }
+
+  function convertTimes (network: Network) {
+    return {
+      ...network,
+      draftTime: +(network?.draftTime || 0) / 1000,
+      disputableTime: +(network?.disputableTime || 0) / 1000,
+      cancelableTime: +(network?.cancelableTime || 0) / 1000,
+    }
+  }
   
   const {
     data: myNetwork,
@@ -58,12 +69,12 @@ export function MyMarketplace({
 
   useEffect(() => {
     if (myNetwork && !isFetching && isSuccess)
-      setForcedNetwork(myNetwork);
+      setForcedNetwork(convertTimes(myNetwork));
   }, [myNetwork]);
 
   return(
     <MyNetworkPageView
-      myNetwork={myNetwork}
+      myNetwork={convertTimes(myNetwork)}
       bounties={bounties}
       updateEditingNetwork={invalidate}
     />
