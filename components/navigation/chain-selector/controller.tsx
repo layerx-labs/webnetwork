@@ -27,7 +27,7 @@ export default function ChainSelector({
   const isOnNetwork = isOnNetworkPath(pathname);
   const isWalletPage = asPath?.includes("wallet");
   const isCreateBountyPage = pathname?.includes("create-bounty");
-  const isCreateNetworkPage = pathname?.includes("new-network");
+  const isCreateNetworkPage = pathname?.includes("new-marketplace");
   const isCreateDeliverablePage = pathname?.includes("create-deliverable");
   const isSetupPage = pathname?.includes("setup");
   const shouldMatchChain = isFilter || isWalletPage || isOnNetwork || isCreateBountyPage ||

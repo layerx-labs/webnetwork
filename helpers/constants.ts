@@ -59,7 +59,7 @@ export const STATIC_URL_PATHS = [
   "networks",
   "leaderboard",
   "explore",
-  "new-network",
+  "new-marketplace",
   "setup",
   "explore",
   "create-bounty",

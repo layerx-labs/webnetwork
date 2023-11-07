@@ -38,7 +38,12 @@ import useNetworkTheme from "x-hooks/use-network-theme";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
-const ALLOWED_PATHS = ["/new-network", "/[network]/[chain]/profile/[[...profilePage]]", "/administration", "/setup"];
+const ALLOWED_PATHS = [
+  "/new-marketplace",
+  "/[network]/[chain]/profile/[[...profilePage]]",
+  "/administration",
+  "/setup",
+];
 const TTL = 48 * 60 * 60 // 2 day
 const storage = new WinStorage('create-network-settings', TTL, "localStorage");
 
@@ -66,7 +71,7 @@ export const NetworkSettingsProvider = ({ children }) => {
     councilAmount: state.Settings?.networkParametersLimits?.councilAmount
   };
 
-  const isCreating = useMemo(() => ["/new-network", "/setup"].includes(router.pathname), [router.pathname]);
+  const isCreating = useMemo(() => ["/new-marketplace", "/setup"].includes(router.pathname), [router.pathname]);
   const needsToLoad = useMemo(() => ALLOWED_PATHS.includes(router.pathname), [router.pathname]);
   const network =
     useMemo(() =>

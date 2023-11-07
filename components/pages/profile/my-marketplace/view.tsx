@@ -29,7 +29,7 @@ export default function MyMarketplacePageView({
         <NotFound 
           message={t("custom-network:errors.you-dont-have-a-custom-network")}
           action={t("actions.create-one")}
-          href="/new-network"
+          href="/new-marketplace"
         />
       ||
         <Col xs={12}>
