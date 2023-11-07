@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
       useGetChains().catch(() => [])
     ])
       .then(([tokens, chains]) => ({ tokens, chains })),
-    bounties: () => useGetProfileBounties(queryWithWallet, "creator").then(bountiesResult),
+    tasks: () => useGetProfileBounties(queryWithWallet, "creator").then(bountiesResult),
     proposals: () => useGetProfileBounties(queryWithWallet, "proposer").then(bountiesResult),
     "deliverables": () => useGetProfileBounties(queryWithWallet, "deliverabler").then(bountiesResult),
     "my-marketplace": () => useGetProfileBounties(query, "governor").then(bountiesResult),
