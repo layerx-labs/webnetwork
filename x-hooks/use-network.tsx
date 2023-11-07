@@ -89,7 +89,7 @@ export function useNetwork() {
 
         if (!data.isRegistered && !!queryChainName) {
           if (state.currentUser?.walletAddress === data.creatorAddress)
-            return replace(getURLWithNetwork("/profile/my-network", {
+            return replace(getURLWithNetwork("/profile/my-marketplace", {
               network: data.name,
               chain: data.chain.chainShortName
             }));

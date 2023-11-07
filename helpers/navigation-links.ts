@@ -40,7 +40,7 @@ export function getProfileLinks(translation: TFunction, isOnNetwork = false) {
     { label: translation("common:main-nav.nav-avatar.bounties") , href: 'bounties', icon:BountiesIcon},
     { label: translation("common:main-nav.nav-avatar.deliverables") , href: 'deliverables', icon:DeliverableIcon},
     { label: translation("common:main-nav.nav-avatar.proposals") , href: 'proposals', icon:ProposalsIcon},
-    { label: translation("common:main-nav.nav-avatar.my-network") , href: 'my-network', icon:CustomNetworkIcon},
+    { label: translation("common:main-nav.nav-avatar.my-network") , href: 'my-marketplace', icon:CustomNetworkIcon},
   ]
 
   return PROFILE_LINKS.slice(0, isOnNetwork ? PROFILE_LINKS.length : -1)

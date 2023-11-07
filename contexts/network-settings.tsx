@@ -50,8 +50,8 @@ const storage = new WinStorage('create-network-settings', TTL, "localStorage");
 export const NetworkSettingsProvider = ({ children }) => {
   const router = useRouter();
 
-  /* NOTE - forced network might be renamed to `user network`,
-            referred to user nework when he access `/my-network` page from/in another network.
+  /* NOTE - forced network might be renamed to `user marketplace`,
+            referred to user nework when he access `/my-marketplace` page from/in another marketplace.
   */
   const [forcedNetwork, setForcedNetwork] = useState<Network>();
   const [networkSettings, setNetworkSettings] =

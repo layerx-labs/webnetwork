@@ -7,4 +7,4 @@ export type ProfilePages =
   "bounties" |
   "deliverables" |
   "proposals" | 
-  "my-network";
+  "my-marketplace";
