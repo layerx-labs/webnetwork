@@ -72,7 +72,7 @@ export function MyMarketplace({
   useEffect(() => {
     if (myNetwork && !isFetching && isSuccess)
       setForcedNetwork(convertTimes(myNetwork));
-  }, [myNetwork]);
+  }, [myNetwork, isFetching, isSuccess]);
 
   return(
     <MyNetworkPageView
