@@ -5,7 +5,7 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import CustomContainer from "components/custom-container";
 import { NewNetworkStepper } from "components/custom-network/new-network-stepper";
 
-export default function NewNetworkPage() {
+export default function NewMarketplacePage() {
   return (
     <CustomContainer className="pt-5">
       <NewNetworkStepper />
