@@ -480,18 +480,11 @@ export const NetworkSettingsProvider = ({ children }) => {
   }, [network, state.Service?.active, state.Service?.starting, state.connectedChain?.id]);
 
   useEffect(() => {
-    console.log("conditions", [
-      !state.currentUser?.walletAddress,
-      !isCreating &&
-        (!network?.name || !forcedService || !!forcedNetwork?.councilAmount),
-      isCreating && !state.Service?.active?.registry?.token?.contractAddress,
-      !needsToLoad,
-      !state.Settings
-    ])
     if ([
       !state.currentUser?.walletAddress,
       !isCreating &&
-        (!network?.name || !forcedService || !!forcedNetwork?.councilAmount),
+        (!network?.name || !forcedService || 
+          (!!networkSettings?.settings?.parameters?.councilAmount?.value && !!forcedNetwork?.councilAmount)),
       isCreating && !state.Service?.active?.registry?.token?.contractAddress,
       !needsToLoad,
       !state.Settings
