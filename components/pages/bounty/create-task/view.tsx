@@ -28,7 +28,7 @@ import {BountyDetailsSectionProps} from "interfaces/create-bounty";
 
 import {RewardInformationSectionProps} from "types/components";
 
-interface CreateBountyPageViewProps 
+interface CreateTaskPageViewProps 
   extends SelectNetworkSectionProps, 
           BountyDetailsSectionProps, 
           RewardInformationSectionProps,
@@ -51,7 +51,7 @@ interface CreateBountyPageViewProps
   closeCannotCreateBountyModal?(): void;
 }
 
-export default function CreateBountyPageView({
+export default function CreateTaskPageView({
   isConnected,
   currentSection,
   isTokenApproved,
@@ -66,7 +66,7 @@ export default function CreateBountyPageView({
   onNextOrCreateButtonClick,
   onSectionHeaderClick,
   ...rest
-}: CreateBountyPageViewProps) {
+}: CreateTaskPageViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
   const isReviewSection = currentSection === 3;

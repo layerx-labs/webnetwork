@@ -8,7 +8,7 @@ import router, {useRouter} from "next/router";
 import {useDebouncedCallback} from "use-debounce";
 
 import {IFilesProps} from "components/drag-and-drop";
-import CreateBountyPageView from "components/pages/bounty/create-bounty/view";
+import CreateBountyPageView from "components/pages/bounty/create-task/view";
 
 import {useAppState} from "contexts/app-state";
 import {toastError, toastWarning} from "contexts/reducers/change-toaster";
@@ -54,13 +54,13 @@ const ZeroNumberFormatValues = {
   floatValue: 0,
 };
 
-interface CreateBountyPageProps {
+interface CreateTaskPageProps {
   networks: Network[];
 }
 
-export default function CreateBountyPage({
+export default function CreateTaskPage({
   networks: allNetworks
-}: CreateBountyPageProps) {
+}: CreateTaskPageProps) {
   const { query } = useRouter();
   const session = useSession();
   const { t } = useTranslation(["common", "bounty"]);

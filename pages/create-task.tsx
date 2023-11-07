@@ -1,11 +1,11 @@
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import CreateBountyPage from "components/pages/bounty/create-bounty/controller";
+import CreateTaskPage from "components/pages/bounty/create-task/controller";
 
 import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
 
-export default CreateBountyPage;
+export default CreateTaskPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const networks = await useSearchNetworks({
