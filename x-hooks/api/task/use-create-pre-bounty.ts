@@ -17,6 +17,6 @@ interface CreatePreBounty {
 
 export function useCreatePreBounty(payload: CreatePreBounty): Promise<IssueData> {
   return api
-    .post<IssueData>("/issue", payload)
+    .post<IssueData>("/task", payload)
     .then(({ data }) => data);
 }
