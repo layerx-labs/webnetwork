@@ -48,7 +48,7 @@ export default function SetupPage(){
 
   useEffect(() => {
     if (isConnected && !isAdmin)
-      replace("/networks");
+      replace("/marketplaces");
   }, [currentUser?.isAdmin, currentUser?.walletAddress]);
 
   if (!currentUser?.walletAddress)
