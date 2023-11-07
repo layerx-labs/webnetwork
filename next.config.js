@@ -141,6 +141,11 @@ module.exports = () => {
           destination: '/new-marketplace',
           permanent: true,
         },
+        {
+          source: '/create-bounty',
+          destination: '/create-task',
+          permanent: true,
+        },
       ]
     }
   };
