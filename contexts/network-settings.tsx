@@ -483,7 +483,7 @@ export const NetworkSettingsProvider = ({ children }) => {
     if ([
       !state.currentUser?.walletAddress,
       !isCreating &&
-        (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
+        (!network?.name || !forcedService || !!forcedNetwork?.councilAmount),
       isCreating && !state.Service?.active?.registry?.token?.contractAddress,
       !needsToLoad,
       !state.Settings
