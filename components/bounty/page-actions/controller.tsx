@@ -97,7 +97,7 @@ export default function PageActions({
   };
 
   function onCreateDeliverableClick() {
-    push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
+    push(getURLWithNetwork("/task/[id]/create-deliverable", query));
   }
 
   async function handleStartWorking() {

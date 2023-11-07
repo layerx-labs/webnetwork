@@ -35,7 +35,7 @@ export default function PaymentsNetwork({
   function redirectToNetwork(id = undefined) {
     const isBountyRedirect = !!id;
 
-    const path = isBountyRedirect ? "/bounty/[id]" : "/tasks";
+    const path = isBountyRedirect ? "/task/[id]" : "/tasks";
 
     push(getURLWithNetwork(path, {
       network: networkPayments?.name,

@@ -426,7 +426,7 @@ export default function CreateTaskPage({
         }
 
         if (createdBounty?.[savedIssue.id]) {
-          router.push(getURLWithNetwork("/bounty/[id]", {
+          router.push(getURLWithNetwork("/task/[id]", {
               chain: connectedChain?.shortName,
               network: currentNetwork?.name,
               id: savedIssue.id

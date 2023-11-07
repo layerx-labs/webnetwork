@@ -81,7 +81,7 @@ export default function IssueListItem({
 
   function handleClickCard() {
     if (xClick) return xClick();
-    router.push(getURLWithNetwork("/bounty/[id]", {
+    router.push(getURLWithNetwork("/task/[id]", {
       id: issue?.id,
       network: issue?.network?.name,
       chain: issue?.network?.chain?.chainShortName

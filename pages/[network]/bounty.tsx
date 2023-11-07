@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     return {
       redirect: {
-        destination: `${network?.chain?.chainShortName}/bounty/${id}`,
+        destination: `${network?.chain?.chainShortName}/task/${id}`,
         permanent: false,
       },
     };

@@ -27,7 +27,7 @@ import { getBountyData } from "x-hooks/api/bounty";
 import { getCommentsData } from "x-hooks/api/comments";
 import useReactQuery from "x-hooks/use-react-query";
 
-export default function PageIssue() {
+export default function TaskPage() {
   const { query } = useRouter();
 
   const { state } = useAppState();
