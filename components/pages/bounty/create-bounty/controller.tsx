@@ -375,7 +375,7 @@ export default function CreateBountyPage({
         });
 
       if (networkBounty?.error !== true) {
-        updateTx(parseTransaction( networkBounty, transactionToast as SimpleBlockTransactionPayload));
+        updateTx(parseTransaction(networkBounty, transactionToast as SimpleBlockTransactionPayload));
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
