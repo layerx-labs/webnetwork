@@ -85,7 +85,6 @@ export default function TransactionsList({onActiveTransactionChange}: Transactio
             </span>
           </div>
         </If>
-          {console.log('transactions',transactions)}
         {transactions.map(renderTransactionRow)}
       </div>
     </div>
