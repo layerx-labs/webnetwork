@@ -51,6 +51,8 @@
     "@taikai/scribal": "^1.0.3",
     "@tanstack/react-query": "^4.33.0",
     "@vlsergey/react-bootstrap-pagination": "^3.2.1",
+    "@web3-react/core": "^8.2.3",
+    "@web3-react/metamask": "^8.2.4",
     "abort-controller": "^3.0.0",
     "axios": "1.5.1",
     "bignumber.js": "9.1.0",
