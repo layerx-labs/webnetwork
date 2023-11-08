@@ -9,7 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 
 type UseDappkit = {
   setProvider(p: Provider): void,
-  initializeConnection(): void,
+  setConnection(connection: Web3Connection): void,
   disconnect(): void,
   provider: Provider | null,
   connection: Web3Connection | null
@@ -19,7 +19,7 @@ export const [metamaskWallet, hooks] = initializeConnector<MetaMask>((actions) =
 
 export const useDappkit = create<UseDappkit>((set, get) => ({
   setProvider: (provider: Provider) => set(() => ({provider, connection: null})),
-  initializeConnection: () => set(() => ({ connection: new Web3Connection({ web3CustomProvider: get().provider }) })),
+  setConnection: (connection: Web3Connection) => set(() => ({ connection })),
   disconnect: () => {
     if (!get().provider)
       return;
@@ -28,8 +28,8 @@ export const useDappkit = create<UseDappkit>((set, get) => ({
 
     set(() => ({connection: null, provider: null}))
   },
-  provider: metamaskWallet.provider as unknown as Provider,
-  connection: new Web3Connection({ web3CustomProvider: metamaskWallet.provider }),
+  provider: null,
+  connection: null,
 }));
 
 export const useDappkitConnection = () =>
