@@ -30,9 +30,8 @@ export default function useBepro() {
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
 
   const failTx = (err, tx, reject?) => {
-
     updateTx({
-      ...tx.payload[0],
+      ...tx,
       status: err?.message?.search("User denied") > -1 ? TransactionStatus.rejected : TransactionStatus.failed
     });
 
@@ -43,10 +42,10 @@ export default function useBepro() {
   async function handlerDisputeProposal(issueContractId: number,
                                         proposalContractId: number): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      const disputeTxAction = addTx([{
+      const disputeTxAction = addTx({
         type: TransactionTypes.dispute,
         network: state.Service?.network?.active,
-      }] as any);
+      });
 
       await state.Service?.active.disputeProposal(+issueContractId, +proposalContractId)
         .then((txInfo: TransactionReceipt) => {
