@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Web3Connection } from "@taikai/dappkit";
 import {isZeroAddress} from "ethereumjs-util";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
@@ -35,7 +36,7 @@ export function useDao() {
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
   const { handleAddNetwork } = useNetworkChange();
-  const { connection, setProvider, initializeConnection } = useDappkit();
+  const { connection, setProvider, setConnection } = useDappkit();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -56,26 +57,28 @@ export function useDao() {
 
       if (!metamaskWallet.provider) return null;
 
-      // setProvider(null)
-      // setProvider(metamaskWallet.provider as unknown as Provider);
-      // initializeConnection();
+      setProvider(null)
+      setProvider(metamaskWallet.provider as unknown as Provider);
+      const web3Connection = new Web3Connection({ 
+        web3CustomProvider: metamaskWallet.provider,
+        skipWindowAssignment: true
+      });
 
-      await connection.connect();
-
-      return state.Service?.web3Connection?.connect()
+      return web3Connection.connect()
         .then((connected) => {
+          setConnection(web3Connection);
           if (!connected) {
             console.debug(`Failed to connect`, state.Service);
 
             return "0x00";
           }
 
-          return state.Service?.web3Connection?.getAddress();
+          return web3Connection.getAddress();
         })
         .then(address => {
           if (address === "0x00") return null;
 
-          handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)))
+          handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)));
           return address;
         })
         .catch(error => {
@@ -115,7 +118,7 @@ export function useDao() {
 
     const withWeb3Host = !!daoService?.web3Host;
 
-    if (!withWeb3Host && chain_id !== +state.Service?.web3Connection?.web3?.currentProvider?.chainId ||
+    if (!withWeb3Host && chain_id !== +connection?.web3?.currentProvider?.chainId ||
         withWeb3Host && networkChain.chainRpc !== daoService?.web3Host)
       return;
 
@@ -192,7 +195,7 @@ export function useDao() {
       }
     }
 
-    const web3Connection = state.Service?.web3Connection;
+    const web3Connection = connection;
     const isConnected = !!web3Connection?.web3?.currentProvider?._state?.isConnected;
     const shouldUseWeb3Connection = +chainIdToConnect === +connectedChain.id && isConnected;
 
