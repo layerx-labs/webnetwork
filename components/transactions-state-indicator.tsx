@@ -11,8 +11,9 @@ import {useAppState} from "contexts/app-state";
 
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {Transaction} from "interfaces/transaction";
-import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
+
 import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
+import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 export default function TransactionsStateIndicator() {
   const {state: {currentUser, connectedChain: {id: connectedChainId}}} = useAppState();
@@ -22,7 +23,7 @@ export default function TransactionsStateIndicator() {
   const [activeTransaction, setActiveTransaction] = useState<Transaction | null>(null);
 
   const {loadFromStorage} = useStorageTransactions();
-  const {list: transactions} = transactionStore();
+  const {list: transactions, isPending} = transactionStore();
 
   function updateLoadingState() {
     if (!transactions.length) {
@@ -48,7 +49,7 @@ export default function TransactionsStateIndicator() {
     loadFromStorage();
   }
 
-  useEffect(updateLoadingState, [transactions]);
+  useEffect(updateLoadingState, [transactions, isPending]);
   useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChainId]);
 
   const overlay = (
