@@ -3,6 +3,7 @@ import {useState} from "react";
 import {GetServerSideProps} from "next";
 import {useTranslation} from "next-i18next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
+import type { provider as Provider } from "web3-core";
 
 import PageHero from "components/common/page-hero/view";
 import NetworksList from "components/networks-list";
@@ -13,6 +14,7 @@ import { Network } from "interfaces/network";
 import { HeroInfo } from "types/components";
 
 import { useGetHeaderNetworks, useSearchNetworks } from "x-hooks/api/marketplace";
+import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 
 interface price_used {
   [name: string]: number;
@@ -38,6 +40,21 @@ export default function NetworksPage({
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [convertedTokens,] = useState<ConvertedTokens>();
+
+  const { setProvider, initializeConnection } = useDappkit();
+
+  function connect (provider: Provider) {
+    setProvider(null)
+    setProvider(provider);
+    console.log("provider", provider)
+    initializeConnection();
+  }
+
+  async function test () {
+    await metamaskWallet.activate();
+    if (metamaskWallet.provider)
+      connect(metamaskWallet.provider as unknown as Provider);
+  }
 
   const infos: HeroInfo[] = [
     {
@@ -66,6 +83,7 @@ export default function NetworksPage({
         />
 
         <div className="mt-4">
+        <button onClick={test}>Test</button>
           <NetworksList networks={networks} />
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import {isZeroAddress} from "ethereumjs-util";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
+import type { provider as Provider } from "web3-core";
 import {isAddress} from "web3-utils";
 
 import {useAppState} from "contexts/app-state";
@@ -16,12 +17,12 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useChain from "x-hooks/use-chain";
-
-import { useDaoStore } from "./stores/dao/dao.store";
-import useMarketplace from "./use-marketplace";
-import useSupportedChain from "./use-supported-chain";
-
+import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
+import useMarketplace from "x-hooks/use-marketplace";
+import useNetworkChange from "x-hooks/use-network-change";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
   const [isLoadingChangingChain, setIsLoadingChangingChain] = useState(false);
@@ -33,6 +34,8 @@ export function useDao() {
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
+  const { handleAddNetwork } = useNetworkChange();
+  const { connection, setProvider, initializeConnection } = useDappkit();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -45,29 +48,47 @@ export function useDao() {
   /**
    * Enables the user/dapp to connect to the active DAOService
    */
-  function connect(): Promise<string | null> {
-    if (!state.Service?.web3Connection) return;
+  async function connect(): Promise<string | null> {
+    try {
+      dispatch(changeConnecting(true));
 
-    return state.Service?.web3Connection?.connect()
-      .then((connected) => {
-        if (!connected) {
-          console.debug(`Failed to connect`, state.Service);
+      await metamaskWallet.activate();
 
-          return "0x00";
-        }
+      if (!metamaskWallet.provider) return null;
 
-        return state.Service?.web3Connection?.getAddress();
-      })
-      .then(address => {
-        if (address === "0x00") return null;
+      // setProvider(null)
+      // setProvider(metamaskWallet.provider as unknown as Provider);
+      // initializeConnection();
 
-        handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)))
-        return address;
-      })
-      .catch(error => {
-        console.debug(`Failed to connect`, error);
-        return null;
-      })
+      await connection.connect();
+
+      return state.Service?.web3Connection?.connect()
+        .then((connected) => {
+          if (!connected) {
+            console.debug(`Failed to connect`, state.Service);
+
+            return "0x00";
+          }
+
+          return state.Service?.web3Connection?.getAddress();
+        })
+        .then(address => {
+          if (address === "0x00") return null;
+
+          handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)))
+          return address;
+        })
+        .catch(error => {
+          console.debug(`Failed to connect`, error);
+          return null;
+        })
+        .finally(() => {
+          dispatch(changeConnecting(false));
+        });
+    } catch(error) {
+      console.debug(`Failed to connect`, error);
+      return null;
+    }
   }
 
   /**
