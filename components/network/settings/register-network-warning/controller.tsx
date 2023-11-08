@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import InfoIconEmpty from "assets/icons/info-icon-empty";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 
 import { RegistryEvents } from "interfaces/enums/events";
 

@@ -155,9 +155,12 @@ export default async function get(query: ParsedUrlQuery) {
                     networkName === 'all' ? {} : (networkName || network) ? { 
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
-                    [getAssociation("chain", ["chainId", "chainShortName", "color"], true, chain ? {
-                      chainShortName: { [Op.iLike]: chain.toString()}
-                    } : {})]);
+                    [getAssociation("chain", 
+                                    ["chainId", "chainShortName", "color", "closeFeePercentage"], 
+                                    true, 
+                                    chain ? {
+                                      chainShortName: { [Op.iLike]: chain.toString()}
+                                    } : {})]);
 
   const transactionalTokenAssociation = 
     getAssociation( "transactionalToken", 
@@ -205,7 +208,9 @@ export default async function get(query: ParsedUrlQuery) {
   }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT))
     .then(result => {
       const rows = result.rows.map(issue => {
-        issue.dataValues.developerAmount = getDeveloperAmount(issue.network.mergeCreatorFeeShare,
+        const closeFee = issue.network.chain.closeFeePercentage;
+        issue.dataValues.developerAmount = getDeveloperAmount(closeFee,
+                                                              issue.network.mergeCreatorFeeShare,
                                                               issue.network.proposerFeeShare,
                                                               BigNumber(issue?.amount));
         return issue;

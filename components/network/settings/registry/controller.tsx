@@ -193,10 +193,13 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
     const wasChanged = parameter => changedFields.includes(parameter);
 
+    const feesBlocks = [];
+
     if (wasChanged("closeFeePercentage") || wasChanged("cancelFeePercentage")) {
       setExecutingTx("bountyFees");
 
       await handleFeeSettings(closeFeePercentage.value as number, cancelFeePercentage.value  as number)
+        .then(({ blockNumber }) => feesBlocks.push(blockNumber))
         .catch(error => console.debug("Failed to update bounty fees", error));
     }
 
@@ -204,6 +207,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
       setExecutingTx("creationFee");
 
       await handleFeeNetworkCreation(networkCreationFeePercentage.value as number)
+        .then(({ blockNumber }) => feesBlocks.push(blockNumber))
         .catch(error => console.debug("Failed to update creation amount", error));
     }
 
@@ -211,6 +215,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
       setExecutingTx("creationAmount");
 
       await handleAmountNetworkCreation(lockAmountForNetworkCreation.value as string)
+        .then(({ blockNumber }) => feesBlocks.push(blockNumber))
         .catch(error => console.debug("Failed to update creation amount", error));
     }
 
@@ -228,9 +233,16 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
       tokensBlocks.push(...(await handleTokensTransactions(allowedReward, false)));
     }
 
+    if (feesBlocks.length) {
+      const ordered = [...feesBlocks].sort();
+      await processEvent(RegistryEvents.ChangedFee, undefined, { 
+        fromBlock: ordered.shift(),
+        toBlock: ordered.pop()
+      });
+    }
+
     if (tokensBlocks.length) {
       const ordered = [...tokensBlocks].sort();
-
       await processEvent(RegistryEvents.ChangeAllowedTokens, undefined, { 
         fromBlock: ordered.shift(),
         toBlock: ordered.pop()

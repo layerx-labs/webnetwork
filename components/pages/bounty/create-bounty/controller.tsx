@@ -11,7 +11,6 @@ import {IFilesProps} from "components/drag-and-drop";
 import CreateBountyPageView from "components/pages/bounty/create-bounty/view";
 
 import {useAppState} from "contexts/app-state";
-import {toastError, toastWarning} from "contexts/reducers/change-toaster";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
@@ -32,8 +31,9 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import {useCreatePreBounty} from "x-hooks/api/bounty";
-import {useProcessEvent} from "x-hooks/api/events/use-process-event";
+import { useCreatePreBounty } from "x-hooks/api/bounty";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
@@ -99,6 +99,7 @@ export default function CreateBountyPage({
   const { getURLWithNetwork } = useNetwork();
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
+  const { addError, addWarning } = useToastStore();
   const {
     dispatch,
     state: { Settings, Service, currentUser, connectedChain, }
@@ -320,7 +321,7 @@ export default function CreateBountyPage({
       });
 
       if (!savedIssue) {
-        dispatch(toastError(t("bounty:errors.creating-bounty")))
+        addError(t("actions.failed"), t("bounty:errors.creating-bounty"));
         return;
       }
 
@@ -363,11 +364,11 @@ export default function CreateBountyPage({
           } as SimpleBlockTransactionPayload);
 
           if (e?.code === MetamaskErrors.ExceedAllowance)
-            dispatch(toastError(t("bounty:errors.exceeds-allowance")));
+            addError(t("actions.failed"), t("bounty:errors.exceeds-allowance"));
           else if (e?.code === MetamaskErrors.UserRejected)
-            dispatch(toastError(t("bounty:errors.bounty-canceled")));
+            addError(t("actions.failed"), t("bounty:errors.bounty-canceled"));
           else
-            dispatch(toastError(e.message || t("bounty:errors.creating-bounty")));
+            addError(t("actions.failed"), e.message || t("bounty:errors.creating-bounty"));
 
           console.debug(e);
 
@@ -382,7 +383,7 @@ export default function CreateBountyPage({
         }, currentNetwork?.name);
 
         if (!createdBounty) {
-          dispatch(toastWarning(t("bounty:errors.sync")));
+          addWarning(t("actions.warning"), t("bounty:errors.sync"));
         }
 
         if (createdBounty?.[savedIssue.id]) {

@@ -1,5 +1,4 @@
 import {useAppState} from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
@@ -7,15 +6,17 @@ import {messageFor} from "helpers/message-for";
 import { ethereumMessageService } from "services/ethereum/message";
 import { siweMessageService } from "services/ethereum/siwe";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+
 export default function useSignature() {
   const {
-    dispatch, 
     state: {
       connectedChain, 
       Service, 
       currentUser
     }
   } = useAppState();
+  const { addError } = useToastStore();
 
   async function signMessage(message = ""): Promise<string> {
     if ((!Service?.web3Connection && !window.ethereum) || !currentUser?.walletAddress)
@@ -29,13 +30,7 @@ export default function useSignature() {
     return ethereumMessageService.sendMessage(Service?.web3Connection, currentUser.walletAddress, typedMessage)
       .catch(error => {
         console.debug("Failed to sign message", error?.toString());
-
-        dispatch(addToast({
-          type: "danger",
-          title: "Failed",
-          content: "Signed message required to proceed",
-        }));
-
+        addError("Failed", "Signed message required to proceed");
         return null;
       });
   }

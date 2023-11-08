@@ -119,7 +119,7 @@ export async function post(req: NextApiRequest) {
     DAOService?.getProposerFee()
   ]);
 
-  const distributions = calculateDistributedAmounts(treasuryInfo,
+  const distributions = calculateDistributedAmounts(treasuryInfo.closeFee,
                                                     creatorFee,
                                                     proposerFee,
                                                     BigNumber(networkBounty.tokenAmount),

@@ -106,13 +106,15 @@ export function useDao() {
         .then(started => {
           if (!started) {
             console.error("Failed to load network", networkAddress);
-            return;
+            return false;
           }
-          listenChainChanged()
+          listenChainChanged();
           console.debug("Network started");
+          return true;
         })
         .catch(error => {
           console.error("Error loading network", error);
+          return false;
         })
         .finally(() => {
           dispatch(changeStarting(false));
@@ -186,7 +188,7 @@ export function useDao() {
       return;
     }
 
-    // console.debug("Starting DAOService");
+    console.debug("Starting DAOService");
 
     const { chainRpc: web3Host, registryAddress: _registry } = chainToConnect;
 
@@ -206,7 +208,7 @@ export function useDao() {
       await daoService.loadRegistry()
         .catch(error => console.debug("Failed to load registry", error));
 
-    //console.debug("DAOService started", daoProps);
+    console.debug("DAOService started", daoProps);
 
     window.DAOService = daoService;
 

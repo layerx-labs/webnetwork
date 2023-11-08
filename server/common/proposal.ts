@@ -44,7 +44,7 @@ export default async function get(query: ParsedUrlQuery) {
       getAssociation("network", ["mergeCreatorFeeShare", "proposerFeeShare"], true, {
         name: caseInsensitiveEqual("network.name", network?.toString())
       }, [
-        getAssociation("chain", [], true, {
+        getAssociation("chain", ["closeFeePercentage"], true, {
           chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain?.toString())
         })
       ]),
@@ -54,9 +54,11 @@ export default async function get(query: ParsedUrlQuery) {
   if (!proposal)
     throw new HttpNotFoundError("Proposal not found");
 
+  const closeFee = proposal.network.chain.closeFeePercentage;
   const mergeCreatorFeeShare = proposal.network.mergeCreatorFeeShare;
   const proposerFeeShare = proposal.network.proposerFeeShare;
-  proposal.dataValues.issue.dataValues.developerAmount = getDeveloperAmount(mergeCreatorFeeShare,
+  proposal.dataValues.issue.dataValues.developerAmount = getDeveloperAmount(closeFee,
+                                                                            mergeCreatorFeeShare,
                                                                             proposerFeeShare,
                                                                             BigNumber(proposal.issue.amount));
 

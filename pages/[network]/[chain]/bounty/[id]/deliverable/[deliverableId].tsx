@@ -6,13 +6,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import DeliverableBody from "components/deliverable/body/controller";
 import CreateReviewModal from "components/deliverable/create-review-modal/controller";
 import DeliverableHero from "components/deliverable/hero/controller";
 
 import { useAppState } from "contexts/app-state";
-import { addToast } from "contexts/reducers/change-toaster";
 
 import { deliverableParser, issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
@@ -21,6 +20,7 @@ import { getReactQueryClient } from "services/react-query";
 
 import { CreateComment } from "x-hooks/api/comments";
 import { getDeliverable } from "x-hooks/api/deliverable";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function DeliverablePage() {
@@ -32,7 +32,8 @@ export default function DeliverablePage() {
   const [showModal, setShowModal] = useState(!!review);
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
+  const { addError, addSuccess } = useToastStore();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
   
@@ -51,19 +52,11 @@ export default function DeliverablePage() {
       deliverableId: currentDeliverable.id,
       comment: body
     }).then(() => {
-      dispatch(addToast({
-        type: "success",
-        title: t("actions.success"),
-        content: t("deliverable:actions.review.success"),
-      }));
+      addSuccess(t("actions.success"), t("deliverable:actions.review.success"));
       invalidateDeliverable();
       setShowModal(false)
     }).catch(() => {
-      dispatch(addToast({
-        type: "danger",
-        title: t("actions.failed"),
-        content: t("deliverable:actions.review.error"),
-      }));
+      addError(t("actions.failed"), t("deliverable:actions.review.error"));
     })
     .finally(() => {
       setIsCreatingReview(false);

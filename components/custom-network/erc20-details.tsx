@@ -4,15 +4,15 @@ import {Col, Row} from "react-bootstrap";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import {FormGroup} from "components/form-group";
 
 import {useAppState} from "contexts/app-state";
-import {toastError, toastSuccess} from "contexts/reducers/change-toaster";
 
 import { DAPPKIT_LINK } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useERC20 from "x-hooks/use-erc20";
 
 interface ERC20DetailsProps {
@@ -44,7 +44,8 @@ export function ERC20Details({
   const [tokenTotalSupply, setTokenTotalSupply] = useState("");
 
   const erc20 = useERC20();
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
+  const { addError, addSuccess } = useToastStore();
 
   const isDeployer = !!deployer;
 
@@ -82,15 +83,15 @@ export function ERC20Details({
       .then(({ contractAddress }) => {
         erc20.setAddress(contractAddress);
         setTokenAddress(contractAddress);
-        dispatch(toastSuccess(t("custom-network:steps.token-configuration.messages.token-deployed.content"), 
-                              t("custom-network:steps.token-configuration.messages.token-deployed.title")));
+        addSuccess( t("custom-network:steps.token-configuration.messages.token-deployed.title"),
+                    t("custom-network:steps.token-configuration.messages.token-deployed.content"));
       })
       .catch(txError => {
         console.debug(txError.message);
 
         if (txError.message.includes("value out-of-bounds"))
-          dispatch(toastError(t("custom-network:steps.token-configuration.errors.deploy.content"), 
-                              t("custom-network:steps.token-configuration.errors.deploy.title")));
+          addError( t("custom-network:steps.token-configuration.errors.deploy.title"),
+                    t("custom-network:steps.token-configuration.errors.deploy.content"));
       })
       .finally(() => setIsDeploying(false));
   }

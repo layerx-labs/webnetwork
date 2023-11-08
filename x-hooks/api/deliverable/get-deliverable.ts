@@ -8,5 +8,5 @@ import { api } from "services/api";
  * @returns get deliverable
  */
 export async function getDeliverable(id: number): Promise<Deliverable> {
-  return api.get(`/deliverable/${id}`).then(({data}) => data)
+  return api.get(`/deliverable/${id}`).then(({data}) => data);
 }

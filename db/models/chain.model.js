@@ -68,7 +68,20 @@ class Chain extends Model {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE
-      }
+      },
+      lockAmountForNetworkCreation: {
+        type: DataTypes.STRING
+      },
+      networkCreationFeePercentage: {
+        type: DataTypes.FLOAT
+      },
+      closeFeePercentage: {
+        type: DataTypes.FLOAT
+      },
+      cancelFeePercentage: {
+        type: DataTypes.FLOAT
+      },
+
     }, {sequelize: sqlz, modelName: 'chain', tableName: 'chains'})
   };
 

@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import ConnectWalletButton from "components/connect-wallet-button";
+import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {ContextualSpan} from "components/contextual-span";
 import CreatingNetworkLoader from "components/creating-network-loader";
 import LockBeproStep from "components/custom-network/lock-bepro-step";
@@ -14,13 +14,11 @@ import NetworkInformationStep from "components/custom-network/network-informatio
 import NetworkSettingsStep from "components/custom-network/network-settings-step";
 import TokenConfiguration from "components/custom-network/token-configuration";
 import If from "components/If";
-import ChainSelector from "components/navigation/chain-selector/controller";
 import Stepper from "components/stepper";
 
 import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 import {changeLoadState} from "contexts/reducers/change-load";
-import {addToast} from "contexts/reducers/change-toaster";
 
 import {
   DEFAULT_CANCELABLE_TIME,
@@ -40,6 +38,7 @@ import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/network";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
@@ -54,12 +53,18 @@ function NewNetwork() {
   const [hasNetwork, setHasNetwork] = useState(false);
   const [creatingNetwork, setCreatingNetwork] = useState<number>(-1);
 
+  const { addError } = useToastStore();
   const { signMessage } = useSignature();
   const { state, dispatch } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
   const { processEvent } = useProcessEvent();
-  const { handleDeployNetworkV2, handleAddNetworkToRegistry, handleChangeNetworkParameter } = useBepro();
+  const {
+    handleDeployNetworkV2,
+    handleAddNetworkToRegistry,
+    handleChangeNetworkParameter,
+    getNetworkAdressByCreator,
+  } = useBepro();
   const { tokensLocked, details, tokens, settings, isSettingsValidated, cleanStorage } = useNetworkSettings();
   const { mutateAsync: createNetwork } = useReactQueryMutation({
     mutationFn: useCreateNetwork
@@ -117,11 +122,7 @@ function NewNetwork() {
       .catch(error => {
         console.debug("useCreateNetwork", error);
         setCreatingNetwork(-1);
-        dispatch(addToast({
-            type: "danger",
-            title: t("actions.failed"),
-            content: t("custom-network:errors.something-went-wrong"),
-        }));
+        addError(t("actions.failed"), t("custom-network:errors.something-went-wrong"));
         return false;
       });
 
@@ -223,12 +224,8 @@ function NewNetwork() {
       })
       .catch((error) => {
         checkHasNetwork();
-        dispatch(addToast({
-            type: "danger",
-            title: t("actions.failed"),
-            content: t("custom-network:errors.failed-to-create-network", {
-              error,
-            }),
+        addError(t("actions.failed"), t("custom-network:errors.failed-to-create-network", {
+          error,
         }));
 
         setCreatingNetwork(-1);
@@ -239,7 +236,7 @@ function NewNetwork() {
   function checkHasNetwork() {
     dispatch(changeLoadState(true));
 
-    state.Service?.active.getNetworkAdressByCreator(state.currentUser.walletAddress)
+    getNetworkAdressByCreator(state.currentUser.walletAddress)
       .then(networkAddress => setHasNetwork(!isZeroAddress(networkAddress)))
       .catch(console.debug)
       .finally(() => dispatch(changeLoadState(false)));

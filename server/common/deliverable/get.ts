@@ -21,7 +21,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
           },
           {
             association: "network",
-            include: [{ association: "chain", attributes: ["chainShortName"] }],
+            include: [{ association: "chain", attributes: ["chainShortName", "closeFeePercentage"] }],
           },
         ],
       },
@@ -36,8 +36,11 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       include,
     });
 
+    const closeFee = deliverable.issue.network.chain.closeFeePercentage;
+
     deliverable.dataValues.issue.dataValues.developerAmount = 
-      getDeveloperAmount( deliverable.issue.network.mergeCreatorFeeShare,
+      getDeveloperAmount( closeFee,
+                          deliverable.issue.network.mergeCreatorFeeShare,
                           deliverable.issue.network.proposerFeeShare,
                           BigNumber(deliverable.issue.amount));
 

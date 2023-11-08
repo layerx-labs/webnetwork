@@ -1,5 +1,7 @@
 import { ParsedUrlQuery } from "querystring";
 
+import { emptyNetworkOverview } from "helpers/api";
+
 import { api } from "services/api";
 
 import { NetworkOverviewData } from "types/api";
@@ -12,5 +14,6 @@ import { NetworkOverviewData } from "types/api";
 export default async function getNetworkOverviewData(query: ParsedUrlQuery) {
   return api.get<NetworkOverviewData>("/overview/network", {
     params: query
-  });
+  }).then(({ data }) => data)
+    .catch(() => emptyNetworkOverview);
 }

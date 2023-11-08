@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import NetworkParameterInput from "components/custom-network/network-parameter-input";
@@ -10,16 +9,19 @@ import { SMALL_TOKEN_SYMBOL_LENGTH } from "helpers/constants";
 import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber";
 import { NETWORK_LIMITS } from "helpers/network";
 
+import { useNetwork } from "x-hooks/use-network";
+
 export default function NetworkContractSettings() {
   const { t } = useTranslation(["common", "custom-network"]);
 
   const { state } = useAppState();
+  const { getTotalNetworkToken } = useNetwork();
+  const { data: totalNetworkToken } = getTotalNetworkToken();
   const { fields, settings } = useNetworkSettings();
 
   const onChange = (label) => (value) => fields.parameter.setter({label, value});
 
   const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
-  const totalNetworkToken = BigNumber(state.Service?.network?.amounts?.totalNetworkToken);
 
   const formatOptions = { maximumFractionDigits: 0 };
 
@@ -87,9 +89,9 @@ export default function NetworkContractSettings() {
       error: settings?.parameters?.oracleExchangeRate?.validated === false,
       decimals: 0,
       onChange: onChange("oracleExchangeRate"),
-      disabled: totalNetworkToken.gt(0),
-      helperText: totalNetworkToken.gt(0) ? t("custom-network:oracle-exchange-rate.unable-to-change", {
-        amount: formatNumberToNScale(totalNetworkToken.toFixed()),
+      disabled: totalNetworkToken?.gt(0),
+      helperText: totalNetworkToken?.gt(0) ? t("custom-network:oracle-exchange-rate.unable-to-change", {
+        amount: formatNumberToNScale(totalNetworkToken?.toFixed() || 0),
         symbol:
           networkTokenSymbol?.length > SMALL_TOKEN_SYMBOL_LENGTH
             ? `${networkTokenSymbol.slice(0, SMALL_TOKEN_SYMBOL_LENGTH)}...`

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { NumberFormatValues } from "react-number-format";
 
-import { Defaults } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
 
 import calculateDistributedAmounts, { calculateTotalAmountFromGivenReward } from "helpers/calculateDistributedAmounts";
 
@@ -16,6 +14,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 import { DistributionsProps } from "interfaces/proposal";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
@@ -40,19 +39,19 @@ export default function UpdateBountyAmountModal({
   updateBountyData,
 }: UpdateBountyAmountModalProps) {
   const { t } = useTranslation(["common", "bounty"]);
+
+  const [inputError, setInputError] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
+  const [distributions, setDistributions] = useState<DistributionsProps>();
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [issueAmount, updateIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
-  const [distributions, setDistributions] = useState<DistributionsProps>();
-  const [inputError, setInputError] = useState("");
 
   const {
-    state: { currentUser, Service },
-    dispatch,
+    state: { currentUser, Service }
   } = useAppState();
-
-  const { processEvent } = useProcessEvent();
+  const { addError } = useToastStore();
   const transactionalERC20 = useERC20();
+  const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
 
   const currentToken = {
@@ -97,7 +96,7 @@ export default function UpdateBountyAmountModal({
         return transactionalERC20.updateAllowanceAndBalance();
       })
       .catch((error) => {
-        dispatch(toastError(error.toString(), `Failed to approve`));
+        addError("Failed to approve", error.toString());
       })
       .finally(() => {
         setIsExecuting(false);
@@ -134,18 +133,10 @@ export default function UpdateBountyAmountModal({
 
 
   function handleDistributions(value, type) {
-    if (!Service?.network?.amounts) return;
-    if (!value) {
-      setDistributions(undefined);
-      if (type === "reward")
-        updateIssueAmount(ZeroNumberFormatValues);
-      else
-        setRewardAmount(ZeroNumberFormatValues);
-      return;
-    }
+    if (!value || !Service?.network?.active) return;
 
-    const { treasury, mergeCreatorFeeShare, proposerFeeShare } = Service.network.amounts;
-    const networkFee = treasury.treasury !== Defaults.nativeZeroAddress ? treasury.closeFee : 0;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
+    const networkFee = chain.closeFeePercentage;
     const amountOfType =
       BigNumber(type === "reward"
         ? calculateTotalAmountFromGivenReward(value, 
@@ -154,7 +145,7 @@ export default function UpdateBountyAmountModal({
                                               +proposerFeeShare/100)
         : value);
 
-    const initialDistributions = calculateDistributedAmounts( treasury,
+    const initialDistributions = calculateDistributedAmounts( chain.closeFeePercentage,
                                                               mergeCreatorFeeShare,
                                                               proposerFeeShare,
                                                               amountOfType,

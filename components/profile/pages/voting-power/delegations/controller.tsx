@@ -38,7 +38,7 @@ export default function Delegations({
     .toFixed();
 
   const votesSymbol = t("token-votes", {
-    token: state.Service?.network?.active?.networkToken.symbol,
+    token: state.Service?.network?.active?.networkToken?.symbol,
   });
 
   const renderInfo = {

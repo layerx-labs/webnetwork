@@ -14,4 +14,5 @@ export const QueryKeys = {
   tokensOf: (wallet: string) => ["tokens", wallet],
   votingPowerOf: (wallet: string) => ["voting-power-multi", wallet],
   votingPowerMultiOf: (wallet: string) => ["voting-power-multi", wallet],
+  totalNetworkToken: (chain: string, network: string) => ["totalNetworkToken", chain, network],
 };

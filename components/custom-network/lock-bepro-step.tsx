@@ -7,7 +7,7 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import AmountWithPreview from "components/custom-network/amount-with-preview";
 import InputNumber from "components/input-number";
 import Step from "components/step";
@@ -31,6 +31,7 @@ import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
+import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 import {transactionStore} from "../../x-hooks/stores/transaction-list/transaction.store";
 
@@ -48,6 +49,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state } = useAppState();
+  const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
@@ -105,14 +107,14 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
     setIsLocking(true);
 
-    state.Service?.active.lockInRegistry(amount.toFixed())
+    lockInRegistry(amount.toFixed())
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
         updateTx(parseTransaction(tx, lockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance()
-        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -133,14 +135,14 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
     setIsUnlocking(true);
 
-    state.Service?.active.unlockFromRegistry()
+    unlockFromRegistry()
       .then((tx) => {
         updateWalletBalance();
         registryToken.updateAllowanceAndBalance();
         setAmount(BigNumber(0));
         updateTx(parseTransaction(tx, unlockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance();
-        return processEvent(RegistryEvents.LockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -182,7 +184,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
     setIsApproving(true);
 
-    state.Service?.active.approveTokenInRegistry(amount?.toFixed())
+    approveTokenInRegistry(amount?.toFixed())
       .then((tx) => {
         registryToken.updateAllowanceAndBalance();
         updateTx(parseTransaction(tx, approveTxAction as SimpleBlockTransactionPayload));

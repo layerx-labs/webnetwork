@@ -6,7 +6,6 @@ import {changeNetwork, changeServiceProp} from "contexts/reducers/change-service
 import {changeSettings,} from "contexts/reducers/change-settings";
 import {changeSpinners} from "contexts/reducers/change-spinners";
 import {changeSupportedChains} from "contexts/reducers/change-supported-chains";
-import {changeToaster} from "contexts/reducers/change-toaster";
 import {addReducer} from "contexts/reducers/main";
 import {changeShowProp} from "contexts/reducers/update-show-prop";
 
@@ -20,7 +19,6 @@ export default function loadApplicationStateReducers() {
     changeLoad,
     changeCurrentUser,
     changeChain,
-    changeToaster,
     changeShowProp,
     changeServiceProp,
     changeNetwork,
@@ -29,11 +27,6 @@ export default function loadApplicationStateReducers() {
     changeSettings,
     changeSupportedChains
   ].forEach(addReducer);
-
-  // console.debug(`Loaded State Reducers`);
-  // console.table(Actions
-  //     .map(({id, stateKey}) => ({id, stateKey}))
-  //     .reduce((p, c) => ({...p, [c.id]: c.stateKey}), {}));
 
   loaded = true;
 }

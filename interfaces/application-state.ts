@@ -1,6 +1,5 @@
 import {Dispatch} from "react";
-
-import {TreasuryInfo, Web3Connection} from "@taikai/dappkit";
+import {Web3Connection} from "@taikai/dappkit";
 
 import {Spinners} from "contexts/reducers/change-spinners";
 import {XReducerAction} from "contexts/reducers/reducer";
@@ -12,33 +11,15 @@ import {kycSession} from "interfaces/kyc-session";
 import {LoadingState} from "interfaces/loading-state";
 import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
-import {ToastNotification} from "interfaces/toast-notification";
 import {Token} from "interfaces/token";
 
 import DAO from "services/dao-service";
 
 import {SettingsType, Tier} from "types/settings";
 
-export interface NetworkTimes {
-  disputableTime: string|number;
-  draftTime: string|number;
-}
-
-export interface NetworkAmounts {
-  councilAmount: string | number;
-  mergeCreatorFeeShare: string | number;
-  proposerFeeShare: string | number;
-  percentageNeededForDispute: string | number;
-  oracleExchangeRate: string | number;
-  treasury: TreasuryInfo;
-  totalNetworkToken: string | number;
-}
-
 export interface ServiceNetwork {
   lastVisited: string;
   active: Network | null;
-  times: NetworkTimes;
-  amounts: NetworkAmounts;
   noDefaultNetwork?: boolean;
   availableChains?: SupportedChainData[];
   tokens: {transactional: Token[]; reward: Token[];} | null;
@@ -88,7 +69,6 @@ export interface State {
   Settings: SettingsType | null;
   Service: ServiceState | null,
   loading: LoadingState | null;
-  toaster: ToastNotification[];
   currentUser: CurrentUserState | null,
   connectedChain: ConnectedChain | null,
   currentBounty: CurrentBounty | null,
