@@ -12,10 +12,9 @@ import {formatNumberToNScale, formatStringToCurrency} from "helpers/formatNumber
 
 import {Transaction} from "interfaces/transaction";
 
-import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
-
-import TokenSymbolView from "./common/token-symbol/view";
 import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
+import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
+import TokenSymbolView from "./common/token-symbol/view";
 import If from "./If";
 
 interface TransactionListProps {
@@ -49,14 +48,13 @@ export default function TransactionsList({onActiveTransactionChange}: Transactio
           <div className="ms-3 me-auto">
             <TransactionType type={item.type}/>
 
-            <If condition={item.amount > 0}>
+            <If condition={(item as { amount: number })?.amount > 0 || (item?.amount && item?.amount !== '0')}>
               <span className="d-flex caption-medium text-gray text-uppercase">
                 {formatStringToCurrency(amount)} <TokenSymbolView name={item.currency} className="ms-1"/>
               </span>
             </If>
 
           </div>
-
           <TransactionStats status={item.status}/>
         </div>
       </div>
@@ -87,7 +85,7 @@ export default function TransactionsList({onActiveTransactionChange}: Transactio
             </span>
           </div>
         </If>
-
+          {console.log('transactions',transactions)}
         {transactions.map(renderTransactionRow)}
       </div>
     </div>
