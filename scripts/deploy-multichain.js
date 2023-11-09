@@ -207,7 +207,7 @@ async function main(option = 0) {
 
       const linkScan = explorers?.length ? explorers[0].url : chainScan;
       const blockScanner = linkScan.indexOf("https://") == 0 ? linkScan : `https://bepro.network/`
-      const eventsApi = isXNetwork || isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
+      const eventsApi = isXNetwork && !isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
 
       await ChainModel.findOrCreate({
         where: {
