@@ -22,7 +22,7 @@ export default function ConnectWalletButton({
 
   async function handleLogin()  {
     if(!window?.ethereum) {
-      dispatch(changeShowWeb3(true))
+      dispatch(changeShowWeb3(true));
       return;
     }
 
@@ -48,7 +48,6 @@ export default function ConnectWalletButton({
       asModal={asModal}
       isLoading={state?.loading?.isLoading || serviceStarting}
       isModalVisible={showModal}
-      hasWeb3Connection={!!state.Service?.web3Connection}
       isConnected={!!state.currentUser?.walletAddress}
       buttonColor={btnColor}
       onConnectClick={handleLogin}
