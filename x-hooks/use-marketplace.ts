@@ -91,7 +91,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     if (isFetching || isError || isStale) return;
     const marketplaces = !!marketplace && !chain ? 
       searchData.rows : searchData.rows.filter(network => lowerCaseCompare(network.chain?.chainShortName, chain));
-    if (!searchData.count || !marketplaces) {
+    if (!searchData.count || !marketplaces?.length) {
       clear();
       if (!!marketplace || !!chain) push("/marketplaces");
       return;
