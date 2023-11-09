@@ -59,7 +59,7 @@ export default function OraclesDelegate({
     if (addressError) setAddressError("");
     setDelegatedTo(params.target.value);
 
-    if (daoService?.web3Connection && params.target.value) {
+    if (params.target.value) {
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {
