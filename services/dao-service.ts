@@ -11,8 +11,10 @@ import {
 } from "@taikai/dappkit";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import BigNumber from "bignumber.js";
+import {isZeroAddress} from "ethereumjs-util";
 import {PromiEvent, provider as Provider, TransactionReceipt as TransactionReceiptWeb3Core} from "web3-core";
 import {Contract} from "web3-eth-contract";
+import {isAddress as web3isAddress} from "web3-utils";
 
 import {BountyExtended} from "interfaces/bounty";
 import {OraclesResumeExtended} from "interfaces/oracles-state";
@@ -707,7 +709,7 @@ export default class DAO {
   }
 
   isAddress(address: string): boolean {
-    return this.web3Connection.utils.isAddress(address);
+    return web3isAddress(address) && !isZeroAddress(address);
   }
 
   async getTimeChain(): Promise<number> { 
