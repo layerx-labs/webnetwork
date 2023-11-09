@@ -30,7 +30,6 @@ export interface ServiceNetwork {
 export interface ServiceState {
   starting: boolean;
   microReady: boolean | null;
-  active: DAO | null;
   network: ServiceNetwork | null;
   web3Connection: Web3Connection
 }

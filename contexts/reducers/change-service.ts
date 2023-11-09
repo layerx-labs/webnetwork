@@ -9,7 +9,6 @@ import {
 } from "../../interfaces/application-state";
 import {AppStateReduceId} from "../../interfaces/enums/app-state-reduce-id";
 import {Network} from "../../interfaces/network";
-import DAO from "../../services/dao-service";
 import {SimpleAction} from "./reducer";
 
 export class ChangeServiceProp<T = ServiceState | Partial<ServiceState>, A = keyof ServiceState>
@@ -40,8 +39,6 @@ export const changeServiceProp = new ChangeServiceProp();
 export const changeNetwork = new ChangeServiceNetworkProp();
 
 export const changeStarting = (starting: boolean) => changeServiceProp.update(starting as any, 'starting');
-
-export const changeActiveDAO = (active: DAO) => changeServiceProp.update(active, 'active');
 
 export const changeNetworkLastVisited = (lastVisited: string) => changeNetwork.update({lastVisited});
 
