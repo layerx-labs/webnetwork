@@ -36,7 +36,7 @@ export function useDao() {
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
   const { handleAddNetwork } = useNetworkChange();
-  const { connection, setProvider, setConnection } = useDappkit();
+  const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -44,6 +44,10 @@ export function useDao() {
 
   function isServiceReady() {
     return !serviceStarting && !isLoadingChangingChain;
+  }
+
+  function disconnect () {
+    return dappkitDisconnect();
   }
 
   /**
@@ -261,6 +265,7 @@ export function useDao() {
   return {
     changeNetwork,
     connect,
+    disconnect,
     start,
     isServiceReady,
     listenChainChanged
