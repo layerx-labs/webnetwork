@@ -268,7 +268,7 @@ async function main(option = 0) {
 
       const paymentToken = await saveToken(payment);
       const governanceToken = await saveToken(governance);
-      const rewardToken = await saveToken(reward);
+      const rewardToken = reward?.address ?await saveToken(reward) : null;
 
       if(!NEXT_PUBLIC_DEFAULT_NETWORK_NAME) return;
 
@@ -323,7 +323,8 @@ async function main(option = 0) {
 
       await saveNetworkTokensRelation(paymentToken, payment.isTransactional, payment.isReward);
       await saveNetworkTokensRelation(governanceToken, governance.isTransactional, governance.isReward);
-      await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
+      if (rewardToken)
+        await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
     } catch (error) {
       console.debug("Failed to save default network", error);
     }
