@@ -74,7 +74,7 @@ export default function BountiesList({
   }
 
   function handleNotFoundClick() {
-    if (!redirect) return router.push('/create-bounty');
+    if (!redirect) return router.push('/create-task');
 
     router.push(redirect);
   }

@@ -12,7 +12,7 @@ import { Network } from "interfaces/network";
 
 import { HeroInfo } from "types/components";
 
-import { useGetHeaderNetworks, useSearchNetworks } from "x-hooks/api/network";
+import { useGetHeaderNetworks, useSearchNetworks } from "x-hooks/api/marketplace";
 
 interface price_used {
   [name: string]: number;

@@ -421,9 +421,9 @@ paths:
           description: Failed to upload to IPFS
         400:
           description: No Files
-  /issue/:
+  /task/:
     post:
-      description: Create new Bounty on the database
+      description: Create new Task on the database
       requestBody:
         content:
           application/json:
@@ -432,7 +432,7 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Bounty title
+                  description: Task title
                 body:
                   type: string
                   description: Markdown body of bounty
@@ -478,7 +478,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bounty'
-  /issue/working:
+  /task/working:
     put:
       description: Change working state on database
       requestBody:
@@ -521,9 +521,9 @@ paths:
                     $ref: '#/components/schemas/Date'
                   author:
                     type: string
-  /issue/{id}/{networkName}/{chainName}/:
+  /task/{id}/{networkName}/{chainName}/:
     get:
-      description: Retrieve single issue from database
+      description: Retrieve single task from database
       parameters:
         - in: path
           name: id

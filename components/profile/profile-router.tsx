@@ -2,12 +2,12 @@ import { useEffect } from "react";
 
 import { useRouter } from "next/router";
 
-import MyNetworkPage from "components/pages/profile/my-network/controller";
+import MyMarketplacePage from "components/pages/profile/my-marketplace/controller";
 import PaymentsPage from "components/pages/profile/payments/controller";
-import BountiesPage from "components/profile/pages/bounties";
 import DeliverablesPage from "components/profile/pages/deliverables";
 import ProfilePage from "components/profile/pages/profile-page/controller";
 import ProposalsPage from "components/profile/pages/proposals";
+import TasksPage from "components/profile/pages/tasks";
 import VotingPowerPage from "components/profile/pages/voting-power/controller";
 import WalletPage from "components/profile/pages/wallet/view";
 
@@ -23,10 +23,10 @@ export default function ProfileRouter(props: ProfilePageProps) {
     Route("/profile/wallet", WalletPage),
     Route("/profile/voting-power", VotingPowerPage),
     Route("/profile/payments", PaymentsPage),
-    Route("/profile/bounties", BountiesPage),
+    Route("/profile/tasks", TasksPage),
     Route("/profile/deliverables", DeliverablesPage),
     Route("/profile/proposals", ProposalsPage),
-    Route("/profile/my-network", MyNetworkPage),
+    Route("/profile/my-marketplace", MyMarketplacePage),
   ];
 
   const currentRoute = routes.find(({ path }) => asPath.split("?")[0].endsWith(path));

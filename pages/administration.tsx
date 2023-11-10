@@ -10,7 +10,7 @@ import Stepper from "components/stepper";
 
 import {Network} from "interfaces/network";
 
-import { useSearchNetworks } from "x-hooks/api/network";
+import { useSearchNetworks } from "x-hooks/api/marketplace";
 
 import {useAppState} from "../contexts/app-state";
 
@@ -28,7 +28,7 @@ export default function AdministrationPage() {
     if (!state.Service?.network?.active) return;
 
     if (!state.Service?.network?.active?.isGovernor)
-      router.push("/networks");
+      router.push("/marketplaces");
     else
       useSearchNetworks({})
         .then(({ count, rows }) => {

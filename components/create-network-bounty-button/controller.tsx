@@ -25,8 +25,8 @@ export default function CreateNetworkBountyButton({
   }
 
   const actions = [
-    { label: t("misc.bounty"), onClick: onClick("/create-bounty") },
-    { label: t("misc.network"), onClick: onClick("/new-network") },
+    { label: t("misc.bounty"), onClick: onClick("/create-task") },
+    { label: t("misc.network"), onClick: onClick("/new-marketplace") },
   ];
 
   return <CreateNetworkBountyButtonView
