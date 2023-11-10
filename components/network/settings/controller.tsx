@@ -21,6 +21,7 @@ import {Network} from "interfaces/network";
 import {SearchBountiesPaginated} from "types/api";
 
 import { useUpdateNetwork } from "x-hooks/api/network";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
@@ -55,6 +56,7 @@ export default function MyNetworkSettings({
   const { colorsToCSS } = useNetworkTheme();
   const { updateActiveNetwork } = useNetwork();
   const { details, settings, forcedNetwork } = useNetworkSettings();
+  const { service: daoService } = useDaoStore();
 
   const chainId = state.connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
@@ -74,7 +76,7 @@ export default function MyNetworkSettings({
   async function handleSubmit() {
     if (
       !state.currentUser?.walletAddress ||
-      !state.Service?.active ||
+      !daoService ||
       !forcedNetwork ||
       forcedNetwork?.isClosed ||
       errorBigImages
@@ -123,13 +125,13 @@ export default function MyNetworkSettings({
   }, [details?.fullLogo, details?.iconLogo]);
 
   useEffect(() => {
-    if (!state.Service?.active?.registry?.contractAddress ||
+    if (!daoService?.registry?.contractAddress ||
         !state.currentUser?.walletAddress ||
         !state.connectedChain?.id) return;
 
     isRegistryGovernor(state.currentUser?.walletAddress)
       .then(setIsGovernorRegistry);
-  }, [state.currentUser?.walletAddress, state.Service?.active?.registry?.contractAddress, state.connectedChain?.id]);
+  }, [state.currentUser?.walletAddress, daoService?.registry?.contractAddress, state.connectedChain?.id]);
 
   useEffect(() => {
     if(!network) return;

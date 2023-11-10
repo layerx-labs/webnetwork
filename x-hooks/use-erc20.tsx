@@ -16,6 +16,8 @@ import { SimpleBlockTransactionPayload } from "interfaces/transaction";
 
 import useBepro from "x-hooks/use-bepro";
 
+import { useDaoStore } from "./stores/dao/dao.store";
+
 export interface useERC20 {
   name: string;
   symbol: string;
@@ -46,16 +48,17 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state, dispatch } = useAppState();
+  const { service: daoService } = useDaoStore();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
     token: address, 
-    network: state.Service?.active?.network?.contractAddress,
-    service: state.Service?.active
+    network: daoService?.network?.contractAddress,
+    service: daoService
   };
 
-  const isServiceReady = !state.Service?.starting && !state.spinners?.switchingChain && state.Service?.active;
+  const isServiceReady = !state.Service?.starting && !state.spinners?.switchingChain && daoService;
 
   function updateAllowanceAndBalance() {
     if (!state.currentUser?.walletAddress ||
@@ -68,7 +71,7 @@ export default function useERC20() {
       .then(setBalance)
       .catch(error => console.debug("useERC20:getTokenBalance", logData, error));
 
-    const realSpender = spender || state.Service?.active?.network?.contractAddress;
+    const realSpender = spender || daoService?.network?.contractAddress;
 
     if (realSpender)
       getAllowance(address, state.currentUser.walletAddress, realSpender)
@@ -77,7 +80,7 @@ export default function useERC20() {
   }
 
   function approve(amount: string) {
-    if (!state.currentUser?.walletAddress || !state.Service?.active || !address || !amount) return;
+    if (!state.currentUser?.walletAddress || !daoService || !address || !amount) return;
 
     return handleApproveToken(address, amount, undefined, symbol).then(updateAllowanceAndBalance);
   }
@@ -113,7 +116,7 @@ export default function useERC20() {
         .catch(error => console.debug("useERC20:getERC20TokenData", logData, error));
   }, [
     state.currentUser?.walletAddress, 
-    state.Service?.active, 
+    daoService, 
     address, 
     name, 
     isServiceReady, 

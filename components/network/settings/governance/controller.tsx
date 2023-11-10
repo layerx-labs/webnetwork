@@ -16,6 +16,7 @@ import { Token } from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/network";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
@@ -45,6 +46,7 @@ export default function NetworkGovernanceSettings({
   const { processEvent } = useProcessEvent();
   const { updateActiveNetwork } = useNetwork();
   const { addError, addSuccess } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
   const {
@@ -89,7 +91,7 @@ export default function NetworkGovernanceSettings({
     if (
       !state.Service?.network?.active ||
       !state.currentUser?.walletAddress ||
-      !state.Service?.active
+      !daoService
     )
       return;
 
@@ -170,7 +172,7 @@ export default function NetworkGovernanceSettings({
   async function handleSubmit() {
     if (
       !state.currentUser?.walletAddress ||
-      !state.Service?.active ||
+      !daoService ||
       !forcedNetwork ||
       forcedNetwork?.isClosed ||
       isClosing

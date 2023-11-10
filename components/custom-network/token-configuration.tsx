@@ -17,6 +17,7 @@ import {StepWrapperProps} from "interfaces/stepper";
 import {Token} from "interfaces/token";
 
 import {useGetTokens} from "x-hooks/api/token";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function TokenConfiguration({
@@ -37,6 +38,7 @@ export default function TokenConfiguration({
   
   const { state } = useAppState();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
+  const { service: daoService } = useDaoStore();
 
   const connectedChainId = state.connectedChain?.id;
 
@@ -86,13 +88,13 @@ export default function TokenConfiguration({
 
   // LoadData from context
   useEffect(() => {
-    if (!state.Service?.active) return;
+    if (!daoService) return;
     if(!selectedRewardTokens?.length && tokens?.allowedRewards)
       setSelectedRewardTokens(tokens.allowedRewards);
 
     if(!selectedTransactionalTokens?.length && tokens?.allowedTransactions)
       setSelectedTransactionalTokens(tokens.allowedTransactions);
-  }, [state.Service?.active, tokens?.settler]);
+  }, [daoService, tokens?.settler]);
 
   useEffect(() => {
     fields.allowedRewards.setter(selectedRewardTokens);
@@ -103,9 +105,9 @@ export default function TokenConfiguration({
   }, [selectedTransactionalTokens])
 
   useEffect(() => {
-    if(!state?.currentUser?.walletAddress || !state?.Service?.active || !BigNumber(tokensLocked.needed).gt(0)) return
+    if(!state?.currentUser?.walletAddress || !daoService || !BigNumber(tokensLocked.needed).gt(0)) return
 
-    state?.Service?.active.getRegistryParameter("networkCreationFeePercentage").then(createFee => {
+    daoService.getRegistryParameter("networkCreationFeePercentage").then(createFee => {
       setCreateNetworkAmount(BigNumber(createFee).div(100).multipliedBy(tokensLocked.needed).toFixed())
     })
 

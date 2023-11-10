@@ -42,6 +42,7 @@ import {useDao} from "x-hooks/use-dao";
 import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
 
+import { useDaoStore } from "./stores/dao/dao.store";
 import useBepro from "./use-bepro";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
@@ -56,6 +57,7 @@ export function useAuthentication() {
   const { chain } = useChain();
   const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const transactions = useTransactions();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
@@ -106,7 +108,7 @@ export function useAuthentication() {
   }
 
   function updateWalletBalance(force = false) {
-    if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !state.Service?.active?.network || !chain)
+    if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !daoService?.network || !chain)
       return;
 
     const update = newBalance => {
@@ -121,9 +123,9 @@ export function useAuthentication() {
     dispatch(changeSpinners.update({balance: true}))
 
     Promise.all([
-      state.Service.active.getOraclesResume(state.currentUser.walletAddress),
+      daoService.getOraclesResume(state.currentUser.walletAddress),
 
-      state.Service.active.getBalance('settler', state.currentUser.walletAddress),
+      daoService.getBalance('settler', state.currentUser.walletAddress),
       useSearchCurators({
         address: state.currentUser.walletAddress,
         networkName: state.Service?.network?.active?.name,
@@ -131,7 +133,7 @@ export function useAuthentication() {
       })
       .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
       // not balance, but related to address, no need for a second useEffect()
-      state.Service.active.isCouncil(state.currentUser.walletAddress),
+      daoService.isCouncil(state.currentUser.walletAddress),
       isNetworkGovernor(state.currentUser.walletAddress)
     ])
       .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {

@@ -12,6 +12,7 @@ import { TransactionTypes } from "interfaces/enums/transaction-types";
 import { OraclesDelegateProps } from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 
 import OraclesDelegateView from "./view";
@@ -32,6 +33,7 @@ export default function OraclesDelegate({
   const [availableAmount, setAvailableAmount] = useState<BigNumber>();
 
   const { processEvent } = useProcessEvent();
+  const { service: daoService } = useDaoStore();
   const {
     state: { transactions, Service },
   } = useAppState();
@@ -59,7 +61,7 @@ export default function OraclesDelegate({
     if (addressError) setAddressError("");
     setDelegatedTo(params.target.value);
 
-    if (Service?.active?.web3Connection && params.target.value) {
+    if (daoService?.web3Connection && params.target.value) {
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {

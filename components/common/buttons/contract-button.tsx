@@ -13,6 +13,7 @@ import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
 
@@ -28,6 +29,7 @@ export default function ContractButton({
   const { changeNetwork } = useDao();
   const { state, dispatch } = useAppState();
   const { addError, addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
 
   function onCloseModal() {
     setIsModalVisible(false);
@@ -68,7 +70,7 @@ export default function ContractButton({
   }
 
   async function validateDao() {
-    if(state.Service?.active) return true;
+    if(daoService) return true;
 
     addError(t("actions.failed"), t("errors.failed-load-dao"));
 
@@ -82,7 +84,7 @@ export default function ContractButton({
         return false;
       }
 
-      if (!state.Service?.starting && !state.Service?.active.network) {
+      if (!state.Service?.starting && !daoService.network) {
         const started = 
           await changeNetwork(state.Service?.network?.active?.chain_id, state.Service?.network?.active?.networkAddress);
         if (!started)

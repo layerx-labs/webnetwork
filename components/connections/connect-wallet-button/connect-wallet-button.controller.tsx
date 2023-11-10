@@ -5,6 +5,7 @@ import ConnectWalletButtonView from "components/connections/connect-wallet-butto
 import { useAppState } from "contexts/app-state";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ConnectWalletButton({
@@ -16,6 +17,7 @@ export default function ConnectWalletButton({
   const [showModal, setShowModal] = useState(false);
 
   const { dispatch, state } = useAppState();
+  const { service: daoService } = useDaoStore();
   const { signInWallet } = useAuthentication();
 
   async function handleLogin()  {
@@ -32,11 +34,11 @@ export default function ConnectWalletButton({
   }
 
   useEffect(() => {
-    if (!state.Service?.active) return;
+    if (!daoService) return;
 
     if (forceLogin)
       signInWallet();
-  }, [state.Service?.active, forceLogin]);
+  }, [daoService, forceLogin]);
 
   useEffect(onWalletChange, [state.currentUser?.walletAddress]);
 

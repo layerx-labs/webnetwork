@@ -14,6 +14,7 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { OraclesActionsProps } from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useERC20 from "x-hooks/use-erc20";
 
 import OraclesActionsView from "./view";
@@ -38,6 +39,7 @@ export default function OraclesActions({
   const networkTokenERC20 = useERC20();
   const { processEvent } = useProcessEvent();
   const { state: { transactions, Service }} = useAppState();
+  const { service: daoService } = useDaoStore();
 
   const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;
@@ -220,9 +222,9 @@ export default function OraclesActions({
     networkTokenERC20.allowance.isLessThan(tokenAmount) && action === t("my-oracles:actions.lock.label");
 
   useEffect(() => {
-    if (Service?.active?.network?.networkToken?.contractAddress)
-      networkTokenERC20.setAddress(Service?.active?.network?.networkToken?.contractAddress);
-  }, [Service?.active?.network?.networkToken?.contractAddress]);
+    if (daoService?.network?.networkToken?.contractAddress)
+      networkTokenERC20.setAddress(daoService?.network?.networkToken?.contractAddress);
+  }, [daoService?.network?.networkToken?.contractAddress]);
 
   return (
       <OraclesActionsView 

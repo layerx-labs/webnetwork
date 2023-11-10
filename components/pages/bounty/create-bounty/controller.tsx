@@ -34,6 +34,7 @@ import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
 import { useCreatePreBounty } from "x-hooks/api/bounty";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -100,9 +101,10 @@ export default function CreateBountyPage({
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, }
+    state: { transactions, Settings, currentUser, connectedChain, }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
@@ -249,7 +251,7 @@ export default function CreateBountyPage({
   }
 
   async function allowCreateIssue() {
-    if (!Service?.active || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
+    if (!daoService || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
       return;
 
     setIsLoadingApprove(true);
@@ -285,7 +287,7 @@ export default function CreateBountyPage({
     ].some((value) => value === false);
 
   async function createBounty() {
-    if (!deliverableType || !transactionalToken || !Service?.active || !currentUser)
+    if (!deliverableType || !transactionalToken || !daoService || !currentUser)
       return;
 
     if (!(await useGetIsAllowed(currentNetwork.id, currentUser.walletAddress))?.allowed) // triple check for bounty creation permission
@@ -353,7 +355,7 @@ export default function CreateBountyPage({
         bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
-      const networkBounty = await Service?.active
+      const networkBounty = await daoService
         .openBounty(bountyPayload)
         .catch((e) => {
           dispatch(updateTx([
@@ -561,7 +563,7 @@ export default function CreateBountyPage({
       return;
 
     changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
-  }, [currentNetwork, Service?.active])
+  }, [currentNetwork, daoService])
 
 
   return(

@@ -20,7 +20,7 @@ import DAO from "services/dao-service";
 import useChain from "x-hooks/use-chain";
 import useNetworkChange from "x-hooks/use-network-change";
 
-import { useDaoService } from "./stores/dao-service/dao-service.store";
+import { useDaoStore } from "./stores/dao/dao.store";
 
 export function useDao() {
   const session = useSession();
@@ -29,7 +29,7 @@ export function useDao() {
   const { state, dispatch } = useAppState();
   const { findSupportedChain } = useChain();
   const { handleAddNetwork } = useNetworkChange();
-  const { service: daoService, updateService } = useDaoService();
+  const { service: daoService, updateService } = useDaoStore();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);

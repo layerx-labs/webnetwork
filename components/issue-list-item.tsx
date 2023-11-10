@@ -29,6 +29,7 @@ import {getIssueState} from "helpers/handleTypeIssue";
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
 import { useUpdateBountyVisibility } from "x-hooks/api/network";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
@@ -64,6 +65,7 @@ export default function IssueListItem({
   const { getURLWithNetwork } = useNetwork();
   const { handleHardCancelBounty, getCancelableTime, getTimeChain } = useBepro();
   const { addError, addSuccess } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { mutate: updateVisibility } = useReactQueryMutation({
     mutationFn: useUpdateBountyVisibility,
     toastSuccess: t("bounty:actions.update-bounty"),
@@ -123,7 +125,7 @@ export default function IssueListItem({
   } 
 
   useEffect(() => {
-    if (state.Service?.active && issue && variant === "management")
+    if (daoService && issue && variant === "management")
       Promise.all([
         getCancelableTime(),
         getTimeChain()
@@ -133,7 +135,7 @@ export default function IssueListItem({
           setIsCancelable(canceable);
         })
         .catch(error => console.debug("Failed to get cancelable time", error));
-  }, [state.Service?.active, issue]);
+  }, [daoService, issue]);
 
   function IssueTag() {
     const tag = issue?.network?.name;

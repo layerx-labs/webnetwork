@@ -6,8 +6,8 @@ import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
 
-import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/common/buttons/contract-button";
+import {ContextualSpan} from "components/contextual-span";
 import {FormGroup} from "components/form-group";
 import {CallToAction} from "components/setup/call-to-action";
 import {ContractField, ContractInput} from "components/setup/contract-input";
@@ -28,6 +28,7 @@ import { RegistryParameters } from "types/dappkit";
 import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
@@ -82,6 +83,7 @@ export function RegistrySetup({
   const { findSupportedChain } = useChain();
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
 
@@ -164,7 +166,7 @@ export function RegistrySetup({
         const { contractAddress } = tx as TransactionReceipt;
         setRegistry(previous => ({ ...previous, value: contractAddress}));
 
-        Service?.active?.loadRegistry(false, contractAddress);
+        daoService?.loadRegistry(false, contractAddress);
 
         return setChainRegistry(contractAddress);
       })
@@ -190,7 +192,7 @@ export function RegistrySetup({
 
     setRegistry(updatedValue(forcedValue || registryAddress));
 
-    const registryObj = Service?.active?.registry;
+    const registryObj = daoService?.registry;
 
     if (!registryObj) return;
 
@@ -299,10 +301,10 @@ export function RegistrySetup({
   }
 
   useEffect(() => {
-    if (!registryAddress || !Service?.active?.registry?.contractAddress || !isVisible) return;
+    if (!registryAddress || !daoService?.registry?.contractAddress || !isVisible) return;
 
     updateData();
-  }, [registryAddress, Service?.active?.registry?.contractAddress, isVisible]);
+  }, [registryAddress, daoService?.registry?.contractAddress, isVisible]);
 
   useEffect(() => {
     if (currentUser?.walletAddress) setTreasury(currentUser?.walletAddress);

@@ -18,6 +18,7 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
@@ -48,6 +49,7 @@ export default function NetworksStep({
   } = useBepro();
   const { signMessage } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
   const MAX_PERCENTAGE_FOR_DISPUTE = +state.Settings?.networkParametersLimits?.disputePercentage?.max;
@@ -62,7 +64,7 @@ export default function NetworksStep({
 
   const networkTokenSymbol = forcedNetwork?.networkToken?.symbol || t("misc.$token");
   const networkAlreadyLoaded = 
-    selectedNetworkAddress === state.Service?.active?.network?.contractAddress && !!forcedNetwork?.councilAmount;
+    selectedNetworkAddress === daoService?.network?.contractAddress && !!forcedNetwork?.councilAmount;
   const nameInputClass = forcedNetwork?.name === details?.name?.value || details?.name?.validated === undefined ? "" : (
     details?.name?.validated && "is-valid" || "is-invalid"
   );
@@ -147,7 +149,7 @@ export default function NetworksStep({
       const network = await useSearchNetworks({ networkAddress: selectedNetworkAddress })
         .then(({ rows }) => rows[0]);
 
-      if (network.networkAddress !== state.Service?.active.network.contractAddress)
+      if (network.networkAddress !== daoService.network.contractAddress)
         await loadNetwork(network.networkAddress);
 
       isNetworkGovernorDao(state.currentUser.walletAddress)

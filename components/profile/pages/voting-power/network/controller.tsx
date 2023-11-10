@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 import { useAppState } from "contexts/app-state";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useChain from "x-hooks/use-chain";
 import useOracleToken from "x-hooks/use-oracle-token";
@@ -20,6 +21,7 @@ export default function VotingPowerNetwork() {
   const { updateWalletBalance } = useAuthentication();
   const { chain } = useChain();
   const { currentOracleToken } = useOracleToken();
+  const { service: daoService } = useDaoStore();
 
   const { curatorAddress } = query;
 
@@ -36,7 +38,7 @@ export default function VotingPowerNetwork() {
   useEffect(() => {
     if (
       !state.currentUser?.walletAddress ||
-      !state.Service?.active?.network ||
+      !daoService?.network ||
       !chain
     )
       return;

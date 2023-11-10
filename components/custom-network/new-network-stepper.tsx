@@ -38,6 +38,7 @@ import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/network";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
@@ -59,6 +60,7 @@ function NewNetwork() {
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useNetwork();
   const { processEvent } = useProcessEvent();
+  const { service: daoService } = useDaoStore();
   const {
     handleDeployNetworkV2,
     handleAddNetworkToRegistry,
@@ -88,7 +90,7 @@ function NewNetwork() {
   ];
 
   async function handleCreateNetwork() {
-    if (!state.currentUser?.walletAddress || !state.Service?.active) return;
+    if (!state.currentUser?.walletAddress || !daoService) return;
 
     const signedMessage = await signMessage(WANT_TO_CREATE_NETWORK);
 
@@ -246,13 +248,13 @@ function NewNetwork() {
     const walletAddress = state.currentUser?.walletAddress;
     const connectedChain = state.connectedChain;
 
-    if (!state.Service?.active ||
+    if (!daoService ||
         !walletAddress ||
         !connectedChain ||
         connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
     checkHasNetwork();
-  }, [state.Service?.active, state.currentUser, state.connectedChain]);
+  }, [daoService, state.currentUser, state.connectedChain]);
 
   return (
     <div>

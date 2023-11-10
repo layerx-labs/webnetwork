@@ -7,7 +7,7 @@ import {useRouter} from "next/router";
 import {useAppState} from "contexts/app-state";
 import { changeWeb3Connection } from "contexts/reducers/change-service";
 
-import {useDaoService} from "x-hooks/stores/dao-service/dao-service.store";
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
@@ -27,7 +27,7 @@ export const GlobalEffectsProvider = ({children}) => {
   const settings = useSettings();
   const auth = useAuthentication();
   const transactions = useTransactions();
-  const { service: daoService } = useDaoService();
+  const { service: daoService } = useDaoStore();
   const { state, dispatch } = useAppState();
 
   const { connectedChain, currentUser, Service, supportedChains } = state;

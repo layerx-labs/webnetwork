@@ -8,7 +8,7 @@ import ContractButton from "components/common/buttons/contract-button";
 import {ExternalLink} from "components/external-link";
 import {FormGroup} from "components/form-group";
 
-import {useAppState} from "contexts/app-state";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 
 export interface ContractField {
   value: string;
@@ -43,7 +43,7 @@ export function ContractInput({
   mustBeAddress
 } : ContractInputProps) {
   const { t } = useTranslation(["common", "setup"]);
-  const { state: { Service } } = useAppState();
+  const { service: daoService } = useDaoStore();
 
   function isInvalid(validated, name) {
     return validated === false ? t("setup:registry.errors.invalid-contract-address", { contract: name }) : "";
@@ -64,13 +64,13 @@ export function ContractInput({
     if (!validator)
       return;
 
-    if (!Service?.active || value.trim() === "") 
+    if (!daoService || value.trim() === "") 
       return onChange(previous => ({ ...previous, validated: null }));
 
     if (!isAddress(value))
       return onChange(previous => ({ ...previous, validated: false }));
 
-    Service.active[validator](value)
+    daoService[validator](value)
       .then(loaded => onChange(previous => ({ ...previous, validated: !!loaded })));
   }
 

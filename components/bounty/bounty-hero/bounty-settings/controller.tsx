@@ -6,6 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
@@ -27,6 +28,7 @@ export default function BountySettings({
 
   const { state } = useAppState();
   const { addError } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { updateWalletBalance } = useAuthentication();
   const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
 
@@ -86,7 +88,7 @@ export default function BountySettings({
   }
 
   useEffect(() => {
-    if (state.Service?.active && currentBounty)
+    if (daoService && currentBounty)
       (async () => {
         const cancelableTime = await getCancelableTime();
         const canceable =
@@ -94,7 +96,7 @@ export default function BountySettings({
           +new Date(+currentBounty.createdAt + cancelableTime);
         setIsCancelable(canceable);
       })();
-  }, [state.Service?.active, currentBounty]);
+  }, [daoService, currentBounty]);
 
   if (!checkRender())
     return <></>;
