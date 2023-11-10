@@ -31,6 +31,12 @@ jest.mock("contexts/app-state", () => ({
   })
 }));
 
+jest.mock("x-hooks/stores/dao/dao.store", () => ({
+  useDaoStore: () => ({
+    service: jest.fn()
+  })
+}))
+
 const mockedSignInWallet = jest.fn(() => {
   state.currentUser.walletAddress = defaultAddress;
 });
