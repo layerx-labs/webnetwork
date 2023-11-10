@@ -2,7 +2,7 @@ const {Sequelize} = require("sequelize");
 const yargs = require("yargs");
 const {hideBin} = require("yargs/helpers");
 
-const {Network_v2, Web3Connection, NetworkRegistry, ERC20, BountyToken} = require("@taikai/dappkit");
+const {Network_v2, Web3Connection, NetworkRegistry, ERC20, BountyToken, Web3Contract} = require("@taikai/dappkit");
 const {nativeZeroAddress} = require("@taikai/dappkit/dist/src/utils/constants");
 
 const DBConfig = require("../db/config");
@@ -87,6 +87,14 @@ async function main(option = 0) {
 
   const startBlock = await connection.eth.getBlockNumber();
 
+  const _customTxOptions = async (ofClass) => {
+    const _origin = await ofClass.txOptions();
+
+    ofClass.txOptions = async () => {
+      return {..._origin(), nonce: await connection.eth.getTransactionCount(await connection.getAddress())}
+    }
+  }
+
   function getContractAddress({contractAddress}) {
     return contractAddress;
   }
@@ -94,6 +102,15 @@ async function main(option = 0) {
   async function Deploy(_class, ...args) {
     const deployer = new _class(connection);
     deployer.loadAbi();
+
+    const _txOptions = deployer.contract.txOptions.bind(deployer.contract);
+
+    deployer.contract.txOptions = async function (m, v, f) {
+      const _origin = await _txOptions(m, v, f);
+
+      return {..._origin, nonce: await connection.eth.getTransactionCount(await connection.getAddress())}
+    };
+
     console.debug(`Deploying ${deployer.constructor?.name} with args:`, ...(args || []));
     const address = getContractAddress(await deployer.deployJsonAbi(...(args || [])));
     console.debug(`Deployed address`, address);
