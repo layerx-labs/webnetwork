@@ -32,13 +32,17 @@ const options = yargs(hideBin(process.argv))
   .option(`network`, {alias: `n`, type: `array`, desc: `ids of network to deploy to, as seen on https://chainid.network/ or custom known one`})
   .option(`deployTestTokens`, {alias: `d`, type: `boolean`, desc: `deploys contracts (-d takes precedence over -pgb`})
   .option(`paymentToken`, {alias: `p`, type: `array`, desc: `use these addresses as transactional token`})
+  .string(`paymentToken`)
   .option(`governanceToken`, {alias: `g`, type: `array`, desc: `use these addresses as governance token`})
+  .string(`governanceToken`)
   .option(`bountyNFT`, {alias: `b`, type: `array`, desc: `use these addresses as bounty token`})
+  .string(`bountyNFT`)
   .option(`privateKey`, {alias: `k`, type: `string`, desc: `Owner private key`})
   .option(`treasury`, {alias: `t`, type: `string`, desc: `custom treasury address (defaults to owner private key if not provided)`})
   .option(`envFile`, {alias: `e`, type: `array`, desc: `env-file names to load`})
   .demandOption([`n`, `k`])
   .parseSync();
+
 
 async function main(option = 0) {
   let chainData;
@@ -224,7 +228,7 @@ async function main(option = 0) {
 
       const linkScan = explorers?.length ? explorers[0].url : chainScan;
       const blockScanner = linkScan.indexOf("https://") == 0 ? linkScan : `https://bepro.network/`
-      const eventsApi = isXNetwork || isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
+      const eventsApi = isXNetwork && !isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
 
       await ChainModel.findOrCreate({
         where: {
@@ -268,7 +272,7 @@ async function main(option = 0) {
 
       const paymentToken = await saveToken(payment);
       const governanceToken = await saveToken(governance);
-      const rewardToken = await saveToken(reward);
+      const rewardToken = reward?.address ? await saveToken(reward) : null;
 
       if(!NEXT_PUBLIC_DEFAULT_NETWORK_NAME) return;
 
@@ -323,7 +327,8 @@ async function main(option = 0) {
 
       await saveNetworkTokensRelation(paymentToken, payment.isTransactional, payment.isReward);
       await saveNetworkTokensRelation(governanceToken, governance.isTransactional, governance.isReward);
-      await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
+      if (rewardToken)
+        await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
     } catch (error) {
       console.debug("Failed to save default network", error);
     }
