@@ -370,8 +370,6 @@ async function main(option = 0) {
 
   const tokensToUse = await getTokens();
 
-  console.log("tokensToUse", tokensToUse)
-
   await saveSettingsToDb( /** grab the result from having changed the network options and save it to db */
     await changeNetworkOptions( /** Load networkAddress and change settings on chain, return result */
       await deployNetwork(tokensToUse[1], /** deploy a network, return contractAddress */
