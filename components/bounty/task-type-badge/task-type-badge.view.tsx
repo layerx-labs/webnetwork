@@ -21,7 +21,7 @@ export default function TaskTypeBadge ({
     design: <DesignIcon />,
     other: <OtherIcon />,
   };
-  const responsiveLabelClass = responsiveLabel ? "d-none d-md-block" : "";
+  const responsiveLabelClass = responsiveLabel ? "d-none d-sm-block" : "";
 
   return(
     <div>
