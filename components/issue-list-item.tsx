@@ -35,6 +35,7 @@ import { useNetwork } from "x-hooks/use-network";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
+import TaskTypeBadge from "./bounty/task-type-badge/task-type-badge.view";
 import NetworkBadge from "./network/badge/view";
 import MoreActionsDropdown from "./utils/more-actions-dropdown/controller";
 
@@ -428,7 +429,13 @@ export default function IssueListItem({
                       </span>
                     </BountyItemLabel>
 
-                    <div className="col d-flex justify-content-end">
+                    <div className="col d-flex justify-content-end px-0">
+                      <TaskTypeBadge 
+                        type={issue?.type}
+                      />
+                    </div>
+
+                    <div className="col-auto d-flex justify-content-end">
                       <BountyAmount bounty={issue} size={size} />
                     </div>
                   </div>
@@ -440,7 +447,9 @@ export default function IssueListItem({
                 className="row align-items-center justify-content-between"
               >
                 <div className="col mw-50-auto network-name">
-                  <BountyTagsView tags={[issue?.network?.name]} />
+                  <TaskTypeBadge 
+                    type={issue?.type}
+                  />
                 </div>
 
                 <div className="col-auto">
