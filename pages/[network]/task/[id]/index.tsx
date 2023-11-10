@@ -41,7 +41,7 @@ export default function TaskPage() {
 
   const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 
-    useReactQuery(QueryKeys.bountyComments(bountyId?.toString()), () => 
+    useReactQuery(QueryKeys.bountyComments(bountyId?.toString()), () =>
       getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const parsedBounty = issueParser(bounty);
@@ -137,7 +137,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   }
 
   await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
-  await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () => 
+  await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () =>
     getCommentsData({ issueId: bountyId, type: "issue" }));
 
   const seoData: Partial<IssueData> = {

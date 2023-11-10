@@ -37,9 +37,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   if (name)
     whereCondition.name = name;
-    
+
   const include = [
-    { 
+    {
       association: "issues",
       attributes: ["id"],
       required: false,
@@ -48,12 +48,12 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         visible: true
       }
     },
-    { 
+    {
       association: "curators",
       required: false,
       attributes: ["id", "tokensLocked", "delegatedToMe"]
     },
-    { 
+    {
       association: "chain",
       attributes: ["chainId", "chainName", "chainShortName", "icon", "color"]
     },
@@ -106,7 +106,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 );
   const networksResult = Object.values(result);
-  
+
   const paginatedData = paginateArray(networksResult.sort(compare), quantity, page);
 
   return res.status(200).json({
