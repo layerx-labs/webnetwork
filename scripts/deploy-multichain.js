@@ -338,7 +338,7 @@ async function main(option = 0) {
       if (!hasGovernance || !hasPayment || !hasBountyNFT)
         throw new Error(`Missing one of (or all): governanceToken, paymentToken, bountyNFT`);
 
-      return [options.paymentToken[option], options.governanceToken[option], nativeZeroAddress, options.bountyNFT[option]];
+      return [options.paymentToken, options.governanceToken, nativeZeroAddress, options.bountyNFT];
     }
 
     const tokens = [...Object.values(await deployTokens()), await deployBountyToken()];
@@ -369,6 +369,8 @@ async function main(option = 0) {
   }
 
   const tokensToUse = await getTokens();
+
+  console.log("tokensToUse", tokensToUse)
 
   await saveSettingsToDb( /** grab the result from having changed the network options and save it to db */
     await changeNetworkOptions( /** Load networkAddress and change settings on chain, return result */
