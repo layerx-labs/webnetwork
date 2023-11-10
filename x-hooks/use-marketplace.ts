@@ -41,7 +41,6 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   function getURLWithNetwork(href: string, _query = undefined): UrlObject {
     const _network = _query?.network ? String(_query?.network)?.toLowerCase()?.replaceAll(" ", "-") : undefined;
     const cleanHref =  href.replace("/[network]/[chain]", "");
-
     return {
       pathname: `/[network]/[chain]/${cleanHref}`.replace("//", "/"),
       query: {
@@ -57,15 +56,12 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   function goToProfilePage(profilePage: ProfilePages, params = undefined) {
     const queryNetwork = query?.network || "";
     const queryChain = query?.chain || "";
-
     const path = profilePage === "profile" ? "profile" : `profile/${profilePage}`;
-
     if (queryNetwork !== "")
       return push(getURLWithNetwork(`/profile/[[...profilePage]]`, {
         ...query,
         ...params
       }), `/${queryNetwork}/${queryChain}/${path}`);
-
     return push({
       pathname: "/profile/[[...profilePage]]",
       query: {
@@ -88,7 +84,12 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   useEffect(() => {
-    if (isFetching || isError || isStale) return;
+    if (isFetching || isError || isStale)
+      return;
+    if (!marketplace && !chain) {
+      clear();
+      return;
+    }
     const marketplaces = !!marketplace && !chain ? 
       searchData.rows : searchData.rows.filter(network => lowerCaseCompare(network.chain?.chainShortName, chain));
     if (!searchData.count || !marketplaces?.length) {
@@ -97,6 +98,8 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       return;
     }
     const active = marketplaces.at(0);
+    if (lowerCaseCompare(active?.networkAddress, data?.active?.networkAddress))
+      return;
     const lastVisited = marketplace;
     const availableChains = searchData.rows.map(network => network.chain);
     const transactionalTokens = active.tokens.filter(token => token.network_tokens.isTransactional);
@@ -112,7 +115,6 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       const userAddress = state.currentUser.walletAddress;
       const isCurator = !!active.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
       const isGovernor = lowerCaseCompare(active.creatorAddress, userAddress);
-
       dispatch(changeCurrentUserisCouncil(isCurator));
       dispatch(changeCurrentUserisGovernor(isGovernor));
     }
