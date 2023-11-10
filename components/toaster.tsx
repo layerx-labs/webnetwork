@@ -1,14 +1,13 @@
 import React from "react";
-import {Toast, ToastContainer} from "react-bootstrap";
+import { Toast, ToastContainer } from "react-bootstrap";
 
 import BeproSmallLogo from "assets/icons/bepro-small-logo";
 
 import Icon from "components/icon";
 
-import {useAppState} from "contexts/app-state";
-import {removeToast} from "contexts/reducers/change-toaster";
+import { ToastNotification } from "interfaces/toast-notification";
 
-import {ToastNotification} from "interfaces/toast-notification";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 
 enum IconMapper {
   info = "info",
@@ -19,16 +18,16 @@ enum IconMapper {
 }
 
 export default function Toaster() {
-  const {state, dispatch} = useAppState();
+  const { toasts, remove } = useToastStore();
 
   function onClose(i: ToastNotification) {
-    dispatch(removeToast(i));
+    remove(i);
   }
 
   return (
     <>
       <ToastContainer>
-        {state?.toaster.map((toast, i) => (
+        {toasts.map((toast, i) => (
           <Toast
           delay={toast.delay || 3000}
             autohide={true}

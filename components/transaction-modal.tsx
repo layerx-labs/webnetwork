@@ -14,7 +14,6 @@ import Modal from "components/modal";
 import TransactionStats from "components/transaction-stats";
 
 import {useAppState} from "contexts/app-state";
-import {toastInfo} from "contexts/reducers/change-toaster";
 
 import {CopyValue} from "helpers/copy-value";
 import {formatStringToCurrency} from "helpers/formatNumber";
@@ -23,12 +22,13 @@ import { isValidUrl } from "helpers/validateUrl";
 
 import {BlockTransaction, Transaction} from "interfaces/transaction";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useNetwork} from "x-hooks/use-network";
 
 export default function TransactionModal({
-                                           transaction = null,
-                                           onCloseClick,
-                                         }: {
+  transaction = null,
+  onCloseClick,
+}: {
   transaction: Transaction;
   onCloseClick: () => void;
 }) {
@@ -38,8 +38,8 @@ export default function TransactionModal({
   const [addressTo, setAddressTo] = useState("...");
   const [addressFrom, setAddressFrom] = useState("...");
 
-  const { state, dispatch } = useAppState();
-
+  const { state } = useAppState();
+  const { addInfo } = useToastStore();
   const { getURLWithNetwork } = useNetwork();
 
   function updateAddresses() {
@@ -88,7 +88,7 @@ export default function TransactionModal({
 
   function copyValue(value: string) {
     CopyValue(value);
-    dispatch(toastInfo(t("transactions.copied", { value })));
+    addInfo(t("actions.info"), t("transactions.copied", { value }));
   }
 
   function getTransactionId() {

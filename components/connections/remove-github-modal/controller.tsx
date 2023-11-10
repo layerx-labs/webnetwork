@@ -3,10 +3,8 @@ import { useTranslation } from "next-i18next";
 
 import RemoveGithubAccountView from "components/connections/remove-github-modal/view";
 
-import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
-
 import { useRemoveGithub } from "x-hooks/api/user";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface RemoveGithubAccountProps {
@@ -26,7 +24,7 @@ export default function RemoveGithubAccount({
 }: RemoveGithubAccountProps) {
   const { t } = useTranslation(["profile", "common"]);
 
-  const { dispatch } = useAppState();
+  const { addError } = useToastStore();
   const { mutate: removeGithub, isLoading: isExecuting } = useReactQueryMutation({
     mutationFn: () => useRemoveGithub({
       address: walletAddress,
@@ -43,11 +41,9 @@ export default function RemoveGithubAccount({
           PULL_REQUESTS_OPEN: t("modals.remove-github.errors.deliverables-open"),
         };
 
-        dispatch(toastError(message[error?.response?.data?.toString()],
-                            t("modals.remove-github.errors.failed-to-remove")));
+        addError(t("modals.remove-github.errors.failed-to-remove"), message[error?.response?.data?.toString()]);
       } else
-        dispatch(toastError(t("modals.remove-github.errors.check-requirements"),
-                            t("modals.remove-github.errors.failed-to-remove")));
+      addError(t("modals.remove-github.errors.failed-to-remove"), t("modals.remove-github.errors.check-requirements"));
     }
   });
 

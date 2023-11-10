@@ -3,13 +3,11 @@ import { useState } from "react";
 import { TransactionReceipt } from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
-
 import { MetamaskErrors } from "interfaces/enums/Errors";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
 
-import { useProcessEvent } from "./api/events/use-process-event";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 
 interface ExecutionResult {
   tx: TransactionReceipt;
@@ -27,8 +25,8 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
   
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const { dispatch } = useAppState();
   const { processEvent } = useProcessEvent();
+  const { addError, addSuccess } = useToastStore();
 
   function execute(...args: unknown[]): Promise<ExecutionResult> {
     return new Promise(async (resolve, reject) => {
@@ -39,7 +37,7 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
 
         const eventsLogs = await processEvent(event, undefined, { fromBlock: tx.blockNumber });
 
-        if (successMessage) dispatch(toastSuccess(successMessage, t("actions.success")));
+        if (successMessage) addSuccess(t("actions.success"), successMessage);
 
         resolve({
           tx,
@@ -47,7 +45,7 @@ export default function useContractTransaction( event: RegistryEvents | NetworkE
         });
       } catch (error) {
         if (errorMessage && error?.code !== MetamaskErrors.UserRejected)
-          dispatch(toastError(errorMessage, t("actions.failed")));
+          addError(t("actions.failed"), errorMessage);
 
         reject(error);
       } finally {

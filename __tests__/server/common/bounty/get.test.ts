@@ -13,7 +13,10 @@ jest.mock("db/models", () => ({
       },
       network: {
         mergeCreatorFeeShare: 1,
-        proposerFeeShare: 1
+        proposerFeeShare: 1,
+        chain: {
+          closeFeePercentage: 1
+        }
       }
     }))
   },
