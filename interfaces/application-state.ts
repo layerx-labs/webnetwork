@@ -11,7 +11,6 @@ import {kycSession} from "interfaces/kyc-session";
 import {LoadingState} from "interfaces/loading-state";
 import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
-import {ToastNotification} from "interfaces/toast-notification";
 import {Token} from "interfaces/token";
 import {BlockTransaction, SimpleBlockTransactionPayload, UpdateBlockTransaction} from "interfaces/transaction";
 
@@ -71,7 +70,6 @@ export interface State {
   Settings: SettingsType | null;
   Service: ServiceState | null,
   loading: LoadingState | null;
-  toaster: ToastNotification[];
   transactions: (SimpleBlockTransactionPayload | BlockTransaction | UpdateBlockTransaction)[];
   currentUser: CurrentUserState | null,
   connectedChain: ConnectedChain | null,

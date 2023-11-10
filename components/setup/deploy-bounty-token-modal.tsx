@@ -7,11 +7,9 @@ import Button from "components/button";
 import { FormGroup } from "components/form-group";
 import Modal from "components/modal";
 
-import { useAppState } from "contexts/app-state";
-import { toastError, toastSuccess } from "contexts/reducers/change-toaster";
-
 import { MetamaskErrors } from "interfaces/enums/Errors";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 
 export function DeployBountyTokenModal({
@@ -25,7 +23,7 @@ export function DeployBountyTokenModal({
   const [symbol, setSymbol] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
 
-  const { dispatch } = useAppState();
+  const { addError, addSuccess } = useToastStore();
   const { handleDeployBountyToken } = useBepro();
 
   const deployBtnDisabled = name.trim() === "" || symbol.trim() === "";
@@ -44,10 +42,10 @@ export function DeployBountyTokenModal({
 
       onChange(tx.contractAddress, true);
       handleClose();
-      dispatch(toastSuccess(t("registry.modals.deploy-bounty-token.success.deploy")));
+      addSuccess(t("actions.success"), t("registry.modals.deploy-bounty-token.success.deploy"));
     } catch (error) {
       if (error?.code !== MetamaskErrors.UserRejected)
-        dispatch(toastError(t("registry.modals.deploy-bounty-token.errors.deploy")));
+        addError(t("actions.failed"), t("registry.modals.deploy-bounty-token.errors.deploy"));
     } finally {
       setIsExecuting(false);
     }

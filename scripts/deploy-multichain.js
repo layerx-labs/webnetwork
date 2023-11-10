@@ -2,7 +2,7 @@ const {Sequelize} = require("sequelize");
 const yargs = require("yargs");
 const {hideBin} = require("yargs/helpers");
 
-const {Network_v2, Web3Connection, NetworkRegistry, ERC20, BountyToken} = require("@taikai/dappkit");
+const {Network_v2, Web3Connection, NetworkRegistry, ERC20, BountyToken, Web3Contract} = require("@taikai/dappkit");
 const {nativeZeroAddress} = require("@taikai/dappkit/dist/src/utils/constants");
 
 const DBConfig = require("../db/config");
@@ -25,24 +25,30 @@ const _xNetworks = {
   ... _xNetwork(`afrodite`, [`https://eth-afrodite.taikai.network:8080`], `TETH`, 1501, `Afrodite Test Chain`, `afrodite`, `https://eth-afrodite.taikai.network:8080`, `https://afrodite.taikai.network:2053`),
   ... _xNetwork(`irene`, [`https://eth-irene.taikai.network:8080`], `TETH`, 1502, `Irene Test Chain`, `irene`, `https://eth-irene.taikai.network:8080`, `https://irene.taikai.network:2053`),
   ... _xNetwork(`apollodorus`, [`https://eth-apollodorus.taikai.network:8080`], `TETH`, 1506, `Apollodorus Test Chain`, `apollodorus`, `https://eth-apollodorus.taikai.network:8080`, `https://apollodorus.taikai.network:2053`),
+  ... _xNetwork(`mumbai`, [`https://polygon-mumbai-bor.publicnode.com`], `MATIC`, 80001, `Mumbai`, `maticmum`, `https://mumbai.polygonscan.com/`, `https://apollodorus.taikai.network:2053`),
 }
 
 const options = yargs(hideBin(process.argv))
   .option(`network`, {alias: `n`, type: `array`, desc: `ids of network to deploy to, as seen on https://chainid.network/ or custom known one`})
   .option(`deployTestTokens`, {alias: `d`, type: `boolean`, desc: `deploys contracts (-d takes precedence over -pgb`})
   .option(`paymentToken`, {alias: `p`, type: `array`, desc: `use these addresses as transactional token`})
+  .string(`paymentToken`)
   .option(`governanceToken`, {alias: `g`, type: `array`, desc: `use these addresses as governance token`})
+  .string(`governanceToken`)
   .option(`bountyNFT`, {alias: `b`, type: `array`, desc: `use these addresses as bounty token`})
+  .string(`bountyNFT`)
   .option(`privateKey`, {alias: `k`, type: `string`, desc: `Owner private key`})
   .option(`treasury`, {alias: `t`, type: `string`, desc: `custom treasury address (defaults to owner private key if not provided)`})
   .option(`envFile`, {alias: `e`, type: `array`, desc: `env-file names to load`})
   .demandOption([`n`, `k`])
   .parseSync();
 
+
 async function main(option = 0) {
   let chainData;
 
   const isXNetwork = !!_xNetworks[options.network[option]];
+  const isMumbai = options.network[option] === "mumbai";
 
   if (isXNetwork)
     chainData = _xNetworks[options.network[option]];
@@ -85,6 +91,14 @@ async function main(option = 0) {
 
   const startBlock = await connection.eth.getBlockNumber();
 
+  const _customTxOptions = async (ofClass) => {
+    const _origin = await ofClass.txOptions();
+
+    ofClass.txOptions = async () => {
+      return {..._origin(), nonce: await connection.eth.getTransactionCount(await connection.getAddress())}
+    }
+  }
+
   function getContractAddress({contractAddress}) {
     return contractAddress;
   }
@@ -92,6 +106,15 @@ async function main(option = 0) {
   async function Deploy(_class, ...args) {
     const deployer = new _class(connection);
     deployer.loadAbi();
+
+    const _txOptions = deployer.contract.txOptions.bind(deployer.contract);
+
+    deployer.contract.txOptions = async function (m, v, f) {
+      const _origin = await _txOptions(m, v, f);
+
+      return {..._origin, nonce: await connection.eth.getTransactionCount(await connection.getAddress())}
+    };
+
     console.debug(`Deploying ${deployer.constructor?.name} with args:`, ...(args || []));
     const address = getContractAddress(await deployer.deployJsonAbi(...(args || [])));
     console.debug(`Deployed address`, address);
@@ -205,7 +228,7 @@ async function main(option = 0) {
 
       const linkScan = explorers?.length ? explorers[0].url : chainScan;
       const blockScanner = linkScan.indexOf("https://") == 0 ? linkScan : `https://bepro.network/`
-      const eventsApi = isXNetwork ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2096`
+      const eventsApi = isXNetwork && !isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
 
       await ChainModel.findOrCreate({
         where: {
@@ -249,7 +272,7 @@ async function main(option = 0) {
 
       const paymentToken = await saveToken(payment);
       const governanceToken = await saveToken(governance);
-      const rewardToken = await saveToken(reward);
+      const rewardToken = reward?.address ? await saveToken(reward) : null;
 
       if(!NEXT_PUBLIC_DEFAULT_NETWORK_NAME) return;
 
@@ -304,7 +327,8 @@ async function main(option = 0) {
 
       await saveNetworkTokensRelation(paymentToken, payment.isTransactional, payment.isReward);
       await saveNetworkTokensRelation(governanceToken, governance.isTransactional, governance.isReward);
-      await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
+      if (rewardToken)
+        await saveNetworkTokensRelation(rewardToken, reward.isTransactional, reward.isReward);
     } catch (error) {
       console.debug("Failed to save default network", error);
     }

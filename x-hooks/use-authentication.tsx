@@ -18,7 +18,6 @@ import {
   changeCurrentUserWallet
 } from "contexts/reducers/change-current-user";
 import {changeActiveNetwork} from "contexts/reducers/change-service";
-import {addToast} from "contexts/reducers/change-toaster";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
 import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -35,11 +34,14 @@ import {SESSION_TTL} from "server/auth/config";
 
 import {useSearchCurators} from "x-hooks/api/curator";
 import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
+
+import useBepro from "./use-bepro";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
@@ -52,10 +54,12 @@ export function useAuthentication() {
 
   const { connect } = useDao();
   const { chain } = useChain();
+  const { isNetworkGovernor } = useBepro();
+  const { addWarning } = useToastStore();
   const transactions = useTransactions();
-  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
+  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -126,7 +130,7 @@ export function useAuthentication() {
       .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
       // not balance, but related to address, no need for a second useEffect()
       state.Service.active.isCouncil(state.currentUser.walletAddress),
-      state.Service.active.isNetworkGovernor(state.currentUser.walletAddress)
+      isNetworkGovernor(state.currentUser.walletAddress)
     ])
       .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {
         update({oracles, bepro, staked});
@@ -203,11 +207,7 @@ export function useAuthentication() {
       const isAdminUser = currentWallet === publicRuntimeConfig?.adminWallet?.toLowerCase();
 
       if (!isAdminUser && state.connectedChain?.name === UNSUPPORTED_CHAIN) {
-        dispatch(addToast({
-          type: "warning",
-          title: "Unsupported chain",
-          content: "To sign a message, connect to a supported chain",
-        }));
+        addWarning("Unsupported chain", "To sign a message, connect to a supported chain");
 
         reject("Unsupported chain");
         return;

@@ -5,7 +5,6 @@ import {useTranslation} from "next-i18next";
 import Button from "components/button";
 
 import {useAppState} from "contexts/app-state";
-import {addToast} from "contexts/reducers/change-toaster";
 
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {parseTransaction} from "helpers/transactions";
@@ -13,6 +12,7 @@ import {parseTransaction} from "helpers/transactions";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 
 import {addTx, updateTx} from "../../../contexts/reducers/change-tx-list";
@@ -66,13 +66,13 @@ export default function NetworkTxButton({
   const [txSuccess,] = useState(false);
 
   const { state, dispatch } = useAppState();
-
+  const { addError, addSuccess } = useToastStore();
   const { updateWalletBalance } = useAuthentication();
 
   function checkForTxMethod() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    if (!txMethod || typeof state.Service?.active.network[txMethod] !== "function")
+    if (!txMethod || typeof state.Service?.active?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
@@ -91,17 +91,13 @@ export default function NetworkTxButton({
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
     
-    state.Service?.active.network[txMethod](txParams.tokenAmount, txParams.from)
+    state.Service?.active?.network[txMethod](txParams.tokenAmount, txParams.from)
       .then(answer => {
         if (answer.status) {
-          onSuccess && onSuccess();
-          dispatch(addToast({
-              type: "success",
-              title: t("actions.success"),
-              content: `
-              ${t(`transactions.types.${methodName}`)} ${formatNumberToCurrency(txParams?.tokenAmount)} ${currency}
-              `
-          }));
+          if (onSuccess) onSuccess();
+          const content = 
+            `${t(`transactions.types.${methodName}`)} ${formatNumberToCurrency(txParams?.tokenAmount)} ${currency}`;
+          addSuccess(t("actions.success"), content);
 
           if(handleEvent && answer.blockNumber)
             handleEvent(answer.blockNumber)
@@ -109,11 +105,7 @@ export default function NetworkTxButton({
           dispatch(updateTx([parseTransaction(answer, tmpTransaction.payload[0] as SimpleBlockTransactionPayload)]));
         } else {
           onFail(answer.message);
-          dispatch(addToast({
-              type: "danger",
-              title: t("actions.failed"),
-              content: answer?.message
-          }));
+          addError(t("actions.failed"), answer?.message);
         }
       })
       .catch((e) => {

@@ -1,7 +1,7 @@
 export enum RegistryEvents {
   NetworkRegistered = "NetworkRegistered",
   NetworkClosed = "NetworkClosed",
-  LockedAmountChanged = "UserLockedAmountChanged",
+  UserLockedAmountChanged = "UserLockedAmountChanged",
   ChangedFee = "ChangedFee",
   ChangeAllowedTokens = "ChangeAllowedTokens",
   LockFeeChanged = "LockFeeChanged"

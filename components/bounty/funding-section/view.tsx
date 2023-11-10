@@ -15,8 +15,8 @@ import {
 } from "components/bounty/funding-section/minimals.view";
 import RetractOrWithdrawModal from "components/bounty/funding-section/retract-or-withdraw-modal/controller";
 import Collapsable from "components/collapsable";
+import ContractButton from "components/common/buttons/contract-button";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
-import ContractButton from "components/contract-button";
 import If from "components/If";
 
 import {IssueBigNumberData, fundingBenefactor} from "interfaces/issue-data";

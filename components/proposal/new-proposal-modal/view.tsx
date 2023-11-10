@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
 import { ContextualSpan } from "components/contextual-span";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import IconOption from "components/icon-option";
 import If from "components/If";
 import Modal from "components/modal";

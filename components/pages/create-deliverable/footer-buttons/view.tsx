@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 export default function FooterButtons({

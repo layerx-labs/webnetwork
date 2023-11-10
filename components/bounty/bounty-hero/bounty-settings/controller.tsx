@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 
 import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 
@@ -25,9 +25,10 @@ export default function BountySettings({
 
   const [isCancelable, setIsCancelable] = useState(false);
 
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
+  const { addError } = useToastStore();
   const { updateWalletBalance } = useAuthentication();
-  const { handleReedemIssue, handleHardCancelBounty } = useBepro();
+  const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
 
   const isGovernor = state.Service?.network?.active?.isGovernor;
   const objViewProps = {
@@ -53,7 +54,7 @@ export default function BountySettings({
         updateBountyData();
       })
       .catch(error => {
-        dispatch(toastError(t("bounty:errors.failed-to-cancel"), t("actions.failed")));
+        addError(t("actions.failed"), t("bounty:errors.failed-to-cancel"));
         console.debug("Failed to cancel bounty", error);
       });
   }
@@ -69,7 +70,7 @@ export default function BountySettings({
         updateBountyData();
       })
       .catch(error => {
-        dispatch(toastError(t("bounty:errors.failed-to-cancel"), t("actions.failed")));
+        addError(t("actions.failed"), t("bounty:errors.failed-to-cancel"));
         console.debug("Failed to cancel bounty", error);
       });
   }
@@ -87,7 +88,7 @@ export default function BountySettings({
   useEffect(() => {
     if (state.Service?.active && currentBounty)
       (async () => {
-        const cancelableTime = await state.Service?.active.getCancelableTime();
+        const cancelableTime = await getCancelableTime();
         const canceable =
           +new Date() >=
           +new Date(+currentBounty.createdAt + cancelableTime);

@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import If from "components/If";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import { TabsProps } from "components/network/settings/controller";

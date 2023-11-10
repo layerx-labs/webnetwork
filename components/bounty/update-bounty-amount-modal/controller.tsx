@@ -6,7 +6,6 @@ import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useAppState } from "contexts/app-state";
-import { toastError } from "contexts/reducers/change-toaster";
 
 import calculateDistributedAmounts, { calculateTotalAmountFromGivenReward } from "helpers/calculateDistributedAmounts";
 
@@ -15,6 +14,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 import { DistributionsProps } from "interfaces/proposal";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 
@@ -39,17 +39,17 @@ export default function UpdateBountyAmountModal({
   updateBountyData,
 }: UpdateBountyAmountModalProps) {
   const { t } = useTranslation(["common", "bounty"]);
+
+  const [inputError, setInputError] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
+  const [distributions, setDistributions] = useState<DistributionsProps>();
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [issueAmount, updateIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
-  const [distributions, setDistributions] = useState<DistributionsProps>();
-  const [inputError, setInputError] = useState("");
 
   const {
-    state: { currentUser, Service },
-    dispatch,
+    state: { currentUser, Service }
   } = useAppState();
-
+  const { addError } = useToastStore();
   const transactionalERC20 = useERC20();
   const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
@@ -96,7 +96,7 @@ export default function UpdateBountyAmountModal({
         return transactionalERC20.updateAllowanceAndBalance();
       })
       .catch((error) => {
-        dispatch(toastError(error.toString(), `Failed to approve`));
+        addError("Failed to approve", error.toString());
       })
       .finally(() => {
         setIsExecuting(false);

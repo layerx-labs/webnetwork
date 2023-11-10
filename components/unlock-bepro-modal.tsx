@@ -5,7 +5,7 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ContractButton from "components/contract-button";
+import ContractButton from "components/common/buttons/contract-button";
 import InputNumber from "components/input-number";
 import Modal from "components/modal";
 
