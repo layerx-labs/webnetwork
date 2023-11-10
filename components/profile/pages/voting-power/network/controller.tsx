@@ -32,8 +32,8 @@ export default function VotingPowerNetwork() {
     state.currentUser?.balance?.oracles?.locked || BigNumber("0");
   const oraclesDelegatedToMe =
     state.currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
-  const oraclesDelegatedToOthers = 
-    state.currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => acc.plus(curr?.amount), BigNumber("0"));
+  const oraclesDelegatedToOthers = state.currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => 
+    acc.plus(curr?.amount), BigNumber("0")) || BigNumber("0");
 
   useEffect(() => {
     if (
