@@ -18,7 +18,7 @@ import {ProfilePages} from "interfaces/utils";
 
 import {WinStorage} from "services/win-storage";
 
-import {useSearchNetworks} from "x-hooks/api/network";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 
 export function useNetwork() {
@@ -89,7 +89,7 @@ export function useNetwork() {
 
         if (!data.isRegistered && !!queryChainName) {
           if (state.currentUser?.walletAddress === data.creatorAddress)
-            return replace(getURLWithNetwork("/profile/my-network", {
+            return replace(getURLWithNetwork("/profile/my-marketplace", {
               network: data.name,
               chain: data.chain.chainShortName
             }));
@@ -113,7 +113,7 @@ export function useNetwork() {
       .catch(e => {
         console.log(`Failed to get network ${queryNetworkName}`, e);
         if(query?.id && query?.repoId) return;
-        return replace(`/networks`);
+        return replace(`/marketplaces`);
       });
   }
 

@@ -12,7 +12,7 @@ import { addFilesToMarkdown } from "helpers/markdown";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import { useEditBounty } from "x-hooks/api/bounty";
+import { useEditBounty } from "x-hooks/api/task";
 
 import BountyBodyView from "./view";
 

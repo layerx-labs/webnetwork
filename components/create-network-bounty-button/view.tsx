@@ -39,7 +39,7 @@ export default function CreateNetworkBountyButtonView({
         }
       >
         <InternalLink
-          href={"/create-bounty"}
+          href={"/create-task"}
           icon={<PlusIcon />}
           label={label ? label : t("main-nav.new-bounty") as string}
           iconBefore

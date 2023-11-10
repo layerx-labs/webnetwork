@@ -33,20 +33,25 @@ import {Token} from "interfaces/token";
 import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
-import { useSearchNetworks } from "x-hooks/api/network/use-search-networks";
+import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import useNetworkTheme from "x-hooks/use-network-theme";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
-const ALLOWED_PATHS = ["/new-network", "/[network]/[chain]/profile/[[...profilePage]]", "/administration", "/setup"];
+const ALLOWED_PATHS = [
+  "/new-marketplace",
+  "/[network]/[chain]/profile/[[...profilePage]]",
+  "/administration",
+  "/setup",
+];
 const TTL = 48 * 60 * 60 // 2 day
 const storage = new WinStorage('create-network-settings', TTL, "localStorage");
 
 export const NetworkSettingsProvider = ({ children }) => {
   const router = useRouter();
 
-  /* NOTE - forced network might be renamed to `user network`,
-            referred to user nework when he access `/my-network` page from/in another network.
+  /* NOTE - forced network might be renamed to `user marketplace`,
+            referred to user nework when he access `/my-marketplace` page from/in another marketplace.
   */
   const [forcedNetwork, setForcedNetwork] = useState<Network>();
   const [networkSettings, setNetworkSettings] =
@@ -66,7 +71,7 @@ export const NetworkSettingsProvider = ({ children }) => {
     councilAmount: state.Settings?.networkParametersLimits?.councilAmount
   };
 
-  const isCreating = useMemo(() => ["/new-network", "/setup"].includes(router.pathname), [router.pathname]);
+  const isCreating = useMemo(() => ["/new-marketplace", "/setup"].includes(router.pathname), [router.pathname]);
   const needsToLoad = useMemo(() => ALLOWED_PATHS.includes(router.pathname), [router.pathname]);
   const network =
     useMemo(() =>

@@ -96,7 +96,7 @@ export default function CreateDeliverablePage({
   }
 
   function onHandleBack() {
-    push(getURLWithNetwork("/bounty/[id]", query));
+    push(getURLWithNetwork("/task/[id]", query));
   }
 
   async function onHandleCreate() {

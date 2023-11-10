@@ -30,7 +30,7 @@ export interface ProposalPageProps {
   proposal: Proposal;
 }
 
-interface MyNetworkPageProps {
+interface MyMarketplacePageProps {
   bounties: SearchBountiesPaginated;
 }
 

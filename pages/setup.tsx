@@ -15,7 +15,7 @@ import TabbedNavigation from "components/tabbed-navigation";
 
 import {useAppState} from "contexts/app-state";
 
-import { useSearchNetworks } from "x-hooks/api/network";
+import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function SetupPage(){
@@ -48,7 +48,7 @@ export default function SetupPage(){
 
   useEffect(() => {
     if (isConnected && !isAdmin)
-      replace("/networks");
+      replace("/marketplaces");
   }, [currentUser?.isAdmin, currentUser?.walletAddress]);
 
   if (!currentUser?.walletAddress)

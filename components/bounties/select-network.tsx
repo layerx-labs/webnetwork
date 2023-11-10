@@ -15,7 +15,7 @@ import { isOnNetworkPath } from "helpers/network";
 
 import { Network } from "interfaces/network";
 
-import { useSearchNetworks } from "x-hooks/api/network";
+import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
 

@@ -11,7 +11,7 @@ import { addToast } from "contexts/reducers/change-toaster";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 
-import { useStartWorking } from "x-hooks/api/bounty";
+import { useStartWorking } from "x-hooks/api/task";
 import { useNetwork } from "x-hooks/use-network";
 
 export default function PageActions({
@@ -97,7 +97,7 @@ export default function PageActions({
   };
 
   function onCreateDeliverableClick() {
-    push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
+    push(getURLWithNetwork("/task/[id]/create-deliverable", query));
   }
 
   async function handleStartWorking() {

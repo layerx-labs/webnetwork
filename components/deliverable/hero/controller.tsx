@@ -17,7 +17,7 @@ export default function DeliverableHero({currentDeliverable, currentBounty}: Del
   const { getURLWithNetwork } = useNetwork();
 
   function handleBack() {
-    router.push(getURLWithNetwork("/bounty/[id]", {
+    router.push(getURLWithNetwork("/task/[id]", {
       id: currentBounty?.id
     }))
   }

@@ -82,7 +82,7 @@ export default function DeliverableBody({
     onCancel(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then(() => {
         updateBountyData();
-        router.push(getURLWithNetwork("/bounty/[id]", {
+        router.push(getURLWithNetwork("/task/[id]", {
           id: currentBounty.id
         }));
       })
