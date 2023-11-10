@@ -7,7 +7,7 @@ type DaoServiceStore = {
   updateService: (dao: DAO) => void;
 };
 
-export const useDaoService = create<DaoServiceStore>((set) => ({
+export const useDaoStore = create<DaoServiceStore>((set) => ({
   service: null,
   updateService: (dao: DAO) => {
     set(() => ({
