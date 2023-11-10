@@ -25,6 +25,7 @@ const _xNetworks = {
   ... _xNetwork(`afrodite`, [`https://eth-afrodite.taikai.network:8080`], `TETH`, 1501, `Afrodite Test Chain`, `afrodite`, `https://eth-afrodite.taikai.network:8080`, `https://afrodite.taikai.network:2053`),
   ... _xNetwork(`irene`, [`https://eth-irene.taikai.network:8080`], `TETH`, 1502, `Irene Test Chain`, `irene`, `https://eth-irene.taikai.network:8080`, `https://irene.taikai.network:2053`),
   ... _xNetwork(`apollodorus`, [`https://eth-apollodorus.taikai.network:8080`], `TETH`, 1506, `Apollodorus Test Chain`, `apollodorus`, `https://eth-apollodorus.taikai.network:8080`, `https://apollodorus.taikai.network:2053`),
+  ... _xNetwork(`mumbai`, [`https://polygon-mumbai-bor.publicnode.com`], `MATIC`, 80001, `Mumbai`, `maticmum`, `https://mumbai.polygonscan.com/`, `https://apollodorus.taikai.network:2053`),
 }
 
 const options = yargs(hideBin(process.argv))
@@ -43,6 +44,7 @@ async function main(option = 0) {
   let chainData;
 
   const isXNetwork = !!_xNetworks[options.network[option]];
+  const isMumbai = options.network[option] === "mumbai";
 
   if (isXNetwork)
     chainData = _xNetworks[options.network[option]];
@@ -205,7 +207,7 @@ async function main(option = 0) {
 
       const linkScan = explorers?.length ? explorers[0].url : chainScan;
       const blockScanner = linkScan.indexOf("https://") == 0 ? linkScan : `https://bepro.network/`
-      const eventsApi = isXNetwork ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2096`
+      const eventsApi = isXNetwork && isMumbai ? eventsUrl : `${NEXT_PUBLIC_HOME_URL}:2053`
 
       await ChainModel.findOrCreate({
         where: {
