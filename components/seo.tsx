@@ -29,7 +29,7 @@ const Seo: React.FC<ISeoProps> = ({ issueMeta }) => {
         <NextSeo
           title={issueMeta?.title?.replace(/\b\w/g, c => c.toUpperCase())}
           openGraph={{
-            url: `${homeUrl}/bounty/${issueId}`,
+            url: `${homeUrl}/task/${issueId}`,
             title: issueMeta?.title,
             description: `${description}...` || "",
             images: [

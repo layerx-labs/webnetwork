@@ -51,7 +51,7 @@ export default function WrongNetworkModal() {
   });
 
   const isRequired = [
-    pathname?.includes("new-network"),
+    pathname?.includes("new-marketplace"),
     pathname?.includes("/[network]/[chain]/profile")
   ].some(c => c);
 

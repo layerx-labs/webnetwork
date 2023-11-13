@@ -15,7 +15,7 @@ import { Network } from "interfaces/network";
 import { Token } from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useUpdateNetwork } from "x-hooks/api/network";
+import { useUpdateNetwork } from "x-hooks/api/marketplace";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";

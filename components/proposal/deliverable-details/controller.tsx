@@ -15,7 +15,7 @@ export default function ProposalDeliverableDetails({
 }: ProposalDeliverableDetailsProps) {
   const { getURLWithNetwork } = useNetwork();
 
-  const deliverableHref = getURLWithNetwork("/bounty/[id]/deliverable/[deliverableId]", {
+  const deliverableHref = getURLWithNetwork("/task/[id]/deliverable/[deliverableId]", {
     id: issue?.id,
     deliverableId: deliverable?.id,
   });

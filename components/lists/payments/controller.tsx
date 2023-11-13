@@ -46,7 +46,7 @@ export default function PaymentsList({
     const id = payment.issue.id;
 
     return () => 
-      push(getURLWithNetwork("/bounty/[id]", { id, chain: network?.chain?.chainShortName, network: network?.name }));
+      push(getURLWithNetwork("/task/[id]", { id, chain: network?.chain?.chainShortName, network: network?.name }));
   }
 
   function onNetworkRedirect(network: NetworkPaymentsData) {
