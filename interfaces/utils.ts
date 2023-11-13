@@ -4,7 +4,7 @@ export type ProfilePages =
   "wallet" |
   "voting-power" |
   "payments" |
-  "bounties" |
+  "tasks" |
   "deliverables" |
   "proposals" | 
-  "my-network";
+  "my-marketplace";

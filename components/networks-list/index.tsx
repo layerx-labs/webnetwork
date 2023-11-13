@@ -51,7 +51,7 @@ export default function NetworksList({
           <NothingFound description={t("custom-network:errors.not-found")}>
             {state.Service?.network?.active ? (
               <InternalLink
-                href="/new-network"
+                href="/new-marketplace"
                 label={String(t("actions.create-one"))}
                 uppercase
                 blank={state.Service?.network?.active.name !== state.Settings?.defaultNetworkConfig?.name}

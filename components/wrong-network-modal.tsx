@@ -56,7 +56,6 @@ export default function WrongNetworkModal({
     staleTime: MINUTE_IN_MS
   });
 
-
   const canBeHided = !isRequired;
 
   async function selectSupportedChain(chain: SupportedChainData) {

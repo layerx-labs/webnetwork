@@ -4,5 +4,5 @@ export enum ErrorMessages {
   NoNetworkFoundOrUserAllowed = "no network or user is already allowed",
   InvalidPayload = "invalid payload",
   NoNetworkFound = "invalid network",
-  CreateBountyNotAllowList = "User is not on create-bounty allow-list",
+  CreateBountyNotAllowList = "User is not on create-task allow-list",
 }

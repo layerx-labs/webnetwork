@@ -22,7 +22,7 @@ export default function DeliverablesPage({
     <ProfileLayout>
       <BountiesList
         bounties={bounties}
-        redirect={getURLWithNetwork("/bounties")}
+        redirect={getURLWithNetwork("/tasks")}
         buttonMessage={t('bounty:label_other')}
         emptyMessage={String(t('errors.you-dont-have-deliverables'))}
         variant="profile"
