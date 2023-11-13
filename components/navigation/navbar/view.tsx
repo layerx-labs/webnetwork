@@ -13,7 +13,7 @@ interface NavBarViewProps {
   isCurrentNetworkClosed: boolean;
   isConnected: boolean;
   brandHref: string | UrlObject;
-  logoUrl: string;
+  logos: { fullLogo: string; logoIcon: string; }
 }
 
 export default function NavBarView({
@@ -21,7 +21,7 @@ export default function NavBarView({
   isCurrentNetworkClosed,
   isConnected,
   brandHref,
-  logoUrl,
+  logos,
 }: NavBarViewProps) {
   const isClosedAlertVisible = isOnNetwork && isCurrentNetworkClosed;
   const paddingY = isConnected ? "py-0" : "py-3";
@@ -41,11 +41,20 @@ export default function NavBarView({
         >
           <div className="d-flex align-items-center gap-44">
             <div className="d-flex gap-32">
-              <BrandLogo
-                href={brandHref}
-                logoUrl={logoUrl}
-                showDefaultBepro={!isOnNetwork}
-              />
+              <ResponsiveWrapper xs={false} xl={true}>
+                <BrandLogo
+                  href={brandHref}
+                  logoUrl={logos.fullLogo}
+                  showDefaultBepro={!isOnNetwork}
+                />
+              </ResponsiveWrapper>
+              <ResponsiveWrapper xs={true} xl={false}>
+                <BrandLogo
+                  href={brandHref}
+                  logoUrl={logos.logoIcon}
+                  showDefaultBepro={!isOnNetwork}
+                />
+              </ResponsiveWrapper>
 
               <ResponsiveWrapper xs={false} xl={true}>
                 <ChainSelector />

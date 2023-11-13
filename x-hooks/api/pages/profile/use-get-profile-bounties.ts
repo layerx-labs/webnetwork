@@ -4,7 +4,7 @@ import { emptyPaginatedData } from "helpers/api";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import { getBountiesListData } from "x-hooks/api/bounty";
+import { getBountiesListData } from "x-hooks/api/task";
 
 type UserType = "proposer" | "creator" | "deliverabler" | "governor";
 

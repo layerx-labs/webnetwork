@@ -26,7 +26,7 @@ function getUpdatedLink(commentBody, networkName, chainName, bountyId) {
   try {
     const linkUrl = new URL(link);
 
-    return `${linkUrl.origin}/${networkName}/${chainName}/bounty/${bountyId}`;
+    return `${linkUrl.origin}/${networkName}/${chainName}/task/${bountyId}`;
   } catch (error) {
     console.log("Failed to get updated link from: ", link);
     return link;

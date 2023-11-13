@@ -71,7 +71,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         title,
         description: `Created on ${network.name} Network.`,
         creationDate: new Date(createdAt).toUTCString(),
-        link: `${homeUrl}/${network.name}/${chain.chainShortName}/bounty/${id}`,
+        link: `${homeUrl}/${network.name}/${chain.chainShortName}/task/${id}`,
         seoUrl: `${ipfsUrl}/${seoImage}`,
         tags: (tags || []).map( tag => ({ tag }))
       }))

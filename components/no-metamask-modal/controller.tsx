@@ -23,7 +23,7 @@ export default function NoMetamaskModal() {
   } = useAppState();
 
   const isRequired = [
-    pathname?.includes("new-network"),
+    pathname?.includes("new-marketplace"),
     pathname?.includes("/[network]/[chain]/profile")
   ].some(c => c);
 

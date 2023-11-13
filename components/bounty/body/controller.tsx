@@ -12,7 +12,7 @@ import { QueryKeys } from "helpers/query-keys";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import { useEditBounty } from "x-hooks/api/bounty";
+import { useEditBounty } from "x-hooks/api/task";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyBodyView from "./view";

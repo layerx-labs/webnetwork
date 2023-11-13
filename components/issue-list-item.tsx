@@ -28,7 +28,7 @@ import {getIssueState} from "helpers/handleTypeIssue";
 
 import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
-import { useUpdateBountyVisibility } from "x-hooks/api/network";
+import { useUpdateBountyVisibility } from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
@@ -93,7 +93,7 @@ export default function IssueListItem({
 
   function handleClickCard() {
     if (xClick) return xClick();
-    router.push(getURLWithNetwork("/bounty/[id]", {
+    router.push(getURLWithNetwork("/task/[id]", {
       id: issue?.id,
       network: issue?.network?.name,
       chain: issue?.network?.chain?.chainShortName
