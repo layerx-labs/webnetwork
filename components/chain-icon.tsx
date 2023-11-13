@@ -10,6 +10,7 @@ interface ChainIconProps {
   size?: string;
   label?: string;
   responsiveLabel?: boolean;
+  className?: string;
 }
 
 const { publicRuntimeConfig } = getConfig();
@@ -18,11 +19,12 @@ export default function ChainIcon({
   src,
   size = "18",
   label,
-  responsiveLabel = true
+  responsiveLabel = true,
+  className
 } : ChainIconProps) {
   const ipfsUrl = publicRuntimeConfig?.urls?.ipfs;
   const chainIcon = src && ipfsUrl ? 
-    <img className="rounded-circle" src={`${ipfsUrl}/${src}`} height={size} width={size} /> :
+    <img className={`rounded-circle ${className}`} src={`${ipfsUrl}/${src}`} height={size} width={size} /> :
     <QuestionMarkIcon height={size} width={size} />;
 
   return(
