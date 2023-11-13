@@ -5,10 +5,12 @@ import CreateNetworkBountyButtonView from "components/create-network-bounty-butt
 
 interface CreateNetworkBountyButtonProps {
   actionCallBack?: () => void;
+  label?: string;
 }
 
 export default function CreateNetworkBountyButton({
   actionCallBack,
+  label
 }: CreateNetworkBountyButtonProps) {
   const { t } = useTranslation("common");
   const { pathname, push } = useRouter();
@@ -23,12 +25,13 @@ export default function CreateNetworkBountyButton({
   }
 
   const actions = [
-    { label: t("misc.bounty"), onClick: onClick("/create-bounty") },
-    { label: t("misc.network"), onClick: onClick("/new-network") },
+    { label: t("misc.bounty"), onClick: onClick("/create-task") },
+    { label: t("misc.network"), onClick: onClick("/new-marketplace") },
   ];
 
   return <CreateNetworkBountyButtonView
     isOnNetwork={isOnNetwork}
     actions={actions}
+    label={label}
   />;
 }

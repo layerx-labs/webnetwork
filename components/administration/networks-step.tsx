@@ -17,7 +17,7 @@ import {psReadAsText} from "helpers/file-reader";
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
-import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/network";
+import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/marketplace";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";

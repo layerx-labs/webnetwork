@@ -9,7 +9,7 @@ import { useAppState } from "contexts/app-state";
 import { getIssueState } from "helpers/handleTypeIssue";
 import { QueryKeys } from "helpers/query-keys";
 
-import { useStartWorking } from "x-hooks/api/bounty";
+import { useStartWorking } from "x-hooks/api/task";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -94,7 +94,7 @@ export default function PageActions({
   };
 
   function onCreateDeliverableClick() {
-    push(getURLWithNetwork("/bounty/[id]/create-deliverable", query));
+    push(getURLWithNetwork("/task/[id]/create-deliverable", query));
   }
   
   return (

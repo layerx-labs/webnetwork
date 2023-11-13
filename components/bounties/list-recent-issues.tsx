@@ -44,7 +44,7 @@ export default function ListRecentIssues({
 
   function renderNothingFound() {
     const goToPage = 
-      () => isBountyType ? push("/create-bounty") : push("/create-bounty?type=funding", "/create-bounty");
+      () => isBountyType ? push("/create-task") : push("/create-task?type=funding", "/create-task");
 
     return (
       <div className="col-12 col-sm-6 col-md">

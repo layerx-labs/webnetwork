@@ -5,7 +5,7 @@ import { WithValidChainId } from "middleware/with-valid-chain-id";
 
 import { error as LogError } from "services/logging";
 
-import get from "server/common/overview/network";
+import get from "server/common/overview/marketplace";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
