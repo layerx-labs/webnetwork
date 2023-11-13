@@ -7,10 +7,10 @@ import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
 import NothingFound from "components/nothing-found";
 
-import {Network} from "interfaces/network";
+import { ActiveNetwork } from "types/api";
 
 interface ListActiveNetworksProps {
-  networks: Network[];
+  networks: ActiveNetwork[];
 }
 export default function ListActiveNetworks({
   networks
@@ -40,7 +40,7 @@ export default function ListActiveNetworks({
                 className="col-12 col-sm-6 col-md-5 col-lg-4"
                 key={`active-${index}-${network?.name}`}
               >
-                <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />
+                <ListActiveNetworksItem network={network} key={`${network.name}`} />
               </div>)}
           </HorizontalScroll>
         </If>
