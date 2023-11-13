@@ -39,11 +39,11 @@ export async function put(req: NextApiRequest): Promise<DatabaseId> {
   if(issue.state === "draft" || isFundingDraft){
     if(body) issue.body = body;
     if(tags) issue.tags = tags;
-  
+
     await issue.save();
-  
+
     return issue.id;
   }
-  
+
   throw new HttpConflictError("Bounty can't be edited");
 }
