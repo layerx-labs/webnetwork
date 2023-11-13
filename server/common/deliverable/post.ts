@@ -32,7 +32,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const { network, chain } = issue;
     const homeUrl = publicRuntimeConfig.urls.home;
-    const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/bounty/${issue.id}`;
+    const bountyUrl = `${homeUrl}/${network.name}/${chain.chainShortName}/task/${issue.id}`;
 
     const deliverableIpfs = {
       name: "BEPRO deliverable",

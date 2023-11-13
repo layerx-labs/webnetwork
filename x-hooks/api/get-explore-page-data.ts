@@ -4,8 +4,8 @@ import {api} from "services/api";
 
 import {ExplorePageProps} from "types/pages";
 
-import {getBountiesListData} from "x-hooks/api/bounty";
-import {useSearchActiveNetworks} from "x-hooks/api/network";
+import {useSearchActiveNetworks} from "x-hooks/api/marketplace";
+import {getBountiesListData} from "x-hooks/api/task";
 
 /**
  * Get explore page data from api based on the current url query
@@ -16,7 +16,7 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
   const { network } = query;
 
   const [ numberOfNetworks, bounties, recentBounties, recentFunding, activeNetworks ] = await Promise.all([
-    api.get("/search/networks/total", { params: { name: network } })
+    api.get("/search/marketplaces/total", { params: { name: network } })
       .then(({ data }) => data)
       .catch(() => 0),
     getBountiesListData(query)

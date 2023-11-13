@@ -16,13 +16,13 @@ import { isValidUrl } from "helpers/validateUrl";
 import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 
-import { getBountyData } from "x-hooks/api/bounty";
 import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import { getBountyData } from "x-hooks/api/task";
 
 export default function CreateDeliverablePage() {
   const { push, query } = useRouter();
@@ -117,7 +117,7 @@ export default function CreateDeliverablePage() {
   }
 
   function onHandleBack() {
-    push(getURLWithNetwork("/bounty/[id]", query));
+    push(getURLWithNetwork("/task/[id]", query));
   }
 
   return (

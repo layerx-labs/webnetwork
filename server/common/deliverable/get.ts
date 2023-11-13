@@ -23,6 +23,9 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
             association: "network",
             include: [{ association: "chain", attributes: ["chainShortName", "closeFeePercentage"] }],
           },
+          {
+            association: "transactionalToken"
+          }
         ],
       },
       { association: "user" },

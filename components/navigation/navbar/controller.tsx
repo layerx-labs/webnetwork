@@ -13,8 +13,12 @@ export default function NavBar() {
   const { getURLWithNetwork } = useNetwork();
 
   const isOnNetwork = pathname?.includes("[network]");
-  const networkLogo = state.Service?.network?.active?.fullLogo;
-  const fullLogoUrl = networkLogo && `${state.Settings?.urls?.ipfs}/${networkLogo}`;
+  const network = state.Service?.network?.active;
+  const logoPath = state.Settings?.urls?.ipfs
+  const logos = {
+    fullLogo: network?.fullLogo && `${logoPath}/${network.fullLogo}` ,
+    logoIcon: network?.logoIcon && `${logoPath}/${network.logoIcon}` 
+  }
   const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/", {
     network: state.Service?.network?.active?.name,
   });
@@ -25,7 +29,7 @@ export default function NavBar() {
       isCurrentNetworkClosed={state.Service?.network?.active?.isClosed}
       isConnected={!!state.currentUser?.walletAddress}
       brandHref={brandHref}
-      logoUrl={fullLogoUrl}
+      logos={logos}
     />
   );
 }

@@ -12,7 +12,7 @@ export default function Home() {
   const { getURLWithNetwork } = useNetwork();
 
   useEffect(() => {
-    replace(getURLWithNetwork(`/bounties`, {
+    replace(getURLWithNetwork(`/tasks`, {
       network: query?.network
     }));
   }, []);

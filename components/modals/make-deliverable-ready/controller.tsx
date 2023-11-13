@@ -36,7 +36,7 @@ export default function MakeDeliverableRedyModal({
   const hasContractId = deliverable?.prContractId !== null;
 
   function goToDeliverable() {
-    push(getURLWithNetwork("/bounty/[id]/deliverable/[deliverableId]", {
+    push(getURLWithNetwork("/task/[id]/deliverable/[deliverableId]", {
       ...query,
       deliverableId
     }));
