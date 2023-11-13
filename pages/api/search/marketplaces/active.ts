@@ -6,7 +6,6 @@ import {isAddress} from "web3-utils";
 import models from "db/models";
 
 import {paginateArray} from "helpers/paginate";
-import {lowerCaseIncludes} from "helpers/string";
 
 import {withCORS} from "middleware";
 
@@ -15,7 +14,13 @@ import {HttpBadRequestError} from "server/errors/http-errors";
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const whereCondition: WhereOptions = {};
 
-  const { name, creatorAddress, isClosed, isRegistered, page, sortBy, order} = req.query || {};
+  const {
+    name,
+    creatorAddress,
+    quantity = 3,
+    page = 1,
+    isClosed
+  } = req.query || {};
 
   if (creatorAddress && !isAddress(creatorAddress?.toString()))
     throw new HttpBadRequestError("provided creator address is not an address")
@@ -26,67 +31,65 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   if (isClosed)
     whereCondition.isClosed = isClosed === "true";
 
-  if (isRegistered)
-    whereCondition.isRegistered = isRegistered === "true";
-
   if (name)
     whereCondition.name = name;
-
-  if ((order && !lowerCaseIncludes(order?.toString(), ["desc", "asc"])) ||
-    (sortBy && !lowerCaseIncludes(sortBy?.toString(), ["updatedat", "createdat"])))
-    throw new HttpBadRequestError("wrong order/sort argument")
     
   const include = [
-    { association: "tokens" },
-    { association: "issues",
+    { 
+      association: "issues",
+      attributes: ["id"],
+      required: false,
       where: { 
         state: { [Op.notIn]: ["pending", "canceled"] },
         visible: true
       }
     },
-    { association: "curators" },
-    { association: "chain" }
+    { 
+      association: "curators",
+      required: false,
+      attributes: ["id", "tokensLocked", "delegatedToMe"]
+    },
+    { 
+      association: "chain",
+      attributes: ["chainId", "chainName", "chainShortName", "icon"]
+    }
   ];
 
   const networks = await models.network.findAll({
-        attributes: {
-          exclude: ["creatorAddress"]
-        },
-        where: whereCondition,
-        include,
-        order: [[String(sortBy) ||["createdAt"], String(order) || "DESC"]],
-        nest: true
-  })
+    attributes: ["name", "colors", "logoIcon", "fullLogo"],
+    where: whereCondition,
+    include,
+    nest: true,
+    order: [["name", "ASC"], ["id", "ASC"]]
+  });
 
-  const result = networks.map((network) => {
-    const tokensLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.tokensLocked || 0),
-                                                   BigNumber(0))
-    const delegatedLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.delegatedToMe || 0),
-                                                      BigNumber(0))                                       
+  const result = {};
 
-    return {
-            name: network?.name,
-            fullLogo: network?.fullLogo,
-            logoIcon: network?.logoIcon,
-            totalValueLock: tokensLocked?.plus(delegatedLocked),
-            totalIssues: network?.issues?.length || 0,
-            countIssues: network?.issues?.length || 0,
-            chain: network?.chain
-    };
-  })
+  for (const network of networks) {
+    const tokensLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.tokensLocked || 0), BigNumber(0));
+    const delegatedLocked = 
+      network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.delegatedToMe || 0), BigNumber(0));
+    
+    const networkOnResult = result[network.name.toLowerCase()];
 
-  const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 )
+    result[network.name.toLowerCase()] = {
+      name: (networkOnResult || network)?.name,
+      fullLogo: (networkOnResult || network)?.fullLogo,
+      logoIcon: (networkOnResult || network)?.logoIcon,
+      totalValueLock: 
+        BigNumber(networkOnResult?.totalValueLock || 0).plus(delegatedLocked).plus(tokensLocked).toFixed(),
+      totalIssues: (networkOnResult?.totalIssues || 0 ) + network?.issues?.length || 0,
+      chains: [...(networkOnResult?.chains || []), network?.chain]
+    }
+  }
+
+  const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 );
+  const networksResult = Object.values(result);
   
-  const paginatedData = paginateArray(result
-          .sort(compare)
-          .slice(0, 3)
-          .map((network) => ({
-            ...network,
-            totalValueLock: network.totalValueLock.toFixed(),
-          })), 3, page || 1);
-                  
+  const paginatedData = paginateArray(networksResult.sort(compare), quantity, page);
+
   return res.status(200).json({
-          count: result.length,
+          count: networksResult.length,
           rows: paginatedData.data,
           pages: paginatedData.pages,
           currentPage: +paginatedData.page
