@@ -31,8 +31,8 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import { useCreatePreBounty } from "x-hooks/api/task";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useCreatePreBounty } from "x-hooks/api/task";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -527,6 +527,7 @@ export default function CreateTaskPage({
   ]);
 
   useEffect(() => {
+    if (currentSection !== 2) return;
     if (!currentNetwork?.tokens) {
       setTransactionalToken(undefined);
       setRewardToken(undefined);
@@ -545,7 +546,7 @@ export default function CreateTaskPage({
       if (tokens.length !== customTokens.length)
         handleCustomTokens(tokens)
     }
-  }, [currentNetwork?.tokens]);
+  }, [currentNetwork?.tokens, currentSection]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -572,7 +573,12 @@ export default function CreateTaskPage({
   }, []);
 
   async function handleNetworkSelected(chain: SupportedChainData) {
-    setCurrentNetwork(undefined)
+    setCurrentNetwork(null);
+    setTransactionalToken(null);
+    setRewardToken(null);
+    setCustomTokens([]);
+    transactionalERC20.setAddress(undefined);
+    rewardERC20.setAddress(undefined);
     handleAddNetwork(chain)
       .then(_ => setCurrentNetwork(networksOfConnectedChain[0]))
       .catch((err) => console.log('handle Add Network error', err));
@@ -604,7 +610,6 @@ export default function CreateTaskPage({
 
     changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
   }, [currentNetwork, Service?.active])
-
 
   return(
     <CreateTaskPageView

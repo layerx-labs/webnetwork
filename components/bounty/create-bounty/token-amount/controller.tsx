@@ -9,6 +9,7 @@ import {useAppState} from "contexts/app-state";
 
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
 
+import { Network } from "interfaces/network";
 import {DistributionsProps} from "interfaces/proposal";
 import {Token} from "interfaces/token";
 
@@ -38,11 +39,13 @@ interface CreateBountyTokenAmountProps {
   needValueValidation: boolean;
   previewAmount: NumberFormatValues;
   distributions: DistributionsProps;
+  currentNetwork: Network;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
 }
 
 export default function CreateBountyTokenAmount({
+  currentNetwork,
   currentToken,
   updateCurrentToken,
   addToken,
@@ -78,7 +81,7 @@ export default function CreateBountyTokenAmount({
 
 
   function calculateRewardAmountGivenTotalAmount(value: number) {
-    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = currentNetwork;
 
     const _value = BigNumber(value);
 
@@ -90,7 +93,7 @@ export default function CreateBountyTokenAmount({
   }
 
   function _calculateTotalAmountFromGivenReward(reward: number) {
-    const { chain, mergeCreatorFeeShare, proposerFeeShare } = Service.network.active;
+    const { chain, mergeCreatorFeeShare, proposerFeeShare } = currentNetwork;
 
     return calculateTotalAmountFromGivenReward( reward, 
                                                 +chain.closeFeePercentage/100,
@@ -105,7 +108,7 @@ export default function CreateBountyTokenAmount({
   });
 
   function handleDistributions(value, type) {
-    if (!Service?.network?.active) return;
+    if (!currentNetwork) return;
     if (!value) {
       setDistributions(undefined);
       if (type === "reward")
@@ -115,7 +118,7 @@ export default function CreateBountyTokenAmount({
       return;
     }
 
-    const { mergeCreatorFeeShare, proposerFeeShare, chain } = Service.network.active;
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
 
     const amountOfType =
       BigNumber(type === "reward"
@@ -152,7 +155,7 @@ export default function CreateBountyTokenAmount({
 
     if(type === 'total'){
       const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(value));
-      setPreviewAmount(handleNumberFormat(rewardValue))
+      setPreviewAmount(handleNumberFormat(rewardValue));
     }
 
     setDistributions(distributions)
