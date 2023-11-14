@@ -51,7 +51,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     },
     { 
       association: "chain",
-      attributes: ["chainId", "chainName", "chainShortName", "icon"]
+      attributes: ["chainId", "chainName", "chainShortName", "icon", "color"]
     }
   ];
 
