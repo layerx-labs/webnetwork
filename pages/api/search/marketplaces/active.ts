@@ -56,13 +56,14 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   ];
 
   const networks = await models.network.findAll({
-    attributes: ["name", "colors", "logoIcon", "fullLogo"],
+    attributes: ["name", "colors", "logoIcon", "fullLogo", "networkAddress"],
     where: whereCondition,
     include,
     nest: true,
     order: [["name", "ASC"], ["id", "ASC"]]
   });
 
+  const groupBy = name ? "networkAddress" : "name";
   const result = {};
 
   for (const network of networks) {
@@ -70,9 +71,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     const delegatedLocked = 
       network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.delegatedToMe || 0), BigNumber(0));
     
-    const networkOnResult = result[network.name.toLowerCase()];
+    const networkOnResult = result[network[groupBy]?.toLowerCase()];
 
-    result[network.name.toLowerCase()] = {
+    result[network[groupBy]?.toLowerCase()] = {
       name: (networkOnResult || network)?.name,
       fullLogo: (networkOnResult || network)?.fullLogo,
       logoIcon: (networkOnResult || network)?.logoIcon,

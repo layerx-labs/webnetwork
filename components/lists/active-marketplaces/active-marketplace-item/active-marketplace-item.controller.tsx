@@ -15,6 +15,11 @@ export function ActiveMarketplaceItem({
 }: ActiveMarketplaceItemProps) {
   const [isChainsModalVisible, setIsChainsModalVisible] = useState(false);
 
+  const marketplaceName = marketplace?.name?.toLowerCase();
+  const firstChainShortName = marketplace?.chains?.at(0)?.chainShortName?.toLowerCase();
+  const hasMoreThanOneChain = marketplace?.chains?.length > 1;
+  const href = hasMoreThanOneChain ? `/${marketplaceName}` : `/${marketplaceName}/${firstChainShortName}`
+
   const setVisible = (e) => {
     e?.preventDefault();
     setIsChainsModalVisible(true);
@@ -25,6 +30,7 @@ export function ActiveMarketplaceItem({
     <ActiveMarketplaceItemView
       marketplace={marketplace}
       isChainsModalVisible={isChainsModalVisible}
+      href={href}
       onMoreClick={setVisible}
       onCloseClick={setHidden}
     />

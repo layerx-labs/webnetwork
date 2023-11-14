@@ -18,6 +18,7 @@ const { publicRuntimeConfig } = getConfig();
 interface ActiveMarketplaceItemProps {
   marketplace: ActiveMarketplace;
   isChainsModalVisible: boolean;
+  href: string;
   onMoreClick: (e) => void;
   onCloseClick: () => void;
 }
@@ -25,6 +26,7 @@ interface ActiveMarketplaceItemProps {
 export function ActiveMarketplaceItemView({
   marketplace,
   isChainsModalVisible,
+  href,
   onMoreClick,
   onCloseClick,
 }: ActiveMarketplaceItemProps) {
@@ -35,7 +37,7 @@ export function ActiveMarketplaceItemView({
 
   return (
     <>
-      <Link href={`/${marketplace?.name}`} passHref>
+      <Link href={href} passHref>
         <div className="cursor-pointer border border-gray-800 border-radius-8 bg-gray-900 p-3 bg-gray-950-hover">
           <div className="row align-items-center justify-content-between mx-0">
             <div className="col-auto px-0">
