@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 import getConfig from "next/config";
 
 import QuestionMarkIcon from "assets/icons/question-mark-icon";
@@ -11,6 +13,7 @@ interface ChainIconProps {
   label?: string;
   responsiveLabel?: boolean;
   className?: string;
+  style?: CSSProperties
 }
 
 const { publicRuntimeConfig } = getConfig();
