@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 
 import { Currency } from "interfaces/currency";
 import { IssueBigNumberData } from "interfaces/issue-data";
+import { Network } from "interfaces/network";
 import { DistributionsProps } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
@@ -84,6 +85,7 @@ export interface RewardInformationViewProps {
     formattedValue: string;
     floatValue: number;
   };
+  currentNetwork: Network;
   currentUserWallet: string;
   rewardChecked: boolean;
   transactionalToken: Token;
@@ -110,6 +112,7 @@ export interface RewardInformationViewProps {
 }
 
 export interface RewardInformationSectionProps {
+  currentNetwork: Network;
   isFundingType: boolean;
   rewardChecked: boolean;
   transactionalToken: Token;

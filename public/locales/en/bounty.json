@@ -255,5 +255,10 @@
   "approximated-values-warning": "Defining the Reward amount will result in approximate values in the contract. If you want exact values, set the Total Amount first.",
   "your-balance": "Your balance",
   "locked-in-the-task": "Locked in the Task",
-  "available": "Available"
+  "available": "Available",
+  "types": {
+    "code": "Code",
+    "design": "Design",
+    "other": "Other"
+  }
 }

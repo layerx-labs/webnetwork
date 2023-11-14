@@ -5,7 +5,6 @@ import {changeLoad} from "contexts/reducers/change-load";
 import {changeNetwork, changeServiceProp} from "contexts/reducers/change-service";
 import {changeSettings,} from "contexts/reducers/change-settings";
 import {changeSupportedChains} from "contexts/reducers/change-supported-chains";
-import {changeTxList} from "contexts/reducers/change-tx-list";
 import {addReducer} from "contexts/reducers/main";
 import {changeShowProp} from "contexts/reducers/update-show-prop";
 
@@ -19,7 +18,6 @@ export default function loadApplicationStateReducers() {
     changeLoad,
     changeCurrentUser,
     changeChain,
-    changeTxList,
     changeShowProp,
     changeServiceProp,
     changeNetwork,

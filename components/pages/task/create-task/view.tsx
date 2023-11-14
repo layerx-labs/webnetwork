@@ -108,6 +108,7 @@ export default function CreateTaskPageView({
     if (currentSection === 2)
       return (
           <RewardInformationSection
+            currentNetwork={rest.currentNetwork}
             isFundingType={rest.isFundingType} 
             rewardChecked={rest.rewardChecked} 
             transactionalToken={rest.transactionalToken} 

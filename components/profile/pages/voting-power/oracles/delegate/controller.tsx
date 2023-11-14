@@ -1,20 +1,21 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { NumberFormatValues } from "react-number-format";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
+import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
+import {useAppState} from "contexts/app-state";
 
-import { NetworkEvents } from "interfaces/enums/events";
-import { TransactionStatus } from "interfaces/enums/transaction-status";
-import { TransactionTypes } from "interfaces/enums/transaction-types";
-import { OraclesDelegateProps } from "interfaces/oracles-state";
+import {NetworkEvents} from "interfaces/enums/events";
+import {TransactionStatus} from "interfaces/enums/transaction-status";
+import {TransactionTypes} from "interfaces/enums/transaction-types";
+import {OraclesDelegateProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useBepro from "x-hooks/use-bepro";
 
 import OraclesDelegateView from "./view";
+import {transactionStore} from "../../../../../../x-hooks/stores/transaction-list/transaction.store";
 
 export default function OraclesDelegate({
   wallet,
@@ -33,9 +34,11 @@ export default function OraclesDelegate({
 
   const { processEvent } = useProcessEvent();
   const {
-    state: { transactions, Service },
+    state: { Service },
   } = useAppState();
   const { isAddress } = useBepro();
+
+  const {list: transactions} = transactionStore();
 
   const networkTokenDecimals =
     Service?.network?.active?.networkToken?.decimals || 18;
