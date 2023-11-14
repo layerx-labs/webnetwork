@@ -1,11 +1,11 @@
-import { CSSProperties, ReactElement } from "react";
+import { CSSProperties, ReactNode } from "react";
 import { Badge as ReactBadge } from "react-bootstrap";
 
 interface BadgeProps {
   label?: string;
   color?: string;
   className?: string;
-  children?: ReactElement
+  children?: ReactNode;
   style?: CSSProperties;
 }
 
