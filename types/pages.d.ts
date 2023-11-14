@@ -8,7 +8,7 @@ import {
   LeaderBoardPaginated,
   CuratorsListPaginated,
   NetworkPaymentsData,
-  ActiveNetwork
+  ActiveMarketplace
 } from "types/api";
 
 export interface ExplorePageProps {
@@ -16,7 +16,7 @@ export interface ExplorePageProps {
   bounties: SearchBountiesPaginated;
   recentBounties: IssueData[];
   recentFunding: IssueData[];
-  activeNetworks: ActiveNetwork[];
+  activeNetworks: ActiveMarketplace[];
 }
 
 export interface NetworkCuratorsPageProps {

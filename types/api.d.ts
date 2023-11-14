@@ -81,7 +81,7 @@ export interface UpdateNetworkParams {
   networkAddress: string;
 }
 
-export interface ActiveNetwork {
+export interface ActiveMarketplace {
   name: string;
   fullLogo?: string;
   logoIcon?: string;
@@ -90,4 +90,4 @@ export interface ActiveNetwork {
   chains: Partial<SupportedChainData>[];
 }
 
-export type ActiveNetworksPaginated = PaginatedData<ActiveNetwork>;
+export type ActiveNetworksPaginated = PaginatedData<ActiveMarketplace>;
