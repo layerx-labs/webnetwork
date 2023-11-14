@@ -159,17 +159,6 @@ export function useNetwork() {
     }, `/${path}`);
   }
 
-  function updateNetworkAndChainMatch() {
-    const connectedChainId = state.connectedChain?.id;
-    const networkChainId = state?.Service?.network?.active?.chain_id;
-    const isOnANetwork = !!query?.network;
-
-    if (connectedChainId && networkChainId && isOnANetwork)
-      dispatch(changeMatchWithNetworkChain(+connectedChainId === +networkChainId));
-    else
-      dispatch(changeMatchWithNetworkChain(null));
-  }
-
   function getTotalNetworkToken() {
     const network = query?.network?.toString();
     const chain = query?.chain?.toString();
@@ -191,7 +180,6 @@ export function useNetwork() {
     getURLWithNetwork,
     clearNetworkFromStorage,
     goToProfilePage,
-    updateNetworkAndChainMatch,
     getTotalNetworkToken
   }
 
