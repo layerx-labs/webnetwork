@@ -98,8 +98,7 @@ export default function useERC20() {
   }
 
   function setDefaults(newAddress?: string) {
-    if (newAddress)
-      setAddress(newAddress);
+    setAddress(newAddress);
     setName("");
     setSymbol("");
     setMinimum("");
