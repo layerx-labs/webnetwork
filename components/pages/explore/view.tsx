@@ -1,11 +1,11 @@
 import { useTranslation } from "next-i18next";
 
-import ListActiveNetworks from "components/bounties/list-active-networks";
 import ListRecentIssues from "components/bounties/list-recent-issues";
 import BountiesList from "components/bounty/bounties-list/controller";
 import HackFestCard from "components/cards/hackfest/view";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
+import ActiveMarketplacesList from "components/lists/active-marketplaces/active-marketplaces-list.view";
 
 import { ExplorePageProps } from "types/pages";
 
@@ -52,7 +52,9 @@ export default function ExplorePageView({
         infos={infos}
       />
 
-      <ListActiveNetworks networks={activeNetworks} />
+      <ActiveMarketplacesList
+        marketplaces={activeNetworks}
+      />
 
       <ListRecentIssues
         recentBounties={recentBounties}
