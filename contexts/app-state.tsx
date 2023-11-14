@@ -15,7 +15,6 @@ const appState: AppState = {
     Service: null,
     loading: null,
     currentUser: null,
-    connectedChain: null,
     currentBounty: null,
     show: {},
     spinners: {},

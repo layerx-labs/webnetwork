@@ -1,4 +1,3 @@
-import {changeChain} from "contexts/reducers/change-chain";
 import {changeCurrentBounty} from "contexts/reducers/change-current-bounty";
 import {changeCurrentUser} from "contexts/reducers/change-current-user";
 import {changeLoad} from "contexts/reducers/change-load";
@@ -18,7 +17,6 @@ export default function loadApplicationStateReducers() {
   [
     changeLoad,
     changeCurrentUser,
-    changeChain,
     changeTxList,
     changeShowProp,
     changeServiceProp,

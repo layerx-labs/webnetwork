@@ -11,6 +11,7 @@ import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
 import {useSettings} from "x-hooks/use-settings";
+import useSupportedChain from "x-hooks/use-supported-chain";
 import {useTransactions} from "x-hooks/use-transactions";
 
 const _context = {};
@@ -27,8 +28,9 @@ export const GlobalEffectsProvider = ({children}) => {
   const auth = useAuthentication();
   const transactions = useTransactions();
   const { state, dispatch } = useAppState();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
-  const { connectedChain, currentUser, Service, supportedChains } = state;
+  const { currentUser, Service } = state;
 
   useEffect(() => {
     const web3Connection = new Web3Connection({
@@ -72,12 +74,6 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(() => {
     network.updateActiveNetwork();
   }, [query?.network, query?.chain]);
-  useEffect(network.updateNetworkAndChainMatch, [
-    connectedChain?.id,
-    query?.network,
-    query?.chain,
-    Service?.network?.active?.chain_id
-  ]);
 
   useEffect(settings.loadSettings, []);
 

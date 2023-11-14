@@ -73,7 +73,6 @@ export interface State {
   loading: LoadingState | null;
   transactions: (SimpleBlockTransactionPayload | BlockTransaction | UpdateBlockTransaction)[];
   currentUser: CurrentUserState | null,
-  connectedChain: ConnectedChain | null,
   currentBounty: CurrentBounty | null,
   show: {
     [key: string]: boolean;
