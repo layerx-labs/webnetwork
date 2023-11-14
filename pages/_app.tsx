@@ -41,25 +41,25 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
     <>
       <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
       <SessionProvider session={session}>
-        <RootProviders>
           <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
-              <Seo issueMeta={seoData} />
-              <ReadOnlyContainer>
-                <NoMetamaskModal />
-                <InvalidAccountWalletModal />
-                <NavBar />
-                <div id="root-container">
-                  <Component {...pageProps} />
-                </div>
-                <WrongNetworkModal />
-                <MissingMetamaskModal />
-                <Toaster />
-                <Loading />
-              </ReadOnlyContainer>
-            </Hydrate>
+            <RootProviders>
+              <Hydrate state={pageProps.dehydratedState}>
+                <Seo issueMeta={seoData} />
+                <ReadOnlyContainer>
+                  <NoMetamaskModal />
+                  <InvalidAccountWalletModal />
+                  <NavBar />
+                  <div id="root-container">
+                    <Component {...pageProps} />
+                  </div>
+                  <WrongNetworkModal />
+                  <MissingMetamaskModal />
+                  <Toaster />
+                  <Loading />
+                </ReadOnlyContainer>
+              </Hydrate>
+            </RootProviders>
           </QueryClientProvider>
-        </RootProviders>
       </SessionProvider>
       <ConsentCookie />
     </>
