@@ -26,7 +26,7 @@ export default function TransactionsStateIndicator() {
 
   const {loadFromStorage} = useStorageTransactions();
   const {list: transactions, isPending} = transactionStore();
-  const { connectedChain: {id: connectedChainId} } = useSupportedChain();
+  const { connectedChain } = useSupportedChain();
 
   function updateLoadingState() {
     if (!transactions.length) {
@@ -46,14 +46,14 @@ export default function TransactionsStateIndicator() {
   }
 
   function restoreTransactions() {
-    if (!currentUser?.walletAddress || !connectedChainId)
+    if (!currentUser?.walletAddress || !connectedChain?.id)
       return;
 
     loadFromStorage();
   }
 
   useEffect(updateLoadingState, [transactions, isPending]);
-  useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChainId]);
+  useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChain]);
 
   const overlay = (
     <Popover id="transactions-indicator">
