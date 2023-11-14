@@ -211,7 +211,8 @@
     "learn-more": "Learn More",
     "origin": "Origin",
     "type": "Type",
-    "all-chains": "All Networks"
+    "all-chains": "All Networks",
+    "available-on": "Available on"
   },
   "modals": {
     "help-modal": {
