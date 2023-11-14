@@ -5,7 +5,6 @@ import {useRouter} from "next/router";
 import {UrlObject} from "url";
 
 import {useAppState} from "contexts/app-state";
-import {changeMatchWithNetworkChain} from "contexts/reducers/change-chain";
 import {
   changeActiveAvailableChains,
   changeActiveNetwork,
@@ -25,6 +24,7 @@ import useChain from "x-hooks/use-chain";
 
 import getNetworkOverviewData from "./api/get-overview-data";
 import useReactQuery from "./use-react-query";
+import useSupportedChain from "./use-supported-chain";
 
 export function useNetwork() {
   const {query, replace, push} = useRouter();
@@ -35,6 +35,7 @@ export function useNetwork() {
 
   const {state, dispatch} = useAppState();
   const { findSupportedChain } = useChain();
+  const { connectedChain } = useSupportedChain();
 
   function getStorageKey(networkName: string, chainId: string | number) {
     return `bepro.network:${networkName}:${chainId}`;
@@ -44,7 +45,7 @@ export function useNetwork() {
     storage.delete();
 
     const networkName = state.Service?.network?.active?.name;
-    const chainId = state.connectedChain?.id;
+    const chainId = connectedChain?.id;
 
     if (networkName)
       new WinStorage(getStorageKey(networkName, chainId), 0, `sessionStorage`).delete();

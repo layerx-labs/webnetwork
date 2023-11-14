@@ -43,6 +43,7 @@ import useSignature from "x-hooks/use-signature";
 import {useTransactions} from "x-hooks/use-transactions";
 
 import useBepro from "./use-bepro";
+import useSupportedChain from "./use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
@@ -60,6 +61,7 @@ export function useAuthentication() {
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
+  const { connectedChain } = useSupportedChain();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -202,7 +204,7 @@ export function useAuthentication() {
   function signMessage(message?: string) {
     return new Promise<string>(async (resolve, reject) => {
       if (!state?.currentUser?.walletAddress ||
-          !state?.connectedChain?.id ||
+          !connectedChain?.id ||
           state.Service?.starting ||
           state.spinners?.signingMessage) {
         reject("Wallet not connected, service not started or already signing a message");
@@ -212,7 +214,7 @@ export function useAuthentication() {
       const currentWallet = state?.currentUser?.walletAddress?.toLowerCase();
       const isAdminUser = currentWallet === publicRuntimeConfig?.adminWallet?.toLowerCase();
 
-      if (!isAdminUser && state.connectedChain?.name === UNSUPPORTED_CHAIN) {
+      if (!isAdminUser && connectedChain?.name === UNSUPPORTED_CHAIN) {
         addWarning("Unsupported chain", "To sign a message, connect to a supported chain");
 
         reject("Unsupported chain");
@@ -223,7 +225,7 @@ export function useAuthentication() {
 
       const storedSignature = sessionStorage.getItem("currentSignature");
 
-      if (decodeMessage(state?.connectedChain?.id,
+      if (decodeMessage(connectedChain?.id,
                         messageToSign,
                         storedSignature || state?.currentUser?.signature,
                         currentWallet)) {

@@ -34,6 +34,7 @@ import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function LockBeproStep({ activeStep, index, handleClick, validated }: StepWrapperProps) {
   const session = useSession();
@@ -53,6 +54,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
+  const { connectedChain } = useSupportedChain();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
 
@@ -113,7 +115,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, lockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
         updateTokenBalance()
-        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -142,7 +144,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         dispatch(updateTx([parseTransaction(tx, unlockTxAction.payload[0] as SimpleBlockTransactionPayload)]));
         updateTokenBalance();
-        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -199,7 +201,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     const tokenAddress = state.Service?.active?.registry?.token?.contractAddress;
     const registryAddress = state.Service?.active?.registry?.contractAddress;
 
-    if (tokenAddress && registryAddress && state.connectedChain?.name !== UNSUPPORTED_CHAIN) {
+    if (tokenAddress && registryAddress && connectedChain?.name !== UNSUPPORTED_CHAIN) {
       registryToken.setAddress(tokenAddress);
       registryToken.setSpender(registryAddress);
     } else {
@@ -209,15 +211,15 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   }, [
     state.Service?.active?.registry?.token?.contractAddress,
     state.Service?.active?.registry?.contractAddress,
-    state.connectedChain?.name
+    connectedChain?.name
   ]);
 
   useEffect(() => {
-    if (session.status !== "authenticated" || !state.connectedChain?.id) return;
+    if (session.status !== "authenticated" || !connectedChain?.id) return;
 
     const userRoles = (session.data as CustomSession).user.roles;
-    setHasNetworkRegistered(UserRoleUtils.isGovernorOnChain(userRoles, state.connectedChain?.id));
-  }, [session, state.connectedChain?.id]);
+    setHasNetworkRegistered(UserRoleUtils.isGovernorOnChain(userRoles, connectedChain?.id));
+  }, [session, connectedChain?.id]);
 
   return (
     <Step

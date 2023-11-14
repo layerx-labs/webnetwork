@@ -31,8 +31,8 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import {getCoinInfoByContract, getCoinList} from "services/coingecko";
 
-import { useCreatePreBounty } from "x-hooks/api/task";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useCreatePreBounty } from "x-hooks/api/task";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -40,6 +40,7 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
@@ -104,10 +105,10 @@ export default function CreateTaskPage({
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
   const { pushAnalytic } = useAnalyticEvents();
-
+  const { connectedChain } = useSupportedChain();
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, }
+    state: { transactions, Settings, Service, currentUser }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,

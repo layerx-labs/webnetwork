@@ -13,6 +13,7 @@ import {useAppState} from "contexts/app-state";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface SelectChainDropdownProps {
   onSelect: (chain: SupportedChainData) => void;
@@ -49,7 +50,8 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, supportedChains, connectedChain, currentUser, spinners } } = useAppState();
+  const { state: { Service, currentUser, spinners } } = useAppState();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   const placeholder = 
     !shouldMatchChain ? t("misc.all-chains") : placeHolder ? placeHolder : t("forms.select-placeholder");

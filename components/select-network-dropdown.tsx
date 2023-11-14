@@ -11,6 +11,8 @@ import {useAppState} from "contexts/app-state";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import useSupportedChain from "x-hooks/use-supported-chain";
+
 interface SelectNetworkDropdownProps {
   onSelect: (chain: SupportedChainData) => void;
   defaultChain?: SupportedChainData;
@@ -41,7 +43,8 @@ export default function SelectNetworkDropdown({
   const [options, setOptions] = useState<ChainOption[]>([]);
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
-  const { state: { Service, supportedChains, connectedChain, currentUser, spinners } } = useAppState();
+  const { state: { Service, currentUser, spinners } } = useAppState();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   function chainToOption(chain: SupportedChainData | Partial<SupportedChainData>, isDisabled?: boolean): ChainOption { 
     return { 

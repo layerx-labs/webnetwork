@@ -18,11 +18,9 @@ export enum AppStateReduceId {
   LastNetworkVisited,
   CurrentUser,
   CurrentUserWallet,
-  ConnectedChain,
   ConnectedChainMatch,
   Show,
   CurrentBounty,
   CurrentBountyChainData,
   Spinners,
-  SupportedChains
 }

@@ -19,6 +19,7 @@ import { QueryKeys } from "helpers/query-keys";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function SetupPage(){
   const { replace } = useRouter();
@@ -26,7 +27,8 @@ export default function SetupPage(){
 
   const [activeTab, setActiveTab] = useState("supportedChains");
 
-  const { state: { currentUser, supportedChains, connectedChain } } = useAppState();
+  const { state: { currentUser } } = useAppState();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   const isConnected = !!currentUser?.walletAddress;
   const isAdmin = !!currentUser?.isAdmin;

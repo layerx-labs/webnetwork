@@ -7,9 +7,12 @@ import {analyticEvents} from "helpers/analytic-events";
 
 import {Analytic, EventName} from "interfaces/analytics";
 
+import useSupportedChain from "./use-supported-chain";
+
 export default function useAnalyticEvents() {
 
   const {state} = useAppState();
+  const { connectedChain } = useSupportedChain();
   const {publicRuntimeConfig} = getConfig();
 
   /**
@@ -47,10 +50,10 @@ export default function useAnalyticEvents() {
     }
 
 
-    if (state?.connectedChain)
+    if (connectedChain)
       details = {
         ...details,
-        ...state.connectedChain,
+        ...connectedChain,
       }
 
     if (eventName in analyticEvents)

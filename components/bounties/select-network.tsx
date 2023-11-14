@@ -19,6 +19,7 @@ import { Network } from "interfaces/network";
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
@@ -39,9 +40,10 @@ export default function SelectNetwork({
 
   const { chain } = useChain();
   const { state } = useAppState();
+  const { connectedChain } = useSupportedChain();
 
   const chainIdToFilter = filterByConnectedChain ? !isOnNetworkPath(pathname) ? 
-      state.connectedChain?.id : chain?.chainId?.toString() : undefined
+        connectedChain?.id : chain?.chainId?.toString() : undefined
 
   const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
                                             () => useSearchNetworks({ chainId: chainIdToFilter }),

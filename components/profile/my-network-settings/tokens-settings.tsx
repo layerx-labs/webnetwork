@@ -16,6 +16,7 @@ import {Token, TokenType} from "interfaces/token";
 
 import { useGetTokens } from "x-hooks/api/token";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function TokensSettings({
   isGovernorRegistry = false,
@@ -38,8 +39,9 @@ export default function TokensSettings({
   
   const { state } = useAppState();
   const { fields } = useNetworkSettings();
-
-  const connectedChainId = state.connectedChain?.id;
+  const { connectedChain } = useSupportedChain();
+  
+  const connectedChainId = connectedChain?.id;
   const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(connectedChainId),
                                             () => useGetTokens(connectedChainId),
                                             {
@@ -116,9 +118,9 @@ export default function TokensSettings({
   }
 
   useEffect(() => {
-    if (!state.Service?.active || !state.connectedChain?.id || !dbTokens) return;
+    if (!state.Service?.active || !connectedChain?.id || !dbTokens) return;
     getAllowedTokensContract();
-  }, [state.Service?.active, state.connectedChain?.id, isGovernorRegistry, dbTokens]);
+  }, [state.Service?.active, connectedChain?.id, isGovernorRegistry, dbTokens]);
 
   useEffect(() => {
     if (defaultSelectedTokens?.length > 0) {

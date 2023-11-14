@@ -36,6 +36,7 @@ import {WinStorage} from "services/win-storage";
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import useBepro from "x-hooks/use-bepro";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
@@ -64,6 +65,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
+  const { connectedChain } = useSupportedChain();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
   const LIMITS = {
@@ -236,7 +238,7 @@ export const NetworkSettingsProvider = ({ children }) => {
         if (networksWithSameName.count === 0)
           return true;
 
-        const currentChain = +state.connectedChain?.id;
+        const currentChain = +connectedChain?.id;
 
         // Network with same name on this chain
         if (networksWithSameName.rows.some(({ chain_id }) => +chain_id === currentChain))
@@ -475,10 +477,10 @@ export const NetworkSettingsProvider = ({ children }) => {
   useEffect(() => {
     if (!network || !state.Service?.active || state.Service?.starting)
       setForcedService(undefined);
-    else if (+network?.chain?.chainId === +state.connectedChain?.id)
+    else if (+network?.chain?.chainId === +connectedChain?.id)
       loadForcedService()
         .then(setForcedService);
-  }, [network, state.Service?.active, state.Service?.starting, state.connectedChain?.id]);
+  }, [network, state.Service?.active, state.Service?.starting, connectedChain?.id]);
 
   useEffect(() => {
     if ([
@@ -509,11 +511,11 @@ export const NetworkSettingsProvider = ({ children }) => {
   ]);
 
   useEffect(() => {
-    if (state.Service?.active?.registry?.contractAddress && state.connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (state.Service?.active?.registry?.contractAddress && connectedChain?.name !== UNSUPPORTED_CHAIN)
       getERC20TokenData(state.Service.active.registry.token.contractAddress)
         .then(setRegistryToken)
         .catch(error => console.debug("Failed to load registry token", error));
-  }, [state.Service?.active?.registry?.contractAddress, state.connectedChain?.name]);
+  }, [state.Service?.active?.registry?.contractAddress, connectedChain?.name]);
 
   const memorizedValue = useMemo<NetworkSettings>(() => ({
     ...networkSettings,

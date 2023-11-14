@@ -15,6 +15,7 @@ import { AddressValidator } from "helpers/validators/address";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ContractButton({
   onClick,
@@ -28,6 +29,7 @@ export default function ContractButton({
   const { changeNetwork } = useDao();
   const { state, dispatch } = useAppState();
   const { addError, addWarning } = useToastStore();
+  const { connectedChain } = useSupportedChain();
 
   function onCloseModal() {
     setIsModalVisible(false);
@@ -42,7 +44,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (state.connectedChain?.matchWithNetworkChain !== false && state.connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (connectedChain?.matchWithNetworkChain !== false && connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
     dispatch(changeNeedsToChangeChain(true));

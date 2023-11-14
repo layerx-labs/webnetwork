@@ -44,6 +44,7 @@ import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSignature from "x-hooks/use-signature";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 function NewNetwork() {
   const router = useRouter();
@@ -69,7 +70,8 @@ function NewNetwork() {
   const { mutateAsync: createNetwork } = useReactQueryMutation({
     mutationFn: useCreateNetwork
   });
-
+  const { connectedChain } = useSupportedChain();
+  
   const isSetupPage = router?.pathname?.toString()?.includes("setup");
 
   const creationSteps = [
@@ -196,7 +198,7 @@ function NewNetwork() {
 
     if (txBlocks.length)
       await processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
-        chainId: state.connectedChain?.id,
+        chainId: connectedChain?.id,
         fromBlock: Math.min(...txBlocks)
       })
         .catch(error => console.debug("Failed to update network parameters", error));
@@ -212,14 +214,14 @@ function NewNetwork() {
 
     setCreatingNetwork(10);
     cleanStorage?.();
-    await processEvent(RegistryEvents.NetworkRegistered, state.connectedChain?.registry, {
+    await processEvent(RegistryEvents.NetworkRegistered, connectedChain?.registry, {
       fromBlock: registrationTx.blockNumber
     })
       .then(() => {
         updateSession();
         router.push(getURLWithNetwork("/", {
           network: payload.name,
-          chain: state.connectedChain?.shortName
+          chain: connectedChain?.shortName
         }));
       })
       .catch((error) => {
@@ -244,7 +246,6 @@ function NewNetwork() {
 
   useEffect(() => {
     const walletAddress = state.currentUser?.walletAddress;
-    const connectedChain = state.connectedChain;
 
     if (!state.Service?.active ||
         !walletAddress ||
@@ -252,7 +253,7 @@ function NewNetwork() {
         connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
     checkHasNetwork();
-  }, [state.Service?.active, state.currentUser, state.connectedChain]);
+  }, [state.Service?.active, state.currentUser, connectedChain]);
 
   return (
     <div>
