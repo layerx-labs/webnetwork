@@ -13,7 +13,7 @@ import { lowerCaseCompare } from "helpers/string";
 
 import { ProfilePages } from "interfaces/utils";
 
-import { useSearchNetworks } from "x-hooks/api/network";
+import { useSearchNetworks } from "x-hooks/api/marketplace";
 import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
 import useReactQuery from "x-hooks/use-react-query";
 
