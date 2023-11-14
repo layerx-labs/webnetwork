@@ -1,7 +1,7 @@
 import {Dispatch} from "react";
-import {Web3Connection} from "@taikai/dappkit";
 
 import { Web3Connection } from "@taikai/dappkit";
+
 import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
