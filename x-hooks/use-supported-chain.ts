@@ -56,6 +56,7 @@ export default function useSupportedChain() {
   return {
     supportedChains,
     connectedChain,
+    updateConnectedChain,
     refresh: invalidate,
   };
 }
