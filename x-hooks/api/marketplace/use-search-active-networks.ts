@@ -22,7 +22,7 @@ export async function useSearchActiveNetworks({
   }).toString();
 
   return api
-    .get<ActiveNetworksPaginated>(`/search/networks/active/?${params}`)
+    .get<ActiveNetworksPaginated>(`/search/marketplaces/active/?${params}`)
     .then(({ data }) => data)
     .catch(() => emptyPaginatedData as ActiveNetworksPaginated);
 }
