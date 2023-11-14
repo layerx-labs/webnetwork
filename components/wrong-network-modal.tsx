@@ -12,17 +12,14 @@ import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
 import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
-import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
-import { MINUTE_IN_MS, UNSUPPORTED_CHAIN } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
+import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { useGetChains } from "x-hooks/api/chain";
 import { useDao } from "x-hooks/use-dao";
 import useNetworkChange from "x-hooks/use-network-change";
-import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 type typeError = { code?: number; message?: string }
 
@@ -40,15 +37,10 @@ export default function WrongNetworkModal() {
   const { handleAddNetwork } = useNetworkChange();
   const {
     dispatch,
-    state: { connectedChain, currentUser, Service, supportedChains, loading, spinners }
+    state: { currentUser, Service, loading, spinners }
   } = useAppState();
 
-  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
-    dispatch(updateSupportedChains(chains));
-    return chains; 
-  }), {
-    staleTime: MINUTE_IN_MS
-  });
+  const { supportedChains, connectedChain } = useSupportedChain()
 
   const isRequired = [
     pathname?.includes("new-marketplace"),
