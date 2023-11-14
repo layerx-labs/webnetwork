@@ -10,7 +10,6 @@ import {useDebouncedCallback} from "use-debounce";
 import {IFilesProps} from "components/drag-and-drop";
 
 import {useAppState} from "contexts/app-state";
-import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
@@ -45,6 +44,7 @@ import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
+import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
 import useGetIsAllowed from "../../../../x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
 import CreateTaskPageView from "./view";
@@ -107,11 +107,13 @@ export default function CreateTaskPage({
 
   const {
     dispatch,
-    state: { transactions, Settings, Service, currentUser, connectedChain, }
+    state: { Settings, Service, currentUser, connectedChain, }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });
+
+  const {add: addTx, update: updateTx, list: transactions} = transactionStore()
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -349,18 +351,18 @@ export default function CreateTaskPage({
         return;
       }
 
-      pushAnalytic(EventName.CREATE_PRE_TASK, {saved: true, id: savedIssue.id, finished: true})
+      pushAnalytic(EventName.CREATE_PRE_TASK, {
+        saved: true,
+        id: savedIssue.id,
+        finished: true,
+      });
 
-      const transactionToast = addTx([
-        {
-          type: TransactionTypes.openIssue,
-          amount: payload.amount,
-          network: currentNetwork,
-          currency: transactionalToken?.symbol
-        },
-      ]);
-
-      dispatch(transactionToast);
+      const transactionToast = addTx({
+        type: TransactionTypes.openIssue,
+        amount: payload.amount,
+        network: currentNetwork,
+        currency: transactionalToken?.symbol,
+      });
 
       const bountyPayload: BountyPayload = {
         cid: savedIssue.ipfsUrl,
@@ -384,15 +386,13 @@ export default function CreateTaskPage({
       const networkBounty = await Service?.active
         .openBounty(bountyPayload)
         .catch((e) => {
-          dispatch(updateTx([
-              {
-                ...transactionToast.payload[0],
-                status:
-                  e?.code === MetamaskErrors.UserRejected
-                    ? TransactionStatus.failed
-                    : TransactionStatus.failed,
-              },
-          ]));
+          updateTx({
+            ...transactionToast,
+            status:
+              e?.code === MetamaskErrors.UserRejected
+                ? TransactionStatus.failed
+                : TransactionStatus.failed,
+          } as SimpleBlockTransactionPayload);
 
           if (e?.code === MetamaskErrors.ExceedAllowance)
             addError(t("actions.failed"), t("bounty:errors.exceeds-allowance"));
@@ -417,10 +417,7 @@ export default function CreateTaskPage({
       })
 
       if (networkBounty?.error !== true) {
-        dispatch(updateTx([
-            parseTransaction( networkBounty,
-                              transactionToast.payload[0] as SimpleBlockTransactionPayload),
-        ]));
+        updateTx(parseTransaction(networkBounty, transactionToast as SimpleBlockTransactionPayload));
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
