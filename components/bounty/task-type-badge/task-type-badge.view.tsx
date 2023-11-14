@@ -17,9 +17,9 @@ export default function TaskTypeBadge ({
   const { t } = useTranslation("bounty");
 
   const ICONS = {
-    code: <CodeIcon />,
-    design: <DesignIcon />,
-    other: <OtherIcon />,
+    code: () => <CodeIcon />,
+    design: () => <DesignIcon />,
+    other: () => <OtherIcon />,
   };
   const responsiveLabelClass = responsiveLabel ? "d-none d-sm-block" : "";
 
@@ -30,7 +30,7 @@ export default function TaskTypeBadge ({
         color="gray-850"
       >
         <div className="d-flex align-items-center gap-1">
-          {ICONS[type]}
+          {ICONS[type]?.()}
           <div className={responsiveLabelClass}>
             {t(`types.${type}`)}
           </div>
