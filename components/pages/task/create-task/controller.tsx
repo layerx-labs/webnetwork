@@ -10,7 +10,6 @@ import {useDebouncedCallback} from "use-debounce";
 import {IFilesProps} from "components/drag-and-drop";
 
 import {useAppState} from "contexts/app-state";
-import {addTx, updateTx} from "contexts/reducers/change-tx-list";
 
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
@@ -47,6 +46,7 @@ import {CustomSession} from "../../../../interfaces/custom-session";
 import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
 import useGetIsAllowed from "../../../../x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
+import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
 import CreateTaskPageView from "./view";
 
@@ -107,12 +107,13 @@ export default function CreateTaskPage({
   const { pushAnalytic } = useAnalyticEvents();
   const { connectedChain } = useSupportedChain();
   const {
-    dispatch,
-    state: { transactions, Settings, Service, currentUser }
+    state: { Settings, Service, currentUser }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });
+
+  const {add: addTx, update: updateTx, list: transactions} = transactionStore()
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -350,18 +351,18 @@ export default function CreateTaskPage({
         return;
       }
 
-      pushAnalytic(EventName.CREATE_PRE_TASK, {saved: true, id: savedIssue.id, finished: true})
+      pushAnalytic(EventName.CREATE_PRE_TASK, {
+        saved: true,
+        id: savedIssue.id,
+        finished: true,
+      });
 
-      const transactionToast = addTx([
-        {
-          type: TransactionTypes.openIssue,
-          amount: payload.amount,
-          network: currentNetwork,
-          currency: transactionalToken?.symbol
-        },
-      ]);
-
-      dispatch(transactionToast);
+      const transactionToast = addTx({
+        type: TransactionTypes.openIssue,
+        amount: payload.amount,
+        network: currentNetwork,
+        currency: transactionalToken?.symbol,
+      });
 
       const bountyPayload: BountyPayload = {
         cid: savedIssue.ipfsUrl,
@@ -385,15 +386,13 @@ export default function CreateTaskPage({
       const networkBounty = await Service?.active
         .openBounty(bountyPayload)
         .catch((e) => {
-          dispatch(updateTx([
-              {
-                ...transactionToast.payload[0],
-                status:
-                  e?.code === MetamaskErrors.UserRejected
-                    ? TransactionStatus.failed
-                    : TransactionStatus.failed,
-              },
-          ]));
+          updateTx({
+            ...transactionToast,
+            status:
+              e?.code === MetamaskErrors.UserRejected
+                ? TransactionStatus.failed
+                : TransactionStatus.failed,
+          } as SimpleBlockTransactionPayload);
 
           if (e?.code === MetamaskErrors.ExceedAllowance)
             addError(t("actions.failed"), t("bounty:errors.exceeds-allowance"));
@@ -418,10 +417,7 @@ export default function CreateTaskPage({
       })
 
       if (networkBounty?.error !== true) {
-        dispatch(updateTx([
-            parseTransaction( networkBounty,
-                              transactionToast.payload[0] as SimpleBlockTransactionPayload),
-        ]));
+        updateTx(parseTransaction(networkBounty, transactionToast as SimpleBlockTransactionPayload));
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
@@ -528,6 +524,7 @@ export default function CreateTaskPage({
   ]);
 
   useEffect(() => {
+    if (currentSection !== 2) return;
     if (!currentNetwork?.tokens) {
       setTransactionalToken(undefined);
       setRewardToken(undefined);
@@ -546,7 +543,7 @@ export default function CreateTaskPage({
       if (tokens.length !== customTokens.length)
         handleCustomTokens(tokens)
     }
-  }, [currentNetwork?.tokens]);
+  }, [currentNetwork?.tokens, currentSection]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -573,7 +570,12 @@ export default function CreateTaskPage({
   }, []);
 
   async function handleNetworkSelected(chain: SupportedChainData) {
-    setCurrentNetwork(undefined)
+    setCurrentNetwork(null);
+    setTransactionalToken(null);
+    setRewardToken(null);
+    setCustomTokens([]);
+    transactionalERC20.setAddress(undefined);
+    rewardERC20.setAddress(undefined);
     handleAddNetwork(chain)
       .then(_ => setCurrentNetwork(networksOfConnectedChain[0]))
       .catch((err) => console.log('handle Add Network error', err));
@@ -605,7 +607,6 @@ export default function CreateTaskPage({
 
     changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
   }, [currentNetwork, Service?.active])
-
 
   return(
     <CreateTaskPageView

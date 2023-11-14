@@ -11,6 +11,7 @@ const ZeroNumberFormatValues = {
 };
 
 export default function RewardInformationSection({
+  currentNetwork,
   transactionalToken,
   rewardToken,
   isFundingType,
@@ -51,6 +52,7 @@ export default function RewardInformationSection({
 
   return (
     <RewardInformationSectionView
+      currentNetwork={currentNetwork}
       isFundingType={isFundingType}
       defaultValue={ZeroNumberFormatValues}
       currentUserWallet={currentUser?.walletAddress}

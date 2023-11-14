@@ -14,11 +14,10 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useAuthentication} from "x-hooks/use-authentication";
-
-import {addTx, updateTx} from "../../../contexts/reducers/change-tx-list";
 import {MetamaskErrors} from "../../../interfaces/enums/Errors";
 import {SimpleBlockTransactionPayload} from "../../../interfaces/transaction";
 import NetworkTxButtonView from "./view";
+import {transactionStore} from "../../../x-hooks/stores/transaction-list/transaction.store";
 
 
 interface NetworkTxButtonParams {
@@ -66,6 +65,8 @@ export default function NetworkTxButton({
   const [txSuccess,] = useState(false);
 
   const { state, dispatch } = useAppState();
+  const {add: addTx, update: updateTx} = transactionStore();
+
   const { addError, addSuccess } = useToastStore();
   const { updateWalletBalance } = useAuthentication();
 
@@ -79,14 +80,12 @@ export default function NetworkTxButton({
   function makeTx() {
     if (!state.Service?.active?.network || !state.currentUser) return;
 
-    const tmpTransaction = addTx([{
+    const tmpTransaction = addTx({
       type: txType,
       amount: txParams?.tokenAmount || "0",
       currency: txCurrency || t("misc.$token"),
       network: state.Service?.network?.active
-    }]);
-
-    dispatch(tmpTransaction);
+    })
     
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
@@ -102,7 +101,7 @@ export default function NetworkTxButton({
           if(handleEvent && answer.blockNumber)
             handleEvent(answer.blockNumber)
 
-          dispatch(updateTx([parseTransaction(answer, tmpTransaction.payload[0] as SimpleBlockTransactionPayload)]));
+          updateTx(parseTransaction(answer, tmpTransaction as SimpleBlockTransactionPayload));
         } else {
           onFail(answer.message);
           addError(t("actions.failed"), answer?.message);
@@ -110,10 +109,10 @@ export default function NetworkTxButton({
       })
       .catch((e) => {
 
-        dispatch(updateTx([{
-          ...tmpTransaction.payload[0],
+        updateTx({
+          ...tmpTransaction,
           status: e?.code === MetamaskErrors.UserRejected ? TransactionStatus.rejected : TransactionStatus.failed,
-        }]));
+        } as SimpleBlockTransactionPayload)
 
         console.error(`Failed network-tx-button`, e);
 

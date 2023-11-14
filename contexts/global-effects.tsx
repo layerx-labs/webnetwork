@@ -1,18 +1,19 @@
 import {createContext, useEffect} from "react";
 
-import { Web3Connection } from "@taikai/dappkit";
+import {Web3Connection} from "@taikai/dappkit";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 
 import {useAppState} from "contexts/app-state";
-import { changeWeb3Connection } from "contexts/reducers/change-service";
+import {changeWeb3Connection} from "contexts/reducers/change-service";
 
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
-import {useTransactions} from "x-hooks/use-transactions";
+
+import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 const _context = {};
 
@@ -26,7 +27,7 @@ export const GlobalEffectsProvider = ({children}) => {
   const network = useNetwork();
   const settings = useSettings();
   const auth = useAuthentication();
-  const transactions = useTransactions();
+  const transactions = useStorageTransactions();
   const { state, dispatch } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 

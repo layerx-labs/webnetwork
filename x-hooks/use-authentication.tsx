@@ -40,7 +40,7 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useSignature from "x-hooks/use-signature";
-import {useTransactions} from "x-hooks/use-transactions";
+import {useStorageTransactions} from "./use-storage-transactions";
 
 import useBepro from "./use-bepro";
 import useSupportedChain from "./use-supported-chain";
@@ -55,9 +55,9 @@ export function useAuthentication() {
 
   const { connect } = useDao();
   const { chain } = useChain();
+  const transactions = useStorageTransactions();
   const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
-  const transactions = useTransactions();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();

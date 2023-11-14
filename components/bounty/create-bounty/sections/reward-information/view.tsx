@@ -12,6 +12,7 @@ import CreateBountyTokenAmount from "../../token-amount/controller";
 import RewardInformationBalanceView from "./balance/view";
 
 export default function RewardInformationSectionView({
+  currentNetwork,
   transactionalToken,
   rewardToken,
   isFundingType,
@@ -74,6 +75,7 @@ export default function RewardInformationSectionView({
     return (
       <>
         <CreateBountyTokenAmount
+          currentNetwork={currentNetwork}
           currentToken={fieldParams[type].token}
           updateCurrentToken={fieldParams[type].setToken}
           customTokens={fieldParams[type].tokens}
