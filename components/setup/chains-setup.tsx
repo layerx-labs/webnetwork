@@ -16,11 +16,16 @@ import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 
 import {useAppState} from "contexts/app-state";
 import {changeLoadState} from "contexts/reducers/change-load";
+import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 import {toastError, toastSuccess} from "contexts/reducers/change-toaster";
+
+import { MINUTE_IN_MS } from "helpers/constants";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
+import { useGetChains } from "x-hooks/api/chain";
 import useApi from "x-hooks/use-api";
+import useReactQuery from "x-hooks/use-react-query";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);
@@ -34,6 +39,14 @@ export default function ChainsSetup() {
   
   const api = useApi();
   const {state, dispatch} = useAppState();
+
+  const { invalidate } = useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+    dispatch(updateSupportedChains(chains));
+    return chains; 
+  }), {
+    staleTime: MINUTE_IN_MS
+  });
+
 
   function updateMiniChainInfo() {
     if (chains.length)
@@ -76,6 +89,7 @@ export default function ChainsSetup() {
     api.addSupportedChain(chain)
       .then(success => {
         if (success) {
+          invalidate();
           dispatch(toastSuccess(`added chain ${chain.name}`));
           setShowChainModal(null);
         } else 

@@ -14,16 +14,20 @@ import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
+import { useDao } from "x-hooks/use-dao";
+
 export default function ContractButton({
   onClick,
   children,
   ...rest
 }: ButtonProps) {
+  const { query } = useRouter();
   const { t } = useTranslation(["common"]);
+  
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const { changeNetwork } = useDao();
   const { state, dispatch } = useAppState();
-  const { query } = useRouter();
 
   function onCloseModal() {
     setIsModalVisible(false);
@@ -79,8 +83,12 @@ export default function ContractButton({
       }
 
       if (!state.Service?.starting && !state.Service?.active.network) {
-        dispatch(toastError(t("errors.failed-load-network")));
-        return false;
+        const started = 
+          await changeNetwork(state.Service?.network?.active?.chain_id, state.Service?.network?.active?.networkAddress);
+        
+        if (!started)
+          dispatch(toastError(t("errors.failed-load-network")));
+        return started;
       }
     }
 

@@ -106,13 +106,15 @@ export function useDao() {
         .then(started => {
           if (!started) {
             console.error("Failed to load network", networkAddress);
-            return;
+            return false;
           }
-          listenChainChanged()
+          listenChainChanged();
           console.debug("Network started");
+          return true;
         })
         .catch(error => {
           console.error("Error loading network", error);
+          return false;
         })
         .finally(() => {
           dispatch(changeStarting(false));

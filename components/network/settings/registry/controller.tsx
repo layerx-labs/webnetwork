@@ -151,7 +151,8 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
           originalValue: transactional.map(toLower)
         }));
         setRegistryTokenSymbol(registrySymbol);
-      });
+      })
+      .catch(error => console.debug("Failed to get registry data", error));
   }
 
   async function handleTokensTransactions({ value, originalValue }: Field, isTransactional = true) {
