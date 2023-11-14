@@ -19,8 +19,7 @@ const appState: AppState = {
     currentBounty: null,
     show: {},
     spinners: {},
-    transactions: [],
-    supportedChains: null
+    transactions: []
   },
   dispatch: () => undefined
 };
