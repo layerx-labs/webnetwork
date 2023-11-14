@@ -4,9 +4,8 @@ import {useRouter} from "next/router";
 import {isAddress} from "web3-utils";
 
 import {useAppState} from "contexts/app-state";
-import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
 import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service";
-import {changeChangingChain, changeConnecting} from "contexts/reducers/change-spinners";
+import {changeConnecting} from "contexts/reducers/change-spinners";
 import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -18,7 +17,8 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import DAO from "services/dao-service";
 
 import useChain from "x-hooks/use-chain";
-import useNetworkChange from "x-hooks/use-network-change";
+
+import useSupportedChain from "./use-supported-chain";
 
 export function useDao() {
   const session = useSession();
@@ -26,7 +26,7 @@ export function useDao() {
 
   const { state, dispatch } = useAppState();
   const { findSupportedChain } = useChain();
-  const { handleAddNetwork } = useNetworkChange();
+  const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -57,7 +57,7 @@ export function useDao() {
       .then(address => {
         if (address === "0x00") return null;
 
-        handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)))
+        handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)))
         return address;
       })
       .catch(error => {
@@ -132,8 +132,6 @@ export function useDao() {
       return;
     }
 
-    const supportedChains = state.supportedChains;
-
     if (!supportedChains?.length) {
       // console.debug("No supported chains found");
       return;
@@ -146,8 +144,6 @@ export function useDao() {
       console.debug("Is on network, but network data was not loaded yet");
       return;
     }
-
-    const { connectedChain } = state;
 
     const activeNetworkChainId = state.Service?.network?.active?.chain_id;
 
@@ -215,47 +211,30 @@ export function useDao() {
     dispatch(changeActiveDAO(daoService));
   }
 
-  function changeChain() {
-    if (state.connectedChain?.matchWithNetworkChain !== false || 
-        !state.currentUser?.walletAddress || 
-        state.spinners?.changingChain) 
-      return;
-
-    dispatch(changeChangingChain(true));
-
-    const networkChain = state.Service?.network?.active?.chain;
-
-    if (networkChain)
-      handleAddNetwork(networkChain)
-        .catch(console.debug)
-        .finally(() => dispatch(changeChangingChain(false)));
-  }
-
-  function dispatchChainUpdate(chainId: number) {
+  function updateChain(chainId: number) {
     const chain = findSupportedChain({ chainId });
 
     sessionStorage.setItem("currentChainId", chainId.toString());
 
-    return dispatch(changeChainReducer.update({
+    return updateConnectedChain({
       id: (chain?.chainId || chainId)?.toString(),
       name: chain?.chainName || UNSUPPORTED_CHAIN,
       shortName: chain?.chainShortName?.toLowerCase() || UNSUPPORTED_CHAIN,
       explorer: chain?.blockScanner || SUPPORT_LINK,
       events: chain?.eventsApi,
       registry: chain?.registryAddress
-    }));
+    })
   }
 
   function listenChainChanged() {
-    if (!window.ethereum || !state.supportedChains?.length)
+    if (!window.ethereum || !supportedChains?.length)
       return;
 
-    handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)))
+    handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)))
   }
 
   return {
     changeNetwork,
-    changeChain,
     connect,
     start,
     isServiceReady,
