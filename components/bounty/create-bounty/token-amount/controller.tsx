@@ -149,7 +149,7 @@ export default function CreateBountyTokenAmount({
     if(type === 'reward'){
       const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
       updateIssueAmount(handleNumberFormat(total))
-      if (amountIsGtBalance(total.toNumber(), tokenBalance))
+      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding)
         setInputError(t("bounty:errors.exceeds-allowance"));
     }
 
