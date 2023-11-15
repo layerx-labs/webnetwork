@@ -61,7 +61,7 @@ export const GlobalEffectsProvider = ({children}) => {
     Service?.network?.active?.chain_id,
   ]);
 
-  useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, Service?.active?.network?.contractAddress]);
+  useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, Service?.active?.network?.contractAddress, chain]);
   useEffect(auth.updateKycSession, [state?.currentUser?.accessToken,
                                     state?.currentUser?.match,
                                     state?.currentUser?.walletAddress,
