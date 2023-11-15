@@ -74,10 +74,11 @@ class Curators extends Model {
     });
   }
 
-  static findByAddress(address) {
+  static findByAddressAndNetworkId(address, networkId) {
     return this.findOne({
       where: {
-        address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("address")), address?.toLowerCase())
+        address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("address")), address?.toLowerCase()),
+        networkId
       }
     });
   }
