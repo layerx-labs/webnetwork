@@ -99,7 +99,7 @@ export default function SelectChainDropdown({
         options?.find(({ value: { chainId } }) => chainId === +(Service?.network?.active?.chain?.chainId))?.value;
     else
       chain =
-        options?.find(({ value: { chainId } }) => chainId === +(defaultChain?.chainId || connectedChain.id))?.value;
+        options?.find(({ value: { chainId } }) => chainId === +(defaultChain?.chainId || connectedChain?.id))?.value;
 
     if (!chain) {
       setSelectedChain(null);
