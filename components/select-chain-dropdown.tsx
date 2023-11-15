@@ -50,7 +50,7 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, currentUser, spinners } } = useAppState();
+  const { state: { Service, currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const placeholder = 
@@ -147,7 +147,6 @@ export default function SelectChainDropdown({
     options,
     Service?.network?.active?.chain,
     connectedChain?.id,
-    spinners,
     shouldMatchChain
   ]);
 

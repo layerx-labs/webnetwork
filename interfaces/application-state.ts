@@ -1,7 +1,7 @@
 import {Dispatch} from "react";
-import {Web3Connection} from "@taikai/dappkit";
 
-import {Spinners} from "contexts/reducers/change-spinners";
+import { Web3Connection } from "@taikai/dappkit";
+
 import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
@@ -72,9 +72,6 @@ export interface State {
   currentUser: CurrentUserState | null,
   currentBounty: CurrentBounty | null,
   show: {
-    [key: string]: boolean;
-  }
-  spinners: Partial<Spinners> & {
     [key: string]: boolean;
   }
 }

@@ -18,7 +18,6 @@ import NoMetamaskModal from "components/no-metamask-modal/controller";
 import ReadOnlyContainer from "components/read-only-container";
 import Seo from "components/seo";
 import Toaster from "components/toaster";
-import WrongNetworkModal from "components/wrong-network-modal";
 
 import RootProviders from "contexts";
 
@@ -52,7 +51,6 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
                   <div id="root-container">
                     <Component {...pageProps} />
                   </div>
-                  <WrongNetworkModal />
                   <MissingMetamaskModal />
                   <Toaster />
                   <Loading />

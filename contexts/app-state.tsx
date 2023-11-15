@@ -17,7 +17,6 @@ const appState: AppState = {
     currentUser: null,
     currentBounty: null,
     show: {},
-    spinners: {},
   },
   dispatch: () => undefined
 };

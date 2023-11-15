@@ -11,7 +11,6 @@ import Modal from "components/modal";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
-import { changeNeedsToChangeChain } from "contexts/reducers/change-spinners";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
@@ -23,44 +22,29 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 
 type typeError = { code?: number; message?: string }
 
-export default function WrongNetworkModal() {
+export default function WrongNetworkModal({
+  show,
+  isRequired = false,
+  onClose
+}: {
+  show: boolean;
+  isRequired?: boolean;
+  onClose: () => void;
+}) {
   const { t } = useTranslation("common");
-  const { query, pathname } = useRouter();
+  const { query } = useRouter();
 
   const [error, setError] = useState<string>("");
-  const [_showModal, setShowModal] = useState(false);
   const [isAddingNetwork, setIsAddingNetwork] = useState(false);
   const [networkChain, setNetworkChain] = useState<SupportedChainData>(null);
   const [chosenSupportedChain, setChosenSupportedChain] = useState<SupportedChainData>(null);
 
   const { connect } = useDao();
   const { handleAddNetwork } = useNetworkChange();
-  const {
-    dispatch,
-    state: { currentUser, Service, loading, spinners }
-  } = useAppState();
-
-  const { supportedChains, connectedChain } = useSupportedChain()
-
-  const isRequired = [
-    pathname?.includes("new-marketplace"),
-    pathname?.includes("/[network]/[chain]/profile")
-  ].some(c => c);
+  const {state: { currentUser, Service }} = useAppState();
+  const { supportedChains } = useSupportedChain()
 
   const canBeHided = !isRequired;
-
-  function changeShowModal() {
-    if (!supportedChains?.length || loading?.isLoading) {
-      setShowModal(false);
-      return;
-    }
-
-    setShowModal([
-      spinners?.needsToChangeChain,
-      connectedChain?.matchWithNetworkChain === false && isRequired,
-      connectedChain?.name === UNSUPPORTED_CHAIN && isRequired
-    ].some(c => c));
-  }
 
   async function selectSupportedChain(chain: SupportedChainData) {
     if (!chain)
@@ -87,7 +71,7 @@ export default function WrongNetworkModal() {
       })
       .finally(() => {
         setIsAddingNetwork(false);
-        dispatch(changeNeedsToChangeChain(false));
+        onClose()
       });
   }
 
@@ -102,24 +86,12 @@ export default function WrongNetworkModal() {
       setNetworkChain(null);
   }
 
-  function handleHideModal() {
-    dispatch(changeNeedsToChangeChain(false));
-  }
-
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
   useEffect(updateNetworkChain, [Service?.network?.active?.chain_id, supportedChains, query?.network]);
-  useEffect(changeShowModal, [
-    currentUser?.walletAddress,
-    connectedChain?.matchWithNetworkChain,
-    connectedChain?.id,
-    supportedChains,
-    loading,
-    spinners,
-    isRequired
-  ]);
 
-  if ((spinners?.needsToChangeChain || _showModal) && !currentUser?.walletAddress)
+
+  if (show && !currentUser?.walletAddress)
     return <ConnectWalletButton asModal={true} />;
 
   return (
@@ -127,8 +99,8 @@ export default function WrongNetworkModal() {
       title={t("modals.wrong-network.change-network")}
       titlePosition="center"
       titleClass="h4 text-white bg-opacity-100"
-      show={_showModal}
-      onCloseClick={canBeHided ? handleHideModal : undefined}
+      show={show}
+      onCloseClick={canBeHided ? onClose : undefined}
     >
       <div className="d-flex flex-column text-center align-items-center">
         <strong className="caption-small d-block text-uppercase text-white-50 mb-3 pb-1">
