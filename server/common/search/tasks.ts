@@ -156,7 +156,7 @@ export default async function get(query: ParsedUrlQuery) {
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", 
-                                    ["chainId", "chainShortName", "color", "closeFeePercentage"], 
+                                    ["chainId", "chainShortName", "color", "closeFeePercentage", "icon"], 
                                     true, 
                                     chain ? {
                                       chainShortName: { [Op.iLike]: chain.toString()}
