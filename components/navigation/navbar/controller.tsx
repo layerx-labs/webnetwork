@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import {useRouter} from "next/router";
 
 import NavBarView from "components/navigation/navbar/view";
@@ -5,12 +7,14 @@ import NavBarView from "components/navigation/navbar/view";
 import {useAppState} from "contexts/app-state";
 
 import {useNetwork} from "x-hooks/use-network";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function NavBar() {
   const { pathname } = useRouter();
 
   const { state } = useAppState();
   const { getURLWithNetwork } = useNetwork();
+  const { loadChainsDatabase } = useSupportedChain();
 
   const isOnNetwork = pathname?.includes("[network]");
   const network = state.Service?.network?.active;
@@ -22,6 +26,8 @@ export default function NavBar() {
   const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/", {
     network: state.Service?.network?.active?.name,
   });
+
+  useEffect(loadChainsDatabase, [])
 
   return (
     <NavBarView
