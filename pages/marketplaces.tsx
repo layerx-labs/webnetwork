@@ -13,7 +13,6 @@ import { Network } from "interfaces/network";
 import { HeroInfo } from "types/components";
 
 import { useGetHeaderNetworks, useSearchNetworks } from "x-hooks/api/marketplace";
-import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 
 interface price_used {
   [name: string]: number;
