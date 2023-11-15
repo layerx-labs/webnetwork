@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { Web3Connection } from "@taikai/dappkit";
 import {isZeroAddress} from "ethereumjs-util";
 import {useSession} from "next-auth/react";
@@ -22,11 +20,9 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useChain from "x-hooks/use-chain";
 import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
-import useNetworkChange from "x-hooks/use-network-change";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
-  const [isLoadingChangingChain, setIsLoadingChangingChain] = useState(false);
   const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
@@ -35,7 +31,6 @@ export function useDao() {
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
-  const { handleAddNetwork } = useNetworkChange();
   const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
 
   function isChainConfigured(chain: SupportedChainData) {
@@ -43,7 +38,7 @@ export function useDao() {
   }
 
   function isServiceReady() {
-    return !serviceStarting && !isLoadingChangingChain;
+    return !serviceStarting;
   }
 
   function disconnect () {
@@ -55,8 +50,6 @@ export function useDao() {
    */
   async function connect(): Promise<string | null> {
     try {
-      dispatch(changeConnecting(true));
-
       await metamaskWallet.activate();
 
       if (!metamaskWallet.provider) return null;
@@ -82,15 +75,12 @@ export function useDao() {
         .then(address => {
           if (address === "0x00") return null;
 
-          handleEthereumProvider(dispatchChainUpdate, () => dispatch(changeMissingMetamask(true)));
+          handleEthereumProvider(updateConnectedChain, () => dispatch(changeMissingMetamask(true)));
           return address;
         })
         .catch(error => {
           console.debug(`Failed to connect`, error);
           return null;
-        })
-        .finally(() => {
-          dispatch(changeConnecting(false));
         });
     } catch(error) {
       console.debug(`Failed to connect`, error);
@@ -109,7 +99,6 @@ export function useDao() {
     if (!daoService ||
         !networkAddress ||
         !chain_id ||
-        isLoadingChangingChain ||
         serviceStarting)
       return;
 
