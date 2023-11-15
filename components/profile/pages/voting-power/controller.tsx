@@ -29,7 +29,7 @@ export default function VotingPowerPage() {
     <VotingPowerPageView>
       <>
         <NoNetworkTokenModal
-          isVisible={!hasNetworkTokenSaved}
+          isVisible={isOnNetwork && !hasNetworkTokenSaved}
         />
         {renderChildrenVotingPower()}
       </>
