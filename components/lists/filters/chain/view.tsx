@@ -1,6 +1,8 @@
 import { useTranslation } from "next-i18next";
 
 import NativeSelectWrapper from "components/common/native-select-wrapper/view";
+import IconOption from "components/icon-option";
+import IconSingleValue from "components/icon-single-value";
 import If from "components/If";
 import ReactSelect from "components/react-select";
 
@@ -52,6 +54,10 @@ export default function ChainFilterView({
             isSearchable={false}
             placeholder={t("placeholders.select-chain")}
             isClearable={!isMobile}
+            components={{
+              Option: IconOption,
+              SingleValue: IconSingleValue,
+            }}
           />
         </NativeSelectWrapper>
       </div>
