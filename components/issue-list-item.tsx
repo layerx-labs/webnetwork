@@ -36,6 +36,7 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
 import TaskTypeBadge from "./bounty/task-type-badge/task-type-badge.view";
+import ChainIcon from "./chain-icon";
 import NetworkBadge from "./network/badge/view";
 import MoreActionsDropdown from "./utils/more-actions-dropdown/controller";
 
@@ -343,52 +344,37 @@ export default function IssueListItem({
     );
   }
 
-
   return (
     <CardItem onClick={handleClickCard} key="default-card">
       <div className="row align-items-center">
-        <div className="col-12">
-          <div className="row">
-            <div className="d-flex col-10 text-truncate">
-              <div className="me-2">
-                <BountyStatusInfo
-                  issueState={issueState}
-                  fundedAmount={fundedAmount}
-                  fundingAmount={fundingAmount}
-                />
-              </div>
-              <span className="span text-truncate mb-3">
+        <div className="col">
+          <div className="row align-items-center">
+            <div className="col-auto">
+              <BountyStatusInfo
+                issueState={issueState}
+                fundedAmount={fundedAmount}
+                fundingAmount={fundingAmount}
+              />
+            </div>
+
+            <div className="col px-0 text-truncate">
+              <span className="span">
                 {(issue?.title !== null && issue?.title) || (
                   <Translation ns="bounty" label={"errors.fetching"} />
                 )}
               </span>
             </div>
-            <div className="d-flex d-none d-lg-block justify-content-end col-md-2">
-              <div className="d-flex justify-content-end">
-                <If condition={variant === "multi-network"}>
-                  <ResponsiveWrapper xs={false} xl={true}>
-                    <div
-                      className={`d-flex py-1 pe-2 justify-content-center text-truncate border border-gray-800
-                        border-radius-4 text-white-40 bg-gray-850 text-uppercase`}
-                    >
-                      <div className="d-flex flex-column justify-content-center">
-                        <div
-                          className="d-flex ball mx-2"
-                          style={{
-                            backgroundColor: issue?.network?.chain?.color,
-                          }}
-                        />
-                      </div>
-                      {issue?.network?.chain?.chainShortName}
-                    </div>
-                  </ResponsiveWrapper>
-                </If>
-              </div>
+
+            <div className="col-auto">
+              <ChainIcon
+                src={issue?.network?.chain?.icon}
+                label={issue?.network?.chain?.chainName}
+              />
             </div>
           </div>
           
           <ResponsiveWrapper xs={false} xl={true}>
-            <div className="d-flex justify-content-md-start mb-3">
+            <div className="d-flex justify-content-md-start mt-2 mb-3">
               <BountyTagsView tags={issue?.tags} />
 
               <If condition={issue?.isKyc}>
