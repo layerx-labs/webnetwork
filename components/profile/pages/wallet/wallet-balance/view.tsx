@@ -81,7 +81,7 @@ export default function WalletBalanceView({
             </If>
           </InputGroup>
         </div>
-        <div className="col-auto">
+        <div className="col-auto px-0">
           <ResponsiveWrapper xs={true} md={false}>
             <IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />
           </ResponsiveWrapper>
