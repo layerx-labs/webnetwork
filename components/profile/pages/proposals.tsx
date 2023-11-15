@@ -1,4 +1,5 @@
 import {useTranslation} from "next-i18next";
+import { useRouter } from "next/router";
 
 import BountiesList from "components/bounty/bounties-list/controller";
 import ProfileLayout from "components/profile/profile-layout";
@@ -15,14 +16,16 @@ export default function ProposalsPage({
   bounties
 }: ProposalsPageProps) {
   const { t } = useTranslation(["proposal", "bounty"]);
-
+  const { pathname } = useRouter();
   const { getURLWithNetwork } = useNetwork();
+
+  const isOnNetwork = pathname?.includes("[network]");
 
   return(
     <ProfileLayout>
       <BountiesList
         bounties={bounties}
-        redirect={getURLWithNetwork("/curators")}
+        redirect={isOnNetwork ? getURLWithNetwork("/tasks") : "/explore"}
         buttonMessage={t('bounty:label_other')}
         emptyMessage={t('errors.you-dont-have-proposals')}
         variant="profile"
