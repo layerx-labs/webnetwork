@@ -197,7 +197,6 @@ export default function WalletBalance({
   return (
     <WalletBalanceView
       totalAmount={totalAmount}
-      isOnNetwork={!!query?.network}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
       tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
