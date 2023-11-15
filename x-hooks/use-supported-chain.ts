@@ -19,8 +19,10 @@ export default function useSupportedChain() {
   const {
     chains: supportedChains,
     connectedChain,
+    isGetChainsDatabase,
     updateChains,
     updateConnectedChain,
+    loadChainsDatabase
   } = useSupportedChainStore();
 
   const { invalidate } = useReactQuery(QueryKeys.chains(),
@@ -31,19 +33,19 @@ export default function useSupportedChain() {
       }),
                                        {
       staleTime: MINUTE_IN_MS,
+      enabled: isGetChainsDatabase
                                        });
-
+  
   function updateNetworkAndChainMatch() {
-    const connectedChainId = connectedChain?.id;
     const networkChainId = state?.Service?.network?.active?.chain_id;
     const isOnANetwork = !!query?.network;
+    const matchWithNetworkChain = +connectedChain?.id === +networkChainId
 
-    if (connectedChainId && networkChainId && isOnANetwork)
+    if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain && isOnANetwork)
       updateConnectedChain({
         ...connectedChain,
-        matchWithNetworkChain: +connectedChainId === +networkChainId,
+        matchWithNetworkChain: matchWithNetworkChain,
       });
-    else updateConnectedChain(null);
   }
 
   useEffect(updateNetworkAndChainMatch, [
@@ -51,12 +53,13 @@ export default function useSupportedChain() {
     query?.chain,
     connectedChain?.id,
     state.Service?.network?.active?.chain_id,
-  ]);
+  ])
 
   return {
     supportedChains,
     connectedChain,
     updateConnectedChain,
+    loadChainsDatabase,
     refresh: invalidate,
   };
 }
