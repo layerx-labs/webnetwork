@@ -6,7 +6,6 @@ import {isAddress} from "web3-utils";
 import {useAppState} from "contexts/app-state";
 import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
 import {changeActiveDAO, changeStarting} from "contexts/reducers/change-service";
-import {changeChangingChain, changeConnecting} from "contexts/reducers/change-spinners";
 import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -19,8 +18,10 @@ import DAO from "services/dao-service";
 
 import useChain from "x-hooks/use-chain";
 import useNetworkChange from "x-hooks/use-network-change";
+import { useState } from "react";
 
 export function useDao() {
+  const [isLoadingChangingChain, setIsLoadingChangingChain] = useState(false);
   const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
@@ -33,7 +34,7 @@ export function useDao() {
   }
 
   function isServiceReady() {
-    return !state.Service?.starting && !state.spinners?.switchingChain;
+    return !state.Service?.starting && !isLoadingChangingChain;
   }
 
   /**
@@ -41,8 +42,6 @@ export function useDao() {
    */
   function connect(): Promise<string | null> {
     if (!state.Service?.web3Connection) return;
-
-    dispatch(changeConnecting(true));
 
     return state.Service?.web3Connection?.connect()
       .then((connected) => {
@@ -64,9 +63,6 @@ export function useDao() {
         console.debug(`Failed to connect`, error);
         return null;
       })
-      .finally(() => {
-        dispatch(changeConnecting(false));
-      });
   }
 
   /**
@@ -80,7 +76,7 @@ export function useDao() {
     if (!state.Service?.active ||
         !networkAddress ||
         !chain_id ||
-        state.spinners.switchingChain ||
+        isLoadingChangingChain ||
         state.Service?.starting)
       return;
 
@@ -218,17 +214,17 @@ export function useDao() {
   function changeChain() {
     if (state.connectedChain?.matchWithNetworkChain !== false || 
         !state.currentUser?.walletAddress || 
-        state.spinners?.changingChain) 
+        isLoadingChangingChain) 
       return;
 
-    dispatch(changeChangingChain(true));
+    setIsLoadingChangingChain(true)
 
     const networkChain = state.Service?.network?.active?.chain;
 
     if (networkChain)
       handleAddNetwork(networkChain)
         .catch(console.debug)
-        .finally(() => dispatch(changeChangingChain(false)));
+        .finally(() => setIsLoadingChangingChain(false));
   }
 
   function dispatchChainUpdate(chainId: number) {
