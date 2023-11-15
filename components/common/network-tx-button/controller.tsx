@@ -3,24 +3,23 @@ import {MutableRefObject, ReactChild, useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
 
 import Button from "components/button";
+import NetworkTxButtonView from "components/common/network-tx-button/view";
 
 import {useAppState} from "contexts/app-state";
 
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {parseTransaction} from "helpers/transactions";
 
+import {MetamaskErrors} from "interfaces/enums/Errors";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
+import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
-
-import {MetamaskErrors} from "../../../interfaces/enums/Errors";
-import {SimpleBlockTransactionPayload} from "../../../interfaces/transaction";
-import {transactionStore} from "../../../x-hooks/stores/transaction-list/transaction.store";
-import NetworkTxButtonView from "./view";
 
 
 interface NetworkTxButtonParams {

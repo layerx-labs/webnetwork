@@ -4,6 +4,8 @@ import {NumberFormatValues} from "react-number-format";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
+import OraclesActionsView from "components/profile/pages/voting-power/oracles/actions/view";
+
 import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {NetworkEvents} from "interfaces/enums/events";
@@ -13,11 +15,9 @@ import {OraclesActionsProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { transactionStore } from "x-hooks/stores/transaction-list/transaction.store";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
-
-import OraclesActionsView from "./view";
 
 export default function OraclesActions({
   wallet,
