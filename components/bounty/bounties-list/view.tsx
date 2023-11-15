@@ -204,7 +204,11 @@ export default function BountiesListView({
           <If condition={!hideFilter && (!isManagement || isProfile)}>
             <div className="col-auto">
               <If condition={!isManagement}>
-                <IssueFilters sortOptions={sortOptions} onlyProfileFilters={isProfile} chains={chains}/>
+              <IssueFilters
+                  sortOptions={sortOptions}
+                  onlyProfileFilters={isProfile}
+                  chains={type === "bounties" ? chains : null}
+                />
               </If>
 
               <div className="d-none d-xl-flex">
@@ -213,12 +217,14 @@ export default function BountiesListView({
                     isCurrentDefault={isProfile && isOnNetwork}
                     filterByConnectedChain={isOnNetwork ? true : false}
                   />
-                  <div className="d-flex align-items-center ms-3">
-                    <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
-                      {t("misc.chain")}
-                    </label>
-                    <ChainFilter chains={chains} label={false} />
-                  </div>
+                  <If condition={type === 'bounties'}>
+                    <div className="d-flex align-items-center ms-3">
+                      <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+                        {t("misc.chain")}
+                      </label>
+                      <ChainFilter chains={chains} label={false} />
+                    </div>
+                  </If>
                 </If>
               </div>
             </div>
