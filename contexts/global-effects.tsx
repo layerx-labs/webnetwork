@@ -83,7 +83,5 @@ export const GlobalEffectsProvider = ({children}) => {
 
   useEffect(settings.loadSettings, []);
 
-  useEffect(transactions.loadFromStorage, [currentUser?.walletAddress, connectedChain]);
-
   return <GlobalEffectsContext.Provider value={_context} children={children} />
 }
