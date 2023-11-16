@@ -7,6 +7,7 @@ import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
 import Button from "components/button";
+import ChainIcon from "components/chain-icon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
@@ -55,9 +56,9 @@ export default function BountyHeroView({
     <div className="mt-2 border-bottom border-gray-850 pb">
       <CustomContainer>
         <div className="row d-flex flex-row justify-content-center">
-          <div className="col-md-12 min-w-bounty-hero justify-content-center">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex align-items-center">
+          <div className="col-12 min-w-bounty-hero justify-content-center">
+            <div className="row justify-content-between align-items-center">
+              <div className="col">
                 <span className="me-1 text-white-30 text-uppercase">
                   {network} /
                 </span>
@@ -66,7 +67,7 @@ export default function BountyHeroView({
                 </span>
               </div>
 
-              <div className="">
+              <div className="col-auto">
                 <BountySettings
                   currentBounty={bounty}
                   updateBountyData={updateBountyData}
@@ -75,24 +76,25 @@ export default function BountyHeroView({
               </div>
             </div>
 
-            <div className="d-flex flex-wrap justify-content-between border-top border-gray-850 mt-3 pt-3">
-              <div className="d-flex d-inline-flex align-items-center align-items-center">
-                <div
-                  className={`d-flex py-1 px-2 bg-transparent border border-gray-700 text-gray-300 border-radius-4`}
-                >
-                  <div className="d-flex flex-column justify-content-center">
+            <div 
+              className="row align-items-center flex-wrap border-top border-gray-850 mt-3 pt-3"
+            >
+              <div className="col-auto">
+                <div className="row py-1 mx-0 bg-transparent border border-gray-700 text-gray-300 border-radius-4">
+                  <div className="d-flex align-items-center">
                     <BountyStatusInfo
                       issueState={currentState}
                       fundedAmount={bounty?.fundedAmount}
                     />
+                    <span className="ms-1 text-white text-capitalize">
+                      {currentState}
+                    </span>
                   </div>
-
-                  <span className="ms-1 text-white text-capitalize">
-                    {currentState}
-                  </span>
                 </div>
+              </div>
 
-                <If condition={bounty?.isKyc}>
+              <If condition={bounty?.isKyc}>
+                <div className="col-auto">
                   <OverlayTrigger
                     key="bottom-githubPath"
                     placement="bottom"
@@ -109,10 +111,21 @@ export default function BountyHeroView({
                       {t("bounty:kyc.label")}
                     </div>
                   </OverlayTrigger>
-                </If>
+                </div>
+              </If>
+
+              <div className="col">
+                <div className="row justify-content-end">
+                  <div className="col-auto">
+                    <ChainIcon
+                      src={bounty?.network?.chain?.icon}
+                      label={bounty?.network?.chain?.chainName}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div>
+              <div className="col-auto mt-2 mt-sm-0">
                 {renderPriceConversor()}
               </div>
             </div>
