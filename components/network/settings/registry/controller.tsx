@@ -262,10 +262,11 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   }
 
   useEffect(() => {
-    if(!state.Service?.active?.registry?.contractAddress) return;
+    if(!state.Service?.active?.registry?.contractAddress || !state.Service?.active?.network?.contractAddress)
+      return;
 
     updateRegistryParameters();
-  }, [state.Service?.active?.registry?.contractAddress]);
+  }, [state.Service?.active?.network?.contractAddress, state.Service?.active?.registry?.contractAddress]);
 
   return(
     <NetworkRegistrySettingsView

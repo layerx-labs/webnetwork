@@ -80,8 +80,7 @@ export function useDao() {
     if (!state.Service?.active ||
         !networkAddress ||
         !chain_id ||
-        state.spinners.switchingChain ||
-        state.Service?.starting)
+        state.spinners.switchingChain)
       return;
 
     if (state.Service?.active?.network?.contractAddress === networkAddress)
@@ -188,7 +187,7 @@ export function useDao() {
       return;
     }
 
-    // console.debug("Starting DAOService");
+    console.debug("Starting DAOService");
 
     const { chainRpc: web3Host, registryAddress: _registry } = chainToConnect;
 
@@ -208,7 +207,7 @@ export function useDao() {
       await daoService.loadRegistry()
         .catch(error => console.debug("Failed to load registry", error));
 
-    //console.debug("DAOService started", daoProps);
+    console.debug("DAOService started", daoProps);
 
     window.DAOService = daoService;
 
