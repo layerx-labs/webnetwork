@@ -8,30 +8,22 @@ import TransactionModal from "components/transaction-modal";
 import TransactionsList from "components/transactions-list";
 
 import {useAppState} from "contexts/app-state";
-import {setTxList} from "contexts/reducers/change-tx-list";
 
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {Transaction} from "interfaces/transaction";
 
-import {WinStorage} from "services/win-storage";
+import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
+import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 export default function TransactionsStateIndicator() {
-  const {state: {transactions, currentUser}, dispatch} = useAppState();
+  const {state: {currentUser, connectedChain: {id: connectedChainId}}} = useAppState();
 
   const [loading, setLoading] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [activeTransaction, setActiveTransaction] = useState<Transaction | null>(null);
 
-  function parseBlock(tx, block) {
-    tx.addressFrom = block.from;
-    tx.addressTo = block.to;
-    tx.transactionHash = block.hash;
-    tx.blockHash = block.blockHash;
-    tx.confirmations = block.nonce;
-    tx.status = block.blockNumber ? TransactionStatus.completed : TransactionStatus.pending;
-
-    return tx;
-  }
+  const {loadFromStorage} = useStorageTransactions();
+  const {list: transactions, isPending} = transactionStore();
 
   function updateLoadingState() {
     if (!transactions.length) {
@@ -51,26 +43,14 @@ export default function TransactionsStateIndicator() {
   }
 
   function restoreTransactions() {
-    if (!currentUser?.walletAddress)
+    if (!currentUser?.walletAddress || !connectedChainId)
       return;
 
-    const storage = new WinStorage(`bepro.transaction:${currentUser?.walletAddress}`, 0);
-    if (!storage?.value || !storage?.value?.length)
-      return;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const {eth: {getTransaction}} = (window as any).web3;
-
-    Promise.all(storage.value
-        .filter(tx => tx.status !== TransactionStatus.rejected && tx.transactionHash)
-        .map(tx =>
-          getTransaction(tx.transactionHash)
-            .then(block => parseBlock(tx, block))))
-      .then(txs => dispatch(setTxList(txs)))
+    loadFromStorage();
   }
 
-  useEffect(updateLoadingState, [transactions]);
-  useEffect(restoreTransactions, [currentUser?.walletAddress]);
+  useEffect(updateLoadingState, [transactions, isPending]);
+  useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChainId]);
 
   const overlay = (
     <Popover id="transactions-indicator">

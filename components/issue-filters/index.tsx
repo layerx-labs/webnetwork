@@ -5,6 +5,7 @@ export default function IssueFilters({
   onlyTimeFrame = false,
   sortOptions,
   onlyProfileFilters = false,
+  chains = []
 }) {
   return (
     <>
@@ -19,6 +20,7 @@ export default function IssueFilters({
           onlyTimeFrame={onlyTimeFrame}
           sortOptions={sortOptions}
           onlyProfileFilters={onlyProfileFilters}
+          chainOptions={chains}
         />
       </div>
     </>

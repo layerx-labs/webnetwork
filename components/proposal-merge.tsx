@@ -12,16 +12,15 @@ import {useAppState} from "contexts/app-state";
 import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { DistributedAmounts, Proposal } from "interfaces/proposal";
-import {TokenInfo} from "interfaces/token";
+import {Token, TokenInfo} from "interfaces/token";
 
-import {getCoinInfoByContract} from "services/coingecko";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 
 import ProposalDistributionList from "./proposal/distribution/list/view";
 
 interface props {
   amountTotal: BigNumber;
-  tokenSymbol?: string;
-  proposal: Proposal;
+  token?: Token;
   onClickMerge: () => void;
   canMerge: boolean;
   idBounty: string;
@@ -31,8 +30,7 @@ interface props {
 
 export default function ProposalMerge({
   amountTotal,
-  tokenSymbol,
-  proposal,
+  token,
   onClickMerge,
   canMerge,
   idBounty,
@@ -47,16 +45,14 @@ export default function ProposalMerge({
   const {state} = useAppState();
 
   const amountTotalConverted = BigNumber(handleConversion(amountTotal));
-  const currentTokenSymbol = tokenSymbol ||  t("common:misc.token")
+  const currentTokenSymbol = token.symbol ||  t("common:misc.token")
+
+  const { data: prices } = useCoingeckoPrice([
+    { address: token?.address, chainId: token?.chain_id },
+  ])
 
   function handleConversion(value) {
     return BigNumber(value).multipliedBy(coinInfo?.prices[state.Settings?.currency?.defaultFiat]).toFixed(4);
-  }
-
-  async function  getCoinInfo() { 
-    await getCoinInfoByContract(state.Service?.network?.active?.networkToken?.symbol).then((tokenInfo) => {
-      setCoinInfo(tokenInfo)
-    }).catch(error => console.debug("getCoinInfo", error));
   }
 
   function handleMerge() {
@@ -65,10 +61,13 @@ export default function ProposalMerge({
   }
 
   useEffect(() => {
-    if (!proposal ||!state.Service?.network?.active)
-      return;
-    getCoinInfo()
-  }, [proposal, amountTotal]);
+    if (!token || !prices) return;
+
+    setCoinInfo({
+      ...token,
+      prices: prices[0],
+    });
+  }, [token, prices]);
 
   return (
     <>
@@ -117,6 +116,7 @@ export default function ProposalMerge({
        <ProposalDistributionList
         distributedAmounts={distributedAmounts}
         transactionalTokenSymbol={currentTokenSymbol}
+        fiatSymbol={state.Settings?.currency?.defaultFiat}
         convertValue={handleConversion}
       />
 
@@ -141,11 +141,10 @@ export default function ProposalMerge({
               <span className="text-white caption-small text-light-gray">
                 {amountTotalConverted?.toFixed()}</span>
               <span className=" ms-2 caption-small text-light-gray">
-                EUR
+                {state.Settings?.currency?.defaultFiat}
               </span>
             </div>
             )}
-
           </div>
         </div>
       </Modal>

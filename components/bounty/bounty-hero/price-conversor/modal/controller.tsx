@@ -4,7 +4,9 @@ import BigNumber from "bignumber.js";
 
 import {useAppState} from "contexts/app-state";
 
-import {getCoinInfoByContract} from "services/coingecko";
+import { Token } from "interfaces/token";
+
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 
 import PriceConversorModalView from "./view";
 
@@ -12,6 +14,7 @@ interface IPriceConversiorModalProps {
   show: boolean;
   onClose: ()=> void;
   value?: BigNumber;
+  token: Token;
   symbol: string;
 }
 interface Options {
@@ -25,6 +28,7 @@ export default function PriceConversorModal({
   show,
   onClose,
   value,
+  token,
   symbol
 }:IPriceConversiorModalProps) {
 
@@ -37,32 +41,36 @@ export default function PriceConversorModal({
 
   const {state} = useAppState();
 
+  const {
+    data: prices,
+    isFetching,
+    isError,
+  } = useCoingeckoPrice(token?.address && token?.chain_id
+      ? [{ address: token?.address, chainId: token?.chain_id }]
+      : null);
+
   async function handlerChange({value, label}: Options){
-    if (!symbol) return;
+    const currency = value.toLowerCase()
+    if (!token || !prices) return;
 
-    const data = 
-      await getCoinInfoByContract(symbol)
-        .catch((err) => {
-          if(err) setErrorCoinInfo(true)
-          return ({ prices: { [value]: 0 } })
-        });
+    if (!prices[0][currency] || isError) setErrorCoinInfo(true);
 
-    if(data.prices[value] > 0) setErrorCoinInfo(false)
+    if(prices[currency] > 0) setErrorCoinInfo(false)
     setCurrentCurrency({value, label});
     setCurrentToken(value.toUpperCase())
-    setCurrentPrice(data.prices[value]);
+    setCurrentPrice(prices[0][currency] || 0);
   }
 
   useEffect(()=>{
-    if (!state.Settings?.currency?.conversionList) return;
+    if (!state.Settings?.currency?.conversionList && !prices) return;
 
     const { conversionList } = state.Settings.currency
 
     const opt = conversionList.map(currency=>({value: currency?.value, label: currency?.label}))
     setOptions(opt)
-    handlerChange(opt[0])
+    handlerChange(opt.find(v => v.value === defaultValue[0].value) || opt[0])
     
-  },[state.Settings?.currency?.conversionList])
+  },[state.Settings?.currency?.conversionList, prices])
 
 
   return (
@@ -70,6 +78,7 @@ export default function PriceConversorModal({
       show={show} 
       onClose={onClose} 
       symbol={symbol} 
+      isLoadingPrice={isFetching}
       currentValue={currentValue} 
       handleCurrentValue={setValue} 
       currentPrice={currentPrice} 

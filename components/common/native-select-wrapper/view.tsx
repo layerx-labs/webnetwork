@@ -47,7 +47,7 @@ export default function NativeSelectWrapper({
             { isClearable && t("actions.clear") || t("misc.choose-one") }
           </option>
           
-          {options.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}
+          {options?.map(({ label }, i) => <option value={i} key={label}>{label}</option>)}
         </select>
       </If>
     </div>

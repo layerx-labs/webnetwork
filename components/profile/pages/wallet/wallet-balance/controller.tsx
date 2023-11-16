@@ -14,13 +14,13 @@ import { MINUTE_IN_MS } from "helpers/constants";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
-import { getCoinInfoByContract } from "services/coingecko";
 import DAO from "services/dao-service";
 
 import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
 
 import WalletBalanceView from "./view";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 interface WalletBalanceProps {
   chains: SupportedChainData[];
   tokens: Token[];
@@ -42,7 +42,13 @@ export default function WalletBalance({
   const { query, push, pathname, asPath } = useRouter();
   const { getERC20TokenData, getTokenBalance } = useBepro();
 
-  const defaultFiat = state?.Settings?.currency?.defaultFiat;
+  const {
+    data: prices,
+    isLoading: isLoadingPrices,
+    isSuccess: isSucessPrices,
+  } = useCoingeckoPrice(tokens.map(({ address, chain_id }) => ({ address, chainId: chain_id })));
+
+  const defaultFiat = state?.Settings?.currency?.defaultFiat?.toLowerCase();
 
   function toTokenWithBalance(token) {
     return {
@@ -56,18 +62,14 @@ export default function WalletBalance({
     typeof token === "string" ? token : token?.address;
 
   async function processToken(token: Token, service: DAO) {
-    const [tokenInformation, balance] = await Promise.all([
-      getCoinInfoByContract(token?.symbol)
-        .catch(() => ({ prices: {}, icon: null })),
-      getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
-        .catch(() => BigNumber(0)),
-    ]);
-
+    const balance = await service
+      .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
+      .catch(() => BigNumber(0));
+    
     return {
       ...token,
       balance,
-      price: tokenInformation?.prices?.[defaultFiat] || null,
-      icon: <TokenIcon src={tokenInformation?.icon as string} />,
+      icon: <TokenIcon src={token?.icon as string} />,
     };
   }
 
@@ -120,7 +122,7 @@ export default function WalletBalance({
     return daoService
   }
 
-  function loadTokensBalance(): Promise<(TokenBalanceType & { price?: number })[]> {
+  function loadTokensBalance(): Promise<TokenBalanceType[]> {
     const currentChains = chains.map(({ chainRpc, chainId }) => ({
       web3Connection: loadDaoService(chainRpc),
       chainId 
@@ -144,22 +146,41 @@ export default function WalletBalance({
                     enabled: !!state.currentUser?.walletAddress && !!state.supportedChains,
                     staleTime: MINUTE_IN_MS
                   });
-
+  
   useEffect(() => {
     if (!isLoading && isSuccess) {
       const filteredTokens = tokensData
         .map(token => toTokenWithBalance(token))
-        .filter(({ name, symbol, networks, chain_id }) => handleSearchFilter(name, symbol, networks, chain_id))
+
       setTokensWithBalance(filteredTokens);
-      const hasNoConverted = filteredTokens.some(token => !token?.price);
-      setHasNoConvertedToken(hasNoConverted);
-      const total = hasNoConverted ? 
-        filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0)) :
-        filteredTokens.reduce((acc, token) => 
-          BigNumber(token.balance).multipliedBy(token.price).plus(acc), BigNumber(0));
-      setTotalAmount(total.toFixed());
+
+      if(!isLoadingPrices && isSucessPrices){
+        const tokensPrices = tokens.map((token, key) => ({
+          ...token,
+          price: prices[key][defaultFiat]
+        }))
+
+        const filteredTokensPrices = filteredTokens.map(t => ({
+          ...t,
+          price: tokensPrices.find(({ id }) => id === t.id)?.price
+        }))
+
+        const hasNoConverted = filteredTokensPrices.some(token => !token?.price);
+
+        setHasNoConvertedToken(hasNoConverted);
+        const total = hasNoConverted ? 
+          filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0)) :
+          filteredTokensPrices.reduce((acc, token) => 
+            BigNumber(token.balance).multipliedBy(token.price).plus(acc), BigNumber(0));
+        setTotalAmount(total.toFixed());
+
+      } else {
+        setHasNoConvertedToken(true)
+        const totalNoConverted = filteredTokens.reduce((acc, token) => BigNumber(token.balance).plus(acc), BigNumber(0))
+        setTotalAmount(totalNoConverted.toFixed())
+      }
     }
-  }, [tokensData, query?.networkName, query?.networkChain]);
+  }, [tokensData, prices, query?.networkName, query?.networkChain]);
 
   useEffect(() => {
     if(!query?.networkName && query?.network){
@@ -177,7 +198,8 @@ export default function WalletBalance({
       isOnNetwork={!!query?.network}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-      tokens={tokensWithBalance}
+      tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
+        handleSearchFilter(name, symbol, networks, chain_id))}
       searchString={searchState}
       onSearchClick={updateSearch}
       onSearchInputChange={handleSearchChange}

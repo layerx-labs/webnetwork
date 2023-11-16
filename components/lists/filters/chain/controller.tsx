@@ -45,7 +45,7 @@ export default function ChainFilter({
 
   return(
     <ChainFilterView
-      options={chains.map(chainToOption)}
+      options={chains?.map(chainToOption)}
       option={chainToOption(chain)}
       onChange={onChainChange}
       direction={direction}

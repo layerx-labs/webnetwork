@@ -93,7 +93,7 @@ export default function ProposalActionsButtons({
       proposal={proposal}
       issueAmount={BigNumber(issue?.amount || issue?.fundingAmount || 0)}
       issueDbId={issue?.id}
-      transactionalTokenSymbol={issue?.transactionalToken?.symbol}
+      token={issue?.transactionalToken}
       isAbleToMerge={isMergeable}
       isAbleToDispute={isDisputable && isUserAbleToDispute}
       isAbleToRefuse={isRefusable}

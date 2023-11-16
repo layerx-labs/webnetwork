@@ -1,14 +1,26 @@
 import BigNumber from "bignumber.js";
 
-import { getCoinPrice } from "services/coingecko";
+import { TokenPrice } from "interfaces/token";
 
 import { ConvertableItem, ConvertedItem } from "types/utils";
 
-async function getPricesAndConvert<T>(items: ConvertableItem[], fiatSymbol: string) {
-  const prices = await Promise.all(items.map(async item => ({
+
+function getPricesAndConvert<T>(items: ConvertableItem[],
+                                fiatSymbol: string,
+                                tokensPrice: TokenPrice[]) {
+  const coingeckoPrices = items
+    .map((v, key) => ({
+      address: v.token.address,
+      chainId: v.token.chain_id,
+      price: tokensPrice[key][fiatSymbol],
+    }));
+
+  const prices = items.map((item) => ({
     ...item,
-    price: await getCoinPrice(item.token.symbol, fiatSymbol).catch(() => 0)
-  })));
+    price:
+      coingeckoPrices.find((v) =>
+          v.address === item.token.address && v.chainId === item.token.chain_id).price || 0,
+  }));
 
   const convert = ({ value, price}) => BigNumber(value * price);
   const hasPrice = ({ price }) => price > 0;

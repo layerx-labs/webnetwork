@@ -24,10 +24,7 @@ export default function InvalidAccountWalletModal() {
 
   const { 
     state:{
-      currentUser,
-      spinners:{
-        matching
-      }
+      currentUser
     }
   } = useAppState();
 
@@ -37,8 +34,7 @@ export default function InvalidAccountWalletModal() {
     currentUser?.match === MatchAccountsStatus.MISMATCH, 
     currentUser?.login,
     currentUser?.walletAddress,
-    !asPath.includes(`connect-account`),
-    !matching
+    !asPath.includes(`connect-account`)
   ].every(condition=> condition);
 
   function handleSignOut() {

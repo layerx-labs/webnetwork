@@ -89,7 +89,7 @@ export default function ProposalPageView({
             <div className="row">
               <ProposalDistributionList
                 distributedAmounts={distributedAmounts}
-                transactionalTokenSymbol={issue?.transactionalToken?.symbol}
+                token={issue?.transactionalToken}
               />
             </div>
 

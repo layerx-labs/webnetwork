@@ -12,6 +12,7 @@ import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
 import IssueListItem from "components/issue-list-item";
+import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
@@ -33,6 +34,7 @@ interface BountiesListViewProps {
   hideFilter?: boolean;
   hasFilter?: boolean;
   currentChain?: SupportedChainData;
+  chains?: SupportedChainData[];
   onClearSearch: () => void;
   onNotFoundClick: () => void;
   onNextPage: () => void;
@@ -58,7 +60,8 @@ export default function BountiesListView({
   onSearchInputChange,
   onSearchClick,
   onEnterPressed,
-  currentChain
+  currentChain,
+  chains
 }: BountiesListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
@@ -201,7 +204,11 @@ export default function BountiesListView({
           <If condition={!hideFilter && (!isManagement || isProfile)}>
             <div className="col-auto">
               <If condition={!isManagement}>
-                <IssueFilters sortOptions={sortOptions} onlyProfileFilters={isProfile}/>
+              <IssueFilters
+                  sortOptions={sortOptions}
+                  onlyProfileFilters={isProfile}
+                  chains={type === "bounties" ? chains : null}
+                />
               </If>
 
               <div className="d-none d-xl-flex">
@@ -210,6 +217,14 @@ export default function BountiesListView({
                     isCurrentDefault={isProfile && isOnNetwork}
                     filterByConnectedChain={isOnNetwork ? true : false}
                   />
+                  <If condition={type === 'bounties'}>
+                    <div className="d-flex align-items-center ms-3">
+                      <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+                        {t("misc.chain")}
+                      </label>
+                      <ChainFilter chains={chains} label={false} />
+                    </div>
+                  </If>
                 </If>
               </div>
             </div>

@@ -13,6 +13,8 @@ import { getPricesAndConvert } from "helpers/tokens";
 import { PaymentsPageProps } from "types/pages";
 import { TotalFiatNetworks } from "types/utils";
 
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+
 export default function PaymentsPage({ 
   payments,
   chains,
@@ -28,27 +30,43 @@ export default function PaymentsPage({
   const isNetworkPayments = !!router?.query?.networkName && !!payments?.length;
   const fiatSymbol = state?.Settings?.currency?.defaultFiat?.toUpperCase();
 
+  const tokens = payments.flatMap(({ payments }) => payments.map(payment => ({
+    address: payment?.issue?.transactionalToken.address,
+    chainId: payment?.issue?.transactionalToken.chain_id
+  })))
+
+  const {
+    data: prices,
+    isLoading,
+    isSuccess,
+  } = useCoingeckoPrice(tokens.length > 0 ? tokens : null);
+
   useEffect(() => {
-    if (!payments?.length) {
+    if (!payments?.length || !prices) {
       setTotalFiatNetworks([]);
       setTotalFiat(0);
       return;
     }
 
-    const convertableItems = payments.flatMap(({ id, payments }) => payments.map(payment => ({
-      tokenAddress: payment?.issue?.transactionalToken?.address,
-      networkId: id,
-      value: BigNumber(payment.ammount),
-      token: payment.issue.transactionalToken
-    })));
+    if (!isLoading && isSuccess) {
+      const convertableItems = payments.flatMap(({ id, payments }) =>
+        payments.map((payment) => ({
+          tokenAddress: payment?.issue?.transactionalToken?.address,
+          networkId: id,
+          value: BigNumber(payment.ammount),
+          token: payment.issue.transactionalToken,
+        })));
 
-    getPricesAndConvert<TotalFiatNetworks>(convertableItems, state?.Settings?.currency?.defaultFiat)
-      .then(({ converted, noConverted, totalConverted }) => {      
-        setTotalFiatNetworks(converted);
-        setTotalFiat(totalConverted.toNumber());
-        setHasNoConvertedToken(!!noConverted.length);
-      });
-  }, [payments]);
+      const { converted, noConverted, totalConverted } =
+        getPricesAndConvert<TotalFiatNetworks>(convertableItems,
+                                               state?.Settings?.currency?.defaultFiat?.toLowerCase(),
+                                               prices);
+
+      setTotalFiatNetworks(converted);
+      setTotalFiat(totalConverted.toNumber());
+      setHasNoConvertedToken(!!noConverted.length);
+    }
+  }, [payments, prices]);
 
   if (isNetworkPayments)
     return(

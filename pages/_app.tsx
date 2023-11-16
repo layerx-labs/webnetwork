@@ -52,7 +52,6 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
                 <div id="root-container">
                   <Component {...pageProps} />
                 </div>
-                <WrongNetworkModal />
                 <MissingMetamaskModal />
                 <Toaster />
                 <Loading />

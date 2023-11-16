@@ -8,16 +8,17 @@ import {useAppState} from "contexts/app-state";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
 
-import { NetworkEvents } from "interfaces/enums/events";
+import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
-import { OraclesActionsProps } from "interfaces/oracles-state";
+import {OraclesActionsProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useERC20 from "x-hooks/use-erc20";
 
 import OraclesActionsView from "./view";
+import {transactionStore} from "../../../../../../x-hooks/stores/transaction-list/transaction.store";
 
 export default function OraclesActions({
   wallet,
@@ -38,8 +39,9 @@ export default function OraclesActions({
 
   const networkTokenERC20 = useERC20();
   const { processEvent } = useProcessEvent();
-  const { state: { transactions, Service }} = useAppState();
+  const { state: { Service }} = useAppState();
   const { service: daoService } = useDaoStore();
+  const {list: transactions} = transactionStore();
 
   const networkTokenSymbol = networkTokenERC20.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;

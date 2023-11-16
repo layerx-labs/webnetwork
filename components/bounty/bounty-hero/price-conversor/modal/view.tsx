@@ -9,6 +9,8 @@ import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
+import If from "components/If";
+import { Spinner } from "react-bootstrap";
 
 interface IPriceConversiorModalProps {
   show: boolean;
@@ -22,6 +24,7 @@ interface IPriceConversiorModalProps {
   currentCurrency: Options;
   options: Options[];
   handleSelectChange: ({value, label}: Options) => void;
+  isLoadingPrice: boolean;
 }
 
 interface Options {
@@ -40,7 +43,8 @@ export default function PriceConversorModalView({
   errorCoinInfo,
   currentCurrency,
   options,
-  handleSelectChange
+  handleSelectChange,
+  isLoadingPrice
 }: IPriceConversiorModalProps) {
   const { t } = useTranslation("common");
 
@@ -111,7 +115,14 @@ export default function PriceConversorModalView({
         </div>
       </div>
       <div className="d-flex flex-row justify-content-center mt-4">
+        <If condition={!isLoadingPrice} 
+          otherwise={
+            <Spinner animation={"border"} />
+          }
+        >
         {formatNumberToNScale(currentPrice * currentValue)} {currentToken}
+        </If>
+        
       </div>
     </Modal>
   );

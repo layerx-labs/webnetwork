@@ -102,7 +102,7 @@ export default function MobileFiltersModal({
         handleSortBy();
       }}
     >
-      <If condition={chainOptions && !isOnNetwork}>
+      <If condition={chainOptions && (!isOnNetwork || onlyProfileFilters)}>
         <ContainerFilterView label={t("misc.chain")}>
             <ChainFilter chains={chainOptions} label={false} />
         </ContainerFilterView>
@@ -111,12 +111,13 @@ export default function MobileFiltersModal({
         <If condition={!hideSort}>
           <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />
         </If>
-
-        <SelectNetwork
-          isCurrentDefault={isOnNetwork}
-          onlyProfileFilters={onlyProfileFilters}
-          filterByConnectedChain={isOnNetwork ? true : false}
-        />
+        <div className="mt-2">
+          <SelectNetwork
+            isCurrentDefault={isOnNetwork}
+            onlyProfileFilters={onlyProfileFilters}
+            filterByConnectedChain={isOnNetwork ? true : false}
+          />
+        </div>
       </If>
 
       <If condition={!onlyTimeFrame && !onlyProfileFilters}>
