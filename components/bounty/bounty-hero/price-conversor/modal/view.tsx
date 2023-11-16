@@ -11,6 +11,8 @@ import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
+import If from "components/If";
+import { Spinner } from "react-bootstrap";
 
 interface IPriceConversiorModalProps {
   show: boolean;
