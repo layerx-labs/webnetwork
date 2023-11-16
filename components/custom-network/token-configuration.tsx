@@ -58,7 +58,7 @@ export default function TokenConfiguration({
   }
 
   useReactQuery(QueryKeys.tokensByChain(connectedChainId),
-                () => useGetTokens(connectedChainId),
+                () => useGetTokens({ chainId: connectedChainId }),
                 {
                   enabled: !!connectedChainId,
                   onSuccess: processTokens
