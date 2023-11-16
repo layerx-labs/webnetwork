@@ -80,8 +80,7 @@ export function useDao() {
     if (!state.Service?.active ||
         !networkAddress ||
         !chain_id ||
-        state.spinners.switchingChain ||
-        state.Service?.starting)
+        state.spinners.switchingChain)
       return;
 
     if (state.Service?.active?.network?.contractAddress === networkAddress)
