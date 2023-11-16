@@ -17,9 +17,9 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
-import { useDaoStore } from "./stores/dao/dao.store";
-import {useProcessEvent} from "./api/events/use-process-event";
-import {transactionStore} from "./stores/transaction-list/transaction.store";
+import {useProcessEvent} from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 
 const DIVISOR = 1000000;
 
