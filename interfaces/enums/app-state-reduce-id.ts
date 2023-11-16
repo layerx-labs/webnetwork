@@ -23,6 +23,5 @@ export enum AppStateReduceId {
   Show,
   CurrentBounty,
   CurrentBountyChainData,
-  Spinners,
   SupportedChains
 }

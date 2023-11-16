@@ -16,6 +16,7 @@ import { truncateAddress } from "helpers/truncate-address";
 import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
 
 import BountyTagsView from "../bounty-tags/view";
+import TaskTypeBadge from "../task-type-badge/task-type-badge.view";
 import BountySettings from "./bounty-settings/controller";
 interface BountyHeroProps {
   handleEditIssue?: () => void;
@@ -120,11 +121,15 @@ export default function BountyHeroView({
               {bounty?.title}
             </h5>
 
-            <If condition={!!bounty?.tags?.length}>
-              <div className="mt-3 border-bottom border-gray-850 pb-4">
+            <div className="d-flex flex-wrap gap-1 align-items-center mt-3 border-bottom border-gray-850 pb-4">
+              <TaskTypeBadge 
+                type={bounty?.type}
+                responsiveLabel={false}
+              />
+              <If condition={!!bounty?.tags?.length}>
                 <BountyTagsView tags={bounty?.tags} />
-              </div>
-            </If>
+              </If>
+            </div>
 
             <div 
               className={`py-3 gap-3 d-flex flex-wrap align-items-center border-top 

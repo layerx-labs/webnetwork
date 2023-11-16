@@ -18,7 +18,6 @@ import {
   changeCurrentUserWallet
 } from "contexts/reducers/change-current-user";
 import {changeActiveNetwork} from "contexts/reducers/change-service";
-import {changeSpinners} from "contexts/reducers/change-spinners";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
 import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -40,7 +39,7 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useSignature from "x-hooks/use-signature";
-import {useTransactions} from "x-hooks/use-transactions";
+import {useStorageTransactions} from "./use-storage-transactions";
 
 import useBepro from "./use-bepro";
 
@@ -49,14 +48,15 @@ export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
+  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
   const session = useSession();
   const { asPath } = useRouter();
 
   const { connect } = useDao();
   const { chain } = useChain();
+  const transactions = useStorageTransactions();
   const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
-  const transactions = useTransactions();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
@@ -118,8 +118,6 @@ export function useAuthentication() {
     const updateNetwork = newParameters =>
       dispatch(changeActiveNetwork(Object.assign(state.Service.network.active || {} as any, newParameters)));
 
-    dispatch(changeSpinners.update({balance: true}))
-
     Promise.all([
       state.Service.active.getOraclesResume(state.currentUser.walletAddress),
 
@@ -139,10 +137,6 @@ export function useAuthentication() {
         updateNetwork({isCouncil, isGovernor});
       })
       .catch(error => console.debug("Failed to updateWalletBalance", error))
-      .finally(() => {
-        dispatch(changeSpinners.update({balance: false}));
-        //console.debug(`should have updated state`, state.currentUser.balance)
-      });
   }
 
   async function syncUserDataWithSession() {
@@ -204,7 +198,7 @@ export function useAuthentication() {
       if (!state?.currentUser?.walletAddress ||
           !state?.connectedChain?.id ||
           state.Service?.starting ||
-          state.spinners?.signingMessage) {
+          isLoadingSigningMessage) {
         reject("Wallet not connected, service not started or already signing a message");
         return;
       }
@@ -236,11 +230,11 @@ export function useAuthentication() {
         return;
       }
 
-      dispatch(changeSpinners.update({ signingMessage: true }));
+      setIsLoadingSigningMessage(true)
 
       await _signMessage(messageToSign)
         .then(signature => {
-          dispatch(changeSpinners.update({ signingMessage: false }));
+          setIsLoadingSigningMessage(false)
 
           if (signature) {
             dispatch(changeCurrentUserSignature(signature));

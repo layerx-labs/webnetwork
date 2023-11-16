@@ -76,6 +76,7 @@ export default function TokensDropdown({
   });
 
   const handleChange = (newValue) => {
+    if (!newValue) return;
     const { value, __isNew__ } = newValue;
 
     if (__isNew__ && !canAddToken) return;

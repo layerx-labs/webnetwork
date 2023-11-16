@@ -43,11 +43,12 @@ export default function SelectNetwork({
   const chainIdToFilter = filterByConnectedChain ? !isOnNetworkPath(pathname) ? 
       state.connectedChain?.id : chain?.chainId?.toString() : undefined
 
-  const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
-                                            () => useSearchNetworks({ chainId: chainIdToFilter }),
-                                            {
-                                              enabled: !!chainIdToFilter
-                                            });
+  const { data: networks } = useReactQuery(QueryKeys.networksByChain(chainIdToFilter),
+                                           () =>
+      useSearchNetworks(chainIdToFilter ? { chainId: chainIdToFilter } : {}),
+                                           {
+      enabled: chainIdToFilter ? !!chainIdToFilter : true,
+                                           });
 
   function networkToOption(network: Network) {
     return {

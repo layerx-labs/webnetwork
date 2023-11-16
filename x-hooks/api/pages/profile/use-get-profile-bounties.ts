@@ -17,6 +17,12 @@ export async function useGetProfileBounties(query: ParsedUrlQuery, type: UserTyp
     [type]: query?.wallet
   };
 
+  if(type === 'creator' && query?.networkChain) 
+    query = {
+      ...query,
+      chain: query?.networkChain
+    }
+
   return getBountiesListData({
     ...query,
     ...filter

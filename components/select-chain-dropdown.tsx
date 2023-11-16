@@ -13,6 +13,10 @@ import {useAppState} from "contexts/app-state";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+import useReactQuery from "x-hooks/use-react-query";
+import { useGetChains } from "x-hooks/api/chain";
+import { QueryKeys } from "helpers/query-keys";
+import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
 interface SelectChainDropdownProps {
   onSelect: (chain: SupportedChainData) => void;
@@ -49,7 +53,12 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, supportedChains, connectedChain, currentUser, spinners } } = useAppState();
+  const { state: { Service, supportedChains, connectedChain, currentUser }, dispatch } = useAppState();
+
+  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
+    dispatch(updateSupportedChains(chains));
+    return chains; 
+  }));
 
   const placeholder = 
     !shouldMatchChain ? t("misc.all-chains") : placeHolder ? placeHolder : t("forms.select-placeholder");
@@ -145,7 +154,6 @@ export default function SelectChainDropdown({
     options,
     Service?.network?.active?.chain,
     connectedChain?.id,
-    spinners,
     shouldMatchChain
   ]);
 

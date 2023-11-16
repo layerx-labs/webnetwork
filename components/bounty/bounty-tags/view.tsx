@@ -15,8 +15,9 @@ export default function BountyTagsView({
         <Badge
           key={tag}
           label={tag}
-          className={`caption-medium border border-gray-800 border-radius-4 text-uppercase text-truncate text-gray-400`}
-          color="gray-850"
+          className={`border border-gray-800 px-2 py-1 border-radius-4 sm-regular text-uppercase 
+            text-truncate text-gray-500`}
+          color="transparent"
         />
       ))}
     </div>
