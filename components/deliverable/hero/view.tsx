@@ -77,10 +77,7 @@ export default function DeliverableHeroView({
                 <div className="d-flex flex-wrap justify-content-end">
                   <PriceConversor
                     currentValue={currentBounty?.developerAmount}
-                    currency={
-                      currentBounty?.transactionalToken?.symbol ||
-                      t("misc.token")
-                    }
+                    token={currentBounty?.transactionalToken}
                   />
                 </div>
               </div>

@@ -57,7 +57,7 @@ export default async function get(query: ParsedUrlQuery) {
         include: [
           { 
             association: "transactionalToken",
-            attributes: ["address", "name", "symbol"]
+            attributes: ["address", "name", "symbol", "chain_id"]
           },
           {
             association: "network",

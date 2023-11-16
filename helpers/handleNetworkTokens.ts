@@ -2,6 +2,7 @@ import { Web3Connection } from "@taikai/dappkit";
 import { ERC20 } from "@taikai/dappkit";
 
 import Database from "db/models";
+import { getCoinIconByChainAndContractAddress } from "services/coingecko";
 
 //checks if it exists in the base, creates it if necessary and if it exists, adds the boolean for the correct value
 const handlefindOrCreateTokens = async (tokenId: number,
@@ -76,6 +77,8 @@ async function handleCreateSettlerToken(address: string,
     const name = await erc20.name();
     const symbol = await erc20.symbol();
 
+    const icon = await getCoinIconByChainAndContractAddress(address, chain_id) || undefined
+
     const newToken = await Database.tokens.create({
       address,
       name,
@@ -83,7 +86,8 @@ async function handleCreateSettlerToken(address: string,
       chain_id,
       minimum: minAmount,
       isTransactional: false,
-      isReward: false
+      isReward: false,
+      icon
     })
 
     return newToken

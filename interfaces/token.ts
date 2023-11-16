@@ -6,6 +6,8 @@ import { Network } from "../interfaces/network";
 
 export type TokenType = 'reward' | 'transactional';
 
+export type CurrencysType = 'usd' | 'btc' | 'eth' | 'eur';
+
 export interface Token {
   id?: number;
   chain_id?: number;
@@ -23,6 +25,7 @@ export interface Token {
   isAllowed?: boolean;
   isReward?: boolean;
   minimum?: string;
+  icon?: string | ReactElement;
 }
 
 export interface NetworkToken {
@@ -34,10 +37,9 @@ export interface NetworkToken {
 }
 
 export interface TokenInfo extends Partial<Token> {
-    icon: string | ReactElement;
     prices: TokenPrice;
 }
 
-export interface TokenPrice {
-  [key: string]: number;
-}
+export type TokenPrice = {
+  [key in CurrencysType]?: number;
+} & { updatedAt: string };

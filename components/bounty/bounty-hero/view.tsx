@@ -45,11 +45,8 @@ export default function BountyHeroView({
   function renderPriceConversor() {
     return (
       <PriceConversor
+        token={bounty?.transactionalToken}
         currentValue={currentState === "funding" ? bounty?.amount : bounty?.developerAmount }
-        currency={
-          bounty?.transactionalToken?.symbol ||
-          t("common:misc.token")
-        }
       />
     );
   }

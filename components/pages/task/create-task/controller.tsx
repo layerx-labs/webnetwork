@@ -28,8 +28,6 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import {getCoinInfoByContract, getCoinList} from "services/coingecko";
-
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreatePreBounty } from "x-hooks/api/task";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
@@ -44,8 +42,8 @@ import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
 import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
 import {UserRoleUtils} from "../../../../server/utils/jwt";
-import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
 import useGetIsAllowed from "../../../../x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
+import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
 import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
 import CreateTaskPageView from "./view";
 
@@ -129,14 +127,7 @@ export default function CreateTaskPage({
     BigNumber(v).isLessThan(BigNumber(min));
 
   async function addToken(newToken: Token) {
-    await getCoinInfoByContract(newToken?.symbol)
-      .then((tokenInfo) => {
-        setCustomTokens([...customTokens, { ...newToken, tokenInfo }]);
-      })
-      .catch((err) => {
-        console.error("coinErro", err);
-        setCustomTokens([...customTokens, newToken]);
-      });
+    setCustomTokens([...customTokens, newToken]);
   }
 
   function validateBannedDomain(link: string) {
@@ -161,17 +152,6 @@ export default function CreateTaskPage({
   function handleOriginLinkChange(newLink: string) {
     setOriginLink(newLink);
     validateDomainDebounced(newLink);
-  }
-
-  async function handleCustomTokens(tokens: Token[]) {
-    await getCoinList() // ask for list so it we don't do that on the loop;
-
-    Promise.all(tokens?.map(async (token) => {
-      const newTokens = await getCoinInfoByContract(token?.symbol)
-        .then((tokenInfo) => ({ ...token, tokenInfo }))
-        .catch(() => token);
-      return newTokens
-    })).then(t => setCustomTokens(t))
   }
 
   function onUpdateFiles(files: IFilesProps[]) {
@@ -541,7 +521,7 @@ export default function CreateTaskPage({
       }
 
       if (tokens.length !== customTokens.length)
-        handleCustomTokens(tokens)
+        setCustomTokens(tokens)
     }
   }, [currentNetwork?.tokens, currentSection]);
 
