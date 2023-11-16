@@ -71,7 +71,7 @@ export default function TotalVotes({
 
       <VotesAmount
         label={t("profile:deletaged-to-others")}
-        amount={votesDelegatedToOthers?.toFixed()}
+        amount={votesDelegatedToOthers?.toFixed() || '0'}
         networkIcon={icon}
         votesSymbol={votesSymbol}
         tokenSymbol={tokenSymbol}
