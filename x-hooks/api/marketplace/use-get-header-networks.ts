@@ -4,7 +4,7 @@ import { api } from "services/api";
 
 export async function useGetHeaderNetworks() {
   return api
-    .get<HeaderNetworksProps>(`/header/marketplace`)
+    .get<HeaderNetworksProps>(`/header/marketplaces`)
     .then(({ data }) => ({
       totalConverted: data.TVL || 0,
       numberOfBounties: data.bounties || 0,
