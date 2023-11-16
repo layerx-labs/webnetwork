@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
+import WalletBalanceView from "components/profile/pages/wallet/wallet-balance/view";
 import { TokenBalanceType } from "components/profile/token-balance";
 import TokenIcon from "components/token-icon";
 
@@ -16,12 +17,10 @@ import { Token } from "interfaces/token";
 
 import DAO from "services/dao-service";
 
-import useBepro from "x-hooks/use-bepro";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import WalletBalanceView from "./view";
-import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 interface WalletBalanceProps {
   chains: SupportedChainData[];
   tokens: Token[];
@@ -41,7 +40,6 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
-  const { getERC20TokenData, getTokenBalance } = useBepro();
   const { supportedChains } = useSupportedChain();
 
   const {
