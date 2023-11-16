@@ -48,9 +48,9 @@ export default function BountiesList({
   const { search, setSearch, clearSearch } = useSearch();
   const { getChainFromUrl } = useChain();
   
-  const { state, time, networkName } = router.query;
+  const { state, time, networkName, networkChain } = router.query;
 
-  const hasFilter = !!(state || time || search || networkName);
+  const hasFilter = !!(state || time || search || networkName || networkChain);
   const isOnNetwork = !!router?.query?.network;
 
   function handleSearchChange(e) {
@@ -127,6 +127,7 @@ export default function BountiesList({
       onEnterPressed={handleSearch}
       onSearchInputChange={handleSearchChange}
       hideFilter={hideFilter}
+      chains={appState?.supportedChains}
     />
   );
 }
