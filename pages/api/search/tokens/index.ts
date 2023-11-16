@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import { Sequelize, WhereOptions } from "sequelize";
 
 import Database from "db/models";
 
