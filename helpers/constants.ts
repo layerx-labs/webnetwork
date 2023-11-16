@@ -54,7 +54,7 @@ export const DAY_IN_SECONDS = 24 * 60 * 60;
 export const MILLISECONDS = 1000;
 export const MINUTE_IN_MS = 60 * MILLISECONDS;
 export const STATIC_URL_PATHS = [
-  "bounty",
+  "marketplaces",
   "network",
   "networks",
   "leaderboard",
@@ -62,6 +62,7 @@ export const STATIC_URL_PATHS = [
   "new-marketplace",
   "setup",
   "explore",
+  "create-bounty",
   "create-task",
   "api-doc",
   "administration",
@@ -71,7 +72,7 @@ export const STATIC_URL_PATHS = [
   "deliverable",
   "proposal",
   "curators",
-  "bounties",
+  "tasks",
 ];
 export const BOUNTY_TAGS = [
   {
