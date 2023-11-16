@@ -25,13 +25,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     ...query,
     wallet: token?.address as string
   };
+  const chainWalletFilter = {
+    type: "transactional",
+    ... query?.networkChain ? { chainShortName: query.networkChain.toString() } : {}
+  };
 
   const bountiesResult = result => ({ bounties: result });
 
   const getDataFn = {
     payments: () => useGetProfilePayments(queryWithWallet),
     wallet: () => Promise.all([
-      useGetTokens().then(tokens => tokens?.filter(token => token?.isTransactional)).catch(() => []),
+      useGetTokens(chainWalletFilter).catch(() => []),
       useGetChains().catch(() => [])
     ])
       .then(([tokens, chains]) => ({ tokens, chains })),

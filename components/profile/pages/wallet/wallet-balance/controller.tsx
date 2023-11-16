@@ -93,22 +93,9 @@ export default function WalletBalance({
     debouncedSearchUpdater(e.target.value);
   }
 
-  function handleSearchFilter(name = "", symbol = "", networks, chainId) {
-    const hasNetworkName = query?.networkName;
-    const isNetwork = !!networks.find(({ name }) =>
-        hasNetworkName?.toString().toLowerCase() === name?.toLowerCase());
-    const hasChainName = query?.networkChain;
-    const isChain = !!chains.find((chain) =>
-        chain.chainId === chainId &&
-        hasChainName?.toString().toLowerCase() ===
-          chain.chainShortName.toLowerCase());
-
-    return (
-      (name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
-        symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0) &&
-      (hasNetworkName ? isNetwork : true) &&
-      (hasChainName ? isChain : true)
-    );
+  function handleSearchFilter(name = "", symbol = "") {
+    return name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0;
   }
 
   function loadDaoService(chainRpc: string) {
@@ -140,7 +127,7 @@ export default function WalletBalance({
   }
 
   const { data: tokensData, isLoading, isSuccess } = 
-    useReactQuery(["tokens-balance", state.currentUser?.walletAddress],
+    useReactQuery(["tokens-balance", state.currentUser?.walletAddress, query?.networkChain?.toString()],
                   loadTokensBalance,
                   {
                     enabled: !!state.currentUser?.walletAddress && !!supportedChains,
@@ -151,7 +138,6 @@ export default function WalletBalance({
     if (!isLoading && isSuccess) {
       const filteredTokens = tokensData
         .map(token => toTokenWithBalance(token))
-
       setTokensWithBalance(filteredTokens);
 
       if(!isLoadingPrices && isSucessPrices){
@@ -197,8 +183,8 @@ export default function WalletBalance({
       totalAmount={totalAmount}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-      tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
-        handleSearchFilter(name, symbol, networks, chain_id))}
+      tokens={tokensWithBalance.filter(({ name, symbol }) =>
+        handleSearchFilter(name, symbol))}
       searchString={searchState}
       onSearchClick={updateSearch}
       onSearchInputChange={handleSearchChange}
