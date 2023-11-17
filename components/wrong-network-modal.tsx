@@ -12,8 +12,6 @@ import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import { useDao } from "x-hooks/use-dao";

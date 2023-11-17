@@ -156,7 +156,8 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
           originalValue: transactional.map(toLower)
         }));
         setRegistryTokenSymbol(registrySymbol);
-      });
+      })
+      .catch(error => console.debug("Failed to get registry data", error));
   }
 
   async function handleTokensTransactions({ value, originalValue }: Field, isTransactional = true) {
@@ -278,10 +279,10 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   }
 
   useEffect(() => {
-    if(!daoService?.registry?.contractAddress) return;
+    if(!daoService?.registry?.contractAddress || !daoService?.network?.contractAddress) return;
 
     updateRegistryParameters();
-  }, [daoService?.registry?.contractAddress]);
+  }, [daoService?.network?.contractAddress, daoService?.registry?.contractAddress]);
 
   return(
     <NetworkRegistrySettingsView

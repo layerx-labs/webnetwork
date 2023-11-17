@@ -54,7 +54,7 @@ export default function ResponsiveListItem({
               </div>
 
               <If condition={!!secondaryLabel}>
-                <div className="col-auto px-0">
+                <div className="col-auto mt-2 px-0">
                   {secondaryLabel}
                 </div>
               </If>
