@@ -16,6 +16,7 @@ import useBepro from "x-hooks/use-bepro";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import TokenIcon from "./token-icon";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 
 interface TokensDropdownProps {
