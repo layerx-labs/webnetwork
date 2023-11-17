@@ -44,7 +44,7 @@ export default function SelectNetworkDropdown({
   const [options, setOptions] = useState<ChainOption[]>([]);
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
-  const { state: { Service, currentUser } } = useAppState();
+  const { state: { currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 

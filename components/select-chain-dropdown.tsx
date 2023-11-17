@@ -51,7 +51,7 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, currentUser } } = useAppState();
+  const { state: { currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 

@@ -41,7 +41,7 @@ export default function WrongNetworkModal({
   const { connect } = useDao();
   const marketplace = useMarketplace();
   const { handleAddNetwork } = useNetworkChange();
-  const {state: { currentUser, Service }} = useAppState();
+  const {state: { currentUser }} = useAppState();
   const { supportedChains } = useSupportedChain()
 
   const canBeHided = !isRequired;

@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
@@ -25,7 +23,6 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
     t("bounty:steps.closed"),
   ]);
 
-  const { state } = useAppState();
   const { service: daoService } = useDaoStore();
   const marketplace = useMarketplace();
 

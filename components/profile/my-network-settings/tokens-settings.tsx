@@ -7,7 +7,6 @@ import If from "components/If";
 import MultipleTokensDropdown from "components/multiple-tokens-dropdown";
 import {WarningSpan} from "components/warning-span";
 
-import {useAppState} from "contexts/app-state";
 import { useNetworkSettings } from "contexts/network-settings";
 
 import { QueryKeys } from "helpers/query-keys";
@@ -38,7 +37,6 @@ export default function TokensSettings({
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   const [allowedTransactionalTokensList, setAllowedTransactionalTokensList] = useState<Token[]>();
   
-  const { state } = useAppState();
   const { service: daoService } = useDaoStore();
   const { fields } = useNetworkSettings();
   const { connectedChain } = useSupportedChain();

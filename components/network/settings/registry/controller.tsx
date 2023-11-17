@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 
 import NetworkRegistrySettingsView from "components/network/settings/registry/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
 
 import { RegistryEvents } from "interfaces/enums/events";
@@ -44,7 +42,6 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [networkCreationFeePercentage, setNetworkCreationFeePercentage] = useState<Field>(defaultField);
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
-  const {state} = useAppState();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();
   const marketplace = useMarketplace();

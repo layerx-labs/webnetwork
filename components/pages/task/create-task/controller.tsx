@@ -574,7 +574,7 @@ export default function CreateTaskPage({
 
   async function onNetworkSelected(opt) {
     changeNetwork(opt.chain_id, opt?.networkAddress)
-      .then(_ => setCurrentNetwork(opt));
+      .then(() => setCurrentNetwork(opt));
   }
 
   function handleSectionHeaderClick(i: number) {

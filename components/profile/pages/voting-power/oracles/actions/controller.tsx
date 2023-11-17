@@ -4,8 +4,6 @@ import {NumberFormatValues} from "react-number-format";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import {useAppState} from "contexts/app-state";
-
 import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {NetworkEvents} from "interfaces/enums/events";
@@ -15,11 +13,11 @@ import {OraclesActionsProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 
 import OraclesActionsView from "./view";
-import {transactionStore} from "../../../../../../x-hooks/stores/transaction-list/transaction.store";
 
 export default function OraclesActions({
   wallet,
@@ -41,7 +39,6 @@ export default function OraclesActions({
   const networkTokenERC20 = useERC20();
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { state: { Service }} = useAppState();
   const { service: daoService } = useDaoStore();
   const {list: transactions} = transactionStore();
 

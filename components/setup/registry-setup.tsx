@@ -84,7 +84,7 @@ export function RegistrySetup({
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { state: { currentUser, Service } } = useAppState();
+  const { state: { currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({

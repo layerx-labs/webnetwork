@@ -32,7 +32,8 @@ export default function HackFestCard() {
             </div>
             <div className="row mb-4">
               <span className="xs-medium text-blue-50 font-weight-normal mb-3">
-                If you're a builder, join the party! Browse dozens of tasks in the Open-Marketplace, solve them and earn crypto.
+                If you're a builder, join the party! Browse dozens of tasks in the Open-Marketplace,
+                  solve them and earn crypto.
               </span>
             </div>
 

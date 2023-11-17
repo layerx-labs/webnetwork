@@ -68,7 +68,7 @@ export default function NetworkTxButton({
   const [txSuccess,] = useState(false);
 
   const marketplace = useMarketplace();
-  const { state, dispatch } = useAppState();
+  const { state } = useAppState();
   const {add: addTx, update: updateTx} = transactionStore();
 
   const { addError, addSuccess } = useToastStore();

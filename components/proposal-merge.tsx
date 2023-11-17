@@ -11,11 +11,10 @@ import {useAppState} from "contexts/app-state";
 
 import {formatStringToCurrency} from "helpers/formatNumber";
 
-import { DistributedAmounts, Proposal } from "interfaces/proposal";
+import { DistributedAmounts } from "interfaces/proposal";
 import {Token, TokenInfo} from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
-import useMarketplace from "x-hooks/use-marketplace";
 
 import ProposalDistributionList from "./proposal/distribution/list/view";
 
@@ -44,7 +43,6 @@ export default function ProposalMerge({
   const [coinInfo, setCoinInfo] = useState<TokenInfo>()
   
   const {state} = useAppState();
-  const marketplace = useMarketplace();
 
   const amountTotalConverted = BigNumber(handleConversion(amountTotal));
   const currentTokenSymbol = token.symbol ||  t("common:misc.token")

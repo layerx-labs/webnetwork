@@ -11,7 +11,6 @@ import { DistributedAmounts } from "interfaces/proposal";
 import { Token, TokenInfo } from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
-import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalDistributionListProps {
   distributedAmounts: DistributedAmounts;
@@ -27,7 +26,6 @@ export default function ProposalDistributionList({
   const [coinInfo, setCoinInfo] = useState<TokenInfo>();
 
   const { state } = useAppState();
-  const marketplace = useMarketplace();
 
   const { data: prices } = useCoingeckoPrice([
     { address: token?.address, chainId: token?.chain_id },

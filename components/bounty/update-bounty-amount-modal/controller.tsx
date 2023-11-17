@@ -49,7 +49,7 @@ export default function UpdateBountyAmountModal({
   const [issueAmount, updateIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
 
   const {
-    state: { currentUser, Service }
+    state: { currentUser }
   } = useAppState();
   const { addError } = useToastStore();
   const { service: daoService } = useDaoStore();

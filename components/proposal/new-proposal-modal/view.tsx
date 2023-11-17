@@ -4,8 +4,8 @@ import { components as RSComponents, SingleValueProps } from "react-select";
 import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
-import { ContextualSpan } from "components/contextual-span";
 import ContractButton from "components/common/buttons/contract-button";
+import { ContextualSpan } from "components/contextual-span";
 import IconOption from "components/icon-option";
 import If from "components/If";
 import Modal from "components/modal";

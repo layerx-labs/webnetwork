@@ -35,7 +35,6 @@ export default function ProposalOrDeliverableView({
   isDisputed,
   isMerged,
   totalToBeDisputed,
-  status,
   isRefused
 }: ItemRowProps) {
   return (
