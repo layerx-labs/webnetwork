@@ -13,6 +13,7 @@ const publicRuntimeConfig = {
     kyc: process.env.NEXT_PUBLIC_KYC_API || 'https://individual-api.synaps.io/v3',
   },
   enableCoinGecko: process.env.NEXT_ENABLE_COINGECKO,
+  mainCurrency: process.env.NEXT_PUBLIC_CURRENCY_MAIN,
   adminWallet: process.env.NEXT_PUBLIC_ADMIN_WALLET_ADDRESS,
   leaderboardPoints: {
     bountyClosedDev: process.env.NEXT_PUBLIC_BOUNTY_CLOSED_DEV || 1,
