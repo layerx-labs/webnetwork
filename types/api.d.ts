@@ -88,6 +88,7 @@ export interface ActiveMarketplace {
   totalValueLock: string;
   totalIssues: number;
   chains: Partial<SupportedChainData>[];
+  hasNotConverted?: boolean;
 }
 
 export type ActiveNetworksPaginated = PaginatedData<ActiveMarketplace>;

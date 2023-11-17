@@ -13,6 +13,9 @@ import { formatNumberToNScale } from "helpers/formatNumber";
 
 import { ActiveMarketplace } from "types/api";
 
+import If from "../../../If";
+import InfoTooltip from "../../../info-tooltip";
+
 const { publicRuntimeConfig } = getConfig();
 
 interface ActiveMarketplaceItemProps {
@@ -33,7 +36,7 @@ export function ActiveMarketplaceItemView({
   const { t } = useTranslation("bounty");
 
   const amountClasses = 
-    "col-auto bg-gray-850 p-1 px-2 border-radius-4 border border-gray-800 sm-regular fontw-weight-normal";
+    "col-auto bg-gray-850 p-1 px-2 border-radius-4 border border-gray-800 sm-regular lh-1 font-weight-normal";
 
   return (
     <>
@@ -77,8 +80,15 @@ export function ActiveMarketplaceItemView({
             </div>
 
             <div className={amountClasses}>
-              {formatNumberToNScale(marketplace?.totalValueLock || 0, 0)}{" "}
-              <span className="text-uppercase text-gray-500">{t("tvl")}</span>
+              <div className="d-flex align-items-center gap-1">
+                <span>{formatNumberToNScale(marketplace?.totalValueLock || 0, 0)}</span>
+                <span className="text-uppercase text-gray-500">{publicRuntimeConfig?.mainCurrency}</span>
+                <If condition={marketplace?.hasNotConverted}>
+                  <InfoTooltip
+                    description="Some tokens weren't converted"
+                  />
+                </If>
+              </div>
             </div>
           </div>
         </div>

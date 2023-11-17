@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
 import {NextApiRequest, NextApiResponse} from "next";
+import getConfig from "next/config";
 import {Op, WhereOptions} from "sequelize";
 import {isAddress} from "web3-utils";
 
@@ -9,7 +10,10 @@ import {paginateArray} from "helpers/paginate";
 
 import {withCORS} from "middleware";
 
+import getTokensPrices from "server/common/check-prices/post";
 import {HttpBadRequestError} from "server/errors/http-errors";
+
+const { publicRuntimeConfig } = getConfig();
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const whereCondition: WhereOptions = {};
@@ -52,6 +56,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     { 
       association: "chain",
       attributes: ["chainId", "chainName", "chainShortName", "icon", "color"]
+    },
+    {
+      association: "networkToken",
+      attributes: ["address", "name", "symbol", "chain_id"]
     }
   ];
 
@@ -66,23 +74,35 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const groupBy = name ? "networkAddress" : "name";
   const result = {};
 
-  for (const network of networks) {
-    const tokensLocked = network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.tokensLocked || 0), BigNumber(0));
-    const delegatedLocked = 
-      network?.curators?.reduce((ac, cv) => BigNumber(ac).plus(cv?.delegatedToMe || 0), BigNumber(0));
-    
+  const networkTokens = networks?.map(network => ({
+    address: network?.networkToken?.address,
+    chainId: network?.networkToken?.chain_id
+  }));
+
+  const tokensPrices = await getTokensPrices({
+    body: {
+      tokens: networkTokens
+    }
+  } as NextApiRequest)
+    .catch(() => networkTokens);
+
+  networks?.forEach((network, index) => {
+    const tvl = network?.curators?.reduce((ac, cv) =>
+      BigNumber(ac).plus(cv?.tokensLocked || 0).plus(cv?.delegatedToMe || 0), BigNumber(0));
+    const tokenPrice = tokensPrices[index][publicRuntimeConfig?.mainCurrency];
+
     const networkOnResult = result[network[groupBy]?.toLowerCase()];
 
     result[network[groupBy]?.toLowerCase()] = {
       name: (networkOnResult || network)?.name,
       fullLogo: (networkOnResult || network)?.fullLogo,
       logoIcon: (networkOnResult || network)?.logoIcon,
-      totalValueLock: 
-        BigNumber(networkOnResult?.totalValueLock || 0).plus(delegatedLocked).plus(tokensLocked).toFixed(),
+      totalValueLock: BigNumber(networkOnResult?.totalValueLock || 0).plus(tvl.multipliedBy(tokenPrice || 0)).toFixed(),
       totalIssues: (networkOnResult?.totalIssues || 0 ) + network?.issues?.length || 0,
-      chains: [...(networkOnResult?.chains || []), network?.chain]
+      chains: [...(networkOnResult?.chains || []), network?.chain],
+      hasNotConverted: networkOnResult?.hasNotConverted || !tokenPrice
     }
-  }
+  });
 
   const compare = (networkOne, networkTwo) => (networkOne?.totalIssues >= networkTwo?.totalIssues ? -1 : 0 );
   const networksResult = Object.values(result);
