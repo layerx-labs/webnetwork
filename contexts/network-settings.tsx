@@ -34,6 +34,7 @@ import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -65,6 +66,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
+  const { service: daoService, serviceStarting } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
@@ -296,14 +298,14 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   async function loadForcedService(): Promise<DAO> {
     if (!network ||
-        toLower(state.Service?.active?.network?.contractAddress) === toLower(network?.networkAddress))
-      return state.Service?.active;
+        toLower(daoService?.network?.contractAddress) === toLower(network?.networkAddress))
+      return daoService;
 
     if (toLower(forcedService?.network?.contractAddress) === toLower(network?.networkAddress))
       return forcedService;
 
     const dao = new DAO({
-      web3Connection: state.Service?.active?.web3Connection,
+      web3Connection: daoService?.web3Connection,
       skipWindowAssignment: true
     });
 
@@ -475,19 +477,19 @@ export const NetworkSettingsProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!network || !state.Service?.active || state.Service?.starting)
+    if (!network || !daoService || serviceStarting)
       setForcedService(undefined);
     else if (+network?.chain?.chainId === +connectedChain?.id)
       loadForcedService()
         .then(setForcedService);
-  }, [network, state.Service?.active, state.Service?.starting, connectedChain?.id]);
+  }, [network, daoService, serviceStarting, connectedChain?.id]);
 
   useEffect(() => {
     if ([
       !state.currentUser?.walletAddress,
       !isCreating &&
         (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
-      isCreating && !state.Service?.active?.registry?.token?.contractAddress,
+      isCreating && !daoService?.registry?.token?.contractAddress,
       !needsToLoad,
       !state.Settings
     ].some(c => c))
@@ -506,16 +508,16 @@ export const NetworkSettingsProvider = ({ children }) => {
     isCreating,
     needsToLoad,
     router.pathname,
-    state.Service?.active?.registry?.token?.contractAddress,
+    daoService?.registry?.token?.contractAddress,
     state.Settings
   ]);
 
   useEffect(() => {
-    if (state.Service?.active?.registry?.contractAddress && connectedChain?.name !== UNSUPPORTED_CHAIN)
-      getERC20TokenData(state.Service.active.registry.token.contractAddress)
+    if (daoService?.registry?.contractAddress && connectedChain?.name !== UNSUPPORTED_CHAIN)
+      getERC20TokenData(daoService.registry.token.contractAddress)
         .then(setRegistryToken)
         .catch(error => console.debug("Failed to load registry token", error));
-  }, [state.Service?.active?.registry?.contractAddress, connectedChain?.name]);
+  }, [daoService?.registry?.contractAddress, connectedChain?.name]);
 
   const memorizedValue = useMemo<NetworkSettings>(() => ({
     ...networkSettings,

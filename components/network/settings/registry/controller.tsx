@@ -16,6 +16,7 @@ import { Field } from "types/utils";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import { useNetwork } from "x-hooks/use-network";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -45,6 +46,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
   const {state} = useAppState();
   const { processEvent } = useProcessEvent();
+  const { service: daoService } = useDaoStore();
   const { updateActiveNetwork } = useNetwork();
   const { 
     handleFeeSettings,
@@ -124,11 +126,11 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
   async function updateRegistryParameters() {
     return Promise.all([
-      state.Service.active.getTreasury(),
-      state.Service.active.getRegistryCreatorAmount(),
-      state.Service.active.getRegistryCreatorFee(),
-      state.Service.active.getAllowedTokens(),
-      state.Service.active?.registry?.token?.symbol()
+      daoService.getTreasury(),
+      daoService.getRegistryCreatorAmount(),
+      daoService.getRegistryCreatorFee(),
+      daoService.getAllowedTokens(),
+      daoService?.registry?.token?.symbol()
     ])
       .then(([
         { treasury, closeFee, cancelFee },
@@ -276,10 +278,10 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   }
 
   useEffect(() => {
-    if(!state.Service?.active?.registry?.contractAddress) return;
+    if(!daoService?.registry?.contractAddress) return;
 
     updateRegistryParameters();
-  }, [state.Service?.active?.registry?.contractAddress]);
+  }, [daoService?.registry?.contractAddress]);
 
   return(
     <NetworkRegistrySettingsView

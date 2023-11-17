@@ -6,6 +6,8 @@ import { useAppState } from "contexts/app-state";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+
 import BountyStatusProgressView from "./view";
 
 export default function BountyStatusProgress({ currentBounty }: { currentBounty: IssueBigNumberData}) {
@@ -23,9 +25,10 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
   ]);
 
   const { state } = useAppState();
+  const { service: daoService } = useDaoStore();
 
   const getChainTime = () =>
-    state?.Service?.active
+    daoService
       ?.getTimeChain()
       .then(setChainTime)
       .catch(console.log);

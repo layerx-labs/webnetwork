@@ -20,6 +20,7 @@ import { DistributedAmounts } from "interfaces/proposal";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -47,6 +48,7 @@ export default function ProposalPage() {
 
   const { state } = useAppState();
   const { getTimeChain } = useBepro();
+  const { service: daoService } = useDaoStore();
 
   const proposalId = query?.proposalId?.toString();
   const proposalQueryKey = QueryKeys.proposal(proposalId);
@@ -146,9 +148,9 @@ export default function ProposalPage() {
   ]);
 
   useEffect(() => {
-    if (state.Service?.active)
+    if (daoService)
       getTimeChain().then(setChainTime);
-  }, [state.Service?.active]);
+  }, [daoService]);
 
   useEffect(() => {
     getDistributedAmounts();

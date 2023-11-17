@@ -30,6 +30,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
@@ -51,6 +52,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
   const registryToken = useERC20();
   const { state } = useAppState();
+  const { service: daoService } = useDaoStore();
   const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
@@ -99,7 +101,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   }
 
   async function handleLock() {
-    if (!state.Service?.active || !amount) return;
+    if (!daoService || !amount) return;
 
     const lockTxAction = addTx({
       type: TransactionTypes.lock,
@@ -128,7 +130,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   }
 
   async function handleUnLock() {
-    if (!state.Service?.active) return;
+    if (!daoService) return;
 
     const unlockTxAction = addTx({
       type: TransactionTypes.unlock,
@@ -199,8 +201,8 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   }
 
   useEffect(() => {
-    const tokenAddress = state.Service?.active?.registry?.token?.contractAddress;
-    const registryAddress = state.Service?.active?.registry?.contractAddress;
+    const tokenAddress = daoService?.registry?.token?.contractAddress;
+    const registryAddress = daoService?.registry?.contractAddress;
 
     if (tokenAddress && registryAddress && connectedChain?.name !== UNSUPPORTED_CHAIN) {
       registryToken.setAddress(tokenAddress);
@@ -210,8 +212,8 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
       registryToken.setSpender(undefined);
     }
   }, [
-    state.Service?.active?.registry?.token?.contractAddress,
-    state.Service?.active?.registry?.contractAddress,
+    daoService?.registry?.token?.contractAddress,
+    daoService?.registry?.contractAddress,
     connectedChain?.name
   ]);
 

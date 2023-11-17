@@ -12,6 +12,7 @@ import {parseTransaction} from "helpers/transactions";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import {MetamaskErrors} from "../../../interfaces/enums/Errors";
@@ -68,17 +69,18 @@ export default function NetworkTxButton({
   const {add: addTx, update: updateTx} = transactionStore();
 
   const { addError, addSuccess } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { updateWalletBalance } = useAuthentication();
 
   function checkForTxMethod() {
-    if (!state.Service?.active?.network || !state.currentUser) return;
+    if (!daoService?.network || !state.currentUser) return;
 
-    if (!txMethod || typeof state.Service?.active?.network[txMethod] !== "function")
+    if (!txMethod || typeof daoService?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
   function makeTx() {
-    if (!state.Service?.active?.network || !state.currentUser) return;
+    if (!daoService?.network || !state.currentUser) return;
 
     const tmpTransaction = addTx({
       type: txType,
@@ -90,7 +92,7 @@ export default function NetworkTxButton({
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
     
-    state.Service?.active?.network[txMethod](txParams.tokenAmount, txParams.from)
+    daoService?.network[txMethod](txParams.tokenAmount, txParams.from)
       .then(answer => {
         if (answer.status) {
           if (onSuccess) onSuccess();
@@ -141,7 +143,7 @@ export default function NetworkTxButton({
     </Button>
   );
 
-  useEffect(checkForTxMethod, [state.Service?.active, state.currentUser]);
+  useEffect(checkForTxMethod, [daoService, state.currentUser]);
 
   return (
       <NetworkTxButtonView 

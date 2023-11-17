@@ -39,9 +39,11 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useSignature from "x-hooks/use-signature";
-import {useStorageTransactions} from "./use-storage-transactions";
 
+
+import { useDaoStore } from "./stores/dao/dao.store";
 import useBepro from "./use-bepro";
+import {useStorageTransactions} from "./use-storage-transactions";
 import useSupportedChain from "./use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
@@ -58,6 +60,7 @@ export function useAuthentication() {
   const transactions = useStorageTransactions();
   const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
+  const { service: daoService, serviceStarting} = useDaoStore();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
@@ -108,7 +111,7 @@ export function useAuthentication() {
   }
 
   function updateWalletBalance(force = false) {
-    if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !state.Service?.active?.network || !chain)
+    if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !daoService?.network || !chain)
       return;
 
     const update = newBalance => {
@@ -121,9 +124,9 @@ export function useAuthentication() {
       dispatch(changeActiveNetwork(Object.assign(state.Service.network.active || {} as any, newParameters)));
 
     Promise.all([
-      state.Service.active.getOraclesResume(state.currentUser.walletAddress),
+      daoService.getOraclesResume(state.currentUser.walletAddress),
 
-      state.Service.active.getBalance('settler', state.currentUser.walletAddress),
+      daoService.getBalance('settler', state.currentUser.walletAddress),
       useSearchCurators({
         address: state.currentUser.walletAddress,
         networkName: state.Service?.network?.active?.name,
@@ -131,7 +134,7 @@ export function useAuthentication() {
       })
       .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
       // not balance, but related to address, no need for a second useEffect()
-      state.Service.active.isCouncil(state.currentUser.walletAddress),
+      daoService.isCouncil(state.currentUser.walletAddress),
       isNetworkGovernor(state.currentUser.walletAddress)
     ])
       .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {
@@ -199,7 +202,7 @@ export function useAuthentication() {
     return new Promise<string>(async (resolve, reject) => {
       if (!state?.currentUser?.walletAddress ||
           !connectedChain?.id ||
-          state.Service?.starting ||
+          serviceStarting ||
           isLoadingSigningMessage) {
         reject("Wallet not connected, service not started or already signing a message");
         return;

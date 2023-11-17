@@ -14,6 +14,7 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 import { DistributionsProps } from "interfaces/proposal";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
@@ -50,6 +51,7 @@ export default function UpdateBountyAmountModal({
     state: { currentUser, Service }
   } = useAppState();
   const { addError } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const transactionalERC20 = useERC20();
   const { processEvent } = useProcessEvent();
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
@@ -233,7 +235,7 @@ export default function UpdateBountyAmountModal({
   useEffect(() => {
     if (
       !transactionalAddress ||
-      !Service?.active ||
+      !daoService ||
       !currentUser?.walletAddress ||
       !show
     )
@@ -241,7 +243,7 @@ export default function UpdateBountyAmountModal({
 
     transactionalERC20.setAddress(transactionalAddress);
     transactionalERC20.updateAllowanceAndBalance();
-  }, [transactionalAddress, Service?.active, currentUser, show]);
+  }, [transactionalAddress, daoService, currentUser, show]);
 
   return (
     <UpdateBountyAmountModalView

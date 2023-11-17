@@ -30,6 +30,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreatePreBounty } from "x-hooks/api/task";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -102,10 +103,11 @@ export default function CreateTaskPage({
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { pushAnalytic } = useAnalyticEvents();
   const { connectedChain } = useSupportedChain();
   const {
-    state: { Settings, Service, currentUser }
+    state: { Settings, currentUser }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
@@ -236,7 +238,7 @@ export default function CreateTaskPage({
   }
 
   async function allowCreateIssue() {
-    if (!Service?.active || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
+    if (!daoService || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
       return;
 
     setIsLoadingApprove(true);
@@ -290,7 +292,7 @@ export default function CreateTaskPage({
     ].some((value) => value === false);
 
   async function createBounty() {
-    if (!deliverableType || !transactionalToken || !Service?.active || !currentUser)
+    if (!deliverableType || !transactionalToken || !daoService || !currentUser)
       return;
 
     if (!(await useGetIsAllowed(currentNetwork.id, currentUser.walletAddress))?.allowed) // triple check for bounty creation permission
@@ -363,7 +365,7 @@ export default function CreateTaskPage({
         bountyPayload.fundingAmount = issueAmount.formattedValue;
       }
 
-      const networkBounty = await Service?.active
+      const networkBounty = await daoService
         .openBounty(bountyPayload)
         .catch((e) => {
           updateTx({
@@ -586,7 +588,7 @@ export default function CreateTaskPage({
       return;
 
     changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
-  }, [currentNetwork, Service?.active])
+  }, [currentNetwork, daoService])
 
   return(
     <CreateTaskPageView

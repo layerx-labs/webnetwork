@@ -7,6 +7,7 @@ import {useRouter} from "next/router";
 import {useAppState} from "contexts/app-state";
 import {changeWeb3Connection} from "contexts/reducers/change-service";
 
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
 import {useNetwork} from "x-hooks/use-network";
@@ -27,6 +28,7 @@ export const GlobalEffectsProvider = ({children}) => {
   const network = useNetwork();
   const settings = useSettings();
   const auth = useAuthentication();
+  const { service: daoService } = useDaoStore();
   const transactions = useStorageTransactions();
   const { state, dispatch } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
@@ -57,12 +59,12 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(() => {
     dao.changeNetwork();
   }, [
-    Service?.active,
+    daoService,
     Service?.network?.active?.networkAddress,
     Service?.network?.active?.chain_id,
   ]);
 
-  useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, Service?.active?.network?.contractAddress]);
+  useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, daoService?.network?.contractAddress]);
   useEffect(auth.updateKycSession, [state?.currentUser?.accessToken,
                                     state?.currentUser?.match,
                                     state?.currentUser?.walletAddress,
@@ -70,15 +72,13 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(auth.verifyReAuthorizationNeed, [currentUser?.walletAddress]);
   useEffect(() => {
     auth.syncUserDataWithSession();
-  }, [Service?.active, session]);
+  }, [daoService, session]);
   
   useEffect(() => {
     network.updateActiveNetwork();
   }, [query?.network, query?.chain]);
 
   useEffect(settings.loadSettings, []);
-
-  useEffect(transactions.loadFromStorage, [currentUser?.walletAddress, connectedChain]);
 
   return <GlobalEffectsContext.Provider value={_context} children={children} />
 }

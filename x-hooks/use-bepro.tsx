@@ -1,3 +1,4 @@
+import { TreasuryInfo } from "@taikai/dappkit";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
@@ -16,9 +17,9 @@ import DAO from "services/dao-service";
 
 import {NetworkParameters} from "types/dappkit";
 
+import { useDaoStore } from "./stores/dao/dao.store";
 import {useProcessEvent} from "./api/events/use-process-event";
 import {transactionStore} from "./stores/transaction-list/transaction.store";
-import { TreasuryInfo } from "@taikai/dappkit";
 
 const DIVISOR = 1000000;
 
@@ -26,6 +27,7 @@ export default function useBepro() {
   const { t } = useTranslation("common");
 
   const { state } = useAppState();
+  const { service: daoService } = useDaoStore();
   const { processEvent } = useProcessEvent();
   const {add: addTx, update: updateTx} = transactionStore();
 
@@ -49,7 +51,7 @@ export default function useBepro() {
         network: state.Service?.network?.active,
       });
 
-      await state.Service?.active.disputeProposal(+issueContractId, +proposalContractId)
+      await daoService.disputeProposal(+issueContractId, +proposalContractId)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, disputeTxAction as SimpleBlockTransactionPayload))
           resolve?.(txInfo);
@@ -67,7 +69,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.updateConfigFees(closeFee, cancelFee)
+      await daoService.updateConfigFees(closeFee, cancelFee)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
@@ -85,7 +87,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.updateAmountNetworkCreation(amount)
+      await daoService.updateAmountNetworkCreation(amount)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
@@ -103,7 +105,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.updateFeeNetworkCreation(amount)
+      await daoService.updateFeeNetworkCreation(amount)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
           resolve(txInfo);
@@ -123,7 +125,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.closeBounty(+bountyId, +proposalContractId, tokenUri)
+      await daoService.closeBounty(+bountyId, +proposalContractId, tokenUri)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, closeIssueTx as SimpleBlockTransactionPayload))
           resolve(txInfo);
@@ -145,7 +147,7 @@ export default function useBepro() {
         currency: currency
       });
 
-      await state.Service?.active.updateBountyAmount(bountyId, amount)
+      await daoService.updateBountyAmount(bountyId, amount)
       .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
         updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
         resolve(txInfo);
@@ -167,7 +169,7 @@ export default function useBepro() {
 
       let tx: { blockNumber: number; }
 
-      await state.Service?.active.cancelBounty(contractId, funding)
+      await daoService.cancelBounty(contractId, funding)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
           return processEvent(NetworkEvents.BountyCanceled, undefined, {
@@ -194,7 +196,7 @@ export default function useBepro() {
 
       let tx: { blockNumber: number; }
 
-      await state.Service?.active.hardCancel(contractId)
+      await daoService.hardCancel(contractId)
         .then((txInfo: { blockNumber: number; }) => {
           tx = txInfo;
 
@@ -225,7 +227,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active
+      await daoService
         .createProposal(bountyId, pullRequestId, [recipient], [100])
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
@@ -249,7 +251,7 @@ export default function useBepro() {
 
       const tx = addTx({ type, network: state.Service?.network?.active, amount, currency });
 
-      await state.Service?.active.approveToken(tokenAddress, amount)
+      await daoService.approveToken(tokenAddress, amount)
       .then((txInfo) => {
         if (!txInfo)
           throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
@@ -275,7 +277,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active
+      await daoService
         .takeBackDelegation(delegationId)
         .then((txInfo: { blockNumber: number; }) => {
           if (!txInfo)
@@ -304,13 +306,13 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active?.createPullRequest( bountyId,
-                                                      "",
-                                                      "",
-                                                      originCID,
-                                                      "",
-                                                      "",
-                                                      cid)
+      await daoService?.createPullRequest( bountyId,
+                                           "",
+                                           "",
+                                           originCID,
+                                           "",
+                                           "",
+                                           cid)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -329,7 +331,7 @@ export default function useBepro() {
       });
 
 
-      await state.Service?.active.setPullRequestReadyToReview(bountyId, pullRequestId)
+      await daoService.setPullRequestReadyToReview(bountyId, pullRequestId)
       .then((txInfo: TransactionReceipt) => {
         updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
@@ -346,7 +348,7 @@ export default function useBepro() {
         type: TransactionTypes.cancelDeliverable,
         network: state.Service?.network?.active});
 
-      await state.Service?.active.cancelPullRequest(bountyId, pullRequestId)
+      await daoService.cancelPullRequest(bountyId, pullRequestId)
       .then((txInfo: TransactionReceipt) => {
         updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
@@ -364,7 +366,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       })
 
-      await state.Service?.active.refuseProposal(bountyId, proposalId)
+      await daoService.refuseProposal(bountyId, proposalId)
       .then((txInfo: TransactionReceipt) => {
         updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload));
         resolve(txInfo);
@@ -382,7 +384,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.deployNetworkV2(networkToken)
+      await daoService.deployNetworkV2(networkToken)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -406,13 +408,13 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.deployNetworkRegistry(erc20,
-                                                        lockAmountForNetworkCreation,
-                                                        treasury,
-                                                        BigNumber(lockFeePercentage).multipliedBy(DIVISOR).toString(),
-                                                        BigNumber(closeFee).multipliedBy(DIVISOR).toString(),
-                                                        BigNumber(cancelFee).multipliedBy(DIVISOR).toString(),
-                                                        bountyToken)
+      await daoService.deployNetworkRegistry(erc20,
+                                             lockAmountForNetworkCreation,
+                                             treasury,
+                                             BigNumber(lockFeePercentage).multipliedBy(DIVISOR).toString(),
+                                             BigNumber(closeFee).multipliedBy(DIVISOR).toString(),
+                                             BigNumber(cancelFee).multipliedBy(DIVISOR).toString(),
+                                             bountyToken)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -430,7 +432,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.setNFTTokenDispatcher(nftToken, networkAddress)
+      await daoService.setNFTTokenDispatcher(nftToken, networkAddress)
         .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -448,7 +450,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.addNetworkToRegistry(networkAddress)
+      await daoService.addNetworkToRegistry(networkAddress)
         .then(txInfo => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -466,7 +468,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.deployBountyToken(name, symbol)
+      await daoService.deployBountyToken(name, symbol)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -481,11 +483,11 @@ export default function useBepro() {
                                               value: number | string,
                                               networkAddress?: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
-      let service = state.Service?.active;
+      let service = daoService;
 
-      if (networkAddress && networkAddress !== state.Service?.active?.network?.contractAddress) {
+      if (networkAddress && networkAddress !== daoService?.network?.contractAddress) {
         service = new DAO({
-          web3Connection: state.Service?.active.web3Connection,
+          web3Connection: daoService.web3Connection,
           skipWindowAssignment: true
         });
 
@@ -518,7 +520,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.fundBounty(bountyId, amount, tokenDecimals)
+      await daoService.fundBounty(bountyId, amount, tokenDecimals)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -541,7 +543,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.retractFundBounty(bountyId, fundingId)
+      await daoService.retractFundBounty(bountyId, fundingId)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -564,7 +566,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active.withdrawFundRewardBounty(bountyId, fundingId)
+      await daoService.withdrawFundRewardBounty(bountyId, fundingId)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -585,7 +587,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active[( add ? 'addAllowedTokens' : 'removeAllowedTokens')](addresses, isTransactional)
+      await daoService[( add ? 'addAllowedTokens' : 'removeAllowedTokens')](addresses, isTransactional)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -603,7 +605,7 @@ export default function useBepro() {
         network: state.Service?.network?.active
       });
 
-      await state.Service?.active?.unlockFromRegistry()
+      await daoService?.unlockFromRegistry()
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
@@ -615,83 +617,83 @@ export default function useBepro() {
   }
 
   async function getERC20TokenData(address:string): Promise<Token> {
-    return state.Service?.active.getERC20TokenData(address)
+    return daoService.getERC20TokenData(address)
   }
 
   function isAddress(address: string): boolean {
-    return state.Service?.active.isAddress(address)
+    return daoService.isAddress(address)
   }
 
   function getCancelableTime(): Promise<number> {
-    return state.Service?.active.getCancelableTime()
+    return daoService.getCancelableTime()
   }
 
   function getTimeChain(): Promise<number> {
-    return state.Service?.active.getTimeChain()
+    return daoService.getTimeChain()
   }
 
   function getTokenBalance(tokenAddress: string, walletAddress: string): Promise<BigNumber> {
-    return state.Service?.active.getTokenBalance(tokenAddress, walletAddress)
+    return daoService.getTokenBalance(tokenAddress, walletAddress)
   }
 
   function loadNetwork(networkAddress: string, skipAssignment?: boolean) {
-    return state.Service?.active.loadNetwork(networkAddress, skipAssignment);
+    return daoService.loadNetwork(networkAddress, skipAssignment);
   }
 
   function isNetworkGovernor(walletAddress: string) {
-    return state.Service?.active.isNetworkGovernor(walletAddress);
+    return daoService.isNetworkGovernor(walletAddress);
   }
 
   function getNetworkParameter(parameter: NetworkParameters) {
-    return state.Service?.active.getNetworkParameter(parameter)
+    return daoService.getNetworkParameter(parameter)
   }
 
   function getSettlerTokenData() {
-    return state.Service?.active.getSettlerTokenData()
+    return daoService.getSettlerTokenData()
   }
 
   function setNetworkParameter(parameter: NetworkParameters, value: string | number) {
-    return state.Service?.active.setNetworkParameter(parameter, value)
+    return daoService.setNetworkParameter(parameter, value)
   }
 
   function lockInRegistry(amount: string) {
-    return state.Service?.active.lockInRegistry(amount)
+    return daoService.lockInRegistry(amount)
   }
   
   function approveTokenInRegistry(amount: string) {
-    return state.Service?.active.approveTokenInRegistry(amount)
+    return daoService.approveTokenInRegistry(amount)
   }
 
   function unlockFromRegistry() {
-    return state.Service?.active.unlockFromRegistry()
+    return daoService.unlockFromRegistry()
   }
 
   function getNetworkAdressByCreator(walletAddress: string) {
-    return state.Service?.active.getNetworkAdressByCreator(walletAddress)
+    return daoService.getNetworkAdressByCreator(walletAddress)
   }
 
   function isRegistryGovernor(walletAddress: string) {
-    return state.Service?.active.isRegistryGovernor(walletAddress)
+    return daoService.isRegistryGovernor(walletAddress)
   }
 
   function getTokensLockedInRegistryByAddress(walletAddress: string) {
-    return state.Service?.active.getTokensLockedInRegistryByAddress(walletAddress)
+    return daoService.getTokensLockedInRegistryByAddress(walletAddress)
   }
 
   function getRegistryCreatorAmount() {
-    return state.Service?.active.getRegistryCreatorAmount()
+    return daoService.getRegistryCreatorAmount()
   }
 
   function getAllowance(tokenAddress: string, walletAddress: string, spenderAddress: string) {
-    return state.Service?.active.getAllowance(tokenAddress, walletAddress, spenderAddress)
+    return daoService.getAllowance(tokenAddress, walletAddress, spenderAddress)
   }
 
   function deployERC20Token(name: string, symbol: string, cap: string, ownerAddress: string) {
-    return state.Service?.active.deployERC20Token(name, symbol, cap, ownerAddress)
+    return daoService.deployERC20Token(name, symbol, cap, ownerAddress)
   }
 
   function treasuryInfo(): Promise<TreasuryInfo> {
-    return state.Service?.active.network?.treasuryInfo()
+    return daoService.network?.treasuryInfo()
   }
   
   return {

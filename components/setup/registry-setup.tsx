@@ -27,6 +27,7 @@ import { RegistryParameters } from "types/dappkit";
 import { useUpdateChain } from "x-hooks/api/chain";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
@@ -81,6 +82,7 @@ export function RegistrySetup({
   const { findSupportedChain } = useChain();
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { state: { currentUser, Service } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
@@ -159,7 +161,7 @@ export function RegistrySetup({
         const { contractAddress } = tx as TransactionReceipt;
         setRegistry(previous => ({ ...previous, value: contractAddress}));
 
-        Service?.active?.loadRegistry(false, contractAddress);
+        daoService?.loadRegistry(false, contractAddress);
 
         return setChainRegistry(contractAddress);
       })
@@ -185,7 +187,7 @@ export function RegistrySetup({
 
     setRegistry(updatedValue(forcedValue || registryAddress));
 
-    const registryObj = Service?.active?.registry;
+    const registryObj = daoService?.registry;
 
     if (!registryObj) return;
 
@@ -294,10 +296,10 @@ export function RegistrySetup({
   }
 
   useEffect(() => {
-    if (!registryAddress || !Service?.active?.registry?.contractAddress || !isVisible) return;
+    if (!registryAddress || !daoService?.registry?.contractAddress || !isVisible) return;
 
     updateData();
-  }, [registryAddress, Service?.active?.registry?.contractAddress, isVisible]);
+  }, [registryAddress, daoService?.registry?.contractAddress, isVisible]);
 
   useEffect(() => {
     if (currentUser?.walletAddress) setTreasury(currentUser?.walletAddress);

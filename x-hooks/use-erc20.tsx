@@ -14,8 +14,9 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import useBepro from "x-hooks/use-bepro";
-import {transactionStore} from "./stores/transaction-list/transaction.store";
 
+import { useDaoStore } from "./stores/dao/dao.store";
+import {transactionStore} from "./stores/transaction-list/transaction.store";
 import useSupportedChain from "./use-supported-chain";
 
 export interface useERC20 {
@@ -48,6 +49,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state } = useAppState();
+  const { service: daoService, serviceStarting } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
   const { connectedChain } = useSupportedChain();
@@ -55,11 +57,11 @@ export default function useERC20() {
   const logData = { 
     wallet: state.currentUser?.walletAddress,
     token: address, 
-    network: state.Service?.active?.network?.contractAddress,
-    service: state.Service?.active
+    network: daoService?.network?.contractAddress,
+    service: daoService
   };
 
-  const isServiceReady = !state.Service?.starting && state.Service?.active;
+  const isServiceReady = !serviceStarting && daoService;
 
   async function updateAllowanceAndBalance() {
     if (!state.currentUser?.walletAddress ||
@@ -78,7 +80,7 @@ export default function useERC20() {
         return BigNumber(0);
       });
 
-    const realSpender = spender || state.Service?.active?.network?.contractAddress;
+    const realSpender = spender || daoService?.network?.contractAddress;
 
     let allowance = BigNumber(0);
     if (realSpender)
@@ -96,7 +98,7 @@ export default function useERC20() {
   }
 
   function approve(amount: string) {
-    if (!state.currentUser?.walletAddress || !state.Service?.active || !address || !amount) return;
+    if (!state.currentUser?.walletAddress || !daoService || !address || !amount) return;
 
     return handleApproveToken(address, amount, undefined, symbol).then(updateAllowanceAndBalance);
   }
@@ -131,7 +133,7 @@ export default function useERC20() {
         .catch(error => console.debug("useERC20:getERC20TokenData", logData, error));
   }, [
     state.currentUser?.walletAddress, 
-    state.Service?.active, 
+    daoService, 
     address, 
     name, 
     isServiceReady, 

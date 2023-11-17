@@ -13,6 +13,7 @@ import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -30,6 +31,7 @@ export default function ContractButton({
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const isRequired = [
@@ -90,7 +92,7 @@ export default function ContractButton({
   }
 
   async function validateDao() {
-    if(Service?.active) return true
+    if(daoService) return true;
 
     addError(t("actions.failed"), t("errors.failed-load-dao"));
 
@@ -99,12 +101,12 @@ export default function ContractButton({
 
   async function validateLoadNetwork() {
     if (query?.network) {
-      if (Service?.starting) {
+      if (serviceStarting) {
         addWarning(t("actions.warning"), t("warnings.await-load-network"));
         return false;
       }
 
-      if (!Service?.starting && !Service?.active.network) {
+      if (!serviceStarting && !daoService.network) {
         const started = 
           await changeNetwork(Service?.network?.active?.chain_id, Service?.network?.active?.networkAddress);
         if (!started)
