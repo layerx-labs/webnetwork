@@ -21,7 +21,6 @@ import useContractTransaction from "x-hooks/use-contract-transaction";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-import { getBountyData } from "x-hooks/api/task";
 
 export default function CreateDeliverablePage() {
   const { push, query } = useRouter();

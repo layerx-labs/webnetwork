@@ -65,6 +65,7 @@ export const STATIC_URL_PATHS = [
   "new-marketplace",
   "setup",
   "explore",
+  "create-bounty",
   "create-task",
   "create-task",
   "api-doc",
