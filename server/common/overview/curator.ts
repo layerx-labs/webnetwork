@@ -4,10 +4,9 @@ import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual, caseLiteral } from "helpers/db/conditionals";
-import paginate, {paginateArray} from "helpers/paginate";
-
-import {orderByProperty} from "../../../helpers/array";
+import { orderByProperty } from "helpers/array";
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { paginateArray } from "helpers/paginate";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
