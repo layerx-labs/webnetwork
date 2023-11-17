@@ -29,10 +29,12 @@ export const transactionStore =
     isPending: false,
     add: (entry: Transaction) => {
       const _entry = {...entry, id: uuidv4(), status: TransactionStatus.pending, date: +new Date()}
-      set(() => {
-        get().list.unshift(_entry)
-        return ({list: get().list, isPending: true})
-      })
+      const newList = [_entry, ...get().list];
+      saveTransactionsToStorage(newList);
+      set(() => ({
+        list: newList,
+        isPending: true
+      }))
 
       return _entry; /** return the added entry so we can updated it later */
     },
