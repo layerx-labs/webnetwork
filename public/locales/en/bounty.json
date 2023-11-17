@@ -261,5 +261,6 @@
     "code": "Code",
     "design": "Design",
     "other": "Other"
-  }
+  },
+  "tokens-not-converted": "Some tokens weren't converted"
 }

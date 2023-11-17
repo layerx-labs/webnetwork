@@ -81,11 +81,14 @@ export function ActiveMarketplaceItemView({
 
             <div className={amountClasses}>
               <div className="d-flex align-items-center gap-1">
-                <span>{formatNumberToNScale(marketplace?.totalValueLock || 0, 0)}</span>
+                <span>
+                  {marketplace?.hasNotConverted ? "~ ": ""}
+                  {formatNumberToNScale(marketplace?.totalValueLock || 0, 0)}
+                </span>
                 <span className="text-uppercase text-gray-500">{publicRuntimeConfig?.mainCurrency}</span>
                 <If condition={marketplace?.hasNotConverted}>
                   <InfoTooltip
-                    description="Some tokens weren't converted"
+                    description={t("tokens-not-converted")}
                   />
                 </If>
               </div>
