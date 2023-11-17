@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 
 import Button, { ButtonProps } from "components/button";
 import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
+import WrongNetworkModal from "components/wrong-network-modal";
 
 import { useAppState } from "contexts/app-state";
-
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
@@ -16,7 +16,6 @@ import { AddressValidator } from "helpers/validators/address";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
-import WrongNetworkModal from "components/wrong-network-modal";
 
 export default function ContractButton({
   onClick,
@@ -31,7 +30,7 @@ export default function ContractButton({
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
 
   const isRequired = [
     pathname?.includes("new-network"),
@@ -100,12 +99,12 @@ export default function ContractButton({
 
   async function validateLoadNetwork() {
     if (query?.network) {
-      if (Service?.starting) {
+      if (serviceStarting) {
         addWarning(t("actions.warning"), t("warnings.await-load-network"));
         return false;
       }
 
-      if (!Service?.starting && !daoService.network) {
+      if (!serviceStarting && !daoService.network) {
         const started = 
           await changeNetwork(Service?.network?.active?.chain_id, Service?.network?.active?.networkAddress);
         if (!started)

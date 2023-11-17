@@ -65,7 +65,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const {state} = useAppState();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
   const LIMITS = {
@@ -475,12 +475,12 @@ export const NetworkSettingsProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!network || !daoService || state.Service?.starting)
+    if (!network || !daoService || serviceStarting)
       setForcedService(undefined);
     else if (+network?.chain?.chainId === +state.connectedChain?.id)
       loadForcedService()
         .then(setForcedService);
-  }, [network, daoService, state.Service?.starting, state.connectedChain?.id]);
+  }, [network, daoService, serviceStarting, state.connectedChain?.id]);
 
   useEffect(() => {
     if ([

@@ -59,7 +59,7 @@ export function useAuthentication() {
   const transactions = useStorageTransactions();
   const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, serviceStarting} = useDaoStore();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
@@ -200,7 +200,7 @@ export function useAuthentication() {
     return new Promise<string>(async (resolve, reject) => {
       if (!state?.currentUser?.walletAddress ||
           !state?.connectedChain?.id ||
-          state.Service?.starting ||
+          serviceStarting ||
           isLoadingSigningMessage) {
         reject("Wallet not connected, service not started or already signing a message");
         return;

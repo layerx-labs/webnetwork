@@ -49,7 +49,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { state } = useAppState();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
 
@@ -60,7 +60,7 @@ export default function useERC20() {
     service: daoService
   };
 
-  const isServiceReady = !state.Service?.starting && daoService;
+  const isServiceReady = !serviceStarting && daoService;
 
   async function updateAllowanceAndBalance() {
     if (!state.currentUser?.walletAddress ||

@@ -13,8 +13,6 @@ import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 
-import DAO from "services/dao-service";
-
 import {SettingsType, Tier} from "types/settings";
 
 export interface ServiceNetwork {
@@ -26,7 +24,6 @@ export interface ServiceNetwork {
 }
 
 export interface ServiceState {
-  starting: boolean;
   microReady: boolean | null;
   network: ServiceNetwork | null;
   web3Connection: Web3Connection

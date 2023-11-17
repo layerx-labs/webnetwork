@@ -38,8 +38,6 @@ export class ChangeServiceNetworkProp<T = ServiceNetwork|Partial<ServiceNetwork>
 export const changeServiceProp = new ChangeServiceProp();
 export const changeNetwork = new ChangeServiceNetworkProp();
 
-export const changeStarting = (starting: boolean) => changeServiceProp.update(starting as any, 'starting');
-
 export const changeNetworkLastVisited = (lastVisited: string) => changeNetwork.update({lastVisited});
 
 export const changeActiveNetwork = (active: Network) => changeNetwork.update({active});

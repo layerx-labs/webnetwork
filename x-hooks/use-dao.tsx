@@ -7,7 +7,6 @@ import {isAddress} from "web3-utils";
 
 import {useAppState} from "contexts/app-state";
 import {changeChain as changeChainReducer} from "contexts/reducers/change-chain";
-import {changeStarting} from "contexts/reducers/change-service";
 import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -31,14 +30,14 @@ export function useDao() {
   const { state, dispatch } = useAppState();
   const { findSupportedChain } = useChain();
   const { handleAddNetwork } = useNetworkChange();
-  const { service: daoService, updateService } = useDaoStore();
+  const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
   }
 
   function isServiceReady() {
-    return !state.Service?.starting && !isLoadingChangingChain;
+    return !serviceStarting && !isLoadingChangingChain;
   }
 
   /**
@@ -81,7 +80,7 @@ export function useDao() {
         !networkAddress ||
         !chain_id ||
         isLoadingChangingChain ||
-        state.Service?.starting)
+        serviceStarting)
       return;
 
     if (daoService?.network?.contractAddress === networkAddress)
@@ -99,7 +98,7 @@ export function useDao() {
 
     console.debug("Starting network");
 
-    dispatch(changeStarting(true));
+    updateServiceStarting(true)
 
     return  daoService
         .loadNetwork(networkAddress)
@@ -117,7 +116,7 @@ export function useDao() {
           return false;
         })
         .finally(() => {
-          dispatch(changeStarting(false));
+          updateServiceStarting(false)
         });
   }
 

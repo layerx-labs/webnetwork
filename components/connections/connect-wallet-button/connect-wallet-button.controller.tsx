@@ -17,7 +17,7 @@ export default function ConnectWalletButton({
   const [showModal, setShowModal] = useState(false);
 
   const { dispatch, state } = useAppState();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
   const { signInWallet } = useAuthentication();
 
   async function handleLogin()  {
@@ -46,7 +46,7 @@ export default function ConnectWalletButton({
     <ConnectWalletButtonView
       children={children}
       asModal={asModal}
-      isLoading={state?.loading?.isLoading || state.Service?.starting}
+      isLoading={state?.loading?.isLoading || serviceStarting}
       isModalVisible={showModal}
       hasWeb3Connection={!!state.Service?.web3Connection}
       isConnected={!!state.currentUser?.walletAddress}
