@@ -6,8 +6,6 @@ import { useDebouncedCallback } from "use-debounce";
 
 import CreateDeliverablePageView from "components/pages/create-deliverable/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { issueParser } from "helpers/issue";
 import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 import { QueryKeys } from "helpers/query-keys";
@@ -20,7 +18,7 @@ import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/delivera
 import { getBountyData } from "x-hooks/api/task";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -35,9 +33,8 @@ export default function CreateDeliverablePage() {
   const [description, setDescription] = useState<string>();
   const [createdDeliverableId, setCreatedDeliverableId] = useState<number>();
   
-  const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
   const { handleCreatePullRequest } = useBepro();
+  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
   
   const bountyQueryKey = QueryKeys.bounty(query?.id?.toString());
   const { data: bountyData } = useReactQuery(bountyQueryKey, () => getBountyData(query));
@@ -83,7 +80,7 @@ export default function CreateDeliverablePage() {
   ];
 
   function validateBannedDomain(link: string) {
-    const bannedDomains = state.Service?.network?.active?.banned_domains || [];
+    const bannedDomains = activeMarketplace?.banned_domains || [];
     return !!bannedDomains.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 

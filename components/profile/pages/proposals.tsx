@@ -6,7 +6,7 @@ import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalsPageProps {
   bounties: SearchBountiesPaginated;
@@ -17,7 +17,8 @@ export default function ProposalsPage({
 }: ProposalsPageProps) {
   const { t } = useTranslation(["proposal", "bounty"]);
   const { pathname } = useRouter();
-  const { getURLWithNetwork } = useNetwork();
+
+  const { getURLWithNetwork } = useMarketplace();
 
   const isOnNetwork = pathname?.includes("[network]");
 

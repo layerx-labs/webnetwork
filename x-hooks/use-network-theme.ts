@@ -1,15 +1,15 @@
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-
 import {hexadecimalToRGB} from "helpers/colors";
 
 import {ThemeColors} from "interfaces/network";
 
+import useMarketplace from "x-hooks/use-marketplace";
+
 export default function useNetworkTheme() {
   const router = useRouter();
 
-  const {state} = useAppState();
+  const { active: activeMarketplace } = useMarketplace();
 
   function DefaultTheme(): ThemeColors {
     return {
@@ -29,21 +29,21 @@ export default function useNetworkTheme() {
   }
 
   function colorsToCSS(overrideColors = undefined as ThemeColors): string {
-    if (!state.Service?.network?.active || (!state.Service?.network?.active?.colors && !overrideColors)) return "";
+    if (!activeMarketplace || (!activeMarketplace?.colors && !overrideColors)) return "";
 
     const colors = {
-      text: overrideColors?.text || state.Service?.network?.active.colors?.text,
-      background: overrideColors?.background || state.Service?.network?.active.colors?.background,
-      shadow: overrideColors?.shadow || state.Service?.network?.active.colors?.shadow,
-      gray: overrideColors?.gray || state.Service?.network?.active.colors?.gray,
-      primary: overrideColors?.primary || state.Service?.network?.active.colors?.primary,
-      secondary: overrideColors?.secondary || state.Service?.network?.active.colors?.secondary,
-      oracle: overrideColors?.oracle || state.Service?.network?.active.colors?.oracle,
-      success: overrideColors?.success || state.Service?.network?.active.colors?.success,
-      danger: overrideColors?.danger || state.Service?.network?.active.colors?.danger,
-      warning: overrideColors?.warning || state.Service?.network?.active.colors?.warning,
-      info: overrideColors?.info || state.Service?.network?.active.colors?.info,
-      dark: overrideColors?.dark || state.Service?.network?.active.colors?.dark,
+      text: overrideColors?.text || activeMarketplace.colors?.text,
+      background: overrideColors?.background || activeMarketplace.colors?.background,
+      shadow: overrideColors?.shadow || activeMarketplace.colors?.shadow,
+      gray: overrideColors?.gray || activeMarketplace.colors?.gray,
+      primary: overrideColors?.primary || activeMarketplace.colors?.primary,
+      secondary: overrideColors?.secondary || activeMarketplace.colors?.secondary,
+      oracle: overrideColors?.oracle || activeMarketplace.colors?.oracle,
+      success: overrideColors?.success || activeMarketplace.colors?.success,
+      danger: overrideColors?.danger || activeMarketplace.colors?.danger,
+      warning: overrideColors?.warning || activeMarketplace.colors?.warning,
+      info: overrideColors?.info || activeMarketplace.colors?.info,
+      dark: overrideColors?.dark || activeMarketplace.colors?.dark,
     };
 
     return `:root {

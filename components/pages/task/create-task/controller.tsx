@@ -43,7 +43,7 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -103,7 +103,7 @@ export default function CreateTaskPage({
   const transactionalERC20 = useERC20();
   const { handleApproveToken } = useBepro();
   const { changeNetwork, start } = useDao();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
@@ -574,7 +574,7 @@ export default function CreateTaskPage({
 
   async function onNetworkSelected(opt) {
     changeNetwork(opt.chain_id, opt?.networkAddress)
-      .then(_ => setCurrentNetwork(opt));
+      .then(() => setCurrentNetwork(opt));
   }
 
   function handleSectionHeaderClick(i: number) {

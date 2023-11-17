@@ -52,6 +52,9 @@ export default function PullRequestLabels({
     case t("status.canceled").toLowerCase(): {
       return "danger";
     }
+    case t("status.refused").toLowerCase(): {
+      return "danger";
+    }
     case t("status.disputed").toLowerCase(): {
       return "danger";
     }

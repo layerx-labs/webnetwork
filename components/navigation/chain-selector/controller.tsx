@@ -9,7 +9,7 @@ import { isOnNetworkPath } from "helpers/network";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { useDao } from "x-hooks/use-dao";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 
 export default function ChainSelector({
@@ -21,7 +21,7 @@ export default function ChainSelector({
 
   const { connect } = useDao();
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { handleAddNetwork } = useNetworkChange();
   
   const isOnNetwork = isOnNetworkPath(pathname);

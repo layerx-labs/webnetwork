@@ -17,7 +17,6 @@ import {
   changeCurrentUserSignature,
   changeCurrentUserWallet
 } from "contexts/reducers/change-current-user";
-import {changeActiveNetwork} from "contexts/reducers/change-service";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
 import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -36,14 +35,14 @@ import {useSearchCurators} from "x-hooks/api/curator";
 import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
+import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
+import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
 
-
 import { useDaoStore } from "./stores/dao/dao.store";
-import useBepro from "./use-bepro";
-import {useStorageTransactions} from "./use-storage-transactions";
+import { useStorageTransactions } from "./use-storage-transactions";
 import useSupportedChain from "./use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
@@ -58,9 +57,10 @@ export function useAuthentication() {
   const { connect } = useDao();
   const { chain } = useChain();
   const transactions = useStorageTransactions();
-  const { isNetworkGovernor } = useBepro();
   const { addWarning } = useToastStore();
   const { service: daoService, serviceStarting} = useDaoStore();
+  const marketplace = useMarketplace();
+  const { isNetworkGovernor } = useBepro();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
@@ -120,26 +120,19 @@ export function useAuthentication() {
       balance.value = newState;
     }
 
-    const updateNetwork = newParameters =>
-      dispatch(changeActiveNetwork(Object.assign(state.Service.network.active || {} as any, newParameters)));
-
     Promise.all([
       daoService.getOraclesResume(state.currentUser.walletAddress),
 
       daoService.getBalance('settler', state.currentUser.walletAddress),
       useSearchCurators({
         address: state.currentUser.walletAddress,
-        networkName: state.Service?.network?.active?.name,
+        networkName: marketplace?.active?.name,
         chainShortName: chain.chainShortName
       })
-      .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value)),
-      // not balance, but related to address, no need for a second useEffect()
-      daoService.isCouncil(state.currentUser.walletAddress),
-      isNetworkGovernor(state.currentUser.walletAddress)
+      .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value))
     ])
-      .then(([oracles, bepro, staked, isCouncil, isGovernor]) => {
+      .then(([oracles, bepro, staked]) => {
         update({oracles, bepro, staked});
-        updateNetwork({isCouncil, isGovernor});
       })
       .catch(error => console.debug("Failed to updateWalletBalance", error))
   }

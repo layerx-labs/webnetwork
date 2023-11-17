@@ -6,8 +6,6 @@ import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
 
-import {useAppState} from "contexts/app-state";
-
 import { emptyBountiesPaginated } from "helpers/api";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -15,6 +13,7 @@ import { SearchBountiesPaginated } from "types/api";
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import { getBountiesListData } from "x-hooks/api/task";
 import {useBounty} from "x-hooks/use-bounty";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface BountiesPageProps {
   bounties: SearchBountiesPaginated;
@@ -34,7 +33,7 @@ export default function TasksPage({
   useBounty();
   const { t } = useTranslation(["common"]);
   
-  const {state} = useAppState();
+  const marketplace = useMarketplace();
 
   const infos = [
     {
@@ -48,7 +47,7 @@ export default function TasksPage({
     {
       value: lockedOnNetwork,
       label: t("heroes.in-network"),
-      currency: t("$oracles", { token: state.Service?.network?.active?.networkToken?.symbol || t("misc.$token") })
+      currency: t("$oracles", { token: marketplace?.active?.networkToken?.symbol || t("misc.$token") })
     },
     {
       value: protocolMembers,

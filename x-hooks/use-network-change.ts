@@ -4,10 +4,13 @@ import { useAppState } from "contexts/app-state";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import useMarketplace from "./use-marketplace";
+
 export default function useNetworkChange() {
-  const { state } = useAppState();
+  const { dispatch } = useAppState();
+  const marketplace = useMarketplace();
   
-  async function handleAddNetwork(chosenSupportedChain: SupportedChainData = state.Service?.network?.active?.chain) {
+  async function handleAddNetwork(chosenSupportedChain: SupportedChainData = marketplace?.active?.chain) {
     const chainId = toHex(chosenSupportedChain.chainId);
 
     return window.ethereum.request({

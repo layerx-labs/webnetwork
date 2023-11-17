@@ -2,7 +2,7 @@ import DeliverableDetailsView from "components/proposal/deliverable-details/view
 
 import { Deliverable, IssueBigNumberData, IssueData } from "interfaces/issue-data";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalDeliverableDetailsProps {
   deliverable: Deliverable;
@@ -13,7 +13,7 @@ export default function ProposalDeliverableDetails({
   deliverable,
   issue,
 }: ProposalDeliverableDetailsProps) {
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   const deliverableHref = getURLWithNetwork("/task/[id]/deliverable/[deliverableId]", {
     id: issue?.id,

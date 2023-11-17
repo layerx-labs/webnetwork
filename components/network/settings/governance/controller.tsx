@@ -20,7 +20,7 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface GovernanceProps {
   address: string;
@@ -43,8 +43,8 @@ export default function NetworkGovernanceSettings({
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { updateActiveNetwork } = useNetwork();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
@@ -75,21 +75,21 @@ export default function NetworkGovernanceSettings({
                   forcedNetwork?.tokensLocked || 0),
     NetworkAmount(t("custom-network:open-bounties"),
                   t("custom-network:open-bounties-description"),
-                  state.Service?.network?.active?.totalOpenIssues || 0,
+                  marketplace?.active?.totalOpenIssues || 0,
                   0),
     NetworkAmount(t("custom-network:total-bounties"),
                   t("custom-network:total-bounties-description"),
-                  state.Service?.network?.active?.totalIssues || 0,
+                  marketplace?.active?.totalIssues || 0,
                   0),
   ];
 
   const isCurrentNetwork = (!!network &&
-    !!state.Service?.network?.active &&
-    network?.networkAddress === state.Service?.network?.active?.networkAddress)
+    !!marketplace?.active &&
+    network?.networkAddress === marketplace?.active?.networkAddress)
 
   function handleCloseMyNetwork() {
     if (
-      !state.Service?.network?.active ||
+      !marketplace?.active ||
       !state.currentUser?.walletAddress ||
       !daoService
     )
@@ -107,7 +107,7 @@ export default function NetworkGovernanceSettings({
       })
       .then(() => {
         updateWalletBalance(true);
-        if (isCurrentNetwork) updateActiveNetwork(true);
+        if (isCurrentNetwork) marketplace.refresh();
         updateSession();
         return updateEditingNetwork();
       })
@@ -247,13 +247,12 @@ export default function NetworkGovernanceSettings({
     }
 
     signMessage(IM_AM_CREATOR_NETWORK)
-      .then(() => {
-        return useUpdateNetwork(json)
-          .then(() => {
-            return Promise.all([
-              updateEditingNetwork(),
-              updateActiveNetwork(true)
-            ]);
+      .then(async () => {
+        await useUpdateNetwork(json)
+          .then(async () => {
+            if (isCurrentNetwork) marketplace.refresh();
+
+            return updateEditingNetwork();
           })
           .then(() => {
             addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
@@ -274,7 +273,7 @@ export default function NetworkGovernanceSettings({
   }, [tokens]);
 
   useEffect(() => {
-    updateActiveNetwork(true);
+    marketplace.refresh();
   }, []);
 
   return(

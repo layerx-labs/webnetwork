@@ -13,6 +13,7 @@ interface BecomeCuratorCardViewProps {
   councilAmount: string;
   networkTokenSymbol: string;
   votingPowerHref: UrlObject;
+  votingPowerAlias: string;
 }
 
 export default function BecomeCuratorCardView({
@@ -21,6 +22,7 @@ export default function BecomeCuratorCardView({
   councilAmount,
   networkTokenSymbol,
   votingPowerHref,
+  votingPowerAlias,
 }: BecomeCuratorCardViewProps) {
   const { t } = useTranslation("council");
 
@@ -54,7 +56,7 @@ export default function BecomeCuratorCardView({
         {t("become-council-description-part-two")}
       </div>
       
-      <Link href={votingPowerHref}>
+      <Link href={votingPowerHref} as={votingPowerAlias}>
         <a className="text-decoration-none text-purple text-uppercase">
           {t("go-to-lock-unlock")}{" "}
 

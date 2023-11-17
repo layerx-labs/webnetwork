@@ -6,17 +6,19 @@ import { ContextualSpan } from "components/contextual-span";
 
 interface DeliverableInfoCardViewProps {
   votingPowerHref: UrlObject;
+  votingPowerAlias: string;
 }
 
 export default function DeliverableInfoCardView({
-  votingPowerHref
+  votingPowerHref,
+  votingPowerAlias,
 }: DeliverableInfoCardViewProps) {
   const { t } = useTranslation("deliverable");
 
   return (
     <ContextualSpan isAlert isDismissable context='info' className="bg-info-10 mb-2">
     {t("deliverable:infos.curators")}
-      <Link href={votingPowerHref}>
+      <Link href={votingPowerHref} as={votingPowerAlias}>
         <a className="text-primary">
           {t("deliverable:infos.get-voting-power")}
         </a>

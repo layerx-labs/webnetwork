@@ -15,10 +15,12 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useAuthentication} from "x-hooks/use-authentication";
+import useMarketplace from "x-hooks/use-marketplace";
+
 import {MetamaskErrors} from "../../../interfaces/enums/Errors";
 import {SimpleBlockTransactionPayload} from "../../../interfaces/transaction";
-import NetworkTxButtonView from "./view";
 import {transactionStore} from "../../../x-hooks/stores/transaction-list/transaction.store";
+import NetworkTxButtonView from "./view";
 
 
 interface NetworkTxButtonParams {
@@ -65,7 +67,8 @@ export default function NetworkTxButton({
   const [showModal, setShowModal] = useState(false);
   const [txSuccess,] = useState(false);
 
-  const { state, dispatch } = useAppState();
+  const marketplace = useMarketplace();
+  const { state } = useAppState();
   const {add: addTx, update: updateTx} = transactionStore();
 
   const { addError, addSuccess } = useToastStore();
@@ -86,8 +89,8 @@ export default function NetworkTxButton({
       type: txType,
       amount: txParams?.tokenAmount || "0",
       currency: txCurrency || t("misc.$token"),
-      network: state.Service?.network?.active
-    })
+      network: marketplace?.active
+    });
     
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");

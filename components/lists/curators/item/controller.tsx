@@ -4,7 +4,7 @@ import { useAppState } from "contexts/app-state";
 
 import { Curator } from "interfaces/curators";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface CuratorListItemProps {
   curator: Curator;
@@ -14,7 +14,7 @@ export default function CuratorListItem({
   curator
 }: CuratorListItemProps) {
   const { state } = useAppState();
-  const { goToProfilePage } = useNetwork();
+  const { goToProfilePage } = useMarketplace();
 
   const isConnected = !!state.currentUser?.walletAddress;
   const isSameAddress = state.currentUser?.walletAddress?.toLowerCase() === curator?.address?.toLowerCase();

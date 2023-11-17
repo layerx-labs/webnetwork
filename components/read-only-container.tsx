@@ -1,15 +1,16 @@
 import {useRouter} from "next/router";
 
-import { useAppState } from "contexts/app-state";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function ReadOnlyContainer({ children }) {
-  const { state } = useAppState();
   const { pathname } = useRouter();
+  
+  const marketplace = useMarketplace();
 
   const isOnNetwork = pathname?.includes("[network]");
 
   return(
-    <div className={`${state.Service?.network?.active?.isClosed && isOnNetwork ? "read-only-network" : ""}`}>
+    <div className={`${marketplace?.active?.isClosed && isOnNetwork ? "read-only-network" : ""}`}>
       {children}
     </div>
   );

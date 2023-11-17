@@ -49,3 +49,9 @@ export const changeCurrentUserisAdmin = (isAdmin: boolean) =>
 
 export const changeCurrentUserKycSession = (kycSession: kycSession) =>
   changeCurrentUser.update({kycSession});
+
+export const changeCurrentUserisCouncil = (isCouncil: boolean) =>
+  changeCurrentUser.update({isCouncil});
+
+export const changeCurrentUserisGovernor = (isGovernor: boolean) =>
+  changeCurrentUser.update({isGovernor});

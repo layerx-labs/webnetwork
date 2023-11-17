@@ -10,7 +10,7 @@ import { getIssueState } from "helpers/handleTypeIssue";
 import { QueryKeys } from "helpers/query-keys";
 
 import { useStartWorking } from "x-hooks/api/task";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function PageActions({
@@ -23,12 +23,12 @@ export default function PageActions({
   const { query, push } = useRouter();
 
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
   const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: () => useStartWorking({
       id: currentBounty?.id,
-      networkName: state.Service?.network?.active?.name
+      networkName: activeMarketplace?.name
     }),
     toastSuccess: t("bounty:actions.start-working.success"),
     toastError: t("bounty:actions.start-working.error")
@@ -43,7 +43,7 @@ export default function PageActions({
   }
 
   const deliverablesAbleToBeProposed = getDeliverablesAbleToBeProposed();
-  const isCouncilMember = !!state.Service?.network?.active?.isCouncil;
+  const isCouncilMember = !!state.currentUser?.isCouncil;
   const isBountyReadyToPropose = !!currentBounty?.isReady;
   const bountyState = getIssueState({
     state: currentBounty?.state,

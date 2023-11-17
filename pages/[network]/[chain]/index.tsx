@@ -4,12 +4,12 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import {GetServerSideProps} from "next/types";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function Home() {
   const { replace, query } = useRouter();
   
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   useEffect(() => {
     if(query?.network && query?.chain)

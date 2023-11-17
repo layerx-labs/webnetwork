@@ -6,7 +6,7 @@ import { useAppState } from "contexts/app-state";
 
 import { ProposalDisputes } from "interfaces/proposal";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalDisputesProps {
   disputes: ProposalDisputes[];
@@ -18,7 +18,7 @@ export function ProposalDisputes({
   networkTokenSymbol,
 }: ProposalDisputesProps) {
   const { state } = useAppState();
-  const { getTotalNetworkToken } = useNetwork();
+  const { getTotalNetworkToken } = useMarketplace();
   const { data: totalNetworkToken } = getTotalNetworkToken();
 
   function percentage(value: string) {

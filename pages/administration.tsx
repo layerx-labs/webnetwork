@@ -11,6 +11,7 @@ import Stepper from "components/stepper";
 import {Network} from "interfaces/network";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import {useAppState} from "../contexts/app-state";
 
@@ -19,15 +20,16 @@ export default function AdministrationPage() {
   const [currentStep, setCurrentStep] = useState(1);
 
   const { state } = useAppState();
+  const marketplace = useMarketplace();
 
   function handleChangeStep(stepToGo) {
     setCurrentStep(stepToGo === currentStep ? 0 : stepToGo);
   }
 
   useEffect(() => {
-    if (!state.Service?.network?.active) return;
+    if (!marketplace?.active) return;
 
-    if (!state.Service?.network?.active?.isGovernor)
+    if (!state.currentUser?.isGovernor)
       router.push("/marketplaces");
     else
       useSearchNetworks({})
@@ -38,7 +40,7 @@ export default function AdministrationPage() {
           console.log("Failed to retrieve networks list", error);
         });
 
-  }, [state.Service?.network?.active]);
+  }, [marketplace?.active]);
 
   return (
     <div className="container">

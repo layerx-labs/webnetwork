@@ -32,7 +32,7 @@ import { useUpdateBountyVisibility } from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
@@ -64,7 +64,7 @@ export default function IssueListItem({
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
   
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
   const { handleHardCancelBounty, getCancelableTime, getTimeChain } = useBepro();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();

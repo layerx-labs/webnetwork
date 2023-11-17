@@ -53,6 +53,7 @@ export const BOOTSTRAP_BREAKPOINTS = {
 export const DAY_IN_SECONDS = 24 * 60 * 60;
 export const MILLISECONDS = 1000;
 export const MINUTE_IN_MS = 60 * MILLISECONDS;
+export const FIVE_MINUTES_IN_MS = 5 * MINUTE_IN_MS;
 export const STATIC_URL_PATHS = [
   "marketplaces",
   "network",

@@ -13,10 +13,9 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 import {Token} from "interfaces/token";
 
 import useBepro from "x-hooks/use-bepro";
-
-import {useAppState} from "../contexts/app-state";
-import TokenIcon from "./token-icon";
 import useSupportedChain from "x-hooks/use-supported-chain";
+
+import TokenIcon from "./token-icon";
 
 
 interface TokensDropdownProps {

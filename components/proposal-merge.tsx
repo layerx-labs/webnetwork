@@ -11,7 +11,7 @@ import {useAppState} from "contexts/app-state";
 
 import {formatStringToCurrency} from "helpers/formatNumber";
 
-import { DistributedAmounts, Proposal } from "interfaces/proposal";
+import { DistributedAmounts } from "interfaces/proposal";
 import {Token, TokenInfo} from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";

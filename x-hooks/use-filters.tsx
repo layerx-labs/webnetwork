@@ -2,9 +2,9 @@ import {useEffect, useState} from "react";
 
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-
 import {IssueFilterBoxOption} from "interfaces/filters";
+
+import useMarketplace from "./use-marketplace";
 
 type FiltersTypes = "time" | "state";
 
@@ -28,7 +28,7 @@ export default function useFilters(): [
   const [timeFilters, setTimeFilters] = useState<IssueFilterBoxOption[]>([]);
   const [stateFilters, setStateFilters] = useState<IssueFilterBoxOption[]>([]);
 
-  const {state} = useAppState();
+  const marketplace = useMarketplace();
 
   function getActiveFiltersOf(opts: IssueFilterBoxOption[]) {
     return opts
@@ -114,7 +114,7 @@ export default function useFilters(): [
       ...(router.query.sortBy ? { sortBy: router.query.sortBy } : { sortBy: undefined }),
       ...(router.query.order ? { order: router.query.order } : { order: undefined }),
       ...(router.query.search ? { search: router.query.search } : { search: undefined }),
-      network: state.Service?.network?.active.name,
+      network: marketplace?.active.name,
       page: "1"
     };
 

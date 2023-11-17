@@ -2,20 +2,18 @@ import { useEffect } from "react";
 
 import { useRouter } from "next/router";
 
-import { useAppState } from "contexts/app-state";
-
 import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
+import { useGetChains } from "x-hooks/api/chain";
+import { useSupportedChainStore } from "x-hooks/stores/supported-chain/supported-chain.store";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
-
-import { useGetChains } from "./api/chain";
-import { useSupportedChainStore } from "./stores/supported-chain/supported-chain.store";
 
 export default function useSupportedChain() {
   const { query } = useRouter();
 
-  const { state } = useAppState();
+  const marketplace = useMarketplace();
   const {
     chains: supportedChains,
     connectedChain,
@@ -37,7 +35,7 @@ export default function useSupportedChain() {
                                        });
   
   function updateNetworkAndChainMatch() {
-    const networkChainId = state?.Service?.network?.active?.chain_id;
+    const networkChainId = marketplace?.active?.chain_id;
     const isOnANetwork = !!query?.network;
     const matchWithNetworkChain = +connectedChain?.id === +networkChainId
 
@@ -52,7 +50,7 @@ export default function useSupportedChain() {
     query?.network,
     query?.chain,
     connectedChain?.id,
-    state.Service?.network?.active?.chain_id,
+    marketplace?.active?.chain_id,
   ])
 
   return {

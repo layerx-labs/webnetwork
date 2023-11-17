@@ -5,10 +5,12 @@ import { useAppState } from "contexts/app-state";
 import { PastEventsParams } from "interfaces/api";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
 
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useProcessEvent() {
   const  { state } = useAppState();
+  const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
 
   async function processEvent(event: NetworkEvents | RegistryEvents | StandAloneEvents,
@@ -18,7 +20,7 @@ export function useProcessEvent() {
     const chainId = connectedChain?.id;
     const events = connectedChain?.events;
     const registryAddress = connectedChain?.registry;
-    const networkAddress = state.Service?.network?.active?.networkAddress;
+    const networkAddress = marketplace?.active?.networkAddress;
 
     const isRegistryEvent = event in RegistryEvents;
     const addressToSend = address || (isRegistryEvent ? registryAddress : networkAddress);
@@ -27,7 +29,7 @@ export function useProcessEvent() {
       throw new Error("Missing events url, chain id or address");
 
     const eventsURL = new URL(`/read/${chainId}/${addressToSend}/${event}`, connectedChain?.events);
-    const networkName = currentNetworkName || state.Service?.network?.active?.name;
+    const networkName = currentNetworkName || marketplace?.active?.name;
 
     return axios.get(eventsURL.href, {
     params

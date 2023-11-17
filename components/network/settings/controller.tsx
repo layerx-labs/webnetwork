@@ -23,7 +23,7 @@ import {SearchBountiesPaginated} from "types/api";
 import {useUpdateNetwork} from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -53,9 +53,9 @@ export default function MyNetworkSettings({
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { isRegistryGovernor } = useBepro();
   const { colorsToCSS } = useNetworkTheme();
-  const { updateActiveNetwork } = useNetwork();
   const { details, settings, forcedNetwork } = useNetworkSettings();
   const { service: daoService } = useDaoStore();
   const { connectedChain } = useSupportedChain();
@@ -70,8 +70,8 @@ export default function MyNetworkSettings({
 
   const isCurrentNetwork =
     !!network &&
-    !!state.Service?.network?.active &&
-    network?.networkAddress === state.Service?.network?.active?.networkAddress;
+    !!marketplace?.active &&
+    network?.networkAddress === marketplace?.active?.networkAddress;
 
   const networkNeedRegistration = network?.isRegistered === false;
 
@@ -102,7 +102,7 @@ export default function MyNetworkSettings({
   }
 
   async function updateNetworkData() {
-    if (isCurrentNetwork) await updateActiveNetwork(true);
+    if (isCurrentNetwork) await marketplace.refresh();
 
     await updateEditingNetwork();
   }

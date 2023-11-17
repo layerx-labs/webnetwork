@@ -10,7 +10,7 @@ import {changeWeb3Connection} from "contexts/reducers/change-service";
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -25,11 +25,11 @@ export const GlobalEffectsProvider = ({children}) => {
   const session = useSession();
 
   const dao = useDao();
-  const network = useNetwork();
   const settings = useSettings();
   const auth = useAuthentication();
   const { service: daoService } = useDaoStore();
   const transactions = useStorageTransactions();
+  const marketplace = useMarketplace();
   const { state, dispatch } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 
@@ -50,7 +50,7 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(() => {
     dao.start();
   }, [
-    Service?.network?.active?.chain_id,
+    marketplace?.active?.chain_id,
     connectedChain?.id,
     connectedChain?.registry,
     currentUser?.connected
@@ -60,8 +60,8 @@ export const GlobalEffectsProvider = ({children}) => {
     dao.changeNetwork();
   }, [
     daoService,
-    Service?.network?.active?.networkAddress,
-    Service?.network?.active?.chain_id,
+    marketplace?.active?.networkAddress,
+    marketplace?.active?.chain_id,
   ]);
 
   useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, daoService?.network?.contractAddress]);
@@ -73,10 +73,6 @@ export const GlobalEffectsProvider = ({children}) => {
   useEffect(() => {
     auth.syncUserDataWithSession();
   }, [daoService, session]);
-  
-  useEffect(() => {
-    network.updateActiveNetwork();
-  }, [query?.network, query?.chain]);
 
   useEffect(settings.loadSettings, []);
 

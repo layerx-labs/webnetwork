@@ -13,6 +13,7 @@ import {useAppState} from "contexts/app-state";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface SelectChainDropdownProps {
@@ -50,8 +51,9 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { Service, currentUser } } = useAppState();
+  const { state: { currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
+  const marketplace = useMarketplace();
 
   const placeholder = 
     !shouldMatchChain ? t("misc.all-chains") : placeHolder ? placeHolder : t("forms.select-placeholder");
@@ -94,9 +96,9 @@ export default function SelectChainDropdown({
 
     let chain = undefined;
 
-    if (isOnNetwork && Service?.network?.active?.chain)
+    if (isOnNetwork && marketplace?.active?.chain)
       chain = 
-        options?.find(({ value: { chainId } }) => chainId === +(Service?.network?.active?.chain?.chainId))?.value;
+        options?.find(({ value: { chainId } }) => chainId === +(marketplace?.active?.chain?.chainId))?.value;
     else
       chain =
         options?.find(({ value: { chainId } }) => chainId === +(defaultChain?.chainId || connectedChain?.id))?.value;
@@ -112,13 +114,13 @@ export default function SelectChainDropdown({
   }
 
   async function updateOptions() {
-    if (!supportedChains || (isOnNetwork && !Service?.network?.availableChains)) return;
+    if (!supportedChains || (isOnNetwork && !marketplace?.availableChains)) return;
 
     const configuredChains = supportedChains.filter(isChainConfigured);
 
     if (isOnNetwork)
       setOptions(configuredChains.map(chain =>
-        chainToOption(chain, !Service?.network?.availableChains?.find(({ chainId }) => chainId === chain.chainId))));
+        chainToOption(chain, !marketplace?.availableChains?.find(({ chainId }) => chainId === chain.chainId))));
     else
       setOptions(configuredChains.map(chain => chainToOption(chain)));
   }
@@ -138,14 +140,14 @@ export default function SelectChainDropdown({
     updateOptions();
   }, [
     isOnNetwork,
-    Service?.network?.availableChains,
+    marketplace?.availableChains,
     supportedChains,
     currentUser?.isAdmin
   ]);
 
   useEffect(updateSelectedChainMatchConnected, [
     options,
-    Service?.network?.active?.chain,
+    marketplace?.active?.chain,
     connectedChain?.id,
     shouldMatchChain
   ]);
