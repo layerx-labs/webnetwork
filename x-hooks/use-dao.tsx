@@ -75,7 +75,7 @@ export function useDao() {
         .then(address => {
           if (address === "0x00") return null;
 
-          handleEthereumProvider(updateConnectedChain, () => dispatch(changeMissingMetamask(true)));
+          handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)));
           return address;
         })
         .catch(error => {
