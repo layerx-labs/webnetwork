@@ -8,14 +8,16 @@ import { siweMessageService } from "services/ethereum/siwe";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 
+import useSupportedChain from "./use-supported-chain";
+
 export default function useSignature() {
   const {
     state: {
-      connectedChain, 
       Service, 
       currentUser
     }
   } = useAppState();
+  const { connectedChain } = useSupportedChain();
   const { addError } = useToastStore();
 
   async function signMessage(message = ""): Promise<string> {

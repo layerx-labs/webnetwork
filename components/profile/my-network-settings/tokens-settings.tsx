@@ -17,6 +17,7 @@ import {Token, TokenType} from "interfaces/token";
 import { useGetTokens } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function TokensSettings({
   isGovernorRegistry = false,
@@ -40,8 +41,9 @@ export default function TokensSettings({
   const { state } = useAppState();
   const { service: daoService } = useDaoStore();
   const { fields } = useNetworkSettings();
-
-  const connectedChainId = state.connectedChain?.id;
+  const { connectedChain } = useSupportedChain();
+  
+  const connectedChainId = connectedChain?.id;
   const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(connectedChainId),
                                             () => useGetTokens(connectedChainId),
                                             {
@@ -118,9 +120,9 @@ export default function TokensSettings({
   }
 
   useEffect(() => {
-    if (!daoService || !state.connectedChain?.id || !dbTokens) return;
+    if (!daoService || !connectedChain?.id || !dbTokens) return;
     getAllowedTokensContract();
-  }, [daoService, state.connectedChain?.id, isGovernorRegistry, dbTokens]);
+  }, [daoService, connectedChain?.id, isGovernorRegistry, dbTokens]);
 
   useEffect(() => {
     if (defaultSelectedTokens?.length > 0) {

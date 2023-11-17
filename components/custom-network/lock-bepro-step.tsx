@@ -34,6 +34,8 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
+import useSupportedChain from "x-hooks/use-supported-chain";
+
 import {transactionStore} from "../../x-hooks/stores/transaction-list/transaction.store";
 
 export default function LockBeproStep({ activeStep, index, handleClick, validated }: StepWrapperProps) {
@@ -55,6 +57,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
+  const { connectedChain } = useSupportedChain();
   const {add: addTx, update: updateTx} = transactionStore();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
@@ -116,7 +119,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         updateTx(parseTransaction(tx, lockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance()
-        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -144,7 +147,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
         setAmount(BigNumber(0));
         updateTx(parseTransaction(tx, unlockTxAction as SimpleBlockTransactionPayload));
         updateTokenBalance();
-        return processEvent(RegistryEvents.UserLockedAmountChanged, state.connectedChain?.registry, {
+        return processEvent(RegistryEvents.UserLockedAmountChanged, connectedChain?.registry, {
           fromBlock: tx.blockNumber
         })
       })
@@ -201,7 +204,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
     const tokenAddress = daoService?.registry?.token?.contractAddress;
     const registryAddress = daoService?.registry?.contractAddress;
 
-    if (tokenAddress && registryAddress && state.connectedChain?.name !== UNSUPPORTED_CHAIN) {
+    if (tokenAddress && registryAddress && connectedChain?.name !== UNSUPPORTED_CHAIN) {
       registryToken.setAddress(tokenAddress);
       registryToken.setSpender(registryAddress);
     } else {
@@ -211,15 +214,15 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   }, [
     daoService?.registry?.token?.contractAddress,
     daoService?.registry?.contractAddress,
-    state.connectedChain?.name
+    connectedChain?.name
   ]);
 
   useEffect(() => {
-    if (session.status !== "authenticated" || !state.connectedChain?.id) return;
+    if (session.status !== "authenticated" || !connectedChain?.id) return;
 
     const userRoles = (session.data as CustomSession).user.roles;
-    setHasNetworkRegistered(UserRoleUtils.isGovernorOnChain(userRoles, state.connectedChain?.id));
-  }, [session, state.connectedChain?.id]);
+    setHasNetworkRegistered(UserRoleUtils.isGovernorOnChain(userRoles, connectedChain?.id));
+  }, [session, connectedChain?.id]);
 
   return (
     <Step

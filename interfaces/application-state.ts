@@ -66,9 +66,7 @@ export interface State {
   Service: ServiceState | null,
   loading: LoadingState | null;
   currentUser: CurrentUserState | null,
-  connectedChain: ConnectedChain | null,
   currentBounty: CurrentBounty | null,
-  supportedChains: SupportedChainData[] | null,
   show: {
     [key: string]: boolean;
   }

@@ -18,6 +18,7 @@ import DAO from "services/dao-service";
 
 import useBepro from "x-hooks/use-bepro";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 import WalletBalanceView from "./view";
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
@@ -41,6 +42,7 @@ export default function WalletBalance({
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
   const { getERC20TokenData, getTokenBalance } = useBepro();
+  const { supportedChains } = useSupportedChain();
 
   const {
     data: prices,
@@ -143,7 +145,7 @@ export default function WalletBalance({
     useReactQuery(["tokens-balance", state.currentUser?.walletAddress],
                   loadTokensBalance,
                   {
-                    enabled: !!state.currentUser?.walletAddress && !!state.supportedChains,
+                    enabled: !!state.currentUser?.walletAddress && !!supportedChains,
                     staleTime: MINUTE_IN_MS
                   });
   

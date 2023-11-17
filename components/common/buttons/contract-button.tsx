@@ -16,6 +16,7 @@ import { AddressValidator } from "helpers/validators/address";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ContractButton({
   onClick,
@@ -26,11 +27,12 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: {connectedChain, currentUser, Service, loading, supportedChains,}, dispatch } = useAppState();
+  const { state: { currentUser, Service, loading }, dispatch } = useAppState();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();
   const { service: daoService, serviceStarting } = useDaoStore();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   const isRequired = [
     pathname?.includes("new-network"),

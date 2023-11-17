@@ -23,6 +23,7 @@ import {MiniChainInfo} from "interfaces/mini-chain";
 
 import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);
@@ -34,7 +35,8 @@ export default function ChainsSetup() {
   const [filteredChains, setFilteredChains] = useState<MiniChainInfo[]>([]);
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
-  const {state, dispatch} = useAppState();
+  const {dispatch} = useAppState();
+  const { supportedChains } = useSupportedChain();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),
@@ -82,7 +84,7 @@ export default function ChainsSetup() {
   }
 
   function changeExistingState() {
-    setExistingState(state?.supportedChains?.map(({chainId}) => chainId));
+    setExistingState(supportedChains?.map(({chainId}) => chainId));
   }
 
   function makeAddRemoveButton(chain: MiniChainInfo) {
@@ -120,7 +122,7 @@ export default function ChainsSetup() {
 
   useEffect(updateMiniChainInfo, [])
   useEffect(handleSearch, [search])
-  useEffect(changeExistingState, [state?.supportedChains]);
+  useEffect(changeExistingState, [supportedChains]);
 
   return <>
     <div className="content-wrapper border-top-0 p-3">

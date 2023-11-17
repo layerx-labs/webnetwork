@@ -29,8 +29,8 @@ import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useCreatePreBounty } from "x-hooks/api/task";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -38,6 +38,7 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
@@ -104,9 +105,9 @@ export default function CreateTaskPage({
   const { addError, addWarning } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { pushAnalytic } = useAnalyticEvents();
-
+  const { connectedChain } = useSupportedChain();
   const {
-    state: { Settings, currentUser, connectedChain, }
+    state: { Settings, currentUser }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,

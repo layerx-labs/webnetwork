@@ -26,6 +26,7 @@ import useBepro from "x-hooks/use-bepro";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface MyNetworkSettingsProps {
   network: Network;
@@ -57,8 +58,9 @@ export default function MyNetworkSettings({
   const { updateActiveNetwork } = useNetwork();
   const { details, settings, forcedNetwork } = useNetworkSettings();
   const { service: daoService } = useDaoStore();
+  const { connectedChain } = useSupportedChain();
 
-  const chainId = state.connectedChain?.id;
+  const chainId = connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
     queryKey: QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chainId),
     mutationFn: useUpdateNetwork,
@@ -127,11 +129,11 @@ export default function MyNetworkSettings({
   useEffect(() => {
     if (!daoService?.registry?.contractAddress ||
         !state.currentUser?.walletAddress ||
-        !state.connectedChain?.id) return;
+        !connectedChain?.id) return;
 
     isRegistryGovernor(state.currentUser?.walletAddress)
       .then(setIsGovernorRegistry);
-  }, [state.currentUser?.walletAddress, daoService?.registry?.contractAddress, state.connectedChain?.id]);
+  }, [state.currentUser?.walletAddress, daoService?.registry?.contractAddress, connectedChain?.id]);
 
   useEffect(() => {
     if(!network) return;

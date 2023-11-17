@@ -5,16 +5,19 @@ import { useAppState } from "contexts/app-state";
 import { PastEventsParams } from "interfaces/api";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
 
+import useSupportedChain from "x-hooks/use-supported-chain";
+
 export function useProcessEvent() {
   const  { state } = useAppState();
+  const { connectedChain } = useSupportedChain();
 
   async function processEvent(event: NetworkEvents | RegistryEvents | StandAloneEvents,
                               address?: string,
                               params: PastEventsParams = { fromBlock: 0 },
                               currentNetworkName?: string) {
-    const chainId = state.connectedChain?.id;
-    const events = state.connectedChain?.events;
-    const registryAddress = state.connectedChain?.registry;
+    const chainId = connectedChain?.id;
+    const events = connectedChain?.events;
+    const registryAddress = connectedChain?.registry;
     const networkAddress = state.Service?.network?.active?.networkAddress;
 
     const isRegistryEvent = event in RegistryEvents;
@@ -23,7 +26,7 @@ export function useProcessEvent() {
     if (!events || !addressToSend || !chainId)
       throw new Error("Missing events url, chain id or address");
 
-    const eventsURL = new URL(`/read/${chainId}/${addressToSend}/${event}`, state.connectedChain?.events);
+    const eventsURL = new URL(`/read/${chainId}/${addressToSend}/${event}`, connectedChain?.events);
     const networkName = currentNetworkName || state.Service?.network?.active?.name;
 
     return axios.get(eventsURL.href, {

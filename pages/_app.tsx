@@ -18,7 +18,6 @@ import NoMetamaskModal from "components/no-metamask-modal/controller";
 import ReadOnlyContainer from "components/read-only-container";
 import Seo from "components/seo";
 import Toaster from "components/toaster";
-import WrongNetworkModal from "components/wrong-network-modal";
 
 import RootProviders from "contexts";
 
@@ -41,24 +40,24 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
     <>
       <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
       <SessionProvider session={session}>
-        <RootProviders>
           <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
-              <Seo issueMeta={seoData} />
-              <ReadOnlyContainer>
-                <NoMetamaskModal />
-                <InvalidAccountWalletModal />
-                <NavBar />
-                <div id="root-container">
-                  <Component {...pageProps} />
-                </div>
-                <MissingMetamaskModal />
-                <Toaster />
-                <Loading />
-              </ReadOnlyContainer>
-            </Hydrate>
+            <RootProviders>
+              <Hydrate state={pageProps.dehydratedState}>
+                <Seo issueMeta={seoData} />
+                <ReadOnlyContainer>
+                  <NoMetamaskModal />
+                  <InvalidAccountWalletModal />
+                  <NavBar />
+                  <div id="root-container">
+                    <Component {...pageProps} />
+                  </div>
+                  <MissingMetamaskModal />
+                  <Toaster />
+                  <Loading />
+                </ReadOnlyContainer>
+              </Hydrate>
+            </RootProviders>
           </QueryClientProvider>
-        </RootProviders>
       </SessionProvider>
       <ConsentCookie />
     </>

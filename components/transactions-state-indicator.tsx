@@ -12,11 +12,13 @@ import {useAppState} from "contexts/app-state";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {Transaction} from "interfaces/transaction";
 
+import useSupportedChain from "x-hooks/use-supported-chain";
+
 import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
 import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 export default function TransactionsStateIndicator() {
-  const {state: {currentUser, connectedChain: {id: connectedChainId}}} = useAppState();
+  const {state: {currentUser}} = useAppState();
 
   const [loading, setLoading] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -24,6 +26,7 @@ export default function TransactionsStateIndicator() {
 
   const {loadFromStorage} = useStorageTransactions();
   const {list: transactions, isPending} = transactionStore();
+  const { connectedChain } = useSupportedChain();
 
   function updateLoadingState() {
     if (!transactions.length) {
@@ -43,14 +46,14 @@ export default function TransactionsStateIndicator() {
   }
 
   function restoreTransactions() {
-    if (!currentUser?.walletAddress || !connectedChainId)
+    if (!currentUser?.walletAddress || !connectedChain?.id)
       return;
 
     loadFromStorage();
   }
 
   useEffect(updateLoadingState, [transactions, isPending]);
-  useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChainId]);
+  useEffect(restoreTransactions, [currentUser?.walletAddress, connectedChain]);
 
   const overlay = (
     <Popover id="transactions-indicator">

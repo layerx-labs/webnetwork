@@ -11,17 +11,14 @@ import Modal from "components/modal";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
-import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
-import { MINUTE_IN_MS } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
+import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { useGetChains } from "x-hooks/api/chain";
 import { useDao } from "x-hooks/use-dao";
 import useNetworkChange from "x-hooks/use-network-change";
-import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 type typeError = { code?: number; message?: string }
 
@@ -44,17 +41,8 @@ export default function WrongNetworkModal({
 
   const { connect } = useDao();
   const { handleAddNetwork } = useNetworkChange();
-  const {
-    dispatch,
-    state: { currentUser, Service, supportedChains }
-  } = useAppState();
-
-  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
-    dispatch(updateSupportedChains(chains));
-    return chains; 
-  }), {
-    staleTime: MINUTE_IN_MS
-  });
+  const {state: { currentUser, Service }} = useAppState();
+  const { supportedChains } = useSupportedChain()
 
   const canBeHided = !isRequired;
 

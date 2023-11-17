@@ -37,6 +37,7 @@ import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
@@ -66,6 +67,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
   const { service: daoService, serviceStarting } = useDaoStore();
+  const { connectedChain } = useSupportedChain();
 
   const IPFS_URL = state.Settings?.urls?.ipfs;
   const LIMITS = {
@@ -238,7 +240,7 @@ export const NetworkSettingsProvider = ({ children }) => {
         if (networksWithSameName.count === 0)
           return true;
 
-        const currentChain = +state.connectedChain?.id;
+        const currentChain = +connectedChain?.id;
 
         // Network with same name on this chain
         if (networksWithSameName.rows.some(({ chain_id }) => +chain_id === currentChain))
@@ -477,10 +479,10 @@ export const NetworkSettingsProvider = ({ children }) => {
   useEffect(() => {
     if (!network || !daoService || serviceStarting)
       setForcedService(undefined);
-    else if (+network?.chain?.chainId === +state.connectedChain?.id)
+    else if (+network?.chain?.chainId === +connectedChain?.id)
       loadForcedService()
         .then(setForcedService);
-  }, [network, daoService, serviceStarting, state.connectedChain?.id]);
+  }, [network, daoService, serviceStarting, connectedChain?.id]);
 
   useEffect(() => {
     if ([
@@ -511,11 +513,11 @@ export const NetworkSettingsProvider = ({ children }) => {
   ]);
 
   useEffect(() => {
-    if (daoService?.registry?.contractAddress && state.connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (daoService?.registry?.contractAddress && connectedChain?.name !== UNSUPPORTED_CHAIN)
       getERC20TokenData(daoService.registry.token.contractAddress)
         .then(setRegistryToken)
         .catch(error => console.debug("Failed to load registry token", error));
-  }, [daoService?.registry?.contractAddress, state.connectedChain?.name]);
+  }, [daoService?.registry?.contractAddress, connectedChain?.name]);
 
   const memorizedValue = useMemo<NetworkSettings>(() => ({
     ...networkSettings,
