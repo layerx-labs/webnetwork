@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import { Sequelize, WhereOptions } from "sequelize";
 
 import Database from "db/models";
 
@@ -10,47 +10,43 @@ import { error as logError } from 'services/logging';
 const colToLower = (colName: string) => Sequelize.fn("LOWER", Sequelize.col(colName));
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  const { networkName, chainId } = req.query;
+  const { networkName, chainId, chainShortName, type } = req.query;
   
   try {
     const whereCondition: WhereOptions = {};
+    const networkWhere: WhereOptions = {};
+    const chainWhere: WhereOptions = {};
 
-    let queryParams = {};
+    if (type === "transactional")
+      whereCondition.isTransactional = true;
 
-    if (chainId)
-      whereCondition.chain_id = +chainId;
+    if (type === "reward")
+      whereCondition.isReward = true;
 
     if (networkName) {
       whereCondition.isAllowed = true;
-
-      queryParams = {
-        where: {
-          [Op.or]: [{ isTransactional: true }, { isReward: true }]
-        },
-        include: [
-          {
-            association: "networks",
-            required: true,
-            where: {
-              name: Sequelize.where(colToLower("networks.name"), "=", (networkName as string).toLowerCase())
-            }
-          }
-        ]
-      };
-    } else {
-      queryParams = {
-        include: [
-          {
-            association: "networks",
-          },
-        ],
-      };
+      networkWhere.name = Sequelize.where(colToLower("networks.name"), "=", (networkName as string)?.toLowerCase());
     }
-      
+
+    if (chainId)
+      chainWhere.chainId = +chainId;
+
+    if (chainShortName)
+      chainWhere.chainShortName = chainShortName;
 
     const tokens = await Database.tokens.findAll({
       where: whereCondition,
-      ...queryParams
+      include: [
+        {
+          association: "networks",
+          required: !!networkName,
+          where: networkWhere
+        }, {
+          association: "chain",
+          required: !!chainId || !!chainShortName,
+          where: chainWhere
+        }
+      ]
     });
 
     return res.status(200).json(tokens);

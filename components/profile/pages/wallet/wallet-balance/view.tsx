@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
-import SelectNetwork from "components/bounties/select-network";
 import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
@@ -23,7 +22,6 @@ import NetworkItem from "../../../network-item/controller";
 
 interface WalletBalanceViewProps {
   totalAmount: string;
-  isOnNetwork: boolean;
   hasNoConvertedToken: boolean;
   defaultFiat: string;
   tokens: TokenBalanceType[];
@@ -37,7 +35,6 @@ interface WalletBalanceViewProps {
 
 export default function WalletBalanceView({
   totalAmount,
-  isOnNetwork,
   hasNoConvertedToken,
   defaultFiat,
   tokens,
@@ -84,7 +81,7 @@ export default function WalletBalanceView({
             </If>
           </InputGroup>
         </div>
-        <div className="col-auto">
+        <div className="col-auto px-0">
           <ResponsiveWrapper xs={true} md={false}>
             <IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />
           </ResponsiveWrapper>
@@ -98,7 +95,6 @@ export default function WalletBalanceView({
                 label={false}
               />
             </div>
-            <SelectNetwork isCurrentDefault={isOnNetwork} filterByConnectedChain={isOnNetwork ? true : false} />
           </ResponsiveWrapper>
         </div>
       </div>

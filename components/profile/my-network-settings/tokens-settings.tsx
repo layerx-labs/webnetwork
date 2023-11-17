@@ -45,7 +45,7 @@ export default function TokensSettings({
   
   const connectedChainId = connectedChain?.id;
   const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(connectedChainId),
-                                            () => useGetTokens(connectedChainId),
+                                            () => useGetTokens({ chainId: connectedChainId }),
                                             {
                                               enabled: !!connectedChainId
                                             });

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import { useRouter } from "next/router";
 
+import ChainIcon from "components/chain-icon";
 import ChainFilterView from "components/lists/filters/chain/view";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
@@ -27,9 +28,10 @@ export default function ChainFilter({
   const { isMobileView, isTabletView } = useBreakPoint();
   const { setValue } = useQueryFilter({ networkChain: query?.networkChain?.toString() });
 
-  const chainToOption = (chain: SupportedChainData): SelectOption => chain ? ({
+  const chainToOption = (chain: SupportedChainData): SelectOption & { preIcon: ReactNode } => chain ? ({
     value: chain?.chainShortName,
     label: chain?.chainName,
+    preIcon: <ChainIcon src={chain?.icon} />
   }) : null;
 
   function onChainChange(option: SelectOption) {
