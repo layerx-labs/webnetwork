@@ -5,8 +5,9 @@ import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 
-import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
+
+import { Network } from "interfaces/network";
 
 import {SearchBountiesPaginated} from "types/api";
 import {MyMarketplacePageProps} from "types/pages";
@@ -44,6 +45,15 @@ export function MyMarketplace({
         return savedNetwork;
       });
   }
+
+  function convertTimes (network: Network) {
+    return {
+      ...network,
+      draftTime: +(network?.draftTime || 0) / 1000,
+      disputableTime: +(network?.disputableTime || 0) / 1000,
+      cancelableTime: +(network?.cancelableTime || 0) / 1000,
+    }
+  }
   
   const networkQueryKey = QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chain?.chainId?.toString());
   const {
@@ -55,13 +65,12 @@ export function MyMarketplace({
                     getNetwork,
                     {
                       enabled: !!state.currentUser?.walletAddress && !!chain,
-                      staleTime: MINUTE_IN_MS
                     });
 
   useEffect(() => {
     if (myNetwork && !isFetching && isSuccess)
-      setForcedNetwork(myNetwork);
-  }, [myNetwork]);
+      setForcedNetwork(convertTimes(myNetwork));
+  }, [myNetwork, isFetching, isSuccess]);
 
   return(
     <MyNetworkPageView

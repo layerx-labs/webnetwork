@@ -12,9 +12,11 @@ export default function Home() {
   const { getURLWithNetwork } = useNetwork();
 
   useEffect(() => {
-    replace(getURLWithNetwork(`/tasks`, {
-      network: query?.network
-    }));
+    if(query?.network && query?.chain)
+      replace(getURLWithNetwork(`/tasks`, {
+        network: query?.network,
+        chain: query?.chain
+      }));
   }, []);
 
   return null;

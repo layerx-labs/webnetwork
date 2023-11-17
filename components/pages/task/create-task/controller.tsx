@@ -17,7 +17,10 @@ import {addFilesToMarkdown} from "helpers/markdown";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
 
+import {EventName} from "interfaces/analytics";
 import {BountyPayload} from "interfaces/create-bounty";
+import {CustomSession} from "interfaces/custom-session";
+import {CreateTaskSections} from "interfaces/enums/create-task-sections";
 import {MetamaskErrors, OriginLinkErrors} from "interfaces/enums/Errors";
 import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
@@ -28,10 +31,15 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
+import {UserRoleUtils} from "server/utils/jwt";
+
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import useGetIsAllowed from "x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
 import { useCreatePreBounty } from "x-hooks/api/task";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
@@ -40,13 +48,9 @@ import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import {EventName} from "../../../../interfaces/analytics";
-import {CustomSession} from "../../../../interfaces/custom-session";
-import {CreateTaskSections} from "../../../../interfaces/enums/create-task-sections";
-import {UserRoleUtils} from "../../../../server/utils/jwt";
-import useGetIsAllowed from "../../../../x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
-import {transactionStore} from "../../../../x-hooks/stores/transaction-list/transaction.store";
-import useAnalyticEvents from "../../../../x-hooks/use-analytic-events";
+
+
+
 import CreateTaskPageView from "./view";
 
 const ZeroNumberFormatValues = {

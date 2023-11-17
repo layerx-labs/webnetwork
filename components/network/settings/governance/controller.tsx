@@ -144,17 +144,19 @@ export default function NetworkGovernanceSettings({
   function getChangedTokens() {
     const changedTokens = [];
 
-    if (!settingsTokens.allowedRewards || !settingsTokens.allowedTransactions || !networkToken) return changedTokens;
+    if (!settingsTokens?.allowedRewards?.length && !settingsTokens?.allowedTransactions?.length && !networkToken)
+      return changedTokens;
 
-    const getAddress = ({ address }) => address;
-    const hasEqualLength = (arr1, arr2) => arr1.length === arr2.length;
-    const hasSameElements = (arr1, arr2) => arr1.every(el => arr2.find(el2 => el === el2));
+    const getAddress = (token: Token) => token?.address;
+    const hasEqualLength = (arr1, arr2) => arr1?.length === arr2?.length;
+    const hasSameElements = (arr1, arr2) => arr1?.every(el => arr2?.find(el2 => el === el2));
 
-    const allowedRewards = settingsTokens.allowedRewards.map(getAddress);
-    const allowedTransactions = settingsTokens.allowedTransactions.map(getAddress);
+    const allowedRewards = settingsTokens?.allowedRewards?.map(getAddress);
+    const allowedTransactions = settingsTokens?.allowedTransactions?.map(getAddress);
 
-    const networkRewards = networkToken.filter(({ isReward }) => isReward).map(getAddress);
-    const networkTransactions = networkToken.filter(({ isTransactional }) => isTransactional).map(getAddress);
+    const networkRewards = networkToken?.filter(token => token?.network_tokens?.isReward).map(getAddress);
+    const networkTransactions = 
+      networkToken?.filter(token => token?.network_tokens?.isTransactional).map(getAddress);
 
     if (!hasEqualLength(allowedRewards, networkRewards))
       changedTokens.push("reward");
@@ -245,12 +247,13 @@ export default function NetworkGovernanceSettings({
     }
 
     signMessage(IM_AM_CREATOR_NETWORK)
-      .then(async () => {
-        await useUpdateNetwork(json)
-          .then(async () => {
-            if (isCurrentNetwork) updateActiveNetwork(true);
-
-            return updateEditingNetwork();
+      .then(() => {
+        return useUpdateNetwork(json)
+          .then(() => {
+            return Promise.all([
+              updateEditingNetwork(),
+              updateActiveNetwork(true)
+            ]);
           })
           .then(() => {
             addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));

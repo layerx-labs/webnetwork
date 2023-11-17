@@ -17,12 +17,12 @@ import { OriginLinkErrors } from "interfaces/enums/Errors";
 import { NetworkEvents } from "interfaces/enums/events";
 
 import { DeletePreDeliverable, CreatePreDeliverable } from "x-hooks/api/deliverable";
+import { getBountyData } from "x-hooks/api/task";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import { useNetwork } from "x-hooks/use-network";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-import { getBountyData } from "x-hooks/api/task";
 
 export default function CreateDeliverablePage() {
   const { push, query } = useRouter();
