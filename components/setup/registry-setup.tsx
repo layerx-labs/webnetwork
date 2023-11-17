@@ -6,8 +6,8 @@ import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
 
-import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/common/buttons/contract-button";
+import {ContextualSpan} from "components/contextual-span";
 import {FormGroup} from "components/form-group";
 import {CallToAction} from "components/setup/call-to-action";
 import {ContractField, ContractInput} from "components/setup/contract-input";
@@ -15,7 +15,6 @@ import {DeployBountyTokenModal} from "components/setup/deploy-bounty-token-modal
 import {DeployERC20Modal} from "components/setup/deploy-erc20-modal";
 
 import {useAppState} from "contexts/app-state";
-import { updateSupportedChains } from "contexts/reducers/change-supported-chains";
 
 import { DAPPKIT_LINK } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
@@ -25,15 +24,15 @@ import {RegistryEvents} from "interfaces/enums/events";
 
 import { RegistryParameters } from "types/dappkit";
 
-import { useGetChains, useUpdateChain } from "x-hooks/api/chain";
+import { useUpdateChain } from "x-hooks/api/chain";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
-import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface RegistrySetupProps { 
   isVisible?: boolean;
@@ -83,12 +82,8 @@ export function RegistrySetup({
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { dispatch, state: { currentUser, Service, connectedChain, supportedChains } } = useAppState();
-
-  useReactQuery(QueryKeys.chains(), () => useGetChains().then(chains => { 
-    dispatch(updateSupportedChains(chains));
-    return chains; 
-  }));
+  const { state: { currentUser, Service } } = useAppState();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),

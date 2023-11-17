@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 
 import { useRouter } from "next/router";
 
-import { useAppState } from "contexts/app-state";
-
 import { SupportedChainData } from "interfaces/supported-chain-data";
+
+import useSupportedChain from "./use-supported-chain";
 
 interface FindSupportedChainProps {
   chainId?: number;
@@ -16,7 +16,7 @@ export default function useChain() {
   
   const [chain, setChain] = useState<SupportedChainData>();
 
-  const { state: { supportedChains } } = useAppState();
+  const { supportedChains } = useSupportedChain();
 
   function findSupportedChain({ chainId, chainShortName } : FindSupportedChainProps) {
     return supportedChains?.find(e => e.chainId === chainId || 

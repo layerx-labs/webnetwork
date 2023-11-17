@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 
 import Button, { ButtonProps } from "components/button";
 import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
+import WrongNetworkModal from "components/wrong-network-modal";
 
 import { useAppState } from "contexts/app-state";
-
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
@@ -15,7 +15,7 @@ import { AddressValidator } from "helpers/validators/address";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
-import WrongNetworkModal from "components/wrong-network-modal";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ContractButton({
   onClick,
@@ -26,10 +26,11 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: {connectedChain, currentUser, Service, loading, supportedChains,}, dispatch } = useAppState();
+  const { state: { currentUser, Service, loading }, dispatch } = useAppState();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();
+  const { supportedChains, connectedChain } = useSupportedChain();
 
   const isRequired = [
     pathname?.includes("new-network"),

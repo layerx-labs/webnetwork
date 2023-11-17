@@ -16,6 +16,8 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import useBepro from "x-hooks/use-bepro";
 import {transactionStore} from "./stores/transaction-list/transaction.store";
 
+import useSupportedChain from "./use-supported-chain";
+
 export interface useERC20 {
   name: string;
   symbol: string;
@@ -48,6 +50,7 @@ export default function useERC20() {
   const { state } = useAppState();
   const {add: addTx, update: updateTx} = transactionStore();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
+  const { connectedChain } = useSupportedChain();
 
   const logData = { 
     wallet: state.currentUser?.walletAddress,
@@ -63,7 +66,7 @@ export default function useERC20() {
         !address ||
         !name ||
         !isServiceReady ||
-        state.connectedChain?.name === UNSUPPORTED_CHAIN) return;
+        connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
     const balance = await getTokenBalance(address, state.currentUser.walletAddress)
       .then(b => {
@@ -115,7 +118,7 @@ export default function useERC20() {
       
       if (name)
         setDefaults();
-    } else if (address && !name && isServiceReady && state.connectedChain?.matchWithNetworkChain !== false)
+    } else if (address && !name && isServiceReady && connectedChain?.matchWithNetworkChain !== false)
       getERC20TokenData(address)
         .then(async ({ name, symbol, decimals, totalSupply }) => {
           setName(name);
@@ -132,12 +135,12 @@ export default function useERC20() {
     address, 
     name, 
     isServiceReady, 
-    state.connectedChain?.matchWithNetworkChain
+    connectedChain?.matchWithNetworkChain
   ]);
 
   useEffect(() => {
     updateAllowanceAndBalance();
-  }, [state.currentUser?.walletAddress, isServiceReady, state.connectedChain, name]);
+  }, [state.currentUser?.walletAddress, isServiceReady, connectedChain, name]);
 
   async function deploy(name: string,
                         symbol: string,

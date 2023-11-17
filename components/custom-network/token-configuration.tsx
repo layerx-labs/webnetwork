@@ -18,6 +18,7 @@ import {Token} from "interfaces/token";
 
 import {useGetTokens} from "x-hooks/api/token";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function TokenConfiguration({
   activeStep,
@@ -37,8 +38,9 @@ export default function TokenConfiguration({
   
   const { state } = useAppState();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
+  const { connectedChain } = useSupportedChain();
 
-  const connectedChainId = state.connectedChain?.id;
+  const connectedChainId = connectedChain?.id;
 
   function processTokens(tokens) {
     const { transactional, reward } = tokens.reduce((acc, curr) => ({

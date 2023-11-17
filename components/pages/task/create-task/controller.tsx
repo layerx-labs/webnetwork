@@ -37,6 +37,7 @@ import useERC20 from "x-hooks/use-erc20";
 import {useNetwork} from "x-hooks/use-network";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {EventName} from "../../../../interfaces/analytics";
 import {CustomSession} from "../../../../interfaces/custom-session";
@@ -102,10 +103,9 @@ export default function CreateTaskPage({
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
   const { pushAnalytic } = useAnalyticEvents();
-
+  const { connectedChain } = useSupportedChain();
   const {
-    dispatch,
-    state: { Settings, Service, currentUser, connectedChain, }
+    state: { Settings, Service, currentUser }
   } = useAppState();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,

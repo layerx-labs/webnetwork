@@ -16,6 +16,7 @@ import useBepro from "x-hooks/use-bepro";
 
 import {useAppState} from "../contexts/app-state";
 import TokenIcon from "./token-icon";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 
 interface TokensDropdownProps {
@@ -62,7 +63,7 @@ export default function TokensDropdown({
   const [options, setOptions] = useState<Option[]>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const {state} = useAppState();
+  const { connectedChain } = useSupportedChain();
   const {getTokenBalance} = useBepro();
 
   const formatCreateLabel = (inputValue: string) =>
@@ -114,9 +115,9 @@ export default function TokensDropdown({
 
   useEffect(() => {
     if (!tokens?.length) return;
-    if (needsBalance && state.connectedChain?.matchWithNetworkChain) getBalanceTokens();
+    if (needsBalance && connectedChain?.matchWithNetworkChain) getBalanceTokens();
     else setOptions(tokens.map(tokenToOption));
-  }, [tokens, state.connectedChain?.matchWithNetworkChain]);
+  }, [tokens, connectedChain?.matchWithNetworkChain]);
 
   useEffect(() => {
     if(!!option || !options?.length) return;
