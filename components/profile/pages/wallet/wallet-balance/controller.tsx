@@ -65,7 +65,6 @@ export default function WalletBalance({
     const balance = await service
       .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
       .catch(() => BigNumber(0));
-    
     return {
       ...token,
       balance,
