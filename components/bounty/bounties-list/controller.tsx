@@ -16,6 +16,7 @@ import { SearchBountiesPaginatedBigNumber } from "types/components";
 import useChain from "x-hooks/use-chain";
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface BountiesListProps {
   bounties?: SearchBountiesPaginated;
@@ -47,6 +48,7 @@ export default function BountiesList({
   const { state: appState } = useAppState();
   const { search, setSearch, clearSearch } = useSearch();
   const { getChainFromUrl } = useChain();
+  const { supportedChains } = useSupportedChain();
   
   const { state, time, networkName, networkChain } = router.query;
 
@@ -127,7 +129,7 @@ export default function BountiesList({
       onEnterPressed={handleSearch}
       onSearchInputChange={handleSearchChange}
       hideFilter={hideFilter}
-      chains={appState?.supportedChains}
+      chains={supportedChains}
     />
   );
 }
