@@ -17,7 +17,7 @@ export async function useGetProfileBounties(query: ParsedUrlQuery, type: UserTyp
     [type]: query?.wallet
   };
 
-  if(type === 'creator' && query?.networkChain) 
+  if(['creator', 'deliverabler', 'proposer'].includes(type) && query?.networkChain) 
     query = {
       ...query,
       chain: query?.networkChain
