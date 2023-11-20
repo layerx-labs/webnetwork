@@ -32,8 +32,8 @@ export default function ListSortView({
   const { t } = useTranslation("common");
 
   const labelClass = (asSelect || labelLineBreak) ? 
-    "caption-small font-weight-medium text-gray-100 text-capitalize" : 
-    "caption-small text-white-50 text-nowrap mr-1";
+    "caption-small font-weight-medium text-gray-100 text-capitalize" :
+    "sm-regular text-white text-nowrap mr-1";
   const containerClass = (asSelect || labelLineBreak) ? "d-flex flex-column gap-1" : "d-flex align-items-center";
 
   if (!componentVersion)

@@ -23,6 +23,29 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
     "Networks",
     t("council:council-table.actions"),
   ];
+  const sortOptions = [
+    {
+      label: "Total Votes",
+      value: "totalVotes",
+      sortBy: "totalVotes",
+      order: "DESC",
+    }, {
+      label: "Accepted Proposals",
+      value: "acceptedProposals",
+      sortBy: "acceptedProposals",
+      order: "DESC",
+    }, {
+      label: "Disputed Proposals",
+      value: "disputedProposals",
+      sortBy: "disputedProposals",
+      order: "DESC",
+    }, {
+      label: "Disputes",
+      value: "disputes",
+      sortBy: "disputes",
+      order: "DESC",
+    },
+  ];
 
   return (
     <List
@@ -30,6 +53,9 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
       header={header}
       hasMorePages={hasMore}
       searchPlaceholder={"Search curator"}
+      emptyMessage={"No curators found"}
+      sortOptions={sortOptions}
+      chainFilters
     >
       {curators?.rows?.map((curator) => (
         <CuratorListItem
