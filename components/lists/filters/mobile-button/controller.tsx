@@ -4,7 +4,7 @@ import MobileFiltersButtonView from "components/lists/filters/mobile-button/view
 
 interface MobileFiltersButtonProps {
   children: ReactNode;
-  onApply: () => void;
+  onApply?: () => void;
 }
 
 export default function MobileFiltersButton({
@@ -22,7 +22,7 @@ export default function MobileFiltersButton({
   }
 
   function onConfirm() {
-    onApply();
+    onApply?.();
     handleCloseModal();
   }
 

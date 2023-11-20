@@ -32,7 +32,7 @@ export default function ListSortView({
   const { t } = useTranslation("common");
 
   const labelClass = (asSelect || labelLineBreak) ? 
-    "caption-small font-weight-medium text-gray-100 text-capitalize" :
+    "sm-regular font-weight-medium text-white text-capitalize" :
     "sm-regular text-white text-nowrap mr-1";
   const containerClass = (asSelect || labelLineBreak) ? "d-flex flex-column gap-1" : "d-flex align-items-center";
 
@@ -46,12 +46,18 @@ export default function ListSortView({
           {t("sort.label")}
         </span>
 
-        <ReactSelect
-          defaultValue={defaultOption}
+        <NativeSelectWrapper
           options={options}
-          isSearchable={false}
           onChange={onChange}
-        />
+          selectedIndex={selectedIndex}
+        >
+          <ReactSelect
+            defaultValue={defaultOption}
+            options={options}
+            isSearchable={false}
+            onChange={onChange}
+          />
+        </NativeSelectWrapper>
       </div>
     );
 
