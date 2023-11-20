@@ -1,27 +1,23 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import DelegateIcon from "assets/icons/delegate-icon";
-
-import Button from "components/button";
+import ChainIcon from "components/chain-icon";
 import CopyButton from "components/common/buttons/copy/controller";
+import {OverlappingIcons} from "components/common/overlapping-icons/overlapping-icons.view";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import Identicon from "components/identicon";
-import If from "components/If";
 
 import { formatNumberToNScale } from "helpers/formatNumber";
 import { truncateAddress } from "helpers/truncate-address";
 
-import { Curator } from "interfaces/curators";
+import {CuratorOverview} from "types/api";
 
 interface CuratorListItemProps {
-  curator: Curator;
-  onDelegateClick: () => void;
+  curator: CuratorOverview;
 }
 
 export default function CuratorListItemView({
-  curator,
-  onDelegateClick
+  curator
 }: CuratorListItemProps) {
   const { t } = useTranslation(["common", "council"]);
 
@@ -29,26 +25,36 @@ export default function CuratorListItemView({
     {
       label: t("council:council-table.closed-proposals"),
       secondaryLabel: `${curator?.acceptedProposals || 0}`,
-      breakpoints: { xs: false, md: true },
+      breakpoints: { xs: false, lg: true },
       justify: "center"
     },
     {
       label: t("council:council-table.disputed-proposals"),
       secondaryLabel: `${curator?.disputedProposals || 0}`,
-      breakpoints: { xs: false, md: true },
+      breakpoints: { xs: false, xl: true },
       justify: "center"
     },
     {
       label: t("council:council-table.disputes"),
-      secondaryLabel: `${curator?.disputes?.length || 0}`,
-      breakpoints: { xs: false, lg: true },
+      secondaryLabel: `${curator?.disputes || 0}`,
+      breakpoints: { xs: false, xl: true },
       justify: "center"
     },
     {
       label: t("council:council-table.total-votes"),
       secondaryLabel: 
-        formatNumberToNScale(new BigNumber(curator?.tokensLocked || 0).plus(curator?.delegatedToMe).toFixed()),
-      breakpoints: { xs: false, xl: true },
+        formatNumberToNScale(BigNumber(curator?.totalVotes).toFixed()),
+      breakpoints: { xs: false, md: true },
+      justify: "center"
+    },
+    {
+      label: "Networks",
+      secondaryLabel: <OverlappingIcons
+        icons={curator?.marketplaces?.map(marketplace => (
+          <ChainIcon src={marketplace?.chain?.icon} size="22" />
+        ))}
+      />,
+      breakpoints: { xs: false, md: true },
       justify: "center"
     }
   ];
@@ -61,28 +67,14 @@ export default function CuratorListItemView({
           address={curator?.address}
         />
       }
-      label={truncateAddress(curator?.address)}
+      label={truncateAddress(curator?.address, 4)}
       columns={columns}
-      mobileColumnIndex={3}
+      mobileColumnIndex={[3, 4]}
       action={
-        <>
-          <CopyButton
-            value={curator?.address}
-            popOverLabel={t("misc.address-copied")}
-          />
-
-          <If condition={!!onDelegateClick}>
-            <Button
-              color="gray-900"
-              textClass="text-gray-50"
-              className=" ml-1 border-radius-4 p-1 border-gray-700 not-svg"
-              key={curator?.address}
-              onClick={onDelegateClick}
-            >
-              <DelegateIcon />
-            </Button>
-          </If>
-        </>
+        <CopyButton
+          value={curator?.address}
+          popOverLabel={t("misc.address-copied")}
+        />
       }
     />
   );
