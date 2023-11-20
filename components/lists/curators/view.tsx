@@ -52,8 +52,8 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
       isEmpty={isListEmpty}
       header={header}
       hasMorePages={hasMore}
-      searchPlaceholder={"Search curator"}
-      emptyMessage={"No curators found"}
+      searchPlaceholder={t("council:search-by-address")}
+      emptyMessage={t("council:no-curators-found")}
       sortOptions={sortOptions}
       chainFilters
     >
