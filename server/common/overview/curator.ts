@@ -85,13 +85,35 @@ export default async function get(query: ParsedUrlQuery) {
 
   const result = orderByProperty(Object.values(curatorsGrouped), sort, order.toString());
 
-
   const paginatedData = paginateArray(result, 10, +page || 1);
+
+  const totalCurators = await models.curator.count({
+    where: {
+      isCurrentlyCurator: true,
+    },
+    include: [
+      {
+        association: "network",
+        attributes: [],
+        required: !!network || !!chain,
+        where: networkWhere,
+        include: [
+          {
+            association: "chain",
+            attributes: ["chainId", "chainName", "icon", "color"],
+            required: !!chain,
+            where: chainWhere
+          }
+        ]
+      }
+    ]
+  });
 
   return {
     count: result.length,
     rows: paginatedData.data,
     pages: paginatedData.pages,
+    totalCurators,
     currentPage: +paginatedData.page
   };
 }

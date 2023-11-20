@@ -3,10 +3,10 @@ import { GetServerSideProps } from "next/types";
 
 import NetworkCurators from "components/pages/network-curators/controller";
 
-import { emptyBountiesPaginated, emptyCuratorsPaginated } from "helpers/api";
+import { emptyBountiesPaginated } from "helpers/api";
 
-import { getCuratorsListData } from "x-hooks/api/curator";
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
+import useGetCuratorOverview from "x-hooks/api/overview/use-get-overview-curator";
 import { getBountiesListData } from "x-hooks/api/task";
 
 export default NetworkCurators;
@@ -26,9 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
 
   const [bounties, curators, overview] = await Promise.all([
     state ? getBountiesList({ ...query, state }) : emptyBountiesPaginated,
-    getCuratorsListData({ isCurrentlyCurator: 'true', ...query })
-      .then(({ data }) => data)
-      .catch(() => emptyCuratorsPaginated),
+    useGetCuratorOverview({ ...query, chain: query?.networkChain }),
     getNetworkOverviewData(query)
   ]);
     
