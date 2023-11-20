@@ -85,12 +85,9 @@ export default function ListView(props: ListViewProps) {
               <ListSort options={sortOptions} />
             </div>
           </If>
-
-          <If condition={networkFilter}>
-            <div className="d-none d-xl-flex">
+            <div className="col-auto d-none d-xl-flex">
               <SelectNetwork isCurrentDefault={isOnNetwork} />
             </div>
-          </If>
         </div>
       </If>
 
