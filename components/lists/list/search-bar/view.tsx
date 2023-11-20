@@ -30,7 +30,7 @@ export default function ListSearchBar({
   onClearSearch,
 }: ListSearchBarProps) {
   return (
-    <InputGroup className="border-radius-8">
+    <InputGroup className="border-radius-4">
       <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
         <SearchIcon />
       </InputGroup.Text>
@@ -45,7 +45,7 @@ export default function ListSearchBar({
 
       <If condition={hasFilter}>
         <Button
-          className="bg-gray-900 border-0 py-0 px-3 rounded-0"
+          className="btn bg-gray-850 border-0 py-0 px-3"
           onClick={onClearSearch}
         >
           <CloseIcon width={10} height={10} />
