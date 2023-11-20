@@ -3,11 +3,11 @@ import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
-import { 
+import {
   SearchBountiesPaginated,
   LeaderBoardPaginated,
-  CuratorsListPaginated,
   NetworkPaymentsData,
+  PaginatedCuratorOverview,
   ActiveMarketplace
 } from "types/api";
 
@@ -22,7 +22,7 @@ export interface ExplorePageProps {
 
 export interface NetworkCuratorsPageProps {
   bounties: SearchBountiesPaginated;
-  curators: CuratorsListPaginated;
+  curators: PaginatedCuratorOverview;
   totalReadyBounties: number;
   totalDistributed: number;
   totalLocked: number;
