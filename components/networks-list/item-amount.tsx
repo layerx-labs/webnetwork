@@ -1,9 +1,11 @@
+import {ReactNode} from "react";
+
 import TokenSymbolView from "components/common/token-symbol/view";
 import If from "components/If";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface ItemAmountProps {
-  amount: string | number;
+  amount: string | number | ReactNode;
   label: string;
   currency?: string;
 }
@@ -27,7 +29,7 @@ export default function ItemAmount({
   }
 
   return(
-    <div className="d-flex gap-1 bg-gray-950 text-nowrap py-1 px-2 border-radius-4 border border-gray-800">
+    <div className="d-flex align-items-center gap-2 text-nowrap py-1 px-0 px-md-2">
       <If condition={typeof amount !== "undefined"}>
         <span className="caption-small font-weight-medium text-white">
           {typeof amount === 'string' ? renderAmount(amount) : amount}

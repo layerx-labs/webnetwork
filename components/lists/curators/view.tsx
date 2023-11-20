@@ -3,10 +3,10 @@ import { useTranslation } from "next-i18next";
 import CuratorListItem from "components/lists/curators/item/controller";
 import List from "components/lists/list/controller";
 
-import { CuratorsListPaginated } from "types/api";
+import {PaginatedCuratorOverview} from "types/api";
 
 interface CuratorsListViewProps {
-  curators: CuratorsListPaginated;
+  curators: PaginatedCuratorOverview;
 }
 
 export default function CuratorsListView({ curators }: CuratorsListViewProps) {
@@ -20,15 +20,16 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
     t("council:council-table.disputed-proposals"),
     t("council:council-table.disputes"),
     t("council:council-table.total-votes"),
+    "Networks",
     t("council:council-table.actions"),
   ];
 
   return (
     <List
       isEmpty={isListEmpty}
-      withSearchAndFilters={false}
       header={header}
       hasMorePages={hasMore}
+      searchPlaceholder={"Search curator"}
     >
       {curators?.rows?.map((curator) => (
         <CuratorListItem

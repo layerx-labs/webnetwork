@@ -15,7 +15,7 @@ interface NetworkListItemProps {
   secondaryLabel?: ReactNode;
   thirdLabel?: ReactNode;
   columns: ResponsiveListItemColumnProps[];
-  mobileColumnIndex?: number;
+  mobileColumnIndex?: number | number[];
   action?: ReactNode;
 }
 
@@ -29,12 +29,12 @@ export default function ResponsiveListItem({
   mobileColumnIndex = 0,
   action,
 }: NetworkListItemProps) {
-  const firstColumn = columns[mobileColumnIndex];
+  const mobileColumns = columns?.filter((col, index) => [].concat(mobileColumnIndex).includes(index));
 
   return (
     <div 
       className={clsx([
-        "p-3 row border-radius-8 border border-gray-850 bg-gray-900 mx-0",
+        "p-3 row border-radius-4 bg-gray-850 mx-0",
         !!onClick && "cursor-pointer",
       ])} 
       onClick={onClick}
@@ -66,13 +66,14 @@ export default function ResponsiveListItem({
               </div>
             </If>
 
-            <If condition={!!firstColumn}>
-              <div className="mt-2">
-                <ResponsiveListItemColumn
-                  {...firstColumn}
-                  justify="start"
-                  breakpoints={{ xs: true, md: false }}
-                />
+            <If condition={!!mobileColumns}>
+              <div className="d-flex flex-column">
+                {mobileColumns.map(col =>
+                  <ResponsiveListItemColumn
+                    {...col}
+                    justify="start"
+                    breakpoints={{ xs: true, md: false }}
+                  />)}
               </div>
             </If>
             <If condition={!!action}>
