@@ -39,13 +39,11 @@ export interface SearchNetworkParams {
 }
 
 export interface SearchActiveNetworkParams {
-  page?: string;
-  creatorAddress?: string;
-  sortBy?: string;
-  order?: string;
-  isClosed?: boolean;
-  isRegistered?: boolean;
+  quantity?: number;
   name?: string;
+  creatorAddress?: string;
+  isClosed?: boolean;
+  page?: number;
 }
 export interface StartWorkingParams extends RequestParams {
   id: string;

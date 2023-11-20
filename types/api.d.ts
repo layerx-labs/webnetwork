@@ -3,6 +3,7 @@ import { IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
 import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
 export type DatabaseId = number;
@@ -79,3 +80,15 @@ export interface UpdateNetworkParams {
   isClosed?: boolean;
   networkAddress: string;
 }
+
+export interface ActiveMarketplace {
+  name: string;
+  fullLogo?: string;
+  logoIcon?: string;
+  totalValueLock: string;
+  totalIssues: number;
+  chains: Partial<SupportedChainData>[];
+  hasNotConverted?: boolean;
+}
+
+export type ActiveNetworksPaginated = PaginatedData<ActiveMarketplace>;

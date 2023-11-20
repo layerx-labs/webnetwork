@@ -8,6 +8,8 @@ interface NetworkLogoProps {
   isBepro?: boolean;
   size?: SizeOptions;
   noBg?: boolean;
+  bgColor?: string;
+  shape?: "circle" | "square";
 }
 
 export default function NetworkLogo({
@@ -15,16 +17,24 @@ export default function NetworkLogo({
   isBepro = false,
   size = "md",
   noBg,
+  shape = "circle",
+  bgColor,
   ...props
 }: NetworkLogoProps) {
   const sizes = {
     sm: 15,
     md: 24
   };
+  const roundedClass = {
+    circle: "rounded-circle",
+    square: "rounded",
+  };
+  const bgClass = `bg-${bgColor || "dark"}`;
 
   return (
     <div className={
-      `${noBg ? "p-0" : "bg-dark p-2"} d-flex align-items-center justify-content-center rounded-circle`
+      `${noBg ? "p-0" : `${bgClass} p-1`} d-flex border border-gray-800
+        align-items-center justify-content-center ${roundedClass[shape]}`
     }>
       {isBepro ? (
         <BeProBlue width={sizes[size]} height={sizes[size]} />

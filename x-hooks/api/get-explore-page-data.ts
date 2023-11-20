@@ -29,9 +29,8 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
       .then(({ data }) => data.rows)
       .catch(() => []),
     useSearchActiveNetworks({
-      isClosed: false,
-      isRegistered: true,
-      name: query?.network?.toString()
+      name: query?.network?.toString(),
+      isClosed: false
     })
       .then(({ rows }) => rows)
   ]);

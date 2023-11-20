@@ -1,20 +1,23 @@
 import {useTranslation} from "next-i18next";
 import Link from "next/link";
 
-import ListActiveNetworksItem from "components/bounties/list-active-networks-item";
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
+import { 
+  ActiveMarketplaceItem 
+} from "components/lists/active-marketplaces/active-marketplace-item/active-marketplace-item.controller";
 import NothingFound from "components/nothing-found";
 
-import {Network} from "interfaces/network";
+import { ActiveMarketplace } from "types/api";
 
-interface ListActiveNetworksProps {
-  networks: Network[];
+
+interface ActiveMarketplacesListProps {
+  marketplaces: ActiveMarketplace[];
 }
-export default function ListActiveNetworks({
-  networks
-}: ListActiveNetworksProps) {
+export default function ActiveMarketplacesList({
+  marketplaces
+}: ActiveMarketplacesListProps) {
   const { t } = useTranslation(["bounty"]);
 
   return (
@@ -31,16 +34,16 @@ export default function ListActiveNetworks({
 
       <div className="row mt-1">
         <If
-          condition={!!networks.length}
+          condition={!!marketplaces.length}
           otherwise={<NothingFound description={t("most-active-network-empty")} />}
         >
           <HorizontalScroll>
-            {networks.map((network, index) => 
+            {marketplaces.map((marketplace, index) => 
               <div
                 className="col-12 col-sm-6 col-md-5 col-lg-4"
-                key={`active-${index}-${network?.name}`}
+                key={`active-${index}-${marketplace?.name}`}
               >
-                <ListActiveNetworksItem network={network} key={`${network.name}-${network.chain.chainShortName}`} />
+                <ActiveMarketplaceItem marketplace={marketplace} key={`${marketplace.name}`} />
               </div>)}
           </HorizontalScroll>
         </If>

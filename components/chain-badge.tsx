@@ -3,7 +3,7 @@ import Badge from "components/badge";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 interface ChainBadgeProps {
-  chain: SupportedChainData;
+  chain: Partial<SupportedChainData>;
   transparent?: boolean;
 }
 
