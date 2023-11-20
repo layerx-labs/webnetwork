@@ -13,7 +13,7 @@ export default function ListHeader({
         className={`d-flex flex-row col justify-content-center  align-items-center 
         text-gray`}
       >
-        <span className="caption-medium text-center">{label}</span>
+        <span className="xs-medium text-uppercase text-center gray-150">{label}</span>
       </div>
     );
   }

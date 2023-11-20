@@ -20,7 +20,7 @@ export interface SearchBountiesPaginatedBigNumber extends Omit<SearchBountiesPag
 
 export interface ResponsiveListItemColumnProps {
   label?: string;
-  secondaryLabel?: string;
+  secondaryLabel?: ReactNode;
   breakpoints?: BreakpointOptions;
   currency?: string;
   justify?: string;
