@@ -11,7 +11,6 @@ interface ConnectWalletButtonViewProps {
   asModal?: boolean;
   isLoading?: boolean;
   isModalVisible?: boolean;
-  hasWeb3Connection?: boolean;
   isConnected?: boolean;
   buttonColor: string;
   onConnectClick: () => void;
@@ -22,7 +21,6 @@ export default function ConnectWalletButtonView ({
   asModal,
   isLoading,
   isModalVisible,
-  hasWeb3Connection,
   isConnected,
   buttonColor,
   onConnectClick,
@@ -35,7 +33,6 @@ export default function ConnectWalletButtonView ({
     return(
       <ConnectWalletModal
         isVisible={isModalVisible}
-        hasWeb3Connection={hasWeb3Connection}
         onConnectClick={onConnectClick}
       />
     );

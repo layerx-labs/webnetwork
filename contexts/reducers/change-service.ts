@@ -1,5 +1,3 @@
-import { Web3Connection } from "@taikai/dappkit";
-
 import {SimpleAction} from "contexts/reducers/reducer";
 
 import {
@@ -21,6 +19,3 @@ export class ChangeServiceProp<T = ServiceState | Partial<ServiceState>, A = key
 }
 
 export const changeServiceProp = new ChangeServiceProp();
-
-export const changeWeb3Connection = (web3Connection: Web3Connection) => 
-  changeServiceProp.update(web3Connection, "web3Connection");

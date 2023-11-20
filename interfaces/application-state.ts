@@ -1,7 +1,5 @@
 import {Dispatch} from "react";
 
-import { Web3Connection } from "@taikai/dappkit";
-
 import {XReducerAction} from "contexts/reducers/reducer";
 
 import {Balance} from "interfaces/balance-state";
@@ -14,7 +12,6 @@ import {SettingsType, Tier} from "types/settings";
 
 export interface ServiceState {
   microReady: boolean | null;
-  web3Connection: Web3Connection
 }
 
 export interface ConnectedChain {

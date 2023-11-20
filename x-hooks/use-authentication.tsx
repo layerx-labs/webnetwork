@@ -35,7 +35,6 @@ import {useSearchCurators} from "x-hooks/api/curator";
 import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
-import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -54,13 +53,12 @@ export function useAuthentication() {
   const session = useSession();
   const { asPath } = useRouter();
 
-  const { connect } = useDao();
   const { chain } = useChain();
   const transactions = useStorageTransactions();
   const { addWarning } = useToastStore();
   const { service: daoService, serviceStarting} = useDaoStore();
   const marketplace = useMarketplace();
-  const { isNetworkGovernor } = useBepro();
+  const { connect, disconnect } = useDao();
   const { state, dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
@@ -75,6 +73,8 @@ export function useAuthentication() {
 
     expirationStorage.removeItem();
     transactions.deleteFromStorage();
+
+    disconnect();
 
     nextSignOut({
       callbackUrl: `${URL_BASE}/${redirect || ""}`

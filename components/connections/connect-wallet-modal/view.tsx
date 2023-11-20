@@ -5,19 +5,15 @@ import metamaskLogo from "assets/metamask.png";
 
 import Button from "components/button";
 import TermsAndConditions from "components/common/terms-and-conditions/view";
-import { ContextualSpan } from "components/contextual-span";
-import If from "components/If";
 import Modal from "components/modal";
 
 interface ConnectWalletModalProps {
   isVisible?: boolean;
-  hasWeb3Connection?: boolean;
   onConnectClick: () => void;
 }
 
 export default function ConnectWalletModal({
   isVisible,
-  hasWeb3Connection,
   onConnectClick
 } : ConnectWalletModalProps) {
   const { t } = useTranslation(["common", "connect-wallet-button"]);
@@ -37,31 +33,16 @@ export default function ConnectWalletModal({
         </strong>
 
         <div className="d-flex justify-content-center align-items-center w-100">
-          <If
-            condition={hasWeb3Connection}
-            otherwise={
-              <div className="my-3">
-                <ContextualSpan context="danger">
-                  {t("connect-wallet-button:web3Connection-error")}
-                </ContextualSpan>
-
-                <span className="p text-danger ms-3">
-                  {t("connect-wallet-button:refresh-page")}
-                </span>
-              </div>
-            }
+          <Button
+            color="dark-gray"
+            className="rounded-8 text-white p-3 d-flex text-center justify-content-center align-items-center w-75"
+            onClick={onConnectClick}
           >
-            <Button
-              color="dark-gray"
-              className="rounded-8 text-white p-3 d-flex text-center justify-content-center align-items-center w-75"
-              onClick={onConnectClick}
-            >
-              <Image src={metamaskLogo} width={15} height={15} />
-              <span className="text-white text-uppercase ms-2 caption-large">
-                {t("misc.metamask")}
-              </span>
-            </Button>
-          </If>
+            <Image src={metamaskLogo} width={15} height={15} />
+            <span className="text-white text-uppercase ms-2 caption-large">
+              {t("misc.metamask")}
+            </span>
+          </Button>
         </div>
 
         <TermsAndConditions />

@@ -8,6 +8,7 @@ import router, {useRouter} from "next/router";
 import {useDebouncedCallback} from "use-debounce";
 
 import {IFilesProps} from "components/drag-and-drop";
+import CreateTaskPageView from "components/pages/task/create-task/view";
 
 import {useAppState} from "contexts/app-state";
 
@@ -47,11 +48,6 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-
-
-
-import CreateTaskPageView from "./view";
 
 const ZeroNumberFormatValues = {
   value: "",

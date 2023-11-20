@@ -4,18 +4,17 @@ import {NumberFormatValues} from "react-number-format";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
+import OraclesDelegateView from "components/profile/pages/voting-power/oracles/delegate/view";
+
 import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {OraclesDelegateProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
-
-import OraclesDelegateView from "./view";
 
 export default function OraclesDelegate({
   wallet,
@@ -34,7 +33,6 @@ export default function OraclesDelegate({
 
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { service: daoService } = useDaoStore();
   const { isAddress } = useBepro();
   const {list: transactions} = transactionStore();
 
@@ -59,7 +57,7 @@ export default function OraclesDelegate({
     if (addressError) setAddressError("");
     setDelegatedTo(params.target.value);
 
-    if (daoService?.web3Connection && params.target.value) {
+    if (params.target.value) {
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {

@@ -1,11 +1,9 @@
 import {createContext, useEffect} from "react";
 
-import {Web3Connection} from "@taikai/dappkit";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 
 import {useAppState} from "contexts/app-state";
-import {changeWeb3Connection} from "contexts/reducers/change-service";
 
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useAuthentication} from "x-hooks/use-authentication";
@@ -26,22 +24,14 @@ export const GlobalEffectsProvider = ({children}) => {
 
   const dao = useDao();
   const settings = useSettings();
+  const { state } = useAppState();
   const auth = useAuthentication();
   const { service: daoService } = useDaoStore();
   const transactions = useStorageTransactions();
   const marketplace = useMarketplace();
-  const { state, dispatch } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const { currentUser, Service } = state;
-
-  useEffect(() => {
-    const web3Connection = new Web3Connection({
-      skipWindowAssignment: true
-    });
-
-    dispatch(changeWeb3Connection(web3Connection));
-  }, []);
 
   useEffect(dao.listenChainChanged, [
     supportedChains
