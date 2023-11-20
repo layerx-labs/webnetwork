@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 
 import CuratorsListView from "components/lists/curators/view";
 
-import { CuratorsListPaginated } from "types/api";
+import { PaginatedCuratorOverview } from "types/api";
 
 interface CuratorsListProps {
-  curators: CuratorsListPaginated;
+  curators: PaginatedCuratorOverview;
 }
 
 export default function CuratorsList({ curators }: CuratorsListProps) {
-  const [curatorsList, setCuratorsList] = useState<CuratorsListPaginated>();
+  const [curatorsList, setCuratorsList] = useState<PaginatedCuratorOverview>();
 
   useEffect(() => {
     if (!curators) return;

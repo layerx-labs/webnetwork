@@ -92,3 +92,16 @@ export interface ActiveMarketplace {
 }
 
 export type ActiveNetworksPaginated = PaginatedData<ActiveMarketplace>;
+
+export interface CuratorOverview {
+  address: string;
+  acceptedProposals: number;
+  disputedProposals: number;
+  disputes: number;
+  totalVotes: number;
+  marketplaces: Pick<Network, "networkAddress" | "name" | "chain">[];
+}
+
+export interface PaginatedCuratorOverview extends PaginatedData<CuratorOverview> {
+  totalCurators: number;
+}
