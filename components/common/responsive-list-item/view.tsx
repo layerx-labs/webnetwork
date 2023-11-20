@@ -34,7 +34,7 @@ export default function ResponsiveListItem({
   return (
     <div 
       className={clsx([
-        "p-3 row border-radius-4 bg-gray-850 mx-0",
+        "p-3 row border-radius-4 bg-gray-850 mx-0 align-items-center",
         !!onClick && "cursor-pointer",
       ])} 
       onClick={onClick}
@@ -47,7 +47,7 @@ export default function ResponsiveListItem({
 
           <div className="col px-0">
             <div className="row align-items-center">
-              <div className="col-auto mt-2">
+              <div className="col-auto">
                 <span className="caption-small overflow-wrap-anywhere font-weight-medium text-white">
                   {label}
                 </span>
