@@ -48,7 +48,7 @@ export default function CuratorListItemView({
       justify: "center"
     },
     {
-      label: "Networks",
+      label: t("council:council-table.networks"),
       secondaryLabel: <OverlappingIcons
         icons={curator?.marketplaces?.map(marketplace => (
           <ChainIcon src={marketplace?.chain?.icon} size="22" />

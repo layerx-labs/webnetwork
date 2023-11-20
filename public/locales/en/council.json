@@ -20,7 +20,8 @@
     "disputes": "Disputes",
     "total-votes": "Total Votes",
     "actions": "Actions",
-    "deletage-address": "Delegate to this address"
+    "deletage-address": "Delegate to this address",
+    "networks": "Networks"
   },
   "errors": {
     "not-found": "Curators not found"

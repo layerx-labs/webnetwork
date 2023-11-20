@@ -25,22 +25,22 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
   ];
   const sortOptions = [
     {
-      label: "Total Votes",
+      label: t("council:council-table.total-votes"),
       value: "totalVotes",
       sortBy: "totalVotes",
       order: "DESC",
     }, {
-      label: "Accepted Proposals",
+      label: t("council:council-table.closed-proposals"),
       value: "acceptedProposals",
       sortBy: "acceptedProposals",
       order: "DESC",
     }, {
-      label: "Disputed Proposals",
+      label: t("council:council-table.disputed-proposals"),
       value: "disputedProposals",
       sortBy: "disputedProposals",
       order: "DESC",
     }, {
-      label: "Disputes",
+      label: t("council:council-table.disputes"),
       value: "disputes",
       sortBy: "disputes",
       order: "DESC",
