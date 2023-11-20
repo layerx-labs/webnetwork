@@ -26,7 +26,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
 
   const [bounties, curators, overview] = await Promise.all([
     state ? getBountiesList({ ...query, state }) : emptyBountiesPaginated,
-    useGetCuratorOverview({ ...query, chain: query?.networkChain }),
+    useGetCuratorOverview({
+      ...query,
+      chain: query?.networkChain,
+      address: query?.search
+    }),
     getNetworkOverviewData(query)
   ]);
     
