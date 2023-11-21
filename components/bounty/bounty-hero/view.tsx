@@ -178,7 +178,7 @@ export default function BountyHeroView({
               <div className="d-flex align-items-center">
                 <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto">
                   <>
-                    <div className="d-flex flex-column justify-content-center me-1">
+                    <div className="d-flex flex-column justify-content-center">
                       <Avatar
                         size="xsm"
                         userLogin={bounty?.user?.githubLogin}
