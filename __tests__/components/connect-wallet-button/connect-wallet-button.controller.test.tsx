@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 
-import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
@@ -9,7 +8,7 @@ import { changeShowWeb3 } from 'contexts/reducers/update-show-prop';
 
 import ethereum from "__mocks__/ethereum";
 
-import i18NextProviderTests from '__tests__/utils/i18next-provider';
+import { render } from "__tests__/utils/custom-render";
 
 const defaultAddress = "0x000000";
 
@@ -57,9 +56,7 @@ describe("ConnectWalletButton", () => {
   it("Should render children if connect succeeds", async () => {
     const result = render(<ConnectWalletButton>
       <span data-testid="address">{defaultAddress}</span>
-      </ConnectWalletButton>, {
-      wrapper: i18NextProviderTests
-      });
+      </ConnectWalletButton>);
 
     await userEvent.click(result.getByRole("button"));
 
@@ -72,9 +69,7 @@ describe("ConnectWalletButton", () => {
   });
 
   it("Should call useAuthentication().signInWallet if forceLogin is true", async () => {
-    render(<ConnectWalletButton forceLogin={true}></ConnectWalletButton>, {
-      wrapper: i18NextProviderTests
-    });
+    render(<ConnectWalletButton forceLogin={true}></ConnectWalletButton>);
 
     expect(mockedSignInWallet).toHaveBeenCalled();
   });
@@ -82,9 +77,7 @@ describe("ConnectWalletButton", () => {
   it("Should not call useAuthentication().signInWallet if ethereum is not available", async () => {
     window.ethereum = null;
 
-    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
-      wrapper: i18NextProviderTests
-    });
+    const result = render(<ConnectWalletButton></ConnectWalletButton>);
 
     await userEvent.click(result.getByRole("button"));
 
@@ -94,9 +87,7 @@ describe("ConnectWalletButton", () => {
   it("Should change NoMetamaskModal visibility if ethereum is not available", async () => {
     window.ethereum = null;
     
-    const result = render(<ConnectWalletButton></ConnectWalletButton>, {
-      wrapper: i18NextProviderTests
-    });
+    const result = render(<ConnectWalletButton></ConnectWalletButton>);
 
     await userEvent.click(result.getByRole("button"));
 
