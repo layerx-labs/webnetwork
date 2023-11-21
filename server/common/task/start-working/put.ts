@@ -43,14 +43,5 @@ export default async function put(req: NextApiRequest) {
 
   await issue.save();
 
-  await models.comments.create({
-    issueId: +issue.id,
-    comment: "I'm working on this task",
-    type: "issue",
-    userAddress: user.address,
-    userId: user.id,
-    hidden: false
-  });
-
   return newWorking;
 }
