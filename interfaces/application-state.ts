@@ -10,10 +10,6 @@ import {LoadingState} from "interfaces/loading-state";
 
 import {SettingsType, Tier} from "types/settings";
 
-export interface ServiceState {
-  microReady: boolean | null;
-}
-
 export interface ConnectedChain {
   id: string;
   name: string;
@@ -50,7 +46,6 @@ export interface CurrentBounty {
 
 export interface State {
   Settings: SettingsType | null;
-  Service: ServiceState | null,
   loading: LoadingState | null;
   currentUser: CurrentUserState | null,
   currentBounty: CurrentBounty | null,
