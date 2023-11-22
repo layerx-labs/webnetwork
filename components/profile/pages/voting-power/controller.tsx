@@ -32,10 +32,14 @@ export default function VotingPowerPage() {
   return (
     <VotingPowerPageView>
       <>
-        <NoNetworkTokenModal
-          isVisible={isModalVisible}
-        />
-        {renderChildrenVotingPower()}
+        <div>
+          <NoNetworkTokenModal
+            isVisible={isModalVisible}
+          />
+        </div>
+        <div>
+          {renderChildrenVotingPower()}
+        </div>
       </>
     </VotingPowerPageView>
   );
