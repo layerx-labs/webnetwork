@@ -1,7 +1,6 @@
 import { ParsedUrlQuery } from "querystring";
 import { WhereOptions } from "sequelize";
 
-import models from "db/models";
 import Database from "db/models";
 
 import { DEFAULT_ITEMS_PER_PAGE, calculateTotalPages } from "helpers/paginate";
@@ -65,8 +64,8 @@ export default async function get(query: ParsedUrlQuery) {
           ...l,
           ... l?.githublogin ? {user: { githubLogin: l?.githublogin }} : null,
           numberNfts: l?.numbernfts,
-          chainslogos: l?.chainslogos?.split(", "),
-          networkslogos: l?.networkslogos?.split(", "),
+          networkslogos: l?.chainslogos?.split(", "),
+          marketplacelogos: l?.networkslogos?.split(", "),
         })),
       };
     });
