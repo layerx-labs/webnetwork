@@ -47,4 +47,4 @@ export const NetworkValidator = (param: NetworkParameters, value: StrOrNmb): boo
   return validators[param];
 };
 
-export const isOnNetworkPath = (pathname: string) => pathname?.includes("[network]/[chain]");
+export const isOnNetworkPath = (pathname: string) => pathname?.includes("[network]") && pathname !== "/[network]";
