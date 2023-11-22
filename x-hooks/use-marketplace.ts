@@ -25,7 +25,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
 
   const { data, clear, update } = useMarketplaceStore();
   const { currentUser, updateCurrentUser} = useUserStore();
-  const { data: searchData, isError, isFetching, isStale, invalidate } = 
+  const { data: searchData, isError, isFetching, isStale, invalidate } =
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
       name: marketplace,
       isNeedCountsAndTokensLocked: true,
@@ -38,28 +38,24 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
 
   function getURLWithNetwork(href: string, _query = undefined): UrlObject {
     const _network = _query?.network ? String(_query?.network)?.toLowerCase()?.replaceAll(" ", "-") : undefined;
-    const cleanHref =  href.replace("/[network]/[chain]", "");
+    const cleanHref =  href.replace("/[network]", "");
     return {
-      pathname: `/[network]/[chain]/${cleanHref}`.replace("//", "/"),
+      pathname: `/[network]/${cleanHref}`.replace("//", "/"),
       query: {
         ..._query,
-        chain: _query?.chain || query?.chain || data?.active?.chain?.chainShortName,
-        network: _network ||
-          query?.network ||
-          data?.active?.name
+        network: _network || query?.network || data?.active?.name
       }
     };
   }
 
   function goToProfilePage(profilePage: ProfilePages, params = undefined) {
     const queryNetwork = query?.network || "";
-    const queryChain = query?.chain || "";
     const path = profilePage === "profile" ? "profile" : `profile/${profilePage}`;
     if (queryNetwork !== "")
       return push(getURLWithNetwork(`/profile/[[...profilePage]]`, {
         ...query,
         ...params
-      }), `/${queryNetwork}/${queryChain}/${path}`);
+      }), `/${queryNetwork}/${path}`);
     return push({
       pathname: "/profile/[[...profilePage]]",
       query: {
