@@ -1,12 +1,10 @@
 import "@testing-library/jest-dom";
 
-import { render } from "@testing-library/react";
-
 import ConnectWalletButtonView from "components/connections/connect-wallet-button/connect-wallet-button.view";
 
 import useBreakPointMocked from "__mocks__/x-hooks/use-breapoint";
 
-import i18NextProviderTests from '__tests__/utils/i18next-provider';
+import { render } from "__tests__/utils/custom-render";
 
 jest.mock("x-hooks/use-breakpoint", () => ({
   __esModule: true,
@@ -34,9 +32,7 @@ describe("ConnectWalletButtonView", () => {
                             {...defaultProps}
                           >
                             <span data-testid="address">address</span>
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     expect(result.queryByRole("button")).toBeVisible();
     expect(result.queryByTestId("address")).toBeNull();
   });
@@ -45,9 +41,7 @@ describe("ConnectWalletButtonView", () => {
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     const button = result.queryByRole("button");
     const mobileLabel = button.firstChild.firstChild;
     const desktopLabel = button.firstChild.lastChild;
@@ -63,9 +57,7 @@ describe("ConnectWalletButtonView", () => {
                             {...defaultProps}
                           >
                             <span data-testid="address">address</span>
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     expect(result.queryByRole("button")).toBeNull();
     expect(result.queryByTestId("address").textContent).toBe("address");
   });
@@ -76,9 +68,7 @@ describe("ConnectWalletButtonView", () => {
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     expect(result.queryByTestId("connect-wallet-modal")).toBeVisible();
   });
 
@@ -89,9 +79,7 @@ describe("ConnectWalletButtonView", () => {
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     expect(result.queryByTestId("connect-wallet-modal")).toBeNull();
   });
 
@@ -100,9 +88,7 @@ describe("ConnectWalletButtonView", () => {
     const result = render(<ConnectWalletButtonView
                             {...defaultProps}
                           >
-                          </ConnectWalletButtonView>, {
-                            wrapper: i18NextProviderTests
-                          });
+                          </ConnectWalletButtonView>);
     expect(result.queryByTestId("connect-wallet-modal")).toBeNull();
   });
 });

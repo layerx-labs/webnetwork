@@ -56,9 +56,9 @@ export default function MyNetworkSettings({
   const marketplace = useMarketplace();
   const { isRegistryGovernor } = useBepro();
   const { colorsToCSS } = useNetworkTheme();
-  const { details, settings, forcedNetwork } = useNetworkSettings();
   const { service: daoService } = useDaoStore();
   const { connectedChain } = useSupportedChain();
+  const { details, settings, forcedNetwork, clearState } = useNetworkSettings();
 
   const chainId = connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
@@ -99,6 +99,7 @@ export default function MyNetworkSettings({
     };
 
     await updateNetwork(json);
+    clearState();
   }
 
   async function updateNetworkData() {

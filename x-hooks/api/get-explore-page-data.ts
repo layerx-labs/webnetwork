@@ -6,6 +6,7 @@ import {ExplorePageProps} from "types/pages";
 
 import {useSearchActiveNetworks} from "x-hooks/api/marketplace";
 import {getBountiesListData} from "x-hooks/api/task";
+import {useGetTotalUsers} from "x-hooks/api/user";
 
 /**
  * Get explore page data from api based on the current url query
@@ -15,25 +16,27 @@ import {getBountiesListData} from "x-hooks/api/task";
 export default async function getExplorePageData(query: ParsedUrlQuery): Promise<ExplorePageProps> {
   const { network } = query;
 
-  const [ numberOfNetworks, bounties, recentBounties, recentFunding, activeNetworks ] = await Promise.all([
-    api.get("/search/marketplaces/total", { params: { name: network } })
-      .then(({ data }) => data)
-      .catch(() => 0),
-    getBountiesListData(query)
-      .then(({ data }) => data)
-      .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),
-    getBountiesListData({ count: "3", state: "open", network })
-      .then(({ data }) => data.rows)
-      .catch(() => []),
-    getBountiesListData({ count: "3", state: "funding", network })
-      .then(({ data }) => data.rows)
-      .catch(() => []),
-    useSearchActiveNetworks({
-      name: query?.network?.toString(),
-      isClosed: false
-    })
-      .then(({ rows }) => rows)
-  ]);
+  const [ numberOfNetworks, bounties, recentBounties, recentFunding, activeNetworks, protocolMembers ] =
+    await Promise.all([
+      api.get("/search/marketplaces/total", { params: { name: network } })
+        .then(({ data }) => data)
+        .catch(() => 0),
+      getBountiesListData(query)
+        .then(({ data }) => data)
+        .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),
+      getBountiesListData({ count: "3", state: "open", network })
+        .then(({ data }) => data.rows)
+        .catch(() => []),
+      getBountiesListData({ count: "3", state: "funding", network })
+        .then(({ data }) => data.rows)
+        .catch(() => []),
+      useSearchActiveNetworks({
+        name: query?.network?.toString(),
+        isClosed: false
+      })
+        .then(({ rows }) => rows),
+      useGetTotalUsers()
+    ]);
 
   return {
     numberOfNetworks,
@@ -41,5 +44,6 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
     recentBounties,
     recentFunding,
     activeNetworks,
+    protocolMembers
   };
 }
