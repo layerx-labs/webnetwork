@@ -65,7 +65,7 @@ export function useDao() {
         .then((connected) => {
           setConnection(web3Connection);
           if (!connected) {
-            console.debug(`Failed to connect`, state.Service);
+            console.debug(`Failed to connect`, daoService);
 
             return "0x00";
           }

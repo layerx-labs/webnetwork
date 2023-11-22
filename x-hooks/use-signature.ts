@@ -12,12 +12,7 @@ import { useDappkitConnection } from "x-hooks/use-dappkit";
 import useSupportedChain from "./use-supported-chain";
 
 export default function useSignature() {
-  const {
-    state: {
-      Service, 
-      currentUser
-    }
-  } = useAppState();
+  const {state: { currentUser }} = useAppState();
   const { connectedChain } = useSupportedChain();
   const { addError } = useToastStore();
   const { connection } = useDappkitConnection();
