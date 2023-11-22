@@ -16,8 +16,7 @@ export default function VotingPowerPage() {
   const { network } = query;
 
   const isOnNetwork = !!network;
-  const hasNetworkTokenSaved = !state.Service?.network?.active || 
-    !!state.Service?.network?.active?.networkToken && isOnNetwork;
+  const hasNetworkTokenSaved = !isOnNetwork || !!state.Service?.network?.active?.networkToken && isOnNetwork;
 
   function renderChildrenVotingPower() {
     if (isOnNetwork) return <VotingPowerNetwork />;
