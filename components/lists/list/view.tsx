@@ -102,7 +102,7 @@ export default function ListView(props: ListViewProps) {
 
           <If condition={networkFilter}>
             <div className="col-auto d-none d-xl-block">
-              <SelectNetwork isCurrentDefault={isOnNetwork} />
+              <SelectNetwork isCurrentDefault={isOnNetwork} fontRegular/>
             </div>
           </If>
 
@@ -117,7 +117,7 @@ export default function ListView(props: ListViewProps) {
               </If>
 
               <If condition={networkFilter}>
-                <SelectNetwork isCurrentDefault={isOnNetwork} />
+                <SelectNetwork isCurrentDefault={isOnNetwork} onlyProfileFilters fontRegular/>
               </If>
             </MobileFiltersButton>
           </div>
