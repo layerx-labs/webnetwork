@@ -20,6 +20,7 @@ export default function ExplorePageView({
   recentFunding,
   networkName,
   activeNetworks,
+  protocolMembers
 }: ExplorePageViewProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
 
@@ -31,6 +32,10 @@ export default function ExplorePageView({
     {
       value: bounties?.totalBounties || 0,
       label: t("custom-network:hero.number-of-bounties")
+    },
+    {
+      value: protocolMembers || 0,
+      label: t("heroes.protocol-members")
     }
   ];
 
