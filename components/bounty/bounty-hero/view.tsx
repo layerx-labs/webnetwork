@@ -39,7 +39,8 @@ export default function BountyHeroView({
   currentState,
   isOriginModalVisible,
   showOriginModal,
-  hideOriginModal
+  hideOriginModal,
+  handleEditIssue
 }: BountyHeroProps) {
   const { t } = useTranslation(["bounty", "common"]);
 
@@ -72,6 +73,7 @@ export default function BountyHeroView({
                   currentBounty={bounty}
                   updateBountyData={updateBountyData}
                   isEditIssue={isEditIssue}
+                  onEditIssue={handleEditIssue}
                 />
               </div>
             </div>
