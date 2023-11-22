@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import SelectNetwork from "components/bounties/select-network";
 import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
@@ -39,7 +38,7 @@ export default function MobileFiltersModal({
 }: MobileFiltersModalProps) {
   const { t } = useTranslation(["common"]);
   const router = useRouter();
-  const isOnNetwork = !!router?.query?.network;
+
   const [selectedSortIndex, setSelectedSortIndex] = useState<number>();
   const [ [stateOptions, timeOptions], , , checkOption, applyFilters ] = useFilters();
 
@@ -102,7 +101,7 @@ export default function MobileFiltersModal({
         handleSortBy();
       }}
     >
-      <If condition={chainOptions && (!isOnNetwork || onlyProfileFilters)}>
+      <If condition={!!chainOptions && onlyProfileFilters}>
         <ContainerFilterView label={t("misc.chain")}>
             <ChainFilter chains={chainOptions} label={false} />
         </ContainerFilterView>
@@ -111,13 +110,6 @@ export default function MobileFiltersModal({
         <If condition={!hideSort}>
           <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />
         </If>
-        <div className="mt-2">
-          <SelectNetwork
-            isCurrentDefault={isOnNetwork}
-            onlyProfileFilters={onlyProfileFilters}
-            filterByConnectedChain={isOnNetwork ? true : false}
-          />
-        </div>
       </If>
 
       <If condition={!onlyTimeFrame && !onlyProfileFilters}>

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useAppState } from "contexts/app-state";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import NetworkItemView from "./view";
 interface NetworkItemProps {
@@ -45,7 +45,7 @@ export default function NetworkItem({
     state: { Settings: settings, currentUser },
   } = useAppState();
   const { query } = useRouter();
-  const { goToProfilePage } = useNetwork();
+  const { goToProfilePage } = useMarketplace();
   const { isDesktopView } = useBreakPoint();
 
   const isNetworkVariant = variant === "network";

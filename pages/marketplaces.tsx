@@ -55,7 +55,6 @@ export default function NetworksPage({
     }
   ];
 
-
   return (
     <>
       <div>

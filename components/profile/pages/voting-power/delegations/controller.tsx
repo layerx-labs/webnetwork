@@ -8,6 +8,8 @@ import { formatStringToCurrency } from "helpers/formatNumber";
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
+import useMarketplace from "x-hooks/use-marketplace";
+
 import DelegationsView from "./view";
 
 interface DelegationsProps {
@@ -28,6 +30,9 @@ export default function Delegations({
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
 
   const { state } = useAppState();
+  const marketplace = useMarketplace();
+
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
 
   const walletDelegations = (delegations ||
     state.currentUser?.balance?.oracles?.delegations ||
@@ -38,14 +43,14 @@ export default function Delegations({
     .toFixed();
 
   const votesSymbol = t("token-votes", {
-    token: state.Service?.network?.active?.networkToken?.symbol,
+    token: networkTokenSymbol,
   });
 
   const renderInfo = {
     toMe: {
       title: t("profile:deletaged-to-me"),
       description: t("my-oracles:descriptions.oracles-delegated-to-me", {
-        token: state.Service?.network?.active?.networkToken?.symbol,
+        token: networkTokenSymbol,
       }),
       total: undefined,
       delegations: walletDelegations || [
@@ -56,7 +61,7 @@ export default function Delegations({
       title: t("profile:deletaged-to-others"),
       total: formatStringToCurrency(totalAmountDelegations),
       description: t("my-oracles:descriptions.oracles-delegated-to-others", {
-        token: state.Service?.network?.active?.networkToken?.symbol,
+        token: networkTokenSymbol,
       }),
       delegations:
         walletDelegations ||
@@ -65,8 +70,7 @@ export default function Delegations({
     },
   };
 
-  const networkTokenName =
-    state.Service?.network?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
+  const networkTokenName = marketplace?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
 
   return (
     <DelegationsView

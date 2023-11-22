@@ -19,7 +19,7 @@ import {truncateAddress} from "helpers/truncate-address";
 import { ProfilePages } from "interfaces/utils";
 
 import {useAuthentication} from "x-hooks/use-authentication";
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function NavAvatar() {
   const { query, asPath } = useRouter();
@@ -29,7 +29,7 @@ export default function NavAvatar() {
 
   const { state } = useAppState();
   const { signOut } = useAuthentication();
-  const { goToProfilePage } = useNetwork();
+  const { goToProfilePage } = useMarketplace();
 
   const username =
     state.currentUser?.login ? state.currentUser.login : truncateAddress(state.currentUser?.walletAddress);

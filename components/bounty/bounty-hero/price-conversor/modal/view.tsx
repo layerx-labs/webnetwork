@@ -1,16 +1,16 @@
+import { Spinner } from "react-bootstrap";
 import {components as RSComponents ,SingleValueProps } from "react-select";
 
 import {useTranslation} from "next-i18next";
 
 import TransactionIcon from "assets/icons/transaction";
 
+import If from "components/If";
 import InputNumber from "components/input-number";
 import Modal from "components/modal";
 import ReactSelect from "components/react-select";
 
 import {formatNumberToNScale} from "helpers/formatNumber";
-import If from "components/If";
-import { Spinner } from "react-bootstrap";
 
 interface IPriceConversiorModalProps {
   show: boolean;

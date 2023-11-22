@@ -8,6 +8,7 @@ export const QueryKeys = {
   chains: () => ["supportedChains"],
   network: (networkAddress: string, chainId: string) => ["network", networkAddress, chainId],
   networksByChain: (chainId: string) => ["networks", chainId],
+  networksByName: (networkName: string) => ["networks", networkName],
   networksByGovernor: (governorAddress: string, chainId: string) => ["network", governorAddress, chainId],
   networkDefault: () => ["network", "default"],
   tokensByChain: (chainId: string) => ["tokens", chainId],

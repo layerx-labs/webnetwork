@@ -14,7 +14,7 @@ import {orderByProperty} from "helpers/array";
 
 import {Network} from "interfaces/network";
 
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface NetworkListProps {
   networks: Network[];
@@ -28,7 +28,7 @@ export default function NetworksList({
 
   const [order, setOrder] = useState(["name", "asc"]);
 
-  const { getURLWithNetwork } = useNetwork();
+  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
 
   const { state } = useAppState();
 
@@ -49,12 +49,12 @@ export default function NetworksList({
         <div className="col-xs-12 col-xl-10">
           {(!networks.length && (
           <NothingFound description={t("custom-network:errors.not-found")}>
-            {state.Service?.network?.active ? (
+            {activeMarketplace ? (
               <InternalLink
                 href="/new-marketplace"
                 label={String(t("actions.create-one"))}
                 uppercase
-                blank={state.Service?.network?.active.name !== state.Settings?.defaultNetworkConfig?.name}
+                blank={activeMarketplace?.name !== state.Settings?.defaultNetworkConfig?.name}
               />
             ) : (
               ""

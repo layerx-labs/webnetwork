@@ -13,11 +13,12 @@ import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import useBepro from "x-hooks/use-bepro";
 
-import { useDaoStore } from "./stores/dao/dao.store";
-import {transactionStore} from "./stores/transaction-list/transaction.store";
-import useSupportedChain from "./use-supported-chain";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import useBepro from "x-hooks/use-bepro";
+import useMarketplace from "x-hooks/use-marketplace";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export interface useERC20 {
   name: string;
@@ -51,6 +52,7 @@ export default function useERC20() {
   const { state } = useAppState();
   const { service: daoService, serviceStarting } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
+  const marketplace = useMarketplace();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
   const { connectedChain } = useSupportedChain();
 
@@ -151,7 +153,7 @@ export default function useERC20() {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.deployERC20Token,
-        network: state.Service?.network?.active
+        network: marketplace?.active
       });
 
       await deployERC20Token(name, symbol, cap, ownerAddress)

@@ -115,14 +115,16 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
     return null;
   });
 
-  if (!bountyData)
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/${query?.network}/${query?.chain}/tasks`,
-      },
-      props:{},
-    };
+  const redirect = (url: string) => ({
+    redirect: {
+      permanent: false,
+      destination: url,
+    },
+    props: {},
+  });
+
+  if (!bountyData && query?.network && query?.chain) return redirect(`/${query?.network}/${query?.chain}/tasks`)
+  else if(!bountyData) return redirect('/explorer')
 
   await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
   await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () => 

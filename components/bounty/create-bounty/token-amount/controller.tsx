@@ -69,8 +69,9 @@ export default function CreateBountyTokenAmount({
   const { t } = useTranslation(["bounty", "common", "proposal"]);
   const [show, setShow] = useState<boolean>(false);
   const [inputError, setInputError] = useState("");
+
   const {
-    state: { currentUser, Service },
+    state: { currentUser },
   } = useAppState();
 
   const debouncedDistributionsUpdater =

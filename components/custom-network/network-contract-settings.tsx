@@ -2,26 +2,24 @@ import {useTranslation} from "next-i18next";
 
 import NetworkParameterInput from "components/custom-network/network-parameter-input";
 
-import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
 
 import { SMALL_TOKEN_SYMBOL_LENGTH } from "helpers/constants";
 import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber";
 import { NETWORK_LIMITS } from "helpers/network";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function NetworkContractSettings() {
   const { t } = useTranslation(["common", "custom-network"]);
 
-  const { state } = useAppState();
-  const { getTotalNetworkToken } = useNetwork();
-  const { data: totalNetworkToken } = getTotalNetworkToken();
+  const marketplace = useMarketplace();
+  const { data: totalNetworkToken } = marketplace.getTotalNetworkToken();
   const { fields, settings } = useNetworkSettings();
 
   const onChange = (label) => (value) => fields.parameter.setter({label, value});
 
-  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.$token");
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.$token");
 
   const formatOptions = { maximumFractionDigits: 0 };
 

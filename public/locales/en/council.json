@@ -13,6 +13,8 @@
   "ready-to-close": "Ready to Close",
   "ready-to-propose": "Ready to Propose",
   "council-list": "Curators List",
+  "search-by-address": "Search curators by address",
+  "no-curators-found": "No curators found",
   "council-table": {
     "address": "Address",
     "closed-proposals": "Accepted Proposals",
@@ -20,7 +22,8 @@
     "disputes": "Disputes",
     "total-votes": "Total Votes",
     "actions": "Actions",
-    "deletage-address": "Delegate to this address"
+    "deletage-address": "Delegate to this address",
+    "networks": "Networks"
   },
   "errors": {
     "not-found": "Curators not found"

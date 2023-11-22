@@ -5,14 +5,16 @@ import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 
-import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
+
+import { Network } from "interfaces/network";
 
 import {SearchBountiesPaginated} from "types/api";
 import {MyMarketplacePageProps} from "types/pages";
 
 import {useSearchNetworks} from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 interface MyMarketplaceProps {
@@ -24,6 +26,7 @@ export function MyMarketplace({
 }: MyMarketplaceProps) {
   const { chain } = useChain();
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { setForcedNetwork } = useNetworkSettings();
 
   async function getNetwork() {
@@ -33,7 +36,7 @@ export function MyMarketplace({
       creatorAddress: state.currentUser.walletAddress,
       isClosed: false,
       chainId: chainId,
-      name: state.Service?.network?.active?.name
+      name: marketplace?.active?.name
     })
       .then(({ count , rows }) => {
         const savedNetwork = count > 0 ? rows[0] : undefined;
@@ -43,6 +46,15 @@ export function MyMarketplace({
                                   JSON.stringify(savedNetwork));
         return savedNetwork;
       });
+  }
+
+  function convertTimes (network: Network) {
+    return {
+      ...network,
+      draftTime: +(network?.draftTime || 0) / 1000,
+      disputableTime: +(network?.disputableTime || 0) / 1000,
+      cancelableTime: +(network?.cancelableTime || 0) / 1000,
+    }
   }
   
   const networkQueryKey = QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chain?.chainId?.toString());
@@ -55,13 +67,12 @@ export function MyMarketplace({
                     getNetwork,
                     {
                       enabled: !!state.currentUser?.walletAddress && !!chain,
-                      staleTime: MINUTE_IN_MS
                     });
 
   useEffect(() => {
     if (myNetwork && !isFetching && isSuccess)
-      setForcedNetwork(myNetwork);
-  }, [myNetwork]);
+      setForcedNetwork(convertTimes(myNetwork));
+  }, [myNetwork, isFetching, isSuccess]);
 
   return(
     <MyNetworkPageView

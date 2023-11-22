@@ -13,6 +13,7 @@ import { QueryKeys } from "helpers/query-keys";
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useEditBounty } from "x-hooks/api/task";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import BountyBodyView from "./view";
@@ -36,6 +37,7 @@ export default function BountyBody({
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: useEditBounty,
@@ -82,8 +84,8 @@ export default function BountyBody({
       handleCancelEdit={handleCancelEdit}
       handleUpdateBounty={() => editBounty({
         id: currentBounty?.id,
-        networkName: state.Service?.network?.active?.name,
-        chainName: state.Service?.network?.active?.chain?.chainShortName,
+        networkName: marketplace?.active?.name,
+        chainName: marketplace?.active?.chain?.chainShortName,
         body: addFilesInDescription(body),
         tags: selectedTags,
       })}

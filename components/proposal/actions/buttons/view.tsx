@@ -27,7 +27,6 @@ interface ProposalActionsButtonsViewProps {
 }
 
 export default function ProposalActionsButtonsView({
-  proposal,
   issueAmount,
   issueDbId,
   token,

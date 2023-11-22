@@ -84,7 +84,7 @@ export function RegistrySetup({
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { state: { currentUser, Service } } = useAppState();
+  const { state: { currentUser } } = useAppState();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({
@@ -167,7 +167,9 @@ export function RegistrySetup({
       })
       .then(() => {
         const chain = findSupportedChain({ chainId: +connectedChain?.id, chainShortName: connectedChain?.shortName});
-        if (chain) useAddToken({address: erc20.value, minAmount: erc20MinAmount, chainId: chain?.chainId}) 
+        if (chain) 
+          useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: chain?.chainId})
+            .catch(error => console.debug("useAddToken: ", error));
 
         loadSettings(true);
       })
@@ -272,7 +274,14 @@ export function RegistrySetup({
       return;
     }
 
-    mudateUpdateChain({ chainId: chain.chainId, registryAddress: address });
+    mudateUpdateChain({
+      chainId: chain.chainId,
+      registryAddress: address,
+      lockAmountForNetworkCreation,
+      networkCreationFeePercentage,
+      closeFeePercentage,
+      cancelFeePercentage,
+    });
   }
 
   function _setRegistry(val) {

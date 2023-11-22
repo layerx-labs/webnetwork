@@ -4,20 +4,20 @@ import NoNetworkTokenModal from "components/modals/no-network-token/no-network-t
 import VotingPowerMultiNetwork from "components/profile/pages/voting-power/multi-network/controller";
 import VotingPowerNetwork from "components/profile/pages/voting-power/network/controller";
 
-import { useAppState } from "contexts/app-state";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import VotingPowerPageView from "./view";
 
 export default function VotingPowerPage() {
   const { query } = useRouter();
 
-  const { state } = useAppState();
+  const marketplace = useMarketplace();
 
   const { network } = query;
 
   const isOnNetwork = !!network;
-  const hasNetworkTokenSaved = !state.Service?.network?.active || 
-    !!state.Service?.network?.active?.networkToken && isOnNetwork;
+  const hasNetworkTokenSaved = !marketplace?.active || 
+    !!marketplace?.active?.networkToken && isOnNetwork;
 
   function renderChildrenVotingPower() {
     if (isOnNetwork) return <VotingPowerNetwork />;
@@ -29,7 +29,7 @@ export default function VotingPowerPage() {
     <VotingPowerPageView>
       <>
         <NoNetworkTokenModal
-          isVisible={!hasNetworkTokenSaved}
+          isVisible={isOnNetwork && !hasNetworkTokenSaved}
         />
         {renderChildrenVotingPower()}
       </>

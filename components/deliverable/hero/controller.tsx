@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import DeliverableHeroView from "./view";
 
@@ -14,7 +14,7 @@ interface DeliverableHeroControllerProps {
 export default function DeliverableHero({currentDeliverable, currentBounty}: DeliverableHeroControllerProps) {
   const router = useRouter();
   
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   function handleBack() {
     router.push(getURLWithNetwork("/task/[id]", {

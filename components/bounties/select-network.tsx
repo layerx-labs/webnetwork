@@ -11,6 +11,7 @@ import ReactSelect from "components/react-select";
 
 import { useAppState } from "contexts/app-state";
 
+import { MINUTE_IN_MS } from "helpers/constants";
 import { isOnNetworkPath } from "helpers/network";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -18,6 +19,7 @@ import { Network } from "interfaces/network";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -41,16 +43,16 @@ export default function SelectNetwork({
   const { chain } = useChain();
   const { state } = useAppState();
   const { connectedChain } = useSupportedChain();
+  const marketplace = useMarketplace();
 
-  const chainIdToFilter = filterByConnectedChain ? !isOnNetworkPath(pathname) ? 
-        connectedChain?.id : chain?.chainId?.toString() : undefined
+  const chainIdToFilter = filterByConnectedChain ? (!isOnNetworkPath(pathname) ? 
+      connectedChain?.id : chain?.chainId?.toString()) : undefined;
 
-  const { data: networks } = useReactQuery(QueryKeys.networksByChain(chainIdToFilter),
-                                           () =>
-      useSearchNetworks(chainIdToFilter ? { chainId: chainIdToFilter } : {}),
-                                           {
-      enabled: chainIdToFilter ? !!chainIdToFilter : true,
-                                           });
+  const { data: networks } = useReactQuery( QueryKeys.networksByChain(chainIdToFilter), 
+                                            () => useSearchNetworks({ chainId: chainIdToFilter }),
+                                            {
+                                              staleTime: MINUTE_IN_MS
+                                            });
 
   function networkToOption(network: Network) {
     return {
@@ -97,9 +99,9 @@ export default function SelectNetwork({
   }, [networks, query]);
 
   useEffect(() => {
-    if (state.Service?.network?.active && !selected && isCurrentDefault)
-      setSelected(networkToOption(state.Service?.network?.active));
-  }, [isCurrentDefault, state.Service?.network?.active]);
+    if (marketplace?.active && !selected && isCurrentDefault)
+      setSelected(networkToOption(marketplace?.active));
+  }, [isCurrentDefault, marketplace?.active]);
 
   return(
     <div className={`${onlyProfileFilters ? 'mb-3' : 'd-flex align-items-center'}`}>

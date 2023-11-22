@@ -5,6 +5,7 @@
   "labelWithCount_one": "{{count}} task",
   "labelWithCount_other": "{{count}} tasks",
   "no-comments-available": "_No comments available_",
+  "tvl": "TVL",
   "description": "description",
   "view-all-addresses": "view all address",
   "search": "Search for a task by title, description or tags",
@@ -260,5 +261,6 @@
     "code": "Code",
     "design": "Design",
     "other": "Other"
-  }
+  },
+  "tokens-not-converted": "Some tokens weren't converted"
 }

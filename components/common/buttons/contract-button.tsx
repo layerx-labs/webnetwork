@@ -16,6 +16,8 @@ import { AddressValidator } from "helpers/validators/address";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDao } from "x-hooks/use-dao";
+import { useDappkitConnectionInfo } from "x-hooks/use-dappkit";
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ContractButton({
@@ -27,12 +29,14 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: { currentUser, Service, loading }, dispatch } = useAppState();
+  const { state: { currentUser, loading }, dispatch } = useAppState();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();
+  const marketplace = useMarketplace();
   const { service: daoService, serviceStarting } = useDaoStore();
   const { supportedChains, connectedChain } = useSupportedChain();
+  const connectionInfo = useDappkitConnectionInfo();
 
   const isRequired = [
     pathname?.includes("new-network"),
@@ -75,14 +79,12 @@ export default function ContractButton({
   }
 
   async function validateWallet() {
-    const web3Connection = Service?.web3Connection;
     const sessionWallet = currentUser?.walletAddress;
+    const connectedAddress = connectionInfo?.address;
 
-    if (!web3Connection || !sessionWallet) return false;
+    if (!connectedAddress || !sessionWallet) return false;
 
-    const connectedWallet = await web3Connection.getAddress();
-
-    const isSameWallet = AddressValidator.compare(sessionWallet, connectedWallet);
+    const isSameWallet = AddressValidator.compare(sessionWallet, connectedAddress);
 
     if (isSameWallet) return true;
 
@@ -106,9 +108,9 @@ export default function ContractButton({
         return false;
       }
 
-      if (!serviceStarting && !daoService.network) {
+      if (!serviceStarting && !marketplace?.active) {
         const started = 
-          await changeNetwork(Service?.network?.active?.chain_id, Service?.network?.active?.networkAddress);
+          await changeNetwork(marketplace?.active?.chain_id, marketplace?.active?.networkAddress);
         if (!started)
           addError(t("actions.failed"), t("errors.failed-load-network"));
         return started;

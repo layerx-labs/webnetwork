@@ -1,6 +1,6 @@
 import Button from "components/button";
-import {ContextualSpan} from "components/contextual-span";
 import ContractButton from "components/common/buttons/contract-button";
+import {ContextualSpan} from "components/contextual-span";
 
 export function CallToAction({
   call,

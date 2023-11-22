@@ -211,7 +211,8 @@
     "learn-more": "Learn More",
     "origin": "Origin",
     "type": "Type",
-    "all-chains": "All Networks"
+    "all-chains": "All Networks",
+    "available-on": "Available on"
   },
   "modals": {
     "help-modal": {
@@ -402,7 +403,7 @@
       "delegate": "Delegate",
       "removing-delegation": "Removing Delegation",
       "dispute": "Dispute task",
-      "propose": "Propose merge request",
+      "propose": "Create Proposal",
       "close-bounty": "Close task",
       "redeem-bounty": "Cancel task",
       "approve-settler": "Approve Marketplace Token",

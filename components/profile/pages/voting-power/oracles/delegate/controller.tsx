@@ -4,7 +4,7 @@ import {NumberFormatValues} from "react-number-format";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import {useAppState} from "contexts/app-state";
+import OraclesDelegateView from "components/profile/pages/voting-power/oracles/delegate/view";
 
 import {NetworkEvents} from "interfaces/enums/events";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
@@ -12,11 +12,9 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {OraclesDelegateProps} from "interfaces/oracles-state";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 import useBepro from "x-hooks/use-bepro";
-
-import OraclesDelegateView from "./view";
-import {transactionStore} from "../../../../../../x-hooks/stores/transaction-list/transaction.store";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function OraclesDelegate({
   wallet,
@@ -33,18 +31,13 @@ export default function OraclesDelegate({
   const [delegatedTo, setDelegatedTo] = useState<string>(defaultAddress || "");
   const [availableAmount, setAvailableAmount] = useState<BigNumber>();
 
+  const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { service: daoService } = useDaoStore();
-  const {
-    state: { Service },
-  } = useAppState();
   const { isAddress } = useBepro();
-
   const {list: transactions} = transactionStore();
 
-  const networkTokenDecimals =
-    Service?.network?.active?.networkToken?.decimals || 18;
-  const networkTokenSymbol = Service?.network?.active?.networkToken?.symbol;
+  const networkTokenDecimals = marketplace?.active?.networkToken?.decimals || 18;
+  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
 
   function handleChangeOracles(params: NumberFormatValues) {
     if (params.value === "") return setTokenAmount("");
@@ -64,7 +57,7 @@ export default function OraclesDelegate({
     if (addressError) setAddressError("");
     setDelegatedTo(params.target.value);
 
-    if (daoService?.web3Connection && params.target.value) {
+    if (params.target.value) {
       clearTimeout(debounce.current);
 
       debounce.current = setTimeout(() => {

@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import BountyStatusProgressView from "./view";
 
@@ -24,8 +23,8 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
     t("bounty:steps.closed"),
   ]);
 
-  const { state } = useAppState();
   const { service: daoService } = useDaoStore();
+  const marketplace = useMarketplace();
 
   const getChainTime = () =>
     daoService
@@ -120,7 +119,7 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
       isCanceled={isCanceled}
       isClosed={isClosed}
       chainTime={chainTime}
-      draftTime={state.Service?.network?.active?.draftTime}
+      draftTime={marketplace?.active?.draftTime}
       currentStep={currentStep}
     />
   );

@@ -19,6 +19,7 @@ import { PaymentInfoProps } from "types/components";
 
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalModalProps {
   deliverables: Deliverable[];
@@ -39,13 +40,14 @@ export default function ProposalModal({
   const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
 
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { handleProposeMerge } = useBepro();
   const [isExecuting, onCreateProposal] = useContractTransaction( NetworkEvents.ProposalCreated,
                                                                   handleProposeMerge,
                                                                   t("messages.proposal-created"),
                                                                   t("errors.failed-to-create"));
 
-  const { chain, mergeCreatorFeeShare, proposerFeeShare } = state.Service?.network?.active || {};
+  const { chain, mergeCreatorFeeShare, proposerFeeShare } = marketplace?.active || {};
   const deliverableUserAddress = currentDeliverable?.user?.address;
   const deliverableUserLogin = currentDeliverable?.user?.githubLogin;
   const distributedAmounts = chain ? calculateDistributedAmounts( chain.closeFeePercentage,

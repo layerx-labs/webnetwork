@@ -27,8 +27,8 @@ export default function MobileFiltersButtonView({
   return(
     <>
       <Button
-        color="gray-900"
-        className={`border border-gray-800 rounded-2 not-svg p-2`}
+        color="gray-850"
+        className={`border border-gray-800 border-radius-4`}
         onClick={onShow}
       >
         <FilterIcon />
@@ -42,7 +42,9 @@ export default function MobileFiltersButtonView({
         okLabel={t("actions.apply")}
         onOkClick={onConfirm}
       >
-        {children}
+        <div className="d-flex flex-column gap-2">
+          {children}
+        </div>
       </Modal>
     </>
   );

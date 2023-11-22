@@ -8,12 +8,12 @@ import { isOnNetworkPath } from "helpers/network";
 
 import { Link } from "types/utils";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function NavBarLinks() {
   const { pathname } = useRouter();
 
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   const isOnNetwork = isOnNetworkPath(pathname);
 

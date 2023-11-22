@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 
 import NetworkRegistrySettingsView from "components/network/settings/registry/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
 
 import { RegistryEvents } from "interfaces/enums/events";
@@ -18,7 +16,7 @@ import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 type Executing = "bountyFees" | "creationFee" | "creationAmount" | "transactional" | "reward";
@@ -44,10 +42,9 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [networkCreationFeePercentage, setNetworkCreationFeePercentage] = useState<Field>(defaultField);
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
-  const {state} = useAppState();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();
-  const { updateActiveNetwork } = useNetwork();
+  const marketplace = useMarketplace();
   const { 
     handleFeeSettings,
     handleAmountNetworkCreation,
@@ -156,7 +153,8 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
           originalValue: transactional.map(toLower)
         }));
         setRegistryTokenSymbol(registrySymbol);
-      });
+      })
+      .catch(error => console.debug("Failed to get registry data", error));
   }
 
   async function handleTokensTransactions({ value, originalValue }: Field, isTransactional = true) {
@@ -255,7 +253,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
     setExecutingTx(undefined);
 
-    await updateActiveNetwork(true);
+    await marketplace.refresh();
     await updateRegistryParameters();
   }
 
@@ -278,10 +276,10 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   }
 
   useEffect(() => {
-    if(!daoService?.registry?.contractAddress) return;
+    if(!daoService?.registry?.contractAddress || !daoService?.network?.contractAddress) return;
 
     updateRegistryParameters();
-  }, [daoService?.registry?.contractAddress]);
+  }, [daoService?.network?.contractAddress, daoService?.registry?.contractAddress]);
 
   return(
     <NetworkRegistrySettingsView

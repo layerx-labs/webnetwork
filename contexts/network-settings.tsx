@@ -36,6 +36,7 @@ import {WinStorage} from "services/win-storage";
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -64,6 +65,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const [forcedService, setForcedService] = useState<DAO>();
 
   const {state} = useAppState();
+  const marketplace = useMarketplace();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
   const { service: daoService, serviceStarting } = useDaoStore();
@@ -81,7 +83,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const needsToLoad = useMemo(() => ALLOWED_PATHS.includes(router.pathname), [router.pathname]);
   const network =
     useMemo(() =>
-      forcedNetwork || state.Service?.network?.active, [forcedNetwork, state.Service?.network?.active]);
+      forcedNetwork || marketplace?.active, [forcedNetwork, marketplace?.active]);
 
   function handlerValidateSettings(settings) {
     //Treasury

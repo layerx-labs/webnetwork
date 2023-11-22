@@ -1,8 +1,8 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import ContractButton from "components/common/buttons/contract-button";
+import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { formatStringToCurrency } from "helpers/formatNumber";

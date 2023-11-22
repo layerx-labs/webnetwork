@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
+import { NumericFormat } from "react-number-format";
 
 import clsx from "clsx";
 import { kebabCase } from "lodash";
@@ -9,8 +10,6 @@ import InfoTooltip from "components/info-tooltip";
 import { InputNumber as InputNumberProps } from "types/input-number";
 
 import TokenSymbolView from "./common/token-symbol/view";
-import { NumericFormat } from "react-number-format";
-
 
 export default function InputNumber({
   label = "",

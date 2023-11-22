@@ -9,7 +9,7 @@ import {useAppState} from "contexts/app-state";
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 import {Proposal} from "interfaces/proposal";
 
-import {useNetwork} from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 import ItemRowView from "./view";
 
@@ -27,7 +27,7 @@ export default function ItemRow({
   const { state } = useAppState();
 
   const router = useRouter();
-  const { getURLWithNetwork, getTotalNetworkToken } = useNetwork();
+  const { active: activeMarketplace, getURLWithNetwork, getTotalNetworkToken } = useMarketplace();
   const { data: totalNetworkToken } = getTotalNetworkToken();
 
   const pathRedirect = isProposal ? "bounty/[id]/proposal/[proposalId]" : "bounty/[id]/deliverable/[deliverableId]";
@@ -44,7 +44,8 @@ export default function ItemRow({
   const proposal = currentBounty?.mergeProposals?.find((proposal) => 
                                                         proposal.contractId === +(item as Proposal)?.contractId);
   const isDisputed = !!proposal?.isDisputed;
-  const isMerged = (item as Proposal)?.isMerged;
+  const isMerged = !!(item as Proposal)?.isMerged;
+  const isRefused = !!(item as Proposal)?.refusedByBountyOwner;
   const isCanceledDeliverable = !!(item as Deliverable)?.canceled;
   const isDraftDeliverable = !isCanceledDeliverable && !(item as Deliverable)?.markedReadyForReview;
   if (!isProposal) {
@@ -63,7 +64,7 @@ export default function ItemRow({
         label: isDisputed ? "disputed" : "accepted",
       });
     }
-    if (proposal.refusedByBountyOwner) status.push({ label: "failed" });
+    if (proposal.refusedByBountyOwner) status.push({ label: "refused" });
 
     valueRedirect.proposalId = item?.id;
   }
@@ -72,11 +73,11 @@ export default function ItemRow({
     ? (item as Proposal)?.contractId + 1
     : (item as Deliverable)?.id;
 
-  const totalToBeDisputed = BigNumber(state.Service?.network?.active?.percentageNeededForDispute)
-    .multipliedBy(totalNetworkToken || 0)
+  const totalToBeDisputed = BigNumber(activeMarketplace?.percentageNeededForDispute)
+    .multipliedBy(totalNetworkToken)
     .dividedBy(100);
 
-  const isCurator = !!state?.Service?.network?.active?.isCouncil;
+  const isCurator = !!state?.currentUser?.isCouncil;
 
   const btnLabel = isProposal
     ? "actions.view-proposal"
@@ -106,6 +107,7 @@ export default function ItemRow({
       isDisputed={isDisputed}
       isMerged={isMerged}
       totalToBeDisputed={totalToBeDisputed}
+      isRefused={isRefused}
     />
   );
 }

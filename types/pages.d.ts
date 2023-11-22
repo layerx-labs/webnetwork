@@ -1,22 +1,27 @@
 import { IssueData } from "interfaces/issue-data";
-import { Network } from "interfaces/network";
 import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
-import { SearchBountiesPaginated, LeaderBoardPaginated, CuratorsListPaginated, NetworkPaymentsData } from "types/api";
+import {
+  SearchBountiesPaginated,
+  LeaderBoardPaginated,
+  NetworkPaymentsData,
+  PaginatedCuratorOverview,
+  ActiveMarketplace
+} from "types/api";
 
 export interface ExplorePageProps {
   numberOfNetworks: number;
   bounties: SearchBountiesPaginated;
   recentBounties: IssueData[];
   recentFunding: IssueData[];
-  activeNetworks: Network[];
+  activeNetworks: ActiveMarketplace[];
 }
 
 export interface NetworkCuratorsPageProps {
   bounties: SearchBountiesPaginated;
-  curators: CuratorsListPaginated;
+  curators: PaginatedCuratorOverview;
   totalReadyBounties: number;
   totalDistributed: number;
   totalLocked: number;

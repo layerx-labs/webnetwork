@@ -8,7 +8,7 @@ import { Payment } from "interfaces/payments";
 import { NetworkPaymentsData } from "types/api";
 import { TotalFiatNetworks } from "types/utils";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface PaymentsListProps {
   payments: NetworkPaymentsData[];
@@ -25,7 +25,7 @@ export default function PaymentsList({
   const { push } = useRouter();
   const { t } = useTranslation(["common", "profile", "bounty"]);
 
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   const headers = [
     {

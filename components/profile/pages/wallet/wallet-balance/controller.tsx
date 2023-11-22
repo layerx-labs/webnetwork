@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
+import WalletBalanceView from "components/profile/pages/wallet/wallet-balance/view";
 import { TokenBalanceType } from "components/profile/token-balance";
 import TokenIcon from "components/token-icon";
 
@@ -16,12 +17,10 @@ import { Token } from "interfaces/token";
 
 import DAO from "services/dao-service";
 
-import useBepro from "x-hooks/use-bepro";
+import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import WalletBalanceView from "./view";
-import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 interface WalletBalanceProps {
   chains: SupportedChainData[];
   tokens: Token[];
@@ -41,7 +40,6 @@ export default function WalletBalance({
 
   const { state } = useAppState();
   const { query, push, pathname, asPath } = useRouter();
-  const { getERC20TokenData, getTokenBalance } = useBepro();
   const { supportedChains } = useSupportedChain();
 
   const {
@@ -67,7 +65,6 @@ export default function WalletBalance({
     const balance = await service
       .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
       .catch(() => BigNumber(0));
-    
     return {
       ...token,
       balance,
@@ -95,22 +92,9 @@ export default function WalletBalance({
     debouncedSearchUpdater(e.target.value);
   }
 
-  function handleSearchFilter(name = "", symbol = "", networks, chainId) {
-    const hasNetworkName = query?.networkName;
-    const isNetwork = !!networks.find(({ name }) =>
-        hasNetworkName?.toString().toLowerCase() === name?.toLowerCase());
-    const hasChainName = query?.networkChain;
-    const isChain = !!chains.find((chain) =>
-        chain.chainId === chainId &&
-        hasChainName?.toString().toLowerCase() ===
-          chain.chainShortName.toLowerCase());
-
-    return (
-      (name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
-        symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0) &&
-      (hasNetworkName ? isNetwork : true) &&
-      (hasChainName ? isChain : true)
-    );
+  function handleSearchFilter(name = "", symbol = "") {
+    return name.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+      symbol.toLowerCase().indexOf(search.toLowerCase()) >= 0;
   }
 
   function loadDaoService(chainRpc: string) {
@@ -142,7 +126,7 @@ export default function WalletBalance({
   }
 
   const { data: tokensData, isLoading, isSuccess } = 
-    useReactQuery(["tokens-balance", state.currentUser?.walletAddress],
+    useReactQuery(["tokens-balance", state.currentUser?.walletAddress, query?.networkChain?.toString()],
                   loadTokensBalance,
                   {
                     enabled: !!state.currentUser?.walletAddress && !!supportedChains,
@@ -153,7 +137,6 @@ export default function WalletBalance({
     if (!isLoading && isSuccess) {
       const filteredTokens = tokensData
         .map(token => toTokenWithBalance(token))
-
       setTokensWithBalance(filteredTokens);
 
       if(!isLoadingPrices && isSucessPrices){
@@ -197,11 +180,10 @@ export default function WalletBalance({
   return (
     <WalletBalanceView
       totalAmount={totalAmount}
-      isOnNetwork={!!query?.network}
       hasNoConvertedToken={hasNoConvertedToken}
       defaultFiat={state?.Settings?.currency?.defaultFiat}
-      tokens={tokensWithBalance.filter(({ name, symbol, networks, chain_id }) =>
-        handleSearchFilter(name, symbol, networks, chain_id))}
+      tokens={tokensWithBalance.filter(({ name, symbol }) =>
+        handleSearchFilter(name, symbol))}
       searchString={searchState}
       onSearchClick={updateSearch}
       onSearchInputChange={handleSearchChange}

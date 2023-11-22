@@ -1,33 +1,28 @@
 import { emptyPaginatedData } from "helpers/api";
 
 import { SearchActiveNetworkParams } from "interfaces/api";
-import { Network } from "interfaces/network";
 
 import { api } from "services/api";
 
-import { PaginatedData } from "types/api";
+import { ActiveNetworksPaginated } from "types/api";
 
 export async function useSearchActiveNetworks({
-  page = "1",
+  page = 1,
+  quantity = 3,
+  name = "",
   creatorAddress = "",
-  sortBy = "updatedAt",
-  order = "DESC",
-  isClosed = undefined,
-  isRegistered = undefined,
-  name = ""
+  isClosed
 }: SearchActiveNetworkParams) {
   const params = new URLSearchParams({
-    page,
-    creatorAddress,
-    sortBy,
-    order,
+    quantity: quantity.toString(),
+    page: page.toString(),
     name,
+    creatorAddress,
     ... (isClosed !== undefined && { isClosed: isClosed.toString() } || {}),
-    ... (isRegistered !== undefined && { isRegistered: isRegistered.toString() } || {})
   }).toString();
 
   return api
-    .get<PaginatedData<Network>>(`/search/marketplaces/active/?${params}`)
+    .get<ActiveNetworksPaginated>(`/search/marketplaces/active/?${params}`)
     .then(({ data }) => data)
-    .catch(() => emptyPaginatedData as PaginatedData<Network>);
+    .catch(() => emptyPaginatedData as ActiveNetworksPaginated);
 }

@@ -12,11 +12,10 @@ import SelectChainDropdown from "components/select-chain-dropdown";
 
 import {useAppState} from "contexts/app-state";
 
-import { UNSUPPORTED_CHAIN } from "helpers/constants";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import { useDao } from "x-hooks/use-dao";
+import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -40,8 +39,9 @@ export default function WrongNetworkModal({
   const [chosenSupportedChain, setChosenSupportedChain] = useState<SupportedChainData>(null);
 
   const { connect } = useDao();
+  const marketplace = useMarketplace();
   const { handleAddNetwork } = useNetworkChange();
-  const {state: { currentUser, Service }} = useAppState();
+  const {state: { currentUser }} = useAppState();
   const { supportedChains } = useSupportedChain()
 
   const canBeHided = !isRequired;
@@ -76,8 +76,8 @@ export default function WrongNetworkModal({
   }
 
   function updateNetworkChain() {
-    if (supportedChains?.length && Service?.network?.active?.chain_id && query?.network) {
-      const chain = supportedChains.find(({ chainId }) => +Service?.network?.active?.chain_id === +chainId );
+    if (supportedChains?.length && marketplace?.active?.chain_id && query?.network) {
+      const chain = supportedChains.find(({ chainId }) => +marketplace?.active?.chain_id === +chainId );
 
       setNetworkChain(chain);
       setChosenSupportedChain(chain);
@@ -88,8 +88,7 @@ export default function WrongNetworkModal({
 
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
-  useEffect(updateNetworkChain, [Service?.network?.active?.chain_id, supportedChains, query?.network]);
-
+  useEffect(updateNetworkChain, [marketplace?.active?.chain_id, supportedChains, query?.network]);
 
   if (show && !currentUser?.walletAddress)
     return <ConnectWalletButton asModal={true} />;

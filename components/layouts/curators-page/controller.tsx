@@ -7,7 +7,7 @@ import CuratorsPageLayoutView from "components/layouts/curators-page/view";
 
 import { useAppState } from "contexts/app-state";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface CuratorsLayoutProps {
   children?: ReactNode;
@@ -28,10 +28,10 @@ export default function CuratorsPageLayout({
   const { t } = useTranslation(["common", "council"]);
 
   const { state } = useAppState();
-  const { getURLWithNetwork } = useNetwork();
+  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
 
-  const networkTokenSymbol = state.Service?.network?.active?.networkToken?.symbol || t("misc.token");
-  const isCouncil = !!state?.Service?.network?.active?.isCouncil;
+  const networkTokenSymbol = activeMarketplace?.networkToken?.symbol || t("misc.token");
+  const isCouncil = !!state?.currentUser?.isCouncil;
   const heroInfos = [
     {
       value: totalReadyBounties,

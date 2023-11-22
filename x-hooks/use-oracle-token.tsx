@@ -2,22 +2,19 @@ import { useTranslation } from "next-i18next";
 
 import Indicator from "components/indicator";
 
-import { useAppState } from "contexts/app-state";
+import useMarketplace from "x-hooks/use-marketplace";
 
 export default function useOracleToken() {
   const { t } = useTranslation(["common", "profile"]);
 
-  const { state } = useAppState();
+  const marketplace = useMarketplace();
 
   const oracleToken = {
-    symbol:
-      state.Service?.network?.active?.networkToken?.symbol || t("misc.token"),
-    name:
-      state.Service?.network?.active?.networkToken?.name ||
-      t("profile:oracle-name-placeholder"),
+    symbol: marketplace?.active?.networkToken?.symbol || t("misc.token"),
+    name: marketplace?.active?.networkToken?.name || t("profile:oracle-name-placeholder"),
     icon: (
       <Indicator
-        bg={state.Service?.network?.active?.colors?.primary}
+        bg={marketplace?.active?.colors?.primary}
         size="lg"
       />
     ),

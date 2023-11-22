@@ -17,7 +17,7 @@ import { CustomSession } from "interfaces/custom-session";
 import { useUpdateEmail } from "x-hooks/api/user";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function ProfilePage() {
@@ -36,7 +36,7 @@ export default function ProfilePage() {
   }, 500);
 
   const { state } = useAppState();
-  const { goToProfilePage } = useNetwork();
+  const { goToProfilePage } = useMarketplace();
   const { signInGithub } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
   const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
@@ -114,7 +114,7 @@ export default function ProfilePage() {
       isNotificationEnabled={isNotificationEnabled}
       isConfirmationPending={isConfirmationPending}
       walletAddress={state.currentUser?.walletAddress}
-      isCouncil={state.Service?.network?.active?.isCouncil}
+      isCouncil={state.currentUser?.isCouncil}
       onHandleClickDisconnect={handleClickDisconnect}
       onHideRemoveModal={hideRemoveModal}
       showRemoveModal={showRemoveModal}

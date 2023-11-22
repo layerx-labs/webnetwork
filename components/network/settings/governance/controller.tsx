@@ -20,7 +20,7 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface GovernanceProps {
   address: string;
@@ -43,8 +43,8 @@ export default function NetworkGovernanceSettings({
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
   const { state } = useAppState();
+  const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { updateActiveNetwork } = useNetwork();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
@@ -75,21 +75,21 @@ export default function NetworkGovernanceSettings({
                   forcedNetwork?.tokensLocked || 0),
     NetworkAmount(t("custom-network:open-bounties"),
                   t("custom-network:open-bounties-description"),
-                  state.Service?.network?.active?.totalOpenIssues || 0,
+                  marketplace?.active?.totalOpenIssues || 0,
                   0),
     NetworkAmount(t("custom-network:total-bounties"),
                   t("custom-network:total-bounties-description"),
-                  state.Service?.network?.active?.totalIssues || 0,
+                  marketplace?.active?.totalIssues || 0,
                   0),
   ];
 
   const isCurrentNetwork = (!!network &&
-    !!state.Service?.network?.active &&
-    network?.networkAddress === state.Service?.network?.active?.networkAddress)
+    !!marketplace?.active &&
+    network?.networkAddress === marketplace?.active?.networkAddress)
 
   function handleCloseMyNetwork() {
     if (
-      !state.Service?.network?.active ||
+      !marketplace?.active ||
       !state.currentUser?.walletAddress ||
       !daoService
     )
@@ -107,7 +107,7 @@ export default function NetworkGovernanceSettings({
       })
       .then(() => {
         updateWalletBalance(true);
-        if (isCurrentNetwork) updateActiveNetwork(true);
+        if (isCurrentNetwork) marketplace.refresh();
         updateSession();
         return updateEditingNetwork();
       })
@@ -144,17 +144,19 @@ export default function NetworkGovernanceSettings({
   function getChangedTokens() {
     const changedTokens = [];
 
-    if (!settingsTokens.allowedRewards || !settingsTokens.allowedTransactions || !networkToken) return changedTokens;
+    if (!settingsTokens?.allowedRewards?.length && !settingsTokens?.allowedTransactions?.length && !networkToken)
+      return changedTokens;
 
-    const getAddress = ({ address }) => address;
-    const hasEqualLength = (arr1, arr2) => arr1.length === arr2.length;
-    const hasSameElements = (arr1, arr2) => arr1.every(el => arr2.find(el2 => el === el2));
+    const getAddress = (token: Token) => token?.address;
+    const hasEqualLength = (arr1, arr2) => arr1?.length === arr2?.length;
+    const hasSameElements = (arr1, arr2) => arr1?.every(el => arr2?.find(el2 => el === el2));
 
-    const allowedRewards = settingsTokens.allowedRewards.map(getAddress);
-    const allowedTransactions = settingsTokens.allowedTransactions.map(getAddress);
+    const allowedRewards = settingsTokens?.allowedRewards?.map(getAddress);
+    const allowedTransactions = settingsTokens?.allowedTransactions?.map(getAddress);
 
-    const networkRewards = networkToken.filter(({ isReward }) => isReward).map(getAddress);
-    const networkTransactions = networkToken.filter(({ isTransactional }) => isTransactional).map(getAddress);
+    const networkRewards = networkToken?.filter(token => token?.network_tokens?.isReward).map(getAddress);
+    const networkTransactions = 
+      networkToken?.filter(token => token?.network_tokens?.isTransactional).map(getAddress);
 
     if (!hasEqualLength(allowedRewards, networkRewards))
       changedTokens.push("reward");
@@ -248,7 +250,7 @@ export default function NetworkGovernanceSettings({
       .then(async () => {
         await useUpdateNetwork(json)
           .then(async () => {
-            if (isCurrentNetwork) updateActiveNetwork(true);
+            if (isCurrentNetwork) marketplace.refresh();
 
             return updateEditingNetwork();
           })
@@ -271,7 +273,7 @@ export default function NetworkGovernanceSettings({
   }, [tokens]);
 
   useEffect(() => {
-    updateActiveNetwork(true);
+    marketplace.refresh();
   }, []);
 
   return(

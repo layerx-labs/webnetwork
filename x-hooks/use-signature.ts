@@ -7,6 +7,7 @@ import { ethereumMessageService } from "services/ethereum/message";
 import { siweMessageService } from "services/ethereum/siwe";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useDappkitConnection } from "x-hooks/use-dappkit";
 
 import useSupportedChain from "./use-supported-chain";
 
@@ -19,9 +20,10 @@ export default function useSignature() {
   } = useAppState();
   const { connectedChain } = useSupportedChain();
   const { addError } = useToastStore();
+  const { connection } = useDappkitConnection();
 
   async function signMessage(message = ""): Promise<string> {
-    if ((!Service?.web3Connection && !window.ethereum) || !currentUser?.walletAddress)
+    if ((!connection && !window.ethereum) || !currentUser?.walletAddress)
       return;
 
     const typedMessage = ethereumMessageService.getMessage({
@@ -29,7 +31,7 @@ export default function useSignature() {
       message
     });
 
-    return ethereumMessageService.sendMessage(Service?.web3Connection, currentUser.walletAddress, typedMessage)
+    return ethereumMessageService.sendMessage(connection, currentUser.walletAddress, typedMessage)
       .catch(error => {
         console.debug("Failed to sign message", error?.toString());
         addError("Failed", "Signed message required to proceed");
@@ -38,7 +40,7 @@ export default function useSignature() {
   }
 
   async function signInWithEthereum(nonce: string, address: string, issuedAt: Date, expiresAt: Date) {
-    if ((!Service?.web3Connection && !window.ethereum) || !nonce || !address)
+    if ((!connection && !window.ethereum) || !nonce || !address)
       return;
 
     const message = siweMessageService.getMessage({
@@ -47,7 +49,7 @@ export default function useSignature() {
       expiresAt
     });
 
-    const signature = await siweMessageService.sendMessage(Service.web3Connection, address, message)
+    const signature = await siweMessageService.sendMessage(connection, address, message)
       .catch(() => null);
 
     return signature;

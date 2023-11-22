@@ -32,8 +32,8 @@ export default function VotingPowerNetwork() {
     state.currentUser?.balance?.oracles?.locked || BigNumber("0");
   const oraclesDelegatedToMe =
     state.currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
-  const oraclesDelegatedToOthers = 
-    state.currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => acc.plus(curr?.amount), BigNumber("0"));
+  const oraclesDelegatedToOthers = state.currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => 
+    acc.plus(curr?.amount), BigNumber("0")) || BigNumber("0");
 
   useEffect(() => {
     if (
@@ -55,8 +55,8 @@ export default function VotingPowerNetwork() {
       votesSymbol={votesSymbol}
       walletAddress={state.currentUser?.walletAddress}
       userBalance={state.currentUser?.balance}
-      userIsCouncil={state.Service?.network?.active?.isCouncil}
-      userIsGovernor={state.Service?.network?.active?.isGovernor}
+      userIsCouncil={state.currentUser?.isCouncil}
+      userIsGovernor={state.currentUser?.isGovernor}
       handleUpdateWalletBalance={() => updateWalletBalance(true)}
       delegationAddress={curatorAddress?.toString()}
     />

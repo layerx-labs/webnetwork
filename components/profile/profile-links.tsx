@@ -7,7 +7,7 @@ import { getProfileLinks } from "helpers/navigation-links";
 
 import { LinkProps } from "types/components";
 
-import { useNetwork } from "x-hooks/use-network";
+import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProfileLinksProps {
   onClick?: () => void;
@@ -19,7 +19,7 @@ export default function ProfileLinks({
   const { query, asPath } = useRouter();
   const { t } = useTranslation("common");
 
-  const { getURLWithNetwork } = useNetwork();
+  const { getURLWithNetwork } = useMarketplace();
 
   const cleanQuery = { ...query, networkName: null, networkChain: null };
 
