@@ -550,7 +550,7 @@ export default function CreateTaskPage({
   useEffect(() => handleMinAmount('transactional'), [issueAmount])
   useEffect(() => handleMinAmount('reward'), [rewardAmount])
   useEffect(() => {
-    setUserCanCreateBounties(!currentNetwork?.id ? true :
+    setUserCanCreateBounties(!currentNetwork?.id ? true : !currentNetwork?.allow_list?.length ? true :
       (session?.data as CustomSession)?.user?.roles
         ? UserRoleUtils.hasCreateBountyRole((session?.data as CustomSession)?.user?.roles, currentNetwork?.id)
         : true) // if no session roles are found we will let the normal flow deal with an unauthenticated user
