@@ -27,12 +27,14 @@ interface SelectNetworkProps {
   isCurrentDefault?: boolean;
   onlyProfileFilters?: boolean;
   filterByConnectedChain?: boolean;
+  fontRegular?: boolean;
 }
 
 export default function SelectNetwork({
   isCurrentDefault = false,
   onlyProfileFilters = false,
-  filterByConnectedChain = false
+  filterByConnectedChain = false,
+  fontRegular = false
 } : SelectNetworkProps) {
   const { t } = useTranslation("common");
   const { query, pathname, asPath, push } = useRouter();
@@ -105,7 +107,11 @@ export default function SelectNetwork({
 
   return(
     <div className={`${onlyProfileFilters ? 'mb-3' : 'd-flex align-items-center'}`}>
-      <span className='caption-small font-weight-medium text-gray-100 text-nowrap mr-1'>
+      <span
+        className={`${
+          fontRegular ? "sm-regular text-white" : "caption-small  text-gray-100"
+        } font-weight-medium text-nowrap mr-1`}
+      >
         {t("misc.network")}
       </span>
       <NativeSelectWrapper
