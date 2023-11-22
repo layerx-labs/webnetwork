@@ -18,6 +18,7 @@ export default async function get(query: ParsedUrlQuery) {
 
   const leaderboardQuery = `
     SELECT
+      count(*) OVER() AS "count",
       address, 
       githubLogin,
       COUNT(issue) AS numberNfts,
@@ -53,18 +54,13 @@ export default async function get(query: ParsedUrlQuery) {
     OFFSET ${OFFSET} LIMIT ${DEFAULT_ITEMS_PER_PAGE};
 `;
 
-  const countLeaderboard = await models.userPayments.count({
-    distinct: true,
-    col: "address",
-  });
-
   const leaderboard = await Database.sequelize
     .query(leaderboardQuery, {
       type: Database.sequelize.QueryTypes.SELECT,
     })
     .then((leaderboards) => {
       return {
-        count: countLeaderboard,
+        count: leaderboards?.length ? leaderboards[0]?.count : 0,
         rows: leaderboards.map((l) => ({
           ...l,
           ... l?.githublogin ? {user: { githubLogin: l?.githublogin }} : null,
@@ -78,6 +74,6 @@ export default async function get(query: ParsedUrlQuery) {
   return {
     ...leaderboard,
     currentPage: PAGE,
-    pages: calculateTotalPages(countLeaderboard, DEFAULT_ITEMS_PER_PAGE),
+    pages: calculateTotalPages(leaderboard.count, DEFAULT_ITEMS_PER_PAGE),
   };
 }
