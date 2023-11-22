@@ -6,6 +6,8 @@ import VotingPowerNetwork from "components/profile/pages/voting-power/network/co
 
 import { useAppState } from "contexts/app-state";
 
+import {lowerCaseCompare} from "helpers/string";
+
 import VotingPowerPageView from "./view";
 
 export default function VotingPowerPage() {
@@ -16,8 +18,10 @@ export default function VotingPowerPage() {
   const { network } = query;
 
   const isOnNetwork = !!network;
-  const hasNetworkTokenSaved = !state.Service?.network?.active || 
-    !!state.Service?.network?.active?.networkToken && isOnNetwork;
+  const activeNetwork = state.Service?.network?.active;
+  const isNetworkGovernor = lowerCaseCompare(state.currentUser?.walletAddress, activeNetwork?.creatorAddress);
+  const hasTokenSaved = !!activeNetwork?.networkToken;
+  const isModalVisible = !hasTokenSaved && isNetworkGovernor && isOnNetwork;
 
   function renderChildrenVotingPower() {
     if (isOnNetwork) return <VotingPowerNetwork />;
@@ -28,10 +32,14 @@ export default function VotingPowerPage() {
   return (
     <VotingPowerPageView>
       <>
-        <NoNetworkTokenModal
-          isVisible={!hasNetworkTokenSaved}
-        />
-        {renderChildrenVotingPower()}
+        <div>
+          <NoNetworkTokenModal
+            isVisible={isModalVisible}
+          />
+        </div>
+        <div>
+          {renderChildrenVotingPower()}
+        </div>
       </>
     </VotingPowerPageView>
   );
