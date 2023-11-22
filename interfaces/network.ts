@@ -103,6 +103,7 @@ export interface NetworkSettings {
   setForcedNetwork?: (network: Network) => void;
   updateTokenBalance?: ()=> Promise<TokensLocked>
   cleanStorage?: () => void;
+  clearState?: () => void;
   tokensLocked?: TokensLocked;
   details?: {
     name: Field<string>;

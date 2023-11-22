@@ -85,6 +85,9 @@ export const NetworkSettingsProvider = ({ children }) => {
     useMemo(() =>
       forcedNetwork || marketplace?.active, [forcedNetwork, marketplace?.active]);
 
+  function clearState () {
+    setNetworkSettings((JSON.parse(JSON.stringify(DefaultNetworkSettings))));
+  }
   function handlerValidateSettings(settings) {
     //Treasury
     const isTreasuryEmpty = settings?.treasury?.address?.value?.trim() === "";
@@ -530,7 +533,8 @@ export const NetworkSettingsProvider = ({ children }) => {
     cleanStorage,
     updateTokenBalance,
     fields: Fields,
-    registryToken
+    registryToken,
+    clearState
   }), [networkSettings, Fields, LIMITS, setForcedNetwork]);
 
   return (
