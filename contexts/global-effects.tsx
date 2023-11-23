@@ -6,6 +6,7 @@ import {useRouter} from "next/router";
 import {useAppState} from "contexts/app-state";
 
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -25,13 +26,12 @@ export const GlobalEffectsProvider = ({children}) => {
   const dao = useDao();
   const settings = useSettings();
   const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const auth = useAuthentication();
   const { service: daoService } = useDaoStore();
   const transactions = useStorageTransactions();
   const marketplace = useMarketplace();
   const { supportedChains, connectedChain } = useSupportedChain();
-
-  const { currentUser, Service } = state;
 
   useEffect(dao.listenChainChanged, [
     supportedChains
@@ -55,9 +55,9 @@ export const GlobalEffectsProvider = ({children}) => {
   ]);
 
   useEffect(auth.updateWalletBalance, [currentUser?.walletAddress, daoService?.network?.contractAddress]);
-  useEffect(auth.updateKycSession, [state?.currentUser?.accessToken,
-                                    state?.currentUser?.match,
-                                    state?.currentUser?.walletAddress,
+  useEffect(auth.updateKycSession, [currentUser?.accessToken,
+                                    currentUser?.match,
+                                    currentUser?.walletAddress,
                                     state?.Settings?.kyc?.tierList]);
   useEffect(auth.verifyReAuthorizationNeed, [currentUser?.walletAddress]);
   useEffect(() => {

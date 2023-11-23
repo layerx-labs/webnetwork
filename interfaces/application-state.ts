@@ -47,7 +47,6 @@ export interface CurrentBounty {
 export interface State {
   Settings: SettingsType | null;
   loading: LoadingState | null;
-  currentUser: CurrentUserState | null,
   currentBounty: CurrentBounty | null,
   show: {
     [key: string]: boolean;
