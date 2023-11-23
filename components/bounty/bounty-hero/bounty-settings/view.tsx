@@ -52,6 +52,11 @@ export default function BountySettingsView({
     handleHardCancel()
   }
 
+  function handleEditIssue() {
+    onEditIssue()
+    handleHide()
+  }
+
   function handleHide() {
     setShow(false);
   }
@@ -120,7 +125,7 @@ export default function BountySettingsView({
             className="px-0 mx-0 p font-weight-normal text-capitalize"
             transparent
             align="left"
-            onClick={onEditIssue}
+            onClick={handleEditIssue}
           >
             <Translation ns="bounty" label="actions.edit-bounty" />
           </ContractButton>

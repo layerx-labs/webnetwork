@@ -84,7 +84,10 @@ export default function BountyBodyView({
                 <BodyEditButtons 
                   handleUpdateBounty={handleUpdateBounty} 
                   handleCancelEdit={handleCancelEdit} 
-                  handleIsPreview={() => handleIsPreview(!isPreview)} 
+                  handleIsPreview={() => {
+                    handleIsPreview(!isPreview)
+                    !isPreview === true && window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                  }} 
                   isPreview={isPreview} 
                   isDisableUpdateIssue={isDisableUpdateIssue()} 
                   isUploading={isUploading} 
