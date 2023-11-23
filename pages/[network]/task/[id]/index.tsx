@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -26,15 +26,17 @@ import { getReactQueryClient } from "services/react-query";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getBountyData } from "x-hooks/api/task";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function TaskPage() {
   const { query } = useRouter();
 
   const { state } = useAppState();
+  const { updateCurrentChain } = useMarketplace();
 
   const bountyId = query?.id;
-  const bountyQueryKey = ["bounty", bountyId?.toString()];
+  const bountyQueryKey = QueryKeys.bounty(bountyId?.toString());
 
   const { data: bounty, invalidate: invalidateBounty } = useReactQuery(bountyQueryKey, () => getBountyData(query));
   const { data: comments, invalidate: invalidateComments } = 
@@ -58,6 +60,11 @@ export default function TaskPage() {
   function handleCancelEditIssue() {
     setIsEditIssue(false)
   }
+
+  useEffect(() => {
+    if (bounty?.network?.chain?.chainId)
+      updateCurrentChain(bounty?.network?.chain);
+  }, [bounty?.network?.chain?.chainId]);
 
   return (
     <BountyEffectsProvider currentBounty={bounty}>
@@ -110,10 +117,11 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
   const queryClient = getReactQueryClient();
   const bountyId = query.id?.toString();
 
-  const bountyData = await getBountyData(query).catch(error => {
-    console.log("getBountyData error", error.toString());
-    return null;
-  });
+  const bountyData = await getBountyData(query)
+    .catch(error => {
+      console.log("getBountyData error", error.toString());
+      return null;
+    });
 
   const redirect = (url: string) => ({
     redirect: {
@@ -123,8 +131,11 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
     props: {},
   });
 
-  if (!bountyData && query?.network && query?.chain) return redirect(`/${query?.network}/${query?.chain}/tasks`)
-  else if(!bountyData) return redirect('/explorer')
+  if (!bountyData) {
+    if (query?.network)
+      return redirect(`/${query?.network}/tasks`);
+    return redirect('/explorer');
+  }
 
   await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
   await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () => 

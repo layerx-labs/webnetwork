@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
 import { useTranslation } from "next-i18next";
@@ -21,6 +21,7 @@ import { getReactQueryClient } from "services/react-query";
 import { CreateComment } from "x-hooks/api/comments";
 import { getDeliverable } from "x-hooks/api/deliverable";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function DeliverablePage() {
@@ -34,6 +35,7 @@ export default function DeliverablePage() {
 
   const { state } = useAppState();
   const { addError, addSuccess } = useToastStore();
+  const { updateCurrentChain } = useMarketplace();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
   
@@ -70,6 +72,11 @@ export default function DeliverablePage() {
   function handleCloseModal() {
     setShowModal(false);
   }
+
+  useEffect(() => {
+    if (deliverableData?.issue?.network?.chain?.chainId)
+      updateCurrentChain(deliverableData?.issue?.network?.chain);
+  }, [deliverableData?.issue?.network?.chain?.chainId]);
 
   return (
     <>
