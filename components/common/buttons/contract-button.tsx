@@ -32,6 +32,8 @@ export default function ContractButton({
   const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
   const connectionInfo = useDappkitConnectionInfo();
+  const isSameChain = !!connectedChain?.id && !!marketplace.currentChain?.chainId &&
+    +connectedChain?.id === +marketplace.currentChain?.chainId;
 
   async function validateEthereum() {
     if(window.ethereum) return true;
@@ -42,7 +44,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (connectedChain?.matchWithNetworkChain !== false && connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (isSameChain && connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
     updateWrongNetworkModal(true)
