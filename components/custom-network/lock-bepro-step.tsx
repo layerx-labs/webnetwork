@@ -284,12 +284,9 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                         {t("misc.available")}
                       </span>
 
-                      <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center flex-wrap">
                         <span className="text-gray">
-                          {formatNumberToCurrency(balance?.beproAvailable?.toNumber() || 0,
-                                                  {
-                              maximumFractionDigits: 18,
-                                                  })}
+                          {formatNumberToNScale(balance?.beproAvailable?.toNumber() || 0)}
                         </span>
 
                         {amount?.gt(0) && (
@@ -301,7 +298,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                             </span>
 
                             <span className={`${textAmountClass} ml-1`}>
-                              {formatNumberToCurrency(balance?.beproAvailable
+                              {formatNumberToNScale(balance?.beproAvailable
                                   ?.minus(amount)
                                   ?.toNumber())}
                             </span>
