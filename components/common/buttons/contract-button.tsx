@@ -15,6 +15,7 @@ import { AddressValidator } from "helpers/validators/address";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
 import { useDappkitConnectionInfo } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -29,7 +30,8 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: { currentUser, loading }, dispatch } = useAppState();
+  const { state: { loading }, dispatch } = useAppState();
+  const { currentUser } = useUserStore();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
   const { addError, addWarning } = useToastStore();

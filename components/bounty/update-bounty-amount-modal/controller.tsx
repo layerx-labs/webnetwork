@@ -5,8 +5,6 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useAppState } from "contexts/app-state";
-
 import calculateDistributedAmounts, { calculateTotalAmountFromGivenReward } from "helpers/calculateDistributedAmounts";
 
 import { NetworkEvents } from "interfaces/enums/events";
@@ -16,6 +14,7 @@ import { DistributionsProps } from "interfaces/proposal";
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -48,9 +47,7 @@ export default function UpdateBountyAmountModal({
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [issueAmount, updateIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
 
-  const {
-    state: { currentUser }
-  } = useAppState();
+  const { currentUser } = useUserStore();
   const { addError } = useToastStore();
   const { service: daoService } = useDaoStore();
   const marketplace = useMarketplace();

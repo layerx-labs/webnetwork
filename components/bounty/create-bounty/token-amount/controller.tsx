@@ -5,13 +5,13 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 import {useDebouncedCallback} from "use-debounce";
 
-import {useAppState} from "contexts/app-state";
-
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
 
 import { Network } from "interfaces/network";
 import {DistributionsProps} from "interfaces/proposal";
 import {Token} from "interfaces/token";
+
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 import CreateBountyTokenAmountView from "./view";
 
@@ -70,9 +70,7 @@ export default function CreateBountyTokenAmount({
   const [show, setShow] = useState<boolean>(false);
   const [inputError, setInputError] = useState("");
 
-  const {
-    state: { currentUser },
-  } = useAppState();
+  const { currentUser } = useUserStore();
 
   const debouncedDistributionsUpdater =
     useDebouncedCallback((value, type) =>

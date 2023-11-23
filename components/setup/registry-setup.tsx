@@ -14,8 +14,6 @@ import {ContractField, ContractInput} from "components/setup/contract-input";
 import {DeployBountyTokenModal} from "components/setup/deploy-bounty-token-modal";
 import {DeployERC20Modal} from "components/setup/deploy-erc20-modal";
 
-import {useAppState} from "contexts/app-state";
-
 import { DAPPKIT_LINK } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 import { REGISTRY_LIMITS, RegistryValidator } from "helpers/registry";
@@ -29,6 +27,7 @@ import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useAddToken } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useChain from "x-hooks/use-chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -84,7 +83,7 @@ export function RegistrySetup({
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
-  const { state: { currentUser } } = useAppState();
+  const { currentUser } = useUserStore();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({

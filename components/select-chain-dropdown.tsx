@@ -8,10 +8,9 @@ import IconOption from "components/icon-option";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
 
-import {useAppState} from "contexts/app-state";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -51,7 +50,7 @@ export default function SelectChainDropdown({
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
   const { isDesktopView } = useBreakPoint();
-  const { state: { currentUser } } = useAppState();
+  const { currentUser } = useUserStore();
   const { supportedChains, connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 

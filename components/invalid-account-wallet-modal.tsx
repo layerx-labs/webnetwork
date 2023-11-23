@@ -9,12 +9,11 @@ import Avatar from "components/avatar";
 import Button from "components/button";
 import Modal from "components/modal";
 
-import {useAppState} from "contexts/app-state";
-
 import {truncateAddress} from "helpers/truncate-address";
 
 import { MatchAccountsStatus } from "interfaces/enums/api";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function InvalidAccountWalletModal() {
@@ -22,11 +21,7 @@ export default function InvalidAccountWalletModal() {
 
   const { t } = useTranslation("common");
 
-  const { 
-    state:{
-      currentUser
-    }
-  } = useAppState();
+  const { currentUser } = useUserStore();
 
   const { signOut } = useAuthentication();
 

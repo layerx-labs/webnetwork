@@ -40,6 +40,7 @@ import { useCreatePreBounty } from "x-hooks/api/task";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
@@ -107,8 +108,9 @@ export default function CreateTaskPage({
   const { pushAnalytic } = useAnalyticEvents();
   const { connectedChain } = useSupportedChain();
   const {
-    state: { Settings, currentUser }
+    state: { Settings }
   } = useAppState();
+  const { currentUser } = useUserStore();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });

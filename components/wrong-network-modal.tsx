@@ -10,10 +10,9 @@ import ConnectWalletButton from "components/connections/connect-wallet-button/co
 import Modal from "components/modal";
 import SelectChainDropdown from "components/select-chain-dropdown";
 
-import {useAppState} from "contexts/app-state";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
@@ -41,7 +40,7 @@ export default function WrongNetworkModal({
   const { connect } = useDao();
   const marketplace = useMarketplace();
   const { handleAddNetwork } = useNetworkChange();
-  const {state: { currentUser }} = useAppState();
+  const { currentUser } = useUserStore();
   const { supportedChains } = useSupportedChain()
 
   const canBeHided = !isRequired;

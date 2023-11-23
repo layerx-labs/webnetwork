@@ -7,18 +7,17 @@ import Button from "components/button";
 import TransactionModal from "components/transaction-modal";
 import TransactionsList from "components/transactions-list";
 
-import {useAppState} from "contexts/app-state";
-
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {Transaction} from "interfaces/transaction";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
 import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 export default function TransactionsStateIndicator() {
-  const {state: {currentUser}} = useAppState();
+  const { currentUser } = useUserStore();
 
   const [loading, setLoading] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);

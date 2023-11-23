@@ -7,10 +7,9 @@ import IconSingleValue from "components/icon-single-value";
 import Indicator from "components/indicator";
 import ReactSelect from "components/react-select";
 
-import {useAppState} from "contexts/app-state";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -44,7 +43,7 @@ export default function SelectNetworkDropdown({
   const [options, setOptions] = useState<ChainOption[]>([]);
   const [selected, setSelectedChain] = useState<ChainOption>(null);
 
-  const { state: { currentUser } } = useAppState();
+  const { currentUser } = useUserStore();
   const { supportedChains, connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 
