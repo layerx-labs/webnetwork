@@ -17,7 +17,7 @@ export default async function get(query: ParsedUrlQuery) {
     chain,
   } = query;
 
-  if (!proposalId || !network || !chain)
+  if (!proposalId || !network)
     throw new HttpNotFoundError("Missing parameters");
 
   const proposal = await models.mergeProposal.findOne({
@@ -44,7 +44,7 @@ export default async function get(query: ParsedUrlQuery) {
       getAssociation("network", ["mergeCreatorFeeShare", "proposerFeeShare"], true, {
         name: caseInsensitiveEqual("network.name", network?.toString())
       }, [
-        getAssociation("chain", ["closeFeePercentage"], true, {
+        getAssociation("chain", ["chainId", "chainShortName", "icon", "closeFeePercentage"], true, {
           chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain?.toString())
         })
       ]),
