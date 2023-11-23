@@ -13,7 +13,6 @@ const appState: AppState = {
   state: {
     Settings: null,
     loading: null,
-    currentUser: null,
     currentBounty: null,
     show: {},
   },

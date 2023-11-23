@@ -1,5 +1,4 @@
 import {changeCurrentBounty} from "contexts/reducers/change-current-bounty";
-import {changeCurrentUser} from "contexts/reducers/change-current-user";
 import {changeLoad} from "contexts/reducers/change-load";
 import {changeSettings,} from "contexts/reducers/change-settings";
 import {addReducer} from "contexts/reducers/main";
@@ -13,7 +12,6 @@ export default function loadApplicationStateReducers() {
 
   [
     changeLoad,
-    changeCurrentUser,
     changeShowProp,
     changeCurrentBounty,
     changeSettings
