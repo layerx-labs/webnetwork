@@ -21,9 +21,9 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   const { query, push } = useRouter();
 
   const marketplace = marketplaceName || query?.network?.toString();
-  const chain = chainName || query?.chain?.toString();
+  const chain = chainName;
 
-  const { data, clear, update } = useMarketplaceStore();
+  const { data, clear, update, updateCurrentChain } = useMarketplaceStore();
   const { currentUser, updateCurrentUser} = useUserStore();
   const { data: searchData, isError, isFetching, isStale, invalidate } =
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
@@ -88,7 +88,8 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       searchData.rows : searchData.rows.filter(network => lowerCaseCompare(network.chain?.chainShortName, chain));
     if (!searchData.count || !marketplaces?.length) {
       clear();
-      if (!!marketplace || !!chain) push("/marketplaces");
+      if (marketplace)
+        push("/marketplaces");
       return;
     }
     const active = marketplaces.at(0);
@@ -119,6 +120,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   return {
     ...data,
     refresh: invalidate,
+    updateCurrentChain,
     getURLWithNetwork,
     goToProfilePage,
     getTotalNetworkToken,
