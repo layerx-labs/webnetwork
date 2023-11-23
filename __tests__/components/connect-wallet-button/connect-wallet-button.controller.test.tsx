@@ -12,21 +12,15 @@ import { render } from "__tests__/utils/custom-render";
 
 const defaultAddress = "0x000000";
 
-const state = {
-  Service: {
-    active: jest.fn()
-  },
-  currentUser: {
-    walletAddress: null
-  }
-};
+const currentUser = {
+  walletAddress: null
+}
 
 const mockedDispatch = jest.fn();
 
 jest.mock("contexts/app-state", () => ({
   useAppState: () => ({
-    dispatch: mockedDispatch,
-    state
+    dispatch: mockedDispatch
   })
 }));
 
@@ -36,8 +30,14 @@ jest.mock("x-hooks/stores/dao/dao.store", () => ({
   })
 }))
 
+jest.mock("x-hooks/stores/user/user.store", () => ({
+  useUserStore: () => ({
+    currentUser
+  })
+}))
+
 const mockedSignInWallet = jest.fn(() => {
-  state.currentUser.walletAddress = defaultAddress;
+  currentUser.walletAddress = defaultAddress;
 });
 
 jest.mock("x-hooks/use-authentication", () => ({
@@ -49,7 +49,7 @@ jest.mock("x-hooks/use-authentication", () => ({
 describe("ConnectWalletButton", () => {
   beforeEach(() => {
     window.ethereum = ethereum as any;
-    state.currentUser.walletAddress = null;
+    currentUser.walletAddress = null;
     jest.clearAllMocks();
   });
 
