@@ -34,7 +34,7 @@ export default function useSupportedChain() {
                                        });
   
   function updateNetworkAndChainMatch() {
-    const networkChainId = marketplace?.active?.chain_id;
+    const networkChainId = marketplace?.currentChain?.chainId;
     const isOnANetwork = !!query?.network;
     const matchWithNetworkChain = +connectedChain?.id === +networkChainId;
 
@@ -48,7 +48,7 @@ export default function useSupportedChain() {
   useEffect(updateNetworkAndChainMatch, [
     query?.network,
     connectedChain?.id,
-    marketplace?.active?.chain_id,
+    marketplace?.currentChain?.chainId,
   ])
 
   return {
