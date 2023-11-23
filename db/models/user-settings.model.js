@@ -1,6 +1,6 @@
 const {Model, DataTypes} = require("sequelize");
 
-class Notification extends Model {
+class UserSetting extends Model {
   static init(sequelize) {
     super.init({
       id: {
@@ -9,7 +9,13 @@ class Notification extends Model {
         type: DataTypes.INTEGER,
         unique: true
       },
-      userId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "user",
+          key: "id"
+        }
+      },
       notifications: DataTypes.BOOLEAN,
       language: DataTypes.STRING,
     }, {
@@ -28,4 +34,4 @@ class Notification extends Model {
   }
 }
 
-module.exports = Notification;
+module.exports = UserSetting;

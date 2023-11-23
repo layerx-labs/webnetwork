@@ -10,10 +10,18 @@ module.exports = {
         unique: true
       },
       type: DataTypes.STRING,
-      userId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "users",
+          key: "id"
+        },
+      },
       read: DataTypes.BOOLEAN,
       uuid: DataTypes.STRING,
     });
+
+    await queryInterface.addIndex('notifications', ['userId']);
   },
 
   down: async (queryInterface,) => {

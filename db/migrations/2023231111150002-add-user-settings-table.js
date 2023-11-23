@@ -9,10 +9,18 @@ module.exports = {
         type: DataTypes.INTEGER,
         unique: true
       },
-      userId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "users",
+          key: "id"
+        }
+      },
       notifications: DataTypes.BOOLEAN,
       language: DataTypes.STRING,
     });
+
+    await queryInterface.addIndex('user_settings', ['userId']);
   },
 
   down: async (queryInterface,) => {

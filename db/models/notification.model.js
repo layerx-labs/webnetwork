@@ -9,7 +9,13 @@ class Notification extends Model {
         primaryKey: true,
         unique: true
       },
-      userId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "user",
+          key: "id"
+        }
+      },
       type: DataTypes.STRING,
       read: DataTypes.BOOLEAN,
       uuid: DataTypes.STRING,
@@ -24,7 +30,8 @@ class Notification extends Model {
   static associate(models,) {
     this.belongsTo(models.user, {
       foreignKey: "id",
-      targetKey: "userId"
+      targetKey: "userId",
+      as: "user"
     })
   }
 }
