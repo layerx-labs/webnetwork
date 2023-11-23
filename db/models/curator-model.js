@@ -75,7 +75,7 @@ class Curators extends Model {
 
     this.hasMany(models.user, {
       foreignKey: "address",
-      targetKey: "address"
+      targetKey: "userId"
     })
   }
 
