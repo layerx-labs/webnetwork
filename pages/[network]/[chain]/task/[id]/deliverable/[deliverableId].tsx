@@ -11,8 +11,6 @@ import DeliverableBody from "components/deliverable/body/controller";
 import CreateReviewModal from "components/deliverable/create-review-modal/controller";
 import DeliverableHero from "components/deliverable/hero/controller";
 
-import { useAppState } from "contexts/app-state";
-
 import { deliverableParser, issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -20,6 +18,7 @@ import { getReactQueryClient } from "services/react-query";
 
 import { CreateComment } from "x-hooks/api/comments";
 import { getDeliverable } from "x-hooks/api/deliverable";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -32,7 +31,7 @@ export default function DeliverablePage() {
   const [showModal, setShowModal] = useState(!!review);
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { addError, addSuccess } = useToastStore();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
@@ -42,7 +41,7 @@ export default function DeliverablePage() {
   const isDeliverableReady = !!currentDeliverable?.markedReadyForReview;
 
   function handleCreateReview(body: string) {
-    if (!state.currentUser?.walletAddress) return;
+    if (!currentUser?.walletAddress) return;
 
     setIsCreatingReview(true);
 

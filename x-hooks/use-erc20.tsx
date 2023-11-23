@@ -3,8 +3,6 @@ import {useEffect, useState} from "react";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import BigNumber from "bignumber.js";
 
-import {useAppState} from "contexts/app-state";
-
 import {UNSUPPORTED_CHAIN} from "helpers/constants";
 import {parseTransaction} from "helpers/transactions";
 
@@ -19,6 +17,8 @@ import {transactionStore} from "x-hooks/stores/transaction-list/transaction.stor
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
+
+import { useUserStore } from "./stores/user/user.store";
 
 export interface useERC20 {
   name: string;
@@ -49,7 +49,7 @@ export default function useERC20() {
   const [allowance, setAllowance] = useState(BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { service: daoService, serviceStarting } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
   const marketplace = useMarketplace();
@@ -57,7 +57,7 @@ export default function useERC20() {
   const { connectedChain } = useSupportedChain();
 
   const logData = { 
-    wallet: state.currentUser?.walletAddress,
+    wallet: currentUser?.walletAddress,
     token: address, 
     network: daoService?.network?.contractAddress,
     service: daoService
@@ -66,13 +66,13 @@ export default function useERC20() {
   const isServiceReady = !serviceStarting && daoService;
 
   async function updateAllowanceAndBalance() {
-    if (!state.currentUser?.walletAddress ||
+    if (!currentUser?.walletAddress ||
         !address ||
         !name ||
         !isServiceReady ||
         connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
-    const balance = await getTokenBalance(address, state.currentUser.walletAddress)
+    const balance = await getTokenBalance(address, currentUser.walletAddress)
       .then(b => {
         setBalance(b);
         return b;
@@ -86,7 +86,7 @@ export default function useERC20() {
 
     let allowance = BigNumber(0);
     if (realSpender)
-      allowance = await getAllowance(address, state.currentUser.walletAddress, realSpender)
+      allowance = await getAllowance(address, currentUser.walletAddress, realSpender)
         .then(a => {
           setAllowance(a);
           return a;
@@ -100,7 +100,7 @@ export default function useERC20() {
   }
 
   function approve(amount: string) {
-    if (!state.currentUser?.walletAddress || !daoService || !address || !amount) return;
+    if (!currentUser?.walletAddress || !daoService || !address || !amount) return;
 
     return handleApproveToken(address, amount, undefined, symbol).then(updateAllowanceAndBalance);
   }
@@ -134,7 +134,7 @@ export default function useERC20() {
         })
         .catch(error => console.debug("useERC20:getERC20TokenData", logData, error));
   }, [
-    state.currentUser?.walletAddress, 
+    currentUser?.walletAddress, 
     daoService, 
     address, 
     name, 
@@ -144,7 +144,7 @@ export default function useERC20() {
 
   useEffect(() => {
     updateAllowanceAndBalance();
-  }, [state.currentUser?.walletAddress, isServiceReady, connectedChain, name]);
+  }, [currentUser?.walletAddress, isServiceReady, connectedChain, name]);
 
   async function deploy(name: string,
                         symbol: string,

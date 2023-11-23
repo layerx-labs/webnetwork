@@ -6,13 +6,12 @@ import { useDebouncedCallback } from "use-debounce";
 
 import BountiesListView from "components/bounty/bounties-list/view";
 
-import {useAppState} from "contexts/app-state";
-
 import { issueParser } from "helpers/issue";
 
 import { SearchBountiesPaginated } from "types/api";
 import { SearchBountiesPaginatedBigNumber } from "types/components";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useChain from "x-hooks/use-chain";
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
@@ -45,7 +44,7 @@ export default function BountiesList({
   const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { nextPage } = usePage();
-  const { state: appState } = useAppState();
+  const { currentUser } = useUserStore();
   const { search, setSearch, clearSearch } = useSearch();
   const { getChainFromUrl } = useChain();
   const { supportedChains } = useSupportedChain();
@@ -120,7 +119,7 @@ export default function BountiesList({
       type={type}
       searchString={searchState}
       isOnNetwork={isOnNetwork}
-      isConnected={!!appState.currentUser?.walletAddress}
+      isConnected={!!currentUser?.walletAddress}
       hasFilter={hasFilter}
       onSearchClick={updateSearch}
       onClearSearch={handleClearSearch}

@@ -10,14 +10,13 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
 
-import {useAppState} from "contexts/app-state";
-
 import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
 import { getProfileLinks } from "helpers/navigation-links";
 import {truncateAddress} from "helpers/truncate-address";
 
 import { ProfilePages } from "interfaces/utils";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -27,12 +26,12 @@ export default function NavAvatar() {
 
   const [visible, setVisible] = useState(false);
 
-  const { state } = useAppState();
   const { signOut } = useAuthentication();
   const { goToProfilePage } = useMarketplace();
+  const { currentUser } = useUserStore();
 
   const username =
-    state.currentUser?.login ? state.currentUser.login : truncateAddress(state.currentUser?.walletAddress);
+    currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
 
   function handleInternalLinkClick(profilePage: ProfilePages) {
     setVisible(false);
@@ -107,8 +106,8 @@ export default function NavAvatar() {
         <div className="row align-items-center border-bottom border-light-gray pb-2">
           <div className="col-3 px-0">
             <AvatarOrIdenticon
-              user={state.currentUser?.login}
-              address={state.currentUser?.walletAddress}
+              user={currentUser?.login}
+              address={currentUser?.walletAddress}
               size="md"
             />
           </div>
@@ -165,8 +164,8 @@ export default function NavAvatar() {
       >
         <div className="d-flex flex-column align-items-center justify-content-center">
           <AvatarOrIdenticon
-            user={state.currentUser?.login}
-            address={state.currentUser?.walletAddress}
+            user={currentUser?.login}
+            address={currentUser?.walletAddress}
             size="md"
           />
         </div>

@@ -34,6 +34,7 @@ import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -65,6 +66,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const [forcedService, setForcedService] = useState<DAO>();
 
   const {state} = useAppState();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
@@ -251,7 +253,7 @@ export const NetworkSettingsProvider = ({ children }) => {
         if (networksWithSameName.rows.some(({ chain_id }) => +chain_id === currentChain))
           return false;
 
-        const currentWallet = state.currentUser?.walletAddress?.toLowerCase();
+        const currentWallet = currentUser?.walletAddress?.toLowerCase();
 
         // Network with same name on other chain and connected with the same creator wallet
         if (networksWithSameName.rows.find(({ creatorAddress }) => creatorAddress.toLowerCase() === currentWallet))
@@ -325,7 +327,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   async function getTokenBalance() {
     const [tokensLockedInRegistry, registryCreatorAmount] = await Promise.all([
-      getTokensLockedInRegistryByAddress(state.currentUser?.walletAddress),
+      getTokensLockedInRegistryByAddress(currentUser?.walletAddress),
       getRegistryCreatorAmount()
     ])
 
@@ -491,7 +493,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   useEffect(() => {
     if ([
-      !state.currentUser?.walletAddress,
+      !currentUser?.walletAddress,
       !isCreating &&
         (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
       isCreating && !daoService?.registry?.token?.contractAddress,
@@ -507,7 +509,7 @@ export const NetworkSettingsProvider = ({ children }) => {
     else if(isCreating)
       loadDefaultSettings().finally(()=> setIsLoadingData(false));
   }, [
-    state.currentUser?.walletAddress,
+    currentUser?.walletAddress,
     forcedService,
     network,
     isCreating,

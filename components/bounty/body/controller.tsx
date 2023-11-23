@@ -13,6 +13,7 @@ import { QueryKeys } from "helpers/query-keys";
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useEditBounty } from "x-hooks/api/task";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -38,6 +39,7 @@ export default function BountyBody({
 
   const { state } = useAppState();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
   const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: useEditBounty,
@@ -79,7 +81,7 @@ export default function BountyBody({
 
   return (
     <BountyBodyView
-      walletAddress={state.currentUser?.walletAddress}
+      walletAddress={currentUser?.walletAddress}
       isDisableUpdateIssue={isDisableUpdateIssue}
       handleCancelEdit={handleCancelEdit}
       handleUpdateBounty={() => editBounty({

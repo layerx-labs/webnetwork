@@ -5,6 +5,7 @@ import ConnectWalletButtonView from "components/connections/connect-wallet-butto
 import { useAppState } from "contexts/app-state";
 import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 
@@ -18,6 +19,7 @@ export default function ConnectWalletButton({
 
   const { dispatch, state } = useAppState();
   const { service: daoService, serviceStarting } = useDaoStore();
+  const { currentUser } = useUserStore();
   const { signInWallet } = useAuthentication();
 
   async function handleLogin()  {
@@ -30,7 +32,7 @@ export default function ConnectWalletButton({
   }
 
   function onWalletChange() {
-    setShowModal(!state.currentUser?.walletAddress);
+    setShowModal(!currentUser?.walletAddress);
   }
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function ConnectWalletButton({
       signInWallet();
   }, [daoService, forceLogin]);
 
-  useEffect(onWalletChange, [state.currentUser?.walletAddress]);
+  useEffect(onWalletChange, [currentUser?.walletAddress]);
 
   return(
     <ConnectWalletButtonView
@@ -48,7 +50,7 @@ export default function ConnectWalletButton({
       asModal={asModal}
       isLoading={state?.loading?.isLoading || serviceStarting}
       isModalVisible={showModal}
-      isConnected={!!state.currentUser?.walletAddress}
+      isConnected={!!currentUser?.walletAddress}
       buttonColor={btnColor}
       onConnectClick={handleLogin}
     />

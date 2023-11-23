@@ -2,12 +2,11 @@ import { useRouter } from "next/router";
 
 import ChainSelectorView from "components/navigation/chain-selector/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { isOnNetworkPath } from "helpers/network";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
@@ -20,9 +19,9 @@ export default function ChainSelector({
   const { query, pathname, asPath, push } = useRouter();
 
   const { connect } = useDao();
-  const { state } = useAppState();
   const { getURLWithNetwork } = useMarketplace();
   const { handleAddNetwork } = useNetworkChange();
+  const { currentUser } = useUserStore();
   
   const isOnNetwork = isOnNetworkPath(pathname);
   const isWalletPage = asPath?.includes("wallet");
@@ -39,7 +38,7 @@ export default function ChainSelector({
     if (!isOnNetwork) {
       handleAddNetwork(chain)
         .then(() => {
-          if (state.currentUser?.walletAddress) return;
+          if (currentUser?.walletAddress) return;
 
           connect();
         })

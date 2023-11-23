@@ -6,17 +6,6 @@ import getConfig from "next/config";
 import {useRouter} from "next/router";
 
 import {useAppState} from "contexts/app-state";
-import {
-  changeCurrentUserBalance,
-  changeCurrentUserConnected,
-  changeCurrentUserId,
-  changeCurrentUserisAdmin,
-  changeCurrentUserKycSession,
-  changeCurrentUserLogin,
-  changeCurrentUserMatch,
-  changeCurrentUserSignature,
-  changeCurrentUserWallet
-} from "contexts/reducers/change-current-user";
 import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
 
 import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -40,6 +29,7 @@ import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
 
+import { useUserStore } from "./stores/user/user.store";
 import { useDaoStore } from "./stores/dao/dao.store";
 import { useStorageTransactions } from "./use-storage-transactions";
 import useSupportedChain from "./use-supported-chain";
@@ -63,6 +53,7 @@ export function useAuthentication() {
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { connectedChain } = useSupportedChain();
+  const { currentUser, updateCurrentUser} = useUserStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -111,21 +102,21 @@ export function useAuthentication() {
   }
 
   function updateWalletBalance(force = false) {
-    if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !daoService?.network || !chain)
+    if ((!force && (balance.value || !currentUser?.walletAddress)) || !daoService?.network || !chain)
       return;
 
     const update = newBalance => {
-      const newState = Object.assign(state.currentUser.balance || {}, newBalance);
-      dispatch(changeCurrentUserBalance(newState));
+      const newState = Object.assign(currentUser.balance || {}, newBalance);
+      updateCurrentUser({ balance: newState });
       balance.value = newState;
     }
 
     Promise.all([
-      daoService.getOraclesResume(state.currentUser.walletAddress),
+      daoService.getOraclesResume(currentUser.walletAddress),
 
-      daoService.getBalance('settler', state.currentUser.walletAddress),
+      daoService.getBalance('settler', currentUser.walletAddress),
       useSearchCurators({
-        address: state.currentUser.walletAddress,
+        address: currentUser.walletAddress,
         networkName: marketplace?.active?.name,
         chainShortName: chain.chainShortName
       })
@@ -143,44 +134,47 @@ export function useAuthentication() {
     const isUnauthenticated = session?.status === "unauthenticated";
 
     if (isUnauthenticated) {
-      dispatch(changeCurrentUserConnected(false));
-      dispatch(changeCurrentUserLogin(null));
-      dispatch(changeCurrentUserWallet(null));
-      dispatch(changeCurrentUserisAdmin(null));
-      dispatch(changeCurrentUserMatch(null));
-      dispatch(changeCurrentUserId(null));
+      updateCurrentUser({
+        connected: false,
+        login: null,
+        walletAddress: null,
+        isAdmin: null,
+        match: null,
+        id: null
+      })
 
       sessionStorage.setItem("currentWallet", "");
       return;
     }
 
     const user = session?.data?.user as CustomSession["user"];
-    const isSameGithubAccount = user.login === state.currentUser?.login;
-    const isSameWallet = AddressValidator.compare(user.address, state.currentUser?.walletAddress);
+    const isSameGithubAccount = user.login === currentUser?.login;
+    const isSameWallet = AddressValidator.compare(user.address, currentUser?.walletAddress);
 
-    if (user.accountsMatch !== state.currentUser?.match)
-      dispatch(changeCurrentUserMatch(user.accountsMatch));
+    if (user.accountsMatch !== currentUser?.match)
+      updateCurrentUser({match: user.accountsMatch})
 
     if (!user || isSameGithubAccount && isSameWallet)
       return;
 
     if (!isSameGithubAccount) {
-      dispatch(changeCurrentUserLogin(user.login));
+      updateCurrentUser({ login: user.login })
     }
 
     if (!isSameWallet) {
       const isAdmin = user.roles.includes(UserRole.ADMIN);
-
-      dispatch(changeCurrentUserId(user.id));
-      dispatch(changeCurrentUserWallet(user.address));
-      dispatch(changeCurrentUserisAdmin(isAdmin));
+      updateCurrentUser({
+        id: user.id,
+        walletAddress: user.address,
+        isAdmin: isAdmin
+      })
 
       sessionStorage.setItem("currentWallet", user.address);
     }
 
     await connect();
 
-    dispatch(changeCurrentUserConnected(true));
+    updateCurrentUser({connected: true})
 
     pushAnalytic(EventName.USER_LOGGED_IN, { login: user.login });
   }
@@ -193,7 +187,7 @@ export function useAuthentication() {
 
   function signMessage(message?: string) {
     return new Promise<string>(async (resolve, reject) => {
-      if (!state?.currentUser?.walletAddress ||
+      if (!currentUser?.walletAddress ||
           !connectedChain?.id ||
           serviceStarting ||
           isLoadingSigningMessage) {
@@ -201,7 +195,7 @@ export function useAuthentication() {
         return;
       }
 
-      const currentWallet = state?.currentUser?.walletAddress?.toLowerCase();
+      const currentWallet = currentUser?.walletAddress?.toLowerCase();
       const isAdminUser = currentWallet === publicRuntimeConfig?.adminWallet?.toLowerCase();
 
       if (!isAdminUser && connectedChain?.name === UNSUPPORTED_CHAIN) {
@@ -217,14 +211,14 @@ export function useAuthentication() {
 
       if (decodeMessage(connectedChain?.id,
                         messageToSign,
-                        storedSignature || state?.currentUser?.signature,
+                        storedSignature || currentUser?.signature,
                         currentWallet)) {
         if (storedSignature)
-          dispatch(changeCurrentUserSignature(storedSignature));
+          updateCurrentUser({signature: storedSignature})
         else
-          sessionStorage.setItem("currentSignature", state?.currentUser?.signature);
+          sessionStorage.setItem("currentSignature", currentUser?.signature);
 
-        resolve(storedSignature || state?.currentUser?.signature);
+        resolve(storedSignature || currentUser?.signature);
         return;
       }
 
@@ -235,14 +229,14 @@ export function useAuthentication() {
           setIsLoadingSigningMessage(false)
 
           if (signature) {
-            dispatch(changeCurrentUserSignature(signature));
+            updateCurrentUser({signature})
             sessionStorage.setItem("currentSignature", signature);
 
             resolve(signature);
             return;
           }
 
-          dispatch(changeCurrentUserSignature(undefined));
+          updateCurrentUser({signature: undefined})
           sessionStorage.removeItem("currentSignature");
 
           reject("Message not signed");
@@ -252,15 +246,15 @@ export function useAuthentication() {
   }
 
   function updateKycSession(){
-    if(!state?.currentUser?.match
-        || !state?.currentUser?.accessToken
-        || !state?.currentUser?.walletAddress
+    if(!currentUser?.match
+        || !currentUser?.accessToken
+        || !currentUser?.walletAddress
         || !state?.Settings?.kyc?.isKycEnabled)
       return
 
     useGetKycSession()
       .then((data) => data.status !== 'VERIFIED' ? useValidateKycSession(data.session_id) : data)
-      .then((session)=> dispatch(changeCurrentUserKycSession(session)))
+      .then((session)=> updateCurrentUser({kycSession: session}))
   }
 
   return {

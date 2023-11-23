@@ -22,12 +22,15 @@ import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+import { useUserStore } from "./stores/user/user.store";
+
 export function useDao() {
   const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
   const marketplace = useMarketplace();
-  const { state, dispatch } = useAppState();
+  const { dispatch } = useAppState();
+  const { currentUser } = useUserStore();
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
@@ -145,7 +148,7 @@ export function useDao() {
    */
   async function start() {
     if (session.status === "loading" ||
-        session.status === "authenticated" && !state.currentUser?.connected) {
+        session.status === "authenticated" && !currentUser?.connected) {
       // console.debug("Session not loaded yet");
       return;
     }
@@ -181,7 +184,7 @@ export function useDao() {
     if (!isConfigured) {
       console.debug("Chain not configured", chainToConnect);
 
-      if (state.currentUser?.isAdmin && !asPath.includes("setup") && !asPath.includes("connect-account")) {
+      if (currentUser?.isAdmin && !asPath.includes("setup") && !asPath.includes("connect-account")) {
         replace("/setup");
 
         return;

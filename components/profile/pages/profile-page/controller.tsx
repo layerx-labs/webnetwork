@@ -7,14 +7,13 @@ import { useDebouncedCallback } from "use-debounce";
 
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
 
 import { CustomSession } from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -35,10 +34,10 @@ export default function ProfilePage() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const { state } = useAppState();
   const { goToProfilePage } = useMarketplace();
   const { signInGithub } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
+  const { currentUser } = useUserStore();
   const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
     toastError: t("email-errors.failed-to-update"),
@@ -101,7 +100,7 @@ export default function ProfilePage() {
 
   return (
     <ProfilePageView
-      userLogin={state.currentUser?.login}
+      userLogin={currentUser?.login}
       userEmail={inputEmail}
       onSave={onSave}
       onResend={onResend}
@@ -113,8 +112,8 @@ export default function ProfilePage() {
       onHandleEmailChange={handleEmailChange}
       isNotificationEnabled={isNotificationEnabled}
       isConfirmationPending={isConfirmationPending}
-      walletAddress={state.currentUser?.walletAddress}
-      isCouncil={state.currentUser?.isCouncil}
+      walletAddress={currentUser?.walletAddress}
+      isCouncil={currentUser?.isCouncil}
       onHandleClickDisconnect={handleClickDisconnect}
       onHideRemoveModal={hideRemoveModal}
       showRemoveModal={showRemoveModal}

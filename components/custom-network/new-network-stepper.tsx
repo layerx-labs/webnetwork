@@ -38,6 +38,7 @@ import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/marketplace/use-create-network";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
@@ -57,11 +58,12 @@ function NewNetwork() {
 
   const { addError } = useToastStore();
   const { signMessage } = useSignature();
-  const { state, dispatch } = useAppState();
+  const { dispatch } = useAppState();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();
+  const { currentUser } = useUserStore();
   const {
     handleDeployNetworkV2,
     handleAddNetworkToRegistry,
@@ -92,7 +94,7 @@ function NewNetwork() {
   ];
 
   async function handleCreateNetwork() {
-    if (!state.currentUser?.walletAddress || !daoService) return;
+    if (!currentUser?.walletAddress || !daoService) return;
 
     const signedMessage = await signMessage(WANT_TO_CREATE_NETWORK);
 
@@ -116,7 +118,7 @@ function NewNetwork() {
       colors: settings.theme.colors,
       logoIcon: (await psReadAsText(details.iconLogo.value.raw)).toString(),
       fullLogo: (await psReadAsText(details.fullLogo.value.raw)).toString(),
-      creator: state.currentUser.walletAddress,
+      creator: currentUser.walletAddress,
       tokens,
       networkAddress: deployedNetworkAddress,
       signedMessage
@@ -240,14 +242,14 @@ function NewNetwork() {
   function checkHasNetwork() {
     dispatch(changeLoadState(true));
 
-    getNetworkAdressByCreator(state.currentUser.walletAddress)
+    getNetworkAdressByCreator(currentUser.walletAddress)
       .then(networkAddress => setHasNetwork(!isZeroAddress(networkAddress)))
       .catch(console.debug)
       .finally(() => dispatch(changeLoadState(false)));
   }
 
   useEffect(() => {
-    const walletAddress = state.currentUser?.walletAddress;
+    const walletAddress = currentUser?.walletAddress;
 
     if (!daoService ||
         !walletAddress ||
@@ -255,7 +257,7 @@ function NewNetwork() {
         connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
     checkHasNetwork();
-  }, [daoService, state.currentUser, connectedChain]);
+  }, [daoService, currentUser, connectedChain]);
 
   return (
     <div>

@@ -18,6 +18,7 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/marketplace";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useAuthentication } from "x-hooks/use-authentication";
@@ -50,6 +51,7 @@ export default function NetworksStep({
   const { signMessage } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
+  const { currentUser } = useUserStore();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
   const MAX_PERCENTAGE_FOR_DISPUTE = +state.Settings?.networkParametersLimits?.disputePercentage?.max;
@@ -141,7 +143,7 @@ export default function NetworksStep({
   }
 
   async function handleLoad() {
-    if (networkAlreadyLoaded || !state.currentUser) return;
+    if (networkAlreadyLoaded || !currentUser) return;
 
     try {
       setIsLoading(true);
@@ -152,7 +154,7 @@ export default function NetworksStep({
       if (network.networkAddress !== daoService.network.contractAddress)
         await loadNetwork(network.networkAddress);
 
-      isNetworkGovernorDao(state.currentUser.walletAddress)
+      isNetworkGovernorDao(currentUser.walletAddress)
         .then(setIsNetworkGovernor)
         .catch(error => console.log(error));
 
@@ -195,13 +197,13 @@ export default function NetworksStep({
   }
 
   async function handleSubmit() {
-    if (!state.currentUser?.walletAddress || !forcedNetwork) return;
+    if (!currentUser?.walletAddress || !forcedNetwork) return;
 
     setIsUpdatingNetwork(true);
 
     const json = {
       override: true,
-      creator: state.currentUser?.walletAddress,
+      creator: currentUser?.walletAddress,
       networkAddress: forcedNetwork.networkAddress,
       name: differentOrUndefined(details?.name?.value, forcedNetwork.name),
       description: differentOrUndefined(details?.description, forcedNetwork.description),

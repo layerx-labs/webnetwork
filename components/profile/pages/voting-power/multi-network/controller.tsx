@@ -4,13 +4,12 @@ import { useRouter } from "next/router";
 
 import VotingPowerMultiNetworkView from "components/profile/pages/voting-power/multi-network/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { QueryKeys } from "helpers/query-keys";
 
 import { Curator } from "interfaces/curators";
 
 import { useSearchCurators } from "x-hooks/api/curator";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -19,19 +18,19 @@ export default function VotingPowerMultiNetwork() {
 
   const [network, setNetwork] = useState<Curator>();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { getURLWithNetwork } = useMarketplace();
 
   function getNetworksVotingPower() {
     return useSearchCurators({
-      address: state.currentUser?.walletAddress,
+      address: currentUser?.walletAddress,
     })
       .then(({ rows }) => rows);
   }
 
-  const { data: networks } = useReactQuery( QueryKeys.votingPowerMultiOf(state.currentUser?.walletAddress),
+  const { data: networks } = useReactQuery( QueryKeys.votingPowerMultiOf(currentUser?.walletAddress),
                                             getNetworksVotingPower,
-                                            { enabled: !!state.currentUser?.walletAddress });
+                                            { enabled: !!currentUser?.walletAddress });
 
   function goToNetwork(network) {
     push(getURLWithNetwork("/tasks", {

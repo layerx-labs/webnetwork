@@ -17,6 +17,7 @@ import { Token } from "interfaces/token";
 
 import DAO from "services/dao-service";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -39,6 +40,7 @@ export default function WalletBalance({
   const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { query, push, pathname, asPath } = useRouter();
   const { supportedChains } = useSupportedChain();
 
@@ -63,7 +65,7 @@ export default function WalletBalance({
 
   async function processToken(token: Token, service: DAO) {
     const balance = await service
-      .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
+      .getTokenBalance(getAddress(token), currentUser?.walletAddress)
       .catch(() => BigNumber(0));
     return {
       ...token,
@@ -126,10 +128,10 @@ export default function WalletBalance({
   }
 
   const { data: tokensData, isLoading, isSuccess } = 
-    useReactQuery(["tokens-balance", state.currentUser?.walletAddress, query?.networkChain?.toString()],
+    useReactQuery(["tokens-balance", currentUser?.walletAddress, query?.networkChain?.toString()],
                   loadTokensBalance,
                   {
-                    enabled: !!state.currentUser?.walletAddress && !!supportedChains,
+                    enabled: !!currentUser?.walletAddress && !!supportedChains,
                     staleTime: MINUTE_IN_MS
                   });
   

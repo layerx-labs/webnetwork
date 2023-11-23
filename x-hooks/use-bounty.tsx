@@ -4,15 +4,18 @@ import { useAppState } from "contexts/app-state";
 import { BountyEffectsContext } from "contexts/bounty-effects";
 import { changeCurrentKycSteps } from "contexts/reducers/change-current-bounty";
 
+import { useUserStore } from "./stores/user/user.store";
+
 export function useBounty() {
   if (!useContext(BountyEffectsContext))
     throw new Error(`useBounty() depends on <BountyEffectsProvider />`);
 
 
   const { state, dispatch } = useAppState();
+  const { currentUser } = useUserStore();
 
   function validateKycSteps(){
-    const sessionSteps = state?.currentUser?.kycSession?.steps;
+    const sessionSteps = currentUser?.kycSession?.steps;
     const bountyTierNeeded = state?.currentBounty?.data?.kycTierList;
     const settingsTierAllowed = state?.Settings?.kyc?.tierList;
 

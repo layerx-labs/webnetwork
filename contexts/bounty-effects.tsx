@@ -7,6 +7,7 @@ import { issueParser } from "helpers/issue";
 
 import { IssueData } from "interfaces/issue-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useBounty } from "x-hooks/use-bounty";
 interface BountyEffectsProviderProps {
   children: ReactNode;
@@ -19,7 +20,8 @@ export const BountyEffectsContext = createContext(_context);
 
 export const BountyEffectsProvider = ({ children, currentBounty }: BountyEffectsProviderProps) => {  
   const bounty = useBounty();
-  const { dispatch, state } = useAppState();
+  const { currentUser } = useUserStore();
+  const { dispatch } = useAppState();
 
   useEffect(() => {
     const parsedData = issueParser(currentBounty);
@@ -32,7 +34,7 @@ export const BountyEffectsProvider = ({ children, currentBounty }: BountyEffects
   useEffect(bounty.validateKycSteps, [
       currentBounty?.isKyc,
       currentBounty?.kycTierList,
-      state?.currentUser?.kycSession,
+      currentUser?.kycSession,
   ]);
 
   return <BountyEffectsContext.Provider value={_context} children={children} />

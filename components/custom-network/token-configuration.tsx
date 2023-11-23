@@ -18,6 +18,7 @@ import {Token} from "interfaces/token";
 
 import {useGetTokens} from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -38,6 +39,7 @@ export default function TokenConfiguration({
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   
   const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
   const { service: daoService } = useDaoStore();
   const { connectedChain } = useSupportedChain();
@@ -107,13 +109,13 @@ export default function TokenConfiguration({
   }, [selectedTransactionalTokens])
 
   useEffect(() => {
-    if(!state?.currentUser?.walletAddress || !daoService || !BigNumber(tokensLocked.needed).gt(0)) return
+    if(!currentUser?.walletAddress || !daoService || !BigNumber(tokensLocked.needed).gt(0)) return
 
     daoService.getRegistryParameter("networkCreationFeePercentage").then(createFee => {
       setCreateNetworkAmount(BigNumber(createFee).div(100).multipliedBy(tokensLocked.needed).toFixed())
     })
 
-  }, [state?.currentUser?.walletAddress, tokensLocked.needed])
+  }, [currentUser?.walletAddress, tokensLocked.needed])
   
   function handleEmptyTokens (tokens: Token[]) {
     if(tokens?.length === 0) return [state.Settings?.beproToken];

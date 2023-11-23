@@ -4,13 +4,12 @@ import {useRouter} from "next/router";
 
 import HamburgerMenuView from "components/navigation/hamburger/menu/view";
 
-import {useAppState} from "contexts/app-state";
-
 import {NAVIGATION_LINKS} from "helpers/navigation-links";
 import {isOnNetworkPath} from "helpers/network";
 
 import {Link} from "types/utils";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -27,9 +26,9 @@ export default function HamburgerMenu({
   
   const [isProfileLinksVisible, setIsProfileLinksVisible] = useState(false);
   
-  const { state } = useAppState();
   const { signOut } = useAuthentication();
   const { getURLWithNetwork } = useMarketplace();
+  const { currentUser } = useUserStore();
 
   const isOnNetwork = isOnNetworkPath(pathname);
 
@@ -62,9 +61,9 @@ export default function HamburgerMenu({
   return(
     <HamburgerMenuView
       show={show}
-      userLogin={state.currentUser?.login}
-      userAddress={state.currentUser?.walletAddress}
-      isConnected={!!state.currentUser?.walletAddress}
+      userLogin={currentUser?.login}
+      userAddress={currentUser?.walletAddress}
+      isConnected={!!currentUser?.walletAddress}
       isProfileLinksVisible={isProfileLinksVisible}
       onDisconnect={handleDisconnect}
       onShowProfileLinks={handleShowProfileLinks}

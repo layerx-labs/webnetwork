@@ -3,8 +3,7 @@ import { useTranslation } from "next-i18next";
 import Button from "components/button";
 import GithubImage from "components/github-image";
 
-import { useAppState } from "contexts/app-state";
-
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 interface IProps{
@@ -14,7 +13,7 @@ interface IProps{
 export default function ConnectGithub({size = 'md'}:IProps) {
   const { t } = useTranslation("common");
 
-  const {state} = useAppState()
+  const { currentUser } = useUserStore();
   const { signInGithub } = useAuthentication();
 
   if (['lg', 'sm'].includes(size)) {
@@ -41,7 +40,7 @@ export default function ConnectGithub({size = 'md'}:IProps) {
             <span className="d-inline-block">
               <Button
                 className="d-inline btn btn-primary text-uppercase"
-                disabled={!state.currentUser?.walletAddress}
+                disabled={!currentUser?.walletAddress}
                 onClick={signInGithub}>
                 {t("actions.connect")}
               </Button>

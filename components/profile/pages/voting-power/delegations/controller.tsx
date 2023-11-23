@@ -1,13 +1,12 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-
 import { formatStringToCurrency } from "helpers/formatNumber";
 
 import { Delegation } from "interfaces/curators";
 import { DelegationExtended } from "interfaces/oracles-state";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 import DelegationsView from "./view";
@@ -29,13 +28,13 @@ export default function Delegations({
 }: DelegationsProps) {
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
 
   const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
 
   const walletDelegations = (delegations ||
-    state.currentUser?.balance?.oracles?.delegations ||
+    currentUser?.balance?.oracles?.delegations ||
     []) as JoinedDelegation[];
   const totalAmountDelegations = walletDelegations
     .reduce((acc, delegation) => BigNumber(delegation.amount).plus(acc),
@@ -54,7 +53,7 @@ export default function Delegations({
       }),
       total: undefined,
       delegations: walletDelegations || [
-        state.currentUser?.balance?.oracles?.delegatedByOthers || 0,
+        currentUser?.balance?.oracles?.delegatedByOthers || 0,
       ],
     },
     toOthers: {
@@ -65,7 +64,7 @@ export default function Delegations({
       }),
       delegations:
         walletDelegations ||
-        state.currentUser?.balance?.oracles?.delegations ||
+        currentUser?.balance?.oracles?.delegations ||
         [],
     },
   };
