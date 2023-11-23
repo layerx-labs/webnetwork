@@ -72,6 +72,11 @@ class Curators extends Model {
       foreignKey: "address",
       targetKey: "address"
     });
+
+    this.hasMany(models.user, {
+      foreignKey: "address",
+      targetKey: "address"
+    })
   }
 
   static findByAddressAndNetworkId(address, networkId) {

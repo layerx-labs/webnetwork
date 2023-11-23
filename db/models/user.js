@@ -70,6 +70,12 @@ class User extends Model {
       sourceKey: "id",
       as: "issues"
     });
+
+    this.hasMany(models.curators, {
+      foreignKey: "address",
+      sourceKey: "address",
+      as: "curation"
+    })
   }
 
   static findByAddress(address) {
