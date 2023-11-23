@@ -10,13 +10,12 @@ import { formatNumberToNScale } from "helpers/formatNumber";
 
 import { Network } from "interfaces/network";
 
-import useChain from "x-hooks/use-chain";
 import { useSettings } from "x-hooks/use-settings";
 
 interface NetworkListItemProps {
   network: Network;
   tokenSymbolDefault: string;
-  handleRedirect: (networkName: string, chainName: string) => void;
+  handleRedirect: (networkName: string) => void;
 }
 
 export default function NetworkListItem({
@@ -25,8 +24,6 @@ export default function NetworkListItem({
   handleRedirect
 }: NetworkListItemProps) {
   const { t } = useTranslation(["bounty", "common"]);
-
-  const { findSupportedChain } = useChain();
 
   const { settings } = useSettings();
 
@@ -55,9 +52,7 @@ export default function NetworkListItem({
   ];
 
   function onClick() {
-    const chainName = findSupportedChain({ chainId: +network?.chain_id})?.chainShortName?.toLowerCase();
-
-    handleRedirect(network?.name, chainName);
+    handleRedirect(network?.name);
   }
 
   return (
