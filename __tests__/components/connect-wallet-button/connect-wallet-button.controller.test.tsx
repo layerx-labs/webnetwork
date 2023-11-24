@@ -16,11 +16,11 @@ const currentUser = {
 
 const updateWeb3Dialog = (v: boolean) => v
 
-const mockedDispatch = jest.fn();
+const mockedWeb3Dialog = jest.fn();
 
-jest.mock("contexts/app-state", () => ({
-  useAppState: () => ({
-    dispatch: mockedDispatch
+jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
+  useLoadersStore: () => ({
+    updateWeb3Dialog
   })
 }));
 
@@ -91,6 +91,6 @@ describe("ConnectWalletButton", () => {
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(mockedDispatch).toHaveBeenCalledWith(updateWeb3Dialog(true));
+    expect(mockedWeb3Dialog).toHaveBeenCalledWith(updateWeb3Dialog(true));
   });
 });
