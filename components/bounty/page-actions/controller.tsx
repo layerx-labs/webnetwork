@@ -26,8 +26,7 @@ export default function PageActions({
   const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: () => useStartWorking({
-      id: currentBounty?.id,
-      networkName: activeMarketplace?.name
+      id: currentBounty?.id
     }),
     toastSuccess: t("bounty:actions.start-working.success"),
     toastError: t("bounty:actions.start-working.error")
