@@ -19,7 +19,7 @@ export const useSupportedChainStore = create<useSupportedChainStore>((set, get) 
     updateChains: (chains: SupportedChainData[]) => {
       set(() => ({
         chains,
-        isGetChainsDatabase: get().isGetChainsDatabase,
+        isGetChainsDatabase: false,
         connectedChain: get().connectedChain,
       }));
       return chains;
