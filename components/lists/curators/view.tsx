@@ -56,6 +56,7 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
       emptyMessage={t("council:no-curators-found")}
       sortOptions={sortOptions}
       chainFilters
+      infinite
     >
       {curators?.rows?.map((curator) => (
         <CuratorListItem
