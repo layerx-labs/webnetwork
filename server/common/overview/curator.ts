@@ -82,27 +82,20 @@ export default async function get(query: ParsedUrlQuery) {
     ]
   }, { page: +page }, [[columns[columnToSort], orderToSort]]));
 
-  const curatorsWithNetworks = await Promise.all(curators.rows.map(async curator => ({
+  const networks = await models.network.findAll({
+    attributes: ["name", "networkAddress", "councilMembers"],
+    include: [
+      {
+        association: "chain",
+        attributes: ["chainId", "chainName", "icon", "color"]
+      }
+    ]
+  });
+
+  const curatorsWithNetworks = curators.rows.map(curator => ({
     ...curator,
-    marketplaces: await models.network.findAll({
-      attributes: ["name", "networkAddress"],
-      include: [
-        {
-          association: "curators",
-          attributes: [],
-          where: {
-            ...networkWhere,
-            address: curator.address
-          }
-        },
-        {
-          association: "chain",
-          attributes: ["chainId", "chainName", "icon", "color"],
-          where: chainWhere
-        }
-      ]
-    })
-  })));
+    marketplaces: networks.filter(n => n.councilMembers.includes(curator.address))
+  }));
 
   const totalCurators = await models.curator.count({
     where: {
