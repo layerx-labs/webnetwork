@@ -28,8 +28,8 @@ class UserSetting extends Model {
 
   static associate(models,) {
     this.belongsTo(models.user, {
-      foreignKey: "id",
-      targetKey: "userId"
+      foreignKey: "userId",
+      targetKey: "id"
     })
   }
 }
