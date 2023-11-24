@@ -22,6 +22,7 @@ export default function StartWorkingButton({
       }`}
       disabled={isExecuting}
       isLoading={isExecuting}
+      buttonType="normal"
     >
       <span>
         <Translation ns="bounty" label="actions.start-working.title" />
