@@ -157,7 +157,7 @@ export default function ProposalPage() {
 
   useEffect(() => {
     if (proposalData?.issue?.network?.chain?.chainId)
-      marketplace.updateCurrentChain(proposalData?.issue?.network?.chain);
+      marketplace.updateParamsOfActive(proposalData?.issue?.network);
   }, [proposalData?.issue?.network?.chain?.chainId]);
 
   return (

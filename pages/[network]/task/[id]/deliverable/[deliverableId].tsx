@@ -35,7 +35,7 @@ export default function DeliverablePage() {
 
   const { state } = useAppState();
   const { addError, addSuccess } = useToastStore();
-  const { updateCurrentChain } = useMarketplace();
+  const { updateParamsOfActive } = useMarketplace();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
   
@@ -75,7 +75,7 @@ export default function DeliverablePage() {
 
   useEffect(() => {
     if (deliverableData?.issue?.network?.chain?.chainId)
-      updateCurrentChain(deliverableData?.issue?.network?.chain);
+      updateParamsOfActive(deliverableData?.issue?.network);
   }, [deliverableData?.issue?.network?.chain?.chainId]);
 
   return (

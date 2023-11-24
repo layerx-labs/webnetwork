@@ -33,7 +33,7 @@ export default function TaskPage() {
   const { query } = useRouter();
 
   const { state } = useAppState();
-  const { updateCurrentChain } = useMarketplace();
+  const { updateParamsOfActive } = useMarketplace();
 
   const bountyId = query?.id;
   const bountyQueryKey = QueryKeys.bounty(bountyId?.toString());
@@ -63,7 +63,7 @@ export default function TaskPage() {
 
   useEffect(() => {
     if (bounty?.network?.chain?.chainId)
-      updateCurrentChain(bounty?.network?.chain);
+      updateParamsOfActive(bounty?.network);
   }, [bounty?.network?.chain?.chainId]);
 
   return (

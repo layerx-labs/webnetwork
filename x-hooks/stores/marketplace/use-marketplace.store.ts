@@ -7,7 +7,6 @@ import { Token } from "interfaces/token";
 interface ActiveMarketplace {
   lastVisited: string | null;
   active: Network | null;
-  currentChain: SupportedChainData | null;
   availableChains: SupportedChainData[] | null;
   transactionalTokens: Token[] | null;
   rewardTokens: Token[] | null;
@@ -18,7 +17,7 @@ type UseMarketplaceStore = {
   update: (data: Partial<ActiveMarketplace>) => ActiveMarketplace,
   updateLastVisited: (lastVisited: string) => ActiveMarketplace,
   updateActive: (active: Network) => ActiveMarketplace,
-  updateCurrentChain: (currentChain: SupportedChainData) => ActiveMarketplace,
+  updateParamsOfActive: (network: Network) => ActiveMarketplace,
   updateAvailableChains: (availableChains: SupportedChainData[]) => ActiveMarketplace,
   updateTransactionalTokens: (transactionalTokens: Token[]) => ActiveMarketplace,
   updateRewardTokens: (rewardTokens: Token[]) => ActiveMarketplace,
@@ -29,7 +28,6 @@ export const useMarketplaceStore = create<UseMarketplaceStore>((set, get) => {
   const cleanData = {
     lastVisited: null,
     active: null,
-    currentChain: null,
     availableChains: null,
     transactionalTokens: null,
     rewardTokens: null
@@ -48,7 +46,16 @@ export const useMarketplaceStore = create<UseMarketplaceStore>((set, get) => {
     update,
     updateLastVisited: (lastVisited: string) => update({ lastVisited }),
     updateActive: (active: Network) => update({ active }),
-    updateCurrentChain: (currentChain: SupportedChainData) => update({ currentChain }),
+    updateParamsOfActive: (network: Network) => update({
+      active: {
+        ...network,
+        name: get().data?.active?.name,
+        description: get().data?.active?.description,
+        colors: get().data?.active?.colors,
+        logoIcon: get().data?.active?.logoIcon,
+        fullLogo: get().data?.active?.fullLogo,
+      }
+    }),
     updateAvailableChains: (availableChains: SupportedChainData[]) => update({ availableChains }),
     updateTransactionalTokens: (transactionalTokens: Token[]) => update({ transactionalTokens }),
     updateRewardTokens: (rewardTokens: Token[]) => update({ rewardTokens }),

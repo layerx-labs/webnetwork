@@ -23,7 +23,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   const marketplace = marketplaceName || query?.network?.toString();
   const chain = chainName;
 
-  const { data, clear, update, updateCurrentChain } = useMarketplaceStore();
+  const { data, clear, update, updateParamsOfActive } = useMarketplaceStore();
   const { currentUser, updateCurrentUser} = useUserStore();
   const { data: searchData, isError, isFetching, isStale, invalidate } =
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
@@ -93,14 +93,21 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       return;
     }
     const active = marketplaces.at(0);
-    if (lowerCaseCompare(active?.networkAddress, data?.active?.networkAddress))
+    if (lowerCaseCompare(active?.name, data?.active?.name))
       return;
     const lastVisited = marketplace;
     const availableChains = searchData.rows.map(network => network.chain);
     const transactionalTokens = active.tokens.filter(token => token.network_tokens.isTransactional);
     const rewardTokens = active.tokens.filter(token => token.network_tokens.isReward);
     update({
-      active,
+      active: {
+        ...(data?.active || active),
+        name: active?.name,
+        description: active?.description,
+        colors: active?.colors,
+        logoIcon: active?.logoIcon,
+        fullLogo: active?.fullLogo,
+      },
       lastVisited,
       availableChains,
       transactionalTokens,
@@ -120,7 +127,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   return {
     ...data,
     refresh: invalidate,
-    updateCurrentChain,
+    updateParamsOfActive,
     getURLWithNetwork,
     goToProfilePage,
     getTotalNetworkToken,
