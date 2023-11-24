@@ -5,6 +5,7 @@ import { BountyEffectsContext } from "contexts/bounty-effects";
 import { changeCurrentKycSteps } from "contexts/reducers/change-current-bounty";
 
 import { useUserStore } from "./stores/user/user.store";
+import { useSettings } from "./use-settings";
 
 export function useBounty() {
   if (!useContext(BountyEffectsContext))
@@ -12,12 +13,13 @@ export function useBounty() {
 
 
   const { state, dispatch } = useAppState();
+  const { settings } = useSettings();
   const { currentUser } = useUserStore();
 
   function validateKycSteps(){
     const sessionSteps = currentUser?.kycSession?.steps;
     const bountyTierNeeded = state?.currentBounty?.data?.kycTierList;
-    const settingsTierAllowed = state?.Settings?.kyc?.tierList;
+    const settingsTierAllowed = settings?.kyc?.tierList;
 
     if(!sessionSteps?.length || !bountyTierNeeded?.length) return;
 

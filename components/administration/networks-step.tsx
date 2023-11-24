@@ -9,7 +9,6 @@ import ImageUploader from "components/image-uploader";
 import InputNumber from "components/input-number";
 import Step from "components/step";
 
-import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
 
 import { IM_AM_CREATOR_NETWORK } from "helpers/constants";
@@ -18,11 +17,12 @@ import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
 import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/marketplace";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
+import { useSettings } from "x-hooks/use-settings";
 
 const {publicRuntimeConfig: {urls: {homeURL}}} = getConfig();
 
@@ -39,7 +39,7 @@ export default function NetworksStep({
   const [ isNetworkGovernor, setIsNetworkGovernor ] = useState(false);
   const [ selectedNetworkAddress, setSelectedNetworkAddress ] = useState<string>();
 
-  const {state} = useAppState();
+  const { settings: Settings } = useSettings();
   const {
     loadNetwork,
     isNetworkGovernor: isNetworkGovernorDao,
@@ -54,13 +54,13 @@ export default function NetworksStep({
   const { currentUser } = useUserStore();
   const { forcedNetwork, details, fields, settings, setForcedNetwork } = useNetworkSettings();
 
-  const MAX_PERCENTAGE_FOR_DISPUTE = +state.Settings?.networkParametersLimits?.disputePercentage?.max;
-  const MIN_DRAFT_TIME = +state.Settings?.networkParametersLimits?.draftTime?.min;
-  const MAX_DRAFT_TIME = +state.Settings?.networkParametersLimits?.draftTime?.max;
-  const MIN_DISPUTE_TIME = +state.Settings?.networkParametersLimits?.disputableTime?.min;
-  const MAX_DISPUTE_TIME = +state.Settings?.networkParametersLimits?.disputableTime?.max;
-  const MIN_COUNCIL_AMOUNT = +state.Settings?.networkParametersLimits?.councilAmount?.min;
-  const MAX_COUNCIL_AMOUNT = +state.Settings?.networkParametersLimits?.councilAmount?.max;
+  const MAX_PERCENTAGE_FOR_DISPUTE = +Settings?.networkParametersLimits?.disputePercentage?.max;
+  const MIN_DRAFT_TIME = +Settings?.networkParametersLimits?.draftTime?.min;
+  const MAX_DRAFT_TIME = +Settings?.networkParametersLimits?.draftTime?.max;
+  const MIN_DISPUTE_TIME = +Settings?.networkParametersLimits?.disputableTime?.min;
+  const MAX_DISPUTE_TIME = +Settings?.networkParametersLimits?.disputableTime?.max;
+  const MIN_COUNCIL_AMOUNT = +Settings?.networkParametersLimits?.councilAmount?.min;
+  const MAX_COUNCIL_AMOUNT = +Settings?.networkParametersLimits?.councilAmount?.max;
 
   const differentOrUndefined = (valueA, valueB) => valueA !== valueB ? valueA : undefined;
 

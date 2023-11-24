@@ -13,7 +13,7 @@ import useReactQuery from "./use-react-query";
  */
 export function useSettings() {
   const {
-    data: Settings,
+    data: settings,
     updateSettings,
     loadSettingsDatabase,
     isGetSettingsDatabase,
@@ -45,7 +45,7 @@ export function useSettings() {
    * Reload settings on each session start
    */
   function loadSettings(force?: boolean) {
-    if (Settings && !force) return;
+    if (settings && !force) return;
 
     if (storage.value && !force) {
       updateSettings(storage.value);
@@ -58,7 +58,7 @@ export function useSettings() {
   }
 
   return {
-    Settings,
+    settings,
     refresh: invalidate,
     loadSettings,
   };

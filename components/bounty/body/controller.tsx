@@ -16,6 +16,7 @@ import { useEditBounty } from "x-hooks/api/task";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import { useSettings } from "x-hooks/use-settings";
 
 import BountyBodyView from "./view";
 
@@ -37,7 +38,7 @@ export default function BountyBody({
   const [selectedTags, setSelectedTags] = useState<string[]>(currentBounty.tags);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
   const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
@@ -57,7 +58,7 @@ export default function BountyBody({
   }
 
   function addFilesInDescription(str) {
-    return addFilesToMarkdown(str, files, state.Settings?.urls?.ipfs);
+    return addFilesToMarkdown(str, files, settings?.urls?.ipfs);
   }
 
   function handleCancelEdit() {

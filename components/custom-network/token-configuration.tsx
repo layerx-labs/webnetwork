@@ -8,7 +8,6 @@ import {Divider} from "components/divider";
 import MultipleTokensDropdown from "components/multiple-tokens-dropdown";
 import Step from "components/step";
 
-import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
 
 import { QueryKeys } from "helpers/query-keys";
@@ -20,6 +19,7 @@ import {useGetTokens} from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function TokenConfiguration({
@@ -38,7 +38,7 @@ export default function TokenConfiguration({
   const [allowedTransactionalTokens, setAllowedTransactionalTokens] = useState<Token[]>();
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const { currentUser } = useUserStore();
   const { tokens, fields, tokensLocked, registryToken } = useNetworkSettings();
   const { service: daoService } = useDaoStore();
@@ -66,7 +66,7 @@ export default function TokenConfiguration({
                   onSuccess: processTokens
                 });
 
-  const networkTokenSymbol = state.Settings?.beproToken?.symbol || t("misc.$token");
+  const networkTokenSymbol = settings?.beproToken?.symbol || t("misc.$token");
 
   function addTransactionalToken(newToken: Token) {
     setAllowedTransactionalTokens([
@@ -118,7 +118,7 @@ export default function TokenConfiguration({
   }, [currentUser?.walletAddress, tokensLocked.needed])
   
   function handleEmptyTokens (tokens: Token[]) {
-    if(tokens?.length === 0) return [state.Settings?.beproToken];
+    if(tokens?.length === 0) return [settings?.beproToken];
 
     return tokens;
   }

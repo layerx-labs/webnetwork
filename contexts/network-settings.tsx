@@ -4,8 +4,6 @@ import BigNumber from "bignumber.js";
 import {isZeroAddress} from "ethereumjs-util";
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-
 import {isSameSet} from "helpers/array";
 import {isColorsSimilar} from "helpers/colors";
 import {
@@ -34,11 +32,12 @@ import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
@@ -65,7 +64,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const [registryToken, setRegistryToken] = useState<Token>();
   const [forcedService, setForcedService] = useState<DAO>();
 
-  const {state} = useAppState();
+  const { settings } = useSettings();
   const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
   const { DefaultTheme } = useNetworkTheme();
@@ -73,12 +72,12 @@ export const NetworkSettingsProvider = ({ children }) => {
   const { service: daoService, serviceStarting } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
-  const IPFS_URL = state.Settings?.urls?.ipfs;
+  const IPFS_URL = settings?.urls?.ipfs;
   const LIMITS = {
-    percentageNeededForDispute: state.Settings?.networkParametersLimits?.disputePercentage,
-    draftTime: state.Settings?.networkParametersLimits?.draftTime,
-    disputableTime: state.Settings?.networkParametersLimits?.disputableTime,
-    councilAmount: state.Settings?.networkParametersLimits?.councilAmount
+    percentageNeededForDispute: settings?.networkParametersLimits?.disputePercentage,
+    draftTime: settings?.networkParametersLimits?.draftTime,
+    disputableTime: settings?.networkParametersLimits?.disputableTime,
+    councilAmount: settings?.networkParametersLimits?.councilAmount
   };
 
   const isCreating = useMemo(() => ["/new-marketplace", "/setup"].includes(router.pathname), [router.pathname]);
@@ -498,7 +497,7 @@ export const NetworkSettingsProvider = ({ children }) => {
         (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
       isCreating && !daoService?.registry?.token?.contractAddress,
       !needsToLoad,
-      !state.Settings
+      !settings
     ].some(c => c))
       return;
 
@@ -516,7 +515,7 @@ export const NetworkSettingsProvider = ({ children }) => {
     needsToLoad,
     router.pathname,
     daoService?.registry?.token?.contractAddress,
-    state.Settings
+    settings
   ]);
 
   useEffect(() => {

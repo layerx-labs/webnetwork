@@ -21,6 +21,7 @@ import { useSearchNetworks } from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface SelectNetworkProps {
@@ -41,7 +42,7 @@ export default function SelectNetwork({
   const [selected, setSelected] = useState(undefined);
 
   const { chain } = useChain();
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const { connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 
@@ -60,7 +61,7 @@ export default function SelectNetwork({
       value: network,
       preIcon: (
         <NetworkLogo
-          src={`${state.Settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
           alt={`${network?.name} logo`}
           isBepro={network?.name.toLowerCase() === 'bepro'}
           size="sm"
