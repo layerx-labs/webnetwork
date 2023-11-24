@@ -1,12 +1,10 @@
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import Button, { ButtonProps } from "components/button";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
@@ -15,25 +13,28 @@ import { useDappkitConnectionInfo } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+interface ContractButtonProps extends ButtonProps {
+  variant?: "network" | "registry";
+}
 export default function ContractButton({
   onClick,
   children,
+  variant = "network",
   ...rest
-}: ButtonProps) {
+}: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
 
-  const { query } = useRouter();
-  const { changeNetwork } = useDao();
+  const { start } = useDao();
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
   const { connectedChain } = useSupportedChain();
-  const { addError, addWarning } = useToastStore();
-  const { service: daoService, serviceStarting } = useDaoStore();
+  const { addError } = useToastStore();
   const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
   const connectionInfo = useDappkitConnectionInfo();
-  const isSameChain = !!connectedChain?.id && !!marketplace.currentChain?.chainId &&
-    +connectedChain?.id === +marketplace.currentChain?.chainId;
+  const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
+    +connectedChain?.id === +marketplace?.active?.chain_id;
+  const isNetworkVariant = variant === "network";
 
   async function validateEthereum() {
     if(window.ethereum) return true;
@@ -67,31 +68,17 @@ export default function ContractButton({
     return false;
   }
 
-  async function validateDao() {
-    if(daoService) return true;
-
-    addError(t("actions.failed"), t("errors.failed-load-dao"));
-
-    return false
-  }
-
-  async function validateLoadNetwork() {
-    if (query?.network) {
-      if (serviceStarting) {
-        addWarning(t("actions.warning"), t("warnings.await-load-network"));
-        return false;
-      }
-
-      if (!serviceStarting && !marketplace?.active) {
-        const started = 
-          await changeNetwork(marketplace?.active?.chain_id, marketplace?.active?.networkAddress);
-        if (!started)
-          addError(t("actions.failed"), t("errors.failed-load-network"));
-        return started;
-      }
+  async function validateService() {
+    try {
+      await start({
+        chainId: +(isNetworkVariant ? marketplace?.active?.chain_id : connectedChain?.id),
+        networkAddress: isNetworkVariant ? marketplace?.active?.networkAddress : null,
+      });
+      return true;
+    } catch (e) {
+      addError(t("actions.failed"), t("errors.failed-load-dao"));
+      return false;
     }
-
-    return true;
   }
 
   async function handleExecute(e) {
@@ -103,8 +90,7 @@ export default function ContractButton({
         validateEthereum,
         validateChain,
         validateWallet,
-        validateDao,
-        validateLoadNetwork
+        validateService
       ];
 
       for (const validation of validations) {
@@ -114,7 +100,7 @@ export default function ContractButton({
           throw new Error(validation.name)
       }
 
-      onClick(e);
+      onClick?.(e);
     } catch (error) {
       console.debug("Contract Button", error);
     }
