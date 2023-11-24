@@ -32,10 +32,10 @@ export default async function get(query: ParsedUrlQuery) {
     };
 
   if (network)
-    networkWhere.name = caseInsensitiveEqual("network.name", network.toString().toLowerCase());
+    networkWhere.name = caseInsensitiveEqual("network.name", network.toString());
 
   if (chain)
-    chainWhere.name = caseInsensitiveEqual("chainShortName", chain.toString().toLowerCase());
+    chainWhere.name = caseInsensitiveEqual("chainShortName", chain.toString());
 
   const columnToSort = [
     "acceptedProposals",
