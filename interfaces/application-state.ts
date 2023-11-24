@@ -45,7 +45,6 @@ export interface CurrentBounty {
 }
 
 export interface State {
-  Settings: SettingsType | null;
   loading: LoadingState | null;
   currentBounty: CurrentBounty | null,
   show: {

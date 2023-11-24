@@ -11,7 +11,6 @@ import {mainReducer} from "./reducers/main";
 
 const appState: AppState = {
   state: {
-    Settings: null,
     loading: null,
     currentBounty: null,
     show: {},
