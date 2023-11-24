@@ -92,39 +92,34 @@ export function useDao() {
   }
   async function start({
     chainId,
-    networkAddress,
-    registryAddress,
+    networkAddress
   }: {
     chainId: number;
     networkAddress?: string;
-    registryAddress?: string;
   }): Promise<void> {
     try {
       updateServiceStarting(true);
-      if (!connection)
-        throw new Error("Missing connection");
       if (!supportedChains?.length)
         throw new Error("No supported chains found");
       const chainToConnect = supportedChains.find(c => +c.chainId === +chainId);
       if (!!chainId && !chainToConnect)
         throw new Error("Invalid chainId provided");
-      if (!isChainConfigured(chainToConnect) && !asPath.includes("setup")) {
-        if (currentUser?.isAdmin ) {
+      if (!isChainConfigured(chainToConnect)) {
+        if (currentUser?.isAdmin && !asPath.includes("setup")) {
           replace("/setup");
           return;
         }
         throw new Error("Chain is not configured");
       }
-      const registryToLoad = (registryAddress || chainToConnect.registryAddress);
       const isSameChain = chainId === daoStore.chainId;
       const isSameNetworkAddress = lowerCaseCompare(networkAddress, daoStore.networkAddress);
-      const isSameRegistryAddress = registryToLoad === daoStore.registryAddress;
+      const isSameRegistryAddress = chainToConnect.registryAddress === daoStore.registryAddress;
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress)
         return;
       const dao = !daoService || !isSameChain ?
         new DAO({
           web3Connection: connection,
-          registryAddress: registryToLoad
+          registryAddress: chainToConnect.registryAddress
         }) : daoService;
       if (!isSameRegistryAddress)
         await dao.loadRegistry();
@@ -132,7 +127,7 @@ export function useDao() {
         await dao.loadNetwork(networkAddress);
       window.DAOService = dao;
       const address = !isSameChain ? networkAddress : networkAddress || daoStore.networkAddress;
-      updateService(dao, chainId, registryToLoad, address);
+      updateService(dao, chainId, chainToConnect.registryAddress, address);
     } catch (e) {
       throw e;
     } finally {
