@@ -17,3 +17,31 @@ export enum OriginLinkErrors {
   Banned = "banned",
   Invalid = "invalid"
 }
+
+
+export enum BadRequestErrors {
+  BadRequest = "bad request",
+  MissingParameters = "missing parameters",
+  WrongParameters = "wrong parameters",
+  WrongParamsNotAnAddress = "expected and address",
+  WrongParamsNotANumber = "expected a number",
+}
+
+export enum ForbiddenErrors {
+  Forbidden = "forbidden",
+  NotTheOwner = "entry is owned by another user"
+}
+
+
+export enum NotFoundErrors {
+  NotFound = "not found",
+  NotificationNotFound = "notification not found"
+}
+
+export enum ConflictErrors {
+  Conflict = "conflict"
+}
+
+export enum UnauthorizedErrors {
+  Unauthorized = "unauthorized"
+}

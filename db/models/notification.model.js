@@ -18,6 +18,7 @@ class Notification extends Model {
       },
       type: DataTypes.STRING,
       read: DataTypes.BOOLEAN,
+      hide: DataTypes.BOOLEAN,
       uuid: DataTypes.STRING,
     }, {
       sequelize,

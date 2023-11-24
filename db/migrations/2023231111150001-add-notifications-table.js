@@ -18,6 +18,7 @@ module.exports = {
         },
       },
       read: DataTypes.BOOLEAN,
+      hide: DataTypes.BOOLEAN,
       uuid: DataTypes.STRING,
     });
 
