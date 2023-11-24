@@ -29,8 +29,9 @@ import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
 
-import { useUserStore } from "./stores/user/user.store";
 import { useDaoStore } from "./stores/dao/dao.store";
+import { useUserStore } from "./stores/user/user.store";
+import { useSettings } from "./use-settings";
 import { useStorageTransactions } from "./use-storage-transactions";
 import useSupportedChain from "./use-supported-chain";
 
@@ -49,7 +50,8 @@ export function useAuthentication() {
   const { service: daoService, serviceStarting} = useDaoStore();
   const marketplace = useMarketplace();
   const { connect, disconnect } = useDao();
-  const { state, dispatch } = useAppState();
+  const { settings } = useSettings();
+  const { dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { connectedChain } = useSupportedChain();
@@ -249,7 +251,7 @@ export function useAuthentication() {
     if(!currentUser?.match
         || !currentUser?.accessToken
         || !currentUser?.walletAddress
-        || !state?.Settings?.kyc?.isKycEnabled)
+        || !settings?.kyc?.isKycEnabled)
       return
 
     useGetKycSession()
