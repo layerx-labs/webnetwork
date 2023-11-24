@@ -1,9 +1,10 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { BountyEffectsContext } from "contexts/bounty-effects";
 
 import { useTaskStore } from "./stores/task/task.store";
 import { useUserStore } from "./stores/user/user.store";
+import { useAuthentication } from "./use-authentication";
 import { useSettings } from "./use-settings";
 
 export function useTask() {
@@ -14,6 +15,7 @@ export function useTask() {
   const { data: currentTask, updateTask } = useTaskStore();
   const { settings } = useSettings();
   const { currentUser } = useUserStore();
+  const { updateKycSession } = useAuthentication();
 
   function validateKycSteps(){
     const sessionSteps = currentUser?.kycSession?.steps;
@@ -33,6 +35,11 @@ export function useTask() {
 
     updateTask({ kycSteps: missingSteps })
   }
+
+  useEffect(updateKycSession, [currentUser?.accessToken,
+                               currentUser?.match,
+                               currentUser?.walletAddress,
+                               settings?.kyc?.tierList]);
 
   return {
     validateKycSteps,
