@@ -25,15 +25,15 @@ export default function BountySettings({
 }) {
   const { t } = useTranslation(["common", "bounty"]);
 
-  const [isCancelable, setIsCancelable] = useState(false);
-
   const { addError } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { currentUser } = useUserStore();
   const { updateWalletBalance } = useAuthentication();
-  const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
+  const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
   const isGovernor = currentUser?.isGovernor;
+  const cancelableTime = currentBounty?.network?.cancelableTime;
+  const isCancelable = +new Date() >= +new Date(+currentBounty.createdAt + cancelableTime);
   const objViewProps = {
     onEditIssue,
     isWalletConnected: !!currentUser?.walletAddress,
@@ -88,17 +88,6 @@ export default function BountySettings({
 
     return (isOwnerCancel || isHardCancel)
   }
-
-  useEffect(() => {
-    if (daoService && currentBounty)
-      (async () => {
-        const cancelableTime = await getCancelableTime();
-        const canceable =
-          +new Date() >=
-          +new Date(+currentBounty.createdAt + cancelableTime);
-        setIsCancelable(canceable);
-      })();
-  }, [daoService, currentBounty]);
 
   if (!checkRender())
     return <></>;
