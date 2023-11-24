@@ -7,8 +7,6 @@ import Button, { ButtonProps } from "components/button";
 import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
 import WrongNetworkModal from "components/wrong-network-modal";
 
-import { useAppState } from "contexts/app-state";
-
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
@@ -30,7 +28,7 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: { loading } } = useAppState();
+  const { loading } = useLoadersStore();
   const { currentUser } = useUserStore();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();

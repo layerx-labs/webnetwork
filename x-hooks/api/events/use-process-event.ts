@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { useAppState } from "contexts/app-state";
-
 import { PastEventsParams } from "interfaces/api";
 import { NetworkEvents, RegistryEvents, StandAloneEvents } from "interfaces/enums/events";
 
@@ -9,7 +7,6 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useProcessEvent() {
-  const  { state } = useAppState();
   const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
 

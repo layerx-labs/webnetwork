@@ -16,9 +16,7 @@ import TokenConfiguration from "components/custom-network/token-configuration";
 import If from "components/If";
 import Stepper from "components/stepper";
 
-import {useAppState} from "contexts/app-state";
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
-import {changeLoadState} from "contexts/reducers/change-load";
 
 import {
   DEFAULT_CANCELABLE_TIME,
@@ -38,9 +36,10 @@ import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/marketplace/use-create-network";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
@@ -58,7 +57,7 @@ function NewNetwork() {
 
   const { addError } = useToastStore();
   const { signMessage } = useSignature();
-  const { dispatch } = useAppState();
+  const { updateLoading } = useLoadersStore();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
@@ -240,12 +239,12 @@ function NewNetwork() {
   }
 
   function checkHasNetwork() {
-    dispatch(changeLoadState(true));
+    updateLoading({ isLoading: true })
 
     getNetworkAdressByCreator(currentUser.walletAddress)
       .then(networkAddress => setHasNetwork(!isZeroAddress(networkAddress)))
       .catch(console.debug)
-      .finally(() => dispatch(changeLoadState(false)));
+      .finally(() => updateLoading({ isLoading: false }))
   }
 
   useEffect(() => {

@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 
 import { IFilesProps } from "components/drag-and-drop";
 
-import { useAppState } from "contexts/app-state";
-
 import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { QueryKeys } from "helpers/query-keys";

@@ -9,8 +9,6 @@ import IconSingleValue from "components/icon-single-value";
 import NetworkLogo from "components/network-logo";
 import ReactSelect from "components/react-select";
 
-import { useAppState } from "contexts/app-state";
-
 import { MINUTE_IN_MS } from "helpers/constants";
 import { isOnNetworkPath } from "helpers/network";
 import { QueryKeys } from "helpers/query-keys";
