@@ -16,7 +16,7 @@ export function getNotifications(req: NextApiRequest) {
   if (!userId || !roles.includes(UserRole.ADMIN))
     throw new HttpUnauthorizedError();
 
-  if (!roles.includes(UserRole.ADMIN) && address !== userAddress)
+  if (!roles.includes(UserRole.ADMIN) && address && address !== userAddress)
     throw new HttpUnauthorizedError();
 
   if (!id && !address)
