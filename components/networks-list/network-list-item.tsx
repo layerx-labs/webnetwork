@@ -6,13 +6,12 @@ import ResponsiveListItem from "components/common/responsive-list-item/view";
 import PullRequestLabels from "components/deliverable/labels/controller";
 import NetworkLogo from "components/network-logo";
 
-import { useAppState } from "contexts/app-state";
-
 import { formatNumberToNScale } from "helpers/formatNumber";
 
 import { Network } from "interfaces/network";
 
 import useChain from "x-hooks/use-chain";
+import { useSettings } from "x-hooks/use-settings";
 
 interface NetworkListItemProps {
   network: Network;
@@ -28,7 +27,8 @@ export default function NetworkListItem({
   const { t } = useTranslation(["bounty", "common"]);
 
   const { findSupportedChain } = useChain();
-  const { state: { Settings: settings } } = useAppState();
+
+  const { settings } = useSettings();
 
   const totalBounties = +(network?.totalIssues || 0);
   const openBounties = +(network?.totalOpenIssues || 0);

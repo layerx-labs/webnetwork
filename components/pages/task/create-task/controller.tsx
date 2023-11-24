@@ -10,8 +10,6 @@ import {useDebouncedCallback} from "use-debounce";
 import {IFilesProps} from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import {useAppState} from "contexts/app-state";
-
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
@@ -48,6 +46,7 @@ import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 const ZeroNumberFormatValues = {
@@ -107,9 +106,8 @@ export default function CreateTaskPage({
   const { service: daoService } = useDaoStore();
   const { pushAnalytic } = useAnalyticEvents();
   const { connectedChain } = useSupportedChain();
-  const {
-    state: { Settings }
-  } = useAppState();
+
+  const { settings } = useSettings();
   const { currentUser } = useUserStore();
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
@@ -225,7 +223,7 @@ export default function CreateTaskPage({
     if (
       section === 2 &&
       isKyc &&
-      Settings?.kyc?.tierList?.length &&
+      settings?.kyc?.tierList?.length &&
       !tierList.length
     )
       return true;
@@ -236,7 +234,7 @@ export default function CreateTaskPage({
   }
 
   function addFilesInDescription(str) {
-    return addFilesToMarkdown(str, files, Settings?.urls?.ipfs);
+    return addFilesToMarkdown(str, files, settings?.urls?.ipfs);
   }
 
   async function allowCreateIssue() {
