@@ -1,36 +1,38 @@
 import { Web3Connection } from "@taikai/dappkit";
-import {isZeroAddress} from "ethereumjs-util";
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/router";
+import { isZeroAddress } from "ethereumjs-util";
+import { useRouter } from "next/router";
 import type { provider as Provider } from "web3-core";
-import {isAddress} from "web3-utils";
+import { isAddress } from "web3-utils";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import handleEthereumProvider from "helpers/handle-ethereum-provider";
 import { lowerCaseCompare } from "helpers/string";
 
-import {SupportedChainData} from "interfaces/supported-chain-data";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useChain from "x-hooks/use-chain";
 import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
-import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 
 export function useDao() {
-  const session = useSession();
-  const { replace, asPath, pathname } = useRouter();
+  const { replace, asPath } = useRouter();
 
-  const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
   const { findSupportedChain } = useChain();
-  const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
-  const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
+  const {
+    service: daoService,
+    serviceStarting,
+    updateService,
+    updateServiceStarting,
+    ...daoStore
+  } = useDaoStore();
+  const { supportedChains, updateConnectedChain } = useSupportedChain();
   const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
   const { updateMissingMetamask } = useLoadersStore();
 
@@ -88,146 +90,49 @@ export function useDao() {
       return null;
     }
   }
-
-  /**
-   * Change network to a known address if not the same
-   * @param networkAddress
-   */
-  async function changeNetwork(chainId = '', address = '') {
-    const networkAddress = address || marketplace?.active?.networkAddress;
-    const chain_id = +(chainId || marketplace?.active?.chain_id);
-
-    if (!daoService ||
-        !networkAddress ||
-        !chain_id ||
-        serviceStarting)
-      return;
-
-    if (daoService?.network?.contractAddress === networkAddress)
-      return;
-
-    const networkChain = findSupportedChain({ chainId: chain_id });
-
-    if (!networkChain) return;
-
-    const withWeb3Host = !!daoService?.web3Host;
-
-    if (!withWeb3Host && chain_id !== +connection?.web3?.currentProvider?.chainId ||
-        withWeb3Host && networkChain.chainRpc !== daoService?.web3Host)
-      return;
-
-    console.debug("Starting network");
-
-    updateServiceStarting(true)
-
-    return  daoService
-        .loadNetwork(networkAddress)
-        .then(started => {
-          if (!started) {
-            console.error("Failed to load network", networkAddress);
-            return false;
-          }
-          listenChainChanged();
-          console.debug("Network started");
-          return true;
-        })
-        .catch(error => {
-          console.error("Error loading network", error);
-          return false;
-        })
-        .finally(() => {
-          updateServiceStarting(false)
-        });
-  }
-
-  /**
-   * Starts DAOService
-   * dispatches changeNetwork() to active network
-   */
-  async function start() {
-    if (session.status === "loading" ||
-        session.status === "authenticated" && !currentUser?.connected) {
-      // console.debug("Session not loaded yet");
-      return;
-    }
-
-    if (!supportedChains?.length) {
-      // console.debug("No supported chains found");
-      return;
-    }
-
-    const networkChainId = marketplace?.active?.chain_id;
-    const isOnNetwork = pathname?.includes("[network]");
-
-    if (isOnNetwork && !networkChainId) {
-      console.debug("Is on network, but network data was not loaded yet");
-      return;
-    }
-
-    const activeNetworkChainId = marketplace?.active?.chain_id;
-
-    const chainIdToConnect = isOnNetwork && activeNetworkChainId ? activeNetworkChainId : 
-      (connectedChain?.name === UNSUPPORTED_CHAIN ? undefined : connectedChain?.id);
-
-    const chainToConnect = supportedChains.find(({ isDefault, chainId }) => 
-      chainIdToConnect ? +chainIdToConnect === +chainId : isDefault);
-
-    if (!chainToConnect) {
-      console.debug("No default or network chain found");
-      return;
-    }
-
-    const isConfigured = isChainConfigured(chainToConnect);
-
-    if (!isConfigured) {
-      console.debug("Chain not configured", chainToConnect);
-
-      if (currentUser?.isAdmin && !asPath.includes("setup") && !asPath.includes("connect-account")) {
-        replace("/setup");
-
-        return;
+  async function start({
+    chainId,
+    networkAddress
+  }: {
+    chainId: number;
+    networkAddress?: string;
+  }): Promise<void> {
+    try {
+      updateServiceStarting(true);
+      if (!supportedChains?.length)
+        throw new Error("No supported chains found");
+      const chainToConnect = supportedChains.find(c => +c.chainId === +chainId);
+      if (!!chainId && !chainToConnect)
+        throw new Error("Invalid chainId provided");
+      if (!isChainConfigured(chainToConnect)) {
+        if (currentUser?.isAdmin && !asPath.includes("setup")) {
+          replace("/setup");
+          return;
+        }
+        throw new Error("Chain is not configured");
       }
+      const isSameChain = chainId === daoStore.chainId;
+      const isSameNetworkAddress = lowerCaseCompare(networkAddress, daoStore.networkAddress);
+      const isSameRegistryAddress = chainToConnect.registryAddress === daoStore.registryAddress;
+      if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress)
+        return;
+      const dao = !daoService || !isSameChain ?
+        new DAO({
+          web3Connection: connection,
+          registryAddress: chainToConnect.registryAddress
+        }) : daoService;
+      if (!isSameRegistryAddress)
+        await dao.loadRegistry();
+      if (!!networkAddress && !isSameNetworkAddress)
+        await dao.loadNetwork(networkAddress);
+      window.DAOService = dao;
+      const address = !isSameChain ? networkAddress : networkAddress || daoStore.networkAddress;
+      updateService(dao, chainId, chainToConnect.registryAddress, address);
+    } catch (e) {
+      throw e;
+    } finally {
+      updateServiceStarting(false);
     }
-
-    const web3Connection = connection;
-    const isConnected = !!web3Connection?.web3?.currentProvider?._state?.isConnected;
-    const shouldUseWeb3Connection = +chainIdToConnect === +connectedChain.id && isConnected;
-
-    const isSameWeb3Host = 
-      chainToConnect.chainRpc === daoService?.web3Host && !shouldUseWeb3Connection || 
-      shouldUseWeb3Connection && !daoService?.web3Host;
-    const isSameRegistry = lowerCaseCompare(chainToConnect?.registryAddress, daoService?.registryAddress);
-
-    if (isSameWeb3Host && isSameRegistry && !isConnected) {
-      console.debug("Already connected to this web3Host or the service is still starting");
-      return;
-    }
-
-    console.debug("Starting DAOService");
-
-    const { chainRpc: web3Host, registryAddress: _registry } = chainToConnect;
-
-    const registryAddress = isConfigured ? _registry : undefined;
-
-    const daoProps = shouldUseWeb3Connection ? { web3Connection, registryAddress } : { web3Host, registryAddress };
-
-    const newDaoService = new DAO(daoProps);
-
-    if (!shouldUseWeb3Connection)
-      await newDaoService.start()
-        .catch(error => {
-          console.debug("Error starting daoService", error);
-        });
-
-    if (registryAddress)
-      await newDaoService.loadRegistry()
-        .catch(error => console.debug("Failed to load registry", error));
-
-    console.debug("DAOService started", daoProps);
-
-    window.DAOService = newDaoService;
-
-    updateService(newDaoService)
   }
 
   function updateChain(chainId: number) {
@@ -253,7 +158,6 @@ export function useDao() {
   }
 
   return {
-    changeNetwork,
     connect,
     disconnect,
     start,
