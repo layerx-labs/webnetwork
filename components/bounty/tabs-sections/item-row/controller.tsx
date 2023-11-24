@@ -29,7 +29,7 @@ export default function ItemRow({
   const { active: activeMarketplace, getURLWithNetwork, getTotalNetworkToken } = useMarketplace();
   const { data: totalNetworkToken } = getTotalNetworkToken();
 
-  const pathRedirect = isProposal ? "bounty/[id]/proposal/[proposalId]" : "bounty/[id]/deliverable/[deliverableId]";
+  const pathRedirect = isProposal ? "task/[id]/proposal/[proposalId]" : "task/[id]/deliverable/[deliverableId]";
   const valueRedirect: {
     id: number | string;
     deliverableId?: number;
