@@ -12,7 +12,6 @@ import {mainReducer} from "./reducers/main";
 const appState: AppState = {
   state: {
     loading: null,
-    currentBounty: null,
     show: {},
   },
   dispatch: () => undefined

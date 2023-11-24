@@ -46,7 +46,6 @@ export interface CurrentBounty {
 
 export interface State {
   loading: LoadingState | null;
-  currentBounty: CurrentBounty | null,
   show: {
     [key: string]: boolean;
   }

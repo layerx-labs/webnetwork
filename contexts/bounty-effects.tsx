@@ -1,14 +1,13 @@
 import { ReactNode, createContext, useEffect } from "react";
 
-import { useAppState } from "contexts/app-state";
-import { changeCurrentBountyData } from "contexts/reducers/change-current-bounty";
 
 import { issueParser } from "helpers/issue";
 
 import { IssueData } from "interfaces/issue-data";
 
+import { useTaskStore } from "x-hooks/stores/task/task.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useBounty } from "x-hooks/use-bounty";
+import { useTask } from "x-hooks/use-task";
 interface BountyEffectsProviderProps {
   children: ReactNode;
   currentBounty: IssueData;
@@ -19,14 +18,14 @@ const _context = {};
 export const BountyEffectsContext = createContext(_context);
 
 export const BountyEffectsProvider = ({ children, currentBounty }: BountyEffectsProviderProps) => {  
-  const bounty = useBounty();
+  const bounty = useTask();
   const { currentUser } = useUserStore();
-  const { dispatch } = useAppState();
+  const { updateTask } = useTaskStore();
 
   useEffect(() => {
     const parsedData = issueParser(currentBounty);
 
-    dispatch(changeCurrentBountyData(parsedData));
+    updateTask({ data: parsedData })
   }, [
     currentBounty
   ]);

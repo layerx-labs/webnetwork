@@ -1,24 +1,23 @@
 import { useContext } from "react";
 
-import { useAppState } from "contexts/app-state";
 import { BountyEffectsContext } from "contexts/bounty-effects";
-import { changeCurrentKycSteps } from "contexts/reducers/change-current-bounty";
 
+import { useTaskStore } from "./stores/task/task.store";
 import { useUserStore } from "./stores/user/user.store";
 import { useSettings } from "./use-settings";
 
-export function useBounty() {
+export function useTask() {
   if (!useContext(BountyEffectsContext))
-    throw new Error(`useBounty() depends on <BountyEffectsProvider />`);
+    throw new Error(`useTask() depends on <BountyEffectsProvider />`);
 
 
-  const { state, dispatch } = useAppState();
+  const { data: currentTask, updateTask } = useTaskStore();
   const { settings } = useSettings();
   const { currentUser } = useUserStore();
 
   function validateKycSteps(){
     const sessionSteps = currentUser?.kycSession?.steps;
-    const bountyTierNeeded = state?.currentBounty?.data?.kycTierList;
+    const bountyTierNeeded = currentTask?.data?.kycTierList;
     const settingsTierAllowed = settings?.kyc?.tierList;
 
     if(!sessionSteps?.length || !bountyTierNeeded?.length) return;
@@ -32,7 +31,7 @@ export function useBounty() {
                           }))
                           ?.filter(({steps})=> steps?.length) || [];
 
-    dispatch(changeCurrentKycSteps(missingSteps))
+    updateTask({ kycSteps: missingSteps })
   }
 
   return {
