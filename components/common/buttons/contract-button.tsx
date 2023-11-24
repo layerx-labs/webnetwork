@@ -8,12 +8,12 @@ import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
 import WrongNetworkModal from "components/wrong-network-modal";
 
 import { useAppState } from "contexts/app-state";
-import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
@@ -30,7 +30,7 @@ export default function ContractButton({
   const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
   const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: { loading }, dispatch } = useAppState();
+  const { state: { loading } } = useAppState();
   const { currentUser } = useUserStore();
   const { query, pathname } = useRouter();
   const { changeNetwork } = useDao();
@@ -38,6 +38,7 @@ export default function ContractButton({
   const marketplace = useMarketplace();
   const { service: daoService, serviceStarting } = useDaoStore();
   const { supportedChains, connectedChain } = useSupportedChain();
+  const { updateWeb3Dialog } = useLoadersStore();
   const connectionInfo = useDappkitConnectionInfo();
 
   const isRequired = [
@@ -66,7 +67,7 @@ export default function ContractButton({
   async function validateEthereum() {
     if(window.ethereum) return true;
 
-    dispatch(changeShowWeb3(true));
+    updateWeb3Dialog(true)
 
     return false;
   }

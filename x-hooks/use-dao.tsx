@@ -5,9 +5,6 @@ import {useRouter} from "next/router";
 import type { provider as Provider } from "web3-core";
 import {isAddress} from "web3-utils";
 
-import {useAppState} from "contexts/app-state";
-import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
-
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import handleEthereumProvider from "helpers/handle-ethereum-provider";
 import { lowerCaseCompare } from "helpers/string";
@@ -22,6 +19,7 @@ import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 
 export function useDao() {
@@ -29,12 +27,12 @@ export function useDao() {
   const { replace, asPath, pathname } = useRouter();
 
   const marketplace = useMarketplace();
-  const { dispatch } = useAppState();
   const { currentUser } = useUserStore();
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
   const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
+  const { updateMissingMetamask } = useLoadersStore();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -78,7 +76,7 @@ export function useDao() {
         .then(address => {
           if (address === "0x00") return null;
 
-          handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)));
+          handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
           return address;
         })
         .catch(error => {
@@ -251,7 +249,7 @@ export function useDao() {
     if (!window.ethereum || !supportedChains?.length)
       return;
 
-    handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)))
+    handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
   }
 
   return {

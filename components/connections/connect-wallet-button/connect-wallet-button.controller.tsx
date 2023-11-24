@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 
 import ConnectWalletButtonView from "components/connections/connect-wallet-button/connect-wallet-button.view";
 
-import { useAppState } from "contexts/app-state";
-import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
-
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ConnectWalletButton({
@@ -17,14 +15,14 @@ export default function ConnectWalletButton({
 }) {
   const [showModal, setShowModal] = useState(false);
 
-  const { dispatch, state } = useAppState();
+  const { updateWeb3Dialog, loading } = useLoadersStore();
   const { service: daoService, serviceStarting } = useDaoStore();
   const { currentUser } = useUserStore();
   const { signInWallet } = useAuthentication();
 
   async function handleLogin()  {
     if(!window?.ethereum) {
-      dispatch(changeShowWeb3(true));
+      updateWeb3Dialog(true)
       return;
     }
 
@@ -48,7 +46,7 @@ export default function ConnectWalletButton({
     <ConnectWalletButtonView
       children={children}
       asModal={asModal}
-      isLoading={state?.loading?.isLoading || serviceStarting}
+      isLoading={loading?.isLoading || serviceStarting}
       isModalVisible={showModal}
       isConnected={!!currentUser?.walletAddress}
       buttonColor={btnColor}

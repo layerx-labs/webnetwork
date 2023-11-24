@@ -5,9 +5,6 @@ import {getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession} 
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-import {changeReAuthorizeGithub} from "contexts/reducers/update-show-prop";
-
 import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
 import {AddressValidator} from "helpers/validators/address";
@@ -30,6 +27,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
 
 import { useDaoStore } from "./stores/dao/dao.store";
+import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 import { useSettings } from "./use-settings";
 import { useStorageTransactions } from "./use-storage-transactions";
@@ -51,11 +49,11 @@ export function useAuthentication() {
   const marketplace = useMarketplace();
   const { connect, disconnect } = useDao();
   const { settings } = useSettings();
-  const { dispatch } = useAppState();
   const { pushAnalytic } = useAnalyticEvents();
   const { signMessage: _signMessage, signInWithEthereum } = useSignature();
   const { connectedChain } = useSupportedChain();
   const { currentUser, updateCurrentUser} = useUserStore();
+  const { updateReAuthorizeGithub} = useLoadersStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -184,7 +182,7 @@ export function useAuthentication() {
   function verifyReAuthorizationNeed() {
     const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
 
-    dispatch(changeReAuthorizeGithub(!!expirationStorage.value && new Date(expirationStorage.value) < new Date()));
+    updateReAuthorizeGithub(!!expirationStorage.value && new Date(expirationStorage.value) < new Date())
   }
 
   function signMessage(message?: string) {

@@ -4,8 +4,6 @@ import userEvent from "@testing-library/user-event";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
-import { changeShowWeb3 } from 'contexts/reducers/update-show-prop';
-
 import ethereum from "__mocks__/ethereum";
 
 import { render } from "__tests__/utils/custom-render";
@@ -15,6 +13,8 @@ const defaultAddress = "0x000000";
 const currentUser = {
   walletAddress: null
 }
+
+const updateWeb3Dialog = (v: boolean) => v
 
 const mockedDispatch = jest.fn();
 
@@ -91,6 +91,6 @@ describe("ConnectWalletButton", () => {
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(mockedDispatch).toHaveBeenCalledWith(changeShowWeb3(true));
+    expect(mockedDispatch).toHaveBeenCalledWith(updateWeb3Dialog(true));
   });
 });
