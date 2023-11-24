@@ -9,7 +9,7 @@ export async function deleteNotification(req: NextApiRequest) {
   const {id} = req.query;
   const {context: {token: {roles}, user: {id: userId}}} = req.body;
 
-  if (!userId || !roles.includes(UserRole.ADMIN))
+  if (!userId)
     throw new HttpUnauthorizedError();
 
   const [notification] = await getNotifications({query: {id}} as any)
@@ -17,7 +17,7 @@ export async function deleteNotification(req: NextApiRequest) {
   if (!notification)
     throw new HttpNotFoundError(NotFoundErrors.NotificationNotFound);
 
-  if (notification.userId !== +userId)
+  if (!roles.includes(UserRole.ADMIN) && notification.userId !== +userId)
     throw new HttpForbiddenError(ForbiddenErrors.NotTheOwner);
 
   return notification.update({hide: true});

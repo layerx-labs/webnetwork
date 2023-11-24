@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {putReadNotification} from "../../../../server/common/notifications/put-read-notification";
 import {Logger} from "../../../../services/logging";
+import {UserRoute, WithValidChainId} from "../../../../middleware";
 
 async function markNotificationAsRead(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -16,3 +17,6 @@ async function markNotificationAsRead(req: NextApiRequest, res: NextApiResponse)
     res.status(e?.status || 500).json({message: e?.message || e?.toString()});
   }
 }
+
+Logger.changeActionName("MarkNotificationRead");
+export default UserRoute(WithValidChainId(markNotificationAsRead));

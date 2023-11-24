@@ -18,5 +18,5 @@ async function allNotificationsHandler(req: NextApiRequest, res: NextApiResponse
     res.status(e?.status || 500).json({message: e?.message || e?.toString()});
   }
 }
-
+Logger.changeActionName("GetAllNotifications");
 export default UserRoute(WithValidChainId(allNotificationsHandler));

@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {Logger} from "../../../../services/logging";
 import {deleteNotification} from "../../../../server/common/notifications/delete-notification";
+import {UserRoute, WithValidChainId} from "../../../../middleware";
 
 async function singleNotificationHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -16,3 +17,6 @@ async function singleNotificationHandler(req: NextApiRequest, res: NextApiRespon
     res.status(e?.status || 500).json({message: e?.message || e?.toString()});
   }
 }
+
+Logger.changeActionName("DeleteNotification");
+export default UserRoute(WithValidChainId(singleNotificationHandler));
