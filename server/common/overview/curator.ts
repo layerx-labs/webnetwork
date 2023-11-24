@@ -6,7 +6,9 @@ import models from "db/models";
 
 import { orderByProperty } from "helpers/array";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { paginateArray } from "helpers/paginate";
+import paginate, {DEFAULT_ITEMS_PER_PAGE, paginateArray} from "helpers/paginate";
+
+import {castToInt} from "server/utils/sequelize";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -35,57 +37,72 @@ export default async function get(query: ParsedUrlQuery) {
   if (chain)
     chainWhere.name = caseInsensitiveEqual("chainShortName", chain.toString().toLowerCase());
 
-  const curators = await models.curator.findAll({
-    attributes: {
-      exclude: ["id", "createdAt", "updatedAt"],
-    },
+  const columnToSort = [
+    "acceptedProposals",
+    "disputedProposals",
+    "disputes",
+    "totalVotes"
+  ].includes(sortBy.toString()) ? sortBy.toString() : "totalVotes";
+  const orderToSort =
+    ["asc", "desc"].includes(order?.toString()?.toLowerCase()) ? order?.toString()?.toLowerCase() : "desc";
+
+  const columns = {
+    acceptedProposals: castToInt(Sequelize.fn("SUM", Sequelize.col("acceptedProposals"))),
+    disputedProposals: castToInt(Sequelize.fn("SUM", Sequelize.col("disputedProposals"))),
+    disputes: castToInt(Sequelize.literal('(select count(*) from "disputes" d where d.address = "curator".address)')),
+    totalVotes: Sequelize.literal(`sum(cast("tokensLocked" as FLOAT) + cast("delegatedToMe" as FLOAT))`),
+  };
+
+  const curators = await models.curator.findAndCountAll(paginate({
+    attributes: [
+      "curator.address",
+      [columns["acceptedProposals"], "acceptedProposals"],
+      [columns["disputedProposals"], "disputedProposals"],
+      [columns["disputes"], "disputes"],
+      [columns["totalVotes"], "totalVotes"],
+    ],
+    raw: true,
     where: curatorsWhere,
+    group: ["curator.address"],
     include: [
       {
-        association: "disputes",
-        on: Sequelize.where(Sequelize.fn("lower", Sequelize.col("curator.address")),
-                            "=",
-                            Sequelize.fn("lower", Sequelize.col("disputes.address"))),
-      },
-      {
         association: "network",
-        attributes: ["name", "networkAddress"],
+        attributes: [],
         required: !!network || !!chain,
         where: networkWhere,
         include: [
           {
             association: "chain",
-            attributes: ["chainId", "chainName", "icon", "color"],
+            attributes: [],
             required: !!chain,
             where: chainWhere
           }
         ]
       }
     ]
-  });
+  }, { page: +page }, [[columns[columnToSort], orderToSort]]));
 
-  const curatorsGrouped = {};
-
-  for (const curator of curators) {
-    const curatorOnResult = curatorsGrouped[curator.address.toLowerCase()];
-    const votes = BigNumber(curator.tokensLocked).plus(curator.delegatedToMe);
-
-    curatorsGrouped[curator.address.toLowerCase()] = {
-      address: curator.address.toLowerCase(),
-      acceptedProposals: (curatorOnResult?.acceptedProposals || 0) + curator.acceptedProposals,
-      disputedProposals: (curatorOnResult?.disputedProposals || 0) + curator.disputedProposals,
-      disputes: (curatorOnResult?.disputes || 0) + curator.disputes.length,
-      totalVotes: votes.plus(curatorOnResult?.totalVotes || 0).toNumber(),
-      marketplaces: [... (curatorOnResult?.marketplaces || []), curator.network]
-    }
-  }
-
-  const sort = ["acceptedProposals", "disputedProposals", "disputes", "totalVotes"].includes(sortBy.toString()) ?
-    sortBy.toString() : "totalVotes";
-
-  const result = orderByProperty(Object.values(curatorsGrouped), sort, order.toString());
-
-  const paginatedData = paginateArray(result, 10, +page || 1);
+  const curatorsWithNetworks = await Promise.all(curators.rows.map(async curator => ({
+    ...curator,
+    marketplaces: await models.network.findAll({
+      attributes: ["name", "networkAddress"],
+      include: [
+        {
+          association: "curators",
+          attributes: [],
+          where: {
+            ...networkWhere,
+            address: curator.address
+          }
+        },
+        {
+          association: "chain",
+          attributes: ["chainId", "chainName", "icon", "color"],
+          where: chainWhere
+        }
+      ]
+    })
+  })));
 
   const totalCurators = await models.curator.count({
     where: {
@@ -100,7 +117,7 @@ export default async function get(query: ParsedUrlQuery) {
         include: [
           {
             association: "chain",
-            attributes: ["chainId", "chainName", "icon", "color"],
+            attributes: [],
             required: !!chain,
             where: chainWhere
           }
@@ -110,10 +127,10 @@ export default async function get(query: ParsedUrlQuery) {
   });
 
   return {
-    count: result.length,
-    rows: paginatedData.data,
-    pages: paginatedData.pages,
+    count: curators.count.length,
+    rows: curatorsWithNetworks,
+    pages: Math.ceil(curators.count.length / DEFAULT_ITEMS_PER_PAGE),
     totalCurators,
-    currentPage: +paginatedData.page
+    currentPage: +page
   };
 }
