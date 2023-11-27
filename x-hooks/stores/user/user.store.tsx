@@ -10,17 +10,8 @@ type UserStore = {
 export const useUserStore = create<UserStore>((set) => ({
   currentUser: null,
   updateCurrentUser: (v: Partial<CurrentUserState>) => {
-    set((state) => {
-      // Checks if the properties of v are different from the current properties
-      if (
-        state.currentUser &&
-        Object.keys(v).some((key) => state.currentUser[key] !== v[key])
-      ) {
-        return {
-          currentUser: { ...state.currentUser, ...v },
-        };
-      }
-      return state;
-    });
+    set((state) => ({
+      currentUser: { ...state.currentUser, ...v },
+    }));
   },
 }));
