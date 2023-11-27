@@ -54,6 +54,10 @@ export default function ProposalMerge({
     return BigNumber(value).multipliedBy(coinInfo?.prices[settings?.currency?.defaultFiat]).toFixed(4);
   }
 
+  async function handleShowModal () {
+    setShow(true);
+  }
+
   function handleMerge() {
     setShow(false);
     onClickMerge();
@@ -72,7 +76,7 @@ export default function ProposalMerge({
     <>
       <ContractButton
         textClass="text-uppercase text-white"
-        onClick={() => setShow(true)}
+        onClick={handleShowModal}
         disabled={!canMerge || isMerging}
         isLoading={isMerging}
         withLockIcon={!canMerge || isMerging}

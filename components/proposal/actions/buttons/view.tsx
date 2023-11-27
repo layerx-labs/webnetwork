@@ -58,7 +58,7 @@ export default function ProposalActionsButtonsView({
               token={token}
               isMerging={isMerging}
               idBounty={issueDbId}
-              canMerge={isAbleToMerge}
+              canMerge={isAbleToMerge && !isRefusing && !isDisputing}
               distributedAmounts={distributedAmounts}
               onClickMerge={onMerge}
             />
