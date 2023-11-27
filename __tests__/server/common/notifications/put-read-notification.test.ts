@@ -1,7 +1,7 @@
-import {putReadNotification} from "../../../../server/common/notifications/put-read-notification";
 import {simpleContextMock, simpleQueryMock} from "../../../../__mocks__/requests/simple-mock";
-import {HttpBadRequestError, HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 import models from "../../../../db/models";
+import {putReadNotification} from "../../../../server/common/notifications/put-read-notification";
+import {HttpBadRequestError, HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 
 jest.mock("db/models", () => ({
   notification: {
