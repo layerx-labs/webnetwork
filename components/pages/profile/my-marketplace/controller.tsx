@@ -12,10 +12,12 @@ import {SearchBountiesPaginated} from "types/api";
 import {MyMarketplacePageProps} from "types/pages";
 
 import {useSearchNetworks} from "x-hooks/api/marketplace";
+import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
+import {useDao} from "x-hooks/use-dao";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import useChain from "x-hooks/use-chain";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface MyMarketplaceProps {
   bounties: SearchBountiesPaginated;
@@ -24,14 +26,16 @@ interface MyMarketplaceProps {
 export function MyMarketplace({
   bounties
 }: MyMarketplaceProps) {
-  const { chain } = useChain();
+  const { start } = useDao();
   const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
+  const { connectedChain } = useSupportedChain();
   const { setForcedNetwork } = useNetworkSettings();
+  const { update: updateMarketplaceStore } = useMarketplaceStore();
+
+  const chainId = connectedChain?.id?.toString();
 
   async function getNetwork() {
-    const chainId = chain.chainId.toString();
-
     return useSearchNetworks({
       creatorAddress: currentUser.walletAddress,
       isClosed: false,
@@ -57,7 +61,7 @@ export function MyMarketplace({
     }
   }
   
-  const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, chain?.chainId?.toString());
+  const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId);
   const {
     data: myNetwork,
     isFetching,
@@ -66,12 +70,20 @@ export function MyMarketplace({
   } = useReactQuery(networkQueryKey, 
                     getNetwork,
                     {
-                      enabled: !!currentUser?.walletAddress && !!chain,
+                      enabled: !!currentUser?.walletAddress && !!chainId,
                     });
 
   useEffect(() => {
-    if (myNetwork && !isFetching && isSuccess)
+    if (myNetwork && !isFetching && isSuccess) {
       setForcedNetwork(convertTimes(myNetwork));
+      updateMarketplaceStore({
+        active: convertTimes(myNetwork)
+      });
+      start({
+        chainId: +myNetwork.chain_id,
+        networkAddress: myNetwork.networkAddress
+      }).catch(() => {});
+    }
   }, [myNetwork, isFetching, isSuccess]);
 
   return(
