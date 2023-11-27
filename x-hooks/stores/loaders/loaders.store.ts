@@ -13,8 +13,10 @@ type LoadersStore = {
   updateReAuthorizeGithub: (reAuthorizeGithub: boolean) => void;
 };
 
-const updateState =
-  (property: string, value: boolean | LoadingState) => (state: LoadersStore) => ({
+type Properties = "loading" | "web3Dialog" | "missingMetamask" | "reAuthorizeGithub"
+
+const updateState = (property: Properties, value: boolean | LoadingState) =>
+  (state: LoadersStore) => ({
     ...state,
     [property]: value,
   });
@@ -24,8 +26,8 @@ export const useLoadersStore = create<LoadersStore>((set) => ({
   web3Dialog: false,
   missingMetamask: false,
   reAuthorizeGithub: false,
-  updateLoading: (loading: LoadingState) => set(updateState('loading', loading)),
-  updateWeb3Dialog: (web3Dialog: boolean) => set(updateState('web3Dialog', web3Dialog)),
-  updateMissingMetamask: (missingMetamask: boolean) => set(updateState('missingMetamask', missingMetamask)),
-  updateReAuthorizeGithub: (reAuthorizeGithub: boolean) => set(updateState('reAuthorizeGithub', reAuthorizeGithub)),
+  updateLoading: (loading: LoadingState) => set(updateState("loading", loading)),
+  updateWeb3Dialog: (web3Dialog: boolean) => set(updateState("web3Dialog", web3Dialog)),
+  updateMissingMetamask: (missingMetamask: boolean) => set(updateState("missingMetamask", missingMetamask)),
+  updateReAuthorizeGithub: (reAuthorizeGithub: boolean) => set(updateState("reAuthorizeGithub", reAuthorizeGithub)),
 }));
