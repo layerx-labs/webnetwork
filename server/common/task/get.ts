@@ -49,7 +49,11 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
     { 
       association: "network", 
       include: [ 
-        { association: "chain", attributes: [ "chainId", "chainShortName", "closeFeePercentage", "chainName", "icon" ] }
+        {
+          association: "chain",
+          attributes: [ "chainId", "chainShortName", "closeFeePercentage", "chainName", "icon" ]
+        },
+        { association: "networkToken" }
       ] 
     },
   ];
