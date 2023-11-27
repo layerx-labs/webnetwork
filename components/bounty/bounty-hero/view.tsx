@@ -41,7 +41,8 @@ export default function BountyHeroView({
   currentState,
   isOriginModalVisible,
   showOriginModal,
-  hideOriginModal
+  hideOriginModal,
+  handleEditIssue
 }: BountyHeroProps) {
   const { t } = useTranslation(["bounty", "common"]);
 
@@ -74,6 +75,7 @@ export default function BountyHeroView({
                   currentBounty={bounty}
                   updateBountyData={updateBountyData}
                   isEditIssue={isEditIssue}
+                  onEditIssue={handleEditIssue}
                 />
               </div>
             </div>
@@ -180,7 +182,7 @@ export default function BountyHeroView({
               <div className="d-flex align-items-center text-truncate">
                 <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto gap-1">
                   <>
-                    <div className="d-flex flex-column justify-content-center">
+                    <div className="d-flex flex-column justify-content-center me-1">
                       <AvatarOrIdenticon
                         size="xsm"
                         user={bounty?.user?.handle}

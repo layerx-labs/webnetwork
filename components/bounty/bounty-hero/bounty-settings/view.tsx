@@ -9,12 +9,14 @@ import { useTranslation } from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button";
 import Modal from "components/modal";
+import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
 
 interface BountySettingsViewProps {
     isEditIssue?: boolean;
     handleHardCancel?: () => void;
     handleRedeem?: () => void;
+    onEditIssue?: () => void;
     isGovernor: boolean;
     isWalletConnected: boolean;
     isBountyInDraft: boolean;
@@ -28,6 +30,7 @@ interface BountySettingsViewProps {
 export default function BountySettingsView({
     handleHardCancel,
     handleRedeem,
+    onEditIssue,
     isEditIssue,
     isGovernor,
     isWalletConnected,
@@ -47,6 +50,11 @@ export default function BountySettingsView({
   function handleHardCancelBounty() {
     setShowHardCancelModal(false)
     handleHardCancel()
+  }
+
+  function handleEditIssue() {
+    onEditIssue()
+    handleHide()
   }
 
   function handleHide() {
@@ -108,7 +116,23 @@ export default function BountySettingsView({
       )
       return Cancel(false);
   }
-  
+
+  function renderEditButton() {
+    if (isBountyOwner && isBountyInDraft)
+      return (
+        <ResponsiveWrapper xs={true} md={false}>
+          <ContractButton
+            className="px-0 mx-0 p font-weight-normal text-capitalize"
+            transparent
+            align="left"
+            onClick={handleEditIssue}
+          >
+            <Translation ns="bounty" label="actions.edit-bounty" />
+          </ContractButton>
+        </ResponsiveWrapper>
+      );
+  }
+
   useEffect(loadOutsideClick, [show]);
   
   return (
@@ -130,6 +154,7 @@ export default function BountySettingsView({
           >
             <div className="d-flex gap-2 flex-column bounty-settings p-2 bg-gray-950">
               {renderCancel()}
+              {renderEditButton()}
             </div>
           </div>
         </div>
