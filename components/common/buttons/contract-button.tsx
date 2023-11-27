@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { useTranslation } from "next-i18next";
 
 import Button, { ButtonProps } from "components/button";
@@ -14,6 +16,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface ContractButtonProps extends ButtonProps {
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
   variant?: "network" | "registry";
 }
 export default function ContractButton({
@@ -23,6 +26,8 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
+
+  const [isValidating, setIsValidating] = useState(false);
 
   const { start } = useDao();
   const marketplace = useMarketplace();
@@ -86,6 +91,8 @@ export default function ContractButton({
       if (!onClick)
         throw new Error("Missing onClick callback");
 
+      setIsValidating(true);
+
       const validations: (() => Promise<boolean>)[] = [
         validateEthereum,
         validateChain,
@@ -100,9 +107,11 @@ export default function ContractButton({
           throw new Error(validation.name)
       }
 
-      onClick?.(e);
+      await onClick?.(e);
     } catch (error) {
       console.debug("Contract Button", error);
+    } finally {
+      setIsValidating(false);
     }
   }
 
@@ -111,6 +120,8 @@ export default function ContractButton({
       <Button
         onClick={handleExecute}
         {...rest}
+        isLoading={isValidating || rest?.isLoading}
+        disabled={isValidating || rest?.disabled}
       >
         {children}
       </Button>

@@ -6,22 +6,24 @@ import CustomContainer from "components/custom-container";
 import DeliverableButton from "components/deliverable/body/actions/deliverable-button";
 import DeliverableDescription from "components/deliverable/body/description/view";
 import DeliverableOriginLink from "components/deliverable/body/origin-link/view";
+import DeliverableInfoCuratorCard from "components/deliverable/info-curator-card/controller";
 import If from "components/If";
 
 import { CurrentUserState } from "interfaces/application-state";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
+import {DeliverableButtonType} from "types/components";
+
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import DeliverableInfoCuratorCard from "../info-curator-card/controller";
 interface DeliverableBodyViewProps {
   currentBounty: IssueBigNumberData;
   currentDeliverable: Deliverable;
   isCreatingReview: boolean;
   showMakeReadyWarning: boolean;
-  handleShowModal: () => void;
-  handleCancel: () => void;
-  handleMakeReady: () => void;
+  handleShowModal: () => Promise<void>;
+  handleCancel: () => Promise<void>;
+  handleMakeReady: () => Promise<void>;
   isMakeReviewButton: boolean;
   isMakeReadyReviewButton: boolean;
   isCancelButton: boolean;
@@ -50,56 +52,26 @@ export default function DeliverableBodyView({
   const { t } = useTranslation("deliverable");
   const { isMobileView, isTabletView } = useBreakPoint();
 
-  function RenderMakeReviewButton({ className = "" }) {
-    if (isMakeReviewButton && !currentBounty?.isClosed)
-      return (
-        <DeliverableButton
-          type="review"
-          className={className}
-          onClick={handleShowModal}
-          disabled={
-            isCreatingReview ||
-            isCancelling ||
-            isMakingReady
-          }
-          isLoading={isCreatingReview}
-          withLockIcon={isCancelling || isMakingReady}
-        />
-      );
-    
-    return null;
-  }
-
-  function RenderMakeReadyReviewButton({ className = "" }) {
-    if (isMakeReadyReviewButton)
-      return (
-        <DeliverableButton
-          type="ready-review"
-          className={className}
-          onClick={handleMakeReady}
-          disabled={isCreatingReview || isCancelling || isMakingReady}
-          isLoading={isMakingReady}
-          withLockIcon={isCreatingReview || isCancelling}
-        />
-      );
-
-    return null;
-  }
-
-  function RenderCancelButton({ className = ""}) {
-    if(isCancelButton)
-      return (
-        <DeliverableButton
-          type="cancel"
-          className={className}
-          onClick={handleCancel}
-          disabled={isCreatingReview || isCancelling || isMakingReady}
-          isLoading={isCancelling}
-          withLockIcon={isCreatingReview || isMakingReady}
-        />
-      );
-
-    return null;
+  const makeReviewButtonProps = {
+    type: "review" as DeliverableButtonType,
+    onClick: handleShowModal,
+    disabled: isCreatingReview || isCancelling || isMakingReady,
+    isLoading: isCreatingReview,
+    withLockIcon: isCancelling || isMakingReady,
+  };
+  const makeReadyButtonProps = {
+    type: "ready-review" as DeliverableButtonType,
+    onClick: handleMakeReady,
+    disabled: isCreatingReview || isCancelling || isMakingReady,
+    isLoading: isMakingReady,
+    withLockIcon: isCreatingReview || isCancelling,
+  };
+  const cancelButtonProps = {
+    type: "cancel" as DeliverableButtonType,
+    onClick: handleCancel,
+    disabled: isCreatingReview || isCancelling || isMakingReady,
+    isLoading: isCancelling,
+    withLockIcon: isCreatingReview || isMakingReady,
   }
 
   return (
@@ -111,9 +83,26 @@ export default function DeliverableBodyView({
 
         <If condition={isMobileView || isTabletView}>
           <div className="mb-3">
-            <RenderMakeReviewButton className="col-12 mb-3"/>
-            <RenderMakeReadyReviewButton className="col-12 mb-3"/>
-            <RenderCancelButton className="col-12 text-white border-gray-500 "/>
+            <If condition={isMakeReviewButton}>
+              <DeliverableButton
+                className="col-12 mb-3"
+                {...makeReviewButtonProps}
+              />
+            </If>
+
+            <If condition={isMakeReadyReviewButton}>
+              <DeliverableButton
+                className="col-12 mb-3"
+                {...makeReadyButtonProps}
+              />
+            </If>
+
+            <If condition={isCancelButton}>
+              <DeliverableButton
+                className="col-12 mb-3"
+                {...cancelButtonProps}
+              />
+            </If>
           </div>
         </If>
 
@@ -122,9 +111,21 @@ export default function DeliverableBodyView({
               <div className={`col gap-20 p-0 d-flex flex-wrap justify-content-end`}>
                 <If condition={!(isMobileView || isTabletView)}>
                   <>
-                    <RenderMakeReviewButton />
-                    <RenderMakeReadyReviewButton />
-                    <RenderCancelButton />
+                    <If condition={isMakeReviewButton}>
+                      <DeliverableButton
+                        {...makeReviewButtonProps}
+                      />
+                    </If>
+                    <If condition={isMakeReadyReviewButton}>
+                      <DeliverableButton
+                        {...makeReadyButtonProps}
+                      />
+                    </If>
+                    <If condition={isCancelButton}>
+                      <DeliverableButton
+                        {...cancelButtonProps}
+                      />
+                    </If>
                   </>
                 </If>
               </div>

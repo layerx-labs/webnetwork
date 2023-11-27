@@ -65,7 +65,7 @@ export default function DeliverablePage() {
     });
   }
 
-  function handleShowModal() {
+  async function handleShowModal() {
     setShowModal(true);
   }
 
