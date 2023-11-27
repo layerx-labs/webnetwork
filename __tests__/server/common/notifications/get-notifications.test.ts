@@ -37,7 +37,6 @@ describe("getNotifications()", () => {
         .toThrow(HttpBadRequestError)
     })
 
-    /** This tests that the owner can get their notifications as a side-effect */
     it("Throws because '0x1' is not an address", async () => {
       expect(() => getNotifications({
         ...simpleContextMock(undefined, "1"),
@@ -75,6 +74,7 @@ describe("getNotifications()", () => {
         .toEqual([{mock: "notification"}]);
     })
 
+    /** this tests the deleteNotification() and putReadNotification() "is admin" part as a side-effect */
     it("Admin searches for another user id", async () => {
       expect(await getNotifications({
         ...simpleContextMock([UserRole.ADMIN], "1", mockAddress),
