@@ -16,7 +16,6 @@ import { CustomSession } from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import { useAuthentication } from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -26,9 +25,9 @@ export default function ProfilePage() {
   const { data: sessionData, update: updateSession } = useSession();
 
   const [inputEmail, setInputEmail] = useState("");
+  const [inputUserName, setInputUserName] = useState("User-Handle");
+  const [isEditUserName, setIsEditUserName] = useState(false);
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
-  const [showRemoveModal, setShowRemoveModal] = useState(false);
-  const [showConnectModal, setShowConnectModal] = useState(false);
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
 
   const emailValidator = useDebouncedCallback(email => {
@@ -37,8 +36,7 @@ export default function ProfilePage() {
 
   const { state } = useAppState();
   const { goToProfilePage } = useMarketplace();
-  const { signInGithub } = useAuthentication();
-  const { addError, addSuccess } = useToastStore();
+  const { addSuccess } = useToastStore();
   const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
     toastError: t("email-errors.failed-to-update"),
@@ -53,14 +51,13 @@ export default function ProfilePage() {
   const isSameEmail = lowerCaseCompare(userEmail, inputEmail);
   const emailVerificationError = query?.emailVerificationError?.toString()?.replace("Error: ", "");
 
-  const handleClickDisconnect = () => setShowRemoveModal(true);
-  const hideRemoveModal = () => setShowRemoveModal(false);
-  const hideConnectModal = () => setShowConnectModal(false);
-  const onChangeMyHandleClick = () => setShowConnectModal(true);
-
   function handleEmailChange(e) {
     setInputEmail(e.target.value);
     emailValidator(e.target.value);
+  }
+
+  function handleUserNameChange(e) {
+    setInputUserName(e.target.value)
   }
 
   function onSave() {
@@ -95,34 +92,27 @@ export default function ProfilePage() {
   useEffect(() => {
     if (query?.emailVerification === "success")
       addSuccess(t("notifications-form.success-toast.title"), t("notifications-form.success-toast.content"));
-    if (query?.isGithubLoginExist === "true")
-      addError(t("actions.failed"), t("modals.connect-github.errors.github-already-exists"));
   }, [query]);
 
   return (
     <ProfilePageView
-      userLogin={state.currentUser?.login}
       userEmail={inputEmail}
+      userName={inputUserName}
       onSave={onSave}
       onResend={onResend}
       isSaveButtonDisabled={isSameEmail || isExecuting || isEmailInvalid}
+      isEditUserName={isEditUserName}
+      onHandleEditUserName={(e: boolean) => setIsEditUserName(e)}
       emailVerificationError={emailVerificationError}
       isSwitchDisabled={isExecuting}
       isEmailInvalid={isEmailInvalid}
       isExecuting={isExecuting}
       onHandleEmailChange={handleEmailChange}
+      onHandleUserNameChange={handleUserNameChange}
       isNotificationEnabled={isNotificationEnabled}
       isConfirmationPending={isConfirmationPending}
       walletAddress={state.currentUser?.walletAddress}
       isCouncil={state.currentUser?.isCouncil}
-      onHandleClickDisconnect={handleClickDisconnect}
-      onHideRemoveModal={hideRemoveModal}
-      showRemoveModal={showRemoveModal}
-      showConnectModal={showConnectModal}
-      onHideModalClick={hideConnectModal}
-      onChangeMyHandleClick={onChangeMyHandleClick}
-      onDisconnectGithub={updateSession}
-      onConnectGithub={signInGithub}
       onSwitchChange={onSwitchChange}
     />
   );
