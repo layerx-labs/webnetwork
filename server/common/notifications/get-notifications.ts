@@ -12,7 +12,6 @@ import {HttpBadRequestError, HttpUnauthorizedError} from "../../errors/http-erro
 import {isAddress} from "../../../helpers/is-address";
 
 export function getNotifications(req: NextApiRequest) {
-
   const {address, id} = req.query as {address: string, id: string};
   const {page = 1, read = null,} = req.query as {page: string, read?: string};
   const {context: {token: {roles}, user: {id: userId, address: userAddress}}} = req.body;

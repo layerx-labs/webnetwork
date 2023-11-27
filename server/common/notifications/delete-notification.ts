@@ -6,7 +6,7 @@ import {getNotifications} from "./get-notifications";
 
 export async function deleteNotification(req: NextApiRequest) {
   const {id} = req.query;
-  const {context: {token: {roles}, user: {id: userId}}} = req.body;
+  const {context: {user: {id: userId}}} = req.body;
 
   if (!userId)
     throw new HttpUnauthorizedError();
