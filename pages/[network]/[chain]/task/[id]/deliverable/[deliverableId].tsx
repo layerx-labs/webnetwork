@@ -92,7 +92,6 @@ export default function DeliverablePage() {
         onCloseClick={handleCloseModal}
       />
 
-      <ConnectWalletButton asModal={true}/>
     </>
   );
 }

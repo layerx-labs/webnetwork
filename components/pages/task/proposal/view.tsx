@@ -131,7 +131,6 @@ export default function ProposalPageView({
         </div>
       </CustomContainer>
 
-      <ConnectWalletButton asModal={true} />
     </>
   );
 }
