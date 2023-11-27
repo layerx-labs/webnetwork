@@ -1,3 +1,5 @@
+FROM docker.elastic.co/beats/filebeat:7.13.4
+COPY --chown=root:filebeat filebeat.yml /usr/share/filebeat/filebeat.yml
 FROM node:16.16 AS builder
 
 WORKDIR /app
