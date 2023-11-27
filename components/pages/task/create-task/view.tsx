@@ -43,8 +43,8 @@ interface CreateTaskPageViewProps
   isCreating: boolean;
   creationSteps: string[];
   onBackClick: (e?: MouseEvent<HTMLButtonElement>) => void;
-  onApproveClick: () => void;
-  onNextOrCreateButtonClick: () => void;
+  onApproveClick: () => Promise<void>;
+  onNextOrCreateButtonClick: () => Promise<void>;
   onSectionHeaderClick: (i: number) => void;
   allowCreateBounty?: boolean;
   showCannotCreateBountyModal?: boolean;
