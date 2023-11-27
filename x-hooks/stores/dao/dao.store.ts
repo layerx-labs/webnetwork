@@ -8,6 +8,7 @@ type DaoServiceStore = {
   registryAddress: string | null;
   networkAddress: string | null;
   serviceStarting: boolean;
+  get: () => DaoServiceStore,
   updateServiceStarting: (v: boolean) => void;
   updateService: (dao: DAO, chainId?: number, registryAddress?: string, networkAddress?: string) => void;
 };
@@ -18,6 +19,7 @@ export const useDaoStore = create<DaoServiceStore>((set, get) => ({
   chainId: null,
   registryAddress: null,
   networkAddress: null,
+  get,
   updateServiceStarting: (v: boolean) => {
     set(() => ({
       service: get().service,
