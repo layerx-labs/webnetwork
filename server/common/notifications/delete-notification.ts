@@ -1,8 +1,7 @@
 import {NextApiRequest} from "next";
 
-import {ForbiddenErrors, NotFoundErrors} from "../../../interfaces/enums/Errors";
-import {UserRole} from "../../../interfaces/enums/roles";
-import {HttpForbiddenError, HttpNotFoundError, HttpUnauthorizedError} from "../../errors/http-errors";
+import {NotFoundErrors} from "../../../interfaces/enums/Errors";
+import {HttpNotFoundError, HttpUnauthorizedError} from "../../errors/http-errors";
 import {getNotifications} from "./get-notifications";
 
 export async function deleteNotification(req: NextApiRequest) {
@@ -12,13 +11,10 @@ export async function deleteNotification(req: NextApiRequest) {
   if (!userId)
     throw new HttpUnauthorizedError();
 
-  const [notification] = await getNotifications({query: {id}} as any)
+  const [notification] = await getNotifications({query: {id}, body: req.body} as any)
 
   if (!notification)
     throw new HttpNotFoundError(NotFoundErrors.NotificationNotFound);
-
-  if (!roles.includes(UserRole.ADMIN) && notification.userId !== +userId)
-    throw new HttpForbiddenError(ForbiddenErrors.NotTheOwner);
 
   return notification.update({hide: true});
 }
