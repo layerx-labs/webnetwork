@@ -16,7 +16,6 @@
   "locked-by-me": "Locked by me",
   "connect-wallet": "Connect Wallet",
   "council": "Curator",
-  "connect-github": "Connect Github",
   "go-to-network": "Go to Marketplace",
   "total-received": "Total received",
   "connections": "Connections",
@@ -32,39 +31,13 @@
     "period": "Period"
   },
   "actions": {
-    "remove-github-account": "Disconnect Github Handle",
-    "change-my-handle": "Change my handle with github",
     "change-handle": "Change handle"
   },
   "tips": {
     "total-balance": "Total tokens in your wallet",
     "total-oracles": "Total {{tokenName}} token locked available for marketplace curation"
   },
-  "modals": {
-    "remove-github": {
-      "title": "Remove Github Account",
-      "account-from-wallet": "account from the wallet",
-      "success": "Github handle removed successfully",
-      "warnings": {
-        "period": "The account can only be changed again after seven days",
-        "deliverables": "There must be no open deliverables on tasks for this account"
-      },
-      "errors": {
-        "github-already-exists": "This github handle already exists in another account",  
-        "less-than-7-days": "Last account change was less than 7 days ago",
-        "deliverables-open": "There are deliverables open for this account",
-        "failed-to-remove": "Failed to remove account",
-        "check-requirements": "Check the requirements"
-      }
-    },
-    "connect-github": {
-      "title": "Change Handle",
-      "description": "Connect with GitHub and personalize your app profile effortlessly! By clicking the 'Connect' button, you'll use your GitHub login as your handle on the app and your GitHub avatar. It's a seamless way to bring your GitHub identity to our platform.",
-      "errors": {
-        "github-already-exists": "This github handle already exists in another account"
-      }
-    }
-   },
+   "invalid-user-name": "This handle already exists",
    "notifications-form": {
       "title": "Notifications",
       "message": "Allow Bepro Marketplace to send you updates via email. These can include updates to tasks, app updates, etc.",
