@@ -14,10 +14,8 @@ export default function VotingPowerPage() {
   const marketplace = useMarketplace();
 
   const { network } = query;
-
   const isOnNetwork = !!network;
-  const hasNetworkTokenSaved = !marketplace?.active || 
-    !!marketplace?.active?.networkToken && isOnNetwork;
+  const hasNetworkTokenSaved = !marketplace?.active || !!marketplace?.active?.networkToken && isOnNetwork;
 
   function renderChildrenVotingPower() {
     if (isOnNetwork) return <VotingPowerNetwork />;

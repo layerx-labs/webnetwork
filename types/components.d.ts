@@ -152,3 +152,5 @@ export interface PaymentInfoProps {
   percentage: string;
   label: string;
 }
+
+export type DeliverableButtonType = "cancel" | "review" | "ready-review";

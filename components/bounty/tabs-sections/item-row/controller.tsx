@@ -83,12 +83,13 @@ export default function ItemRow({
     : (isDraftDeliverable || isCanceledDeliverable || !isCurator || !!currentBounty?.isClosed)
     ? "actions.view-deliverable"
     : "actions.review";
+  const isReviewAction = btnLabel === "actions.review";
 
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     ev.preventDefault();
     router.push(getURLWithNetwork(pathRedirect, {
       ...valueRedirect,
-      ... !isProposal ? { review: false } : {}
+      ... !isProposal && isReviewAction ? { review: true } : {}
     }));
   }
 
