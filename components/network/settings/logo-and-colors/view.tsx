@@ -64,10 +64,6 @@ export default function NetworkLogoAndColorsSettingsView({
 
               <span className="text-primary">
                 {queryableNetworkName || t("custom-network:steps.network-information.fields.name.default")}
-              </span>/
-
-              <span>
-                {network?.chain?.chainShortName}
               </span>
             </span>
           </Row>
