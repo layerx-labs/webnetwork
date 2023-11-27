@@ -24,7 +24,7 @@ export default function ProfileLinks({
   const cleanQuery = { ...query, networkName: null, networkChain: null };
 
   const getHref = (href = "") =>
-    query?.network ? `/${query?.network}/${query?.chain}/profile/${href}` : `/profile/${href}`;
+    query?.network ? `/${query?.network}/profile/${href}` : `/profile/${href}`;
   const getUrl = () => query?.network ?
     getURLWithNetwork("/profile/[[...profilePage]]", cleanQuery) :
     { pathname: "/profile/[[...profilePage]]", query: cleanQuery };
