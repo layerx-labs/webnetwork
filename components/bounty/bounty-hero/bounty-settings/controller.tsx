@@ -16,11 +16,13 @@ import BountySettingsView from "./view";
 export default function BountySettings({
   isEditIssue,
   currentBounty,
-  updateBountyData
+  updateBountyData,
+  onEditIssue
 }: {
   isEditIssue?: boolean;
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
+  onEditIssue: () => void;
 }) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -34,6 +36,7 @@ export default function BountySettings({
 
   const isGovernor = state.currentUser?.isGovernor;
   const objViewProps = {
+    onEditIssue,
     isWalletConnected: !!state.currentUser?.walletAddress,
     isBountyInDraft: !!currentBounty?.isDraft,
     isBountyOwner:

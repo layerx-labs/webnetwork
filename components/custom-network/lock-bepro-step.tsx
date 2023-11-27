@@ -243,7 +243,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
 
         <div className="row mx-0 mb-4">
           <div className="col mr-3">
-            <div className="row">
+            <div className="row mb-3 mx-0">
               <div className="col px-0">
                 <div className="row mb-2">
                   <label htmlFor="" className="caption-medium text-gray">
@@ -252,7 +252,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                   </label>
                 </div>
 
-                <div className="row mx-0 bg-dark-gray border-radius-8 amount-input">
+                <div className="row bg-dark-gray border-radius-8 amount-input">
                   <div className="col px-0">
                     <InputNumber
                       classSymbol={"text-primary"}
@@ -284,12 +284,9 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                         {t("misc.available")}
                       </span>
 
-                      <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center flex-wrap">
                         <span className="text-gray">
-                          {formatNumberToCurrency(balance?.beproAvailable?.toNumber() || 0,
-                                                  {
-                              maximumFractionDigits: 18,
-                                                  })}
+                          {formatNumberToNScale(balance?.beproAvailable?.toNumber() || 0)}
                         </span>
 
                         {amount?.gt(0) && (
@@ -301,7 +298,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                             </span>
 
                             <span className={`${textAmountClass} ml-1`}>
-                              {formatNumberToCurrency(balance?.beproAvailable
+                              {formatNumberToNScale(balance?.beproAvailable
                                   ?.minus(amount)
                                   ?.toNumber())}
                             </span>
@@ -354,7 +351,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
             </div>
           </div>
 
-          <div className="col bg-dark-gray border-radius-8 p-3">
+          <div className="col bg-dark-gray border-radius-8 p-3 mr-3">
             <p className="caption-medium text-gray mb-4">
               <span className="text-primary">{registryTokenSymbol}</span>{" "}
               {t("misc.locked")}
