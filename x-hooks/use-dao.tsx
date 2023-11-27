@@ -99,6 +99,8 @@ export function useDao() {
   }): Promise<void> {
     try {
       updateServiceStarting(true);
+      if (!connection)
+        throw new Error("Missing connection");
       if (!supportedChains?.length)
         throw new Error("No supported chains found");
       const chainToConnect = supportedChains.find(c => +c.chainId === +chainId);
