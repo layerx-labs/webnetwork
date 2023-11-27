@@ -2,19 +2,13 @@ import {UserRole} from "../../../../interfaces/enums/roles";
 import {getNotifications} from "../../../../server/common/notifications/get-notifications";
 import {HttpBadRequestError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 
+import {simpleContextMock, simpleQueryMock} from "__mocks__/requests/simple-mock";
+
 jest.mock("db/models", () => ({
   notification: {
     findAll: jest.fn().mockReturnValue([{mock: "notification"}])
   }
 }));
-
-const simpleContextMock = (roles = [UserRole.USER],
-                           userId = "0",
-                           address = "0x1") =>
-  ({body: {context: {token: {roles}, user: {id: userId, address}}}}) as any;
-
-const simpleQueryMock = (address = "0x1", id = "", page = undefined, read = undefined) =>
-  ({query: {address, id, page, read}}) as any;
 
 const mockAddress = "0xf15CC0ccBdDA041e2508B829541917823222F364";
 const mockAddress_2 = "0xF33323fCe7d8878698781F33680fd24C7FEfbBba";

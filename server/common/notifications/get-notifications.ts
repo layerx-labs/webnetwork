@@ -30,12 +30,8 @@ export function getNotifications(req: NextApiRequest) {
   if (!id && !address)
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
-  console.log(address)
-
   if (address && !isAddress(address))
     throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotAnAddress);
-
-  console.log(address)
 
   if (id && isNaN(+id))
     throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotANumber);
