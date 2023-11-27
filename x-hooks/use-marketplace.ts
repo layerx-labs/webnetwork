@@ -93,7 +93,8 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       return;
     }
     const active = marketplaces.at(0);
-    if (lowerCaseCompare(active?.name, data?.active?.name))
+    if (lowerCaseCompare(active?.name, data?.active?.name) &&
+      lowerCaseCompare(active?.networkAddress, data?.active?.networkAddress))
       return;
     const lastVisited = marketplace;
     const availableChains = searchData.rows.map(network => network.chain);
