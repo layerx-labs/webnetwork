@@ -17,6 +17,7 @@ export interface ExplorePageProps {
   recentBounties: IssueData[];
   recentFunding: IssueData[];
   activeNetworks: ActiveMarketplace[];
+  protocolMembers: number;
 }
 
 export interface NetworkCuratorsPageProps {

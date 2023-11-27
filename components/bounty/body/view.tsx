@@ -4,11 +4,11 @@ import BountyDescription from "components/bounty/description/controller";
 import BountyEditTag from "components/bounty/edit-tag/controller";
 import BountyStatusProgress from "components/bounty/status-progress/controller";
 import { IFilesProps } from "components/drag-and-drop";
+import If from "components/If";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import BodyEditButtons from "./edit-buttons/view";
-
 interface BountyBodyProps {
   isEditIssue: boolean;
   body: string;
@@ -56,13 +56,13 @@ export default function BountyBodyView({
         <div className="row justify-content-center">
           <div className="col-md-8">
             <div className="border-radius-8 p-3 bg-gray-850 mb-3">
-              {isEditIssue && (
+              <If condition={isEditIssue}>
                 <div className="d-flex justify-content-center">
                   <span className="p family-Regular font-weight-medium mt-1 text-info">
                     {t("bounty:edit-text")}
                   </span>
                 </div>
-              )}
+              </If>
               <BountyEditTag
                 isEdit={isEditIssue}
                 selectedTags={selectedTags}
@@ -80,33 +80,30 @@ export default function BountyBodyView({
                   preview={isPreview}
                 />
               </>
-              {isEditIssue && (
-                <BodyEditButtons 
-                  handleUpdateBounty={handleUpdateBounty} 
-                  handleCancelEdit={handleCancelEdit} 
-                  handleIsPreview={() => {
-                    handleIsPreview(!isPreview)
-                    !isPreview === true && window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-                  }} 
-                  isPreview={isPreview} 
-                  isDisableUpdateIssue={isDisableUpdateIssue()} 
-                  isUploading={isUploading} 
-                />
-              )}
+              <If condition={!!walletAddress}>
+                <If condition={isEditIssue}>
+                  <BodyEditButtons
+                    handleUpdateBounty={handleUpdateBounty}
+                    handleCancelEdit={handleCancelEdit}
+                    handleIsPreview={() => {
+                      handleIsPreview(!isPreview);
+                      !isPreview === true &&
+                        window.scrollTo({
+                          top: 0,
+                          left: 0,
+                          behavior: "smooth",
+                        });
+                    }}
+                    isPreview={isPreview}
+                    isDisableUpdateIssue={isDisableUpdateIssue()}
+                    isUploading={isUploading}
+                  />
+                </If>
+              </If>
             </div>
           </div>
           <div className="col-12 col-md-4">
             <BountyStatusProgress currentBounty={bounty} />
-          </div>
-        </div>
-      </div>
-    );
-  else
-    return (
-      <div className="row justify-content-center">
-        <div className="col-md-12">
-          <div className="border-radius-8 p-3 bg-gray-850 mb-3">
-            <BountyDescription body={body || ""} />
           </div>
         </div>
       </div>

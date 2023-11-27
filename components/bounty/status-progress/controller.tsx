@@ -4,7 +4,6 @@ import { useTranslation } from "next-i18next";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 import BountyStatusProgressView from "./view";
@@ -14,7 +13,6 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
 
   const [stepColor, setStepColor] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<number>();
-  const [chainTime, setChainTime] = useState<number>(+new Date());
   const [steps, setSteps] = useState<string[]>([
     t("bounty:steps.draft"),
     t("bounty:steps.funding"),
@@ -23,14 +21,9 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
     t("bounty:steps.closed"),
   ]);
 
-  const { service: daoService } = useDaoStore();
   const marketplace = useMarketplace();
 
-  const getChainTime = () =>
-    daoService
-      ?.getTimeChain()
-      .then(setChainTime)
-      .catch(console.log);
+  const chainTime = Date.parse(new Date().toISOString())
 
   const { isClosed, isCanceled, isDraft, isFundingRequest, isFunded } =
     currentBounty || {};
@@ -57,9 +50,6 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
     return isFundingRequest ? "270px" : "200px";
   }
 
-  useEffect(() => {
-    getChainTime();
-  }, []);
   useEffect(() => {
     const isFundingStep = !!steps.find((name) => name === t("bounty:steps.funding"));
 
