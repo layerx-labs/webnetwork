@@ -1,29 +1,41 @@
 import {NextApiRequest} from "next";
 import {Op} from "sequelize";
-import {isAddress} from "web3-utils";
 
-import models from "../../../db/models";
-import paginate from "../../../helpers/paginate";
-import {BadRequestErrors} from "../../../interfaces/enums/Errors";
+import models from "db/models";
+
+import paginate from "helpers/paginate";
+
+import {BadRequestErrors} from "interfaces/enums/Errors";
+import {UserRole} from "interfaces/enums/roles";
+
 import {HttpBadRequestError, HttpUnauthorizedError} from "../../errors/http-errors";
-import {UserRole} from "../../../interfaces/enums/roles";
+import {isAddress} from "../../../helpers/is-address";
 
 export function getNotifications(req: NextApiRequest) {
+
   const {address, id} = req.query as {address: string, id: string};
   const {page = 1, read = null,} = req.query as {page: string, read?: string};
-  const {context: {tokens: {roles}}, user: {id: userId, address: userAddress}} = req.body;
+  const {context: {token: {roles}, user: {id: userId, address: userAddress}}} = req.body;
 
-  if (!userId || !roles.includes(UserRole.ADMIN))
+  const userIsAdmin = roles.includes(UserRole.ADMIN);
+
+  if (!userId)
     throw new HttpUnauthorizedError();
 
-  if (!roles.includes(UserRole.ADMIN) && address && address !== userAddress)
+  if (!userIsAdmin && (
+      (address && address !== userAddress)
+      || (id && id !== userId)))
     throw new HttpUnauthorizedError();
 
   if (!id && !address)
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
+  console.log(address)
+
   if (address && !isAddress(address))
     throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotAnAddress);
+
+  console.log(address)
 
   if (id && isNaN(+id))
     throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotANumber);
