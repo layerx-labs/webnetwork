@@ -4,13 +4,13 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import VotingPowerNetworkView from "components/profile/pages/voting-power/network/view";
+
 import { useUserStore } from "x-hooks/stores/user/user.store";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useChain from "x-hooks/use-chain";
 import useOracleToken from "x-hooks/use-oracle-token";
-
-import VotingPowerNetworkView from "./view";
 
 export default function VotingPowerNetwork() {
   const { query } = useRouter();
