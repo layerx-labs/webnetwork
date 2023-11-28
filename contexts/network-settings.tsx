@@ -197,7 +197,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     if(detailsValidate && isCreating){
       const data = Object.keys(newState)
-                          .filter(key => newState[key].validated)
+                          .filter(key => newState[key]?.validated)
                           .reduce((obj, key) => {
                             obj[key] = newState[key]
                             return obj
@@ -506,7 +506,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     if (!isCreating && forcedNetwork)
       loadNetworkSettings().finally(()=> setIsLoadingData(false));
-    else if(isCreating)
+    else if(isCreating && +connectedChain?.id === +daoStore?.chainId)
       loadDefaultSettings().finally(()=> setIsLoadingData(false));
   }, [
     currentUser?.walletAddress,
