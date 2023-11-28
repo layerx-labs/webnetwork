@@ -8,6 +8,7 @@ import { FIVE_MINUTES_IN_MS, MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
+import {Network} from "interfaces/network";
 import { ProfilePages } from "interfaces/utils";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
@@ -71,6 +72,27 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
                           });
   }
 
+  function updateCuratorAndGovernor (network: Network) {
+    if (state.currentUser?.walletAddress) {
+      const userAddress = state.currentUser.walletAddress;
+      const isCurator = !!network?.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
+      const isGovernor = lowerCaseCompare(network?.creatorAddress, userAddress);
+      console.log({
+        isCurator,
+        isGovernor,
+        network,
+        userAddress
+      })
+      dispatch(changeCurrentUserisCouncil(isCurator));
+      dispatch(changeCurrentUserisGovernor(isGovernor));
+    }
+  }
+
+  function _updateParamsOfActive (network: Network) {
+    updateCuratorAndGovernor(network);
+    updateParamsOfActive(network);
+  }
+
   useEffect(() => {
     if (isFetching || isError || isStale)
       return;
@@ -122,7 +144,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   return {
     ...data,
     refresh: invalidate,
-    updateParamsOfActive,
+    updateParamsOfActive: _updateParamsOfActive,
     getURLWithNetwork,
     goToProfilePage,
     getTotalNetworkToken,
