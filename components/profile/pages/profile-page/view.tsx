@@ -25,12 +25,15 @@ interface ProfilePageViewProps {
   isSwitchDisabled: boolean;
   isEmailInvalid: boolean;
   isConfirmationPending: boolean;
-  isExecuting: boolean;
+  isExecutingHandle: boolean;
+  isExecutingEmail: boolean;
   emailVerificationError?: string;
+  isUserNameInvalid: boolean;
   onHandleEmailChange: (e) => void;
   onHandleUserNameChange: (e) => void;
   onHandleEditUserName: (e: boolean) => void;
-  onSave: () => void;
+  onSaveEmail: () => void;
+  onSaveHandle: () => void;
   onResend: () => void;
   onSwitchChange: (value: boolean) => void;
 }
@@ -46,12 +49,15 @@ export default function ProfilePageView({
   isSwitchDisabled,
   isEmailInvalid,
   isConfirmationPending,
-  isExecuting,
+  isExecutingHandle,
+  isExecutingEmail,
   emailVerificationError,
+  isUserNameInvalid,
   onHandleEmailChange,
   onHandleUserNameChange,
   onHandleEditUserName,
-  onSave,
+  onSaveEmail,
+  onSaveHandle,
   onResend,
   onSwitchChange
 }: ProfilePageViewProps) {
@@ -88,13 +94,13 @@ export default function ProfilePageView({
               <UserNameForm 
                 userName={userName} 
                 isEditUserName={isEditUserName} 
-                isSaveButtonDisabled={isSaveButtonDisabled} 
-                isEmailInvalid={isEmailInvalid} 
-                isExecuting={isExecuting} 
+                isSaveButtonDisabled={!userName || isUserNameInvalid || isExecutingHandle} 
+                isUserNameInvalid={isUserNameInvalid} 
+                isExecuting={isExecutingHandle} 
                 isApprovedName={true}
                 onHandleUserNameChange={onHandleUserNameChange} 
                 onHandleEditUserName={onHandleEditUserName} 
-                onSave={onSave} 
+                onSave={onSaveHandle} 
               />
               <div className={`${isTabletOrMobile ? "ms-2" : "mt-2" } text-truncate`}>
                     <AddressWithCopy
@@ -120,9 +126,9 @@ export default function ProfilePageView({
           isSwitchDisabled={isSwitchDisabled} 
           isEmailInvalid={isEmailInvalid} 
           isConfirmationPending={isConfirmationPending} 
-          isExecuting={isExecuting} 
+          isExecuting={isExecutingEmail} 
           onHandleEmailChange={onHandleEmailChange} 
-          onSave={onSave} 
+          onSave={onSaveEmail} 
           onResend={onResend} 
           onSwitchChange={onSwitchChange}   
           emailVerificationError={emailVerificationError}     

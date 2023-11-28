@@ -15,6 +15,8 @@ import { isValidEmail } from "helpers/validators/email";
 import { CustomSession } from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
+import { useCheckHandle } from "x-hooks/api/user/use-check-handle";
+import { useUpdateHandle } from "x-hooks/api/user/use-update-handle";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -27,18 +29,29 @@ export default function ProfilePage() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputUserName, setInputUserName] = useState("User-Handle");
   const [isEditUserName, setIsEditUserName] = useState(false);
+  const [isUserNameInvalid, setIsUserNameInvalid] = useState(false);
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
 
   const emailValidator = useDebouncedCallback(email => {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
+  const debouncedCheckHandle = useDebouncedCallback((value: string) => 
+    useCheckHandle(value).then(setIsUserNameInvalid)
+  , 500);
 
   const { state } = useAppState();
   const { goToProfilePage } = useMarketplace();
   const { addSuccess } = useToastStore();
-  const { mutate: updateEmail, isLoading: isExecuting } = useReactQueryMutation({
+  const { mutate: updateEmail, isLoading: isExecutingEmail } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
+    toastError: t("email-errors.failed-to-update"),
+    onSuccess: () => {
+      updateSession();
+    }
+  });
+  const { mutate: updateHandle, isLoading: isExecutingHandle } = useReactQueryMutation({
+    mutationFn: useUpdateHandle,
     toastError: t("email-errors.failed-to-update"),
     onSuccess: () => {
       updateSession();
@@ -58,10 +71,14 @@ export default function ProfilePage() {
 
   function handleUserNameChange(e) {
     setInputUserName(e.target.value)
+    debouncedCheckHandle(e.target.value)
   }
 
-  function onSave() {
-    updateEmail(inputEmail);
+  function onSave(type: 'email' | 'handle') {
+    if(type === 'email')
+      updateEmail(inputEmail);
+    if(type === 'handle')
+      updateHandle({ address: sessionUser?.address, handle: inputUserName});
   }
 
   function onResend() {
@@ -74,7 +91,7 @@ export default function ProfilePage() {
 
   function onSwitchChange(newValue: boolean) {
     if (!newValue) {
-      if (!isExecuting && userEmail !== "")
+      if (!isExecutingEmail && userEmail !== "")
         updateEmail("");
       else
         setIsNotificationEnabled(false);
@@ -98,15 +115,18 @@ export default function ProfilePage() {
     <ProfilePageView
       userEmail={inputEmail}
       userName={inputUserName}
-      onSave={onSave}
+      onSaveEmail={() => onSave('email')}
+      onSaveHandle={() => onSave('handle')}
       onResend={onResend}
-      isSaveButtonDisabled={isSameEmail || isExecuting || isEmailInvalid}
+      isSaveButtonDisabled={isSameEmail || isExecutingEmail || isEmailInvalid}
       isEditUserName={isEditUserName}
       onHandleEditUserName={(e: boolean) => setIsEditUserName(e)}
       emailVerificationError={emailVerificationError}
-      isSwitchDisabled={isExecuting}
+      isSwitchDisabled={isExecutingEmail}
       isEmailInvalid={isEmailInvalid}
-      isExecuting={isExecuting}
+      isUserNameInvalid={isUserNameInvalid}
+      isExecutingEmail={isExecutingEmail}
+      isExecutingHandle={isExecutingHandle}
       onHandleEmailChange={handleEmailChange}
       onHandleUserNameChange={handleUserNameChange}
       isNotificationEnabled={isNotificationEnabled}

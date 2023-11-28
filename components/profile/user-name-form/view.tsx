@@ -13,7 +13,7 @@ interface UserNameFormProps {
   userName: string;
   isEditUserName: boolean;
   isSaveButtonDisabled: boolean;
-  isEmailInvalid: boolean;
+  isUserNameInvalid: boolean;
   isExecuting: boolean;
   isApprovedName: boolean;
   onHandleUserNameChange: (e) => void;
@@ -25,7 +25,7 @@ export default function UserNameForm({
   userName,
   isEditUserName,
   isSaveButtonDisabled,
-  isEmailInvalid,
+  isUserNameInvalid,
   isExecuting,
   isApprovedName,
   onHandleUserNameChange,
@@ -50,7 +50,7 @@ export default function UserNameForm({
             <input
               type="text"
               className={`form-control xl-semibold user-input ${
-                isEmailInvalid ? "is-invalid" : ""
+                isUserNameInvalid ? "is-invalid" : ""
               }`}
               value={userName}
               onChange={onHandleUserNameChange}
@@ -64,7 +64,7 @@ export default function UserNameForm({
           </div>
         </div>
         <ResponsiveWrapper xl={false} xs={true}>
-          <If condition={isEmailInvalid}>
+          <If condition={isUserNameInvalid}>
             <small className="xs-small text-danger">
               {t("profile:invalid-user-name")}
             </small>
@@ -82,7 +82,7 @@ export default function UserNameForm({
           </div>
         </div>
         <ResponsiveWrapper xl={true} xs={false}>
-          <If condition={isEmailInvalid}>
+          <If condition={isUserNameInvalid}>
             <small className="xs-small text-danger">
               {t("profile:invalid-user-name")}
             </small>
