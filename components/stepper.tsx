@@ -13,7 +13,9 @@ export default function Stepper({ disableActiveStep = false, dark = false, child
 
   useEffect(() => {
     if(disableActiveStep && activeStep !== -1)
-      setActiveStep(-1)
+      setActiveStep(-1);
+    else
+      setActiveStep(0);
   }, [disableActiveStep])
 
   useEffect(() => {
