@@ -13,7 +13,7 @@ module.exports = {
     });
 
     await queryInterface.sequelize.query(
-      `UPDATE "curators" AS c SET "userId" = u."id" FROM "users" AS u WHERE c."address" = u."address";`,
+      `UPDATE "curators" AS c SET "userId" = u."id" FROM "users" AS u WHERE lower(c."address") = lower(u."address");`,
       {type: QueryTypes.UPDATE}
     )
   },
