@@ -1,10 +1,10 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
-import { CurrentUserState } from "interfaces/application-state";
-import { IdsComment, TypeComment } from "interfaces/comments";
-import { IssueDataComment } from "interfaces/issue-data";
+import {CurrentUserState} from "interfaces/application-state";
+import {IdsComment, TypeComment} from "interfaces/comments";
+import {IssueDataComment} from "interfaces/issue-data";
 
 import Comment from "./comment/view";
 import InputComment from "./input-comment/controller";
@@ -38,7 +38,7 @@ export default function BountyCommentsView({
               !disableCreateComment ? (
                 <InputComment
                   userAddress={currentUser?.walletAddress}
-                  githubLogin={currentUser?.login}
+                  handle={currentUser?.login}
                   type={type}
                   ids={ids}
                 />

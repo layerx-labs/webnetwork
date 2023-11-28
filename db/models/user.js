@@ -10,7 +10,7 @@ class User extends Model {
    */
   static init(sequelize) {
     super.init({
-      githubLogin: {
+      handle: {
         type: DataTypes.STRING, 
         allowNull: true
       },
@@ -80,10 +80,10 @@ class User extends Model {
     });
   }
 
-  static findByGithubLogin(githubLogin) {
+  static findByhandle(handle) {
     return this.findOne({
       where: {
-        address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("githubLogin")), githubLogin?.toLowerCase())
+        address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("handle")), handle?.toLowerCase())
       }
     });
   }

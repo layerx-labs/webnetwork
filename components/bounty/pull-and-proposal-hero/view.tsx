@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ArrowLeft from "assets/icons/arrow-left";
 
@@ -10,13 +10,13 @@ import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
 import GithubInfo from "components/github-info";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { Token } from "interfaces/token";
+import {Token} from "interfaces/token";
 
 interface PullAndProposalHeroViewPRops {
   contractId: number;
-  githubLogin: string;
+  handle: string;
   createdAt: Date;
   creatorAddress: string;
   issueTitle: string;
@@ -29,7 +29,7 @@ interface PullAndProposalHeroViewPRops {
 
 export default function PullAndProposalHeroView({
   contractId,
-  githubLogin,
+  handle,
   createdAt,
   creatorAddress,
   issueTitle,
@@ -94,7 +94,7 @@ export default function PullAndProposalHeroView({
             <div className="row align-items-center gap-1">
               <div className="col-auto">
                 <AvatarOrIdenticon
-                  user={githubLogin}
+                  user={handle}
                   address={creatorAddress}
                   size="sm"
                 />
@@ -105,8 +105,8 @@ export default function PullAndProposalHeroView({
                   parent="hero"
                   variant="user"
                   label={
-                    githubLogin
-                      ? `@${githubLogin}`
+                    handle
+                      ? `@${handle}`
                       : truncateAddress(creatorAddress)
                   }
                 />

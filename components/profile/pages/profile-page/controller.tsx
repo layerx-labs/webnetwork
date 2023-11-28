@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
-import { useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-import { useDebouncedCallback } from "use-debounce";
+import {useSession} from "next-auth/react";
+import {useTranslation} from "next-i18next";
+import {useRouter} from "next/router";
+import {useDebouncedCallback} from "use-debounce";
 
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
-import { useAppState } from "contexts/app-state";
+import {useAppState} from "contexts/app-state";
 
-import { lowerCaseCompare } from "helpers/string";
-import { isValidEmail } from "helpers/validators/email";
+import {lowerCaseCompare} from "helpers/string";
+import {isValidEmail} from "helpers/validators/email";
 
-import { CustomSession } from "interfaces/custom-session";
+import {CustomSession} from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
 import { useCheckHandle } from "x-hooks/api/user/use-check-handle";

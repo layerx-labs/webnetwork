@@ -2,11 +2,11 @@ import Avatar from "components/avatar";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 
-import { formatNumberToString } from "helpers/formatNumber";
+import {formatNumberToString} from "helpers/formatNumber";
 
 export default function DistributionBarItem({
   percentage,
-  githubLogin = null,
+  handle = null,
   label = "",
   description = "",
   progressColor = "primary",
@@ -17,14 +17,14 @@ export default function DistributionBarItem({
       style={{ width: `${percentage || 25}%` }}
     >
       <If
-        condition={!!githubLogin}
+        condition={!!handle}
         otherwise={
           <span className="text-gray-500 text-uppercase xs-medium mt-1">
             {label}
           </span>
         }
       >
-        <Avatar key={githubLogin} userLogin={githubLogin} tooltip />
+        <Avatar key={handle} userLogin={handle} tooltip />
       </If>
 
       <div className="d-flex gap-1">

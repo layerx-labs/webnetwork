@@ -1,20 +1,20 @@
-import { ChangeEvent } from "react";
+import {ChangeEvent} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
 export default function InputCommentView({
-  githubLogin,
+  handle,
   userAddress,
   comment,
   onCommentSubmit,
   onCommentChange ,
 }: {
-  githubLogin?: string;
+  handle?: string;
   userAddress: string;
   comment: string;
   onCommentSubmit: (...props) => void;
@@ -27,12 +27,12 @@ export default function InputCommentView({
       <div className="d-flex align-items-center mb-2">
         <div className="d-flex align-items-center">
           <AvatarOrIdenticon
-            user={githubLogin}
+            user={handle}
             address={userAddress}
             size="xsm"
           />
           <span className="xs-medium ms-2">
-            {githubLogin ? `@${githubLogin}` : truncateAddress(userAddress)}{" "}
+            {handle ? `@${handle}` : truncateAddress(userAddress)}{" "}
           </span>
         </div>
       </div>

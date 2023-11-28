@@ -6,7 +6,7 @@ import models from "db/models";
 import {calculateLeaderboardScore} from "helpers/leaderboard-score";
 import paginate, {calculateTotalPages} from "helpers/paginate";
 
-import { withCORS } from "middleware";
+import {withCORS} from "middleware";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -37,7 +37,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       ...leaderboard,
       rows: leaderboard.rows.map(row => ({
         ...row,
-        githubLogin: users.find(({ address }) => address.toLowerCase() === row.address.toLowerCase())?.githubLogin,
+        handle: users.find(({ address }) => address.toLowerCase() === row.address.toLowerCase())?.handle,
         ...calculateLeaderboardScore(row)
       }))
     };

@@ -7,7 +7,7 @@ import TokenSymbolView from "components/common/token-symbol/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 
-import { formatNumberToNScale } from "helpers/formatNumber";
+import {formatNumberToNScale} from "helpers/formatNumber";
 
 interface ProposalDistributionListItemProps {
   percentage: string;
@@ -17,7 +17,7 @@ interface ProposalDistributionListItemProps {
   name: string;
   description?: string;
   line?: boolean
-  githubLogin?: string;
+  handle?: string;
   className?: string;
   isNetworkToken?: boolean;
 }
@@ -29,7 +29,7 @@ export default function ProposalDistributionListItem({
   value,
   convertedValue,
   description,
-  githubLogin,
+  handle,
   className,
   isNetworkToken,
 }: ProposalDistributionListItemProps) {
@@ -40,8 +40,8 @@ export default function ProposalDistributionListItem({
     >
       <div className="d-flex flex-grow-1 flex-column py-1">
         <div className="d-flex align-items-center gap-2">
-          <If condition={!!githubLogin}>
-            <Avatar key={githubLogin}  size="xsm"  userLogin={githubLogin} tooltip />
+          <If condition={!!handle}>
+            <Avatar key={handle}  size="xsm"  userLogin={handle} tooltip />
           </If>
 
           <span className="text-truncate text-gray caption-small font-weight-medium">
