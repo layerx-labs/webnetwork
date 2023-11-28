@@ -77,12 +77,6 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       const userAddress = state.currentUser.walletAddress;
       const isCurator = !!network?.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
       const isGovernor = lowerCaseCompare(network?.creatorAddress, userAddress);
-      console.log({
-        isCurator,
-        isGovernor,
-        network,
-        userAddress
-      })
       dispatch(changeCurrentUserisCouncil(isCurator));
       dispatch(changeCurrentUserisGovernor(isGovernor));
     }
