@@ -2,12 +2,10 @@ import {NextApiRequest} from "next";
 
 import {handleValidator} from "helpers/validators/handle-validator";
 
+import {getUserByAddress} from "server/common/user/get-user-by-address";
+import {getUserByHandle} from "server/common/user/get-user-by-handle";
 import {HttpBadRequestError, HttpConflictError, HttpForbiddenError} from "server/errors/http-errors";
 import {UserRoleUtils} from "server/utils/jwt";
-
-import {getUserByAddress} from "./get-user-by-address";
-import {getUserByHandle} from "./get-user-by-handle";
-
 
 export async function changeUserHandle(req: NextApiRequest) {
   const {handle} = req.query as {handle: string};

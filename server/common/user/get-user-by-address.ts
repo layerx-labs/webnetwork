@@ -3,7 +3,7 @@ import {Op} from "sequelize";
 
 import models from "db/models";
 
-import {HttpBadRequestError, HttpNotFoundError} from "../../errors/http-errors";
+import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
 export async function getUserByAddress(req: NextApiRequest) {
   const {address} = req.query as {address: string};
