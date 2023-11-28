@@ -12,9 +12,11 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
 
 export default function ChainSelector({
-  isFilter = false
+  isFilter = false,
+  placeholder
 }: {
   isFilter?: boolean;
+  placeholder?: string;
 }) {
   const { query, pathname, asPath, push } = useRouter();
 
@@ -62,6 +64,7 @@ export default function ChainSelector({
       onSelect={handleNetworkSelected}
       shouldMatchChain={shouldMatchChain}
       isOnNetwork={isOnNetwork}
+      placeholder={placeholder}
     />
   );
 }

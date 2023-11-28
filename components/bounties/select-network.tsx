@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import IconOption from "components/icon-option";
 import IconSingleValue from "components/icon-single-value";
+import If from "components/If";
 import NetworkLogo from "components/network-logo";
 import ReactSelect from "components/react-select";
 
@@ -26,6 +27,9 @@ interface SelectNetworkProps {
   isCurrentDefault?: boolean;
   onlyProfileFilters?: boolean;
   filterByConnectedChain?: boolean;
+  hideLabel?: boolean;
+  isClearable?: boolean;
+  onChange?: (network: Network) => void;
   fontRegular?: boolean;
 }
 
@@ -33,6 +37,9 @@ export default function SelectNetwork({
   isCurrentDefault = false,
   onlyProfileFilters = false,
   filterByConnectedChain = false,
+  hideLabel,
+  onChange,
+  isClearable = true,
   fontRegular = false
 } : SelectNetworkProps) {
   const { t } = useTranslation("common");
@@ -71,16 +78,18 @@ export default function SelectNetwork({
     };
   }
 
-  function onChange(newValue) {
+  function handleChange(newValue) {
     if (!newValue || newValue?.value?.networkAddress !== selected?.value?.networkAddress) {
       setSelected(newValue);
-
+      if (onChange) {
+        onChange(newValue?.value);
+        return;
+      }
       const newQuery = {
         ...query,
         page: "1",
         networkName: newValue?.value?.name || "all"
       };
-
       push({ pathname: pathname, query: newQuery }, asPath);
     }
   }
@@ -106,16 +115,18 @@ export default function SelectNetwork({
 
   return(
     <div className={`${onlyProfileFilters ? 'mb-3' : 'd-flex align-items-center'}`}>
-      <span
+      <If condition={!hideLabel}>
+        <span
         className={`${
           fontRegular ? "sm-regular text-white" : "caption-small  text-gray-100"
         } font-weight-medium text-nowrap mr-1`}
       >
-        {t("misc.network")}
-      </span>
+          {t("misc.network")}
+        </span>
+      </If>
       <NativeSelectWrapper
         options={options}
-        onChange={onChange}
+        onChange={handleChange}
         selectedIndex={options?.findIndex((opt) =>
             opt?.value?.networkAddress === selected?.value?.networkAddress)}
         isClearable
@@ -123,13 +134,13 @@ export default function SelectNetwork({
         <ReactSelect
           value={selected}
           options={options}
-          onChange={onChange}
+          onChange={handleChange}
           placeholder={t("select-a-network")}
           components={{
             Option: IconOption,
             SingleValue: IconSingleValue,
           }}
-          isClearable
+          isClearable={isClearable}
         />
       </NativeSelectWrapper>
     </div>
