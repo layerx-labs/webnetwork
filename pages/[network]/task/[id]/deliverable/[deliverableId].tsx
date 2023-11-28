@@ -98,8 +98,6 @@ export default function DeliverablePage() {
         onConfirm={handleCreateReview}
         onCloseClick={handleCloseModal}
       />
-
-      <ConnectWalletButton asModal={true}/>
     </>
   );
 }
