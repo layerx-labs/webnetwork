@@ -16,7 +16,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface ContractButtonProps extends ButtonProps {
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => Promise<void>;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => Promise<void> | void;
   variant?: "network" | "registry";
 }
 export default function ContractButton({

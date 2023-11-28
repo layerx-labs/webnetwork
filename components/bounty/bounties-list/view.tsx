@@ -36,7 +36,7 @@ interface BountiesListViewProps {
   currentChain?: SupportedChainData;
   chains?: SupportedChainData[];
   onClearSearch: () => void;
-  onNotFoundClick: () => void;
+  onNotFoundClick: () => Promise<void>;
   onNextPage: () => void;
   onSearchInputChange: (event) => void;
   onSearchClick: () => void;
