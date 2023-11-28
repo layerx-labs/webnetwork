@@ -11,7 +11,7 @@ import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
-import { useDappkitConnectionInfo } from "x-hooks/use-dappkit";
+import {useDappkit} from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -30,13 +30,13 @@ export default function ContractButton({
   const [isValidating, setIsValidating] = useState(false);
 
   const { start } = useDao();
-  const marketplace = useMarketplace();
-  const { currentUser } = useUserStore();
-  const { connectedChain } = useSupportedChain();
+  const { connection } = useDappkit();
   const { addError } = useToastStore();
+  const marketplace = useMarketplace();
+  const { connectedChain } = useSupportedChain();
+  const { currentUser } = useUserStore();
   const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
-  const connectionInfo = useDappkitConnectionInfo();
   const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
     +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
@@ -50,7 +50,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (isSameChain && connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (isNetworkVariant && isSameChain || connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
     updateWrongNetworkModal(true)
@@ -60,7 +60,7 @@ export default function ContractButton({
 
   async function validateWallet() {
     const sessionWallet = currentUser?.walletAddress;
-    const connectedAddress = connectionInfo?.address;
+    const connectedAddress = await connection?.getAddress();
 
     if (!connectedAddress || !sessionWallet) return false;
 
