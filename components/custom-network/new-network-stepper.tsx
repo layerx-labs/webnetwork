@@ -41,6 +41,8 @@ import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
+import {useDao} from "x-hooks/use-dao";
+import {useDappkit} from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -58,10 +60,12 @@ function NewNetwork() {
   const { addError } = useToastStore();
   const { signMessage } = useSignature();
   const { updateLoading } = useLoadersStore();
+  const { start: startService } = useDao();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { service: daoService } = useDaoStore();
+  const { connection } = useDappkit();
+  const { service: daoService, ...daoStore } = useDaoStore();
   const { currentUser } = useUserStore();
   const {
     handleDeployNetworkV2,
@@ -222,9 +226,8 @@ function NewNetwork() {
     ])
       .then(() => {
         updateSession();
-        router.push(getURLWithNetwork("/", {
-          network: payload.name,
-          chain: connectedChain?.shortName
+        router.push(getURLWithNetwork("/tasks", {
+          network: payload.name
         }));
       })
       .catch((error) => {
@@ -253,10 +256,23 @@ function NewNetwork() {
     if (!daoService ||
         !walletAddress ||
         !connectedChain ||
-        connectedChain?.name === UNSUPPORTED_CHAIN) return;
+        connectedChain?.name === UNSUPPORTED_CHAIN ||
+        +connectedChain?.id !== +daoStore?.chainId) return;
 
     checkHasNetwork();
-  }, [daoService, currentUser, connectedChain]);
+  }, [daoStore?.chainId, currentUser, connectedChain]);
+
+  useEffect(() => {
+    if (!connectedChain?.id ||
+        +connectedChain?.id === daoStore?.chainId ||
+        daoStore?.serviceStarting ||
+        !connection)
+      return;
+    startService({
+      chainId: +connectedChain?.id
+    })
+      .catch(() => {});
+  }, [connectedChain?.id, connection]);
 
   return (
     <div>
