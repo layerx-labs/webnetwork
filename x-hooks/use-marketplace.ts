@@ -49,13 +49,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   function goToProfilePage(profilePage: ProfilePages, params = undefined) {
-    const queryNetwork = query?.network || "";
     const path = profilePage === "profile" ? "profile" : `profile/${profilePage}`;
-    if (queryNetwork !== "")
-      return push(getURLWithNetwork(`/profile/[[...profilePage]]`, {
-        ...query,
-        ...params
-      }), `/${queryNetwork}/${path}`);
     return push({
       pathname: "/profile/[[...profilePage]]",
       query: {

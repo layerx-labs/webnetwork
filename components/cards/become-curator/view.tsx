@@ -12,7 +12,7 @@ interface BecomeCuratorCardViewProps {
   onHide: () => void;
   councilAmount: string;
   networkTokenSymbol: string;
-  votingPowerHref: UrlObject;
+  votingPowerHref: string;
   votingPowerAlias: string;
 }
 
