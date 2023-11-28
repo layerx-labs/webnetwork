@@ -148,7 +148,11 @@ export function useDao() {
       shortName: chain?.chainShortName?.toLowerCase() || UNSUPPORTED_CHAIN,
       explorer: chain?.blockScanner || SUPPORT_LINK,
       events: chain?.eventsApi,
-      registry: chain?.registryAddress
+      registry: chain?.registryAddress,
+      lockAmountForNetworkCreation: chain?.lockAmountForNetworkCreation,
+      networkCreationFeePercentage: chain?.networkCreationFeePercentage,
+      closeFeePercentage: chain?.closeFeePercentage,
+      cancelFeePercentage: chain?.cancelFeePercentage,
     })
   }
 
