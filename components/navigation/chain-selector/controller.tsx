@@ -47,14 +47,12 @@ export default function ChainSelector({
       return;
     }
 
-    const needsRedirect = ["bounty", "deliverable", "proposal"].includes(pathname.replace("/[network]/[chain]/", ""));
+    const needsRedirect = ["bounty", "deliverable", "proposal"].includes(pathname.replace("/[network]/", ""));
     const newPath = needsRedirect ? "/" : pathname;
-    const newAsPath = needsRedirect ? `/${query.network}/${chain.chainShortName}` :
-      asPath.replace(query.chain.toString(), chain.chainShortName);
+    const newAsPath = `/${query.network}/`;
 
     push(getURLWithNetwork(newPath, {
-      ... needsRedirect ? {} : query,
-      chain: chain.chainShortName
+      ... needsRedirect ? {} : query
     }), newAsPath);
   }
 

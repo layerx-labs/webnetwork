@@ -34,8 +34,7 @@ export default function VotingPowerMultiNetwork() {
 
   function goToNetwork(network) {
     push(getURLWithNetwork("/tasks", {
-          network: network?.name,
-          chain: network?.chain?.chainShortName,
+          network: network?.name
     }));
     
   }

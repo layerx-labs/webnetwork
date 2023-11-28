@@ -8,8 +8,7 @@ export default function DeliverableInfoCuratorCard() {
 
   const votingPowerHref = getURLWithNetwork("/profile/[[...profilePage]]");
   const marketplaceName = activeMarketplace?.name?.toLowerCase();
-  const chainName = activeMarketplace?.chain?.chainShortName?.toLowerCase();
-  const votingPowerAlias = `/${marketplaceName}/${chainName}/profile/voting-power`;
+  const votingPowerAlias = `/${marketplaceName}/profile/voting-power`;
 
   return (
     <DeliverableInfoCardView
