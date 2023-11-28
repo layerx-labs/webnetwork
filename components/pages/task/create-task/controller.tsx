@@ -298,7 +298,6 @@ export default function CreateTaskPage({
 
     setIsLoadingCreateBounty(true);
 
-
     try {
       const payload = {
         title: bountyTitle,
@@ -470,16 +469,12 @@ export default function CreateTaskPage({
   }
 
   useEffect(() => {
-    if(!connectedChain) return;
-
+    if(!connectedChain || currentSection !== 0) return;
     if (connectedChain.name === UNSUPPORTED_CHAIN) {
       setCurrentNetwork(undefined);
-
       return;
     }
-      
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
-
     setNetworksOfConnectedChain(networksOfChain);
     setCurrentNetwork(networksOfChain[0]);
     updateParamsOfActive(networksOfChain[0]);
