@@ -107,7 +107,7 @@ export default function CreateBountyTokenAmount({
   });
 
   function handleDistributions(value, type) {
-    if (!currentNetwork) return;
+    if (!currentNetwork || !isFunders) return;
     if (!value) {
       setDistributions(undefined);
       if (type === "reward")

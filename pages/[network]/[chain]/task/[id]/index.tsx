@@ -83,9 +83,7 @@ export default function TaskPage() {
           updateBountyData={updateBountyData}
         />
 
-        <If condition={!!currentUser?.walletAddress}>
-          <TabSections currentBounty={parsedBounty} />
-        </If>
+        <TabSections currentBounty={parsedBounty} />
 
         <BountyBody 
           currentBounty={parsedBounty}

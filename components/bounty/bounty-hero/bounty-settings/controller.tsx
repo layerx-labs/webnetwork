@@ -4,9 +4,9 @@ import { useTranslation } from "next-i18next";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 
@@ -15,11 +15,13 @@ import BountySettingsView from "./view";
 export default function BountySettings({
   isEditIssue,
   currentBounty,
-  updateBountyData
+  updateBountyData,
+  onEditIssue
 }: {
   isEditIssue?: boolean;
   currentBounty: IssueBigNumberData;
   updateBountyData: (updatePrData?: boolean) => void;
+  onEditIssue: () => void;
 }) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -33,6 +35,7 @@ export default function BountySettings({
 
   const isGovernor = currentUser?.isGovernor;
   const objViewProps = {
+    onEditIssue,
     isWalletConnected: !!currentUser?.walletAddress,
     isBountyInDraft: !!currentBounty?.isDraft,
     isBountyOwner:
