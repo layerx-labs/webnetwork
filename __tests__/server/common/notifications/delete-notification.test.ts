@@ -1,6 +1,7 @@
 import {NextApiRequest} from "next";
 
 import models from "db/models";
+
 import {deleteNotification} from "../../../../server/common/notifications/delete-notification";
 import {HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 

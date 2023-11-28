@@ -1,4 +1,5 @@
 import {NextApiRequest} from "next";
+
 import models from "../../../../db/models";
 import {putReadNotification} from "../../../../server/common/notifications/put-read-notification";
 import {HttpBadRequestError, HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
