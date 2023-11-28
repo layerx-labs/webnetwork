@@ -1,6 +1,6 @@
-import models from "db/models";
+import {NextApiRequest} from "next";
 
-import {simpleContextMock, simpleQueryMock} from "../../../../__mocks__/requests/simple-mock";
+import models from "db/models";
 import {deleteNotification} from "../../../../server/common/notifications/delete-notification";
 import {HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 
@@ -11,25 +11,44 @@ jest.mock("db/models", () => ({
 }));
 
 describe("deleteNotification()", () => {
+  let mockedRequest: NextApiRequest;
+
+  beforeEach(() => {
+    mockedRequest = {query: {}, body: {context: {token: {roles: []}, user: { id: 1}}}} as NextApiRequest;
+  });
+
+  afterEach(() => {
+    mockedRequest = {query: {}, body: {context: {token: {roles: []}, user: { id: 1}}}} as NextApiRequest;
+  });
+
   it("throws because no userId", async () => {
-    await expect(() => deleteNotification({...simpleContextMock(), ...simpleQueryMock()}))
+    mockedRequest.body.context.user.id = "";
+    await expect(() => deleteNotification(mockedRequest))
       .rejects
       .toThrow(HttpUnauthorizedError);
   });
 
   it("throws because notification does not belong to user", async () => {
-    await expect(() => deleteNotification({...simpleContextMock(undefined, "1"), ...simpleQueryMock("", "2")}))
+    mockedRequest.body.context.token.roles = ["user"];
+    mockedRequest.query = {id: "1"};
+    await expect(() => deleteNotification(mockedRequest))
       .rejects
       .toThrow(HttpUnauthorizedError);
   });
 
   it("calls model.update", async () => {
-    expect(await deleteNotification({...simpleContextMock(undefined, "1"), ...simpleQueryMock("", "1")})).toBe(true);
+    mockedRequest.body.context.token.roles = ["user"];
+    mockedRequest.body.context.user.id = "1";
+    mockedRequest.query = {id: "1"};
+    expect(await deleteNotification(mockedRequest)).toBe(true);
   })
 
   it("throws because not found", async () => {
     models.notification.findAll.mockReturnValue([]);
-    await expect(() => deleteNotification({...simpleContextMock(undefined, "1"), ...simpleQueryMock("", "1")}))
+    mockedRequest.body.context.token.roles = ["user"];
+    mockedRequest.body.context.user.id = "1";
+    mockedRequest.query = {id: "1"};
+    await expect(() => deleteNotification(mockedRequest))
       .rejects
       .toThrow(HttpNotFoundError)
   })
