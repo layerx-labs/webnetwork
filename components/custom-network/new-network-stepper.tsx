@@ -59,6 +59,7 @@ function NewNetwork() {
 
   const { addError } = useToastStore();
   const { signMessage } = useSignature();
+  const { start: startService } = useDao();
   const { updateLoading } = useLoadersStore();
   const { start: startService } = useDao();
   const { colorsToCSS } = useNetworkTheme();
