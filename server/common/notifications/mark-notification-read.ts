@@ -4,8 +4,8 @@ import {BadRequestErrors, NotFoundErrors} from "../../../interfaces/enums/Errors
 import {HttpBadRequestError, HttpNotFoundError, HttpUnauthorizedError} from "../../errors/http-errors";
 import {getNotifications} from "./get-notifications";
 
-export async function putReadNotification(req: NextApiRequest) {
-  const {id, read} = req.query as {address: string, read: "true"|"false", id: string};
+export async function markNotificationRead(req: NextApiRequest) {
+  const {id, read} = req.query as {address?: string, read: "true"|"false", id?: string};
   const {context: {user:{id: userId}}} = req.body;
 
   if (!userId)

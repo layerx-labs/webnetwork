@@ -1,7 +1,7 @@
 import {NextApiRequest} from "next";
 
 import models from "../../../../db/models";
-import {putReadNotification} from "../../../../server/common/notifications/put-read-notification";
+import {markNotificationRead} from "../../../../server/common/notifications/mark-notification-read";
 import {HttpBadRequestError, HttpNotFoundError, HttpUnauthorizedError} from "../../../../server/errors/http-errors";
 
 jest.mock("db/models", () => ({
@@ -10,7 +10,7 @@ jest.mock("db/models", () => ({
   }
 }));
 
-describe("putReadNotification()", () => {
+describe("markNotificationRead()", () => {
   let mockedRequest: NextApiRequest;
 
   beforeEach(() => {
@@ -19,20 +19,20 @@ describe("putReadNotification()", () => {
 
   it("throws because no userId", async () => {
     mockedRequest.body.context.user.id = "";
-    await expect(() => putReadNotification(mockedRequest))
+    await expect(() => markNotificationRead(mockedRequest))
       .rejects
       .toThrow(HttpUnauthorizedError)
   })
 
   it("throws because id is NaN", async () => {
     mockedRequest.query = {id: NaN as any};
-    await expect(() => putReadNotification(mockedRequest))
+    await expect(() => markNotificationRead(mockedRequest))
       .rejects
       .toThrow(HttpBadRequestError)
   })
 
   it("throws because id is undefined", async () => {
-    await expect(() => putReadNotification(mockedRequest))
+    await expect(() => markNotificationRead(mockedRequest))
       .rejects
       .toThrow(HttpBadRequestError)
   })
@@ -41,7 +41,7 @@ describe("putReadNotification()", () => {
     mockedRequest.query = {id: "1", read: "neither"};
 
     await expect(() =>
-      putReadNotification(mockedRequest))
+      markNotificationRead(mockedRequest))
       .rejects
       .toThrow(HttpBadRequestError)
   })
@@ -49,7 +49,7 @@ describe("putReadNotification()", () => {
   it("calls model.update", async () => {
     mockedRequest.query = {id: "1", read: "true"};
 
-    expect(await putReadNotification(mockedRequest))
+    expect(await markNotificationRead(mockedRequest))
       .toBe(true)
   })
 
@@ -58,7 +58,7 @@ describe("putReadNotification()", () => {
     mockedRequest.query = {id: "1", read: "true"};
 
     await expect(() =>
-      putReadNotification(mockedRequest))
+      markNotificationRead(mockedRequest))
       .rejects
       .toThrow(HttpNotFoundError)
   })

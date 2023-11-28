@@ -1,8 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {UserRoute, WithValidChainId} from "../../../middleware";
-import {getNotifications} from "../../../server/common/notifications/get-notifications";
-import {Logger} from "../../../services/logging";
+import {UserRoute, WithValidChainId} from "../../../../middleware";
+import {getNotifications} from "../../../../server/common/notifications/get-notifications";
+import {Logger} from "../../../../services/logging";
 
 async function allNotificationsHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
