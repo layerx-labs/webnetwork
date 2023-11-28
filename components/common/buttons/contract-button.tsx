@@ -40,6 +40,7 @@ export default function ContractButton({
   const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
     +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
+  const isUnsupportedChain = connectedChain?.name === UNSUPPORTED_CHAIN;
 
   async function validateEthereum() {
     if(window.ethereum) return true;
@@ -50,7 +51,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (isNetworkVariant && isSameChain || connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (isNetworkVariant && isSameChain && !isUnsupportedChain)
       return true;
 
     updateWrongNetworkModal(true)
