@@ -1,15 +1,15 @@
-import { AxiosError } from "axios";
-import { useTranslation } from "next-i18next";
+import {AxiosError} from "axios";
+import {useTranslation} from "next-i18next";
 
 import RemoveGithubAccountView from "components/connections/remove-github-modal/view";
 
-import { useRemoveGithub } from "x-hooks/api/user";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import {useRemoveGithub} from "x-hooks/api/user";
+import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface RemoveGithubAccountProps {
   show: boolean;
-  githubLogin: string;
+  handle: string;
   walletAddress: string;
   onCloseClick: () => void;
   onDisconnectGithub: () => void;
@@ -17,7 +17,7 @@ interface RemoveGithubAccountProps {
 
 export default function RemoveGithubAccount({
   show,
-  githubLogin,
+  handle,
   walletAddress,
   onCloseClick,
   onDisconnectGithub,
@@ -28,7 +28,7 @@ export default function RemoveGithubAccount({
   const { mutate: removeGithub, isLoading: isExecuting } = useReactQueryMutation({
     mutationFn: () => useRemoveGithub({
       address: walletAddress,
-      githubLogin
+      handle
     }),
     toastSuccess: t("modals.remove-github.success"),
     onSuccess: () => {
@@ -51,7 +51,7 @@ export default function RemoveGithubAccount({
     <RemoveGithubAccountView
       show={show}
       isLoading={isExecuting}
-      githubLogin={githubLogin}
+      handle={handle}
       walletAddress={walletAddress}
       onCloseClick={onCloseClick}
       onOkClick={removeGithub}

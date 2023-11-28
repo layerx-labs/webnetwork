@@ -1,15 +1,15 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 import NextAuth from "next-auth";
-import { getToken } from "next-auth/jwt";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 
 import models from "db/models";
 
-import { Logger } from "services/logging";
+import {Logger} from "services/logging";
 
-import { SESSION_TTL } from "server/auth/config";
-import { EthereumProvider, GHProvider } from "server/auth/providers";
-import { AccountValidator } from "server/auth/validators/account";
+import {SESSION_TTL} from "server/auth/config";
+import {EthereumProvider, GHProvider} from "server/auth/providers";
+import {AccountValidator} from "server/auth/validators/account";
 
 const {
   serverRuntimeConfig: {
@@ -91,7 +91,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           expires: session.expires,
           user: {
             id: user.id,
-            login: user.githubLogin,
+            login: user.handle,
             roles,
             address,
             accountsMatch,

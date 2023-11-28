@@ -1,6 +1,6 @@
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Avatar from "components/avatar";
 import BountyItemLabel from "components/bounty-item-label";
@@ -12,13 +12,14 @@ import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
+import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
 import BountyTagsView from "../bounty-tags/view";
 import TaskTypeBadge from "../task-type-badge/task-type-badge.view";
 import BountySettings from "./bounty-settings/controller";
+
 interface BountyHeroProps {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
@@ -181,12 +182,12 @@ export default function BountyHeroView({
                     <div className="d-flex flex-column justify-content-center">
                       <Avatar
                         size="xsm"
-                        userLogin={bounty?.user?.githubLogin}
+                        userLogin={bounty?.user?.handle}
                       />{" "}
                     </div>
 
                     <span>
-                      {bounty?.user?.githubLogin || truncateAddress(bounty?.user?.address)}
+                      {bounty?.user?.handle || truncateAddress(bounty?.user?.address)}
                     </span>
                   </>
                 </BountyItemLabel>

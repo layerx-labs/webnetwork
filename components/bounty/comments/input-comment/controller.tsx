@@ -1,23 +1,23 @@
-import { ChangeEvent, useState } from "react";
+import {ChangeEvent, useState} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import InputCommentView from "components/bounty/comments/input-comment/view";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
-import { IdsComment, TypeComment } from "interfaces/comments";
+import {IdsComment, TypeComment} from "interfaces/comments";
 
-import { CreateComment } from "x-hooks/api/comments";
+import {CreateComment} from "x-hooks/api/comments";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export default function InputComment({
-  githubLogin,
+  handle,
   userAddress,
   type,
   ids
 }: {
-  githubLogin?: string;
+  handle?: string;
   userAddress: string;
   type: TypeComment;
   ids: IdsComment;
@@ -52,7 +52,7 @@ export default function InputComment({
 
   return (
     <InputCommentView
-      githubLogin={githubLogin}
+      handle={handle}
       userAddress={userAddress}
       comment={comment}
       onCommentChange={onCommentChange}

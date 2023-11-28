@@ -1,14 +1,13 @@
-
-import { NextApiRequest } from "next";
-import { JWT } from "next-auth/jwt";
+import {NextApiRequest} from "next";
+import {JWT} from "next-auth/jwt";
 import GithubProvider from "next-auth/providers/github";
 import getConfig from "next/config";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
 
-import { AuthProvider } from "server/auth/providers";
+import {AuthProvider} from "server/auth/providers";
 
 const { serverRuntimeConfig } = getConfig();
 interface Profile {
@@ -49,7 +48,7 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
       const callbackUrlHttpKey = "next-auth.callback-url";
       const callbackUrlHttpsKey = "__Secure-next-auth.callback-url";
 
-      const isGithubLoginExist = await models.user.findByGithubLogin(login);
+      const ishandleExist = await models.user.findByhandle(login);
 
       const currentUser = await models.user.findOne({
         where: {
@@ -57,16 +56,16 @@ export const GHProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider
         }
       });
 
-      if(isGithubLoginExist){
+      if(ishandleExist){
         const originalUrl = (req.cookies[callbackUrlHttpKey] || req.cookies[callbackUrlHttpsKey])
-        const queryError = "?isGithubLoginExist=true"
+        const queryError = "?ishandleExist=true"
         const verifyAlreadyExistsError = originalUrl.includes(queryError)
         return `${verifyAlreadyExistsError ? originalUrl : originalUrl+queryError}`
       }
         
 
-      if(currentUser && !isGithubLoginExist) {
-        currentUser.githubLogin = login;
+      if(currentUser && !ishandleExist) {
+        currentUser.handle = login;
         await currentUser.save()
       }
 

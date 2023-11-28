@@ -11,7 +11,7 @@ class MergeProposal extends Model {
     super.init({
         issueId: DataTypes.INTEGER,
         deliverableId: DataTypes.INTEGER,
-        githubLogin: DataTypes.STRING,
+        handle: DataTypes.STRING,
         contractId: DataTypes.INTEGER,
         creator: {
           type: DataTypes.STRING,

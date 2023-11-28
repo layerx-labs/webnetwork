@@ -1,13 +1,13 @@
-import { Col, Row } from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Modal from "components/modal";
 
 interface RemoveGithubAccountViewProps {
   show: boolean;
   isLoading: boolean;
-  githubLogin: string;
+  handle: string;
   walletAddress: string;
   onCloseClick: () => void;
   onOkClick: (...props) => void;
@@ -16,7 +16,7 @@ interface RemoveGithubAccountViewProps {
 export default function RemoveGithubAccountView({
   show,
   isLoading,
-  githubLogin,
+  handle,
   walletAddress,
   onCloseClick,
   onOkClick,
@@ -42,7 +42,7 @@ export default function RemoveGithubAccountView({
         <Col>
           <Row className="text-center">
             <span className="family-Regular font-weight-medium text-white">
-              {t("common:actions.remove")} <SpanPrimary text={githubLogin} />{" "}
+              {t("common:actions.remove")} <SpanPrimary text={handle} />{" "}
               {t("modals.remove-github.account-from-wallet")}{" "}
               <SpanPrimary text={walletAddress} />
             </span>

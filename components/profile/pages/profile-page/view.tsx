@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
@@ -8,7 +8,7 @@ import Button from "components/button";
 import Switch from "components/common/switch/view";
 import RemoveGithubAccount from "components/connections/remove-github-modal/controller";
 import CustomContainer from "components/custom-container";
-import { Divider } from "components/divider";
+import {Divider} from "components/divider";
 import If from "components/If";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import ProfileLayout from "components/profile/profile-layout";
@@ -250,7 +250,7 @@ export default function ProfilePageView({
 
         <RemoveGithubAccount
           show={showRemoveModal}
-          githubLogin={userLogin}
+          handle={userLogin}
           walletAddress={walletAddress}
           onCloseClick={onHideRemoveModal}
           onDisconnectGithub={onDisconnectGithub}
