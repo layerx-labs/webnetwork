@@ -2,6 +2,8 @@ import React from "react";
 
 import { useTranslation } from "next-i18next";
 
+import ApprovedIcon from "assets/icons/approved-icon";
+
 import Button from "components/button";
 import If from "components/If";
 import UserNameWithEditIcon from "components/profile/user-name-with-edit-icon/view";
@@ -13,6 +15,7 @@ interface UserNameFormProps {
   isSaveButtonDisabled: boolean;
   isEmailInvalid: boolean;
   isExecuting: boolean;
+  isApprovedName: boolean;
   onHandleUserNameChange: (e) => void;
   onHandleEditUserName: (e: boolean) => void;
   onSave: () => void;
@@ -24,6 +27,7 @@ export default function UserNameForm({
   isSaveButtonDisabled,
   isEmailInvalid,
   isExecuting,
+  isApprovedName,
   onHandleUserNameChange,
   onHandleEditUserName,
   onSave,
@@ -42,15 +46,22 @@ export default function UserNameForm({
         }
       >
         <div className="col-12 col-lg-4">
-          <input
-            type="text"
-            className={`form-control xl-semibold user-input ${
-              isEmailInvalid ? "is-invalid" : ""
-            }`}
-            value={userName}
-            onChange={onHandleUserNameChange}
-            disabled={isExecuting}
-          />
+          <div className="input-group border-radius-8">
+            <input
+              type="text"
+              className={`form-control xl-semibold user-input ${
+                isEmailInvalid ? "is-invalid" : ""
+              }`}
+              value={userName}
+              onChange={onHandleUserNameChange}
+              disabled={isExecuting}
+            />
+            <If condition={isApprovedName}>
+              <div className="d-flex bg-gray-850 align-items-center pe-3">
+                <ApprovedIcon />
+              </div>
+            </If>
+          </div>
         </div>
         <ResponsiveWrapper xl={false} xs={true}>
           <If condition={isEmailInvalid}>

@@ -14,7 +14,6 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-
 interface ProfilePageViewProps { 
   userEmail?: string;
   userName?: string;
@@ -92,6 +91,7 @@ export default function ProfilePageView({
                 isSaveButtonDisabled={isSaveButtonDisabled} 
                 isEmailInvalid={isEmailInvalid} 
                 isExecuting={isExecuting} 
+                isApprovedName={true}
                 onHandleUserNameChange={onHandleUserNameChange} 
                 onHandleEditUserName={onHandleEditUserName} 
                 onSave={onSave} 
@@ -102,15 +102,15 @@ export default function ProfilePageView({
                       textClass="caption-medium font-weight-normal text-capitalize text-gray-300"
                       truncated
                     />
+              {isCouncil && (
+                <Badge
+                  label={t("profile:council")}
+                  color="purple-30"
+                  className="caption border border-purple text-purple border-radius-8 mt-3"
+                />
+              )}
               </div>
             </div>
-            {isCouncil && (
-              <Badge
-                label={t("profile:council")}
-                color="purple-30"
-                className="caption border border-purple text-purple border-radius-8 mt-3"
-              />
-            )}
         </div>
 
         <NotificationForm 
