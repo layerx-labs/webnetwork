@@ -6,7 +6,6 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
-import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import DeliverableBody from "components/deliverable/body/controller";
 import CreateReviewModal from "components/deliverable/create-review-modal/controller";
 import DeliverableHero from "components/deliverable/hero/controller";

@@ -22,7 +22,6 @@ import {SearchBountiesPaginated} from "types/api";
 import {useUpdateNetwork} from "x-hooks/api/marketplace";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
