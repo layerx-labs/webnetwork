@@ -18,10 +18,6 @@ describe("deleteNotification()", () => {
     mockedRequest = {query: {}, body: {context: {token: {roles: []}, user: { id: 1}}}} as NextApiRequest;
   });
 
-  afterEach(() => {
-    mockedRequest = {query: {}, body: {context: {token: {roles: []}, user: { id: 1}}}} as NextApiRequest;
-  });
-
   it("throws because no userId", async () => {
     mockedRequest.body.context.user.id = "";
     await expect(() => deleteNotification(mockedRequest))
