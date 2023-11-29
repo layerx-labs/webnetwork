@@ -90,15 +90,15 @@ export default function UserNameForm() {
 
   return (
     <UserNameFormView 
-      userName={inputUserName} 
-      sessionUserName={sessionUser?.login} 
-      isEditUserName={isEditUserName} 
+      userhandle={inputUserName} 
+      sessionUserhandle={sessionUser?.login} 
+      isEditting={isEditUserName} 
       isSaveButtonDisabled={!inputUserName || isUserNameInvalid?.invalid || isExecutingHandle || isEqualSessionName} 
-      userNameInvalid={isUserNameInvalid} 
+      validity={isUserNameInvalid} 
       isExecuting={isExecutingHandle} 
-      isApprovedName={isUserNameInvalid?.invalid === false} 
-      onHandleUserNameChange={handleUserNameChange} 
-      onHandleEditUserName={(e: boolean) => setIsEditUserName(e)} 
+      isApproved={isUserNameInvalid?.invalid === false} 
+      onChange={handleUserNameChange} 
+      onEditClick={(e: boolean) => setIsEditUserName(e)} 
       onSave={onSave} 
     />
   );

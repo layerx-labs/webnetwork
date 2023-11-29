@@ -13,39 +13,39 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import { UserNameInvalid } from "./controller";
 
 type UserNameFormViewProps = {
-  userName: string;
-  sessionUserName: string;
-  isEditUserName: boolean;
+  userhandle: string;
+  sessionUserhandle: string;
+  isEditting: boolean;
   isSaveButtonDisabled: boolean;
-  userNameInvalid: UserNameInvalid;
+  validity: UserNameInvalid;
   isExecuting: boolean;
-  isApprovedName: boolean;
-  onHandleUserNameChange: (e) => void;
-  onHandleEditUserName: (e: boolean) => void;
+  isApproved: boolean;
+  onChange: (e) => void;
+  onEditClick: (e: boolean) => void;
   onSave: () => void;
 }
 
 export default function UserNameFormView({
-  userName,
-  sessionUserName,
-  isEditUserName,
+  userhandle,
+  sessionUserhandle,
+  isEditting,
   isSaveButtonDisabled,
-  userNameInvalid,
+  validity,
   isExecuting,
-  isApprovedName,
-  onHandleUserNameChange,
-  onHandleEditUserName,
+  isApproved,
+  onChange,
+  onEditClick,
   onSave,
 }: UserNameFormViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
   function InvalidMessage() {
     return (
-      <If condition={userNameInvalid?.invalid}>
+      <If condition={validity?.invalid}>
         <div className="d-flex align-items-center gap-1 mt-1">
           <InfoIconEmpty className="text-danger" width="13px" />{" "}
           <small className="xs-small text-danger">
-            {userNameInvalid?.text}
+            {validity?.text}
           </small>
         </div>
       </If>
@@ -55,11 +55,11 @@ export default function UserNameFormView({
   return (
     <div className="row my-3 align-items-center gap-2 gap-lg-0">
       <If
-        condition={isEditUserName}
+        condition={isEditting}
         otherwise={
           <UserNameWithEditIcon
-            userName={sessionUserName || "User-Handle"}
-            onHandleOnClick={() => onHandleEditUserName(true)}
+            userName={sessionUserhandle || "User-Handle"}
+            onEditClick={() => onEditClick(true)}
           />
         }
       >
@@ -68,13 +68,13 @@ export default function UserNameFormView({
             <input
               type="text"
               className={`form-control xl-semibold ${
-                userNameInvalid?.invalid ? "is-invalid" : ""
+                validity?.invalid ? "is-invalid" : ""
               }`}
-              value={userName}
-              onChange={onHandleUserNameChange}
+              value={userhandle}
+              onChange={onChange}
               disabled={isExecuting}
             />
-            <If condition={isApprovedName}>
+            <If condition={isApproved}>
               <div className="d-flex bg-gray-850 align-items-center pe-3">
                 <ApprovedIcon />
               </div>

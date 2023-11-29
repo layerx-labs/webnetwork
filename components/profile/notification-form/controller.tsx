@@ -92,11 +92,11 @@ export default function NotificationForm() {
       isNotificationEnabled={isNotificationEnabled}
       isSaveButtonDisabled={isSameEmail || isExecutingEmail || isEmailInvalid}
       isSwitchDisabled={isExecutingEmail}
-      isEmailInvalid={isEmailInvalid}
+      isInvalid={isEmailInvalid}
       isConfirmationPending={isConfirmationPending}
       isExecuting={isExecutingEmail}
       emailVerificationError={emailVerificationError}
-      onHandleEmailChange={handleEmailChange}
+      onChange={handleEmailChange}
       onSave={onSave}
       onResend={onResend}
       onSwitchChange={onSwitchChange}

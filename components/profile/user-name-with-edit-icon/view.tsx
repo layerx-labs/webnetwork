@@ -5,12 +5,12 @@ import Button from "components/button";
 
 interface UserNameWithEditIconProps {
   userName: string;
-  onHandleOnClick: () => void;
+  onEditClick: () => void;
 }
 
 export default function UserNameWithEditIcon({
   userName,
-  onHandleOnClick
+  onEditClick
 }: UserNameWithEditIconProps) {
 
   return(
@@ -19,7 +19,7 @@ export default function UserNameWithEditIcon({
       {userName}
     </h3>
     <Button
-        onClick={onHandleOnClick}
+        onClick={onEditClick}
         color="gray-900"
         textClass="text-gray-50"
         className="border-radius-8 p-1 not-svg"

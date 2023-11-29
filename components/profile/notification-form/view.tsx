@@ -14,11 +14,11 @@ interface NotificationFormViewProps {
   isNotificationEnabled: boolean;
   isSaveButtonDisabled: boolean;
   isSwitchDisabled: boolean;
-  isEmailInvalid: boolean;
+  isInvalid: boolean;
   isConfirmationPending: boolean;
   isExecuting: boolean;
   emailVerificationError: string;
-  onHandleEmailChange: (e) => void;
+  onChange: (e) => void;
   onSave: () => void;
   onResend: () => void;
   onSwitchChange: (value: boolean) => void;
@@ -29,11 +29,11 @@ export default function NotificationFormView({
   isNotificationEnabled,
   isSaveButtonDisabled,
   isSwitchDisabled,
-  isEmailInvalid,
+  isInvalid,
   isConfirmationPending,
   isExecuting,
   emailVerificationError,
-  onHandleEmailChange,
+  onChange,
   onSave,
   onResend,
   onSwitchChange,
@@ -66,14 +66,14 @@ export default function NotificationFormView({
             <div className="col-12 col-lg-6">
               <input
                 type="text"
-                className={`form-control ${isEmailInvalid ? "is-invalid" : ""}`}
+                className={`form-control ${isInvalid ? "is-invalid" : ""}`}
                 value={userEmail}
-                onChange={onHandleEmailChange}
+                onChange={onChange}
                 disabled={isExecuting}
               />
             </div>
             <ResponsiveWrapper lg={false} xs={true}>
-              <If condition={isEmailInvalid}>
+              <If condition={isInvalid}>
                 <small className="xs-small text-danger">
                   {t("profile:notifications-form.invalid-email")}
                 </small>
@@ -91,7 +91,7 @@ export default function NotificationFormView({
               </div>
             </div>
             <ResponsiveWrapper lg={true} xs={false}>
-              <If condition={isEmailInvalid}>
+              <If condition={isInvalid}>
                 <div className="d-flex align-items-center gap-1 mt-1">
                   <InfoIconEmpty className="text-danger" width="13px" />{" "}
                   <small className="xs-small text-danger">
