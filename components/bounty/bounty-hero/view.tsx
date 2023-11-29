@@ -3,6 +3,7 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useTranslation} from "next-i18next";
 
 import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
@@ -176,17 +177,18 @@ export default function BountyHeroView({
                 </span>
               </BountyItemLabel>
 
-              <div className="d-flex align-items-center">
-                <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto">
+              <div className="d-flex align-items-center text-truncate">
+                <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto gap-1">
                   <>
                     <div className="d-flex flex-column justify-content-center">
-                      <Avatar
+                      <AvatarOrIdenticon
                         size="xsm"
-                        userLogin={bounty?.user?.handle}
+                        user={bounty?.user?.handle}
+                        address={bounty?.user?.address}
                       />{" "}
                     </div>
 
-                    <span>
+                    <span className="text-truncate">
                       {bounty?.user?.handle || truncateAddress(bounty?.user?.address)}
                     </span>
                   </>

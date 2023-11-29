@@ -25,13 +25,13 @@ export default function InputCommentView({
   return (
     <div className="border-radius-8 p-3 bg-gray-850 mb-3 border-gray-700 border">
       <div className="d-flex align-items-center mb-2">
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center text-truncate">
           <AvatarOrIdenticon
             user={handle}
             address={userAddress}
             size="xsm"
           />
-          <span className="xs-medium ms-2">
+          <span className="xs-medium ms-2 text-truncate">
             {handle ? `@${handle}` : truncateAddress(userAddress)}{" "}
           </span>
         </div>
