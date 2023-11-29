@@ -2,6 +2,8 @@ import React from "react";
 
 import { useTranslation } from "next-i18next";
 
+import InfoIconEmpty from "assets/icons/info-icon-empty";
+
 import Button from "components/button";
 import Switch from "components/common/switch/view";
 import If from "components/If";
@@ -90,9 +92,12 @@ export default function NotificationForm({
             </div>
             <ResponsiveWrapper lg={true} xs={false}>
               <If condition={isEmailInvalid}>
-                <small className="xs-small text-danger">
-                  {t("profile:notifications-form.invalid-email")}
-                </small>
+                <div className="d-flex align-items-center gap-1 mt-1">
+                  <InfoIconEmpty className="text-danger" width="13px" />{" "}
+                  <small className="xs-small text-danger">
+                    {t("profile:notifications-form.invalid-email")}
+                  </small>
+                </div>
               </If>
             </ResponsiveWrapper>
           </div>
