@@ -14,7 +14,7 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import UserNameFormView from "./view";
 
-export interface UserNameInvalid {
+export interface UserhandleInvalid {
   invalid: boolean;
   text?: string;
 }
@@ -23,9 +23,9 @@ export default function UserNameForm() {
   const { t } = useTranslation(["common", " profile"]);
   const { data: sessionData, update: updateSession } = useSession();
 
-  const [inputUserName, setInputUserName] = useState("");
-  const [isEditUserName, setIsEditUserName] = useState(false);
-  const [isUserNameInvalid, setIsUserNameInvalid] = useState<UserNameInvalid>({
+  const [inputUserhandle, setInputUserhandle] = useState("");
+  const [isEditUserhandle, setIsEditUserhandle] = useState(false);
+  const [isUserhandleInvalid, setIsUserhandleInvalid] = useState<UserhandleInvalid>({
     invalid: null
   });
 
@@ -34,13 +34,13 @@ export default function UserNameForm() {
     toastError: t("profile:user-name.errors.update-handle"),
     onSuccess: () => {
       updateSession();
-      setIsEditUserName(false);
+      setIsEditUserhandle(false);
     },
     toastSuccess: t("profile:user-name.success")
   });
 
   const sessionUser = (sessionData as CustomSession)?.user;
-  const isEqualSessionName = sessionUser?.login?.toLowerCase() === inputUserName?.toLowerCase();
+  const isEqualSessionName = sessionUser?.login?.toLowerCase() === inputUserhandle?.toLowerCase();
 
 
   const handleNameValidator = useDebouncedCallback((value: string) => {
@@ -48,58 +48,63 @@ export default function UserNameForm() {
     const isEqualSessionName = sessionUser?.login?.toLowerCase() === value?.toLowerCase()
     
     if(isEqualSessionName) {
-      setIsUserNameInvalid({ invalid: false })
+      setIsUserhandleInvalid({ invalid: false })
       return; 
     }
 
     if(isValid){
       useCheckHandle(value)
         .then((invalid) =>
-          setIsUserNameInvalid({
+          setIsUserhandleInvalid({
             invalid,
             text: t("profile:user-name.errors.already-exists"),
           }))
         .catch(() => {
-          setIsUserNameInvalid({
+          setIsUserhandleInvalid({
             invalid: true,
             text: t("profile:user-name.errors.check-handle"),
           });
         });
-    } else setIsUserNameInvalid({
+    } else setIsUserhandleInvalid({
       invalid: !isValid,
       text: t("profile:user-name.errors.invalid-name")
     })
   }, 500);
 
   function handleUserNameChange(e) {
-    setInputUserName(e.target.value);
+    setInputUserhandle(e.target.value);
     handleNameValidator(e.target.value);
   }
 
   function onSave() {
-    updateHandle({ address: sessionUser?.address, handle: inputUserName});
+    updateHandle({ address: sessionUser?.address, handle: inputUserhandle});
   }
 
   useEffect(() => {
     if(sessionUser?.login){
-      setInputUserName(sessionUser?.login)
-      setIsUserNameInvalid({ invalid: false });
+      setInputUserhandle(sessionUser?.login)
+      setIsUserhandleInvalid({ invalid: false });
     }
       
   }, [sessionUser])
 
   return (
     <UserNameFormView 
-      userhandle={inputUserName} 
-      sessionUserhandle={sessionUser?.login} 
-      isEditting={isEditUserName} 
-      isSaveButtonDisabled={!inputUserName || isUserNameInvalid?.invalid || isExecutingHandle || isEqualSessionName} 
-      validity={isUserNameInvalid} 
-      isExecuting={isExecutingHandle} 
-      isApproved={isUserNameInvalid?.invalid === false} 
-      onChange={handleUserNameChange} 
-      onEditClick={(e: boolean) => setIsEditUserName(e)} 
-      onSave={onSave} 
+    userhandle={inputUserhandle}
+    sessionUserhandle={sessionUser?.login}
+    isEditting={isEditUserhandle}
+    isSaveButtonDisabled={
+      !inputUserhandle ||
+      isUserhandleInvalid?.invalid ||
+      isExecutingHandle ||
+      isEqualSessionName
+    }
+    validity={isUserhandleInvalid}
+    isExecuting={isExecutingHandle}
+    isApproved={isUserhandleInvalid?.invalid === false}
+    onChange={handleUserNameChange}
+    onEditClick={(e: boolean) => setIsEditUserhandle(e)}
+    onSave={onSave}
     />
   );
 }
