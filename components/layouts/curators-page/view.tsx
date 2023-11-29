@@ -37,7 +37,7 @@ export default function CuratorsPageLayoutView({
       />
 
       <CustomContainer
-        className="pt-3"
+        className="pt-3 pb-5"
         col = "col-xs-12 col-xl-10"
       >
         <ResponsiveWrapper xs={false} xl={true} className="justify-content-center align-items-center">
