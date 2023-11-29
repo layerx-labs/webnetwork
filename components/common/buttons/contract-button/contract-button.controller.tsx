@@ -52,7 +52,7 @@ export default function ContractButton({
   }
 
   async function validateChain() {
-    if (isNetworkVariant && isSameChain && !isUnsupportedChain)
+    if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
       return true;
 
     updateWrongNetworkModal(true)
