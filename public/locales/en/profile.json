@@ -37,7 +37,15 @@
     "total-balance": "Total tokens in your wallet",
     "total-oracles": "Total {{tokenName}} token locked available for marketplace curation"
   },
-   "invalid-user-name": "This handle already exists",
+  "user-name": {
+    "success": "Updated handle",
+    "errors": {
+      "already-exists": "This handle already exists",
+      "check-handle": "Error checking handle",
+      "invalid-name": "Invalid Name",
+      "update-handle": "Error update handle"
+    }
+  },
    "notifications-form": {
       "title": "Notifications",
       "message": "Allow Bepro Marketplace to send you updates via email. These can include updates to tasks, app updates, etc.",
