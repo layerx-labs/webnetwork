@@ -3,13 +3,34 @@ import {Op} from "sequelize";
 
 import models from "db/models";
 
-import {HttpUnauthorizedError} from "server/errors/http-errors";
+import {isAddress} from "helpers/is-address";
+import {lowerCaseCompare} from "helpers/string";
+
+import {HttpBadRequestError, HttpUnauthorizedError} from "server/errors/http-errors";
+import {UserRoleUtils} from "server/utils/jwt";
+
 
 export async function markAllNotificationsRead(req: NextApiRequest) {
-  const {context: {user:{id: userId}}} = req.body;
+  const {address} = req.query as {address: string};
+  const {context: {user:{id: userId, address: userAddress}, token}} = req.body;
 
   if (!userId)
     throw new HttpUnauthorizedError();
 
-  return models.notification.update({read: true}, {where: {userId: {[Op.eq]: userId}}});
+  if (!isAddress(address))
+    throw new HttpBadRequestError();
+
+  if (!UserRoleUtils.hasAdminRole(token) && !lowerCaseCompare(userAddress, address))
+    throw new HttpUnauthorizedError();
+
+  const where = {
+    where: {
+      userId: {
+        [Op.in]: // sequelize can't seem to use include in update :/
+          models.sequelize.literal(`(SELECT "id" FROM "users" WHERE lower("address") = '${address.toLowerCase()}')`)
+      }
+    }
+  }
+
+  return models.notification.update({read: true}, where);
 }

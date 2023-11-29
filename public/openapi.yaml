@@ -399,6 +399,22 @@ components:
               - $ref: '#/components/schemas/LeaderboardEntry'
               - $ref: '#/components/schemas/Network'
 
+    Notification:
+      type: object
+      properties:
+        id:
+          type: number
+        uuid:
+          type: string
+        userId:
+          type: number
+        type:
+          type: string
+        read:
+          type: boolean
+        hide:
+          type: boolean
+
 paths:
   /health:
     description: API Health
@@ -701,6 +717,67 @@ paths:
                 properties:
                   url:
                     $ref: '#/components/schemas/StringUrl'
+
+  /notification/[id]/:
+    delete:
+      description: "Delete notification"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: '#/components/schemas/String'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    $ref: '#/components/schemas/Notification'
+
+  /notification/[id]/mark-read:
+    put:
+      description: "mark notification as read"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            $ref: '#/components/schemas/String'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    $ref: '#/components/schemas/Notification'
+
+  /notifications/[address]/:
+    get:
+      description: "get all notifications for address"
+      parameters:
+        - in: path
+          name: address
+          schema:
+            $ref: '#/components/schemas/String'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    $ref: '#/components/schemas/Notification'
+  /notifications/[address]/read:
+    put:
+      description: "mark all unread notifications of address to read"
+
   /payments/:
     get:
       description: get User payment summary
