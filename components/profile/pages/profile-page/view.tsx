@@ -7,65 +7,21 @@ import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
-import NotificationForm from "components/profile/notification-form/view";
+import NotificationForm from "components/profile/notification-form/controller";
 import ProfileLayout from "components/profile/profile-layout";
-import UserNameForm from "components/profile/user-name-form/view";
+import UserNameForm from "components/profile/user-name-form/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import { UserNameInvalid } from "./controller";
-
 interface ProfilePageViewProps { 
-  sessionUserName?: string;
-  userEmail?: string;
-  userName?: string;
-  isEditUserName?: boolean;
-  isNotificationEnabled: boolean;
   walletAddress: string;
   isCouncil: boolean;
-  isSaveEmailDisabled: boolean;
-  isSaveUserNameDisabled: boolean;
-  isSwitchDisabled: boolean;
-  isEmailInvalid: boolean;
-  isConfirmationPending: boolean;
-  isExecutingHandle: boolean;
-  isExecutingEmail: boolean;
-  emailVerificationError?: string;
-  userNameInvalid: UserNameInvalid;
-  onHandleEmailChange: (e) => void;
-  onHandleUserNameChange: (e) => void;
-  onHandleEditUserName: (e: boolean) => void;
-  onSaveEmail: () => void;
-  onSaveHandle: () => void;
-  onResend: () => void;
-  onSwitchChange: (value: boolean) => void;
 }
 
 export default function ProfilePageView({
   walletAddress,
-  sessionUserName,
-  userEmail,
-  userName,
-  isEditUserName,
-  isNotificationEnabled,
   isCouncil,
-  isSaveEmailDisabled,
-  isSaveUserNameDisabled,
-  isSwitchDisabled,
-  isEmailInvalid,
-  isConfirmationPending,
-  isExecutingHandle,
-  isExecutingEmail,
-  emailVerificationError,
-  userNameInvalid,
-  onHandleEmailChange,
-  onHandleUserNameChange,
-  onHandleEditUserName,
-  onSaveEmail,
-  onSaveHandle,
-  onResend,
-  onSwitchChange
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
@@ -97,19 +53,7 @@ export default function ProfilePageView({
                 withBorder
               />
             </div>
-              <UserNameForm
-                sessionUserName={sessionUserName}
-                userName={userName} 
-                isEditUserName={isEditUserName} 
-                isSaveButtonDisabled={isSaveUserNameDisabled} 
-                userNameInvalid={userNameInvalid} 
-                isExecuting={isExecutingHandle} 
-                isApprovedName={userNameInvalid?.invalid === (false || null) }
-                onHandleUserNameChange={onHandleUserNameChange} 
-                onHandleEditUserName={onHandleEditUserName} 
-                onSave={onSaveHandle} 
-              />
-                
+              <UserNameForm />
               <div className={`${isTabletOrMobile ? "ms-2" : "mt-2" } text-truncate`}>
                     <AddressWithCopy
                       address={walletAddress}
@@ -126,24 +70,8 @@ export default function ProfilePageView({
               </div>
             </div>
         </div>
-
-        <NotificationForm 
-          userEmail={userEmail} 
-          isNotificationEnabled={isNotificationEnabled} 
-          isSaveButtonDisabled={isSaveEmailDisabled} 
-          isSwitchDisabled={isSwitchDisabled} 
-          isEmailInvalid={isEmailInvalid} 
-          isConfirmationPending={isConfirmationPending} 
-          isExecuting={isExecutingEmail} 
-          onHandleEmailChange={onHandleEmailChange} 
-          onSave={onSaveEmail} 
-          onResend={onResend} 
-          onSwitchChange={onSwitchChange}   
-          emailVerificationError={emailVerificationError}     
-        />
-
+        <NotificationForm />
         <Divider bg="gray-850" />
-
       </ProfileLayout>
     </>
   );

@@ -9,7 +9,7 @@ import Switch from "components/common/switch/view";
 import If from "components/If";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-interface NotificationFormProps {
+interface NotificationFormViewProps {
   userEmail: string;
   isNotificationEnabled: boolean;
   isSaveButtonDisabled: boolean;
@@ -24,7 +24,7 @@ interface NotificationFormProps {
   onSwitchChange: (value: boolean) => void;
 }
 
-export default function NotificationForm({
+export default function NotificationFormView({
   userEmail,
   isNotificationEnabled,
   isSaveButtonDisabled,
@@ -37,7 +37,7 @@ export default function NotificationForm({
   onSave,
   onResend,
   onSwitchChange,
-}: NotificationFormProps) {
+}: NotificationFormViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
   return (

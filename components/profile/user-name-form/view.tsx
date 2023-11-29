@@ -10,9 +10,9 @@ import If from "components/If";
 import UserNameWithEditIcon from "components/profile/user-name-with-edit-icon/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { UserNameInvalid } from "../pages/profile-page/controller";
+import { UserNameInvalid } from "./controller";
 
-interface UserNameFormProps {
+type UserNameFormViewProps = {
   userName: string;
   sessionUserName: string;
   isEditUserName: boolean;
@@ -25,7 +25,7 @@ interface UserNameFormProps {
   onSave: () => void;
 }
 
-export default function UserNameForm({
+export default function UserNameFormView({
   userName,
   sessionUserName,
   isEditUserName,
@@ -36,7 +36,7 @@ export default function UserNameForm({
   onHandleUserNameChange,
   onHandleEditUserName,
   onSave,
-}: UserNameFormProps) {
+}: UserNameFormViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
   function InvalidMessage() {
