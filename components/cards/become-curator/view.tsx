@@ -1,6 +1,5 @@
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { UrlObject } from "url";
 
 import ArrowRight from "assets/icons/arrow-right";
 import CloseIcon from "assets/icons/close-icon";
