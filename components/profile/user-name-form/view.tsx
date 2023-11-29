@@ -10,14 +10,14 @@ import If from "components/If";
 import UserNameWithEditIcon from "components/profile/user-name-with-edit-icon/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { UserNameInvalid } from "./controller";
+import { UserhandleInvalid } from "./controller";
 
 type UserNameFormViewProps = {
   userhandle: string;
   sessionUserhandle: string;
   isEditting: boolean;
   isSaveButtonDisabled: boolean;
-  validity: UserNameInvalid;
+  validity: UserhandleInvalid;
   isExecuting: boolean;
   isApproved: boolean;
   onChange: (e) => void;
