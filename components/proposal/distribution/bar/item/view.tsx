@@ -6,7 +6,7 @@ import {formatNumberToString} from "helpers/formatNumber";
 
 export default function DistributionBarItem({
   percentage,
-  recipient,
+  recipient = null,
   handle = null,
   label = "",
   description = "",
