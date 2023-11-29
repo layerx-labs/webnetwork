@@ -24,7 +24,7 @@ export default function PriceConversorView({
 }: IPriceConversorProps) {
   const { t } = useTranslation("common");
   const { isDesktopView } = useBreakPoint();
-  const currency = token.symbol || t("common:misc.token")
+  const currency = token?.symbol || t("common:misc.token")
   
   return (
     <>
