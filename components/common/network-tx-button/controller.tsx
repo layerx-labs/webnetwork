@@ -13,10 +13,10 @@ import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {TransactionTypes} from "interfaces/enums/transaction-types";
 import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -67,7 +67,7 @@ export default function NetworkTxButton({
 
   const marketplace = useMarketplace();
   const {add: addTx, update: updateTx} = transactionStore();
-  const { currentUser } = useUserStore();
+  const { currentUser, updateCurrentUser } = useUserStore();
 
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
@@ -123,6 +123,10 @@ export default function NetworkTxButton({
       })
       .finally(() => {
         updateWalletBalance(true);
+        daoService.isCouncil(currentUser?.walletAddress).then((isCouncil) =>
+          updateCurrentUser({
+            isCouncil,
+          }));
       });
   }
 
