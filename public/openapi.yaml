@@ -415,6 +415,14 @@ components:
         hide:
           type: boolean
 
+    UserSettings:
+      type: object
+      properties:
+        notifications:
+          type: boolean
+        language:
+          type: string
+
 paths:
   /health:
     description: API Health
@@ -732,10 +740,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  url:
-                    $ref: '#/components/schemas/Notification'
+                $ref: '#/components/schemas/Notification'
 
   /notification/[id]/mark-read:
     put:
@@ -751,10 +756,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  url:
-                    $ref: '#/components/schemas/Notification'
+                $ref: '#/components/schemas/Notification'
 
   /notifications/[address]/:
     get:
@@ -770,14 +772,27 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  url:
-                    $ref: '#/components/schemas/Notification'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
   /notifications/[address]/read:
     put:
       description: "mark all unread notifications of address to read"
-
+      parameters:
+        - in: path
+          name: address
+          schema:
+            $ref: '#/components/schemas/String';
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
   /payments/:
     get:
       description: get User payment summary
@@ -1522,3 +1537,27 @@ paths:
             application/json:
               schema:
                 type: string
+  /user/settings/:
+    get:
+      description: "Get settings for connected user"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSettings'
+    post:
+      description: "Change settings for connected user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSettings'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSettings'
