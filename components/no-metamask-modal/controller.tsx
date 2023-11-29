@@ -21,7 +21,7 @@ export default function NoMetamaskModal() {
 
   const isRequired = [
     pathname?.includes("new-marketplace"),
-    pathname?.includes("/[network]/[chain]/profile")
+    pathname?.includes("/profile")
   ].some(c => c);
 
   function handleClickTryAgain() {
