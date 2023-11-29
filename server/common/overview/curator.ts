@@ -1,12 +1,10 @@
-import BigNumber from "bignumber.js";
 import { ParsedUrlQuery } from "querystring";
 import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { orderByProperty } from "helpers/array";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import paginate, {DEFAULT_ITEMS_PER_PAGE, paginateArray} from "helpers/paginate";
+import paginate, {DEFAULT_ITEMS_PER_PAGE} from "helpers/paginate";
 
 import {castToInt} from "server/utils/sequelize";
 
@@ -94,7 +92,7 @@ export default async function get(query: ParsedUrlQuery) {
 
   const curatorsWithNetworks = curators.rows.map(curator => ({
     ...curator,
-    marketplaces: networks.filter(n => n.councilMembers.includes(curator.address))
+    marketplaces: networks.filter(n => n.councilMembers?.includes(curator.address))
   }));
 
   const totalCurators = await models.curator.count({
