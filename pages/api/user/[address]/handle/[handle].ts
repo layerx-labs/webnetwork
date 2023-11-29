@@ -9,7 +9,7 @@ import {changeUserHandle} from "server/common/user/change-user-handle";
 async function changeUserHandleHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method.toLowerCase()) {
-    case "get":
+    case "put":
       res.status(200).json(!(await changeUserHandle(req)))
       break;
     default:

@@ -14,21 +14,25 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import { UserNameInvalid } from "./controller";
+
 interface ProfilePageViewProps { 
+  sessionUserName?: string;
   userEmail?: string;
   userName?: string;
   isEditUserName?: boolean;
   isNotificationEnabled: boolean;
   walletAddress: string;
   isCouncil: boolean;
-  isSaveButtonDisabled: boolean;
+  isSaveEmailDisabled: boolean;
+  isSaveUserNameDisabled: boolean;
   isSwitchDisabled: boolean;
   isEmailInvalid: boolean;
   isConfirmationPending: boolean;
   isExecutingHandle: boolean;
   isExecutingEmail: boolean;
   emailVerificationError?: string;
-  isUserNameInvalid: boolean;
+  userNameInvalid: UserNameInvalid;
   onHandleEmailChange: (e) => void;
   onHandleUserNameChange: (e) => void;
   onHandleEditUserName: (e: boolean) => void;
@@ -40,19 +44,21 @@ interface ProfilePageViewProps {
 
 export default function ProfilePageView({
   walletAddress,
+  sessionUserName,
   userEmail,
   userName,
   isEditUserName,
   isNotificationEnabled,
   isCouncil,
-  isSaveButtonDisabled,
+  isSaveEmailDisabled,
+  isSaveUserNameDisabled,
   isSwitchDisabled,
   isEmailInvalid,
   isConfirmationPending,
   isExecutingHandle,
   isExecutingEmail,
   emailVerificationError,
-  isUserNameInvalid,
+  userNameInvalid,
   onHandleEmailChange,
   onHandleUserNameChange,
   onHandleEditUserName,
@@ -91,17 +97,19 @@ export default function ProfilePageView({
                 withBorder
               />
             </div>
-              <UserNameForm 
+              <UserNameForm
+                sessionUserName={sessionUserName}
                 userName={userName} 
                 isEditUserName={isEditUserName} 
-                isSaveButtonDisabled={!userName || isUserNameInvalid || isExecutingHandle} 
-                isUserNameInvalid={isUserNameInvalid} 
+                isSaveButtonDisabled={isSaveUserNameDisabled} 
+                userNameInvalid={userNameInvalid} 
                 isExecuting={isExecutingHandle} 
-                isApprovedName={true}
+                isApprovedName={userNameInvalid?.invalid === (false || null) }
                 onHandleUserNameChange={onHandleUserNameChange} 
                 onHandleEditUserName={onHandleEditUserName} 
                 onSave={onSaveHandle} 
               />
+                
               <div className={`${isTabletOrMobile ? "ms-2" : "mt-2" } text-truncate`}>
                     <AddressWithCopy
                       address={walletAddress}
@@ -122,7 +130,7 @@ export default function ProfilePageView({
         <NotificationForm 
           userEmail={userEmail} 
           isNotificationEnabled={isNotificationEnabled} 
-          isSaveButtonDisabled={isSaveButtonDisabled} 
+          isSaveButtonDisabled={isSaveEmailDisabled} 
           isSwitchDisabled={isSwitchDisabled} 
           isEmailInvalid={isEmailInvalid} 
           isConfirmationPending={isConfirmationPending} 

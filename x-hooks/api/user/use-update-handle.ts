@@ -7,5 +7,5 @@ export async function useUpdateHandle({
   address: string;
   handle: string;
 }) {
-  return api.put(`/user/${address}/handle/`, [handle]).then(({ data }) => data);
+  return api.put(`/user/${address}/handle/${handle}`).then(({ data }) => data);
 }

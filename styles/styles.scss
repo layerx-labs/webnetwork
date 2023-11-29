@@ -373,7 +373,20 @@ li {
 }
 
 .user-input {
-  height: 46px;
+  height: 46px !important;
+
+  &:focus,
+  &:focus-within {
+    border: none !important;
+  }
+
+  .is-invalid {
+    border: 2px solid var(--bs-danger) !important;
+    &:focus,
+    &:focus-within {
+      border: 2px solid var(--bs-danger) !important;
+    }
+  }
 }
 
 .label-m{
