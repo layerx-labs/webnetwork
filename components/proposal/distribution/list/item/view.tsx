@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 
 import ArrowRight from "assets/icons/arrow-right";
 
-import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import TokenSymbolView from "components/common/token-symbol/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
@@ -18,6 +18,7 @@ interface ProposalDistributionListItemProps {
   description?: string;
   line?: boolean
   handle?: string;
+  address?: string;
   className?: string;
   isNetworkToken?: boolean;
 }
@@ -30,6 +31,7 @@ export default function ProposalDistributionListItem({
   convertedValue,
   description,
   handle,
+  address,
   className,
   isNetworkToken,
 }: ProposalDistributionListItemProps) {
@@ -41,7 +43,11 @@ export default function ProposalDistributionListItem({
       <div className="d-flex flex-grow-1 flex-column py-1">
         <div className="d-flex align-items-center gap-2">
           <If condition={!!handle}>
-            <Avatar key={handle}  size="xsm"  userLogin={handle} tooltip />
+            <AvatarOrIdenticon
+              user={handle}
+              address={address}
+              size="xsm"
+            />
           </If>
 
           <span className="text-truncate text-gray caption-small font-weight-medium">

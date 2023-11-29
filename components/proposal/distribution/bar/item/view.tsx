@@ -1,4 +1,4 @@
-import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 
@@ -6,6 +6,7 @@ import {formatNumberToString} from "helpers/formatNumber";
 
 export default function DistributionBarItem({
   percentage,
+  recipient,
   handle = null,
   label = "",
   description = "",
@@ -24,7 +25,7 @@ export default function DistributionBarItem({
           </span>
         }
       >
-        <Avatar key={handle} userLogin={handle} tooltip />
+        <AvatarOrIdenticon user={handle} address={recipient} size="sm"/>
       </If>
 
       <div className="d-flex gap-1">
