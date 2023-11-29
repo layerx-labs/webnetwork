@@ -85,7 +85,8 @@ export default async function get(query: ParsedUrlQuery) {
     include: [
       {
         association: "chain",
-        attributes: ["chainId", "chainName", "icon", "color"]
+        attributes: ["chainId", "chainName", "icon", "color"],
+        where: chainWhere
       }
     ]
   });
