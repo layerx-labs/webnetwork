@@ -65,7 +65,7 @@ export default function PriceConversorModal({
 
     const { conversionList } = settings.currency
 
-    const opt = conversionList.map(currency=>({value: currency?.value, label: currency?.label}))
+    const opt = conversionList?.map(currency=>({value: currency?.value, label: currency?.label}))
     setOptions(opt)
     handlerChange(opt.find(v => v.value === defaultValue[0].value) || opt[0])
     
