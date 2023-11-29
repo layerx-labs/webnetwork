@@ -5,7 +5,7 @@ import {useTranslation} from "next-i18next";
 
 import LockedIcon from "assets/icons/locked-icon";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import NetworkTxButton from "components/common/network-tx-button/controller";
 import InputNumber from "components/input-number";
 import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";

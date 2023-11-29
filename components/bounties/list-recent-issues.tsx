@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import PlusIcon from "assets/icons/plus-icon";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";

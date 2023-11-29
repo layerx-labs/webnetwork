@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import Button, { ButtonProps } from "components/button";
+import { ButtonProps } from "components/button";
+import ContractButtonView from "components/common/buttons/contract-button/contract-button.view";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
@@ -15,7 +16,7 @@ import {useDappkit} from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-interface ContractButtonProps extends ButtonProps {
+export interface ContractButtonProps extends ButtonProps {
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => Promise<void> | void;
   variant?: "network" | "registry";
 }
@@ -103,7 +104,7 @@ export default function ContractButton({
 
       for (const validation of validations) {
         const isValidated = await validation();
-        
+
         if (!isValidated)
           throw new Error(validation.name)
       }
@@ -117,15 +118,13 @@ export default function ContractButton({
   }
 
   return(
-    <>
-      <Button
-        onClick={handleExecute}
-        {...rest}
-        isLoading={isValidating || rest?.isLoading}
-        disabled={isValidating || rest?.disabled}
-      >
-        {children}
-      </Button>
-    </>
+    <ContractButtonView
+      onClick={handleExecute}
+      {...rest}
+      isLoading={isValidating || rest?.isLoading}
+      disabled={isValidating || rest?.disabled}
+    >
+      {children}
+    </ContractButtonView>
   );
 }

@@ -6,8 +6,7 @@ import {
   
 import { useTranslation } from "next-i18next";
 
-
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
