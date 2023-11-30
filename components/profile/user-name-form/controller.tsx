@@ -69,7 +69,7 @@ export default function UserNameForm() {
       invalid: !isValid,
       text: t("profile:user-name.errors.invalid-name")
     })
-  }, 500);
+  }, 200);
 
   function handleUserNameChange(e) {
     setInputUserhandle(e.target.value);
@@ -90,21 +90,21 @@ export default function UserNameForm() {
 
   return (
     <UserNameFormView 
-    userhandle={inputUserhandle}
-    sessionUserhandle={sessionUser?.login}
-    isEditting={isEditUserhandle}
-    isSaveButtonDisabled={
-      !inputUserhandle ||
-      isUserhandleInvalid?.invalid ||
-      isExecutingHandle ||
-      isEqualSessionName
-    }
-    validity={isUserhandleInvalid}
-    isExecuting={isExecutingHandle}
-    isApproved={isUserhandleInvalid?.invalid === false}
-    onChange={handleUserNameChange}
-    onEditClick={(e: boolean) => setIsEditUserhandle(e)}
-    onSave={onSave}
+      userhandle={inputUserhandle}
+      sessionUserhandle={sessionUser?.login}
+      isEditting={isEditUserhandle}
+      isSaveButtonDisabled={
+        !inputUserhandle ||
+        isUserhandleInvalid?.invalid ||
+        isExecutingHandle ||
+        isEqualSessionName
+      }
+      validity={isUserhandleInvalid}
+      isExecuting={isExecutingHandle}
+      isApproved={isUserhandleInvalid?.invalid === false}
+      onChange={handleUserNameChange}
+      onEditClick={(e: boolean) => setIsEditUserhandle(e)}
+      onSave={onSave}
     />
   );
 }
