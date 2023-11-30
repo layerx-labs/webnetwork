@@ -1,23 +1,23 @@
 import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
-import { addSeconds, formatDistance } from "date-fns";
+import {addSeconds, formatDistance} from "date-fns";
 import {useTranslation} from "next-i18next";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
-import { commentsParser, deliverableParser, issueParser, mergeProposalParser } from "helpers/issue";
-import { isProposalDisputable } from "helpers/proposal";
-import { QueryKeys } from "helpers/query-keys";
-import { lowerCaseCompare } from "helpers/string";
+import {commentsParser, deliverableParser, issueParser, mergeProposalParser} from "helpers/issue";
+import {isProposalDisputable} from "helpers/proposal";
+import {QueryKeys} from "helpers/query-keys";
+import {lowerCaseCompare} from "helpers/string";
 
-import { IssueData } from "interfaces/issue-data";
-import { DistributedAmounts } from "interfaces/proposal";
+import {IssueData} from "interfaces/issue-data";
+import {DistributedAmounts} from "interfaces/proposal";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
@@ -113,7 +113,7 @@ export default function ProposalPage() {
     const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
       ...rest,
       recipient,
-      githubLogin: parsedProposal?.distributions?.find(p => p.recipient === recipient)?.user?.githubLogin
+      handle: parsedProposal?.distributions?.find(p => p.recipient === recipient)?.user?.handle
     }));
 
     setDistributedAmounts({

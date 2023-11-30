@@ -8,12 +8,12 @@ import Badge from "components/badge";
 import NewProposalModalView from "components/proposal/new-proposal-modal/view";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
 import {NetworkEvents} from "interfaces/enums/events";
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
-import { PaymentInfoProps } from "types/components";
+import {PaymentInfoProps} from "types/components";
 
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
@@ -48,7 +48,7 @@ export default function ProposalModal({
 
   const { chain, mergeCreatorFeeShare, proposerFeeShare } = marketplace?.active || {};
   const deliverableUserAddress = currentDeliverable?.user?.address;
-  const deliverableUserLogin = currentDeliverable?.user?.githubLogin;
+  const deliverableUserLogin = currentDeliverable?.user?.handle;
   const distributedAmounts = chain ? calculateDistributedAmounts( chain.closeFeePercentage,
                                                                   mergeCreatorFeeShare,
                                                                   proposerFeeShare,
@@ -114,11 +114,11 @@ export default function ProposalModal({
                 <div className="d-flex align-items-center mt-1 gap-2">
                   <AvatarOrIdenticon
                     address={deliverable?.user?.address}
-                    user={deliverable?.user?.githubLogin}
+                    user={deliverable?.user?.handle}
                     size="xsm"
                   />
                   <span className="xs-small text-gray-500 font-weight-normal text-capitalize">
-                    {deliverable?.user?.githubLogin ?? truncateAddress(deliverable?.user?.address)}
+                    {deliverable?.user?.handle ?? truncateAddress(deliverable?.user?.address)}
                   </span>
                 </div>
               </div>,

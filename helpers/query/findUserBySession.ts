@@ -1,5 +1,5 @@
-import { NextApiRequest } from "next";
-import { getSession } from "next-auth/react";
+import {NextApiRequest} from "next";
+import {getSession} from "next-auth/react";
 
 import models from "db/models";
 
@@ -13,7 +13,7 @@ async function findUserBySession(req: NextApiRequest): Promise<User | null> {
 
   const user = await models.user.findOne({
       where: { 
-        githubLogin: session.user.login
+        handle: session.user.login
       },
       raw: true
   })

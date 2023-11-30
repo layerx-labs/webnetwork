@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import {useSession} from "next-auth/react";
+import {useTranslation} from "next-i18next";
 
 import NetworkGovernanceSettingsView from "components/network/settings/governance/view";
 
 import { useNetworkSettings } from "contexts/network-settings";
 
-import { IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH } from "helpers/constants";
+import {IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
 
-import { StandAloneEvents } from "interfaces/enums/events";
-import { Network } from "interfaces/network";
-import { Token } from "interfaces/token";
+import {StandAloneEvents} from "interfaces/enums/events";
+import {Network} from "interfaces/network";
+import {Token} from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/marketplace";
@@ -233,7 +233,7 @@ export default function NetworkGovernanceSettings({
 
     const json = {
       creator: currentUser.walletAddress,
-      githubLogin: currentUser.login,
+      handle: currentUser.login,
       networkAddress: network.networkAddress,
       allowedTokens: {
         transactional: settingsTokens?.allowedTransactions?.map((token) => token?.id).filter((v) => v),

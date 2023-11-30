@@ -1,8 +1,8 @@
-import { NextApiRequest } from "next";
+import {NextApiRequest} from "next";
 
 import models from "db/models";
 
-import { HttpNotFoundError } from "server/errors/http-errors";
+import {HttpNotFoundError} from "server/errors/http-errors";
 
 export async function patch(req: NextApiRequest) {
   const { id } = req.body.context.user;
@@ -16,7 +16,7 @@ export async function patch(req: NextApiRequest) {
   if (!user) throw new HttpNotFoundError("User not found");
 
   user.resetedAt = new Date();
-  user.githubLogin = null;
+  user.handle = null;
 
   await user.save();
 

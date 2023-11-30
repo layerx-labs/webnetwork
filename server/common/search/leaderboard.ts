@@ -1,9 +1,9 @@
-import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import {ParsedUrlQuery} from "querystring";
+import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import paginate, { DEFAULT_ITEMS_PER_PAGE, calculateTotalPages } from "helpers/paginate";
+import paginate, {calculateTotalPages, DEFAULT_ITEMS_PER_PAGE} from "helpers/paginate";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -21,7 +21,7 @@ export default async function get(query: ParsedUrlQuery) {
   const whereInclude = search ? {
     [Op.or]: [
       { address: { [Op.iLike]: `%${search}%` } },
-      { githubLogin: { [Op.iLike]: `%${search}%` } },
+      { handle: { [Op.iLike]: `%${search}%` } },
     ]
   }  : {};
   
@@ -35,7 +35,7 @@ export default async function get(query: ParsedUrlQuery) {
     include: [
       {
         association: "user",
-        attributes: ["githubLogin"],
+        attributes: ["handle"],
         required: !!search,
         on: Sequelize.where(Sequelize.fn("lower", Sequelize.col("user.address")),
                             "=",

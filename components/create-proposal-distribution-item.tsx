@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { NumberFormatValues } from "react-number-format";
+import {useState} from "react";
+import {NumberFormatValues} from "react-number-format";
 
 import Avatar from "components/avatar";
 import InputNumber from "components/input-number";
 
 interface Props {
-  githubLogin: string;
+  handle: string;
   onChangeDistribution(params: { [key: string]: number }): void;
   isDisable?: boolean;
   error?: boolean;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function CreateProposalDistributionItem({
-  githubLogin,
+  handle,
   onChangeDistribution,
   isDisable = false,
   ...params
@@ -23,7 +23,7 @@ export default function CreateProposalDistributionItem({
 
   function handleValueChange(params: NumberFormatValues) {
     setValue(params.floatValue);
-    onChangeDistribution({ [githubLogin]: params.floatValue || 0 });
+    onChangeDistribution({ [handle]: params.floatValue || 0 });
   }
   // Wasted logic.
   // todo: move within InputNumber itself.
@@ -37,15 +37,15 @@ export default function CreateProposalDistributionItem({
     }
 
     setValue(enhancedValue);
-    onChangeDistribution({ [githubLogin]: enhancedValue || 0 });
+    onChangeDistribution({ [handle]: enhancedValue || 0 });
   }
 
   return (
-    <li className="d-flex align-items-center px-3 py-1 my-1 rounded-3 bg-dark-gray" key={githubLogin}>
-      {githubLogin && (
-        <Avatar userLogin={githubLogin} className="me-2 mt-1" />
+    <li className="d-flex align-items-center px-3 py-1 my-1 rounded-3 bg-dark-gray" key={handle}>
+      {handle && (
+        <Avatar userLogin={handle} className="me-2 mt-1" />
       )}
-      <span className="flex-grow-1 caption-small">@{githubLogin}</span>
+      <span className="flex-grow-1 caption-small">@{handle}</span>
       <div className="flex-shrink-0 w-20">
         <InputNumber
           value={value}

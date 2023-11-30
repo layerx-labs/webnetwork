@@ -36,7 +36,7 @@ function ConnectionButton({
   }
 
   const ICONS = {
-    github: credential ? <Avatar userLogin={credential} /> : <GithubImage width={28} height={28} opacity={1} />,
+    github: <GithubImage width={28} height={28} opacity={1} />,
     wallet: <Image src={metamaskLogo} width={28} height={28} />
   };
 

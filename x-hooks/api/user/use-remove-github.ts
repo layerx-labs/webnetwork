@@ -1,8 +1,8 @@
-import { api } from "services/api";
+import {api} from "services/api";
 
 interface UseRemoveGithubParams {
   address: string;
-  githubLogin: string;
+  handle: string;
 }
 
 export  async function useRemoveGithub(payload: UseRemoveGithubParams) {
