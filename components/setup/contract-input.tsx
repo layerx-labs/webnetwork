@@ -99,6 +99,7 @@ export function ContractInput({
               withLockIcon={action.disabled || action.executing}
               isLoading={action.executing}
               onClick={action.onClick}
+              variant="registry"
             >
               <span>{action.label}</span>
             </ContractButton>

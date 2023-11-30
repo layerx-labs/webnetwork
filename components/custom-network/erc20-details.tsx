@@ -193,6 +193,7 @@ export function ERC20Details({
               withLockIcon={isDeployBtnDisabled}
               isLoading={isDeploying}
               onClick={handleDeploy}
+              variant="registry"
             >
               {t("custom-network:steps.token-configuration.actions.deploy")}
             </ContractButton>
