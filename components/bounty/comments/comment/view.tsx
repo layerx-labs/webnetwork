@@ -1,13 +1,11 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import { FlexColumn } from "components/common/flex-box/view";
+import {FlexColumn} from "components/common/flex-box/view";
 
-import {
-  getTimeDifferenceInWords,
-} from "helpers/formatDate";
-import { truncateAddress } from "helpers/truncate-address";
+import {getTimeDifferenceInWords,} from "helpers/formatDate";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { IssueDataComment } from "interfaces/issue-data";
+import {IssueDataComment} from "interfaces/issue-data";
 
 import AvatarOrIdenticon from "../../../avatar-or-identicon";
 import MarkedRender from "../../../MarkedRender";
@@ -30,15 +28,15 @@ export default function Comment({
         <div className="d-flex align-items-baseline flex-wrap">
           <FlexColumn className="justify-content-center">
             <AvatarOrIdenticon
-              user={user?.githubLogin}
+              user={user?.handle}
               address={userAddress}
               size="xsm"
             />
           </FlexColumn>
           <FlexColumn className="justify-content-center">
             <span className="xs-medium ms-2">
-              {user?.githubLogin
-                ? `@${user?.githubLogin}`
+              {user?.handle
+                ? `@${user?.handle}`
                 : truncateAddress(userAddress)}{" "}
             </span>
           </FlexColumn>

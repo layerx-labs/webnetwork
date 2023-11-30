@@ -1,6 +1,6 @@
-import { ChangeEvent } from "react";
+import {ChangeEvent} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
@@ -8,9 +8,9 @@ import ContractButton from "components/common/buttons/contract-button";
 import GithubInfo from "components/github-info";
 import Modal from "components/modal";
 
-import { formatDate } from "helpers/formatDate";
+import {formatDate} from "helpers/formatDate";
 
-import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
+import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -86,13 +86,13 @@ export default function CreateReviewModalView({
             <div className="d-flex align-items-center flex-wrap-reverse justify-content-start ">
               <div className="d-flex align-items-center justify-content-center me-2 mt-2">
                 <div className="me-2">
-                  <AvatarOrIdenticon user={deliverable?.user?.githubLogin} address={deliverable?.user?.address} />
+                  <AvatarOrIdenticon user={deliverable?.user?.handle} address={deliverable?.user?.address} />
                 </div>
-                {deliverable?.user?.githubLogin && (
+                {deliverable?.user?.handle && (
                   <GithubInfo
                     parent="modal"
                     variant="user"
-                    label={`@${deliverable?.user?.githubLogin}`}
+                    label={`@${deliverable?.user?.handle}`}
                   />
                 )}
               </div>

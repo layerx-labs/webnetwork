@@ -1,13 +1,13 @@
-import { useTranslation } from "next-i18next";
-import { UrlObject } from "url";
+import {useTranslation} from "next-i18next";
+import {UrlObject} from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import DateLabel from "components/date-label";
 import InternalLink from "components/internal-link";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { User } from "interfaces/api";
+import {User} from "interfaces/api";
 
 interface DeliverableDetailsViewProps {
   id: number;
@@ -56,10 +56,10 @@ export default function DeliverableDetailsView({
         <div className="col-xs-12 col-xl-auto">
           <div className="row align-items-center">
             <div className="col-auto">
-              <AvatarOrIdenticon user={user?.githubLogin} address={user?.address} />
+              <AvatarOrIdenticon user={user?.handle} address={user?.address} />
             </div>
             <div className="col-auto p-0">
-              {user?.githubLogin ? `@${user?.githubLogin}` : user?.address ? truncateAddress(user?.address) : null}
+              {user?.handle ? `@${user?.handle}` : user?.address ? truncateAddress(user?.address) : null}
             </div>
           </div>
         </div>

@@ -5,7 +5,6 @@ import {useRouter} from "next/router";
 import ErrorMarkIcon from "assets/icons/errormark-icon";
 import metamaskLogo from "assets/metamask.png";
 
-import Avatar from "components/avatar";
 import Button from "components/button";
 import Modal from "components/modal";
 
@@ -16,6 +15,8 @@ import {truncateAddress} from "helpers/truncate-address";
 import { MatchAccountsStatus } from "interfaces/enums/api";
 
 import { useAuthentication } from "x-hooks/use-authentication";
+
+import AvatarOrIdenticon from "./avatar-or-identicon";
 
 export default function InvalidAccountWalletModal() {
   const {asPath} = useRouter();
@@ -61,7 +62,11 @@ export default function InvalidAccountWalletModal() {
                 border-danger d-flex justify-content-between p-3 align-items-center`}
             >
               <div>
-                <Avatar userLogin={currentUser?.login || "null"} />{" "}
+              <AvatarOrIdenticon
+                  user={currentUser?.login || "null"}
+                  address={currentUser?.walletAddress}
+                  size="sm"
+                />{" "}
                 <span className="ms-2">{currentUser?.login}</span>
               </div>
 

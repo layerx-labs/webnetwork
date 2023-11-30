@@ -1,14 +1,14 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 import NextAuth from "next-auth";
-import { getToken } from "next-auth/jwt";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 
 import models from "db/models";
 
-import { Logger } from "services/logging";
+import {Logger} from "services/logging";
 
 import { SESSION_TTL } from "server/auth/config";
-import { EthereumProvider, GHProvider } from "server/auth/providers";
+import { EthereumProvider } from "server/auth/providers";
 import { AccountValidator } from "server/auth/validators/account";
 
 const {
@@ -23,12 +23,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const currentToken = await getToken({ req, secret: secret });
 
   const ethereumProvider = EthereumProvider(currentToken, req);
-  const githubProvider = GHProvider(currentToken, req);
 
   return NextAuth(req, res, {
     providers: [
-      ethereumProvider.config,
-      githubProvider.config
+      ethereumProvider.config
     ],
     pages: {
       signIn: "/auth/signin"
@@ -43,8 +41,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           const provider = params?.account?.provider;
 
           switch (provider) {
-          case "github":
-            return githubProvider.callbacks.signIn(params);
           
           case "credentials":
             return ethereumProvider.callbacks.signIn(params);
@@ -66,9 +62,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 
           const provider = params?.account?.provider;
           switch (provider) {
-          case "github":
-            return githubProvider.callbacks.jwt(params);
-          
           case "credentials":
             return ethereumProvider.callbacks.jwt(params);
           
@@ -91,7 +84,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           expires: session.expires,
           user: {
             id: user.id,
-            login: user.githubLogin,
+            login: user.handle,
             roles,
             address,
             accountsMatch,

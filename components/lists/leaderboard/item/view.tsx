@@ -1,19 +1,19 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import CopyButton from "components/common/buttons/copy/controller";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import Identicon from "components/identicon";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { LeaderBoard } from "interfaces/leaderboard";
+import {LeaderBoard} from "interfaces/leaderboard";
 
 export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
   const { t } = useTranslation("leaderboard");
 
   const columns = [
     {
-      secondaryLabel: leaderboard?.user?.githubLogin || "-",
+      secondaryLabel: leaderboard?.user?.handle || "-",
       breakpoints: { xs: false, md: true },
       justify: "center",
     },

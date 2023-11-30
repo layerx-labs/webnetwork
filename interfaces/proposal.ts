@@ -1,8 +1,8 @@
 import BigNumber from "bignumber.js";
 
-import { User } from "interfaces/api";
-import { BaseModel } from "interfaces/db/base";
-import { Deliverable, IssueBigNumberData, IssueData, IssueDataComment } from "interfaces/issue-data";
+import {User} from "interfaces/api";
+import {BaseModel} from "interfaces/db/base";
+import {Deliverable, IssueBigNumberData, IssueData, IssueDataComment} from "interfaces/issue-data";
 
 export interface ProposalDistribution extends BaseModel {
   recipient: string;
@@ -19,7 +19,7 @@ export interface ProposalDisputes extends BaseModel {
 }
 
 export interface Proposal extends BaseModel {
-  githubLogin: string;
+  handle: string;
   isMerged?: boolean;
   issueId?: number;
   deliverableId?: number;
@@ -60,7 +60,7 @@ export interface DistributedAmounts {
     value: string;
     percentage: string;
     recipient: string;
-    githubLogin?: string;
+    handle?: string;
   }[];
 }
 

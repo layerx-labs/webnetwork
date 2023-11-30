@@ -2,17 +2,17 @@ import React from "react";
 
 import BigNumber from "bignumber.js";
 import Link from "next/link";
-import { UrlObject } from "url";
+import {UrlObject} from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
-import { IPRLabel } from "components/deliverable/labels/controller";
+import {IPRLabel} from "components/deliverable/labels/controller";
 import If from "components/If";
 import Translation from "components/translation";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { Deliverable } from "interfaces/issue-data";
-import { Proposal } from "interfaces/proposal";
+import {Deliverable} from "interfaces/issue-data";
+import {Proposal} from "interfaces/proposal";
 
 import ReviewsNumberView from "../reviews-number.view";
 import ItemRowIdView from "./id.view";
@@ -48,7 +48,7 @@ export default function ItemRowView({
   totalToBeDisputed,
   isRefused
 }: ItemRowProps) {
-  const userGithubLogin = (item as Deliverable)?.user?.githubLogin; 
+  const userhandle = (item as Deliverable)?.user?.handle;
   const userAddress = (item as Deliverable)?.user?.address || (item as Proposal)?.creator;
 
   function RenderProposalOrDeliverable() {
@@ -80,7 +80,7 @@ export default function ItemRowView({
 
           <div className="text-truncate col-md-5 col-xl-3 d-flex align-items-center gap-2">
             <AvatarOrIdenticon
-              user={userGithubLogin}
+              user={userhandle}
               address={userAddress}
               size="sm"
             />
@@ -90,7 +90,7 @@ export default function ItemRowView({
                 isProposal ? "d-none d-sm-block" : ""
               } text-uppercase text-white caption text-truncate mt-1`}
             >
-              {userGithubLogin ? userGithubLogin : truncateAddress(userAddress)}
+              {userhandle ? userhandle : truncateAddress(userAddress)}
             </span>
           </div>
 

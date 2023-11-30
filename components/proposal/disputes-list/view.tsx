@@ -35,6 +35,7 @@ export function ProposalDisputesView({
           .map((dispute, index, origin) => (
             <ProposalDistributionListItem
               name={truncateAddress(dispute?.address)}
+              address={dispute?.address}
               percentage={calculatePercentage(dispute?.weight?.toString())}
               symbols={[
                 networkTokenSymbol,
