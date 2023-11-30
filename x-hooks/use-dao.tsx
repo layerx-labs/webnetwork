@@ -92,10 +92,12 @@ export function useDao() {
   }
   async function start({
     chainId,
-    networkAddress
+    networkAddress,
+    registryAddress,
   }: {
     chainId: number;
     networkAddress?: string;
+    registryAddress?: string;
   }): Promise<void> {
     try {
       updateServiceStarting(true);
@@ -106,22 +108,23 @@ export function useDao() {
       const chainToConnect = supportedChains.find(c => +c.chainId === +chainId);
       if (!!chainId && !chainToConnect)
         throw new Error("Invalid chainId provided");
-      if (!isChainConfigured(chainToConnect)) {
-        if (currentUser?.isAdmin && !asPath.includes("setup")) {
+      if (!isChainConfigured(chainToConnect) && !asPath.includes("setup")) {
+        if (currentUser?.isAdmin ) {
           replace("/setup");
           return;
         }
         throw new Error("Chain is not configured");
       }
+      const registryToLoad = (registryAddress || chainToConnect.registryAddress);
       const isSameChain = chainId === daoStore.chainId;
       const isSameNetworkAddress = lowerCaseCompare(networkAddress, daoStore.networkAddress);
-      const isSameRegistryAddress = chainToConnect.registryAddress === daoStore.registryAddress;
+      const isSameRegistryAddress = registryToLoad === daoStore.registryAddress;
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress)
         return;
       const dao = !daoService || !isSameChain ?
         new DAO({
           web3Connection: connection,
-          registryAddress: chainToConnect.registryAddress
+          registryAddress: registryToLoad
         }) : daoService;
       if (!isSameRegistryAddress)
         await dao.loadRegistry();
@@ -129,7 +132,7 @@ export function useDao() {
         await dao.loadNetwork(networkAddress);
       window.DAOService = dao;
       const address = !isSameChain ? networkAddress : networkAddress || daoStore.networkAddress;
-      updateService(dao, chainId, chainToConnect.registryAddress, address);
+      updateService(dao, chainId, registryToLoad, address);
     } catch (e) {
       throw e;
     } finally {
