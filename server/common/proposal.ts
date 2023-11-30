@@ -1,14 +1,14 @@
 import BigNumber from "bignumber.js";
-import { ParsedUrlQuery } from "querystring";
-import { Sequelize } from "sequelize";
+import {ParsedUrlQuery} from "querystring";
+import {Sequelize} from "sequelize";
 
 import models from "db/models";
 
-import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { getAssociation } from "helpers/db/models";
+import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
+import {getAssociation} from "helpers/db/models";
 
-import { HttpNotFoundError } from "server/errors/http-errors";
+import {HttpNotFoundError} from "server/errors/http-errors";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -28,7 +28,7 @@ export default async function get(query: ParsedUrlQuery) {
       getAssociation("disputes"),
       getAssociation("distributions", ["recipient", "percentage"], true, undefined, [
         getAssociation( "user",
-                        ["githubLogin"],
+                        ["handle"],
                         false,
                         undefined,
                         undefined, 
@@ -39,7 +39,7 @@ export default async function get(query: ParsedUrlQuery) {
       getAssociation("deliverable", undefined, false, undefined, [getAssociation("user")]),
       getAssociation("issue", undefined, true, undefined, [
         getAssociation("transactionalToken", ["name", "symbol", "address", "chain_id"]),
-        getAssociation("user", ["address", "githubLogin"]),
+        getAssociation("user", ["address", "handle"]),
       ]),
       getAssociation("network", ["mergeCreatorFeeShare", "proposerFeeShare"], true, {
         name: caseInsensitiveEqual("network.name", network?.toString())

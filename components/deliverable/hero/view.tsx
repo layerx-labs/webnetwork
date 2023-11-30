@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ArrowLeft from "assets/icons/arrow-left";
 
@@ -7,9 +7,9 @@ import PriceConversor from "components/bounty/bounty-hero/price-conversor/contro
 import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
+import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import PullRequestLabels from "../labels/controller";
 
@@ -91,15 +91,15 @@ export default function DeliverableHeroView({
                 <div className="me-2">
                   <AvatarOrIdenticon
                     address={currentDeliverable?.user?.address}
-                    user={currentDeliverable?.user?.githubLogin}
+                    user={currentDeliverable?.user?.handle}
                   />
                 </div>{" "}
                 <div
                   className={`text-uppercase text-white border border-gray-700 p-1 
                               border-radius-4 caption text-truncate`}
                 >
-                  {currentDeliverable.user?.githubLogin
-                    ? currentDeliverable.user?.githubLogin
+                  {currentDeliverable.user?.handle
+                    ? currentDeliverable.user?.handle
                     : truncateAddress(currentDeliverable.user?.address)}
                 </div>
               </div>

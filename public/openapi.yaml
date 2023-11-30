@@ -102,7 +102,7 @@ components:
           type: string
         issueId:
           type: integer
-        githubLogin:
+        handle:
           type: string
         userRepo:
           type: string
@@ -127,7 +127,7 @@ components:
           type: string
         pullRequestId:
           type: integer
-        githubLogin:
+        handle:
           type: string
         creator:
           $ref: '#/components/schemas/StringAddress'
@@ -489,7 +489,7 @@ paths:
               properties:
                 issueId:
                   type: string
-                githubLogin:
+                handle:
                   type: string
                 networkName:
                   type: string
@@ -899,7 +899,7 @@ paths:
                   type: string
                 pullRequestId:
                   type: string
-                githubLogin:
+                handle:
                   type: string
                 body:
                   type: string
@@ -1424,7 +1424,7 @@ paths:
               properties:
                 address:
                   $ref: '#/components/schemas/StringAddress'
-                githubLogin:
+                handle:
                   type: string
       responses:
         404:

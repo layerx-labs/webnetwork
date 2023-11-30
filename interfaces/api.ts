@@ -3,7 +3,7 @@ export interface RequestParams {
   wallet?: string;
 }
 export interface User {
-  githubLogin: string;
+  handle: string;
   address?: string;
   createdAt: string;
   id: number;
@@ -50,7 +50,7 @@ export interface StartWorkingParams extends RequestParams {
 }
 
 export interface PatchUserParams extends RequestParams {
-  githubLogin: string;
+  handle: string;
   migrate?: boolean;
   reset?: boolean;
 }

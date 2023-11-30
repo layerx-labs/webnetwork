@@ -4,11 +4,11 @@ import {Op} from "sequelize";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
 
-import { withProtected } from "middleware";
+import {withProtected} from "middleware";
 
-import { Logger } from "services/logging";
+import {Logger} from "services/logging";
 
 enum Actions {
   REGISTER = "register",
@@ -21,7 +21,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
   try {
     const token = await getToken({ req });
 
-    const githubLogin = token.login.toString();
+    const handle = token.login.toString();
     const address = token.address.toString();
 
     const user = await models.user.findOne({
@@ -31,14 +31,14 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
             address: caseInsensitiveEqual("address", address)
           },
           {
-            githubLogin: caseInsensitiveEqual("githubLogin", githubLogin)
+            handle: caseInsensitiveEqual("githubLogin", handle)
           }
         ]
       }
     });
 
     if (!user) action = Actions.REGISTER;
-    else if (user.address && !user.githubLogin) action = Actions.CONNECT_GITHUB;
+    else if (user.address && !user.handle) action = Actions.CONNECT_GITHUB;
 
     if (!action) 
       return res.status(409).json("No actions needed for this user");
@@ -49,10 +49,10 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
         
       await models.user.create({
         address,
-        githubLogin
+        handle
       });
     } else if (action === Actions.CONNECT_GITHUB) {
-      user.githubLogin = githubLogin;
+      user.handle = handle;
 
       await user.save();
     }

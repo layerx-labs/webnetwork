@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ChainIcon from "components/chain-icon";
 import CopyButton from "components/common/buttons/copy/controller";
@@ -9,14 +9,14 @@ import Identicon from "components/identicon";
 import { truncateAddress } from "helpers/truncate-address";
 import { truncateString } from "helpers/truncate-string";
 
-import { LeaderBoard } from "interfaces/leaderboard";
+import {LeaderBoard} from "interfaces/leaderboard";
 
 export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
   const { t } = useTranslation(["leaderboard", "council", "common"]);
 
   const columns = [
     {
-      secondaryLabel: truncateString(leaderboard?.user?.githubLogin, 15) || "-",
+      secondaryLabel: truncateString(leaderboard?.user?.handle, 15) || "-",
       breakpoints: { xs: false, xl: true },
       justify: "center",
     },

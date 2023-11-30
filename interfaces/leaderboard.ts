@@ -10,7 +10,7 @@ export interface SearchLeaderBoard {
 export interface LeaderBoard {
   address: string;
   user?: {
-    githubLogin?: string;
+    handle?: string;
   };
   networkslogos?: string[];
   marketplacelogos?: string[];

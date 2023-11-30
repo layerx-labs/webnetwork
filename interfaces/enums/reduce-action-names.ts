@@ -1,5 +1,4 @@
 export enum ReduceActionName {
-  handle = "handle",
   MetaMaskWallet = "MetaMaskWallet",
   Loading = "Loading",
   BeproInit = "BeproInit",
@@ -15,7 +14,7 @@ export enum ReduceActionName {
   ChangeMicroServiceReadyState = "ChangeMicroServiceReadyState",
   ChangeNetwork = "ChangeNetwork",
   ChangeNetworkId = "ChangeNetworkId",
-  GithubLogin = "GithubLogin",
+  handle = "handle",
   ChangeTransactionalTokenApproval = "ChangeTransactionalTokenApproval",
   ChangeSettlerTokenApproval = "ChangeSettlerTokenApproval",
   ChangeNetworksSummary = "ChangeNetworksSummary",

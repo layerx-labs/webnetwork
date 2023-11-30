@@ -104,12 +104,6 @@ export function useAuthentication() {
     });
   }
 
-  function signInGithub() {
-    nextSignIn("github", {
-      callbackUrl: `${URL_BASE}${asPath}`
-    });
-  }
-
   function updateWalletBalance(force = false) {
     if ((!force && (balance.value || !state.currentUser?.walletAddress)) || !daoService?.network || !chain)
       return;
@@ -266,7 +260,6 @@ export function useAuthentication() {
   return {
     signOut,
     signInWallet,
-    signInGithub,
     updateWalletBalance,
     verifyReAuthorizationNeed,
     signMessage,

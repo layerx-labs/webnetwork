@@ -1,21 +1,21 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import { getToken } from "next-auth/jwt";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 import {Op} from "sequelize";
 
 import models from "db/models";
 
 import paginate from "helpers/paginate";
-import { lowerCaseCompare } from "helpers/string";
+import {lowerCaseCompare} from "helpers/string";
 
-import { UserTableScopes } from "interfaces/enums/api";
+import {UserTableScopes} from "interfaces/enums/api";
 
-import { withCORS } from "middleware";
+import {withCORS} from "middleware";
 
 import {Logger} from "services/logging";
 
-import { JwtToken } from "server/auth/types";
-import { UserRoleUtils } from "server/utils/jwt";
+import {JwtToken} from "server/auth/types";
+import {UserRoleUtils} from "server/utils/jwt";
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -29,10 +29,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       all: {
         [Op.or]: [
           { address: (req?.body[0]?.toLowerCase()) },
-          { githubLogin: req?.body[1] }
+          { handle: req?.body[1] }
         ]
       },
-      login: { githubLogin: { [Op.in]: req.body || [] } },
+      login: { handle: { [Op.in]: req.body || [] } },
       address: { address: { [Op.in]: (req.body || []).map((s) => s?.toLowerCase()) } }
     };
   

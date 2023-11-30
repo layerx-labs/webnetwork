@@ -1,11 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { WhereOptions } from "sequelize";
+import {NextApiRequest, NextApiResponse} from "next";
+import {WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { isGovernorSigned } from "helpers/handleIsGovernor";
+import {isGovernorSigned} from "helpers/handleIsGovernor";
 
-import { error as LogError } from "services/logging";
+import {error as LogError} from "services/logging";
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -31,7 +31,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     const include = [
       {
         association: "user",
-        attributes: ["githubLogin"]
+        attributes: ["handle"]
       }
     ]
 

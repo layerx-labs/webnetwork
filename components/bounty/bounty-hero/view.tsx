@@ -1,8 +1,9 @@
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Avatar from "components/avatar";
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
@@ -12,13 +13,14 @@ import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
+import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
 
 import BountyTagsView from "../bounty-tags/view";
 import TaskTypeBadge from "../task-type-badge/task-type-badge.view";
 import BountySettings from "./bounty-settings/controller";
+
 interface BountyHeroProps {
   handleEditIssue?: () => void;
   isEditIssue?: boolean;
@@ -177,18 +179,19 @@ export default function BountyHeroView({
                 </span>
               </BountyItemLabel>
 
-              <div className="d-flex align-items-center">
-                <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto">
+              <div className="d-flex align-items-center text-truncate">
+                <BountyItemLabel label={t("common:misc.owner")} className="col-12 col-sm-auto gap-1">
                   <>
                     <div className="d-flex flex-column justify-content-center me-1">
-                      <Avatar
+                      <AvatarOrIdenticon
                         size="xsm"
-                        userLogin={bounty?.user?.githubLogin}
+                        user={bounty?.user?.handle}
+                        address={bounty?.user?.address}
                       />{" "}
                     </div>
 
-                    <span>
-                      {bounty?.user?.githubLogin || truncateAddress(bounty?.user?.address)}
+                    <span className="text-truncate">
+                      {bounty?.user?.handle || truncateAddress(bounty?.user?.address)}
                     </span>
                   </>
                 </BountyItemLabel>

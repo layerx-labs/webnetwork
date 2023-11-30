@@ -1,13 +1,13 @@
-import { Bounty, ProposalDetail } from "@taikai/dappkit";
+import {Bounty, ProposalDetail} from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
-import { NextApiRequest } from "next";
+import {NextApiRequest} from "next";
 import getConfig from "next/config";
-import { Op } from "sequelize";
+import {Op} from "sequelize";
 
 import models from "db/models";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
-import { formatNumberToNScale } from "helpers/formatNumber";
+import {formatNumberToNScale} from "helpers/formatNumber";
 
 import DAO from "services/dao-service";
 import ipfsService from "services/ipfs-service";
@@ -128,7 +128,7 @@ export async function post(req: NextApiRequest) {
   const getNftParticipant = async (address, amounts) => {
     const user = await models.user.findOne({ where: { address: { [Op.iLike]: String(address) } } });
 
-    return NftParticipant(user?.githubLogin || '', amounts.percentage, address, amounts.value);
+    return NftParticipant(user?.handle || '', amounts.percentage, address, amounts.value);
   }
 
   const merger = await getNftParticipant(mergerAddress, distributions.mergerAmount);

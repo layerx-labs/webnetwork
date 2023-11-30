@@ -19,14 +19,14 @@ export default async function get(query: ParsedUrlQuery) {
     SELECT
       count(*) OVER() AS "count",
       address, 
-      githubLogin,
+      handle,
       COUNT(issue) AS numberNfts,
       array_to_string(array_agg(DISTINCT "logoIcon"), ', ') AS networksLogos,
       array_to_string(array_agg(DISTINCT icon), ', ') AS chainsLogos
     FROM (
       SELECT 
         up.address,
-        u."githubLogin" AS githubLogin,
+        u."handle" AS handle,
         i.id AS issue, 
         n."logoIcon", 
         c.icon
@@ -41,14 +41,14 @@ export default async function get(query: ParsedUrlQuery) {
         search
           ? `AND (
               u.address ILIKE '%${search}%' OR
-              u."githubLogin" ILIKE '%${search}%'
+              u."handle" ILIKE '%${search}%'
             )`
           : ""
       }
       ${networkName === 'all' ? '' : networkName ? `AND n.name = LOWER('${networkName}')` : ""}
       ${address  ? `AND u.address = LOWER('${address}')` : ""}
     ) tbl
-    GROUP BY address, githubLogin
+    GROUP BY address, handle
     ORDER BY COUNT(issue) ${order ? order : "DESC"}
     OFFSET ${OFFSET} LIMIT ${DEFAULT_ITEMS_PER_PAGE};
 `;
@@ -62,7 +62,7 @@ export default async function get(query: ParsedUrlQuery) {
         count: leaderboards?.length ? leaderboards[0]?.count : 0,
         rows: leaderboards.map((l) => ({
           ...l,
-          ... l?.githublogin ? {user: { githubLogin: l?.githublogin }} : null,
+          ... l?.handle ? {user: { handle: l?.handle }} : null,
           numberNfts: l?.numbernfts,
           networkslogos: l?.chainslogos?.split(", "),
           marketplacelogos: l?.networkslogos?.split(", "),

@@ -65,6 +65,7 @@ export default function ProposalDistributionListView({
           <ProposalDistributionListItem
             key={`distribution-item-${index}`}
             {...item}
+            address={item?.recipient}
             className={isLastItem(origin, index) ? "rounded-bottom-5" : ""}
           />
         ))}
