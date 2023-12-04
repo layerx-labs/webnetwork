@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { withCORS, NetworkRoute, WithValidChainId } from "middleware";
+import { withCORS, GovernorRoute } from "middleware";
 
 import patch from "server/common/comments/patch";
 
@@ -16,4 +16,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
-export default withCORS(WithValidChainId(NetworkRoute(handler)));
+export default withCORS(GovernorRoute(handler));
