@@ -2,8 +2,6 @@ import userEvent from "@testing-library/user-event";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 
-import {changeShowWeb3} from "contexts/reducers/update-show-prop";
-
 import {UNSUPPORTED_CHAIN} from "helpers/constants";
 
 import ethereum from "__mocks__/ethereum";
@@ -28,23 +26,15 @@ const mockActiveMarketplace = {
   networkAddress: defaultNetworkAddress
 };
 
-const state = {
-  Service: {
-    active: jest.fn()
-  },
-  currentUser: {
-    walletAddress: defaultAddress
-  }
+const currentUser = {
+  walletAddress: defaultAddress
 };
 
-const mockedDispatch = jest.fn();
-
-jest.mock("contexts/app-state", () => ({
-  useAppState: () => ({
-    dispatch: mockedDispatch,
-    state
-  })
-}));
+const useLoadersStore = {
+  updateWeb3Dialog: jest.fn(),
+  updateWrongNetworkModal: jest.fn(),
+  updateWalletMismatchModal: jest.fn(),
+};
 
 const mockStartService = jest.fn();
 jest.mock("x-hooks/use-dao", () => ({
@@ -61,6 +51,16 @@ jest.mock("x-hooks/use-authentication", () => ({
   useAuthentication: () => ({
     signInWallet: jest.fn()
   })
+}));
+
+jest.mock("x-hooks/stores/user/user.store", () => ({
+  useUserStore: () => ({
+    currentUser
+  })
+}));
+
+jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
+  useLoadersStore: () => useLoadersStore
 }));
 
 jest.mock("x-hooks/use-dappkit", () => ({
@@ -96,7 +96,7 @@ describe("ContractButton", () => {
     window.ethereum = ethereum as any;
     mockConnectedChain.id = 1;
     mockConnectedChain.name = "chain";
-    state.currentUser.walletAddress = defaultAddress;
+    currentUser.walletAddress = defaultAddress;
     jest.clearAllMocks();
   });
 
@@ -145,7 +145,7 @@ describe("ContractButton", () => {
     await userEvent.click(result.getByRole("button"));
 
     expect(mockOnClick).not.toHaveBeenCalled();
-    expect(mockedDispatch).toHaveBeenCalledWith(changeShowWeb3(true));
+    expect(useLoadersStore.updateWeb3Dialog).toHaveBeenCalledWith(true);
   });
 
   it("Should not execute onClick because connected chain doesn't match with marketplace chain", async () => {
@@ -157,7 +157,7 @@ describe("ContractButton", () => {
     await userEvent.click(result.getByRole("button"));
 
     expect(mockOnClick).not.toHaveBeenCalled();
-    expect(result.getByRole("dialog").getAttribute("aria-labelledby")).toBe("change-network-modal");
+    expect(useLoadersStore.updateWrongNetworkModal).toHaveBeenCalledWith(true);
   });
 
   it("Should not execute onClick because connected chain is not supported", async () => {
@@ -169,11 +169,11 @@ describe("ContractButton", () => {
     await userEvent.click(result.getByRole("button"));
 
     expect(mockOnClick).not.toHaveBeenCalled();
-    expect(result.getByRole("dialog").getAttribute("aria-labelledby")).toBe("change-network-modal");
+    expect(useLoadersStore.updateWrongNetworkModal).toHaveBeenCalledWith(true);
   });
 
   it("Should not execute onClick because connected wallet is different of session wallet", async () => {
-    state.currentUser.walletAddress = "0x000000";
+    currentUser.walletAddress = "0x000000";
     const result = render(<ContractButton onClick={mockOnClick}>
       <span data-testid="action">Make Transaction</span>
     </ContractButton>);
@@ -181,7 +181,7 @@ describe("ContractButton", () => {
     await userEvent.click(result.getByRole("button"));
 
     expect(mockOnClick).not.toHaveBeenCalled();
-    expect(result.getByRole("dialog").getAttribute("aria-labelledby")).toBe("wallet-mismatch-modal");
+    expect(useLoadersStore.updateWalletMismatchModal).toHaveBeenCalledWith(true);
   });
 
   it("Should not execute onClick because service failed to start", async () => {
