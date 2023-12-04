@@ -13,6 +13,7 @@ import {formatStringToCurrency} from "helpers/formatNumber";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useERC20 from "x-hooks/use-erc20";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 interface ERC20DetailsProps {
   address?: string;

@@ -41,7 +41,7 @@ export function useSettings() {
                                        });
 
   /**
-   * Load settings on useSettings() start only if `state.Settings` is empty
+   * Load settings on useSettings() start only if `Settings` is empty
    * Reload settings on each session start
    */
   function loadSettings(force?: boolean) {
