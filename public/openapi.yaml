@@ -783,7 +783,7 @@ paths:
         - in: path
           name: address
           schema:
-            $ref: '#/components/schemas/String';
+            $ref: '#/components/schemas/String'
       responses:
         200:
           description: OK
