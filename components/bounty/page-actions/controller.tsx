@@ -4,12 +4,11 @@ import { useRouter } from "next/router";
 import { PageActionsControllerProps } from "components/bounty/page-actions/page-actions";
 import PageActionsView from "components/bounty/page-actions/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { getIssueState } from "helpers/handleTypeIssue";
 import { QueryKeys } from "helpers/query-keys";
 
 import { useStartWorking } from "x-hooks/api/task";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -22,8 +21,8 @@ export default function PageActions({
   const { t } = useTranslation(["common", "deliverable", "bounty", "proposal"]);
   const { query, push } = useRouter();
 
-  const { state } = useAppState();
   const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
+  const { currentUser } = useUserStore();
   const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: () => useStartWorking({
@@ -43,18 +42,18 @@ export default function PageActions({
   }
 
   const deliverablesAbleToBeProposed = getDeliverablesAbleToBeProposed();
-  const isCouncilMember = !!state.currentUser?.isCouncil;
+  const isCouncilMember = !!currentUser?.isCouncil;
   const isBountyReadyToPropose = !!currentBounty?.isReady;
   const bountyState = getIssueState({
     state: currentBounty?.state,
     amount: currentBounty?.amount,
     fundingAmount: currentBounty?.fundingAmount,
   });
-  const isWalletConnected = !!state.currentUser?.walletAddress;
+  const isWalletConnected = !!currentUser?.walletAddress;
   const isBountyOpen = currentBounty?.isClosed === false && currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
-  const isWorkingOnBounty = !!currentBounty?.working?.find(id => +id === +state.currentUser?.id);
-  const isBountyOwner = isWalletConnected && currentBounty?.user?.address === state.currentUser?.walletAddress;
+  const isWorkingOnBounty = !!currentBounty?.working?.find(id => +id === +currentUser?.id);
+  const isBountyOwner = isWalletConnected && currentBounty?.user?.address === currentUser?.walletAddress;
   const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
   const isUpdateAmountButton =

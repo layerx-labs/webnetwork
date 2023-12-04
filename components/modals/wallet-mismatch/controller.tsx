@@ -2,24 +2,22 @@ import { useTranslation } from "next-i18next";
 
 import Modal from "components/modal";
 
-import { useAppState } from "contexts/app-state";
-
 import { truncateAddress } from "helpers/truncate-address";
 
-interface WalletMismatchModalProps {
-  show: boolean;
-  onClose: () => void;
-}
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
-export default function WalletMismatchModal({
-  show,
-  onClose
-}: WalletMismatchModalProps) {
+export default function WalletMismatchModal() {
   const { t } = useTranslation();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
+  const { walletMismatchModal: show, updateWalletMismatchModal } = useLoadersStore();
 
-  const truncatedWallet = truncateAddress(state.currentUser?.walletAddress);
+  const truncatedWallet = truncateAddress(currentUser?.walletAddress);
+
+  function onClose () {
+    updateWalletMismatchModal(false);
+  }
 
   return(
     <Modal

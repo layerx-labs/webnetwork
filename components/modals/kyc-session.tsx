@@ -8,26 +8,23 @@ import Modal from 'components/modal';
 import ReadOnlyButtonWrapper from 'components/read-only-button-wrapper';
 import Translation from "components/translation";
 
-import {useAppState} from 'contexts/app-state';
-import {changeCurrentUserKycSession} from 'contexts/reducers/change-current-user';
-
 import { useValidateKycSession } from 'x-hooks/api/kyc';
+import { useUserStore } from 'x-hooks/stores/user/user.store';
 
 export function KycSessionModal() {
   const [show, setShow] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [timer, setTimer] = useState(null);
+  const { currentUser, updateCurrentUser} = useUserStore();
 
-  const {state, dispatch} = useAppState()
-
-  const session = state?.currentUser?.kycSession;
+  const session = currentUser?.kycSession;
   const isVerified = session?.status === "VERIFIED";
 
   function handlerValidateSession() {
     if (session?.session_id)
       useValidateKycSession(session?.session_id)
         .then((data) => {
-          dispatch(changeCurrentUserKycSession(data))
+          updateCurrentUser({ kycSession: data })
         })
   }
 
@@ -51,14 +48,14 @@ export function KycSessionModal() {
     <Row className="mb-3">
       <h6><Translation ns="bounty" label="kyc.label"/></h6>
       <span className={`p-small rans ${isVerified ? 'text-success' : 'text-gray'}`}>
-          {state?.currentUser?.kycSession?.status}
+          {currentUser?.kycSession?.status}
       </span>
     </Row>
     <Row>
       <Col>
         <ReadOnlyButtonWrapper>
           {
-            state?.currentUser?.kycSession?.status !== "VERIFIED"
+            currentUser?.kycSession?.status !== "VERIFIED"
               ? <Button
                 color="danger"
                 className="read-only-button me-1"
@@ -87,7 +84,7 @@ export function KycSessionModal() {
                 </>
               ) : null}
               {
-                state?.currentUser?.kycSession?.status === "VERIFIED"
+                currentUser?.kycSession?.status === "VERIFIED"
                   ? <ContextualSpan className="mt-3 mbn-3" context={"success"}>
                       <Translation ns="bounty"
                                    label="kyc.identified"/></ContextualSpan>

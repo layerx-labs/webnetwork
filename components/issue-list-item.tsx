@@ -21,8 +21,6 @@ import Modal from "components/modal";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
 
-import {useAppState} from "contexts/app-state";
-
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import {getIssueState} from "helpers/handleTypeIssue";
 
@@ -34,6 +32,7 @@ import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import { useSettings } from "x-hooks/use-settings";
 
 import BountyTagsView from "./bounty/bounty-tags/view";
 import TaskTypeBadge from "./bounty/task-type-badge/task-type-badge.view";
@@ -63,7 +62,7 @@ export default function IssueListItem({
   const [showHardCancelModal, setShowHardCancelModal] = useState(false);
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
   
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const { getURLWithNetwork } = useMarketplace();
   const { handleHardCancelBounty, getCancelableTime, getTimeChain } = useBepro();
   const { addError, addSuccess } = useToastStore();
@@ -202,7 +201,7 @@ export default function IssueListItem({
           <ResponsiveWrapper xs={false} md={true} className="d-flex gap-2 align-items-center justify-content-between">
             <div className="mw-50-auto network-name">
               <NetworkBadge
-                logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
+                logoUrl={issue?.network?.logoIcon && `${settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
                 name={issue?.network?.name}
               />
             </div>
@@ -254,7 +253,7 @@ export default function IssueListItem({
               className="mw-50-auto network-name caption-medium font-weight-normal text-capitalize"
             >
               <NetworkBadge
-                logoUrl={issue?.network?.logoIcon && `${state.Settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
+                logoUrl={issue?.network?.logoIcon && `${settings?.urls?.ipfs}/${issue?.network?.logoIcon}`}
                 name={issue?.network?.name}
               />
             </ResponsiveWrapper>

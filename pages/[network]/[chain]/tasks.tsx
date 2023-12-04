@@ -12,8 +12,8 @@ import { SearchBountiesPaginated } from "types/api";
 
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import { getBountiesListData } from "x-hooks/api/task";
-import {useBounty} from "x-hooks/use-bounty";
 import useMarketplace from "x-hooks/use-marketplace";
+import {useTask} from "x-hooks/use-task";
 
 interface BountiesPageProps {
   bounties: SearchBountiesPaginated;
@@ -30,7 +30,7 @@ export default function TasksPage({
   lockedOnNetwork,
   protocolMembers,
 }: BountiesPageProps) {
-  useBounty();
+  useTask();
   const { t } = useTranslation(["common"]);
   
   const marketplace = useMarketplace();

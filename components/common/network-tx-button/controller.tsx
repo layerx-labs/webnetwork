@@ -5,8 +5,6 @@ import {useTranslation} from "next-i18next";
 import Button from "components/button";
 import NetworkTxButtonView from "components/common/network-tx-button/view";
 
-import {useAppState} from "contexts/app-state";
-
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {parseTransaction} from "helpers/transactions";
 
@@ -18,6 +16,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -67,22 +66,22 @@ export default function NetworkTxButton({
   const [txSuccess,] = useState(false);
 
   const marketplace = useMarketplace();
-  const { state } = useAppState();
   const {add: addTx, update: updateTx} = transactionStore();
+  const { currentUser, updateCurrentUser } = useUserStore();
 
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { updateWalletBalance } = useAuthentication();
 
   function checkForTxMethod() {
-    if (!daoService?.network || !state.currentUser) return;
+    if (!daoService?.network || !currentUser) return;
 
     if (!txMethod || typeof daoService?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
   function makeTx() {
-    if (!daoService?.network || !state.currentUser) return;
+    if (!daoService?.network || !currentUser) return;
 
     const tmpTransaction = addTx({
       type: txType,
@@ -124,6 +123,10 @@ export default function NetworkTxButton({
       })
       .finally(() => {
         updateWalletBalance(true);
+        daoService.isCouncil(currentUser?.walletAddress).then((isCouncil) =>
+          updateCurrentUser({
+            isCouncil,
+          }));
       });
   }
 
@@ -145,7 +148,7 @@ export default function NetworkTxButton({
     </Button>
   );
 
-  useEffect(checkForTxMethod, [daoService, state.currentUser]);
+  useEffect(checkForTxMethod, [daoService, currentUser]);
 
   return (
       <NetworkTxButtonView 

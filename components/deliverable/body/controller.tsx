@@ -3,13 +3,12 @@ import { useRouter } from "next/router";
 
 import DeliverableBodyView from "components/deliverable/body/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { lowerCaseCompare } from "helpers/string";
 
 import { NetworkEvents } from "interfaces/enums/events";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -32,7 +31,7 @@ export default function DeliverableBody({
   const router = useRouter();
   const { t } = useTranslation(["common", "deliverable"]);
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { getURLWithNetwork } = useMarketplace();
   const { handleMakePullRequestReady, handleCancelPullRequest } = useBepro();
   const [isMakingReady, onMakeReady] = useContractTransaction(NetworkEvents.PullRequestReady,
@@ -44,12 +43,12 @@ export default function DeliverableBody({
                                                           t("deliverable:actions.cancel.success"),
                                                           t("deliverable:actions.cancel.error"));
 
-  const isCouncil = !!state?.currentUser?.isCouncil;
-  const isWalletConnected = !!state.currentUser?.walletAddress;
+  const isCouncil = !!currentUser?.isCouncil;
+  const isWalletConnected = !!currentUser?.walletAddress;
   const isDeliverableReady = currentDeliverable?.markedReadyForReview;
   const isDeliverableCanceled = currentDeliverable?.canceled;
   const isDeliverableCancelable = currentDeliverable?.isCancelable;
-  const isDeliverableCreator = lowerCaseCompare(currentDeliverable?.user?.address, state.currentUser?.walletAddress);
+  const isDeliverableCreator = lowerCaseCompare(currentDeliverable?.user?.address, currentUser?.walletAddress);
   const showMakeReadyWarning = !isDeliverableReady && isDeliverableCreator;
   const isMakeReviewButton =
     isWalletConnected &&
@@ -101,7 +100,7 @@ export default function DeliverableBody({
       isCancelButton={isCancelButton}
       isCancelling={isCancelling}
       isMakingReady={isMakingReady}
-      currentUser={state.currentUser}
+      currentUser={currentUser}
       isCouncil={isCouncil}
     />
   );

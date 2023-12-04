@@ -2,11 +2,10 @@ import BigNumber from "bignumber.js";
 
 import { ProposalDisputesView } from "components/proposal/disputes-list/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { ProposalDisputes } from "interfaces/proposal";
 
 import useMarketplace from "x-hooks/use-marketplace";
+import { useSettings } from "x-hooks/use-settings";
 
 interface ProposalDisputesProps {
   disputes: ProposalDisputes[];
@@ -17,7 +16,7 @@ export function ProposalDisputes({
   disputes,
   networkTokenSymbol,
 }: ProposalDisputesProps) {
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const { getTotalNetworkToken } = useMarketplace();
   const { data: totalNetworkToken } = getTotalNetworkToken();
 
@@ -34,7 +33,7 @@ export function ProposalDisputes({
     <ProposalDisputesView
       disputes={disputes}
       networkTokenSymbol={networkTokenSymbol}
-      defaultFiat={state.Settings?.currency?.defaultFiat}
+      defaultFiat={settings?.currency?.defaultFiat}
       calculatePercentage={percentage}
     />
   );

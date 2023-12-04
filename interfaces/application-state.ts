@@ -1,18 +1,9 @@
-import {Dispatch} from "react";
-
-import {XReducerAction} from "contexts/reducers/reducer";
-
 import {Balance} from "interfaces/balance-state";
 import {MatchAccountsStatus} from "interfaces/enums/api";
 import {IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
 import {kycSession} from "interfaces/kyc-session";
-import {LoadingState} from "interfaces/loading-state";
 
-import {SettingsType, Tier} from "types/settings";
-
-export interface ServiceState {
-  microReady: boolean | null;
-}
+import { Tier} from "types/settings";
 
 export interface ConnectedChain {
   id: string;
@@ -46,20 +37,4 @@ export interface CurrentBounty {
   lastUpdated: number;
   kycSteps?: Tier[];
   data: IssueBigNumberData;
-}
-
-export interface State {
-  Settings: SettingsType | null;
-  Service: ServiceState | null,
-  loading: LoadingState | null;
-  currentUser: CurrentUserState | null,
-  currentBounty: CurrentBounty | null,
-  show: {
-    [key: string]: boolean;
-  }
-}
-
-export interface AppState {
-  state: State,
-  dispatch: (action: XReducerAction<any>) => Dispatch<XReducerAction<any>>;
 }

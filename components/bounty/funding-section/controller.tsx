@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 import BigNumber from "bignumber.js";
 
-import { useAppState } from "contexts/app-state";
-
 import { getIssueState } from "helpers/handleTypeIssue";
 
 import { IssueBigNumberData, fundingBenefactor } from "interfaces/issue-data";
+
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 import FundingSectionView from "./view";
 
@@ -18,9 +18,9 @@ interface FundingSectionProps {
 export default function FundingSection({ currentBounty, updateBountyData }: FundingSectionProps) {
   const [walletFunds, setWalletFunds] = useState<fundingBenefactor[]>();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
 
-  const isConnected = !!state.currentUser?.walletAddress;
+  const isConnected = !!currentUser?.walletAddress;
   const hasReward = currentBounty?.hasReward;
   const isBountyClosed = !!currentBounty?.isClosed;
   const isBountyFunded = !!currentBounty?.isFunded;
@@ -40,13 +40,13 @@ export default function FundingSection({ currentBounty, updateBountyData }: Fund
     }) === "canceled";
 
   useEffect(() => {
-    if (!state.currentUser?.walletAddress || !currentBounty) return;
+    if (!currentUser?.walletAddress || !currentBounty) return;
 
     const funds = 
-      currentBounty?.benefactors?.filter((fund) => fund.address === state.currentUser.walletAddress);
+      currentBounty?.benefactors?.filter((fund) => fund.address === currentUser.walletAddress);
 
     setWalletFunds(funds);
-  }, [state.currentUser, currentBounty]);
+  }, [currentUser, currentBounty]);
 
   if (isBountyFunded && !walletFunds?.length) return <></>;
 

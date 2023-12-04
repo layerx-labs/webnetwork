@@ -5,8 +5,6 @@ import {addSeconds, formatDistance} from "date-fns";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import {commentsParser, deliverableParser, issueParser, mergeProposalParser} from "helpers/issue";
 import {isProposalDisputable} from "helpers/proposal";
@@ -16,9 +14,10 @@ import {lowerCaseCompare} from "helpers/string";
 import {IssueData} from "interfaces/issue-data";
 import {DistributedAmounts} from "interfaces/proposal";
 
-import {getCommentsData} from "x-hooks/api/comments";
-import {getProposalData} from "x-hooks/api/proposal";
-import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import { getCommentsData } from "x-hooks/api/comments";
+import { getProposalData } from "x-hooks/api/proposal";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
@@ -45,9 +44,9 @@ export default function ProposalPage() {
       proposals: [],
     });
 
-  const { state } = useAppState();
   const { getTimeChain } = useBepro();
   const { service: daoService } = useDaoStore();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
 
   const proposalId = query?.proposalId?.toString();
@@ -64,10 +63,10 @@ export default function ProposalPage() {
   const deliverable = proposalData ? deliverableParser(parsedProposal?.deliverable) : null;
   const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.token");
 
-  const isWalletConnected = !!state.currentUser?.walletAddress;
+  const isWalletConnected = !!currentUser?.walletAddress;
 
   const isUserAbleToDispute = isWalletConnected ? !parsedProposal?.disputes?.some(({ address, weight }) => 
-    lowerCaseCompare(address, state.currentUser?.walletAddress) && weight.gt(0)) : false;
+    lowerCaseCompare(address, currentUser?.walletAddress) && weight.gt(0)) : false;
 
   const isDisputable = [
     isWalletConnected,
@@ -86,7 +85,7 @@ export default function ProposalPage() {
     !issue?.isCanceled,
     !parsedProposal?.isDisputed,
     !parsedProposal?.refusedByBountyOwner,
-    lowerCaseCompare(issue?.user?.address, state.currentUser?.walletAddress),
+    lowerCaseCompare(issue?.user?.address, currentUser?.walletAddress),
   ].every((v) => v);
 
   const isMergeable = [
@@ -170,7 +169,7 @@ export default function ProposalPage() {
       isRefusable={isRefusable}
       isMergeable={isMergeable}
       comments={parsedComments}
-      userData={state.currentUser}
+      userData={currentUser}
     />
   );
 }

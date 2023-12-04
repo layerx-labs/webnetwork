@@ -1,8 +1,8 @@
 import RewardInformationSectionView from "components/bounty/create-bounty/sections/reward-information/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { RewardInformationSectionProps } from "types/components";
+
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -36,9 +36,7 @@ export default function RewardInformationSection({
   setPreviewAmount,
   setDistributions,
 }: RewardInformationSectionProps) {
-  const {
-    state: { currentUser },
-  } = useAppState();
+  const { currentUser } = useUserStore();
 
   function handleIsFunding(e: boolean) {
     if (e === true) updateIssueAmount(ZeroNumberFormatValues);

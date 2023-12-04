@@ -1,5 +1,3 @@
-import {useAppState} from "contexts/app-state";
-
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
@@ -9,15 +7,11 @@ import { siweMessageService } from "services/ethereum/siwe";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useDappkitConnection } from "x-hooks/use-dappkit";
 
+import { useUserStore } from "./stores/user/user.store";
 import useSupportedChain from "./use-supported-chain";
 
 export default function useSignature() {
-  const {
-    state: {
-      Service, 
-      currentUser
-    }
-  } = useAppState();
+  const { currentUser } = useUserStore();
   const { connectedChain } = useSupportedChain();
   const { addError } = useToastStore();
   const { connection } = useDappkitConnection();

@@ -2,10 +2,9 @@ import { useRouter } from "next/router";
 
 import PaymentsNetworkView from "components/pages/profile/payments/network/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { NetworkPaymentsData } from "types/api";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 interface PaymentsNetworkProps {
@@ -21,14 +20,14 @@ export default function PaymentsNetwork({
 }: PaymentsNetworkProps) {
   const { push } = useRouter();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { goToProfilePage, getURLWithNetwork } = useMarketplace();
 
   function handleBack() {
     goToProfilePage("payments", {
       networkName: "",
       networkChain: "",
-      wallet: state.currentUser?.walletAddress
+      wallet: currentUser?.walletAddress
     });
   }
 

@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "next-i18next";
 
-import { useAppState } from "contexts/app-state";
-
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 
@@ -28,22 +27,22 @@ export default function BountySettings({
 
   const [isCancelable, setIsCancelable] = useState(false);
 
-  const { state } = useAppState();
   const { addError } = useToastStore();
   const { service: daoService } = useDaoStore();
+  const { currentUser } = useUserStore();
   const { updateWalletBalance } = useAuthentication();
   const { handleReedemIssue, handleHardCancelBounty, getCancelableTime } = useBepro();
 
-  const isGovernor = state.currentUser?.isGovernor;
+  const isGovernor = currentUser?.isGovernor;
   const objViewProps = {
     onEditIssue,
-    isWalletConnected: !!state.currentUser?.walletAddress,
+    isWalletConnected: !!currentUser?.walletAddress,
     isBountyInDraft: !!currentBounty?.isDraft,
     isBountyOwner:
-      !!state.currentUser?.walletAddress &&
+      !!currentUser?.walletAddress &&
       currentBounty?.user?.address &&
       currentBounty?.user?.address ===
-        state.currentUser?.walletAddress,
+        currentUser?.walletAddress,
 
     isFundingRequest: !!currentBounty?.isFundingRequest,
     isBountyFunded: currentBounty?.fundedAmount?.isEqualTo(currentBounty?.fundingAmount),

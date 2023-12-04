@@ -3,8 +3,6 @@ import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core"
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import {useAppState} from "contexts/app-state";
-
 import {parseTransaction} from "helpers/transactions";
 
 import {NetworkEvents} from "interfaces/enums/events";
@@ -27,7 +25,6 @@ const DIVISOR = 1000000;
 export default function useBepro() {
   const { t } = useTranslation("common");
 
-  const { state } = useAppState();
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { service: daoService } = useDaoStore();

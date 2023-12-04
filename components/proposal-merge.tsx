@@ -7,14 +7,13 @@ import Button from "components/button";
 import ContractButton from "components/common/buttons/contract-button";
 import Modal from "components/modal";
 
-import {useAppState} from "contexts/app-state";
-
 import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { DistributedAmounts } from "interfaces/proposal";
 import {Token, TokenInfo} from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+import { useSettings } from "x-hooks/use-settings";
 
 import ProposalDistributionList from "./proposal/distribution/list/view";
 
@@ -42,7 +41,7 @@ export default function ProposalMerge({
   const [show, setShow] = useState<boolean>(false);
   const [coinInfo, setCoinInfo] = useState<TokenInfo>()
   
-  const {state} = useAppState();
+  const { settings } = useSettings();
 
   const amountTotalConverted = BigNumber(handleConversion(amountTotal));
   const currentTokenSymbol = token.symbol ||  t("common:misc.token")
@@ -52,7 +51,7 @@ export default function ProposalMerge({
   ])
 
   function handleConversion(value) {
-    return BigNumber(value).multipliedBy(coinInfo?.prices[state.Settings?.currency?.defaultFiat]).toFixed(4);
+    return BigNumber(value).multipliedBy(coinInfo?.prices[settings?.currency?.defaultFiat]).toFixed(4);
   }
 
   function handleMerge() {
@@ -116,7 +115,7 @@ export default function ProposalMerge({
        <ProposalDistributionList
         distributedAmounts={distributedAmounts}
         transactionalTokenSymbol={currentTokenSymbol}
-        fiatSymbol={state.Settings?.currency?.defaultFiat}
+        fiatSymbol={settings?.currency?.defaultFiat}
         convertValue={handleConversion}
       />
 
@@ -141,7 +140,7 @@ export default function ProposalMerge({
               <span className="text-white caption-small text-light-gray">
                 {amountTotalConverted?.toFixed()}</span>
               <span className=" ms-2 caption-small text-light-gray">
-                {state.Settings?.currency?.defaultFiat}
+                {settings?.currency?.defaultFiat}
               </span>
             </div>
             )}

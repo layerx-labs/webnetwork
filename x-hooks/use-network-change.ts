@@ -1,13 +1,10 @@
 import {toHex} from "web3-utils";
 
-import { useAppState } from "contexts/app-state";
-
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import useMarketplace from "./use-marketplace";
 
 export default function useNetworkChange() {
-  const { dispatch } = useAppState();
   const marketplace = useMarketplace();
   
   async function handleAddNetwork(chosenSupportedChain: SupportedChainData = marketplace?.active?.chain) {

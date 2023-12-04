@@ -8,13 +8,12 @@ import NetworkListBar from "components/networks-list/network-list-bar";
 import NetworkListItem from "components/networks-list/network-list-item";
 import NothingFound from "components/nothing-found";
 
-import {useAppState} from "contexts/app-state";
-
 import {orderByProperty} from "helpers/array";
 
 import {Network} from "interfaces/network";
 
 import useMarketplace from "x-hooks/use-marketplace";
+import { useSettings } from "x-hooks/use-settings";
 
 interface NetworkListProps {
   networks: Network[];
@@ -30,7 +29,7 @@ export default function NetworksList({
 
   const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
 
-  const { state } = useAppState();
+  const { settings } = useSettings();
 
   function handleOrderChange(newOrder) {
     setOrder(newOrder);
@@ -54,7 +53,7 @@ export default function NetworksList({
                 href="/new-marketplace"
                 label={String(t("actions.create-one"))}
                 uppercase
-                blank={activeMarketplace?.name !== state.Settings?.defaultNetworkConfig?.name}
+                blank={activeMarketplace?.name !== settings?.defaultNetworkConfig?.name}
               />
             ) : (
               ""

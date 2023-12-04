@@ -1,17 +1,16 @@
 import getConfig from "next/config";
 import {event} from "nextjs-google-analytics";
 
-import {useAppState} from "contexts/app-state";
-
 import {analyticEvents} from "helpers/analytic-events";
 
 import {Analytic, EventName} from "interfaces/analytics";
 
+import { useUserStore } from "./stores/user/user.store";
 import useSupportedChain from "./use-supported-chain";
 
 export default function useAnalyticEvents() {
 
-  const {state} = useAppState();
+  const { currentUser } = useUserStore();
   const { connectedChain } = useSupportedChain();
   const {publicRuntimeConfig} = getConfig();
 
@@ -38,12 +37,12 @@ export default function useAnalyticEvents() {
       }
     }
 
-    if (state?.currentUser) {
+    if (currentUser) {
       details = {
         ...details,
-        walletAddress: state.currentUser?.walletAddress?.toString(),
-        connected: state.currentUser?.connected?.toString(),
-        login: state.currentUser?.login
+        walletAddress: currentUser?.walletAddress?.toString(),
+        connected: currentUser?.connected?.toString(),
+        login: currentUser?.login
       };
     }
 

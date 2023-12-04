@@ -4,8 +4,6 @@ import { useTranslation } from "next-i18next";
 
 import BountyDetailsSectionView from "components/bounty/create-bounty/sections/bounty-details/view";
 
-import { useAppState } from "contexts/app-state";
-
 import {
   BOUNTY_TAGS,
   BOUNTY_TITLE_LIMIT,
@@ -16,6 +14,8 @@ import { getOriginLinkPlaceholder } from "helpers/origin-link-placeholder";
 import { BountyDetailsSectionProps } from "interfaces/create-bounty";
 
 import { SelectOption } from "types/utils";
+
+import { useSettings } from "x-hooks/use-settings";
 
 export default function BountyDetailsSection({
   title,
@@ -41,9 +41,7 @@ export default function BountyDetailsSection({
   const [strFiles, setStrFiles] = useState<string[]>([]);
   const [bodyLength, setBodyLength] = useState<number>(0);
   
-  const {
-    state: { Settings },
-  } = useAppState();
+  const { settings } = useSettings();
 
   const TAGS_OPTIONS = BOUNTY_TAGS.map(({ type, tags }) => ({
     label: type,
@@ -53,7 +51,7 @@ export default function BountyDetailsSection({
     }))
   }));
 
-  const kycTierOptions = Settings?.kyc?.tierList?.map((i) => ({
+  const kycTierOptions = settings?.kyc?.tierList?.map((i) => ({
     value: i.id,
     label: i.name,
   }));
@@ -110,7 +108,7 @@ export default function BountyDetailsSection({
       const strFiles = files?.map((file) =>
           file.uploaded &&
           `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-            Settings?.urls?.ipfs
+            settings?.urls?.ipfs
           }/${file.hash}) \n\n`);
 
       setStrFiles(strFiles);
@@ -127,7 +125,7 @@ export default function BountyDetailsSection({
       tagsOptions={TAGS_OPTIONS}
       titleExceedsLimit={title?.length >= BOUNTY_TITLE_LIMIT}
       kycCheck={isKyc}
-      isKycEnabled={Settings?.kyc?.isKycEnabled}
+      isKycEnabled={settings?.kyc?.isKycEnabled}
       kycOptions={kycTierOptions}
       deliverableTypeOptions={deliverableTypes}
       deliverableType={deliverableType}

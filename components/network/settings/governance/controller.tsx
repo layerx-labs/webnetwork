@@ -5,8 +5,7 @@ import {useTranslation} from "next-i18next";
 
 import NetworkGovernanceSettingsView from "components/network/settings/governance/view";
 
-import {useAppState} from "contexts/app-state";
-import {useNetworkSettings} from "contexts/network-settings";
+import { useNetworkSettings } from "contexts/network-settings";
 
 import {IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
 
@@ -14,11 +13,12 @@ import {StandAloneEvents} from "interfaces/enums/events";
 import {Network} from "interfaces/network";
 import {Token} from "interfaces/token";
 
-import {useProcessEvent} from "x-hooks/api/events/use-process-event";
-import {useUpdateNetwork} from "x-hooks/api/marketplace";
-import {useDaoStore} from "x-hooks/stores/dao/dao.store";
-import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
-import {useAuthentication} from "x-hooks/use-authentication";
+import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useUpdateNetwork } from "x-hooks/api/marketplace";
+import { useUserStore } from "x-hooks/stores/user/user.store";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -42,9 +42,9 @@ export default function NetworkGovernanceSettings({
   const [isUpdating, setIsUpdating] = useState(false);
   const [networkToken, setNetworkToken] = useState<Token[]>();
   
-  const { state } = useAppState();
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
+  const { currentUser } = useUserStore();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
@@ -90,7 +90,7 @@ export default function NetworkGovernanceSettings({
   function handleCloseMyNetwork() {
     if (
       !marketplace?.active ||
-      !state.currentUser?.walletAddress ||
+      !currentUser?.walletAddress ||
       !daoService
     )
       return;
@@ -101,7 +101,7 @@ export default function NetworkGovernanceSettings({
       .then(() => {
         return signMessage(IM_AM_CREATOR_NETWORK).then(async () => useUpdateNetwork({
           isClosed: true,
-          creator: state.currentUser.walletAddress,
+          creator: currentUser.walletAddress,
           networkAddress: network?.networkAddress
         }))
       })
@@ -173,7 +173,7 @@ export default function NetworkGovernanceSettings({
 
   async function handleSubmit() {
     if (
-      !state.currentUser?.walletAddress ||
+      !currentUser?.walletAddress ||
       !daoService ||
       !forcedNetwork ||
       forcedNetwork?.isClosed ||
@@ -232,8 +232,8 @@ export default function NetworkGovernanceSettings({
     if (!hasChangedTokens) return;
 
     const json = {
-      creator: state.currentUser.walletAddress,
-      handle: state.currentUser.login,
+      creator: currentUser.walletAddress,
+      handle: currentUser.login,
       networkAddress: network.networkAddress,
       allowedTokens: {
         transactional: settingsTokens?.allowedTransactions?.map((token) => token?.id).filter((v) => v),

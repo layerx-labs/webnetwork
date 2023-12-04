@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
-
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import Button, { ButtonProps } from "components/button";
-import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
-import WrongNetworkModal from "components/wrong-network-modal";
-
-import { useAppState } from "contexts/app-state";
-import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
 import { useDappkitConnectionInfo } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -26,45 +21,22 @@ export default function ContractButton({
   ...rest
 }: ButtonProps) {
   const { t } = useTranslation(["common"]);
-  const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
-  const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { state: { currentUser, loading }, dispatch } = useAppState();
-  const { query, pathname } = useRouter();
+  const { query } = useRouter();
   const { changeNetwork } = useDao();
-  const { addError, addWarning } = useToastStore();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
+  const { connectedChain } = useSupportedChain();
+  const { addError, addWarning } = useToastStore();
   const { service: daoService, serviceStarting } = useDaoStore();
-  const { supportedChains, connectedChain } = useSupportedChain();
+  const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
+
   const connectionInfo = useDappkitConnectionInfo();
-
-  const isRequired = [
-    pathname?.includes("new-network"),
-    pathname?.includes("/[network]/[chain]/profile")
-  ].some(c => c);
-
-  function onCloseModal(variant: "WalletMismatchModal" | "WrongNetworkModal") {
-    variant === "WalletMismatchModal"
-      ? setIsMismatchModalVisible(false)
-      : setIsNetworkModalVisible(false);
-  }
-
-  function changeShowNetworkModal() {
-    if (!supportedChains?.length || loading?.isLoading) {
-      setIsNetworkModalVisible(false);
-      return;
-    }
-
-    setIsNetworkModalVisible([
-      connectedChain?.matchWithNetworkChain === false && isRequired,
-      connectedChain?.name === UNSUPPORTED_CHAIN && isRequired
-    ].some(c => c));
-  }
 
   async function validateEthereum() {
     if(window.ethereum) return true;
 
-    dispatch(changeShowWeb3(true));
+    updateWeb3Dialog(true)
 
     return false;
   }
@@ -73,7 +45,7 @@ export default function ContractButton({
     if (connectedChain?.matchWithNetworkChain !== false && connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
-    setIsNetworkModalVisible(true)
+    updateWrongNetworkModal(true)
 
     return false;
   }
@@ -88,7 +60,7 @@ export default function ContractButton({
 
     if (isSameWallet) return true;
 
-    setIsMismatchModalVisible(true);
+    updateWalletMismatchModal(true);
 
     return false;
   }
@@ -146,15 +118,6 @@ export default function ContractButton({
     }
   }
 
-  useEffect(changeShowNetworkModal, [
-    currentUser?.walletAddress,
-    connectedChain?.matchWithNetworkChain,
-    connectedChain?.id,
-    supportedChains,
-    loading,
-    isRequired
-  ]);
-
   return(
     <>
       <Button
@@ -163,16 +126,6 @@ export default function ContractButton({
       >
         {children}
       </Button>
-
-      <WrongNetworkModal 
-        show={isNetworkModalVisible}
-        onClose={() => onCloseModal('WrongNetworkModal')}
-        isRequired={isRequired}
-      />
-      <WalletMismatchModal
-        show={isMismatchModalVisible}
-        onClose={() => onCloseModal('WalletMismatchModal')}
-      />
     </>
   );
 }

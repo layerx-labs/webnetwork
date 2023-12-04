@@ -10,11 +10,9 @@ import {useRouter} from "next/router";
 import {GoogleAnalytics} from "nextjs-google-analytics";
 
 import ConsentCookie from "components/consent-cokie";
-import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import Loading from "components/loading";
-import MissingMetamaskModal from "components/missing-metamask-modal/controller";
+import RootModals from "components/modals/root-modals/root-modals.controller";
 import NavBar from "components/navigation/navbar/controller";
-import NoMetamaskModal from "components/no-metamask-modal/controller";
 import ReadOnlyContainer from "components/read-only-container";
 import Seo from "components/seo";
 import Toaster from "components/toaster";
@@ -45,13 +43,11 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
             <Hydrate state={pageProps.dehydratedState}>
               <Seo issueMeta={seoData} />
               <ReadOnlyContainer>
-                <NoMetamaskModal />
-                <InvalidAccountWalletModal />
+                <RootModals />
                 <NavBar />
                 <div id="root-container">
                   <Component {...pageProps} />
                 </div>
-                <MissingMetamaskModal />
                 <Toaster />
                 <Loading />
               </ReadOnlyContainer>

@@ -4,8 +4,6 @@ import BigNumber from "bignumber.js";
 import {isZeroAddress} from "ethereumjs-util";
 import {useRouter} from "next/router";
 
-import {useAppState} from "contexts/app-state";
-
 import {isSameSet} from "helpers/array";
 import {isColorsSimilar} from "helpers/colors";
 import {
@@ -35,9 +33,11 @@ import {WinStorage} from "services/win-storage";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
@@ -64,19 +64,20 @@ export const NetworkSettingsProvider = ({ children }) => {
   const [registryToken, setRegistryToken] = useState<Token>();
   const [forcedService, setForcedService] = useState<DAO>();
 
-  const {state} = useAppState();
+  const { settings } = useSettings();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
   const { service: daoService, serviceStarting } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
-  const IPFS_URL = state.Settings?.urls?.ipfs;
+  const IPFS_URL = settings?.urls?.ipfs;
   const LIMITS = {
-    percentageNeededForDispute: state.Settings?.networkParametersLimits?.disputePercentage,
-    draftTime: state.Settings?.networkParametersLimits?.draftTime,
-    disputableTime: state.Settings?.networkParametersLimits?.disputableTime,
-    councilAmount: state.Settings?.networkParametersLimits?.councilAmount
+    percentageNeededForDispute: settings?.networkParametersLimits?.disputePercentage,
+    draftTime: settings?.networkParametersLimits?.draftTime,
+    disputableTime: settings?.networkParametersLimits?.disputableTime,
+    councilAmount: settings?.networkParametersLimits?.councilAmount
   };
 
   const isCreating = useMemo(() => ["/new-marketplace", "/setup"].includes(router.pathname), [router.pathname]);
@@ -251,7 +252,7 @@ export const NetworkSettingsProvider = ({ children }) => {
         if (networksWithSameName.rows.some(({ chain_id }) => +chain_id === currentChain))
           return false;
 
-        const currentWallet = state.currentUser?.walletAddress?.toLowerCase();
+        const currentWallet = currentUser?.walletAddress?.toLowerCase();
 
         // Network with same name on other chain and connected with the same creator wallet
         if (networksWithSameName.rows.find(({ creatorAddress }) => creatorAddress.toLowerCase() === currentWallet))
@@ -325,7 +326,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   async function getTokenBalance() {
     const [tokensLockedInRegistry, registryCreatorAmount] = await Promise.all([
-      getTokensLockedInRegistryByAddress(state.currentUser?.walletAddress),
+      getTokensLockedInRegistryByAddress(currentUser?.walletAddress),
       getRegistryCreatorAmount()
     ])
 
@@ -491,12 +492,12 @@ export const NetworkSettingsProvider = ({ children }) => {
 
   useEffect(() => {
     if ([
-      !state.currentUser?.walletAddress,
+      !currentUser?.walletAddress,
       !isCreating &&
         (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
       isCreating && !daoService?.registry?.token?.contractAddress,
       !needsToLoad,
-      !state.Settings
+      !settings
     ].some(c => c))
       return;
 
@@ -507,14 +508,14 @@ export const NetworkSettingsProvider = ({ children }) => {
     else if(isCreating)
       loadDefaultSettings().finally(()=> setIsLoadingData(false));
   }, [
-    state.currentUser?.walletAddress,
+    currentUser?.walletAddress,
     forcedService,
     network,
     isCreating,
     needsToLoad,
     router.pathname,
     daoService?.registry?.token?.contractAddress,
-    state.Settings
+    settings
   ]);
 
   useEffect(() => {

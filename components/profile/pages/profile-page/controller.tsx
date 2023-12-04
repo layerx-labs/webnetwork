@@ -1,14 +1,14 @@
 import ProfilePageView from "components/profile/pages/profile-page/view";
 
-import {useAppState} from "contexts/app-state";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 export default function ProfilePage() {
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
 
   return (
     <ProfilePageView
-      walletAddress={state.currentUser?.walletAddress}
-      isCouncil={state.currentUser?.isCouncil}
+      walletAddress={currentUser?.walletAddress}
+      isCouncil={currentUser?.isCouncil}
     />
   );
 }

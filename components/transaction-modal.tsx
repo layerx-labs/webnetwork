@@ -13,8 +13,6 @@ import InternalLink from "components/internal-link";
 import Modal from "components/modal";
 import TransactionStats from "components/transaction-stats";
 
-import {useAppState} from "contexts/app-state";
-
 import {CopyValue} from "helpers/copy-value";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import {truncateAddress} from "helpers/truncate-address";
@@ -24,6 +22,7 @@ import {BlockTransaction, Transaction} from "interfaces/transaction";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useMarketplace from "x-hooks/use-marketplace";
+import { useSettings } from "x-hooks/use-settings";
 
 export default function TransactionModal({
   transaction = null,
@@ -38,7 +37,7 @@ export default function TransactionModal({
   const [addressTo, setAddressTo] = useState("...");
   const [addressFrom, setAddressFrom] = useState("...");
 
-  const { state } = useAppState();
+  const { settings } = useSettings();
   const { addInfo } = useToastStore();
 
   const { getURLWithNetwork } = useMarketplace();
@@ -101,7 +100,7 @@ export default function TransactionModal({
   }
 
   function getEtherScanHref(tx: string) {
-    const url = state.Settings?.urls?.blockScan
+    const url = settings?.urls?.blockScan
     const validUrl = isValidUrl(url) ? url : `https://${url}`
     return `${validUrl}/${tx}`;
   }
