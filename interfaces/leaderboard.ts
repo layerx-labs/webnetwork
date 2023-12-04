@@ -12,6 +12,8 @@ export interface LeaderBoard {
   user?: {
     handle?: string;
   };
+  networkslogos?: string[];
+  marketplacelogos?: string[];
   numberNfts?: number;
   ownedBountiesOpened?: number;
   ownedBountiesClosed?: number;

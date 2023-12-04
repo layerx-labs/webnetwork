@@ -26,6 +26,7 @@ interface ListProps {
   hasMorePages?: boolean;
   searchPlaceholder?: string;
   chainFilters?: boolean;
+  networkFilter?: boolean;
 }
 
 export default function List({

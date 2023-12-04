@@ -61,6 +61,11 @@ class LeaderBoard extends Model {
       foreignKey: "address",
       targetKey: "address"
     });
+    this.belongsTo(models.userPayments, {
+      as: 'userPayments',
+      foreignKey: "address",
+      targetKey: "address"
+    });
   }
 }
 

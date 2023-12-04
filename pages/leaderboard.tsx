@@ -20,6 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
       ...(await serverSideTranslations(locale, [
         "common",
         "bounty",
+        "council",
         "connect-wallet-button",
         "custom-network",
         "leaderboard",

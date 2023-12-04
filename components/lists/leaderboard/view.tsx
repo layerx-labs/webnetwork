@@ -12,7 +12,7 @@ interface LeaderBoardListViewProps {
 export default function LeaderBoardListView({
   leaderboard
 }: LeaderBoardListViewProps) {
-  const { t } = useTranslation(["common", "leaderboard"]);
+  const { t } = useTranslation(["common", "leaderboard", "council"]);
 
   const hasData = !!leaderboard?.count;
   const hasMore = hasData && leaderboard?.currentPage < leaderboard?.pages;
@@ -36,6 +36,8 @@ export default function LeaderBoardListView({
     t("leaderboard:table.address"),
     t("leaderboard:table.github-handle"),
     t("leaderboard:table.nfts"),
+    t("council:council-table.networks"),
+    t("misc.networks"),
     t("leaderboard:table.actions"),
   ];
 
@@ -47,6 +49,7 @@ export default function LeaderBoardListView({
       header={header}
       hasMorePages={hasMore}
       searchPlaceholder={t("leaderboard:search")}
+      networkFilter
       infinite
     >
       {leaderboard?.rows?.map((item) => <LeaderBoardListItem key={item?.address} {...item} />)}
