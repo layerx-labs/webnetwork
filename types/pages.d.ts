@@ -8,8 +8,10 @@ import {
   LeaderBoardPaginated,
   NetworkPaymentsData,
   PaginatedCuratorOverview,
-  ActiveMarketplace
+  ActiveMarketplace, PaginatedData
 } from "types/api";
+
+import {Curator} from "../interfaces/curators";
 
 export interface ExplorePageProps {
   numberOfNetworks: number;
@@ -44,6 +46,7 @@ interface ProfilePageProps {
   bounties?: SearchBountiesPaginated;
   payments?: NetworkPaymentsData[];
   chains?: SupportedChainData[];
+  curators?: PaginatedData<Curator>;
 }
 
 export interface MyNetworkPageProps {
