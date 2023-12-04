@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
-
 import { useTranslation } from "next-i18next";
+
+import BountySettingsView from "components/bounty/bounty-hero/bounty-settings/view";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
-
-import BountySettingsView from "./view";
 
 export default function BountySettings({
   isEditIssue,
@@ -26,7 +23,6 @@ export default function BountySettings({
   const { t } = useTranslation(["common", "bounty"]);
 
   const { addError } = useToastStore();
-  const { service: daoService } = useDaoStore();
   const { currentUser } = useUserStore();
   const { updateWalletBalance } = useAuthentication();
   const { handleReedemIssue, handleHardCancelBounty } = useBepro();

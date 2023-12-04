@@ -29,9 +29,9 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";

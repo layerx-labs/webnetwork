@@ -13,8 +13,8 @@ import {MyMarketplacePageProps} from "types/pages";
 
 import {useSearchNetworks} from "x-hooks/api/marketplace";
 import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
-import {useDao} from "x-hooks/use-dao";
 import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";

@@ -2,7 +2,6 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 
-import Avatar from "components/avatar";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyStatusInfo from "components/bounty-status-info";

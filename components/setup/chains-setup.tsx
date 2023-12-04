@@ -34,7 +34,7 @@ export default function ChainsSetup() {
   const [filteredChains, setFilteredChains] = useState<MiniChainInfo[]>([]);
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
-  const { loading, updateLoading } = useLoadersStore();
+  const { updateLoading } = useLoadersStore();
   const { supportedChains } = useSupportedChain();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({

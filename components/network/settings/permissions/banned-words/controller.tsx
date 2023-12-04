@@ -10,8 +10,8 @@ import { QueryKeys } from "helpers/query-keys";
 import { Network } from "interfaces/network";
 
 import { CreateBannedWord, RemoveBannedWord } from "x-hooks/api/marketplace/management/banned-words";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useChain from "x-hooks/use-chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 

@@ -3,7 +3,6 @@ import Image from "next/image";
 
 import metamaskLogo from "assets/metamask.png";
 
-import Avatar from "components/avatar";
 import GithubImage from "components/github-image";
 import If from "components/If";
 
