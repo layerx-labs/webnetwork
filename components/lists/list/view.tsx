@@ -17,6 +17,10 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import { SortOption } from "types/components";
 import { Action } from "types/utils";
 
+import {SupportedChainData} from "../../../interfaces/supported-chain-data";
+import ChainFilter from "../filters/chain/controller";
+import MobileFiltersButton from "../filters/mobile-button/controller";
+
 interface ListViewProps {
   searchString: string;
   searchPlaceholder?: string;
@@ -31,7 +35,9 @@ interface ListViewProps {
   withSearchAndFilters?: boolean;
   header?: string[];
   infinite?: boolean;
+  chainFilters?: boolean;
   hasMorePages?: boolean;
+  chains?: SupportedChainData[];
   onNextPage?: () => void;
   onClearSearch: () => void;
   onSearchInputChange: (event) => void;
@@ -57,6 +63,8 @@ export default function ListView(props: ListViewProps) {
     header,
     infinite,
     hasMorePages,
+    chainFilters,
+    chains,
     onNextPage,
     onSearchClick,
     onClearSearch,
@@ -81,16 +89,38 @@ export default function ListView(props: ListViewProps) {
           </div>
 
           <If condition={!!sortOptions}>
-            <div className="col-auto">
+            <div className="col-auto d-none d-xl-block">
               <ListSort options={sortOptions} />
             </div>
           </If>
 
+          <If condition={!!chainFilters}>
+            <div className="col-auto d-none d-xl-block">
+              <ChainFilter chains={chains} />
+            </div>
+          </If>
+
           <If condition={networkFilter}>
-            <div className="d-none d-xl-flex">
+            <div className="col-auto d-none d-xl-block">
               <SelectNetwork isCurrentDefault={isOnNetwork} />
             </div>
           </If>
+
+          <div className="col-auto d-block d-xl-none">
+            <MobileFiltersButton>
+              <If condition={!!sortOptions}>
+                <ListSort options={sortOptions} asSelect />
+              </If>
+
+              <If condition={!!chainFilters}>
+                <ChainFilter chains={chains} direction="vertical" />
+              </If>
+
+              <If condition={networkFilter}>
+                <SelectNetwork isCurrentDefault={isOnNetwork} />
+              </If>
+            </MobileFiltersButton>
+          </div>
         </div>
       </If>
 

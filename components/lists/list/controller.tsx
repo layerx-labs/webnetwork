@@ -12,6 +12,7 @@ import { Action } from "types/utils";
 
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface ListProps {
   isEmpty?: boolean;
@@ -24,6 +25,7 @@ interface ListProps {
   infinite?: boolean;
   hasMorePages?: boolean;
   searchPlaceholder?: string;
+  chainFilters?: boolean;
 }
 
 export default function List({
@@ -38,6 +40,7 @@ export default function List({
   const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { nextPage } = usePage();
+  const { supportedChains } = useSupportedChain();
   const { search, setSearch, clearSearch } = useSearch();
 
   const { state, time } = query;
@@ -68,6 +71,7 @@ export default function List({
   return (
     <ListView
       {...props}
+      chains={supportedChains}
       searchString={searchState}
       isOnNetwork={isOnNetwork}
       hasFilter={hasFilter}

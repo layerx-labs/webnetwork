@@ -4,22 +4,20 @@ import Modal from "components/modal";
 
 import { truncateAddress } from "helpers/truncate-address";
 
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 
-interface WalletMismatchModalProps {
-  show: boolean;
-  onClose: () => void;
-}
-
-export default function WalletMismatchModal({
-  show,
-  onClose
-}: WalletMismatchModalProps) {
+export default function WalletMismatchModal() {
   const { t } = useTranslation();
 
   const { currentUser } = useUserStore();
+  const { walletMismatchModal: show, updateWalletMismatchModal } = useLoadersStore();
 
   const truncatedWallet = truncateAddress(currentUser?.walletAddress);
+
+  function onClose () {
+    updateWalletMismatchModal(false);
+  }
 
   return(
     <Modal

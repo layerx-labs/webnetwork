@@ -36,7 +36,10 @@ export default function CuratorsPageLayoutView({
         infos={heroInfos}
       />
 
-      <CustomContainer className="pt-3">
+      <CustomContainer
+        className="pt-3 pb-5"
+        col = "col-xs-12 col-xl-10"
+      >
         <ResponsiveWrapper xs={false} xl={true} className="justify-content-center align-items-center">
           <MiniTabs items={tabsItems} />
         </ResponsiveWrapper>
