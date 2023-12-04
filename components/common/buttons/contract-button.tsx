@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
-
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import Button, { ButtonProps } from "components/button";
-import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
-import WrongNetworkModal from "components/wrong-network-modal";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
 import { AddressValidator } from "helpers/validators/address";
@@ -25,42 +21,17 @@ export default function ContractButton({
   ...rest
 }: ButtonProps) {
   const { t } = useTranslation(["common"]);
-  const [isMismatchModalVisible, setIsMismatchModalVisible] = useState(false);
-  const [isNetworkModalVisible, setIsNetworkModalVisible] = useState(false);
 
-  const { loading } = useLoadersStore();
-  const { currentUser } = useUserStore();
-  const { query, pathname } = useRouter();
+  const { query } = useRouter();
   const { changeNetwork } = useDao();
-  const { addError, addWarning } = useToastStore();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
+  const { connectedChain } = useSupportedChain();
+  const { addError, addWarning } = useToastStore();
   const { service: daoService, serviceStarting } = useDaoStore();
-  const { supportedChains, connectedChain } = useSupportedChain();
-  const { updateWeb3Dialog } = useLoadersStore();
+  const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
+
   const connectionInfo = useDappkitConnectionInfo();
-
-  const isRequired = [
-    pathname?.includes("new-network"),
-    pathname?.includes("/[network]/[chain]/profile")
-  ].some(c => c);
-
-  function onCloseModal(variant: "WalletMismatchModal" | "WrongNetworkModal") {
-    variant === "WalletMismatchModal"
-      ? setIsMismatchModalVisible(false)
-      : setIsNetworkModalVisible(false);
-  }
-
-  function changeShowNetworkModal() {
-    if (!supportedChains?.length || loading?.isLoading) {
-      setIsNetworkModalVisible(false);
-      return;
-    }
-
-    setIsNetworkModalVisible([
-      connectedChain?.matchWithNetworkChain === false && isRequired,
-      connectedChain?.name === UNSUPPORTED_CHAIN && isRequired
-    ].some(c => c));
-  }
 
   async function validateEthereum() {
     if(window.ethereum) return true;
@@ -74,7 +45,7 @@ export default function ContractButton({
     if (connectedChain?.matchWithNetworkChain !== false && connectedChain?.name !== UNSUPPORTED_CHAIN)
       return true;
 
-    setIsNetworkModalVisible(true)
+    updateWrongNetworkModal(true)
 
     return false;
   }
@@ -89,7 +60,7 @@ export default function ContractButton({
 
     if (isSameWallet) return true;
 
-    setIsMismatchModalVisible(true);
+    updateWalletMismatchModal(true);
 
     return false;
   }
@@ -147,15 +118,6 @@ export default function ContractButton({
     }
   }
 
-  useEffect(changeShowNetworkModal, [
-    currentUser?.walletAddress,
-    connectedChain?.matchWithNetworkChain,
-    connectedChain?.id,
-    supportedChains,
-    loading,
-    isRequired
-  ]);
-
   return(
     <>
       <Button
@@ -164,16 +126,6 @@ export default function ContractButton({
       >
         {children}
       </Button>
-
-      <WrongNetworkModal 
-        show={isNetworkModalVisible}
-        onClose={() => onCloseModal('WrongNetworkModal')}
-        isRequired={isRequired}
-      />
-      <WalletMismatchModal
-        show={isMismatchModalVisible}
-        onClose={() => onCloseModal('WalletMismatchModal')}
-      />
     </>
   );
 }
