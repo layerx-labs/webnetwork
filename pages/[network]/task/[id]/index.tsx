@@ -14,7 +14,6 @@ import TabSections from "components/bounty/tabs-sections/controller";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 
-import { useAppState } from "contexts/app-state";
 import { BountyEffectsProvider } from "contexts/bounty-effects";
 
 import { commentsParser, issueParser } from "helpers/issue";
@@ -26,13 +25,14 @@ import { getReactQueryClient } from "services/react-query";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getBountyData } from "x-hooks/api/task";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function TaskPage() {
   const { query } = useRouter();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const { updateParamsOfActive } = useMarketplace();
 
   const bountyId = query?.id;
@@ -104,7 +104,7 @@ export default function TaskPage() {
             issueId: +parsedBounty?.id
           }}
           comments={parsedComments}
-          currentUser={state.currentUser}
+          currentUser={currentUser}
         />
       </CustomContainer>
     </BountyEffectsProvider>

@@ -20,8 +20,8 @@ import {Network} from "interfaces/network";
 import {SearchBountiesPaginated} from "types/api";
 
 import {useUpdateNetwork} from "x-hooks/api/marketplace";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -57,7 +57,7 @@ export default function MyNetworkSettings({
   const { connectedChain } = useSupportedChain();
   const { details, settings, forcedNetwork, clearState } = useNetworkSettings();
 
-  const isGovernorRegistry = state?.currentUser?.isAdmin;
+  const isGovernorRegistry = currentUser?.isAdmin;
   const chainId = connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
     queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId),

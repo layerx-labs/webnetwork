@@ -11,12 +11,11 @@ import { lowerCaseCompare } from "helpers/string";
 import {Network} from "interfaces/network";
 import { ProfilePages } from "interfaces/utils";
 
+import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
-
-import getNetworkOverviewData from "./api/get-overview-data";
-import { useUserStore } from "./stores/user/user.store";
 
 export default function useMarketplace(marketplaceName?: string, chainName?: string) {
   const { query, push } = useRouter();
@@ -73,12 +72,14 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   function updateCuratorAndGovernor (network: Network) {
-    if (state.currentUser?.walletAddress) {
-      const userAddress = state.currentUser.walletAddress;
-      const isCurator = !!network?.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
+    if (currentUser?.walletAddress) {
+      const userAddress = currentUser.walletAddress;
+      const isCouncil = !!network?.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
       const isGovernor = lowerCaseCompare(network?.creatorAddress, userAddress);
-      dispatch(changeCurrentUserisCouncil(isCurator));
-      dispatch(changeCurrentUserisGovernor(isGovernor));
+      updateCurrentUser({
+        isCouncil,
+        isGovernor
+      })
     }
   }
 
