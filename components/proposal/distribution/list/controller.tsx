@@ -5,12 +5,11 @@ import { useTranslation } from "next-i18next";
 
 import ProposalDistributionListView from "components/proposal/distribution/list/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { DistributedAmounts } from "interfaces/proposal";
 import { Token, TokenInfo } from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+import { useSettings } from "x-hooks/use-settings";
 
 interface ProposalDistributionListProps {
   distributedAmounts: DistributedAmounts;
@@ -25,13 +24,13 @@ export default function ProposalDistributionList({
 
   const [coinInfo, setCoinInfo] = useState<TokenInfo>();
 
-  const { state } = useAppState();
+  const { settings } = useSettings();
 
   const { data: prices } = useCoingeckoPrice([
     { address: token?.address, chainId: token?.chain_id },
   ]);
 
-  const defaultFiat = state.Settings?.currency?.defaultFiat || "usd";
+  const defaultFiat = settings?.currency?.defaultFiat || "usd";
 
   const handleConversion = (value) =>
     BigNumber(value)

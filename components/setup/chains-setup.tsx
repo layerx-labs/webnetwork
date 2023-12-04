@@ -14,15 +14,13 @@ import {ContextualSpan} from "components/contextual-span";
 import AddChainModal from "components/setup/add-chain-modal";
 import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 
-import {useAppState} from "contexts/app-state";
-import {changeLoadState} from "contexts/reducers/change-load";
-
 import { QueryKeys } from "helpers/query-keys";
 
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
 import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -36,7 +34,7 @@ export default function ChainsSetup() {
   const [filteredChains, setFilteredChains] = useState<MiniChainInfo[]>([]);
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
-  const {dispatch} = useAppState();
+  const { loading, updateLoading } = useLoadersStore();
   const { supportedChains } = useSupportedChain();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({
@@ -61,7 +59,7 @@ export default function ChainsSetup() {
     if (chains.length)
       return;
 
-    dispatch(changeLoadState(true))
+    updateLoading({ isLoading: true })
     axios.get(`https://chainid.network/chains.json`)
       .then(({data}) => data)
       .then(setChains)
@@ -70,7 +68,7 @@ export default function ChainsSetup() {
         return [];
       })
       .finally(() => {
-        dispatch(changeLoadState(false))
+        updateLoading({ isLoading: false })
       })
   }
 

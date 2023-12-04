@@ -5,9 +5,8 @@ import { useRouter } from "next/router";
 import Button from "components/button";
 import NoMetamaskModalView from "components/no-metamask-modal/view";
 
-import { useAppState } from "contexts/app-state";
-import { changeShowWeb3 } from "contexts/reducers/update-show-prop";
 
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 const { publicRuntimeConfig } = getConfig();
@@ -17,10 +16,8 @@ export default function NoMetamaskModal() {
   const { t } = useTranslation("common");
 
   const { isMobileView } = useBreakPoint(true);
-  const {
-    state: { show: { web3Dialog } },
-    dispatch
-  } = useAppState();
+
+  const { updateWeb3Dialog, web3Dialog } = useLoadersStore();
 
   const isRequired = [
     pathname?.includes("new-marketplace"),
@@ -68,7 +65,7 @@ export default function NoMetamaskModal() {
   function handleCloseModal() {
     if (isRequired) return null;
 
-    return () => dispatch(changeShowWeb3(false));
+    return () => updateWeb3Dialog(false)
   }
 
   return (

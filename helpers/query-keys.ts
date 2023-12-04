@@ -6,6 +6,7 @@ export const QueryKeys = {
   deliverable: (deliverableId: string) => ["deliverable", deliverableId],
   deliverableComments: (deliverableId: string) => ["deliverable", deliverableId, "comments"],
   chains: () => ["supportedChains"],
+  settings: () => ["settings"],
   network: (networkAddress: string, chainId: string) => ["network", networkAddress, chainId],
   networksByChain: (chainId: string) => ["networks", chainId],
   networksByName: (networkName: string) => ["networks", networkName],

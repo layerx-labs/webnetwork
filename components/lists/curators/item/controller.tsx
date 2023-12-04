@@ -1,9 +1,8 @@
 import CuratorListItemView from "components/lists/curators/item/view";
 
-import { useAppState } from "contexts/app-state";
-
 import { Curator } from "interfaces/curators";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 interface CuratorListItemProps {
@@ -13,11 +12,11 @@ interface CuratorListItemProps {
 export default function CuratorListItem({
   curator
 }: CuratorListItemProps) {
-  const { state } = useAppState();
   const { goToProfilePage } = useMarketplace();
+  const { currentUser } = useUserStore();
 
-  const isConnected = !!state.currentUser?.walletAddress;
-  const isSameAddress = state.currentUser?.walletAddress?.toLowerCase() === curator?.address?.toLowerCase();
+  const isConnected = !!currentUser?.walletAddress;
+  const isSameAddress = currentUser?.walletAddress?.toLowerCase() === curator?.address?.toLowerCase();
 
   function onDelegateClick() {
     goToProfilePage("voting-power", {

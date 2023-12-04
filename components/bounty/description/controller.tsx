@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { IFilesProps } from "components/drag-and-drop";
 
-import { useAppState } from "contexts/app-state";
+import { useSettings } from "x-hooks/use-settings";
 
 import BountyDescriptionView from "./view";
 
@@ -28,9 +28,7 @@ export default function BountyDescription({
   const [bodyLength, setBodyLength] = useState<number>(0);
   const [strFiles, setStrFiles] = useState<string[]>();
 
-  const {
-    state: { Settings },
-  } = useAppState();
+  const { settings } = useSettings();
 
   useEffect(() => {
     if (body?.length > 0 && strFiles) {
@@ -50,7 +48,7 @@ export default function BountyDescription({
       const strFiles = files?.map((file) =>
           file.uploaded &&
           `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-            Settings?.urls?.ipfs
+            settings?.urls?.ipfs
           }/${file.hash}) \n\n`);
       setStrFiles(strFiles);
     }

@@ -7,13 +7,12 @@ import {useTranslation} from "next-i18next";
 import ContractButton from "components/common/buttons/contract-button";
 import {FormGroup} from "components/form-group";
 
-import {useAppState} from "contexts/app-state";
-
 import { DAPPKIT_LINK } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useERC20 from "x-hooks/use-erc20";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 interface ERC20DetailsProps {
   address?: string;
@@ -44,8 +43,8 @@ export function ERC20Details({
   const [tokenTotalSupply, setTokenTotalSupply] = useState("");
 
   const erc20 = useERC20();
-  const { state } = useAppState();
   const { addError, addSuccess } = useToastStore();
+  const { currentUser } = useUserStore();
 
   const isDeployer = !!deployer;
 
@@ -79,7 +78,7 @@ export function ERC20Details({
   function handleDeploy() {
     setIsDeploying(true);
 
-    erc20.deploy(tokenName, tokenSymbol, tokenTotalSupply, state.currentUser?.walletAddress)
+    erc20.deploy(tokenName, tokenSymbol, tokenTotalSupply, currentUser?.walletAddress)
       .then(({ contractAddress }) => {
         erc20.setAddress(contractAddress);
         setTokenAddress(contractAddress);

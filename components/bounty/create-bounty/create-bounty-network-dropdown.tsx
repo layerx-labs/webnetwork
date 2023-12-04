@@ -6,9 +6,9 @@ import IconOption from "components/icon-option";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
 
-import { useAppState } from "contexts/app-state";
-
 import { Network } from "interfaces/network";
+
+import { useSettings } from "x-hooks/use-settings";
 
 interface SelectNetworkDropdownProps {
   value?: Network;
@@ -39,9 +39,8 @@ export default function CreateBountyNetworkDropdown({
 
   const [options, setOptions] = useState<NetworkOption[]>([]);
   const [selected, setSelected] = useState<NetworkOption>(null);
-  const {
-    state: { Settings: settings },
-  } = useAppState();
+
+  const { settings } = useSettings();
 
   function networkOption(network: Network | Partial<Network>,
                          isDisabled?: boolean): NetworkOption {

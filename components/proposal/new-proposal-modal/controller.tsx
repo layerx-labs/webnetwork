@@ -7,8 +7,6 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import NewProposalModalView from "components/proposal/new-proposal-modal/view";
 
-import {useAppState} from "contexts/app-state";
-
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import {truncateAddress} from "helpers/truncate-address";
 
@@ -17,6 +15,7 @@ import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
 import {PaymentInfoProps} from "types/components";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -39,7 +38,7 @@ export default function ProposalModal({
   const { t } = useTranslation("proposal");
   const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
   const { handleProposeMerge } = useBepro();
   const [isExecuting, onCreateProposal] = useContractTransaction( NetworkEvents.ProposalCreated,
@@ -70,8 +69,8 @@ export default function ProposalModal({
       label: t("create-modal.deliverable-creator"),
     },
     {
-      address: state.currentUser?.walletAddress,
-      login: state.currentUser?.login,
+      address: currentUser?.walletAddress,
+      login: currentUser?.login,
       amount: distributedAmounts?.proposerAmount?.value,
       symbol: currentBounty?.transactionalToken?.symbol,
       percentage: distributedAmounts?.proposerAmount?.percentage,
@@ -134,7 +133,7 @@ export default function ProposalModal({
     <NewProposalModalView
       show={show}
       isExecuting={isExecuting}
-      isConnected={!!state.currentUser?.walletAddress}
+      isConnected={!!currentUser?.walletAddress}
       selectedDeliverable={deliverableToOption(currentDeliverable)}
       deliverablesOptions={deliverables?.filter(d => d?.markedReadyForReview && !d?.canceled)?.map(deliverableToOption)}
       deliverableUrl={currentDeliverable?.deliverableUrl}

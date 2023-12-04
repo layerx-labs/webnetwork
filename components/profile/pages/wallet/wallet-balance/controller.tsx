@@ -8,8 +8,6 @@ import WalletBalanceView from "components/profile/pages/wallet/wallet-balance/vi
 import { TokenBalanceType } from "components/profile/token-balance";
 import TokenIcon from "components/token-icon";
 
-import { useAppState } from "contexts/app-state";
-
 import { MINUTE_IN_MS } from "helpers/constants";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
@@ -17,8 +15,10 @@ import { Token } from "interfaces/token";
 
 import DAO from "services/dao-service";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
 import useReactQuery from "x-hooks/use-react-query";
+import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface WalletBalanceProps {
@@ -38,7 +38,8 @@ export default function WalletBalance({
 
   const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
-  const { state } = useAppState();
+  const { settings } = useSettings();
+  const { currentUser } = useUserStore();
   const { query, push, pathname, asPath } = useRouter();
   const { supportedChains } = useSupportedChain();
 
@@ -48,7 +49,7 @@ export default function WalletBalance({
     isSuccess: isSucessPrices,
   } = useCoingeckoPrice(tokens.map(({ address, chain_id }) => ({ address, chainId: chain_id })));
 
-  const defaultFiat = state?.Settings?.currency?.defaultFiat?.toLowerCase();
+  const defaultFiat = settings?.currency?.defaultFiat?.toLowerCase();
 
   function toTokenWithBalance(token) {
     return {
@@ -63,7 +64,7 @@ export default function WalletBalance({
 
   async function processToken(token: Token, service: DAO) {
     const balance = await service
-      .getTokenBalance(getAddress(token), state?.currentUser?.walletAddress)
+      .getTokenBalance(getAddress(token), currentUser?.walletAddress)
       .catch(() => BigNumber(0));
     return {
       ...token,
@@ -126,10 +127,10 @@ export default function WalletBalance({
   }
 
   const { data: tokensData, isLoading, isSuccess } = 
-    useReactQuery(["tokens-balance", state.currentUser?.walletAddress, query?.networkChain?.toString()],
+    useReactQuery(["tokens-balance", currentUser?.walletAddress, query?.networkChain?.toString()],
                   loadTokensBalance,
                   {
-                    enabled: !!state.currentUser?.walletAddress && !!supportedChains,
+                    enabled: !!currentUser?.walletAddress && !!supportedChains,
                     staleTime: MINUTE_IN_MS
                   });
   
@@ -181,7 +182,7 @@ export default function WalletBalance({
     <WalletBalanceView
       totalAmount={totalAmount}
       hasNoConvertedToken={hasNoConvertedToken}
-      defaultFiat={state?.Settings?.currency?.defaultFiat}
+      defaultFiat={settings?.currency?.defaultFiat}
       tokens={tokensWithBalance.filter(({ name, symbol }) =>
         handleSearchFilter(name, symbol))}
       searchString={searchState}

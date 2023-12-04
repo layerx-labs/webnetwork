@@ -4,7 +4,7 @@ import IconOption from "components/icon-option";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
 
-import {useAppState} from "../../contexts/app-state";
+import { useSettings } from "x-hooks/use-settings";
 
 export default function NetworksDropDown({
   networks,
@@ -12,7 +12,7 @@ export default function NetworksDropDown({
 }) {
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState();
-  const {state} = useAppState();
+  const { settings } = useSettings();
 
   function onSelected(option) {
     setSelected(option.value);
@@ -23,7 +23,7 @@ export default function NetworksDropDown({
     setOptions(networks.map(network => ({
       value: network.networkAddress,
       label: network.name,
-      preIcon: <img src={`${state.Settings?.urls?.ipfs}/${network.logoIcon}`} width={30} height={30} />,
+      preIcon: <img src={`${settings?.urls?.ipfs}/${network.logoIcon}`} width={30} height={30} />,
       isSelected: selected === network.name
     })));
   }, [networks]);

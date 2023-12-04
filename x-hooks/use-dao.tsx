@@ -5,9 +5,6 @@ import {useRouter} from "next/router";
 import type { provider as Provider } from "web3-core";
 import {isAddress} from "web3-utils";
 
-import {useAppState} from "contexts/app-state";
-import { changeMissingMetamask } from "contexts/reducers/update-show-prop";
-
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import handleEthereumProvider from "helpers/handle-ethereum-provider";
 import { lowerCaseCompare } from "helpers/string";
@@ -22,16 +19,20 @@ import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+import { useLoadersStore } from "./stores/loaders/loaders.store";
+import { useUserStore } from "./stores/user/user.store";
+
 export function useDao() {
   const session = useSession();
   const { replace, asPath, pathname } = useRouter();
 
   const marketplace = useMarketplace();
-  const { state, dispatch } = useAppState();
+  const { currentUser } = useUserStore();
   const { findSupportedChain } = useChain();
   const { service: daoService, serviceStarting, updateService, updateServiceStarting } = useDaoStore();
   const { supportedChains, connectedChain, updateConnectedChain } = useSupportedChain();
   const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
+  const { updateMissingMetamask } = useLoadersStore();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -65,7 +66,7 @@ export function useDao() {
         .then((connected) => {
           setConnection(web3Connection);
           if (!connected) {
-            console.debug(`Failed to connect`, state.Service);
+            console.debug(`Failed to connect`, daoService);
 
             return "0x00";
           }
@@ -75,7 +76,7 @@ export function useDao() {
         .then(address => {
           if (address === "0x00") return null;
 
-          handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)));
+          handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
           return address;
         })
         .catch(error => {
@@ -145,7 +146,7 @@ export function useDao() {
    */
   async function start() {
     if (session.status === "loading" ||
-        session.status === "authenticated" && !state.currentUser?.connected) {
+        session.status === "authenticated" && !currentUser?.connected) {
       // console.debug("Session not loaded yet");
       return;
     }
@@ -181,7 +182,7 @@ export function useDao() {
     if (!isConfigured) {
       console.debug("Chain not configured", chainToConnect);
 
-      if (state.currentUser?.isAdmin && !asPath.includes("setup") && !asPath.includes("connect-account")) {
+      if (currentUser?.isAdmin && !asPath.includes("setup") && !asPath.includes("connect-account")) {
         replace("/setup");
 
         return;
@@ -248,7 +249,7 @@ export function useDao() {
     if (!window.ethereum || !supportedChains?.length)
       return;
 
-    handleEthereumProvider(updateChain, () => dispatch(changeMissingMetamask(true)))
+    handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
   }
 
   return {

@@ -2,9 +2,9 @@ import { useTranslation } from "next-i18next";
 
 import Modal from "components/modal";
 
-import { useAppState } from "contexts/app-state";
-
 import { truncateAddress } from "helpers/truncate-address";
+
+import { useUserStore } from "x-hooks/stores/user/user.store";
 
 interface WalletMismatchModalProps {
   show: boolean;
@@ -17,9 +17,9 @@ export default function WalletMismatchModal({
 }: WalletMismatchModalProps) {
   const { t } = useTranslation();
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
 
-  const truncatedWallet = truncateAddress(state.currentUser?.walletAddress);
+  const truncatedWallet = truncateAddress(currentUser?.walletAddress);
 
   return(
     <Modal

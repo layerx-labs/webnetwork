@@ -4,30 +4,22 @@ import userEvent from "@testing-library/user-event";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
-import { changeShowWeb3 } from 'contexts/reducers/update-show-prop';
-
 import ethereum from "__mocks__/ethereum";
 
 import { render } from "__tests__/utils/custom-render";
 
 const defaultAddress = "0x000000";
 
-const state = {
-  Service: {
-    active: jest.fn()
-  },
-  currentUser: {
-    walletAddress: null
-  }
-};
+const currentUser = {
+  walletAddress: null
+}
 
-const mockedDispatch = jest.fn();
+const useLoadersStore = {
+  updateWeb3Dialog: jest.fn()
+}
 
-jest.mock("contexts/app-state", () => ({
-  useAppState: () => ({
-    dispatch: mockedDispatch,
-    state
-  })
+jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
+  useLoadersStore: () => useLoadersStore
 }));
 
 jest.mock("x-hooks/stores/dao/dao.store", () => ({
@@ -36,8 +28,14 @@ jest.mock("x-hooks/stores/dao/dao.store", () => ({
   })
 }))
 
+jest.mock("x-hooks/stores/user/user.store", () => ({
+  useUserStore: () => ({
+    currentUser
+  })
+}))
+
 const mockedSignInWallet = jest.fn(() => {
-  state.currentUser.walletAddress = defaultAddress;
+  currentUser.walletAddress = defaultAddress;
 });
 
 jest.mock("x-hooks/use-authentication", () => ({
@@ -49,7 +47,7 @@ jest.mock("x-hooks/use-authentication", () => ({
 describe("ConnectWalletButton", () => {
   beforeEach(() => {
     window.ethereum = ethereum as any;
-    state.currentUser.walletAddress = null;
+    currentUser.walletAddress = null;
     jest.clearAllMocks();
   });
 
@@ -91,6 +89,6 @@ describe("ConnectWalletButton", () => {
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(mockedDispatch).toHaveBeenCalledWith(changeShowWeb3(true));
+    expect(useLoadersStore.updateWeb3Dialog).toHaveBeenCalledWith(true);
   });
 });

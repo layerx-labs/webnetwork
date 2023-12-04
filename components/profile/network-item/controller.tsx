@@ -2,10 +2,10 @@ import { ReactNode, useState } from "react";
 
 import { useRouter } from "next/router";
 
-import { useAppState } from "contexts/app-state";
-
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
+import { useSettings } from "x-hooks/use-settings";
 
 import NetworkItemView from "./view";
 interface NetworkItemProps {
@@ -41,9 +41,9 @@ export default function NetworkItem({
 }: NetworkItemProps) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
-  const {
-    state: { Settings: settings, currentUser },
-  } = useAppState();
+
+  const { settings } = useSettings();
+  const { currentUser } = useUserStore();
   const { query } = useRouter();
   const { goToProfilePage } = useMarketplace();
   const { isDesktopView } = useBreakPoint();

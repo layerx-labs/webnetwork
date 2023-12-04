@@ -10,7 +10,6 @@ import NetworkPermissions from "components/network/settings/permissions/banned-w
 import NetworkRegistrySettings from "components/network/settings/registry/controller";
 import MyNetworkSettingsView from "components/network/settings/view";
 
-import { useAppState } from "contexts/app-state";
 import { useNetworkSettings } from "contexts/network-settings";
 
 import { psReadAsText } from "helpers/file-reader";
@@ -21,6 +20,7 @@ import {Network} from "interfaces/network";
 import {SearchBountiesPaginated} from "types/api";
 
 import {useUpdateNetwork} from "x-hooks/api/marketplace";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -52,7 +52,7 @@ export default function MyNetworkSettings({
   const [tabs, setTabs] = useState<TabsProps[]>([]);
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
   const { isRegistryGovernor } = useBepro();
   const { colorsToCSS } = useNetworkTheme();
@@ -62,7 +62,7 @@ export default function MyNetworkSettings({
 
   const chainId = connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
-    queryKey: QueryKeys.networksByGovernor(state.currentUser?.walletAddress, chainId),
+    queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId),
     mutationFn: useUpdateNetwork,
     toastSuccess: t("custom-network:messages.refresh-the-page"),
     toastError: t("custom-network:errors.failed-to-update-network")
@@ -77,7 +77,7 @@ export default function MyNetworkSettings({
 
   async function handleSubmit() {
     if (
-      !state.currentUser?.walletAddress ||
+      !currentUser?.walletAddress ||
       !daoService ||
       !forcedNetwork ||
       forcedNetwork?.isClosed ||
@@ -94,7 +94,7 @@ export default function MyNetworkSettings({
       fullLogo: details.fullLogo.value.raw
         ? (await psReadAsText(details.fullLogo.value.raw)).toString()
         : undefined,
-      creator: state.currentUser.walletAddress,
+      creator: currentUser.walletAddress,
       networkAddress: network.networkAddress
     };
 
@@ -129,12 +129,12 @@ export default function MyNetworkSettings({
 
   useEffect(() => {
     if (!daoService?.registry?.contractAddress ||
-        !state.currentUser?.walletAddress ||
+        !currentUser?.walletAddress ||
         !connectedChain?.id) return;
 
-    isRegistryGovernor(state.currentUser?.walletAddress)
+    isRegistryGovernor(currentUser?.walletAddress)
       .then(setIsGovernorRegistry);
-  }, [state.currentUser?.walletAddress, daoService?.registry?.contractAddress, connectedChain?.id]);
+  }, [currentUser?.walletAddress, daoService?.registry?.contractAddress, connectedChain?.id]);
 
   useEffect(() => {
     if(!network) return;
@@ -199,7 +199,7 @@ export default function MyNetworkSettings({
     <MyNetworkSettingsView
       themePreview={isCurrentNetwork ? colorsToCSS(settings?.theme?.colors) : ""}
       isNetworkUnregistered={networkNeedRegistration}
-      isWalletConnected={!!state.currentUser?.walletAddress}
+      isWalletConnected={!!currentUser?.walletAddress}
       updateNetworkData={updateNetworkData}
       networkAddress={network?.networkAddress}
       tabs={getTabs(tabs)}

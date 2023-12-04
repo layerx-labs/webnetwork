@@ -2,10 +2,9 @@ import {useEffect, useState} from "react";
 
 import {useTranslation} from "next-i18next";
 
-import {useAppState} from "contexts/app-state";
-
 import {formatNumberToNScale} from "helpers/formatNumber";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 import TokenSymbolView from "./common/token-symbol/view";
@@ -21,8 +20,8 @@ export default function ProposalProgressBar({
 }) {
   const { t } = useTranslation("proposal");
 
-  const {state} = useAppState();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
 
   const [issueState, setIssueState] = useState<string>("");
   const [issueColor, setIssueColor] = useState<string>("");
@@ -111,7 +110,7 @@ export default function ProposalProgressBar({
   }
 
   useEffect(loadDisputeState, [
-    state.currentUser?.balance?.staked,
+    currentUser?.balance?.staked,
     issueDisputeAmount,
     isDisputed,
     isFinished,

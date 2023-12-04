@@ -1,9 +1,10 @@
-import {useAppState} from "../contexts/app-state";
 import getConfig from "next/config";
 
+import { useUserStore } from "./stores/user/user.store";
+
 export default function isAdmin() {
-  const {state} = useAppState();
+  const { currentUser } = useUserStore();
   const {publicRuntimeConfig} = getConfig();
 
-  return state?.currentUser?.walletAddress.toLowerCase() === publicRuntimeConfig.adminWallet.toLowerCase();
+  return currentUser?.walletAddress.toLowerCase() === publicRuntimeConfig.adminWallet.toLowerCase();
 }

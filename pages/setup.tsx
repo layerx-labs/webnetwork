@@ -13,11 +13,10 @@ import {NetworkSetup} from "components/setup/network-setup";
 import {RegistrySetup} from "components/setup/registry-setup";
 import TabbedNavigation from "components/tabbed-navigation";
 
-import {useAppState} from "contexts/app-state";
-
 import { QueryKeys } from "helpers/query-keys";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -27,7 +26,7 @@ export default function SetupPage(){
 
   const [activeTab, setActiveTab] = useState("supportedChains");
 
-  const { state: { currentUser } } = useAppState();
+  const { currentUser } = useUserStore();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const isConnected = !!currentUser?.walletAddress;

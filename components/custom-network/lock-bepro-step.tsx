@@ -13,7 +13,6 @@ import InputNumber from "components/input-number";
 import Step from "components/step";
 import UnlockBeproModal from "components/unlock-bepro-modal";
 
-import {useAppState} from "contexts/app-state";
 import {useNetworkSettings} from "contexts/network-settings";
 
 import {UNSUPPORTED_CHAIN} from "helpers/constants";
@@ -30,6 +29,7 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
 import {useAuthentication} from "x-hooks/use-authentication";
@@ -50,7 +50,6 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const [hasNetworkRegistered, setHasNetworkRegistered] = useState(false);
 
   const registryToken = useERC20();
-  const { state } = useAppState();
   const { service: daoService } = useDaoStore();
   const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
@@ -58,14 +57,15 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const { processEvent } = useProcessEvent();
   const { connectedChain } = useSupportedChain();
   const {add: addTx, update: updateTx} = transactionStore();
+  const { currentUser } = useUserStore();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
 
   const balance = {
     beproAvailable: registryToken.balance,
     oraclesAvailable: 
-      state.currentUser?.balance?.oracles?.locked?.minus(state.currentUser?.balance?.oracles?.delegatedToOthers),
-    tokensLocked: state.currentUser?.balance?.oracles?.locked?.toFixed(),
+      currentUser?.balance?.oracles?.locked?.minus(currentUser?.balance?.oracles?.delegatedToOthers),
+    tokensLocked: currentUser?.balance?.oracles?.locked?.toFixed(),
   };
 
   const amountLocked = BigNumber(tokensLocked.locked);

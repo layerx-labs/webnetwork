@@ -6,14 +6,13 @@ import { useRouter } from "next/router";
 import PaymentsMulti from "components/pages/profile/payments/multi/controller";
 import PaymentsNetwork from "components/pages/profile/payments/network/controller";
 
-import { useAppState } from "contexts/app-state";
-
 import { getPricesAndConvert } from "helpers/tokens";
 
 import { PaymentsPageProps } from "types/pages";
 import { TotalFiatNetworks } from "types/utils";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+import { useSettings } from "x-hooks/use-settings";
 
 export default function PaymentsPage({ 
   payments,
@@ -25,10 +24,10 @@ export default function PaymentsPage({
   const [hasNoConvertedToken, setHasNoConvertedToken] = useState(false);
   const [totalFiatNetworks, setTotalFiatNetworks] = useState<TotalFiatNetworks[]>([]);
   
-  const { state } = useAppState();
+  const { settings } = useSettings();
 
   const isNetworkPayments = !!router?.query?.networkName && !!payments?.length;
-  const fiatSymbol = state?.Settings?.currency?.defaultFiat?.toUpperCase();
+  const fiatSymbol = settings?.currency?.defaultFiat?.toUpperCase();
 
   const tokens = payments.flatMap(({ payments }) => payments.map(payment => ({
     address: payment?.issue?.transactionalToken.address,
@@ -59,7 +58,7 @@ export default function PaymentsPage({
 
       const { converted, noConverted, totalConverted } =
         getPricesAndConvert<TotalFiatNetworks>(convertableItems,
-                                               state?.Settings?.currency?.defaultFiat?.toLowerCase(),
+                                               settings?.currency?.defaultFiat?.toLowerCase(),
                                                prices);
 
       setTotalFiatNetworks(converted);

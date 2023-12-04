@@ -4,11 +4,10 @@ import BigNumber from "bignumber.js";
 import {useRouter} from "next/router";
 import {v4 as uuidv4} from "uuid";
 
-import {useAppState} from "contexts/app-state";
-
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 import {Proposal} from "interfaces/proposal";
 
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 
 import ItemRowView from "./view";
@@ -24,7 +23,7 @@ export default function ItemRow({
   isProposal,
   currentBounty
 }: ItemRowProps) {
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
 
   const router = useRouter();
   const { active: activeMarketplace, getURLWithNetwork, getTotalNetworkToken } = useMarketplace();
@@ -77,7 +76,7 @@ export default function ItemRow({
     .multipliedBy(totalNetworkToken)
     .dividedBy(100);
 
-  const isCurator = !!state?.currentUser?.isCouncil;
+  const isCurator = !!currentUser?.isCouncil;
 
   const btnLabel = isProposal
     ? "actions.view-proposal"

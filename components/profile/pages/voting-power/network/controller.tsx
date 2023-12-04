@@ -4,8 +4,7 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import { useAppState } from "contexts/app-state";
-
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useAuthentication } from "x-hooks/use-authentication";
 import useChain from "x-hooks/use-chain";
@@ -17,11 +16,11 @@ export default function VotingPowerNetwork() {
   const { query } = useRouter();
   const { t } = useTranslation(["common", "profile"]);
 
-  const { state } = useAppState();
   const { updateWalletBalance } = useAuthentication();
   const { chain } = useChain();
   const { currentOracleToken } = useOracleToken();
   const { service: daoService } = useDaoStore();
+  const { currentUser } = useUserStore();
 
   const { curatorAddress } = query;
 
@@ -29,22 +28,22 @@ export default function VotingPowerNetwork() {
   const votesSymbol = t("token-votes", { token: currentOracleToken.symbol });
 
   const oraclesLocked =
-    state.currentUser?.balance?.oracles?.locked || BigNumber("0");
+    currentUser?.balance?.oracles?.locked || BigNumber("0");
   const oraclesDelegatedToMe =
-    state.currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
-  const oraclesDelegatedToOthers = state.currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => 
+    currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
+  const oraclesDelegatedToOthers = currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => 
     acc.plus(curr?.amount), BigNumber("0")) || BigNumber("0");
 
   useEffect(() => {
     if (
-      !state.currentUser?.walletAddress ||
+      !currentUser?.walletAddress ||
       !daoService?.network ||
       !chain
     )
       return;
 
     updateWalletBalance(true);
-  }, [state.currentUser?.walletAddress]);
+  }, [currentUser?.walletAddress]);
 
   return (
     <VotingPowerNetworkView
@@ -53,10 +52,10 @@ export default function VotingPowerNetwork() {
       oraclesDelegatedToOthers={oraclesDelegatedToOthers}
       oracleToken={currentOracleToken}
       votesSymbol={votesSymbol}
-      walletAddress={state.currentUser?.walletAddress}
-      userBalance={state.currentUser?.balance}
-      userIsCouncil={state.currentUser?.isCouncil}
-      userIsGovernor={state.currentUser?.isGovernor}
+      walletAddress={currentUser?.walletAddress}
+      userBalance={currentUser?.balance}
+      userIsCouncil={currentUser?.isCouncil}
+      userIsGovernor={currentUser?.isGovernor}
       handleUpdateWalletBalance={() => updateWalletBalance(true)}
       delegationAddress={curatorAddress?.toString()}
     />

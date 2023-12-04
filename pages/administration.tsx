@@ -11,15 +11,14 @@ import Stepper from "components/stepper";
 import {Network} from "interfaces/network";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
-
-import {useAppState} from "../contexts/app-state";
 
 export default function AdministrationPage() {
   const [networks, setNetworks] = useState<Network[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const { state } = useAppState();
+  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
 
   function handleChangeStep(stepToGo) {
@@ -29,7 +28,7 @@ export default function AdministrationPage() {
   useEffect(() => {
     if (!marketplace?.active) return;
 
-    if (!state.currentUser?.isGovernor)
+    if (!currentUser?.isGovernor)
       router.push("/marketplaces");
     else
       useSearchNetworks({})

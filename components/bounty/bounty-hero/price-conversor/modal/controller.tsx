@@ -2,11 +2,10 @@ import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
 
-import {useAppState} from "contexts/app-state";
-
 import { Token } from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
+import { useSettings } from "x-hooks/use-settings";
 
 import PriceConversorModalView from "./view";
 
@@ -39,7 +38,7 @@ export default function PriceConversorModal({
   const [errorCoinInfo, setErrorCoinInfo] = useState<boolean>(false);
   const [currentCurrency, setCurrentCurrency] = useState<{label: string, value: string}>(defaultValue[0]);
 
-  const {state} = useAppState();
+  const { settings } = useSettings();
 
   const {
     data: prices,
@@ -62,15 +61,15 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-    if (!state.Settings?.currency?.conversionList && !prices) return;
+    if (!settings?.currency?.conversionList && !prices) return;
 
-    const { conversionList } = state.Settings.currency
+    const { conversionList } = settings.currency
 
-    const opt = conversionList.map(currency=>({value: currency?.value, label: currency?.label}))
+    const opt = conversionList?.map(currency=>({value: currency?.value, label: currency?.label}))
     setOptions(opt)
     handlerChange(opt.find(v => v.value === defaultValue[0].value) || opt[0])
     
-  },[state.Settings?.currency?.conversionList, prices])
+  },[settings?.currency?.conversionList, prices])
 
 
   return (
