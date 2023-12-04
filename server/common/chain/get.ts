@@ -19,7 +19,13 @@ export async function get(req: NextApiRequest): Promise<SupportedChainData[]> {
   }
 
   const chains = await models.chain.findAll({
-    where
+    where,
+    include: [
+      {
+        association: "networks",
+        attributes: ["name", "networkAddress", "colors", "logoIcon", "fullLogo"]
+      }
+    ]
   });
 
   return chains;
