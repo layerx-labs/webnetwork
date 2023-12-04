@@ -1,60 +1,63 @@
-import { useEffect } from "react";
+import {useState} from "react";
 
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import VotingPowerNetworkView from "components/profile/pages/voting-power/network/view";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useAuthentication } from "x-hooks/use-authentication";
-import useChain from "x-hooks/use-chain";
-import useOracleToken from "x-hooks/use-oracle-token";
+import {useUserStore} from "x-hooks/stores/user/user.store";
+
+import {FIVE_MINUTES_IN_MS} from "helpers/constants";
+import {QueryKeys} from "helpers/query-keys";
+import {lowerCaseCompare} from "helpers/string";
+
+import {Network} from "interfaces/network";
+import {SupportedChainData} from "interfaces/supported-chain-data";
+
+import {useSearchCurators} from "x-hooks/api/curator";
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function VotingPowerNetwork() {
-  const { query } = useRouter();
-  const { t } = useTranslation(["common", "profile"]);
+  const [network, setNetwork] = useState<Network>();
+  const [chain, setChain] = useState<SupportedChainData>();
 
-  const { chain } = useChain();
-  const { currentOracleToken } = useOracleToken();
-  const { service: daoService } = useDaoStore();
   const { currentUser } = useUserStore();
-  const { updateWalletBalance } = useAuthentication();
+  const { chainId, networkAddress } = useDaoStore();
+  const { supportedChains } = useSupportedChain();
 
-  const { curatorAddress } = query;
-  const votesSymbol = t("token-votes", { token: currentOracleToken.symbol });
-  const oraclesLocked =
-    currentUser?.balance?.oracles?.locked || BigNumber("0");
-  const oraclesDelegatedToMe =
-    currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
-  const oraclesDelegatedToOthers = currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) =>
-    acc.plus(curr?.amount), BigNumber("0")) || BigNumber("0");
+  const address = currentUser?.walletAddress;
+  const chainShortName = chain?.chainShortName;
+  const networkName = network?.name;
+  const isActionsEnabled = !!network && !!chain && +chain?.chainId === +chainId
+    && lowerCaseCompare(networkAddress, network?.networkAddress);
 
-  useEffect(() => {
-    if (
-      !currentUser?.walletAddress ||
-      !daoService?.network ||
-      !chain
-    )
-      return;
+  const { data: curators } =
+    useReactQuery(QueryKeys.votingPowerOf(address, chainShortName, networkName), () => useSearchCurators({
+      address: address,
+      networkName: networkName,
+      chainShortName: chainShortName,
+      increaseQuantity: true,
+    }), {
+      enabled: !!address,
+      staleTime: FIVE_MINUTES_IN_MS
+    });
 
-    updateWalletBalance(true);
-  }, [currentUser?.walletAddress]);
+  const { locked, delegatedToMe, delegations } = (curators?.rows || []).reduce((acc, curr) => {
+    return {
+      locked: [...acc.locked, ...BigNumber(curr.tokensLocked).gt(0) ? [curr] : []],
+      delegatedToMe: [...acc.delegatedToMe, ...BigNumber(curr.delegatedToMe).gt(0) ? [curr] : []],
+      delegations: [...acc.delegations, ...curr.delegations?.length ? [curr] : []],
+    }
+  }, { locked: [], delegatedToMe: [], delegations: [] });
 
   return (
     <VotingPowerNetworkView
-      oraclesLocked={oraclesLocked}
-      oraclesDelegatedToMe={oraclesDelegatedToMe}
-      oraclesDelegatedToOthers={oraclesDelegatedToOthers}
-      oracleToken={currentOracleToken}
-      votesSymbol={votesSymbol}
-      walletAddress={currentUser?.walletAddress}
-      userBalance={currentUser?.balance}
-      userIsCouncil={currentUser?.isCouncil}
-      userIsGovernor={currentUser?.isGovernor}
-      handleUpdateWalletBalance={() => updateWalletBalance(true)}
-      delegationAddress={curatorAddress?.toString()}
+      chains={supportedChains}
+      networks={chain?.networks}
+      locked={locked}
+      delegatedToMe={delegatedToMe}
+      delegations={delegations}
     />
   );
 }

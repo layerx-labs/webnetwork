@@ -11,11 +11,11 @@ export default function VotingPowerSubTitle({
   tokenColor,
 }: {
   label: string;
-  infoTooltip: string;
-  total: string;
-  votesSymbol: string;
-  variant: "network" | "multi-network";
-  tokenColor: string;
+  infoTooltip?: string;
+  total?: string;
+  votesSymbol?: string;
+  variant?: "network" | "multi-network";
+  tokenColor?: string;
 }) {
   const getTitleSpanClass = (type: string) =>
     `family-Regular text-white font-weight-500 me-2 ${type}`;

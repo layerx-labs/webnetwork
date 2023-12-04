@@ -1,77 +1,57 @@
-import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import { FlexRow } from "components/common/flex-box/view";
-import DelegationItem from "components/profile/pages/voting-power/delegation-item/controller";
+import If from "components/If";
+import VotingPowerSubTitle from "components/profile/pages/voting-power/sub-title/controller";
+import VotesItem from "components/profile/pages/voting-power/votes-item/votes-item.view";
 
-import { Delegation } from "interfaces/curators";
-import { DelegationExtended } from "interfaces/oracles-state";
-
-import VotingPowerSubTitle from "../sub-title/controller";
-
-interface Info {
-    title: string;
-    description: string;
-    total: string | undefined;
-    delegations: JoinedDelegation[] | (number | BigNumber)[];
-}
+import {Curator, Delegation} from "interfaces/curators";
 
 interface DelegationsViewProps {
-  type: "toMe" | "toOthers";
-  variant: "network" | "multi-network";
-  tokenColor: string;
-  renderInfo: {
-    toMe: Info;
-    toOthers: Info;
-  }
-  votesSymbol: string;
-  networkTokenName: string;
+  delegations?: Curator[];
+  onTakeBackClick: (delegation: Delegation) => void;
 }
 
-type JoinedDelegation = Delegation | DelegationExtended;
-
 export default function DelegationsView({
-  type = "toMe",
-  variant = "network",
-  tokenColor,
-  renderInfo,
-  votesSymbol,
-  networkTokenName,
+  delegations,
+  onTakeBackClick,
 }: DelegationsViewProps) {
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
 
   return (
-    <div className="mb-3">
+    <div className="col border border-gray-800 p-4 border-radius-4 col-12 mb-4">
       <FlexRow className="mb-3 justify-content-between align-items-center">
         <VotingPowerSubTitle 
-          label={renderInfo[type].title}
-          infoTooltip={renderInfo[type].description}
-          total={renderInfo[type].total} 
-          votesSymbol={votesSymbol} 
-          variant={variant} 
-          tokenColor={tokenColor}        
+          label={t("profile:deletaged-to-others")}
         />
       </FlexRow>
 
       <div className="row">
         <div className="col">
-          {type === "toOthers" &&
-            !renderInfo[type].delegations?.length &&
-            t("my-oracles:errors.no-delegates")}
-
-          {(type === "toMe" || !!renderInfo[type].delegations?.length) &&
-            renderInfo[type].delegations.map((delegation) => (
-              <DelegationItem
-                key={`delegation-${delegation.id}-${delegation.to}`}
-                type={type}
-                delegation={
-                  type === "toMe" ? { amount: delegation } : delegation
-                }
-                tokenName={networkTokenName}
-                variant={variant}
-                tokenColor={tokenColor}
-              />
-            ))}
+          <If
+            otherwise={
+              <div className="bg-gray-900 border-radius-4 px-3 py-4 text-center">
+               <span className="base-medium text-white font-weight-normal">
+                 {t("my-oracles:errors.no-delegates")}
+               </span>
+              </div>
+            }
+            condition={!!delegations?.length}
+          >
+            {
+              delegations?.map(curator => curator?.delegations?.map(delegation =>
+                <VotesItem
+                  networkLogo={curator?.network?.logoIcon}
+                  networkName={curator?.network?.name}
+                  chainLogo={curator?.network?.chain?.icon}
+                  chainName={curator?.network?.chain?.chainShortName}
+                  amount={delegation?.amount || "0"}
+                  tokenSymbol={curator?.network?.networkToken?.symbol}
+                  onTakeBackClick={() => onTakeBackClick(delegation)}
+                  type="delegated"
+                />))
+            }
+          </If>
         </div>
       </div>
     </div>

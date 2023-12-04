@@ -1,84 +1,43 @@
-import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useState} from "react";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import DelegationsView from "components/profile/pages/voting-power/delegations/view";
 
-import { Delegation } from "interfaces/curators";
-import { DelegationExtended } from "interfaces/oracles-state";
+import {Curator, Delegation} from "interfaces/curators";
+
+import useBepro from "x-hooks/use-bepro";
 
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import useMarketplace from "x-hooks/use-marketplace";
-
-import DelegationsView from "./view";
+import TakeBackModal from "../take-back-modal/take-back-modal.view";
 
 interface DelegationsProps {
-  type?: "toMe" | "toOthers";
-  delegations?: Delegation[];
-  variant?: "network" | "multi-network";
-  tokenColor?: string;
+  delegations?: Curator[];
 }
 
-type JoinedDelegation = Delegation | DelegationExtended;
-
 export default function Delegations({
-  type = "toMe",
   delegations,
-  variant = "network",
-  tokenColor,
 }: DelegationsProps) {
-  const { t } = useTranslation(["common", "profile", "my-oracles"]);
+  const [delegationToTakeBack, setDelegationToTakeBack] = useState<Delegation>(null);
 
-  const { currentUser } = useUserStore();
-  const marketplace = useMarketplace();
+  const { handleTakeBack } = useBepro();
 
-  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
-
-  const walletDelegations = (delegations ||
-    currentUser?.balance?.oracles?.delegations ||
-    []) as JoinedDelegation[];
-  const totalAmountDelegations = walletDelegations
-    .reduce((acc, delegation) => BigNumber(delegation.amount).plus(acc),
-            BigNumber(0))
-    .toFixed();
-
-  const votesSymbol = t("token-votes", {
-    token: networkTokenSymbol,
-  });
-
-  const renderInfo = {
-    toMe: {
-      title: t("profile:deletaged-to-me"),
-      description: t("my-oracles:descriptions.oracles-delegated-to-me", {
-        token: networkTokenSymbol,
-      }),
-      total: undefined,
-      delegations: walletDelegations || [
-        currentUser?.balance?.oracles?.delegatedByOthers || 0,
-      ],
-    },
-    toOthers: {
-      title: t("profile:deletaged-to-others"),
-      total: formatStringToCurrency(totalAmountDelegations),
-      description: t("my-oracles:descriptions.oracles-delegated-to-others", {
-        token: networkTokenSymbol,
-      }),
-      delegations:
-        walletDelegations ||
-        currentUser?.balance?.oracles?.delegations ||
-        [],
-    },
-  };
-
-  const networkTokenName = marketplace?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
+  function handleCancel() {
+    setDelegationToTakeBack(null);
+  }
 
   return (
-    <DelegationsView
-      type={type}
-      variant={variant}
-      tokenColor={tokenColor}
-      renderInfo={renderInfo}
-      votesSymbol={votesSymbol}
-      networkTokenName={networkTokenName}
-    />
+    <>
+      <DelegationsView
+        delegations={delegations}
+        onTakeBackClick={setDelegationToTakeBack}
+      />
+
+      <TakeBackModal
+        delegation={delegationToTakeBack}
+        show={!!delegationToTakeBack}
+        isTakingBack={true}
+        onCloseClick={handleCancel}
+        onTakeBackClick={async () => {}}
+      />
+    </>
   );
 }
