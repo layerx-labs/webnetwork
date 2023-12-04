@@ -43,7 +43,7 @@ export default function ProfileLinks({
 
   return(
     <ul>
-      {getProfileLinks(t, !!query?.network).map(ProfileLink)}
+      {getProfileLinks(t).map(ProfileLink)}
     </ul>
   );
 }

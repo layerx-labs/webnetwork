@@ -130,7 +130,7 @@ export default function NavAvatar() {
         </div>
 
         <LinksSession>
-          {getProfileLinks(t, !!query?.network).map(ProfileInternalLink)}
+          {getProfileLinks(t).map(ProfileInternalLink)}
         </LinksSession>
 
         <LinksSession>
