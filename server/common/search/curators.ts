@@ -15,7 +15,8 @@ export default async function get(query: ParsedUrlQuery) {
     chain,
     page,
     sortBy,
-    order
+    order,
+    increaseQuantity
   } = query;
 
   const whereCondition: WhereOptions = {};
@@ -47,7 +48,7 @@ export default async function get(query: ParsedUrlQuery) {
       },
       include: chain ? [{
         association: "chain",
-        attributes: [],
+        attributes: ["icon"],
         required: true,
         where: {
           chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain.toString())
@@ -59,22 +60,22 @@ export default async function get(query: ParsedUrlQuery) {
       association: "network",
       include: [
         { association: "networkToken" },
-        { association: "chain", attributes: ["chainShortName"] },
+        { association: "chain", attributes: ["chainShortName", "icon"] },
       ],
     });
   }
 
   const PAGE = +(page || 1);
+  const quantityPerPage = isTrue(increaseQuantity?.toString()) ? 20 : undefined;
 
   const curators = await models.curator.findAndCountAll(paginate({
-    logging: console.log,
     attributes: {
       exclude: ["id", "createdAt", "updatedAt"],
     },
     where: whereCondition,
     include,
     subQuery: false,
-  }, { page: PAGE }, [[sortBy || "acceptedProposals", order || "DESC"]]));
+  }, { page: PAGE }, [[sortBy || "acceptedProposals", order || "DESC"]], quantityPerPage));
 
   const totalCurators = await models.curator.count({
     where: {
