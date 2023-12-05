@@ -20,8 +20,6 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import {MINUTE_IN_MS} from "../../../../helpers/constants";
-
 interface MyMarketplaceProps {
   bounties: SearchBountiesPaginated;
 }
