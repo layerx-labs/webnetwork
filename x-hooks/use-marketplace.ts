@@ -125,15 +125,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
       transactionalTokens,
       rewardTokens
     });
-    if (currentUser?.walletAddress) {
-      const userAddress = currentUser.walletAddress;
-      const isCurator = !!active.councilMembers?.find(address => lowerCaseCompare(address, userAddress));
-      const isGovernor = lowerCaseCompare(active.creatorAddress, userAddress);
-      updateCurrentUser({
-        isCouncil: isCurator,
-        isGovernor: isGovernor
-      })
-    }
+    updateCuratorAndGovernor(active);
   }, [searchData, isError, isFetching, isStale]);
 
   return {
