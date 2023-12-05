@@ -11,8 +11,8 @@ export default async function get(query: ParsedUrlQuery) {
   const {
     address,
     isCurrentlyCurator,
-    network,
-    chain,
+    networkName: network,
+    chainShortName: chain,
     page,
     sortBy,
     order,
@@ -42,18 +42,20 @@ export default async function get(query: ParsedUrlQuery) {
     include.push({
       association: "network",
       required: isFilterRequired,
-      attributes: [],
       where: {
         ... network ? { name: caseInsensitiveEqual("network.name", network.toString()) } : {}
       },
-      include: chain ? [{
-        association: "chain",
-        attributes: ["icon"],
-        required: true,
-        where: {
-          chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain.toString())
+      include: [
+        { association: "networkToken" },
+        {
+          association: "chain",
+          attributes: ["chainShortName", "icon"],
+          required: !!chain,
+          where: chain ? {
+            chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain.toString())
+          } : {}
         }
-      }] : []
+      ]
     });
   } else {
     include.push({
