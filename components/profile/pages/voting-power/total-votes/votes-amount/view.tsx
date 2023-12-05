@@ -37,6 +37,7 @@ export default function VotesAmount({
             {
               curators?.map(curator =>
                 <VotesItem
+                  key={`${curator?.address}-${curator?.network?.name}-${curator?.network?.chain?.chainShortName}`}
                   networkLogo={curator?.network?.logoIcon}
                   networkName={curator?.network?.name}
                   chainLogo={curator?.network?.chain?.icon}

@@ -4,7 +4,6 @@ import BigNumber from "bignumber.js";
 
 import VotingPowerNetworkView from "components/profile/pages/voting-power/network/view";
 
-import {useUserStore} from "x-hooks/stores/user/user.store";
 
 import {FIVE_MINUTES_IN_MS} from "helpers/constants";
 import {QueryKeys} from "helpers/query-keys";
@@ -15,22 +14,27 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import {useSearchCurators} from "x-hooks/api/curator";
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-export default function VotingPowerNetwork() {
-  const [network, setNetwork] = useState<Network>();
-  const [chain, setChain] = useState<SupportedChainData>();
-
+interface VotingPowerNetworkProps {
+  selectedNetwork: Network;
+  selectedChain: SupportedChainData;
+}
+export default function VotingPowerNetwork({
+  selectedNetwork,
+  selectedChain,
+}: VotingPowerNetworkProps) {
   const { currentUser } = useUserStore();
   const { chainId, networkAddress } = useDaoStore();
   const { supportedChains } = useSupportedChain();
 
   const address = currentUser?.walletAddress;
-  const chainShortName = chain?.chainShortName;
-  const networkName = network?.name;
-  const isActionsEnabled = !!network && !!chain && +chain?.chainId === +chainId
-    && lowerCaseCompare(networkAddress, network?.networkAddress);
+  const chainShortName = selectedChain?.chainShortName;
+  const networkName = selectedNetwork?.name;
+  const isActionsEnabled = !!selectedNetwork && !!selectedChain && +selectedChain?.chainId === +chainId
+    && lowerCaseCompare(networkAddress, selectedNetwork?.networkAddress);
 
   const { data: curators } =
     useReactQuery(QueryKeys.votingPowerOf(address, chainShortName, networkName), () => useSearchCurators({
@@ -54,7 +58,7 @@ export default function VotingPowerNetwork() {
   return (
     <VotingPowerNetworkView
       chains={supportedChains}
-      networks={chain?.networks}
+      networks={selectedChain?.networks}
       locked={locked}
       delegatedToMe={delegatedToMe}
       delegations={delegations}

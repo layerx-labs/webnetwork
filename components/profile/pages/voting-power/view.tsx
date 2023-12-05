@@ -2,22 +2,33 @@ import {Col, Row} from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-import SelectNetwork from "components/bounties/select-network";
+import ChainFilter from "components/lists/filters/chain/controller";
+import MarketplaceFilter from "components/lists/filters/marketplace/controller";
 import NoNetworkTokenModal from "components/modals/no-network-token/no-network-token-modal.view";
-import ChainSelector from "components/navigation/chain-selector/controller";
 import VotingPowerNetwork from "components/profile/pages/voting-power/network/controller";
 import ProfileLayout from "components/profile/profile-layout";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 import {Network} from "interfaces/network";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 interface VotingPowerPageViewProps {
-  handleMarketplaceChange: (network: Network) => void;
+  selectedNetwork: Network;
+  selectedChain: SupportedChainData;
+  chains: SupportedChainData[];
+  networks: Network[];
   isNoNetworkTokenModalVisible?: boolean;
+  onNetworkSelected: (network: string | number) => void;
+  onChainSelected: (chain: string | number) => void;
 }
 export default function VotingPowerPageView({
+  selectedNetwork,
+  selectedChain,
+  chains,
+  networks,
   isNoNetworkTokenModalVisible,
-  handleMarketplaceChange,
+  onNetworkSelected,
+  onChainSelected,
 }: VotingPowerPageViewProps) {
   const { t } = useTranslation(["common", "profile"]);
 
@@ -33,17 +44,18 @@ export default function VotingPowerPageView({
             </Col>
 
             <Col xs="12" md="auto">
-              <SelectNetwork
-                filterByConnectedChain
-                hideLabel
-                isClearable={false}
-                onChange={handleMarketplaceChange}
+              <MarketplaceFilter
+                marketplaces={networks}
+                onChange={onNetworkSelected}
+                label={false}
               />
             </Col>
 
             <Col xs="12" md="auto">
-              <ChainSelector
-                placeholder="Select network"
+              <ChainFilter
+                chains={chains}
+                onChange={onChainSelected}
+                label={false}
               />
             </Col>
           </Row>
@@ -52,7 +64,10 @@ export default function VotingPowerPageView({
             isVisible={isNoNetworkTokenModalVisible}
           />
 
-          <VotingPowerNetwork />
+          <VotingPowerNetwork
+            selectedNetwork={selectedNetwork}
+            selectedChain={selectedChain}
+          />
         </Col>
       </ReadOnlyButtonWrapper>
     </ProfileLayout>
