@@ -484,6 +484,7 @@
   },
   "placeholders": {
     "select-chain": "Select Network",
+    "select-marketplace": "Select Marketplace",
     "select-latest": "Select Latest"
   },
   "comments": {
