@@ -1263,17 +1263,8 @@ $c_props: (
 }
 
 #notifications-indicator {
-  border: 0;
-  background-color: transparent;
-  &.popover {
-    border-radius: 8px;
-    min-width: 415px;
-    min-height: 96px;
-  }
-  .popover-body {
-    border-radius: 8px;
-    min-height: 96px;
-  }
+  @extend #transactions-indicator;
+  
   .popover-arrow {
     &::after {
       border-bottom-color: $gray-850;
@@ -1299,6 +1290,14 @@ $c_props: (
   svg {
     width: 18px !important;
     height: 18px !important;
+  }
+}
+
+.notification-list {
+  @extend .transaction-list;
+
+  .tx-row {
+    background-color: $gray-850;
   }
 }
 
@@ -1978,6 +1977,12 @@ input[type="color"] {
 
 .border-bottom-dashed {
   border-bottom: 1px dashed $white;
+}
+
+.border-top-line {
+  border-top: 1px solid $gray-800;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
 }
 
 .bg {
