@@ -437,6 +437,13 @@
       "fee-for-network-creation": "Fee For Marketplace Creation"
     }
   },
+  "notifications": {
+    "title": "Notification",
+    "title_other": "Notifications",
+    "mark-read": "Mark all as read",
+    "unread": "Unread",
+    "no-notifications": "You have no notifications"
+  },
   "sort": {
     "label": "Sort by",
     "types": {
