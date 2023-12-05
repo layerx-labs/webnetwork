@@ -71,7 +71,7 @@ class User extends Model {
       as: "issues"
     });
 
-    this.hasMany(models.curators, {
+    this.hasMany(models.curator, {
       foreignKey: "address",
       sourceKey: "address",
       as: "curation"
@@ -83,7 +83,7 @@ class User extends Model {
       as: "settings"
     })
 
-    this.hasMany(models.notifications, {
+    this.hasMany(models.notification, {
       foreignKey: "userId",
       sourceKey: "id",
       as: "notifications"
