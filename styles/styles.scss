@@ -1295,9 +1295,19 @@ $c_props: (
 
 .notification-list {
   @extend .transaction-list;
-
+  .tx-container {
+    max-height: 749px;
+  }
   .tx-row {
     background-color: $gray-850;
+  }
+  .unread-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, $primary 28%, transparent 28%, transparent 100%) 2;
+  }
+  .all-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, transparent 28%, $primary 28%, $primary 46%, transparent 46%) 2;
   }
 }
 
@@ -1361,6 +1371,11 @@ a.row-button svg {
 .spinner-border-xs {
   width: 12px;
   height: 12px;
+}
+
+.text-normal {
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .text-danger {
@@ -1961,6 +1976,11 @@ input[type="color"] {
     border-right: 1px solid $gray-850;
   }
 }
+
+.border-active {
+  
+}
+
 .svg {
   &-gray {
     svg {
