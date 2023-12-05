@@ -4,6 +4,7 @@ import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
 
+import {MINUTE_IN_MS} from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
 import { Network } from "interfaces/network";
@@ -18,8 +19,6 @@ import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-import {MINUTE_IN_MS} from "../../../../helpers/constants";
 
 interface MyMarketplaceProps {
   bounties: SearchBountiesPaginated;
@@ -42,7 +41,8 @@ export function MyMarketplace({
       creatorAddress: currentUser.walletAddress,
       isClosed: false,
       chainId: chainId,
-      name: marketplace?.active?.name
+      name: marketplace?.active?.name,
+      isNeedCountsAndTokensLocked: true
     })
       .then(({ count , rows }) => {
         const savedNetwork = count > 0 ? rows[0] : undefined;
