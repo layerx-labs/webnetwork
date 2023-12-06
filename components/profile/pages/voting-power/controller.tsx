@@ -1,5 +1,7 @@
 import {useState} from "react";
 
+import {useDebouncedCallback} from "use-debounce";
+
 import VotingPowerPageView from "components/profile/pages/voting-power/view";
 
 import {lowerCaseCompare} from "helpers/string";
@@ -19,8 +21,8 @@ export default function VotingPowerPage() {
 
   const { start } = useDao();
   const marketplace = useMarketplace();
-  const { update } = useMarketplaceStore();
   const { currentUser } = useUserStore();
+  const { update } = useMarketplaceStore();
   const { supportedChains } = useSupportedChain();
 
   const networks = Object.values(Object.fromEntries(supportedChains?.flatMap(c => c.networks).map(n => [n.name, n])));
@@ -42,6 +44,10 @@ export default function VotingPowerPage() {
     });
   }
 
+  const debouncedHandleService = useDebouncedCallback((network: Network, chain: SupportedChainData) => {
+    handleService(network, chain);
+  }, 1000);
+
   function onNetworkSelected (network: string | number) {
     marketplace.clear();
     if (!network) {
@@ -50,7 +56,7 @@ export default function VotingPowerPage() {
     }
     const selected = networks?.find(n => lowerCaseCompare(n.name, network?.toString()));
     setSelectedNetwork(selected);
-    handleService(selected, selectedChain);
+    debouncedHandleService(selected, selectedChain);
   }
 
   function onChainSelected (chain: string | number) {
@@ -61,7 +67,7 @@ export default function VotingPowerPage() {
     }
     const selected = supportedChains?.find(c => lowerCaseCompare(c.chainShortName, chain?.toString()))
     setSelectedChain(selected);
-    handleService(selectedNetwork, selected);
+    debouncedHandleService(selectedNetwork, selected);
   }
 
   return (
