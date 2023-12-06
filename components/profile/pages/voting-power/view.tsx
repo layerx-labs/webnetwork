@@ -43,7 +43,7 @@ export default function VotingPowerPageView({
               </h3>
             </Col>
 
-            <Col xs="12" md="auto">
+            <Col xs="12" md="auto" className="mt-2 mb-2 mt-md-0 mb-md-0">
               <MarketplaceFilter
                 marketplaces={networks}
                 onChange={onNetworkSelected}
@@ -64,10 +64,14 @@ export default function VotingPowerPageView({
             isVisible={isNoNetworkTokenModalVisible}
           />
 
-          <VotingPowerNetwork
-            selectedNetwork={selectedNetwork}
-            selectedChain={selectedChain}
-          />
+          <Row>
+            <Col>
+              <VotingPowerNetwork
+                selectedNetwork={selectedNetwork}
+                selectedChain={selectedChain}
+              />
+            </Col>
+          </Row>
         </Col>
       </ReadOnlyButtonWrapper>
     </ProfileLayout>

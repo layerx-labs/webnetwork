@@ -18,25 +18,27 @@ export default function TotalVotes({
 
   return(
     <div className="col border border-gray-800 p-4 border-radius-4 col-12 mb-4">
-      <div className="row mb-3 justify-content-between align-items-center flex-wrap">
-        <VotingPowerSubTitle 
-          label={t("profile:total-votes")}
+      <div className="col p-2">
+        <div className="row mb-3 justify-content-between align-items-center flex-wrap">
+          <VotingPowerSubTitle
+            label={t("profile:total-votes")}
+          />
+        </div>
+
+        <VotesAmount
+          label={t("profile:locked-by-me")}
+          curators={locked}
+          className="mb-4"
+          type="tokensLocked"
+        />
+
+        <VotesAmount
+          label={t("profile:deletaged-to-me")}
+          curators={delegatedToMe}
+          className="mb-4"
+          type="delegatedToMe"
         />
       </div>
-
-      <VotesAmount
-        label={t("profile:locked-by-me")}
-        curators={locked}
-        className="mb-4"
-        type="tokensLocked"
-      />
-
-      <VotesAmount
-        label={t("profile:deletaged-to-me")}
-        curators={delegatedToMe}
-        className="mb-4"
-        type="delegatedToMe"
-      />
     </div>
   );
 }
