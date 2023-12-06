@@ -39,10 +39,7 @@ export default function WrongNetworkModal() {
   const { supportedChains, connectedChain } = useSupportedChain();
   const { wrongNetworkModal: show, loading, updateWrongNetworkModal } = useLoadersStore();
 
-  const isRequired = [
-    pathname?.includes("new-network"),
-    pathname?.includes("/[network]/[chain]/profile")
-  ].some(c => c);
+  const isRequired = pathname?.includes("new-network");
   const canBeHided = !isRequired;
 
   async function selectSupportedChain(chain: SupportedChainData) {
@@ -79,7 +76,7 @@ export default function WrongNetworkModal() {
   }
 
   function updateNetworkChain() {
-    if (supportedChains?.length && marketplace?.active?.chain_id && query?.network) {
+    if (supportedChains?.length && marketplace?.active?.chain_id) {
       const chain = supportedChains.find(({ chainId }) => +marketplace?.active?.chain_id === +chainId );
 
       setNetworkChain(chain);
@@ -103,7 +100,7 @@ export default function WrongNetworkModal() {
 
   const isButtonDisabled = () => [isAddingNetwork].some((values) => values);
 
-  useEffect(updateNetworkChain, [marketplace?.active?.chain_id, supportedChains, query?.network]);
+  useEffect(updateNetworkChain, [marketplace?.active?.chain_id, supportedChains]);
   useEffect(changeShowNetworkModal, [
     currentUser?.walletAddress,
     connectedChain?.matchWithNetworkChain,
