@@ -11,22 +11,23 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { OraclesDelegateViewProps } from "interfaces/oracles-state";
 
 export default function OraclesDelegateView({
- tokenAmount,
- handleChangeOracles,
- error,
- networkTokenDecimals,
- availableAmount,
- handleMaxAmount,
- delegatedTo,
- handleChangeAddress,
- isAddressesEqual,
- addressError,
- networkTokenSymbol,
- handleClickVerification, 
- handleProcessEvent,
- handleTransition,
- handleError,
- isButtonDisabled
+  disabled,
+  tokenAmount,
+  handleChangeOracles,
+  error,
+  networkTokenDecimals,
+  availableAmount,
+  handleMaxAmount,
+  delegatedTo,
+  handleChangeAddress,
+  isAddressesEqual,
+  addressError,
+  networkTokenSymbol,
+  handleClickVerification,
+  handleProcessEvent,
+  handleTransition,
+  handleError,
+  isButtonDisabled
 }: OraclesDelegateViewProps) {
   const {t} = useTranslation(["common", "my-oracles"]);
 
@@ -52,6 +53,7 @@ export default function OraclesDelegateView({
           error={!!error}
           decimalScale={networkTokenDecimals}
           allowNegative={false}
+          disabled={disabled}
           helperText={
             <>
               {formatNumberToNScale(availableAmount?.toString() || 0, 2, '')}{" "}
@@ -72,6 +74,7 @@ export default function OraclesDelegateView({
             {t("my-oracles:fields.address.label")}
           </label>
           <input
+            disabled={disabled}
             value={delegatedTo}
             onChange={handleChangeAddress}
             type="text"
@@ -108,7 +111,7 @@ export default function OraclesDelegateView({
             onFail={handleError}
             buttonLabel={t("my-oracles:actions.delegate.label")}
             fullWidth={true}
-            disabled={isButtonDisabled}
+            disabled={disabled || isButtonDisabled}
           />
         </ReadOnlyButtonWrapper>
       </div>

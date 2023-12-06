@@ -26,34 +26,42 @@ export default function VotingPowerPage() {
   const networks = Object.values(Object.fromEntries(supportedChains?.flatMap(c => c.networks).map(n => [n.name, n])));
   const isNoNetworkTokenModalVisible = !!marketplace?.active && !marketplace?.active?.networkToken &&
     lowerCaseCompare(currentUser?.walletAddress, marketplace?.active?.creatorAddress);
+  function handleService (network: Network, chain: SupportedChainData) {
+    if (!network || !chain)
+      return;
+    const networkOnChain =
+      supportedChains?.find(c => +c?.chainId === +chain?.chainId)?.networks?.find(n => n.name === network?.name);
+    if (!networkOnChain)
+      return;
+    update({
+      active: networkOnChain
+    });
+    start({
+      chainId: +chain?.chainId,
+      networkAddress: networkOnChain?.networkAddress
+    });
+  }
 
   function onNetworkSelected (network: string | number) {
+    marketplace.clear();
     if (!network) {
       setSelectedNetwork(null);
       return;
     }
-
-    setSelectedNetwork(networks?.find(n => lowerCaseCompare(n.name, network?.toString())));
+    const selected = networks?.find(n => lowerCaseCompare(n.name, network?.toString()));
+    setSelectedNetwork(selected);
+    handleService(selected, selectedChain);
   }
 
   function onChainSelected (chain: string | number) {
+    marketplace.clear();
     if (!chain) {
       setSelectedChain(null);
       return;
     }
-
-    setSelectedChain(supportedChains?.find(c => lowerCaseCompare(c.chainShortName, chain?.toString())));
-  }
-
-  function handleMarketplaceChange(marketplace: Network) {
-    if (!marketplace) return;
-    update({
-      active: marketplace
-    });
-    start({
-      chainId: +marketplace?.chain_id,
-      networkAddress: marketplace?.networkAddress
-    });
+    const selected = supportedChains?.find(c => lowerCaseCompare(c.chainShortName, chain?.toString()))
+    setSelectedChain(selected);
+    handleService(selectedNetwork, selected);
   }
 
   return (

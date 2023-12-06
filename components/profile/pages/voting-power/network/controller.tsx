@@ -1,9 +1,8 @@
-import {useState} from "react";
+import {useEffect} from "react";
 
 import BigNumber from "bignumber.js";
 
 import VotingPowerNetworkView from "components/profile/pages/voting-power/network/view";
-
 
 import {FIVE_MINUTES_IN_MS} from "helpers/constants";
 import {QueryKeys} from "helpers/query-keys";
@@ -15,6 +14,7 @@ import {SupportedChainData} from "interfaces/supported-chain-data";
 import {useSearchCurators} from "x-hooks/api/curator";
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useUserStore} from "x-hooks/stores/user/user.store";
+import {useAuthentication} from "x-hooks/use-authentication";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -27,16 +27,16 @@ export default function VotingPowerNetwork({
   selectedChain,
 }: VotingPowerNetworkProps) {
   const { currentUser } = useUserStore();
-  const { chainId, networkAddress } = useDaoStore();
+  const daoStore = useDaoStore();
   const { supportedChains } = useSupportedChain();
+  const { updateWalletBalance } = useAuthentication();
 
   const address = currentUser?.walletAddress;
   const chainShortName = selectedChain?.chainShortName;
   const networkName = selectedNetwork?.name;
-  const isActionsEnabled = !!selectedNetwork && !!selectedChain && +selectedChain?.chainId === +chainId
-    && lowerCaseCompare(networkAddress, selectedNetwork?.networkAddress);
+  const isActionsEnabled = !!selectedNetwork && !!selectedChain;
 
-  const { data: curators } =
+  const { data: curators, invalidate: updateVotes } =
     useReactQuery(QueryKeys.votingPowerOf(address, chainShortName, networkName), () => useSearchCurators({
       address: address,
       networkName: networkName,
@@ -55,6 +55,28 @@ export default function VotingPowerNetwork({
     }
   }, { locked: [], delegatedToMe: [], delegations: [] });
 
+  function updateBalance () {
+    updateWalletBalance(true);
+    updateVotes();
+  }
+
+  useEffect(() => {
+    if (!currentUser?.walletAddress ||
+        !selectedNetwork ||
+        !selectedChain ||
+        !daoStore?.chainId ||
+        !daoStore?.networkAddress ||
+        !(+daoStore?.chainId === +selectedChain?.chainId &&
+          lowerCaseCompare(daoStore?.networkAddress, selectedNetwork?.networkAddress)))
+      return;
+
+    updateWalletBalance(true);
+  }, [currentUser?.walletAddress, daoStore?.chainId, daoStore?.networkAddress]);
+
+  useEffect(() => {
+    updateVotes();
+  }, [selectedNetwork, selectedChain]);
+
   return (
     <VotingPowerNetworkView
       chains={supportedChains}
@@ -62,6 +84,12 @@ export default function VotingPowerNetwork({
       locked={locked}
       delegatedToMe={delegatedToMe}
       delegations={delegations}
+      isActionsEnabled={isActionsEnabled}
+      walletAddress={currentUser?.walletAddress}
+      userBalance={currentUser?.balance}
+      userIsCouncil={currentUser?.isCouncil}
+      userIsGovernor={currentUser?.isGovernor}
+      handleUpdateWalletBalance={updateBalance}
     />
   );
 }

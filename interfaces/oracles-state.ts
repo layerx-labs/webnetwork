@@ -57,6 +57,7 @@ interface Info {
 }
 
 export interface OraclesActionsViewProps {
+  disabled?: boolean;
   wallet: Wallet;
   actions: string[];
   action: string;
@@ -87,6 +88,7 @@ export interface OraclesActionsViewProps {
 }
 
 export interface OraclesActionsProps {
+  disabled?: boolean;
   wallet: Wallet;
   updateWalletBalance: () => void;
 }
@@ -99,6 +101,7 @@ export interface ModalOraclesActionViewProps {
 }
 
 export interface OraclesDelegateViewProps {
+  disabled?: boolean;
   tokenAmount: string
   handleChangeOracles: (params: NumberFormatValues) => void;
   error: string;
@@ -118,6 +121,7 @@ export interface OraclesDelegateViewProps {
 }
 
 export interface OraclesDelegateProps {
+  disabled?: boolean;
   wallet: Wallet;
   updateWalletBalance: () => void;
   defaultAddress?: string;

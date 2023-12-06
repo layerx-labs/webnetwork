@@ -1,9 +1,6 @@
 import React from "react";
-import {Spinner} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
-
-import LockedIcon from "assets/icons/locked-icon";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import NetworkTxButton from "components/common/network-tx-button/controller";
@@ -19,6 +16,7 @@ import { OraclesActionsViewProps } from "interfaces/oracles-state";
 import ModalOraclesActionView from "./modal-actions/view";
 
 export default function OraclesActionsView({
+  disabled,
   wallet,
   actions,
   action,
@@ -64,7 +62,7 @@ export default function OraclesActionsView({
           </p>
 
           <InputNumber
-            disabled={!wallet?.address}
+            disabled={disabled || !wallet?.address}
             className="bg-gray-850"
             label={t("my-oracles:fields.amount.label", {
               currency: currentLabel
@@ -108,25 +106,14 @@ export default function OraclesActionsView({
             <div className="mt-5 d-grid gap-3">
               {action === t("my-oracles:actions.lock.label") && (
                 <ContractButton
-                  disabled={!needsApproval || isApproving}
+                  disabled={disabled || !needsApproval || isApproving}
+                  withLockIcon={disabled || !needsApproval}
+                  isLoading={isApproving || verifyTransactionState(TransactionTypes.approveSettlerToken)}
                   className="ms-0 read-only-button mt-3"
                   onClick={approveSettlerToken}
                 >
-                  {!needsApproval && (
-                    <LockedIcon width={12} height={12} className="mr-1" />
-                  )}
                   <span>
-                    {t("actions.approve")}{" "}
-                    {wallet?.address &&
-                    verifyTransactionState(TransactionTypes.approveSettlerToken) ? (
-                      <Spinner
-                        size={"xs" as unknown as "sm"}
-                        className="align-self-center ml-1"
-                        animation="border"
-                      />
-                    ) : (
-                      ""
-                    )}
+                    {t("actions.approve")}
                   </span>
                 </ContractButton>
               )}
@@ -138,12 +125,10 @@ export default function OraclesActionsView({
                     : "primary"
                 }
                 className="ms-0 read-only-button"
-                disabled={isButtonDisabled}
+                disabled={disabled || isButtonDisabled}
+                withLockIcon={disabled || isButtonDisabled}
                 onClick={handleCheck}
               >
-                {isButtonDisabled && (
-                  <LockedIcon width={12} height={12} className="mr-1" />
-                )}
                 <span>{renderInfo?.label}</span>
               </ContractButton>
             </div>
