@@ -1,6 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {UserRoute, WithValidChainId} from "../../../../middleware";
+import {withCORS, withJWT} from "../../../../middleware";
+import {withSignature} from "../../../../middleware/with-signature";
+import {withUser} from "../../../../middleware/with-user";
 import {getNotifications} from "../../../../server/common/notifications/get-notifications";
 import {Logger} from "../../../../services/logging";
 
@@ -19,4 +21,4 @@ async function allNotificationsHandler(req: NextApiRequest, res: NextApiResponse
   }
 }
 Logger.changeActionName("GetAllNotifications");
-export default UserRoute(WithValidChainId(allNotificationsHandler));
+export default withCORS(withJWT(withSignature(withUser(allNotificationsHandler)), []))
