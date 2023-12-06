@@ -33,7 +33,7 @@ interface NetworkTxButtonParams {
   modalTitle: string;
   modalDescription: string;
   buttonLabel?: string;
-  handleEvent?: (blockNumber) => void;
+  handleEvent?: (blockNumber) => Promise<void> | void;
   buttonConfirmRef?: MutableRefObject<HTMLButtonElement>
   children?: ReactChild | ReactChild[];
   disabled?: boolean;
@@ -94,7 +94,7 @@ export default function NetworkTxButton({
     const currency = txCurrency || t("misc.$token");
     
     daoService?.network[txMethod](txParams.tokenAmount, txParams.from)
-      .then(answer => {
+      .then(async answer => {
         if (answer.status) {
           if (onSuccess) onSuccess();
           const content = 
@@ -102,7 +102,7 @@ export default function NetworkTxButton({
           addSuccess(t("actions.success"), content);
 
           if(handleEvent && answer.blockNumber)
-            handleEvent(answer.blockNumber)
+            await handleEvent(answer.blockNumber);
 
           updateTx(parseTransaction(answer, tmpTransaction as SimpleBlockTransactionPayload));
         } else {
