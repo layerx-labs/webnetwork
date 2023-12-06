@@ -23,6 +23,7 @@ interface VotingPowerNetworkViewProps {
   userBalance: Balance;
   userIsCouncil: boolean;
   userIsGovernor: boolean;
+  isBalanceLoading?: boolean;
   handleUpdateWalletBalance: () => void;
 }
 
@@ -35,6 +36,7 @@ export default function VotingPowerNetworkView({
   userBalance,
   userIsCouncil,
   userIsGovernor,
+  isBalanceLoading,
   handleUpdateWalletBalance,
 }: VotingPowerNetworkViewProps) {
 
@@ -64,6 +66,7 @@ export default function VotingPowerNetworkView({
                 isCouncil: userIsCouncil,
                 isNetworkGovernor: userIsGovernor
               }}
+              isBalanceLoading={isBalanceLoading}
               updateWalletBalance={handleUpdateWalletBalance}
             />
 
@@ -75,6 +78,7 @@ export default function VotingPowerNetworkView({
                 isCouncil: userIsCouncil,
                 isNetworkGovernor: userIsGovernor
               }}
+              isBalanceLoading={isBalanceLoading}
               updateWalletBalance={handleUpdateWalletBalance}
               defaultAddress={null}
             />

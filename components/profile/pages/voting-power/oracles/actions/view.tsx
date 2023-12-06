@@ -4,6 +4,7 @@ import {useTranslation} from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import NetworkTxButton from "components/common/network-tx-button/controller";
+import If from "components/If";
 import InputNumber from "components/input-number";
 import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
@@ -17,6 +18,7 @@ import ModalOraclesActionView from "./modal-actions/view";
 
 export default function OraclesActionsView({
   disabled,
+  isBalanceLoading,
   wallet,
   actions,
   action,
@@ -86,19 +88,26 @@ export default function OraclesActionsView({
             allowNegative={false}
             decimalScale={networkTokenDecimals}
             helperText={
-              <>
-                {formatStringToCurrency(getMaxAmount())}{" "}
-                {currentLabel} {t("misc.available")}
-                <span onClick={handleMaxAmount}
-                      className={`caption-small ml-1 cursor-pointer text-uppercase ${(
-                        currentLabel === t("$oracles", { token: networkTokenSymbol })
-                          ? "text-purple"
-                          : "text-primary"
-                      )}`}>
-                  {t("misc.max")}
-                </span>
-                {error && <p className="p-small my-2">{error}</p>}
-              </>
+              <If
+                condition={!isBalanceLoading}
+                otherwise={
+                  <span className="spinner-border spinner-border-xs ml-1" />
+                }
+              >
+                <If condition={!disabled}>
+                  {formatStringToCurrency(getMaxAmount())}{" "}
+                  {currentLabel} {t("misc.available")}
+                  <span onClick={handleMaxAmount}
+                        className={`caption-small ml-1 cursor-pointer text-uppercase ${(
+                          currentLabel === t("$oracles", { token: networkTokenSymbol })
+                            ? "text-purple"
+                            : "text-primary"
+                        )}`}>
+                    {t("misc.max")}
+                  </span>
+                  {error && <p className="p-small my-2">{error}</p>}
+                </If>
+              </If>
             }
           />
 

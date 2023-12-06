@@ -58,6 +58,7 @@ interface Info {
 
 export interface OraclesActionsViewProps {
   disabled?: boolean;
+  isBalanceLoading?: boolean;
   wallet: Wallet;
   actions: string[];
   action: string;
@@ -89,6 +90,7 @@ export interface OraclesActionsViewProps {
 
 export interface OraclesActionsProps {
   disabled?: boolean;
+  isBalanceLoading?: boolean;
   wallet: Wallet;
   updateWalletBalance: () => void;
 }
@@ -101,6 +103,7 @@ export interface ModalOraclesActionViewProps {
 }
 
 export interface OraclesDelegateViewProps {
+  isBalanceLoading?: boolean;
   disabled?: boolean;
   tokenAmount: string
   handleChangeOracles: (params: NumberFormatValues) => void;
@@ -121,6 +124,7 @@ export interface OraclesDelegateViewProps {
 }
 
 export interface OraclesDelegateProps {
+  isBalanceLoading?: boolean;
   disabled?: boolean;
   wallet: Wallet;
   updateWalletBalance: () => void;

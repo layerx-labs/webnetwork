@@ -15,6 +15,7 @@ import {useSearchCurators} from "x-hooks/api/curator";
 import {useDaoStore} from "x-hooks/stores/dao/dao.store";
 import {useUserStore} from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -26,15 +27,17 @@ export default function VotingPowerNetwork({
   selectedNetwork,
   selectedChain,
 }: VotingPowerNetworkProps) {
-  const { currentUser } = useUserStore();
   const daoStore = useDaoStore();
+  const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
   const { supportedChains } = useSupportedChain();
   const { updateWalletBalance } = useAuthentication();
 
   const address = currentUser?.walletAddress;
   const chainShortName = selectedChain?.chainShortName;
   const networkName = selectedNetwork?.name;
-  const isActionsEnabled = !!selectedNetwork && !!selectedChain;
+  const isActionsEnabled = !!selectedNetwork && !!selectedChain && !!marketplace?.active;
+  const isBalanceLoading = !!daoStore?.serviceStarting;
 
   const { data: curators, invalidate: updateVotes } =
     useReactQuery(QueryKeys.votingPowerOf(address, chainShortName, networkName), () => useSearchCurators({
@@ -86,9 +89,10 @@ export default function VotingPowerNetwork({
       delegations={delegations}
       isActionsEnabled={isActionsEnabled}
       walletAddress={currentUser?.walletAddress}
-      userBalance={currentUser?.balance}
+      userBalance={isActionsEnabled && !!marketplace?.active ? currentUser?.balance : null}
       userIsCouncil={currentUser?.isCouncil}
       userIsGovernor={currentUser?.isGovernor}
+      isBalanceLoading={isBalanceLoading}
       handleUpdateWalletBalance={updateBalance}
     />
   );

@@ -17,6 +17,7 @@ import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 
 export default function OraclesDelegate({
+  isBalanceLoading,
   disabled,
   wallet,
   updateWalletBalance,
@@ -117,6 +118,7 @@ export default function OraclesDelegate({
 
   return (
     <OraclesDelegateView
+      isBalanceLoading={isBalanceLoading}
       disabled={disabled}
       tokenAmount={tokenAmount}
       handleChangeOracles={handleChangeOracles}

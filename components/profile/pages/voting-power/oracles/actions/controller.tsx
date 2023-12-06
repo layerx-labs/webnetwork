@@ -21,6 +21,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 
 export default function OraclesActions({
   disabled,
+  isBalanceLoading,
   wallet,
   updateWalletBalance
 } : OraclesActionsProps) {
@@ -238,7 +239,8 @@ export default function OraclesActions({
   return (
       <OraclesActionsView
         disabled={disabled}
-        wallet={wallet} 
+        isBalanceLoading={isBalanceLoading}
+        wallet={wallet}
         actions={actions} 
         action={action} 
         handleAction={setAction} 

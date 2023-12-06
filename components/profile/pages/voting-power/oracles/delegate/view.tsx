@@ -1,6 +1,9 @@
+import React from "react";
+
 import {useTranslation} from "next-i18next";
 
 import NetworkTxButton from "components/common/network-tx-button/controller";
+import If from "components/If";
 import InputNumber from "components/input-number";
 import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
@@ -11,6 +14,7 @@ import {TransactionTypes} from "interfaces/enums/transaction-types";
 import { OraclesDelegateViewProps } from "interfaces/oracles-state";
 
 export default function OraclesDelegateView({
+  isBalanceLoading,
   disabled,
   tokenAmount,
   handleChangeOracles,
@@ -55,17 +59,24 @@ export default function OraclesDelegateView({
           allowNegative={false}
           disabled={disabled}
           helperText={
-            <>
-              {formatNumberToNScale(availableAmount?.toString() || 0, 2, '')}{" "}
-              {t("misc.votes")}
-              <span
-                className="caption-small ml-1 cursor-pointer text-uppercase text-purple"
-                onClick={handleMaxAmount}
-              >
-                {t("misc.max")}
-              </span>
-              {error && <p className="p-small my-2">{error}</p>}
-            </>
+            <If
+              condition={!isBalanceLoading}
+              otherwise={
+                <span className="spinner-border spinner-border-xs ml-1" />
+              }
+            >
+              <If condition={!disabled}>
+                {formatNumberToNScale(availableAmount?.toString() || 0, 2, '')}{" "}
+                {t("misc.votes")}
+                <span
+                  className="caption-small ml-1 cursor-pointer text-uppercase text-purple"
+                  onClick={handleMaxAmount}
+                >
+                  {t("misc.max")}
+                </span>
+                {error && <p className="p-small my-2">{error}</p>}
+              </If>
+            </If>
           }
         />
 
