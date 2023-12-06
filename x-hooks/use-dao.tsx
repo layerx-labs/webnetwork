@@ -122,7 +122,7 @@ export function useDao() {
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress && !needsToUpdateConnection)
         return;
       const isChainEqualToConnected = +connectedChain?.id === +chainToConnect?.chainId;
-      const daoProps = isChainEqualToConnected || needsToUpdateConnection ?
+      const daoProps = isChainEqualToConnected ?
         { web3Connection: connection } :
         { web3Host: chainToConnect?.chainRpc };
       const dao = !daoService || !isSameChain || needsToUpdateConnection ?
