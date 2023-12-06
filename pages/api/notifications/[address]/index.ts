@@ -21,4 +21,4 @@ async function allNotificationsHandler(req: NextApiRequest, res: NextApiResponse
   }
 }
 Logger.changeActionName("GetAllNotifications");
-export default withCORS(withJWT(withSignature(withUser(allNotificationsHandler)), []))
+export default withCORS(withJWT(withSignature(withUser(allNotificationsHandler, []), []), []))
