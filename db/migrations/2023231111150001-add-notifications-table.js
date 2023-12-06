@@ -20,6 +20,16 @@ module.exports = {
       read: DataTypes.BOOLEAN,
       hide: DataTypes.BOOLEAN,
       uuid: DataTypes.STRING,
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sqlz.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sqlz.literal('CURRENT_TIMESTAMP'),
+      },
     });
 
     await queryInterface.addIndex('notifications', ['userId']);

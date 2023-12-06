@@ -18,6 +18,16 @@ module.exports = {
       },
       notifications: DataTypes.BOOLEAN,
       language: DataTypes.STRING,
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sqlz.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sqlz.literal('CURRENT_TIMESTAMP'),
+      },
     });
 
     await queryInterface.addIndex('user_settings', ['userId']);

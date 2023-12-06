@@ -22,7 +22,7 @@ class UserSetting extends Model {
       sequelize,
       modelName: "userSetting",
       tableName: "user_settings",
-      createdAt: true
+      timestamps: true
     })
   }
 

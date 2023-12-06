@@ -24,7 +24,7 @@ class Notification extends Model {
       sequelize,
       modelName: "notification",
       tableName: "notifications",
-      createdAt: true
+      timestamps: true,
     })
   }
 
