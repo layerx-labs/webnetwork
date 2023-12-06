@@ -131,6 +131,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   return {
     ...data,
     refresh: invalidate,
+    clear,
     updateParamsOfActive: _updateParamsOfActive,
     getURLWithNetwork,
     goToProfilePage,
