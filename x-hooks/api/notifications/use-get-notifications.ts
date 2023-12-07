@@ -12,7 +12,7 @@ import { api } from "services/api";
  * @param address string
  * @returns list of notifications
  */
-export async function useGetNotifications(address: string, query: ParsedUrlQuery ) {
+export async function useGetNotifications(address: string, query?: ParsedUrlQuery ) {
   return api
     .get<SearchNotificationsPaginated>(`/notifications/${address}`, {
         params: query
