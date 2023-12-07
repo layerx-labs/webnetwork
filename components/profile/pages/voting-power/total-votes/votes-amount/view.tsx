@@ -1,3 +1,5 @@
+import {useTranslation} from "next-i18next";
+
 import If from "components/If";
 import VotesItem from "components/profile/pages/voting-power/votes-item/votes-item.view";
 
@@ -16,6 +18,8 @@ export default function VotesAmount({
   className,
   type
 }: VotesAmountProps) {
+  const { t } = useTranslation("profile");
+
   return(
     <div className={`row ${className}`}>
       <div className="col">
@@ -28,7 +32,7 @@ export default function VotesAmount({
             otherwise={
               <div className="bg-gray-900 border-radius-4 px-3 py-4 text-center">
                <span className="base-medium text-white font-weight-normal">
-                 No votes found
+                 {t("no-votes-found")}
                </span>
               </div>
             }

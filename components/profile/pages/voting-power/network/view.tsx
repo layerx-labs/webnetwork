@@ -1,5 +1,7 @@
 import {Col, Row} from "react-bootstrap";
 
+import {useTranslation} from "next-i18next";
+
 import {Divider} from "components/divider";
 import If from "components/If";
 import Delegations from "components/profile/pages/voting-power/delegations/controller";
@@ -39,6 +41,7 @@ export default function VotingPowerNetworkView({
   isBalanceLoading,
   handleUpdateWalletBalance,
 }: VotingPowerNetworkViewProps) {
+  const { t } = useTranslation("profile");
 
   return(
     <>
@@ -52,7 +55,7 @@ export default function VotingPowerNetworkView({
           <If condition={!isActionsEnabled}>
             <div className="bg-gray-900 border-radius-4 px-3 py-5 text-center mb-4">
                  <span className="base-medium text-white font-weight-normal">
-                   Please select a marketplace and a network to manage your votes.
+                   {t("select-marketplace-and-network")}
                  </span>
             </div>
           </If>
