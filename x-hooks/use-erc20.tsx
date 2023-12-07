@@ -50,7 +50,7 @@ export default function useERC20() {
   const [totalSupply, setTotalSupply] = useState(BigNumber(0));
 
   const { currentUser } = useUserStore();
-  const { service: daoService, serviceStarting } = useDaoStore();
+  const { service: daoService, serviceStarting, ...daoStore } = useDaoStore();
   const {add: addTx, update: updateTx} = transactionStore();
   const marketplace = useMarketplace();
   const { handleApproveToken, getERC20TokenData, getTokenBalance, getAllowance, deployERC20Token } = useBepro();
@@ -63,12 +63,11 @@ export default function useERC20() {
     service: daoService
   };
 
-  const isServiceReady = !serviceStarting && daoService;
+  const isServiceReady = !serviceStarting && !!daoService;
 
   async function updateAllowanceAndBalance() {
     if (!currentUser?.walletAddress ||
         !address ||
-        !name ||
         !isServiceReady ||
         connectedChain?.name === UNSUPPORTED_CHAIN) return;
 
@@ -122,29 +121,30 @@ export default function useERC20() {
       
       if (name)
         setDefaults();
-    } else if (address && !name && isServiceReady && connectedChain?.matchWithNetworkChain !== false)
+    } else if ( address &&
+                !name &&
+                isServiceReady &&
+                connectedChain?.matchWithNetworkChain !== false &&
+                +connectedChain?.id === +daoStore?.chainId)
       getERC20TokenData(address)
-        .then(async ({ name, symbol, decimals, totalSupply }) => {
+        .then(({ name, symbol, decimals, totalSupply }) => {
           setName(name);
           setSymbol(symbol);
           setDecimals(decimals);
           setTotalSupply(totalSupply);
           setMinimum(minimum);
           setLoadError(false);
+          updateAllowanceAndBalance();
         })
         .catch(error => console.debug("useERC20:getERC20TokenData", logData, error));
   }, [
-    currentUser?.walletAddress, 
-    daoService, 
+    currentUser?.walletAddress,
+    daoStore?.chainId,
     address, 
     name, 
     isServiceReady, 
     connectedChain?.matchWithNetworkChain
   ]);
-
-  useEffect(() => {
-    updateAllowanceAndBalance();
-  }, [currentUser?.walletAddress, isServiceReady, connectedChain, name]);
 
   async function deploy(name: string,
                         symbol: string,

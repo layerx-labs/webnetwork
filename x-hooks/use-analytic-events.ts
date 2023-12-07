@@ -19,7 +19,7 @@ export default function useAnalyticEvents() {
    * @param eventName name of the event to be sent (must exist in analyticsEvents const)
    * @param details details to be sent in that event
    */
-  function pushAnalytic(eventName: EventName, details: {[options: string]: string | boolean} = {}) {
+  function pushAnalytic(eventName: EventName, details: {[options: string]: string | boolean | number} = {}) {
 
     function getCallback({type}: Analytic) {
       const reject = (message: string) => (a: string, b: any) => Promise.reject(message)

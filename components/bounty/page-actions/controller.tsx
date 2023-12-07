@@ -21,13 +21,12 @@ export default function PageActions({
   const { t } = useTranslation(["common", "deliverable", "bounty", "proposal"]);
   const { query, push } = useRouter();
 
-  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
+  const { getURLWithNetwork } = useMarketplace();
   const { currentUser } = useUserStore();
   const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: () => useStartWorking({
-      id: currentBounty?.id,
-      networkName: activeMarketplace?.name
+      id: currentBounty?.id
     }),
     toastSuccess: t("bounty:actions.start-working.success"),
     toastError: t("bounty:actions.start-working.error")

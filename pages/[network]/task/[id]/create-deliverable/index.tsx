@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next/types";
 
 import CreateDeliverablePage from "components/pages/create-deliverable/controller";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
 import { getReactQueryClient } from "services/react-query";
 

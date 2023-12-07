@@ -3,29 +3,17 @@ import { Op } from "sequelize";
 
 import models from "db/models";
 
-import { chainFromHeader } from "helpers/chain-from-header";
-
 import { HttpConflictError, HttpNotFoundError } from "server/errors/http-errors";
 
 export default async function put(req: NextApiRequest) {
-  const { id, networkName, context } = req.body;
-
-  const chain = await chainFromHeader(req);
-
-  const network = await models.network.findOne({
-    where: {
-      name: {
-        [Op.iLike]: String(networkName).replaceAll(" ", "-")
-      },
-      chain_id: { [Op.eq]: +chain?.chainId }
-    }
-  });
-
-  if (!network)
-    throw new HttpConflictError("Invalid network");
+  const { id, context } = req.body;
 
   const issue = await models.issue.findOne({
-    where: { id, network_id: network.id }
+    where: {
+      id: {
+        [Op.eq]: id
+      }
+    }
   });
 
   if (!issue)
@@ -33,7 +21,7 @@ export default async function put(req: NextApiRequest) {
 
   const user = context.user;
 
-  const userIsAlreadyWorking = issue.working.find((el) => +el === user.id);
+  const userIsAlreadyWorking = issue.working.find(el => +el === user.id);
   if (userIsAlreadyWorking)
     throw new HttpConflictError("User is already working");
 

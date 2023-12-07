@@ -71,14 +71,6 @@ export default class DAO {
       if (!skipAssignment)
         this._network = network;
 
-      // console.table({
-      //   networkAddress,
-      //   networkTokenAddress: network.networkToken?.contractAddress,
-      //   registryAddress: network.registry?.contractAddress,
-      //   nftAddress: network.nftToken?.contractAddress,
-      // });
-
-
       return network;
     } catch (error) {
       console.debug(`Error loading Network_v2 (${networkAddress}): `, error);

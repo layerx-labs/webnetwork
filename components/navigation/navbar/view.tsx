@@ -3,7 +3,6 @@ import {UrlObject} from "url";
 
 import ClosedNetworkAlert from "components/closed-network-alert";
 import BrandLogo from "components/common/brand-logo/view";
-import ChainSelector from "components/navigation/chain-selector/controller";
 import NavBarActions from "components/navigation/navbar/actions/view";
 import NavBarLinks from "components/navigation/navbar/links/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -54,10 +53,6 @@ export default function NavBarView({
                   logoUrl={logos.logoIcon}
                   showDefaultBepro={!isOnNetwork}
                 />
-              </ResponsiveWrapper>
-
-              <ResponsiveWrapper xs={false} xl={true}>
-                <ChainSelector />
               </ResponsiveWrapper>
             </div>
 

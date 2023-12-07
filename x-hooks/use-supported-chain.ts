@@ -24,20 +24,19 @@ export default function useSupportedChain() {
   } = useSupportedChainStore();
 
   const { invalidate } = useReactQuery(QueryKeys.chains(),
-                                       () =>
-      useGetChains().then((chains) => {
-        updateChains(chains);
-        return chains;
-      }),
+                                       () => useGetChains().then((chains) => {
+                                         updateChains(chains);
+                                         return chains;
+                                       }),
                                        {
-      staleTime: MINUTE_IN_MS,
-      enabled: isGetChainsDatabase
+                                          staleTime: MINUTE_IN_MS,
+                                          enabled: isGetChainsDatabase
                                        });
   
   function updateNetworkAndChainMatch() {
     const networkChainId = marketplace?.active?.chain_id;
     const isOnANetwork = !!query?.network;
-    const matchWithNetworkChain = +connectedChain?.id === +networkChainId
+    const matchWithNetworkChain = +connectedChain?.id === +networkChainId;
 
     if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain && isOnANetwork)
       updateConnectedChain({
@@ -48,7 +47,6 @@ export default function useSupportedChain() {
 
   useEffect(updateNetworkAndChainMatch, [
     query?.network,
-    query?.chain,
     connectedChain?.id,
     marketplace?.active?.chain_id,
   ])

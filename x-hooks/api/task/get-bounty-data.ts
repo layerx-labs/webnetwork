@@ -12,7 +12,7 @@ import {api} from "services/api";
 export async function getBountyData(query: ParsedUrlQuery): Promise<IssueData | null> {
   const { id, network: networkName, chain: chainName } = query;
 
-  if ([id, networkName, chainName].some(k => k === "undefined" || k === undefined))
+  if ([id, networkName].some(k => k === "undefined" || k === undefined))
     return null;
 
   return api

@@ -4,7 +4,7 @@ import {useTranslation} from "next-i18next";
 import FundingProgress from "components/bounty/funding-section/funding-progress/controller";
 import {Amount, CaptionMedium, RowWithTwoColumns} from "components/bounty/funding-section/minimals.view";
 import Button from "components/button";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import InputWithBalance from "components/input-with-balance";
 import Modal from "components/modal";
 

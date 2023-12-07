@@ -12,37 +12,37 @@ import TotalVotes from "components/profile/pages/voting-power/total-votes/view";
 import { Balance } from "interfaces/balance-state";
 
 interface OracleToken {
-    symbol: string;
-    name: string;
-    icon: ReactElement;
+  symbol: string;
+  name: string;
+  icon: ReactElement;
 }
 
 interface VotingPowerNetworkViewProps {
-    oraclesLocked: BigNumber;
-    oraclesDelegatedToMe: BigNumber;
-    oraclesDelegatedToOthers: BigNumber;
-    oracleToken: OracleToken;
-    votesSymbol: string;
-    walletAddress: string;
-    userBalance: Balance;
-    userIsCouncil: boolean;
-    userIsGovernor: boolean;
-    handleUpdateWalletBalance: () => void;
-    delegationAddress: string;
+  oraclesLocked: BigNumber;
+  oraclesDelegatedToMe: BigNumber;
+  oraclesDelegatedToOthers: BigNumber;
+  oracleToken: OracleToken;
+  votesSymbol: string;
+  walletAddress: string;
+  userBalance: Balance;
+  userIsCouncil: boolean;
+  userIsGovernor: boolean;
+  handleUpdateWalletBalance: () => void;
+  delegationAddress: string;
 }
 
 export default function VotingPowerNetworkView({
-    oraclesLocked,
-    oraclesDelegatedToMe,
-    oraclesDelegatedToOthers,
-    oracleToken,
-    votesSymbol,
-    walletAddress,
-    userBalance,
-    userIsCouncil,
-    userIsGovernor,
-    handleUpdateWalletBalance,
-    delegationAddress
+  oraclesLocked,
+  oraclesDelegatedToMe,
+  oraclesDelegatedToOthers,
+  oracleToken,
+  votesSymbol,
+  walletAddress,
+  userBalance,
+  userIsCouncil,
+  userIsGovernor,
+  handleUpdateWalletBalance,
+  delegationAddress
 }: VotingPowerNetworkViewProps) {
 
   return(

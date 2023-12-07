@@ -157,6 +157,7 @@ export default function OraclesActions({
 
   function handleProcessEvent(blockNumber) {
     processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+      .then(() => marketplace.refresh())
       .catch(console.debug);
   }
 

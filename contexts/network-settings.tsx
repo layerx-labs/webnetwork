@@ -23,7 +23,7 @@ import {
 import {DefaultNetworkSettings} from "helpers/custom-network";
 import {NetworkValidator} from "helpers/network";
 import {RegistryValidator} from "helpers/registry";
-import {toLower} from "helpers/string";
+import {lowerCaseCompare, toLower} from "helpers/string";
 
 import {Color, Network, NetworkSettings, Theme} from "interfaces/network";
 import {Token} from "interfaces/token";
@@ -44,7 +44,7 @@ const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefi
 
 const ALLOWED_PATHS = [
   "/new-marketplace",
-  "/[network]/[chain]/profile/[[...profilePage]]",
+  "/profile/[[...profilePage]]",
   "/administration",
   "/setup",
 ];
@@ -69,7 +69,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const marketplace = useMarketplace();
   const { DefaultTheme } = useNetworkTheme();
   const { getERC20TokenData, getTokensLockedInRegistryByAddress, getRegistryCreatorAmount } = useBepro();
-  const { service: daoService, serviceStarting } = useDaoStore();
+  const { service: daoService, serviceStarting, ...daoStore } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
   const IPFS_URL = settings?.urls?.ipfs;
@@ -197,7 +197,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     if(detailsValidate && isCreating){
       const data = Object.keys(newState)
-                          .filter(key => newState[key].validated)
+                          .filter(key => newState[key]?.validated)
                           .reduce((obj, key) => {
                             obj[key] = newState[key]
                             return obj
@@ -463,6 +463,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     defaultState.isAbleToClosed = isNetworkAbleToBeClosed;
     defaultState.settings.theme.colors = network?.colors || DefaultTheme();
+    defaultState.networkAddress = forcedNetwork?.networkAddress;
 
     setForcedNetwork((prev)=>({
       ...prev,
@@ -493,7 +494,8 @@ export const NetworkSettingsProvider = ({ children }) => {
   useEffect(() => {
     if ([
       !currentUser?.walletAddress,
-      !isCreating &&
+      !isCreating && lowerCaseCompare(networkSettings?.networkAddress, network?.networkAddress) &&
+        !!network?.tokensLocked &&
         (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
       isCreating && !daoService?.registry?.token?.contractAddress,
       !needsToLoad,
@@ -505,7 +507,7 @@ export const NetworkSettingsProvider = ({ children }) => {
 
     if (!isCreating && forcedNetwork)
       loadNetworkSettings().finally(()=> setIsLoadingData(false));
-    else if(isCreating)
+    else if(isCreating && +connectedChain?.id === +daoStore?.chainId)
       loadDefaultSettings().finally(()=> setIsLoadingData(false));
   }, [
     currentUser?.walletAddress,
@@ -519,7 +521,9 @@ export const NetworkSettingsProvider = ({ children }) => {
   ]);
 
   useEffect(() => {
-    if (daoService?.registry?.contractAddress && connectedChain?.name !== UNSUPPORTED_CHAIN)
+    if (daoService?.registry?.contractAddress &&
+      connectedChain?.name !== UNSUPPORTED_CHAIN &&
+      +daoStore.chainId === +connectedChain?.id)
       getERC20TokenData(daoService.registry.token.contractAddress)
         .then(setRegistryToken)
         .catch(error => console.debug("Failed to load registry token", error));

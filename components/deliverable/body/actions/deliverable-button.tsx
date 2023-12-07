@@ -1,7 +1,9 @@
 import { useTranslation } from "next-i18next";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
+
+import {DeliverableButtonType} from "types/components";
 
 export default function DeliverableButton({
   withLockIcon,
@@ -14,9 +16,9 @@ export default function DeliverableButton({
   withLockIcon?: boolean;
   isLoading?: boolean;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: () => Promise<void>;
   className?: string;
-  type: "cancel" | "review" | "ready-review"
+  type: DeliverableButtonType;
 }) {
   const { t } = useTranslation([ "common" ,"deliverable"]);
 

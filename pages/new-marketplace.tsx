@@ -7,7 +7,7 @@ import { NewNetworkStepper } from "components/custom-network/new-network-stepper
 
 export default function NewMarketplacePage() {
   return (
-    <CustomContainer className="pt-5">
+    <CustomContainer className="py-5">
       <NewNetworkStepper />
     </CustomContainer>
   );

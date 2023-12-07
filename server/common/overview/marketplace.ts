@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from "querystring";
-import { Sequelize, WhereOptions } from "sequelize";
+import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
@@ -13,7 +13,7 @@ export default async function get(query: ParsedUrlQuery) {
     chainId,
   } = query;
 
-  if (!name && !address || !chain && !chainId)
+  if (!name && !address)
     throw new Error("Missing parameters");
 
   const networkWhere: WhereOptions = {};
@@ -32,7 +32,7 @@ export default async function get(query: ParsedUrlQuery) {
   if (chainId)
     chainWhere.chainId = +chainId;
 
-  const network = await models.network.findOne({
+  const networks = await models.network.findAll({
     where: networkWhere,
     include: [
       {
@@ -44,8 +44,14 @@ export default async function get(query: ParsedUrlQuery) {
     ],
   });
 
-  if (!network)
+  if (!networks?.length)
     throw new Error("Network not found");
+
+  const { networksIds, tokensIds, networksAddresses } = networks.reduce((acc, curr) => ({
+    networksIds: [...acc.networksIds, curr.id],
+    tokensIds: [...acc.tokensIds, curr.network_token_id],
+    networksAddresses: [...acc.networksAddresses, curr.networkAddress],
+  }), { networksIds: [], tokensIds: [], networksAddresses: [] });
 
   const [bounties, curators, networkTokenOnClosedBounties, members] = await Promise.all([
     models.issue.findAll({
@@ -56,7 +62,9 @@ export default async function get(query: ParsedUrlQuery) {
       ],
       group: ["issue.state"],
       where: {
-        network_id: network.id,
+        network_id: {
+          [Op.in]: networksIds
+        },
         visible: true
       }
     })
@@ -72,7 +80,9 @@ export default async function get(query: ParsedUrlQuery) {
         ],
       ],
       where: {
-        networkId: network.id
+        networkId: {
+          [Op.in]: networksIds
+        }
       }
     })
       .then(curators => ({ ...curators, total: +curators.total })),
@@ -82,8 +92,12 @@ export default async function get(query: ParsedUrlQuery) {
         [Sequelize.fn("SUM", Sequelize.literal(`CAST("issue"."amount" as FLOAT)`)), "total"]
       ],
       where: {
-        transactionalTokenId: network.network_token_id,
-        network_id: network.id,
+        transactionalTokenId: {
+          [Op.in]: tokensIds
+        },
+        network_id: {
+          [Op.in]: networksIds
+        },
         state: "closed"
       }
     }),
@@ -91,8 +105,8 @@ export default async function get(query: ParsedUrlQuery) {
   ]);
 
   return {
-    name: network.name,
-    networkAddress: network.networkAddress,
+    name: networks[0].name,
+    networkAddress: networksAddresses,
     bounties,
     curators,
     networkTokenOnClosedBounties: networkTokenOnClosedBounties.total || 0,

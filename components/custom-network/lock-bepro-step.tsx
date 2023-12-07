@@ -7,7 +7,7 @@ import {useTranslation} from "next-i18next";
 
 import ArrowRightLine from "assets/icons/arrow-right-line";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import AmountWithPreview from "components/custom-network/amount-with-preview";
 import InputNumber from "components/input-number";
 import Step from "components/step";
@@ -29,9 +29,9 @@ import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 import {UserRoleUtils} from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
@@ -50,7 +50,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const [hasNetworkRegistered, setHasNetworkRegistered] = useState(false);
 
   const registryToken = useERC20();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, ...daoStore } = useDaoStore();
   const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
   const { updateWalletBalance } = useAuthentication();
   const { tokensLocked, updateTokenBalance } = useNetworkSettings();
@@ -202,18 +202,21 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   useEffect(() => {
     const tokenAddress = daoService?.registry?.token?.contractAddress;
     const registryAddress = daoService?.registry?.contractAddress;
-
-    if (tokenAddress && registryAddress && connectedChain?.name !== UNSUPPORTED_CHAIN) {
+    if (tokenAddress &&
+        registryAddress &&
+        connectedChain?.name !== UNSUPPORTED_CHAIN &&
+        +connectedChain?.id === +daoStore?.chainId &&
+        !daoStore?.serviceStarting &&
+        !!daoService) {
       registryToken.setAddress(tokenAddress);
       registryToken.setSpender(registryAddress);
-    } else {
-      registryToken.setAddress(undefined);
-      registryToken.setSpender(undefined);
+      return;
     }
+    registryToken.setAddress(null);
+    registryToken.setSpender(null);
   }, [
-    daoService?.registry?.token?.contractAddress,
-    daoService?.registry?.contractAddress,
-    connectedChain?.name
+    daoStore?.chainId,
+    daoService
   ]);
 
   useEffect(() => {
@@ -415,6 +418,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                 <ContractButton
                   disabled={isApproving || !!lockingPercent?.gt(100)}
                   onClick={handleApproval}
+                  variant="registry"
                 >
                   {t("actions.approve")}
                   {isApproving && (
@@ -427,6 +431,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                   onClick={() => handleLock()}
                   isLoading={isLocking}
                   withLockIcon={!isLocking && isLockBtnDisabled}
+                  variant="registry"
                 >
                   <span>
                     {t("transactions.types.lock")} {registryTokenSymbol}
@@ -442,6 +447,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                 onClick={handleUnLock}
                 isLoading={isUnlocking}
                 withLockIcon={!isUnlocking && isUnlockBtnDisabled}
+                variant="registry"
               >
                 <span>{t("transactions.types.unlock")}</span>
               </ContractButton>

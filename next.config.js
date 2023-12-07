@@ -128,12 +128,12 @@ module.exports = () => {
       return [
         {
           source: '/:network/:chain/bounties',
-          destination: '/:network/:chain/tasks',
+          destination: '/:network/tasks',
           permanent: true,
         },
         {
           source: '/:network/:chain/profile/my-network',
-          destination: '/:network/:chain/profile/my-marketplace',
+          destination: '/profile/my-marketplace',
           permanent: true,
         },
         {
@@ -148,22 +148,22 @@ module.exports = () => {
         },
         {
           source: '/:network/:chain/bounty/:id',
-          destination: '/:network/:chain/task/:id',
+          destination: '/:network/task/:id',
           permanent: true,
         },
         {
           source: '/:network/:chain/bounty/:id/deliverable/:deliverableId',
-          destination: '/:network/:chain/task/:id/deliverable/:deliverableId',
+          destination: '/:network/task/:id/deliverable/:deliverableId',
           permanent: true,
         },
         {
           source: '/:network/:chain/bounty/:id/proposal/:proposalId',
-          destination: '/:network/:chain/task/:id/proposal/:proposalId',
+          destination: '/:network/task/:id/proposal/:proposalId',
           permanent: true,
         },
         {
           source: '/:network/:chain/bounty/:id/create-deliverable',
-          destination: '/:network/:chain/task/:id/create-deliverable',
+          destination: '/:network/task/:id/create-deliverable',
           permanent: true,
         },
       ]

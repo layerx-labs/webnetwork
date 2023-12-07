@@ -4,15 +4,15 @@ import {Col, Row} from "react-bootstrap";
 import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import {FormGroup} from "components/form-group";
 
 import { DAPPKIT_LINK } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import useERC20 from "x-hooks/use-erc20";
 import { useUserStore } from "x-hooks/stores/user/user.store";
+import useERC20 from "x-hooks/use-erc20";
 
 interface ERC20DetailsProps {
   address?: string;
@@ -193,6 +193,7 @@ export function ERC20Details({
               withLockIcon={isDeployBtnDisabled}
               isLoading={isDeploying}
               onClick={handleDeploy}
+              variant="registry"
             >
               {t("custom-network:steps.token-configuration.actions.deploy")}
             </ContractButton>

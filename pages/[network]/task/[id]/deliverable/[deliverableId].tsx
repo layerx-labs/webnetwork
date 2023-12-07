@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
 import { useTranslation } from "next-i18next";
@@ -6,7 +6,6 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
-import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import DeliverableBody from "components/deliverable/body/controller";
 import CreateReviewModal from "components/deliverable/create-review-modal/controller";
 import DeliverableHero from "components/deliverable/hero/controller";
@@ -18,8 +17,9 @@ import { getReactQueryClient } from "services/react-query";
 
 import { CreateComment } from "x-hooks/api/comments";
 import { getDeliverable } from "x-hooks/api/deliverable";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function DeliverablePage() {
@@ -31,8 +31,9 @@ export default function DeliverablePage() {
   const [showModal, setShowModal] = useState(!!review);
   const [isCreatingReview, setIsCreatingReview] = useState(false);
 
-  const { currentUser } = useUserStore();
   const { addError, addSuccess } = useToastStore();
+  const { updateParamsOfActive } = useMarketplace();
+  const { currentUser } = useUserStore();
   const { data: deliverableData, invalidate: invalidateDeliverable } = 
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
   
@@ -62,13 +63,18 @@ export default function DeliverablePage() {
     });
   }
 
-  function handleShowModal() {
+  async function handleShowModal() {
     setShowModal(true);
   }
 
   function handleCloseModal() {
     setShowModal(false);
   }
+
+  useEffect(() => {
+    if (deliverableData?.issue?.network?.chain?.chainId)
+      updateParamsOfActive(deliverableData?.issue?.network);
+  }, [deliverableData?.issue?.network?.chain?.chainId]);
 
   return (
     <>
@@ -90,7 +96,6 @@ export default function DeliverablePage() {
         onConfirm={handleCreateReview}
         onCloseClick={handleCloseModal}
       />
-
     </>
   );
 }

@@ -155,6 +155,11 @@ export default function ProposalPage() {
     getDistributedAmounts();
   }, [marketplace?.active]);
 
+  useEffect(() => {
+    if (proposalData?.issue?.network?.chain?.chainId)
+      marketplace.updateParamsOfActive(proposalData?.issue?.network);
+  }, [proposalData?.issue?.network?.chain?.chainId]);
+
   return (
     <ProposalPageView
       proposal={parsedProposal}

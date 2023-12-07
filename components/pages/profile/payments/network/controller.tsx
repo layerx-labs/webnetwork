@@ -38,7 +38,6 @@ export default function PaymentsNetwork({
 
     push(getURLWithNetwork(path, {
       network: networkPayments?.name,
-      chain: networkPayments?.chain?.chainShortName,
       ... isBountyRedirect ? { id } : {}
     }));
   }

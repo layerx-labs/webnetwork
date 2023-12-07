@@ -96,8 +96,7 @@ export default function IssueListItem({
     if (xClick) return xClick();
     router.push(getURLWithNetwork("/task/[id]", {
       id: issue?.id,
-      network: issue?.network?.name,
-      chain: issue?.network?.chain?.chainShortName
+      network: issue?.network?.name
     }));
   }
 

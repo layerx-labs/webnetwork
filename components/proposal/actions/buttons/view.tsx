@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import If from "components/If";
 import ProposalMerge from "components/proposal-merge";
 
@@ -58,7 +58,7 @@ export default function ProposalActionsButtonsView({
               token={token}
               isMerging={isMerging}
               idBounty={issueDbId}
-              canMerge={isAbleToMerge}
+              canMerge={isAbleToMerge && !isRefusing && !isDisputing}
               distributedAmounts={distributedAmounts}
               onClickMerge={onMerge}
             />

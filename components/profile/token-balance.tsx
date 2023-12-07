@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import { FlexColumn, FlexRow } from "components/common/flex-box/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 

@@ -95,6 +95,7 @@ type TokensLocked = {
   validated: boolean;
 };
 export interface NetworkSettings {
+  networkAddress?: string;
   isSettingsValidated: boolean;
   isLoadingData: boolean;
   forcedNetwork?: Network;

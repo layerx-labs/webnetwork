@@ -7,7 +7,7 @@ import {
   RowWithTwoColumns,
 } from "components/bounty/funding-section/minimals.view";
 import Button from "components/button";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import Modal from "components/modal";
 
 

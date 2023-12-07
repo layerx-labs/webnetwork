@@ -9,6 +9,7 @@ const ZeroField = () => ({
 });
 
 export const DefaultNetworkSettings = {
+  networkAddress: null,
   isSettingsValidated: false,
   isAbleToClosed: false,
   tokensLocked: {
