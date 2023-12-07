@@ -1,3 +1,5 @@
+import { NotificationsType } from "interfaces/notifications";
+
 export const DEFAULT_CANCEL_FEE = 1;
 export const DEFAULT_CLOSE_FEE = 5;
 export const DEFAULT_DISPUTE_TIME = 259200;
@@ -162,3 +164,34 @@ export const BOUNTY_TAGS = [
   },
 ];
 export const CHAIN_DEFAULT_DECIMALS = 18;
+
+export const NotificationTextsTypes: Record<NotificationsType, { title: string, subTitle: string }> = {
+  task: {
+    title: "A task has been created on %s!",
+    subTitle: ''
+  },
+  deliverable: {
+    title: "A new deliverable has been created!",
+    subTitle: ''
+  },
+  proposal: {
+    title: "A new proposal was created!",
+    subTitle: ''
+  },
+  dispute: {
+    title: "A Dispute Was Held",
+    subTitle: ''
+  },
+  open: {
+    title: "A task is open",
+    subTitle: ''
+  },
+  ready: {
+    title: "A deliverable is ready to be accepted!",
+    subTitle: ''
+  },
+  canceled: {
+    title: "A task was canceled",
+    subTitle: ''
+  }
+}
