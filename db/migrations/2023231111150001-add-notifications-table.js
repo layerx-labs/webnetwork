@@ -3,23 +3,21 @@ const { DataTypes} = require("sequelize");
 module.exports = {
   up: async (queryInterface, sqlz) => {
     await queryInterface.createTable("notifications", {
-      id: {
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-        unique: true
-      },
-      type: DataTypes.STRING,
       userId: {
         type: DataTypes.INTEGER,
         references: {
           model: "users",
           key: "id"
-        },
+        }
       },
+      type: DataTypes.STRING,
       read: DataTypes.BOOLEAN,
       hide: DataTypes.BOOLEAN,
-      uuid: DataTypes.STRING,
+      uuid: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      template: DataTypes.TEXT,
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
