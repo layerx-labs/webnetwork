@@ -15,7 +15,6 @@ import DAO from "services/dao-service";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import useChain from "x-hooks/use-chain";
 import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -23,7 +22,6 @@ export function useDao() {
   const { replace, asPath } = useRouter();
 
   const { currentUser } = useUserStore();
-  const { findSupportedChain } = useChain();
   const {
     service: daoService,
     serviceStarting,
@@ -147,7 +145,7 @@ export function useDao() {
   }
 
   function updateChain(chainId: number) {
-    const chain = findSupportedChain({ chainId });
+    const chain = supportedChains?.find(c => +chainId === +c?.chainId);
 
     sessionStorage.setItem("currentChainId", chainId.toString());
 
