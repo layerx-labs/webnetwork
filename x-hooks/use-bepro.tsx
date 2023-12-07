@@ -271,7 +271,7 @@ export default function useBepro() {
 
   async function handleTakeBack(delegationId: number,
                                 amount: string,
-                                currency: TransactionCurrency): Promise<{ blockNumber: number; } | Error> {
+                                currency: TransactionCurrency): Promise<TransactionReceipt> {
 
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
@@ -283,7 +283,7 @@ export default function useBepro() {
 
       await getService()
         .takeBackDelegation(delegationId)
-        .then((txInfo: { blockNumber: number; }) => {
+        .then((txInfo: TransactionReceipt) => {
           if (!txInfo)
             throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
           updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
