@@ -3,7 +3,7 @@ import {Op} from "sequelize";
 
 import models from "db/models";
 
-import paginate from "helpers/paginate";
+import paginate, { calculateTotalPages } from "helpers/paginate";
 
 import {BadRequestErrors} from "interfaces/enums/Errors";
 import {UserRole} from "interfaces/enums/roles";
@@ -12,7 +12,7 @@ import {isAddress} from "../../../helpers/is-address";
 import {lowerCaseCompare} from "../../../helpers/string";
 import {HttpBadRequestError, HttpUnauthorizedError} from "../../errors/http-errors";
 
-export function getNotifications(req: NextApiRequest) {
+export async function getNotifications(req: NextApiRequest) {
   const {address, id} = req.query as {address: string, id: string};
   const {page = 1, read = null,} = req.query as {page: string, read?: string};
   const {context: {token: {roles}, user: {id: userId, address: userAddress}}} = req.body;
@@ -58,8 +58,17 @@ export function getNotifications(req: NextApiRequest) {
 
   const include = []
   if (address)
-    include.push({model: models.user, as: "user", where: {address: address.toLowerCase()}, attributes: []});
+    include.push({ association: "user", attributes: ['address'] });
 
   /** if "address" is provided, we paginate the result, otherwise we return a simple "findAll" */
-  return models.notification.findAll(address ? paginate({where, include},{page: +page}) : where);
+  const notifications = await models.notification.findAndCountAll(address ? 
+      paginate({ where, include }, { page: +page }, [["createdAt", "DESC"]]) 
+    : 
+      where);
+
+  return {
+    ...notifications,
+    currentPage: page,
+    pages: calculateTotalPages(notifications?.count)
+  };
 }
