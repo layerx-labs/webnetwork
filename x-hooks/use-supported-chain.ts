@@ -16,7 +16,8 @@ export default function useSupportedChain() {
     isGetChainsDatabase,
     updateChains,
     updateConnectedChain,
-    loadChainsDatabase
+    loadChainsDatabase,
+    get
   } = useSupportedChainStore();
 
   const { invalidate } = useReactQuery(QueryKeys.chains(),
@@ -51,5 +52,6 @@ export default function useSupportedChain() {
     updateConnectedChain,
     loadChainsDatabase,
     refresh: invalidate,
+    get
   };
 }
