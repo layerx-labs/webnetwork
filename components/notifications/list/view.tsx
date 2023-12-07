@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import { useTranslation } from "next-i18next";
 
 import DoubleCheckIcon from "assets/icons/double-check-icon";
@@ -7,26 +5,37 @@ import DoubleCheckIcon from "assets/icons/double-check-icon";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import If from "components/If";
+import InfiniteScroll from "components/infinite-scroll";
 
-import { useStorageTransactions } from "x-hooks/use-storage-transactions";
+import { NotificationTextsTypes } from "helpers/constants";
 
-import { data } from "../mock.data";
+import {
+  Notifications,
+  SearchNotificationsPaginated,
+} from "interfaces/notifications";
 
-interface NotificationListProps {
+interface NotificationListViewProps {
+  notifications: SearchNotificationsPaginated;
+  btnUnreadActive: boolean;
+  hasMorePages: boolean;
+  onNextPage: () => void;
   onActiveNotificationChange: (notification: any) => void;
+  onClickMarkAllRead: () => void;
+  onUpdateBtnUreadActive: (v: boolean) => void;
 }
 
-export default function NotificationsList({
+export default function NotificationsListView({
+  notifications,
+  btnUnreadActive,
+  hasMorePages,
+  onNextPage,
   onActiveNotificationChange,
-}: NotificationListProps) {
+  onClickMarkAllRead,
+  onUpdateBtnUreadActive,
+}: NotificationListViewProps) {
   const { t } = useTranslation("common");
-  const [btnUnreadActive, setBtnUreadActive] = useState<boolean>(true);
 
-  const { deleteFromStorage } = useStorageTransactions();
-
-  const notifications = data;
-
-  function renderNotificationRow(item: any, key: number) {
+  function renderNotificationRow(item: Notifications, key: number) {
     const className = `h-100 w-100 px-3 py-2 tx-row  cursor-pointer ${
       key !== 0 && "mt-2 border-top-line"
     } `;
@@ -40,19 +49,18 @@ export default function NotificationsList({
         <div className="d-flex flex-column">
           <div className="d-flex justify-content-between mt-2">
             <div className="d-flex flex-grow-1 me-3">
-              <AvatarOrIdenticon
-                address="0xf15cc0ccbdda041e2508b829541917823222f364"
-                size="sm"
-              />
+              <AvatarOrIdenticon address={item?.user?.address} size="sm" />
             </div>
             <div className="d-flex flex-column flex-grow-2 ">
               <span className="xs-medium notification-title text-white mb-3">
-                User-handle name commented on your bounty #123
+                {key}--{NotificationTextsTypes[item.type].title}
               </span>
-              <span className="sm-regular mb-3 text-white-50">
-                This is the space where we can see a little bit of the comment
-                this user left on this specific bounty.
-              </span>
+              <If condition={!!NotificationTextsTypes[item.type].subTitle}>
+                <span className="sm-regular mb-3 text-white-50">
+                  {NotificationTextsTypes[item.type].subTitle}
+                </span>
+              </If>
+
               <div className="d-flex gap-2 text-white-50">
                 <span className="sm-regular">Raycast</span>
                 <span>•</span>
@@ -74,8 +82,8 @@ export default function NotificationsList({
         <h4 className="base-medium text-white">
           {t("notifications.title_other")}
         </h4>
-        <If condition={!!notifications.length}>
-          <Button className="px-0" onClick={deleteFromStorage} transparent>
+        <If condition={!!notifications?.rows?.length}>
+          <Button className="px-0" onClick={onClickMarkAllRead} transparent>
             <div className="xs-small text-gray-150 d-flex align-items-center justify-content-center">
               <DoubleCheckIcon />
               <span className="xs-small text-normal">
@@ -93,7 +101,7 @@ export default function NotificationsList({
         >
           <Button
             transparent
-            onClick={() => setBtnUreadActive(true)}
+            onClick={() => onUpdateBtnUreadActive(true)}
             className="p-0 ms-2"
           >
             <span
@@ -106,12 +114,12 @@ export default function NotificationsList({
           </Button>
 
           <span className="p xs-medium text-gray-500 bg-gray-800 border-radius-4 p-1 px-2 ms-2">
-            10
+            {notifications?.count}
           </span>
 
           <Button
             transparent
-            onClick={() => setBtnUreadActive(false)}
+            onClick={() => onUpdateBtnUreadActive(false)}
             className="p-0 ms-4 ps-2"
           >
             <span
@@ -125,14 +133,16 @@ export default function NotificationsList({
         </div>
       </div>
       <div className="overflow-auto tx-container mt-1 pt-2">
-        <If condition={!notifications || !notifications.length}>
+        <If condition={!notifications || !notifications?.rows?.length}>
           <div className="text-center">
             <span className="caption-small text-light-gray text-uppercase fs-8 family-Medium">
               {t("notifications.no-notifications")}
             </span>
           </div>
         </If>
-        {notifications.map(renderNotificationRow)}
+        <InfiniteScroll handleNewPage={onNextPage} hasMore={hasMorePages}>
+          {notifications?.rows?.map(renderNotificationRow)}
+        </InfiniteScroll>
       </div>
     </div>
   );

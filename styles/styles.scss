@@ -1296,7 +1296,7 @@ $c_props: (
 .notification-list {
   @extend .transaction-list;
   .tx-container {
-    max-height: 749px;
+    max-height: 549px !important;
   }
   .tx-row {
     background-color: $gray-850;
