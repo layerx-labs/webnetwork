@@ -1,3 +1,5 @@
+import {useTranslation} from "next-i18next";
+
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import MarketplaceWithNetworkLogo
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
@@ -11,6 +13,7 @@ interface VotesItemProps {
   chainName: string;
   amount: string;
   tokenSymbol: string;
+  disabled?: boolean;
   type?: "locked" | "delegated"
   transactionHash?: string;
   onTakeBackClick?: () => void;
@@ -23,10 +26,13 @@ export default function VotesItem({
   chainName,
   amount,
   tokenSymbol,
+  disabled,
   type = "locked",
   transactionHash,
   onTakeBackClick
 }: VotesItemProps) {
+  const { t } = useTranslation("common");
+
   const isLockedType = type === "locked";
   const mainLabel = isLockedType ? networkName : `${formatStringToCurrency(amount)} $${tokenSymbol}`;
   const secondaryLabel = isLockedType ? chainName : transactionHash;
@@ -48,13 +54,12 @@ export default function VotesItem({
             {mainLabel}
           </span>
         </div>
-        <If condition={isLockedType}>
-          <div className="row pt-2">
+
+        <div className="row pt-2">
             <span className="xs-medium text-gray-500 text-capitalize font-weight-normal">
               {secondaryLabel}
             </span>
-          </div>
-        </If>
+        </div>
       </div>
 
 
@@ -67,8 +72,9 @@ export default function VotesItem({
                 textClass="text-gray-200 font-weight-500 text-capitalize"
                 className="border-radius-4 border border-gray-700"
                 onClick={onTakeBackClick}
+                disabled={disabled}
               >
-                Take Back
+                {t("actions.take-back")}
               </ContractButton>
             }
           >

@@ -9,11 +9,13 @@ import {Curator, Delegation} from "interfaces/curators";
 
 interface DelegationsViewProps {
   delegations?: Curator[];
+  disabled?: boolean;
   onTakeBackClick: (delegation: Delegation) => void;
 }
 
 export default function DelegationsView({
   delegations,
+  disabled,
   onTakeBackClick,
 }: DelegationsViewProps) {
   const { t } = useTranslation(["common", "profile", "my-oracles"]);
@@ -26,33 +28,35 @@ export default function DelegationsView({
         />
       </FlexRow>
 
-      <div className="row">
-        <div className="col">
-          <If
-            otherwise={
-              <div className="bg-gray-900 border-radius-4 px-3 py-4 text-center">
-               <span className="base-medium text-white font-weight-normal">
-                 {t("my-oracles:errors.no-delegates")}
-               </span>
-              </div>
-            }
-            condition={!!delegations?.length}
-          >
-            {
-              delegations?.map(curator => curator?.delegations?.map(delegation =>
-                <VotesItem
-                  networkLogo={curator?.network?.logoIcon}
-                  networkName={curator?.network?.name}
-                  chainLogo={curator?.network?.chain?.icon}
-                  chainName={curator?.network?.chain?.chainShortName}
-                  amount={delegation?.amount || "0"}
-                  tokenSymbol={curator?.network?.networkToken?.symbol}
-                  onTakeBackClick={() => onTakeBackClick(delegation)}
-                  type="delegated"
-                />))
-            }
-          </If>
-        </div>
+      <div className="row mx-0">
+        <If
+          otherwise={
+            <div className="bg-gray-900 border-radius-4 px-3 py-4 text-center">
+             <span className="base-medium text-white font-weight-normal">
+               {t("my-oracles:errors.no-delegates")}
+             </span>
+            </div>
+          }
+          condition={!!delegations?.length}
+        >
+          <div className="col">
+          {
+            delegations?.map(curator => curator?.delegations?.map(delegation =>
+              <VotesItem
+                disabled={disabled}
+                networkLogo={curator?.network?.logoIcon}
+                networkName={curator?.network?.name}
+                chainLogo={curator?.network?.chain?.icon}
+                chainName={curator?.network?.chain?.chainShortName}
+                amount={delegation?.amount || "0"}
+                tokenSymbol={curator?.network?.networkToken?.symbol}
+                onTakeBackClick={() => onTakeBackClick(delegation)}
+                transactionHash={delegation?.to}
+                type="delegated"
+              />))
+          }
+          </div>
+        </If>
       </div>
     </div>
   );

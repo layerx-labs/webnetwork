@@ -89,7 +89,9 @@ export default function VotingPowerNetworkView({
       <Divider bg="gray-800" />
 
       <Delegations
+        disabled={!isActionsEnabled || isBalanceLoading}
         delegations={delegations}
+        updateWalletBalance={handleUpdateWalletBalance}
       />
     </>
   );
