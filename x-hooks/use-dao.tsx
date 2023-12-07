@@ -31,7 +31,7 @@ export function useDao() {
   } = useDaoStore();
   const { updateMissingMetamask } = useLoadersStore();
   const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
-  const { connectedChain, supportedChains, updateConnectedChain } = useSupportedChain();
+  const { connectedChain, supportedChains, updateConnectedChain, get } = useSupportedChain();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -145,7 +145,7 @@ export function useDao() {
   }
 
   function updateChain(chainId: number) {
-    const chain = supportedChains?.find(c => +chainId === +c?.chainId);
+    const chain = get()?.chains?.find(c => +chainId === +c?.chainId);
 
     sessionStorage.setItem("currentChainId", chainId.toString());
 
