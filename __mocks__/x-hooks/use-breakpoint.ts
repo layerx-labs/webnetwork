@@ -1,4 +1,4 @@
-export default function useBreakPointMocked (validateAgent?: boolean) {
+export default function (validateAgent?: boolean) {
   return {
     currentBreakPoint: "xl",
     isMobileView: false,
