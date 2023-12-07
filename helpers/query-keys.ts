@@ -18,4 +18,5 @@ export const QueryKeys = {
   votingPowerMultiOf: (wallet: string) => ["voting-power-multi", wallet],
   pricesByCoingecko: (tokens: {address: string, chainId: number}[]) => ['price', ...tokens?.map(v => v.address)],
   totalNetworkToken: (chain: string, network: string) => ["totalNetworkToken", chain, network],
+  notifications: (address: string) => ["notifications", address]
 };
