@@ -1,5 +1,3 @@
-import {CSSProperties} from "react";
-
 import BeProBlue from "assets/icons/bepro-blue";
 
 import { SizeOptions } from "interfaces/utils";

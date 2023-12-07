@@ -24,7 +24,7 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 type typeError = { code?: number; message?: string }
 
 export default function WrongNetworkModal() {
-  const { query, pathname } = useRouter();
+  const { pathname } = useRouter();
   const { t } = useTranslation("common");
 
   const [error, setError] = useState<string>("");

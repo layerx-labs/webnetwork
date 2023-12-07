@@ -27,8 +27,6 @@ export default function BountySettings({
   const { updateWalletBalance } = useAuthentication();
   const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
-  const cancelableTime = currentBounty?.network?.cancelableTime;
-  const isCancelable = +new Date() >= +new Date(+currentBounty.createdAt + cancelableTime);
   const isGovernor = currentUser?.isGovernor;
   const cancelableTime = currentBounty?.network?.cancelableTime;
   const isCancelable = +new Date() >= +new Date(+currentBounty.createdAt + cancelableTime);
