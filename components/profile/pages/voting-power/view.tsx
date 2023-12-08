@@ -12,7 +12,7 @@ import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
-interface VotingPowerPageViewProps {
+export interface VotingPowerPageViewProps {
   selectedNetwork: Network;
   selectedChain: SupportedChainData;
   chains: SupportedChainData[];
