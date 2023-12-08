@@ -3,6 +3,6 @@ export default function (validateAgent?: boolean) {
     currentBreakPoint: "xl",
     isMobileView: false,
     isTabletView: false,
-    isDesktopView: false,
+    isDesktopView: true,
   };
 }
