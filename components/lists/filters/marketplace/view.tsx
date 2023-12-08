@@ -40,7 +40,7 @@ export default function MarketplaceFilterView({
         </div>
       </If>
 
-      <div className="col">
+      <div className="col" data-testid="marketplace-filter">
         <NativeSelectWrapper
           options={options}
           onChange={onChange}
