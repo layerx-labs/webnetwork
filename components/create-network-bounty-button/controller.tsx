@@ -6,10 +6,12 @@ import CreateNetworkBountyButtonView from "components/create-network-bounty-butt
 
 interface CreateNetworkBountyButtonProps {
   label?: string;
+  actionCallBack?: () => void;
 }
 
 export default function CreateNetworkBountyButton({
-  label
+  label,
+  actionCallBack
 }: CreateNetworkBountyButtonProps) {
   const { pathname, push } = useRouter();
 
@@ -36,6 +38,7 @@ export default function CreateNetworkBountyButton({
       onClick={onClick}
       onCloseClick={onCloseClick}
       label={label}
+      actionCallBack={actionCallBack}
     />
   );
 }

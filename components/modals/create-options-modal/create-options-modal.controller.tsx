@@ -18,11 +18,13 @@ import { useSettings } from "x-hooks/use-settings";
 interface CreateOptionsModalProps {
   show?: boolean;
   onCloseClick?: () => void;
+  actionCallBack?: () => void;
 }
 
 export default function CreateOptionsModal ({
   show,
   onCloseClick,
+  actionCallBack,
 }: CreateOptionsModalProps) {
   const { push } = useRouter();
   const { t } = useTranslation("common");
@@ -64,13 +66,14 @@ export default function CreateOptionsModal ({
 
   function handleClose () {
     setSelectedOption(null);
-    onCloseClick();
+    onCloseClick?.();
   }
 
   function onContinueClick () {
     if (!hasSelected)
       return;
     handleClose();
+    actionCallBack?.();
     const { url, blank } = options[selectedOption];
     if (blank)
       window.open(url);

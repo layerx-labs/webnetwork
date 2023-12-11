@@ -14,6 +14,7 @@ interface CreateNetworkBountyButtonViewProps {
   label?: string;
   onClick?: () => void;
   onCloseClick?: () => void;
+  actionCallBack?: () => void;
 }
 
 export default function CreateNetworkBountyButtonView({
@@ -21,6 +22,7 @@ export default function CreateNetworkBountyButtonView({
   isModalVisible,
   onClick,
   onCloseClick,
+  actionCallBack,
   label
 }: CreateNetworkBountyButtonViewProps) {
   const { t } = useTranslation("common");
@@ -49,6 +51,7 @@ export default function CreateNetworkBountyButtonView({
       </If>
       <CreateOptionsModal
         show={isModalVisible}
+        actionCallBack={actionCallBack}
         onCloseClick={onCloseClick}
       />
   </ReadOnlyButtonWrapper>
