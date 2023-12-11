@@ -5,9 +5,7 @@ import { fireEvent } from "@testing-library/react";
 
 import VotingPowerPage from "components/profile/pages/voting-power/controller";
 
-import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
-
-import { chain1, network1, network2 } from "__mocks__/x-hooks/use-supported-chain";
+import { chain1, network1 } from "__mocks__/x-hooks/use-supported-chain";
 
 import { render } from "__tests__/utils/custom-render";
 
@@ -154,6 +152,30 @@ describe("VotingPowerPage", () => {
     expect(mockSetSelectedChain).toHaveBeenCalledWith(null);
   });
 
+  it("Should display only chains available for the selected marketplace", async () => {
+    const result = render(<QueryClientProvider client={queryClient}><VotingPowerPage /></QueryClientProvider>);
+    const marketplaceSelect = result.getByTestId("marketplace-filter").firstChild.firstChild;
+    fireEvent.focus(marketplaceSelect);
+    fireEvent.keyDown(marketplaceSelect, {
+      key: "ArrowDown",
+      code: 40,
+    });
+    fireEvent.click(result.getByText("network2"));
+    expect(result.queryByText("chain1")).toBeNull();
+  });
+
+  it("Should display only marketplaces available for the selected chain", async () => {
+    const result = render(<QueryClientProvider client={queryClient}><VotingPowerPage /></QueryClientProvider>);
+    const chainSelect = result.getByTestId("chain-filter").firstChild.firstChild;
+    fireEvent.focus(chainSelect);
+    fireEvent.keyDown(chainSelect, {
+      key: "ArrowDown",
+      code: 40,
+    });
+    fireEvent.click(result.getByText("chain1"));
+    expect(result.queryByText("network2")).toBeNull();
+  });
+
   it("Should not update active marketplace and call start service because only marketplace is selected", async () => {
     const result = render(<QueryClientProvider client={queryClient}><VotingPowerPage /></QueryClientProvider>);
     const select = result.getByTestId("marketplace-filter").firstChild.firstChild;
@@ -172,26 +194,6 @@ describe("VotingPowerPage", () => {
     const select = result.getByTestId("chain-filter").firstChild.firstChild;
     fireEvent.focus(select);
     fireEvent.keyDown(select, {
-      key: "ArrowDown",
-      code: 40,
-    });
-    fireEvent.click(result.getByText("chain1"));
-    expect(mockMarketplaceUpdate).not.toHaveBeenCalled();
-    expect(mockStartService).not.toHaveBeenCalled();
-  });
-
-  it("Should not update marketplace and start service because marketplace is not available on network", async () => {
-    const result = render(<QueryClientProvider client={queryClient}><VotingPowerPage /></QueryClientProvider>);
-    const marketplaceSelect = result.getByTestId("marketplace-filter").firstChild.firstChild;
-    fireEvent.focus(marketplaceSelect);
-    fireEvent.keyDown(marketplaceSelect, {
-      key: "ArrowDown",
-      code: 40,
-    });
-    fireEvent.click(result.getByText("network2"));
-    const chainSelect = result.getByTestId("chain-filter").firstChild.firstChild;
-    fireEvent.focus(chainSelect);
-    fireEvent.keyDown(chainSelect, {
       key: "ArrowDown",
       code: 40,
     });
