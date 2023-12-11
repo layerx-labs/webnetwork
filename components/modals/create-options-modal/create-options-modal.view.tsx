@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
 import SelectableCard from "components/common/selectable-card/selectable-card.view";

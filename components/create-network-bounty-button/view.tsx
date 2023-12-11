@@ -3,7 +3,6 @@ import {useTranslation} from "next-i18next";
 import PlusIcon from "assets/icons/plus-icon";
 
 import Button from "components/button";
-import MultiActionButton from "components/common/buttons/multi-action/view";
 import If from "components/If";
 import InternalLink from "components/internal-link";
 import CreateOptionsModal from "components/modals/create-options-modal/create-options-modal.controller";

@@ -62,7 +62,7 @@ interface CreateTaskPageProps {
 export default function CreateTaskPage({
   networks: allNetworks
 }: CreateTaskPageProps) {
-  const { query, push } = useRouter();
+  const { query } = useRouter();
   const session = useSession();
   const { t } = useTranslation(["common", "bounty"]);
 
