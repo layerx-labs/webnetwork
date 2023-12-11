@@ -39,6 +39,8 @@ export default function CreateOptionsModalView ({
       cancelLabel={t("actions.cancel")}
       okLabel={t("actions.continue")}
       size="xl"
+      backdrop
+      onBackdropClick={onCloseClick}
     >
       <div className="row mx-0 mx-md-n3 gy-4 justify-content-center">
         {options.map((opt, i) => <div className="col-11 col-lg px-0 px-md-2" key={`options-modal-${i}`}>
