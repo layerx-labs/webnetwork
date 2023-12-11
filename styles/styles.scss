@@ -145,43 +145,6 @@ li {
   padding-top: $navbar-height;
 }
 
-.modal {
-  &-header {
-    padding-bottom: 0;
-  }
-  &-content {
-    background-color: $gray-900;
-  }
-  &-header,
-  &-footer {
-    justify-content: center;
-    border: 0;
-  }
-  .close-button {
-    width: 24px;
-    top: 16px;
-    right: 16px;
-  }
-
-  .close-icon-search {
-    color: blue !important;
-  }
-
-  .modal-lg {
-    .modal-content > .modal-header > .close-button {
-      left: 96%;
-      top: 1.5%;
-    }
-  }
-
-  .modal-xl {
-    .modal-content > .modal-header > .close-button {
-      left: 97%;
-      top: 10px;
-    }
-  }
-}
-
 .react-select {
   &-container {
     width: 100%;
