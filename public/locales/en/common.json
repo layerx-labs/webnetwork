@@ -442,7 +442,13 @@
     "title_other": "Notifications",
     "mark-read": "Mark all as read",
     "unread": "Unread",
-    "no-notifications": "You have no notifications"
+    "no-notifications": "You have no notifications",
+    "success": {
+      "update-read": "reading updated successfully"
+    },
+    "erros": {
+      "update-notifications": "error updating notification readings"
+    }
   },
   "sort": {
     "label": "Sort by",
