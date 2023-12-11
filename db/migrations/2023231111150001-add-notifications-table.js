@@ -3,6 +3,12 @@ const { DataTypes} = require("sequelize");
 module.exports = {
   up: async (queryInterface, sqlz) => {
     await queryInterface.createTable("notifications", {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        unique: true,
+      },
       userId: {
         type: DataTypes.INTEGER,
         references: {
