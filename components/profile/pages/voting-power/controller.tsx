@@ -25,9 +25,16 @@ export default function VotingPowerPage() {
   const { update } = useMarketplaceStore();
   const { supportedChains } = useSupportedChain();
 
-  const networks = Object.values(Object.fromEntries(supportedChains?.flatMap(c => c.networks).map(n => [n.name, n])));
+  const networks =
+    Object.values(Object.fromEntries(supportedChains?.
+    filter(c => +c?.chainId === +selectedChain?.chainId || !selectedChain)?.
+    flatMap(c => c?.networks).map(n => [n?.name, n])));
+  const chains =
+    supportedChains?.filter(c => c?.networks?.find(n => lowerCaseCompare(n?.name, selectedNetwork?.name)) ||
+      !selectedNetwork);
   const isNoNetworkTokenModalVisible = !!marketplace?.active && !marketplace?.active?.networkToken &&
     lowerCaseCompare(currentUser?.walletAddress, marketplace?.active?.creatorAddress);
+
   function handleService (network: Network, chain: SupportedChainData) {
     if (!network || !chain)
       return;
@@ -74,7 +81,7 @@ export default function VotingPowerPage() {
     <VotingPowerPageView
       selectedNetwork={selectedNetwork}
       selectedChain={selectedChain}
-      chains={supportedChains}
+      chains={chains}
       networks={networks}
       isNoNetworkTokenModalVisible={isNoNetworkTokenModalVisible}
       onNetworkSelected={onNetworkSelected}
