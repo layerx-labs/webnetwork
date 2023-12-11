@@ -336,6 +336,24 @@
       "title": "Network token usage",
       "please-contact": "Please contact administration to allow usage of your custom token or",
       "go-to-explore": "go back to explore page"
+    },
+    "create-marketplace-options": {
+      "title": "Create Marketplace",
+      "subtitle": "Explore your options below and take the next step towards launching your tasks.",
+      "options": {
+        "launch-in-open-marketplace": {
+          "title": "Launch in Open Marketplace",
+          "description": "Test your tasks globally. Gain insights before bulding your own marketplace."
+        },
+        "get-help": {
+          "title": "Get Expert Help",
+          "description": "Seek support from our team. Fill a form, and we'll respond promptly."
+        },
+        "create-marketplace": {
+          "title": "Create Your Marketplace",
+          "description":  "Create your marketplace effortlessly using our user-friendly platform."
+        }
+      }
     }
   },
   "forms": {

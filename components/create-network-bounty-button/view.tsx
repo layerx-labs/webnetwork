@@ -2,25 +2,26 @@ import {useTranslation} from "next-i18next";
 
 import PlusIcon from "assets/icons/plus-icon";
 
+import Button from "components/button";
 import MultiActionButton from "components/common/buttons/multi-action/view";
 import If from "components/If";
 import InternalLink from "components/internal-link";
+import CreateOptionsModal from "components/modals/create-options-modal/create-options-modal.controller";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
-
-interface Action {
-  label: string;
-  onClick: () => void;
-}
 
 interface CreateNetworkBountyButtonViewProps {
   isOnNetwork: boolean;
-  actions: Action[];
+  isModalVisible?: boolean;
   label?: string;
+  onClick?: () => void;
+  onCloseClick?: () => void;
 }
 
 export default function CreateNetworkBountyButtonView({
   isOnNetwork,
-  actions,
+  isModalVisible,
+  onClick,
+  onCloseClick,
   label
 }: CreateNetworkBountyButtonViewProps) {
   const { t } = useTranslation("common");
@@ -30,12 +31,13 @@ export default function CreateNetworkBountyButtonView({
       <If 
         condition={isOnNetwork}
         otherwise={
-          <MultiActionButton
-            label={t("misc.create")}
+          <Button
             className="read-only-button w-100"
-            icon={<PlusIcon />}
-            actions={actions}
-          />
+            onClick={onClick}
+          >
+            <PlusIcon />
+            <span>{t("misc.create")}</span>
+          </Button>
         }
       >
         <InternalLink
@@ -46,6 +48,10 @@ export default function CreateNetworkBountyButtonView({
           uppercase
         />
       </If>
+      <CreateOptionsModal
+        show={isModalVisible}
+        onCloseClick={onCloseClick}
+      />
   </ReadOnlyButtonWrapper>
   );
 }

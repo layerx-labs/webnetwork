@@ -13,7 +13,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 
 export default function Modal({
   title = "",
-  centerTitle = false,
+  centerTitle = true,
   subTitle = "",
   key,
   children = null,
@@ -21,7 +21,6 @@ export default function Modal({
   onCloseClick,
   onCloseDisabled = false,
   backdrop = "static",
-  titlePosition = "start",
   titleClass,
   okLabel = "",
   cancelLabel = "",
@@ -44,27 +43,38 @@ export default function Modal({
     if (footer) return footer;
     if (okLabel || cancelLabel)
       return (
-        <div className="mb-2 d-flex flex-row justify-content-between">
+        <div className="row justify-content-between justify-content-lg-end px-0 gap-3 mt-5">
           <If condition={!!cancelLabel}>
-            <Button
-              color="gray-850"
-              onClick={onCloseClick}
-              disabled={onCloseDisabled || isExecuting}
-            >
-              <span>{cancelLabel}</span>
-            </Button>
+            <div className="col-5 col-md-auto">
+              <div className="row">
+                <Button
+                  color="gray-800"
+                  className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium 
+                  py-2 px-3`}
+                  onClick={onCloseClick}
+                  disabled={onCloseDisabled || isExecuting}
+                >
+                  <span>{cancelLabel}</span>
+                </Button>
+              </div>
+            </div>
           </If>
 
           <If condition={!!okLabel}>
-            <Button
-              color={okColor}
-              onClick={onOkClick}
-              disabled={okDisabled || isExecuting}
-              isLoading={isExecuting}
-              withLockIcon={okDisabled}
-            >
-              <span>{okLabel}</span>
-            </Button>
+            <div className="col-5 col-md-auto">
+             <div className="row">
+               <Button
+                 color={okColor}
+                 className={`border-radius-4 border border-${okDisabled || isExecuting ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
+                 onClick={onOkClick}
+                 disabled={okDisabled || isExecuting}
+                 isLoading={isExecuting}
+               >
+                 <span>{okLabel}</span>
+               </Button>
+             </div>
+            </div>
           </If>
         </div>
       );
@@ -84,30 +94,42 @@ export default function Modal({
       {...params}
     >
       <ModalBootstrap.Header
-        className={`relative d-flex  flex-column justify-content-${titlePosition} ${
-          titlePosition ? "text-center" : ""
+        className={`row mb-4 align-items-center ${
+          centerTitle || isMobileView ? "text-center" : ""
         } text-break`}
       >
-        <ModalBootstrap.Title
-          className={`text-white ${titleClass || ""} ${
-            centerTitle ? "text-center w-100" : ""
-          }`}
-        >
-          <h4>{titleComponent || title}</h4>
-        </ModalBootstrap.Title>
+        <div className="col mb-1">
+          <div className="row align-items-center">
+            <ModalBootstrap.Title
+              className={`col text-white xl-medium ${titleClass || ""}`}
+            >
+              <h4>{titleComponent || title}</h4>
+            </ModalBootstrap.Title>
 
-        {subTitle || subTitleComponent && <p className="text-white caption-small">{subTitleComponent || subTitle }</p>}
+            {onCloseClick && (
+              <div className="col-auto">
+                <Button
+                  color="gray-800"
+                  className="p-1 text-gray-300 border border-gray-700 not-svg"
+                  onClick={onCloseClick}
+                  disabled={isExecuting||onCloseDisabled}
+                >
+                  <CloseIcon width={12} height={12} />
+                </Button>
+              </div>
+            )}
+          </div>
 
-        {onCloseClick && (
-          <Button
-            transparent
-            className="close-button p-0 position-absolute text-gray not-svg"
-            onClick={onCloseClick}
-            disabled={isExecuting||onCloseDisabled}
-          >
-            <CloseIcon />
-          </Button>
-        )}
+          <If condition={!!subTitle || !!subTitleComponent}>
+            <div className="row mt-3">
+              <div className="col">
+                <span className="base-medium text-gray-400">
+                  {subTitleComponent || subTitle }
+                </span>
+              </div>
+            </div>
+          </If>
+        </div>
       </ModalBootstrap.Header>
       <ModalBootstrap.Body>{children}</ModalBootstrap.Body>
       <ModalBootstrap.Footer className="row mx-0">{renderFooter()}</ModalBootstrap.Footer>
