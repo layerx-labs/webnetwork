@@ -61,14 +61,16 @@ export async function getNotifications(req: NextApiRequest) {
     include.push({ association: "user", attributes: ['address'] });
 
   /** if "address" is provided, we paginate the result, otherwise we return a simple "findAll" */
-  const notifications = await models.notification.findAndCountAll(address ? 
-      paginate({ where, include }, { page: +page }, [["createdAt", "DESC"]]) 
-    : 
-      where);
+  if(address){
+    const notifications = 
+      await models.notification.findAndCountAll(paginate({ where, include }, { page: +page }, [["createdAt", "DESC"]]));
 
-  return {
-    ...notifications,
-    currentPage: page,
-    pages: calculateTotalPages(notifications?.count)
-  };
+    return {
+      ...notifications,
+      currentPage: page,
+      pages: calculateTotalPages(notifications?.count)
+    };
+  } 
+  
+  return models.notification.findAll(where)
 }
