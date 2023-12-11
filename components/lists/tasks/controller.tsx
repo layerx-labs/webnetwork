@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 import {UrlObject} from "url";
 import { useDebouncedCallback } from "use-debounce";
 
-import BountiesListView from "components/bounty/bounties-list/view";
+import TasksListView from "components/lists/tasks/view";
 
 import { issueParser } from "helpers/issue";
 
@@ -17,7 +17,7 @@ import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-interface BountiesListProps {
+interface TasksListProps {
   bounties?: SearchBountiesPaginated;
   redirect?: string | UrlObject;
   emptyMessage?: string;
@@ -27,7 +27,7 @@ interface BountiesListProps {
   hideFilter?: boolean;
 }
 
-export default function BountiesList({
+export default function TasksList({
   emptyMessage,
   buttonMessage,
   redirect,
@@ -35,7 +35,7 @@ export default function BountiesList({
   bounties,
   type = "bounties",
   hideFilter,
-}: BountiesListProps) {
+}: TasksListProps) {
   const router = useRouter();
   
   const [searchState, setSearchState] = useState("");
@@ -111,7 +111,7 @@ export default function BountiesList({
   }, []);
 
   return (
-    <BountiesListView
+    <TasksListView
       emptyMessage={emptyMessage}
       buttonMessage={buttonMessage}
       variant={variant}

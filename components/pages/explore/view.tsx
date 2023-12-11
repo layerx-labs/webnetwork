@@ -1,6 +1,6 @@
 import { useTranslation } from "next-i18next";
 
-import BountiesList from "components/bounty/bounties-list/controller";
+import TasksList from "components/lists/tasks/controller";
 import GlobalHero from "components/common/global-hero/global-hero.view";
 import CustomContainer from "components/custom-container";
 
@@ -40,7 +40,7 @@ export default function ExplorePageView({
         infos={infos}
       />
 
-      <BountiesList
+      <TasksList
         bounties={bounties}
         variant="bounty-hall"
       />

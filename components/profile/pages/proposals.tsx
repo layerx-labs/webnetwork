@@ -1,7 +1,7 @@
 import {useTranslation} from "next-i18next";
 import { useRouter } from "next/router";
 
-import BountiesList from "components/bounty/bounties-list/controller";
+import TasksList from "components/lists/tasks/controller";
 import ProfileLayout from "components/profile/profile-layout";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -24,7 +24,7 @@ export default function ProposalsPage({
 
   return(
     <ProfileLayout>
-      <BountiesList
+      <TasksList
         bounties={bounties}
         redirect={isOnNetwork ? getURLWithNetwork("/tasks") : "/explore"}
         buttonMessage={t('bounty:label_other')}

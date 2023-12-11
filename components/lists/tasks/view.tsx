@@ -11,9 +11,9 @@ import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 import IssueFilters from "components/issue-filters";
-import IssueListItem from "components/issue-list-item";
 import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
+import TasksListItem from "components/lists/tasks/task-item/task-list-item.controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -22,7 +22,7 @@ import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { SearchBountiesPaginatedBigNumber } from "types/components";
 
-interface BountiesListViewProps {
+interface TasksListViewProps {
   bounties?: SearchBountiesPaginatedBigNumber;
   emptyMessage?: string;
   buttonMessage?: string;
@@ -43,7 +43,7 @@ interface BountiesListViewProps {
   onEnterPressed: (event) => void;
 }
 
-export default function BountiesListView({
+export default function TasksListView({
   emptyMessage,
   buttonMessage,
   variant,
@@ -62,7 +62,7 @@ export default function BountiesListView({
   onEnterPressed,
   currentChain,
   chains
-}: BountiesListViewProps) {
+}: TasksListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
   const isManagement = variant === "management";
@@ -270,7 +270,7 @@ export default function BountiesListView({
           hasMore={hasMorePages}
         >
           {bounties?.rows?.map(issue => 
-              <IssueListItem
+              <TasksListItem
                 issue={issue}
                 key={`issue-list-item-${issue.id}`}
                 variant={variantIssueItem}

@@ -1,4 +1,4 @@
-import BountiesList from "components/bounty/bounties-list/controller";
+import TasksList from "components/lists/tasks/controller";
 import NetworkTabContainer from "components/network/settings/tab-container/view";
 
 import { SearchBountiesPaginated } from "types/api";
@@ -13,7 +13,7 @@ export default function NetworkManagement({
   return(
     <NetworkTabContainer>
       <div className="mt-4">
-        <BountiesList bounties={bounties} variant="management" />
+        <TasksList bounties={bounties} variant="management" />
       </div>
     </NetworkTabContainer>
   );

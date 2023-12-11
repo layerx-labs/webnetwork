@@ -7,7 +7,7 @@ import ContractButton from "components/common/buttons/contract-button/contract-b
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
-import IssueListItem from "components/issue-list-item";
+import TasksListItem from "components/lists/tasks/task-item/task-list-item.controller";
 import NothingFound from "components/nothing-found";
 
 import { issueParser } from "helpers/issue";
@@ -95,7 +95,7 @@ export default function ListRecentIssues({
         <HorizontalScroll>
           {recentBounties?.map((bounty) => (
               <div className="col-12 col-sm-6 col-md-5 col-lg-4" key={bounty.id}>
-                <IssueListItem issue={issueParser(bounty)} key={bounty.id} size="sm" />
+                <TasksListItem issue={issueParser(bounty)} key={bounty.id} size="sm" />
               </div>
           ))}
             
