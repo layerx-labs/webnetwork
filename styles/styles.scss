@@ -1332,8 +1332,8 @@ $c_props: (
 
 .hover {
   &-white:hover {
-    background-color: rgba(rgba($white, 0), 0.2);
-    color: #fff;
+    background-color: rgba(rgba($white, 0), 0.2) !important;
+    color: #fff !important;
   }
 
   &-blue:hover {
