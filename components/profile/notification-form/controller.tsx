@@ -11,7 +11,9 @@ import { isValidEmail } from "helpers/validators/email";
 import { CustomSession } from "interfaces/custom-session";
 
 import { useUpdateEmail } from "x-hooks/api/user";
+import { useUpdateUserSettings } from "x-hooks/api/user/settings/use-update-settings";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
@@ -21,6 +23,7 @@ export default function NotificationForm() {
   const { query } = useRouter();
   const { t } = useTranslation("profile");
   const { data: sessionData, update: updateSession } = useSession();
+  const { currentUser } = useUserStore();
 
   const [inputEmail, setInputEmail] = useState("");
 
@@ -39,6 +42,14 @@ export default function NotificationForm() {
     onSuccess: () => {
       updateSession();
     }
+  });
+  const { mutate: updateUserSettings, isLoading: isExecutingSettings } = useReactQueryMutation({
+    mutationFn: useUpdateUserSettings,
+    toastError: t("profile:notifications-form.errors.update-settings"),
+    toastSuccess: t("profile:notifications-form.success-toast.settings"),
+    onSuccess: () => {
+      updateSession();
+    },
   });
 
   const sessionUser = (sessionData as CustomSession)?.user;
@@ -65,21 +76,23 @@ export default function NotificationForm() {
   }
 
   function onSwitchChange(newValue: boolean) {
-    if (!newValue) {
-      if (!isExecutingEmail && userEmail !== "")
-        updateEmail("");
-      else
-        setIsNotificationEnabled(false);
-    } else
-      setIsNotificationEnabled(true);
+    const language = navigator.language || (navigator as unknown as {userLanguage: string}).userLanguage;
+    updateUserSettings({
+      language,
+      notifications: newValue
+    })
+
+    setIsNotificationEnabled(newValue);
   }
 
   useEffect(() => {
     setInputEmail(userEmail);
-
-    if (!!userEmail !== isNotificationEnabled) 
-      setIsNotificationEnabled(!!userEmail);
   }, [userEmail]);
+
+  useEffect(() => {
+    if(currentUser?.notifications)
+      setIsNotificationEnabled(currentUser?.notifications);
+  }, [currentUser]);
 
   useEffect(() => {
     if (query?.emailVerification === "success")

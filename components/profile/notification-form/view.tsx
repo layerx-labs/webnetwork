@@ -61,7 +61,6 @@ export default function NotificationFormView({
           </span>
         </div>
 
-        <If condition={isNotificationEnabled}>
           <div className="row mt-3 align-items-center gap-2 gap-lg-0">
             <div className="col-12 col-lg-6">
               <input
@@ -131,7 +130,6 @@ export default function NotificationFormView({
               </div>
             </div>
           </If>
-        </If>
       </div>
     </div>
   );
