@@ -105,3 +105,7 @@ export interface CuratorOverview {
 export interface PaginatedCuratorOverview extends PaginatedData<CuratorOverview> {
   totalCurators: number;
 }
+
+export interface ConvertedAmountsOverview {
+  totalOnTasks: number;
+}
