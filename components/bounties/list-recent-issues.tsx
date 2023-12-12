@@ -7,7 +7,7 @@ import ContractButton from "components/common/buttons/contract-button/contract-b
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
-import TasksListItem from "components/lists/tasks/task-item/task-list-item.controller";
+import TasksListItem from "components/lists/tasks/tasks-list-item/tasks-list-item.controller";
 import NothingFound from "components/nothing-found";
 
 import { issueParser } from "helpers/issue";
