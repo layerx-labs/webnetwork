@@ -1,10 +1,8 @@
 import { useTranslation } from "next-i18next";
 
-import ListRecentIssues from "components/bounties/list-recent-issues";
 import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
-import ActiveMarketplacesList from "components/lists/active-marketplaces/active-marketplaces-list.view";
 
 import { ExplorePageProps } from "types/pages";
 
@@ -15,10 +13,7 @@ interface ExplorePageViewProps extends ExplorePageProps {
 export default function ExplorePageView({
   numberOfNetworks,
   bounties,
-  recentBounties,
-  recentFunding,
   networkName,
-  activeNetworks,
   protocolMembers
 }: ExplorePageViewProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);

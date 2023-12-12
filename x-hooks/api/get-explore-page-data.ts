@@ -4,7 +4,6 @@ import {api} from "services/api";
 
 import {ExplorePageProps} from "types/pages";
 
-import {useSearchActiveNetworks} from "x-hooks/api/marketplace";
 import {getBountiesListData} from "x-hooks/api/task";
 import {useGetTotalUsers} from "x-hooks/api/user";
 
@@ -16,7 +15,7 @@ import {useGetTotalUsers} from "x-hooks/api/user";
 export default async function getExplorePageData(query: ParsedUrlQuery): Promise<ExplorePageProps> {
   const { network } = query;
 
-  const [ numberOfNetworks, bounties, recentBounties, recentFunding, activeNetworks, protocolMembers ] =
+  const [ numberOfNetworks, bounties, protocolMembers ] =
     await Promise.all([
       api.get("/search/marketplaces/total", { params: { name: network } })
         .then(({ data }) => data)
@@ -24,26 +23,12 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
       getBountiesListData(query)
         .then(({ data }) => data)
         .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),
-      getBountiesListData({ count: "3", state: "open", network })
-        .then(({ data }) => data.rows)
-        .catch(() => []),
-      getBountiesListData({ count: "3", state: "funding", network })
-        .then(({ data }) => data.rows)
-        .catch(() => []),
-      useSearchActiveNetworks({
-        name: query?.network?.toString(),
-        isClosed: false
-      })
-        .then(({ rows }) => rows),
       useGetTotalUsers()
     ]);
 
   return {
     numberOfNetworks,
     bounties,
-    recentBounties,
-    recentFunding,
-    activeNetworks,
     protocolMembers
   };
 }
