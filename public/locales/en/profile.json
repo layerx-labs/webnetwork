@@ -54,7 +54,11 @@
       "re-send": "Re-send",
       "success-toast": {
         "title": "Success",
-        "content": "Email confirmed"
+        "content": "Email confirmed",
+        "settings": "Updated settings"
+      },
+      "errors": {
+        "update-settings": "Failed to update settings"
       }
    },
    "email-errors": {
