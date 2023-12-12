@@ -14,15 +14,19 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 
 interface TasksListItemTaskHallProps {
   task: IssueBigNumberData;
+  onClick?: () => void;
 }
 export default function TasksListItemTaskHall ({
-  task
+  task,
+  onClick
 }: TasksListItemTaskHallProps) {
   const { t } = useTranslation("bounty");
 
   return(
     <div
       className="row align-items-center mx-0 p-3 bg-gray-900 border border-gray-800 border-radius-8 cursor-pointer"
+      onClick={onClick}
+      role="link"
     >
       <div className="col p-0">
         <div className="row align-items-center mb-4">

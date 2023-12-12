@@ -86,7 +86,6 @@ export default function TasksListItem({
   });
 
   const fundedAmount = issue?.fundedAmount?.isNaN() ? BigNumber(0) : issue?.fundedAmount;
-  const fundingAmount = issue?.fundingAmount?.isNaN() ? BigNumber(0) : issue?.fundingAmount;
 
   const percentage =
     BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
@@ -349,6 +348,7 @@ export default function TasksListItem({
     return(
       <TasksListItemTaskHall
         task={issue}
+        onClick={handleClickCard}
       />
     );
 
