@@ -86,8 +86,7 @@ export default function BountyHeroView({
                 <div className="row py-1 mx-0 bg-transparent border border-gray-700 text-gray-300 border-radius-4">
                   <div className="d-flex align-items-center">
                     <TaskStatusInfo
-                      issueState={currentState}
-                      fundedAmount={bounty?.fundedAmount}
+                      task={bounty}
                     />
                     <span className="ms-1 text-white text-capitalize">
                       {currentState}
