@@ -13,7 +13,8 @@ export async function useSearchCurators({
   networkName = "",
   sortBy = "updatedAt",
   order = "DESC",
-  chainShortName = ""
+  chainShortName = "",
+  increaseQuantity = false
 }: SearchCuratorParams) {
   const params = new URLSearchParams({
     page,
@@ -22,7 +23,8 @@ export async function useSearchCurators({
     sortBy,
     order,
     chainShortName,
-    ...(isCurrentlyCurator !== undefined && { isCurrentlyCurator: isCurrentlyCurator.toString()} || {})
+    ...(isCurrentlyCurator !== undefined && { isCurrentlyCurator: isCurrentlyCurator.toString()} || {}),
+    ...(increaseQuantity !== undefined && { increaseQuantity: increaseQuantity.toString()} || {}),
   }).toString();
 
   return api

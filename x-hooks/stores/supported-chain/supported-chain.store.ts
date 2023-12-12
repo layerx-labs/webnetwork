@@ -9,7 +9,8 @@ type useSupportedChainStore = {
   isGetChainsDatabase: boolean;
   updateChains: (chains: SupportedChainData[]) => SupportedChainData[];
   updateConnectedChain: (chain: ConnectedChain) => ConnectedChain;
-  loadChainsDatabase: () => void
+  loadChainsDatabase: () => void;
+  get: () => useSupportedChainStore;
 };
 
 export const useSupportedChainStore = create<useSupportedChainStore>((set, get) => ({
@@ -38,5 +39,6 @@ export const useSupportedChainStore = create<useSupportedChainStore>((set, get) 
         isGetChainsDatabase: true,
         connectedChain: get().connectedChain,
       }));
-    }
+    },
+    get
 }));

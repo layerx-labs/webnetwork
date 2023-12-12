@@ -20,6 +20,8 @@ import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 
 export default function OraclesActions({
+  disabled,
+  isBalanceLoading,
   wallet,
   updateWalletBalance
 } : OraclesActionsProps) {
@@ -132,6 +134,7 @@ export default function OraclesActions({
       BigNumber(tokenAmount).isZero(),
       BigNumber(tokenAmount).isNaN(),
       exceedsAvailable(tokenAmount),
+      disabled,
       !tokenAmount,
       transactions.find(({ status, type }) =>
           status === TransactionStatus.pending && type === getTxType())
@@ -156,8 +159,11 @@ export default function OraclesActions({
   }
 
   function handleProcessEvent(blockNumber) {
-    processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
-      .then(() => marketplace.refresh())
+    return processEvent(NetworkEvents.OraclesChanged, undefined, { fromBlock: blockNumber })
+      .then(() => {
+        marketplace.refresh()
+        updateWalletBalance();
+      })
       .catch(console.debug);
   }
 
@@ -211,6 +217,8 @@ export default function OraclesActions({
   }
 
   function setMaxAmount() {
+    if (disabled)
+      return;
     return setTokenAmount(getMaxAmount(true));
   }
 
@@ -229,8 +237,10 @@ export default function OraclesActions({
   }, [daoService?.network?.networkToken?.contractAddress]);
 
   return (
-      <OraclesActionsView 
-        wallet={wallet} 
+      <OraclesActionsView
+        disabled={disabled}
+        isBalanceLoading={isBalanceLoading}
+        wallet={wallet}
         actions={actions} 
         action={action} 
         handleAction={setAction} 

@@ -8,23 +8,20 @@ import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import handleEthereumProvider from "helpers/handle-ethereum-provider";
 import { lowerCaseCompare } from "helpers/string";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import useChain from "x-hooks/use-chain";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-import { useLoadersStore } from "./stores/loaders/loaders.store";
-import { useUserStore } from "./stores/user/user.store";
 
 export function useDao() {
   const { replace, asPath } = useRouter();
 
   const { currentUser } = useUserStore();
-  const { findSupportedChain } = useChain();
   const {
     service: daoService,
     serviceStarting,
@@ -32,9 +29,9 @@ export function useDao() {
     updateServiceStarting,
     ...daoStore
   } = useDaoStore();
-  const { supportedChains, updateConnectedChain } = useSupportedChain();
-  const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
   const { updateMissingMetamask } = useLoadersStore();
+  const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
+  const { connectedChain, supportedChains, updateConnectedChain, get } = useSupportedChain();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
@@ -119,16 +116,23 @@ export function useDao() {
       const isSameChain = chainId === daoStore.chainId;
       const isSameNetworkAddress = lowerCaseCompare(networkAddress, daoStore.networkAddress);
       const isSameRegistryAddress = registryToLoad === daoStore.registryAddress;
-      if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress)
+      const needsToUpdateConnection = !!daoService?.web3Host;
+      if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress && !needsToUpdateConnection)
         return;
-      const dao = !daoService || !isSameChain ?
+      const isChainEqualToConnected = +connectedChain?.id === +chainToConnect?.chainId;
+      const daoProps = isChainEqualToConnected ?
+        { web3Connection: connection } :
+        { web3Host: chainToConnect?.chainRpc };
+      const dao = !daoService || !isSameChain || needsToUpdateConnection ?
         new DAO({
-          web3Connection: connection,
+          ...daoProps,
           registryAddress: registryToLoad
         }) : daoService;
-      if (!isSameRegistryAddress)
+      if (!isChainEqualToConnected)
+        await dao.start();
+      if (!isSameRegistryAddress || needsToUpdateConnection)
         await dao.loadRegistry();
-      if (!!networkAddress && !isSameNetworkAddress)
+      if (!!networkAddress && !isSameNetworkAddress || needsToUpdateConnection)
         await dao.loadNetwork(networkAddress);
       window.DAOService = dao;
       const address = !isSameChain ? networkAddress : networkAddress || daoStore.networkAddress;
@@ -141,7 +145,7 @@ export function useDao() {
   }
 
   function updateChain(chainId: number) {
-    const chain = findSupportedChain({ chainId });
+    const chain = get()?.chains?.find(c => +chainId === +c?.chainId);
 
     sessionStorage.setItem("currentChainId", chainId.toString());
 

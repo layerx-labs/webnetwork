@@ -19,7 +19,7 @@ export default function useChain() {
   const { supportedChains } = useSupportedChain();
 
   function findSupportedChain({ chainId, chainShortName } : FindSupportedChainProps) {
-    return supportedChains?.find(e => e.chainId === chainId || 
+    return supportedChains?.find(e => +e.chainId === +chainId ||
       e.chainShortName?.toLowerCase() === chainShortName?.toLowerCase());
   }
 

@@ -63,5 +63,9 @@
     "expired-link": "This confirmation link is expired. Try re-sending another email.",
     "failed-to-update": "Failed to update email",
     "try-again-later": "Something went wrong, try again later"
-   }
+   },
+  "take-back-success": "Take back",
+  "take-back-fail": "Failed to take back",
+  "select-marketplace-and-network": "Please select a marketplace and a network to manage your votes.",
+  "no-votes-found": "No votes found"
 }

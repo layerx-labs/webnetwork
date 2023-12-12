@@ -40,7 +40,7 @@ export default function SelectNetwork({
   hideLabel,
   onChange,
   isClearable = true,
-  fontRegular = false
+  fontRegular = false,
 } : SelectNetworkProps) {
   const { t } = useTranslation("common");
   const { query, pathname, asPath, push } = useRouter();

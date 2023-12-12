@@ -1,12 +1,10 @@
 import React from "react";
-import {Spinner} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 
-import LockedIcon from "assets/icons/locked-icon";
-
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import NetworkTxButton from "components/common/network-tx-button/controller";
+import If from "components/If";
 import InputNumber from "components/input-number";
 import OraclesBoxHeader from "components/profile/pages/voting-power/oracles/box-header/view";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
@@ -19,6 +17,8 @@ import { OraclesActionsViewProps } from "interfaces/oracles-state";
 import ModalOraclesActionView from "./modal-actions/view";
 
 export default function OraclesActionsView({
+  disabled,
+  isBalanceLoading,
   wallet,
   actions,
   action,
@@ -64,7 +64,7 @@ export default function OraclesActionsView({
           </p>
 
           <InputNumber
-            disabled={!wallet?.address}
+            disabled={disabled || !wallet?.address}
             className="bg-gray-850"
             label={t("my-oracles:fields.amount.label", {
               currency: currentLabel
@@ -88,19 +88,26 @@ export default function OraclesActionsView({
             allowNegative={false}
             decimalScale={networkTokenDecimals}
             helperText={
-              <>
-                {formatStringToCurrency(getMaxAmount())}{" "}
-                {currentLabel} {t("misc.available")}
-                <span onClick={handleMaxAmount}
-                      className={`caption-small ml-1 cursor-pointer text-uppercase ${(
-                        currentLabel === t("$oracles", { token: networkTokenSymbol })
-                          ? "text-purple"
-                          : "text-primary"
-                      )}`}>
-                  {t("misc.max")}
-                </span>
-                {error && <p className="p-small my-2">{error}</p>}
-              </>
+              <If
+                condition={!isBalanceLoading}
+                otherwise={
+                  <span className="spinner-border spinner-border-xs ml-1" />
+                }
+              >
+                <If condition={!disabled}>
+                  {formatStringToCurrency(getMaxAmount())}{" "}
+                  {currentLabel} {t("misc.available")}
+                  <span onClick={handleMaxAmount}
+                        className={`caption-small ml-1 cursor-pointer text-uppercase ${(
+                          currentLabel === t("$oracles", { token: networkTokenSymbol })
+                            ? "text-purple"
+                            : "text-primary"
+                        )}`}>
+                    {t("misc.max")}
+                  </span>
+                  {error && <p className="p-small my-2">{error}</p>}
+                </If>
+              </If>
             }
           />
 
@@ -108,25 +115,14 @@ export default function OraclesActionsView({
             <div className="mt-5 d-grid gap-3">
               {action === t("my-oracles:actions.lock.label") && (
                 <ContractButton
-                  disabled={!needsApproval || isApproving}
+                  disabled={disabled || !needsApproval || isApproving}
+                  withLockIcon={disabled || !needsApproval}
+                  isLoading={isApproving || verifyTransactionState(TransactionTypes.approveSettlerToken)}
                   className="ms-0 read-only-button mt-3"
                   onClick={approveSettlerToken}
                 >
-                  {!needsApproval && (
-                    <LockedIcon width={12} height={12} className="mr-1" />
-                  )}
                   <span>
-                    {t("actions.approve")}{" "}
-                    {wallet?.address &&
-                    verifyTransactionState(TransactionTypes.approveSettlerToken) ? (
-                      <Spinner
-                        size={"xs" as unknown as "sm"}
-                        className="align-self-center ml-1"
-                        animation="border"
-                      />
-                    ) : (
-                      ""
-                    )}
+                    {t("actions.approve")}
                   </span>
                 </ContractButton>
               )}
@@ -138,12 +134,10 @@ export default function OraclesActionsView({
                     : "primary"
                 }
                 className="ms-0 read-only-button"
-                disabled={isButtonDisabled}
+                disabled={disabled || isButtonDisabled}
+                withLockIcon={disabled || isButtonDisabled}
                 onClick={handleCheck}
               >
-                {isButtonDisabled && (
-                  <LockedIcon width={12} height={12} className="mr-1" />
-                )}
                 <span>{renderInfo?.label}</span>
               </ContractButton>
             </div>

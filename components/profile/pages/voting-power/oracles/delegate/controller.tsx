@@ -17,6 +17,8 @@ import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 
 export default function OraclesDelegate({
+  isBalanceLoading,
+  disabled,
   wallet,
   updateWalletBalance,
   defaultAddress,
@@ -50,6 +52,8 @@ export default function OraclesDelegate({
   }
 
   function setMaxAmount() {
+    if (disabled)
+      return;
     return setTokenAmount(availableAmount.toFixed());
   }
 
@@ -80,15 +84,18 @@ export default function OraclesDelegate({
   }
 
   function handleProcessEvent(blockNumber) {
-    processEvent(NetworkEvents.OraclesTransfer, undefined, {
+    return processEvent(NetworkEvents.OraclesTransfer, undefined, {
       fromBlock: blockNumber,
-    }).catch(console.debug);
+    })
+      .then(() => updateWalletBalance())
+      .catch(console.debug);
   }
 
   const isButtonDisabled = (): boolean =>
     [
       wallet?.balance?.oracles?.locked?.lt(tokenAmount),
       !delegatedTo,
+      disabled,
       isAddressesEqual(),
       BigNumber(tokenAmount).isZero(),
       BigNumber(tokenAmount).isNaN(),
@@ -111,6 +118,8 @@ export default function OraclesDelegate({
 
   return (
     <OraclesDelegateView
+      isBalanceLoading={isBalanceLoading}
+      disabled={disabled}
       tokenAmount={tokenAmount}
       handleChangeOracles={handleChangeOracles}
       error={error}

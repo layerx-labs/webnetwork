@@ -1,7 +1,9 @@
 import { TreasuryInfo } from "@taikai/dappkit";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import BigNumber from "bignumber.js";
+import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
+import {isAddress as web3isAddress} from "web3-utils";
 
 import {lowerCaseCompare} from "helpers/string";
 import {parseTransaction} from "helpers/transactions";
@@ -269,7 +271,7 @@ export default function useBepro() {
 
   async function handleTakeBack(delegationId: number,
                                 amount: string,
-                                currency: TransactionCurrency): Promise<{ blockNumber: number; } | Error> {
+                                currency: TransactionCurrency): Promise<TransactionReceipt> {
 
     return new Promise(async (resolve, reject) => {
       const tx = addTx({
@@ -281,7 +283,7 @@ export default function useBepro() {
 
       await getService()
         .takeBackDelegation(delegationId)
-        .then((txInfo: { blockNumber: number; }) => {
+        .then((txInfo: TransactionReceipt) => {
           if (!txInfo)
             throw new Error(t("errors.approve-transaction", {currency: networkTokenSymbol}));
           updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
@@ -623,7 +625,7 @@ export default function useBepro() {
   }
 
   function isAddress(address: string): boolean {
-    return getService().isAddress(address)
+    return web3isAddress(address) && !isZeroAddress(address);
   }
 
   function getCancelableTime(): Promise<number> {

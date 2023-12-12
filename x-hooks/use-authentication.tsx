@@ -29,8 +29,8 @@ import useSignature from "x-hooks/use-signature";
 import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 import { useSettings } from "./use-settings";
-import { useStorageTransactions } from "./use-storage-transactions";
-import useSupportedChain from "./use-supported-chain";
+import { useStorageTransactions } from "x-hooks/use-storage-transactions";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 

@@ -27,7 +27,7 @@ export const NAVIGATION_LINKS = {
   ]
 }
 
-export function getProfileLinks(translation: TFunction, isOnNetwork = false) {
+export function getProfileLinks(translation: TFunction) {
   const PROFILE_LINKS: {
     label: string;
     href?: ProfilePages
@@ -43,5 +43,5 @@ export function getProfileLinks(translation: TFunction, isOnNetwork = false) {
     { label: translation("common:main-nav.nav-avatar.my-network") , href: 'my-marketplace', icon:CustomNetworkIcon},
   ]
 
-  return PROFILE_LINKS.slice(0, isOnNetwork ? PROFILE_LINKS.length : -1)
+  return PROFILE_LINKS;
 }
