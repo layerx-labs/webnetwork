@@ -55,10 +55,12 @@ export default function NotificationsListView({
             </div>
 
             <div className="d-flex ms-2">
-              <div
-                className="ball bg-primary cursor-pointer hover-white"
-                onClick={() => onClickRead(item.id)}
-              />
+              <If condition={!item.read}>
+                <div
+                  className="ball bg-primary cursor-pointer hover-white"
+                  onClick={() => onClickRead(item.id)}
+                />
+              </If>
             </div>
           </div>
         </div>
