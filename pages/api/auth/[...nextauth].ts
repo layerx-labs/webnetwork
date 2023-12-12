@@ -92,6 +92,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             email: user.email,
             isEmailConfirmed: user.isEmailConfirmed,
             emailVerificationSentAt: user.emailVerificationSentAt,
+            notifications: user?.settings?.notifications || false
           },
         };
       },
