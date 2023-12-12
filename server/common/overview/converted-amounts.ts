@@ -7,6 +7,7 @@ import models from "db/models";
 
 import { FIVE_MINUTES_IN_MS } from "helpers/constants";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { loadSettingsFromDb } from "helpers/load-settings-db";
 
 import getTokensPrices from "server/common/check-prices/post";
 export default async function get(query: ParsedUrlQuery) {
@@ -60,8 +61,11 @@ export default async function get(query: ParsedUrlQuery) {
     include
   });
 
-  const totalOnTasks =
-    issues.reduce((acc, curr) => acc + curr.amount * (curr.transactionalToken?.last_price_used?.usd || 0), 0);
+  const settings = await loadSettingsFromDb();
+  const currency = settings?.currency?.defaultFiat || "usd";
+
+  const totalOnTasks = issues.reduce((acc, curr) => acc + curr.amount *
+    ((curr.transactionalToken?.last_price_used || {})[currency] || 0), 0);
 
   cache.put(cacheKey, {
     totalOnTasks
