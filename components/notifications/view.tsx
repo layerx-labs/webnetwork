@@ -13,12 +13,18 @@ export default function NotificationsView({
   showOverlay,
   updateShowOverlay,
   loading,
+  updateNotifications,
+  updateType,
+  typeIsUnread
 }: {
   notificationsList: SearchNotificationsPaginated;
   updatePage: () => void;
   showOverlay: boolean;
   updateShowOverlay: (v: boolean) => void;
   loading?: boolean;
+  updateNotifications: () => void;
+  updateType: (v: 'Unread' | 'All') => void;
+  typeIsUnread: boolean;
 }) {
   const overlay = (
     <Popover id="notifications-indicator">
@@ -26,7 +32,9 @@ export default function NotificationsView({
         <NotificationsList
           notifications={notificationsList}
           onNextPage={updatePage}
-          onActiveNotificationChange={() => console.log}
+          updateNotifications={updateNotifications}
+          updateType={updateType}
+          typeIsUnread={typeIsUnread}
         />
       </Popover.Body>
     </Popover>

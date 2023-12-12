@@ -65,9 +65,18 @@ export async function getNotifications(req: NextApiRequest) {
     const notifications = 
       await models.notification.findAndCountAll(paginate({ where, include }, { page: +page }, [["createdAt", "DESC"]]));
 
+    const countUnread = await models.notification.count({
+        where: {
+          read: {
+            [Op.ne]: true,
+          },
+        },
+    });
+
     return {
       ...notifications,
-      currentPage: page,
+      count: countUnread,
+      currentPage: +page,
       pages: calculateTotalPages(notifications?.count)
     };
   } 

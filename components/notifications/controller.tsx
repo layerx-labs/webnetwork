@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { useRouter } from "next/router";
-
 import { QueryKeys } from "helpers/query-keys";
 
 import { SearchNotificationsPaginated } from "interfaces/notifications";
@@ -13,29 +11,35 @@ import useReactQuery from "x-hooks/use-react-query";
 import NotificationsView from "./view";
 
 export default function Notifications() {
-  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isUnread, setIsUnread] = useState<boolean>(true);
+
   const { currentUser } = useUserStore();
-  const { query } = useRouter();
   const [notificationsList, setNotificationsList] =
     useState<SearchNotificationsPaginated>();
-  const { data: notifications } = useReactQuery(QueryKeys.notifications(currentUser?.walletAddress, page?.toString()),
-                                                () =>
-      useGetNotifications(currentUser?.walletAddress, {
-        page: page?.toString(),
-      }),
-                                                {
-      enabled: !!currentUser?.walletAddress && !!page,
-      retry: false,
-                                                });
+  const { data: notifications, invalidate: updateNotifications } =
+    useReactQuery(QueryKeys.notifications(currentUser?.walletAddress, page?.toString(), isUnread?.toString()),
+                  () =>
+        useGetNotifications(currentUser?.walletAddress, {
+          read: (!isUnread)?.toString() ,
+          page: page?.toString()
+        }),
+                  {
+        enabled: !!currentUser?.walletAddress && !!page,
+        retry: false,
+                  });
+
+
+  function updateType(v: 'Unread' | 'All') {
+    v === 'Unread' ? setIsUnread(true) : setIsUnread(false)
+    setPage(1)
+  }
 
   useEffect(() => {
-    console.log("useEffect notificationsList", notifications, page);
     if (!notifications?.rows?.length) return;
 
     setNotificationsList((previous) => {
-      console.log("previous", previous);
       if (!previous || notifications?.currentPage === 1)
         return {
           ...notifications,
@@ -50,15 +54,17 @@ export default function Notifications() {
     });
   }, [notifications]);
 
-  console.log("notifications", notificationsList, page);
+  
 
   return (
     <NotificationsView
       notificationsList={notificationsList}
       updatePage={() => setPage(+notificationsList?.currentPage + 1)}
+      updateType={updateType}
+      typeIsUnread={isUnread}
       showOverlay={showOverlay}
       updateShowOverlay={(v: boolean) => setShowOverlay(v)}
-      loading={loading}
+      updateNotifications={updateNotifications}
     />
   );
 }

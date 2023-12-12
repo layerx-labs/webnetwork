@@ -7,7 +7,7 @@ import Button from "components/button";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 
-import { NotificationTextsTypes } from "helpers/constants";
+import { getTimeDifferenceInWords } from "helpers/formatDate";
 
 import {
   Notifications,
@@ -19,9 +19,9 @@ interface NotificationListViewProps {
   btnUnreadActive: boolean;
   hasMorePages: boolean;
   onNextPage: () => void;
-  onActiveNotificationChange: (notification: any) => void;
   onClickMarkAllRead: () => void;
-  onUpdateBtnUreadActive: (v: boolean) => void;
+  onClickRead: (id: number) => void;
+  onUpdateBtnUreadActive: (v: 'Unread' | 'All') => void;
 }
 
 export default function NotificationsListView({
@@ -29,46 +29,36 @@ export default function NotificationsListView({
   btnUnreadActive,
   hasMorePages,
   onNextPage,
-  onActiveNotificationChange,
   onClickMarkAllRead,
+  onClickRead,
   onUpdateBtnUreadActive,
 }: NotificationListViewProps) {
   const { t } = useTranslation("common");
 
   function renderNotificationRow(item: Notifications, key: number) {
-    const className = `h-100 w-100 px-3 py-2 tx-row  cursor-pointer ${
+    const className = `h-100 w-100 px-3 py-2 tx-row ${
       key !== 0 && "mt-2 border-top-line"
     } `;
-
+    const regex = /<div id="avatar">([^<]+)<\/div>/;
+    const extractAddress = item?.template?.match(regex)?.[1] || null;
+    const template = item.template.replace("%DATE%",
+                                           getTimeDifferenceInWords(new Date(item.createdAt), new Date()));
+    const finalTemplate = template.replace(regex, '')
+    
     return (
-      <div
-        className={className}
-        onClick={() => onActiveNotificationChange(item)}
-        key={item.id}
-      >
+      <div className={className} key={item.id}>
         <div className="d-flex flex-column">
           <div className="d-flex justify-content-between mt-2">
-            <div className="d-flex flex-grow-1 me-3">
-              <AvatarOrIdenticon address={item?.user?.address} size="sm" />
+            <div className="d-flex" key={item.id}>
+              <AvatarOrIdenticon address={extractAddress} size="md" />
+              <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>
-            <div className="d-flex flex-column flex-grow-2 ">
-              <span className="xs-medium notification-title text-white mb-3">
-                {key}--{NotificationTextsTypes[item.type].title}
-              </span>
-              <If condition={!!NotificationTextsTypes[item.type].subTitle}>
-                <span className="sm-regular mb-3 text-white-50">
-                  {NotificationTextsTypes[item.type].subTitle}
-                </span>
-              </If>
 
-              <div className="d-flex gap-2 text-white-50">
-                <span className="sm-regular">Raycast</span>
-                <span>•</span>
-                <span className="sm-regular">1h ago</span>
-              </div>
-            </div>
-            <div className="d-flex flex-grow-1 ms-2">
-              <div className="ball bg-primary" />
+            <div className="d-flex ms-2">
+              <div
+                className="ball bg-primary cursor-pointer hover-white"
+                onClick={() => onClickRead(item.id)}
+              />
             </div>
           </div>
         </div>
@@ -101,7 +91,7 @@ export default function NotificationsListView({
         >
           <Button
             transparent
-            onClick={() => onUpdateBtnUreadActive(true)}
+            onClick={() => onUpdateBtnUreadActive('Unread')}
             className="p-0 ms-2"
           >
             <span
@@ -119,7 +109,7 @@ export default function NotificationsListView({
 
           <Button
             transparent
-            onClick={() => onUpdateBtnUreadActive(false)}
+            onClick={() => onUpdateBtnUreadActive('All')}
             className="p-0 ms-4 ps-2"
           >
             <span

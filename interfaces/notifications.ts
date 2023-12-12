@@ -11,14 +11,15 @@ export type NotificationsType =
 
 export interface Notifications {
   id: number;
-  type: NotificationsType;
-  userId: number;
-  read: boolean;
+  type?: NotificationsType;
+  userId?: number;
+  read?: boolean;
   uuid?: string;
   user?: {
     address: string;
   };
-  hide: boolean;
+  hide?: boolean;
+  template?: string;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
