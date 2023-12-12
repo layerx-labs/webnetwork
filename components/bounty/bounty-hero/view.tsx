@@ -4,13 +4,13 @@ import {useTranslation} from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
-import BountyStatusInfo from "components/bounty-status-info";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
 import Button from "components/button";
 import ChainIcon from "components/chain-icon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
+import TaskStatusInfo from "components/task-status-info";
 
 import {truncateAddress} from "helpers/truncate-address";
 
@@ -85,7 +85,7 @@ export default function BountyHeroView({
               <div className="col-auto">
                 <div className="row py-1 mx-0 bg-transparent border border-gray-700 text-gray-300 border-radius-4">
                   <div className="d-flex align-items-center">
-                    <BountyStatusInfo
+                    <TaskStatusInfo
                       issueState={currentState}
                       fundedAmount={bounty?.fundedAmount}
                     />

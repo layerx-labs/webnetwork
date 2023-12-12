@@ -21,7 +21,8 @@
     "proposals_other": "proposals",
     "reviews_one": "review",
     "reviews_other": "reviews",
-    "opened-on": "Opened on"
+    "opened-on": "Opened on",
+    "submissions": "Submissions"
   },
   "steps": {
     "title": "Task State",
@@ -59,7 +60,7 @@
     "pending": "pending",
     "in-progress": "in progress",
     "open": "open",
-    "funding": "funding",
+    "funding": "Seeking funding",
     "proposal": "proposal"
   },
   "actions": {

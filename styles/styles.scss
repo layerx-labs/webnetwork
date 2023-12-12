@@ -1462,12 +1462,12 @@ textarea.form-control {
 }
 
 .list-actions {
-  z-index: 0;
+  z-index: 1;
   border-radius: 0;
 
   &.sticky-top {
     padding: 20px 0;
-    top: 4.416em;
+    top: 69px;
   }
 
   .input-group {

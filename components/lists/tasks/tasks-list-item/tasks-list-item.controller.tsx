@@ -12,7 +12,6 @@ import TrashIcon from "assets/icons/trash-icon";
 
 import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
-import BountyStatusInfo from "components/bounty-status-info";
 import BountyAmount from "components/bounty/amount-info/controller";
 import BountyTagsView from "components/bounty/bounty-tags/view";
 import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.view";
@@ -20,9 +19,12 @@ import CardItem from "components/card-item";
 import ChainIcon from "components/chain-icon";
 import { FlexColumn } from "components/common/flex-box/view";
 import If from "components/If";
+import TasksListItemTaskHall
+  from "components/lists/tasks/tasks-list-item/tasks-list-item-task-hall/tasks-list-item-task-hall.view";
 import Modal from "components/modal";
 import NetworkBadge from "components/network/badge/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
+import TaskStatusInfo from "components/task-status-info";
 import Translation from "components/translation";
 import MoreActionsDropdown from "components/utils/more-actions-dropdown/controller";
 
@@ -211,7 +213,7 @@ export default function TasksListItem({
                   font-weight-normal text-capitalize border-radius-8`}
               >
                 <>
-                  <BountyStatusInfo issueState={issueState} />
+                  <TaskStatusInfo task={issue} />
                   <span>{isSeekingFund ? t("seeking-funding") : issueState}</span>
                 </>
               </Badge>
@@ -219,7 +221,7 @@ export default function TasksListItem({
           </ResponsiveWrapper>
 
           <ResponsiveWrapper xs={true} md={false} className="align-items-center gap-2 mb-3">
-            <BountyStatusInfo issueState={issueState} />
+            <TaskStatusInfo task={issue} />
             <span className="text-truncate text-capitalize">{issue?.title}</span>
           </ResponsiveWrapper>
 
@@ -343,17 +345,20 @@ export default function TasksListItem({
     );
   }
 
+  if (variant === "multi-network")
+    return(
+      <TasksListItemTaskHall
+        task={issue}
+      />
+    );
+
   return (
     <CardItem onClick={handleClickCard} key="default-card">
       <div className="row align-items-center">
         <div className="col">
           <div className="row align-items-center">
             <div className="col-auto">
-              <BountyStatusInfo
-                issueState={issueState}
-                fundedAmount={fundedAmount}
-                fundingAmount={fundingAmount}
-              />
+              <TaskStatusInfo task={issue} />
             </div>
 
             <div className="col px-0 text-truncate">
