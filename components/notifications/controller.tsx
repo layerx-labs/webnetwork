@@ -22,7 +22,7 @@ export default function Notifications() {
     useReactQuery(QueryKeys.notifications(currentUser?.walletAddress, page?.toString(), isUnread?.toString()),
                   () =>
         useGetNotifications(currentUser?.walletAddress, {
-          read: (!isUnread)?.toString() ,
+          read: !isUnread ? null : (!isUnread)?.toString(),
           page: page?.toString()
         }),
                   {
