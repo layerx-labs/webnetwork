@@ -24,9 +24,7 @@ export async function getNotifications(req: NextApiRequest) {
   if (!userId)
     throw new HttpUnauthorizedError();
 
-  if (!userIsAdmin && (
-      (address && !lowerCaseCompare(address, userAddress))
-      || (id && id !== userId)))
+  if (!userIsAdmin && ((address && !lowerCaseCompare(address, userAddress))))
     throw new HttpUnauthorizedError();
 
   if (!id && !address)
