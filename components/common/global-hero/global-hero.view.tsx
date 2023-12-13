@@ -19,7 +19,7 @@ export default function GlobalHero ({
 
   return(
     <div className="row mt-4 pt-2 mb-5">
-      {infos?.map(i => <div className="col">
+      {infos?.map(i => <div className="col" key={i?.label?.toString()}>
         <div className="d-flex flex-column bg-gray-850 py-3 border-radius-16 text-center">
           <span
             className={clsx([
