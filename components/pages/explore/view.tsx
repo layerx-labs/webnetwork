@@ -25,7 +25,7 @@ export default function ExplorePageView({
       label: t("heroes.open-tasks")
     },
     {
-      value: formatNumberToNScale(totalOnTasks || 0, 0),
+      value: `$${formatNumberToNScale(totalOnTasks || 0, 0)}`,
       label: t("heroes.to-grab")
     },
     {
