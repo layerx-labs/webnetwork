@@ -32,5 +32,5 @@ export async function markAllNotificationsRead(req: NextApiRequest) {
     }
   }
 
-  return models.notification.update({read: true}, where);
+  return models.notifications.update({read: true}, where);
 }
