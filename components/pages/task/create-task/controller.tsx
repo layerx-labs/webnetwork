@@ -470,8 +470,10 @@ export default function CreateTaskPage({
   }
 
   useEffect(() => {
+    if (!query?.marketplace)
+      return;
     const marketplace = allNetworks?.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
-    if (!query?.marketplace || !marketplace)
+    if (!marketplace)
       return;
     handleNetworkSelected(marketplace.chain);
   }, []);
