@@ -2,18 +2,15 @@ import { useTranslation } from "next-i18next";
 
 import DoubleCheckIcon from "assets/icons/double-check-icon";
 
-import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 
-import { getTimeDifferenceInWords } from "helpers/formatDate";
-
 import {
-  Notifications,
   SearchNotificationsPaginated,
 } from "interfaces/notifications";
 
+import NotificationRow from "../row/view";
 interface NotificationListViewProps {
   notifications: SearchNotificationsPaginated;
   btnUnreadActive: boolean;
@@ -21,7 +18,8 @@ interface NotificationListViewProps {
   onNextPage: () => void;
   onClickMarkAllRead: () => void;
   onClickRead: (id: number) => void;
-  onUpdateBtnUreadActive: (v: 'Unread' | 'All') => void;
+  onUpdateBtnUreadActive: (v: "Unread" | "All") => void;
+  redirectTo: (href: string, query) => void;
 }
 
 export default function NotificationsListView({
@@ -32,41 +30,9 @@ export default function NotificationsListView({
   onClickMarkAllRead,
   onClickRead,
   onUpdateBtnUreadActive,
+  redirectTo,
 }: NotificationListViewProps) {
   const { t } = useTranslation("common");
-
-  function renderNotificationRow(item: Notifications, key: number) {
-    const className = `h-100 w-100 px-3 py-2 tx-row ${
-      key !== 0 && "mt-2 border-top-line"
-    } `;
-    const regex = /<div id="avatar">([^<]+)<\/div>/;
-    const extractAddress = item?.template?.match(regex)?.[1] || null;
-    const template = item?.template?.replace("%DATE%",
-                                             getTimeDifferenceInWords(new Date(item.createdAt), new Date()));
-    const finalTemplate = template?.replace(regex, '')
-    
-    return (
-      <div className={className} key={item?.id}>
-        <div className="d-flex flex-column">
-          <div className="d-flex justify-content-between mt-2">
-            <div className="d-flex" key={item?.id}>
-              <AvatarOrIdenticon address={extractAddress} size="md" />
-              <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
-            </div>
-
-            <div className="d-flex ms-2">
-              <If condition={!item?.read}>
-                <div
-                  className="ball bg-primary cursor-pointer hover-white"
-                  onClick={() => onClickRead(item?.id)}
-                />
-              </If>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="notification-list w-100">
@@ -93,7 +59,7 @@ export default function NotificationsListView({
         >
           <Button
             transparent
-            onClick={() => onUpdateBtnUreadActive('Unread')}
+            onClick={() => onUpdateBtnUreadActive("Unread")}
             className="p-0 ms-2"
           >
             <span
@@ -111,7 +77,7 @@ export default function NotificationsListView({
 
           <Button
             transparent
-            onClick={() => onUpdateBtnUreadActive('All')}
+            onClick={() => onUpdateBtnUreadActive("All")}
             className="p-0 ms-4 ps-2"
           >
             <span
@@ -128,12 +94,21 @@ export default function NotificationsListView({
         <If condition={!notifications || !notifications?.rows?.length}>
           <div className="text-center mt-2">
             <span className="caption-small text-light-gray text-uppercase fs-8 family-Medium">
-              {btnUnreadActive ? t("notifications.no-unread-notifications") : t("notifications.no-notifications")}
+              {btnUnreadActive
+                ? t("notifications.no-unread-notifications")
+                : t("notifications.no-notifications")}
             </span>
           </div>
         </If>
         <InfiniteScroll handleNewPage={onNextPage} hasMore={hasMorePages}>
-          {notifications?.rows?.map(renderNotificationRow)}
+          {notifications?.rows?.map((item, key) => (
+            <NotificationRow
+              item={item}
+              key={key}
+              redirectTo={redirectTo}
+              onClickRead={onClickRead}
+            />
+          ))}
         </InfiniteScroll>
       </div>
     </div>
