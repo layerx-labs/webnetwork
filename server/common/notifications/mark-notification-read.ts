@@ -17,10 +17,10 @@ export async function markNotificationRead(req: NextApiRequest) {
   if (["true", "false"].every(s => s !== read))
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
-  const [notification] = await getNotifications({query: {id}, body: req.body} as any);
+  const [notifications] = await getNotifications({query: {id}, body: req.body} as any);
 
-  if (!notification)
+  if (!notifications)
     throw new HttpNotFoundError(NotFoundErrors.NotificationNotFound);
 
-  return notification.update({read: read === "true"});
+  return notifications.update({read: read === "true"});
 }
