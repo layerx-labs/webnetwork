@@ -1,0 +1,18 @@
+.category-filter {
+  &-blue {
+    background: linear-gradient(180deg, #3500FF 0%, #4329A6 100%);
+    box-shadow: 0px 0px 0px 1px #000, 0px 1px 0.2px 0px rgba(255, 255, 255, 0.20) inset, 0px 0px 0px 1px rgba(255, 255, 255, 0.10) inset;
+  }
+  &-orange {
+    background: linear-gradient(180deg, #FF6A2C 0%, #FF4B00 100%);
+    box-shadow: 0px 0px 0px 1px #000, 0px 1px 0.2px 0px rgba(255, 255, 255, 0.20) inset, 0px 0px 0px 1px rgba(255, 255, 255, 0.10) inset;
+  }
+  &-green {
+    background: linear-gradient(180deg, #49FF9D 0%, #0A8256 100%);
+    box-shadow: 0px 0px 0px 1px #000, 0px 1px 0.2px 0px rgba(255, 255, 255, 0.20) inset, 0px 0px 0px 1px rgba(255, 255, 255, 0.10) inset;;
+  }
+  &-pink {
+    background: linear-gradient(180deg, #BD00FF 0%, #8D40EE 100%);
+    box-shadow: 0px 0px 0px 1px #000, 0px 1px 0.2px 0px rgba(255, 255, 255, 0.20) inset, 0px 0px 0px 1px rgba(255, 255, 255, 0.10) inset;
+  }
+}

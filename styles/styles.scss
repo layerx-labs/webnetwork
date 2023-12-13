@@ -28,6 +28,7 @@
 @import "components/horizontal-scroll";
 @import "components/custom-dropdown";
 @import "components/native-select-wrapper";
+@import "components/category-filter";
 
 @import "components/swagger-ui";
 
@@ -2117,4 +2118,10 @@ input[type="color"] {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.rounded-select {
+  .react-select__control {
+    border-radius: 50px;
+  }
 }
