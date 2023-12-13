@@ -442,6 +442,7 @@
     "title_other": "Notifications",
     "mark-read": "Mark all as read",
     "unread": "Unread",
+    "no-unread-notifications": "You have no unread notifications",
     "no-notifications": "You have no notifications",
     "success": {
       "update-read": "reading updated successfully"
