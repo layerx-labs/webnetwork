@@ -41,24 +41,24 @@ export default function NotificationsListView({
     } `;
     const regex = /<div id="avatar">([^<]+)<\/div>/;
     const extractAddress = item?.template?.match(regex)?.[1] || null;
-    const template = item.template.replace("%DATE%",
-                                           getTimeDifferenceInWords(new Date(item.createdAt), new Date()));
-    const finalTemplate = template.replace(regex, '')
+    const template = item?.template?.replace("%DATE%",
+                                             getTimeDifferenceInWords(new Date(item.createdAt), new Date()));
+    const finalTemplate = template?.replace(regex, '')
     
     return (
-      <div className={className} key={item.id}>
+      <div className={className} key={item?.id}>
         <div className="d-flex flex-column">
           <div className="d-flex justify-content-between mt-2">
-            <div className="d-flex" key={item.id}>
+            <div className="d-flex" key={item?.id}>
               <AvatarOrIdenticon address={extractAddress} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>
 
             <div className="d-flex ms-2">
-              <If condition={!item.read}>
+              <If condition={!item?.read}>
                 <div
                   className="ball bg-primary cursor-pointer hover-white"
-                  onClick={() => onClickRead(item.id)}
+                  onClick={() => onClickRead(item?.id)}
                 />
               </If>
             </div>
@@ -74,7 +74,7 @@ export default function NotificationsListView({
         <h4 className="base-medium text-white">
           {t("notifications.title_other")}
         </h4>
-        <If condition={!!notifications?.rows?.length}>
+        <If condition={!!notifications?.rows?.length && btnUnreadActive}>
           <Button className="px-0" onClick={onClickMarkAllRead} transparent>
             <div className="xs-small text-gray-150 d-flex align-items-center justify-content-center">
               <DoubleCheckIcon />
@@ -106,7 +106,7 @@ export default function NotificationsListView({
           </Button>
 
           <span className="p xs-medium text-gray-500 bg-gray-800 border-radius-4 p-1 px-2 ms-2">
-            {notifications?.count}
+            {notifications?.count || 0}
           </span>
 
           <Button
@@ -126,9 +126,9 @@ export default function NotificationsListView({
       </div>
       <div className="overflow-auto tx-container mt-1 pt-2">
         <If condition={!notifications || !notifications?.rows?.length}>
-          <div className="text-center">
+          <div className="text-center mt-2">
             <span className="caption-small text-light-gray text-uppercase fs-8 family-Medium">
-              {t("notifications.no-notifications")}
+              {btnUnreadActive ? t("notifications.no-unread-notifications") : t("notifications.no-notifications")}
             </span>
           </div>
         </If>
