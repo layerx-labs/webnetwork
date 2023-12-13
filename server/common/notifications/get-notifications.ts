@@ -24,8 +24,6 @@ export async function getNotifications(req: NextApiRequest) {
   if (!userId)
     throw new HttpUnauthorizedError();
 
-  console.log(`userAddress`, userAddress, address)
-
   if (!userIsAdmin && (
       (address && !lowerCaseCompare(address, userAddress))
       || (id && id !== userId)))
@@ -54,6 +52,7 @@ export async function getNotifications(req: NextApiRequest) {
 
     /** if read is provided, it will look up read as true or false, otherwise "read" state is ignored */
     ... read !== null ? {read: {[Op.eq]: read.toLowerCase() === "true"}} : {},
+    ... userId ? {userId} : {}
   }
 
   const include = []
@@ -70,6 +69,7 @@ export async function getNotifications(req: NextApiRequest) {
           read: {
             [Op.ne]: true,
           },
+          ... userId ? {userId} : {}
         },
     });
 
