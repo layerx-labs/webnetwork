@@ -6,9 +6,11 @@ import { QueryKeys } from "helpers/query-keys";
 
 import { SearchNotificationsPaginated } from "interfaces/notifications";
 
+import { useUpdateReadNotification } from "x-hooks/api/notification/use-update-read-notification";
 import { useGetNotifications } from "x-hooks/api/notifications/use-get-notifications";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import NotificationsView from "./view";
 
@@ -21,21 +23,28 @@ export default function Notifications() {
   const [notificationsList, setNotificationsList] =
     useState<SearchNotificationsPaginated>();
   const { data: notifications, invalidate: updateNotifications } =
-    useReactQuery(QueryKeys.notifications(currentUser?.walletAddress, page?.toString(), isUnread?.toString()),
+    useReactQuery(QueryKeys.notifications(currentUser?.walletAddress,
+                                          page?.toString(),
+                                          isUnread?.toString()),
                   () =>
         useGetNotifications(currentUser?.walletAddress, {
           read: !isUnread ? null : (!isUnread)?.toString(),
-          page: page?.toString()
+          page: page?.toString(),
         }),
                   {
         enabled: !!currentUser?.walletAddress && !!page,
         retry: false,
                   });
+  const { mutate: updateReadNotification, isLoading: isLoadingReadNotification } = useReactQueryMutation({
+    mutationFn: useUpdateReadNotification,
+    onSuccess: () => {
+      updateNotifications();
+    },
+  });
 
-
-  function updateType(v: 'Unread' | 'All') {
-    v === 'Unread' ? setIsUnread(true) : setIsUnread(false)
-    setPage(1)
+  function updateType(v: "Unread" | "All") {
+    v === "Unread" ? setIsUnread(true) : setIsUnread(false);
+    setPage(1);
   }
 
   useEffect(() => {
@@ -55,13 +64,22 @@ export default function Notifications() {
   }, [notifications]);
 
   useEffect(() => {
-    router.events.on('routeChangeStart', updateNotifications)
+    router.events.on("routeChangeStart", updateNotifications);
     // If the component is unmounted, unsubscribe
     // from the event with the `off` method:
     return () => {
-      router.events.off('routeChangeStart', updateNotifications)
+      router.events.off("routeChangeStart", updateNotifications);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (router.query?.fromEmail && currentUser?.walletAddress && !isLoadingReadNotification) {
+      updateReadNotification({
+        id: router.query?.fromEmail?.toString(),
+        read: true,
+      });
     }
-  }, [router])
+  }, [currentUser?.walletAddress, router.query?.fromEmail]);
 
   return (
     <NotificationsView
