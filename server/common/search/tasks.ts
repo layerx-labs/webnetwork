@@ -30,7 +30,8 @@ export default async function get(query: ParsedUrlQuery) {
     page,
     count,
     sortBy,
-    order
+    order,
+    categories
   } = query;
 
   const whereCondition: WhereOptions = {};
@@ -101,6 +102,12 @@ export default async function get(query: ParsedUrlQuery) {
         { body: { [Op.iLike]: `%${search}%` } },
       ]
     });
+  }
+
+  if (categories) {
+    whereCondition.type = {
+      [Op.in]: categories.toString().replaceAll("marketing", "other").replaceAll("writing", "other").split(",")
+    };
   }
 
   // Associations
