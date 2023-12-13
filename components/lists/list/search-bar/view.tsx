@@ -9,7 +9,7 @@ import If from "components/If";
 
 import { SortOption } from "types/components";
 
-interface ListSearchBarProps {
+export interface ListSearchBarProps {
   searchString: string;
   placeholder: string;
   sortOptions?: SortOption[];
