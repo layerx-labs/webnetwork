@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { useRouter } from "next/router";
+
 import { QueryKeys } from "helpers/query-keys";
 
 import { SearchNotificationsPaginated } from "interfaces/notifications";
@@ -14,7 +16,7 @@ export default function Notifications() {
   const [page, setPage] = useState(1);
   const [showOverlay, setShowOverlay] = useState(false);
   const [isUnread, setIsUnread] = useState<boolean>(true);
-
+  const router = useRouter();
   const { currentUser } = useUserStore();
   const [notificationsList, setNotificationsList] =
     useState<SearchNotificationsPaginated>();
@@ -37,8 +39,6 @@ export default function Notifications() {
   }
 
   useEffect(() => {
-    if (!notifications?.rows?.length) return;
-
     setNotificationsList((previous) => {
       if (!previous || notifications?.currentPage === 1)
         return {
@@ -54,7 +54,14 @@ export default function Notifications() {
     });
   }, [notifications]);
 
-  
+  useEffect(() => {
+    router.events.on('routeChangeStart', updateNotifications)
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off('routeChangeStart', updateNotifications)
+    }
+  }, [router])
 
   return (
     <NotificationsView
