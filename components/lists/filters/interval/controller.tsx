@@ -79,7 +79,7 @@ export default function IntervalFilters({
       [dateParam]: newValue
     };
 
-    const diff = getDifferenceBetweenDates(tmpValue.startDate, tmpValue.endDate, intervalIn);
+    const diff = getDifferenceBetweenDates(tmpValue.startDate?.toString(), tmpValue.endDate?.toString(), intervalIn);
     const isExistentInterval = intervals.includes(diff);
 
     return isExistentInterval ? diff : null;
@@ -118,8 +118,8 @@ export default function IntervalFilters({
     <IntervalFiltersView
       intervals={intervals.map(intervalToOption)}
       interval={intervalToOption(interval)}
-      startDate={value.startDate}
-      endDate={value.endDate}
+      startDate={value.startDate?.toString()}
+      endDate={value.endDate?.toString()}
       onIntervalChange={onIntervalChange}
       onStartDateChange={onDateChange("startDate")}
       onEndDateChange={onDateChange("endDate")}
