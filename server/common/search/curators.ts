@@ -11,11 +11,12 @@ export default async function get(query: ParsedUrlQuery) {
   const {
     address,
     isCurrentlyCurator,
-    network,
-    chain,
+    networkName: network,
+    chainShortName: chain,
     page,
     sortBy,
-    order
+    order,
+    increaseQuantity
   } = query;
 
   const whereCondition: WhereOptions = {};
@@ -41,40 +42,42 @@ export default async function get(query: ParsedUrlQuery) {
     include.push({
       association: "network",
       required: isFilterRequired,
-      attributes: [],
       where: {
         ... network ? { name: caseInsensitiveEqual("network.name", network.toString()) } : {}
       },
-      include: chain ? [{
-        association: "chain",
-        attributes: [],
-        required: true,
-        where: {
-          chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain.toString())
+      include: [
+        { association: "networkToken" },
+        {
+          association: "chain",
+          attributes: ["chainShortName", "icon"],
+          required: !!chain,
+          where: chain ? {
+            chainShortName: caseInsensitiveEqual("network.chain.chainShortName", chain.toString())
+          } : {}
         }
-      }] : []
+      ]
     });
   } else {
     include.push({
       association: "network",
       include: [
         { association: "networkToken" },
-        { association: "chain", attributes: ["chainShortName"] },
+        { association: "chain", attributes: ["chainShortName", "icon"] },
       ],
     });
   }
 
   const PAGE = +(page || 1);
+  const quantityPerPage = isTrue(increaseQuantity?.toString()) ? 20 : undefined;
 
   const curators = await models.curator.findAndCountAll(paginate({
-    logging: console.log,
     attributes: {
       exclude: ["id", "createdAt", "updatedAt"],
     },
     where: whereCondition,
     include,
     subQuery: false,
-  }, { page: PAGE }, [[sortBy || "acceptedProposals", order || "DESC"]]));
+  }, { page: PAGE }, [[sortBy || "acceptedProposals", order || "DESC"]], quantityPerPage));
 
   const totalCurators = await models.curator.count({
     where: {

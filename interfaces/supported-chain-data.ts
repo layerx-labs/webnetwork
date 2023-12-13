@@ -1,3 +1,5 @@
+import { Network } from "interfaces/network";
+
 export interface SupportedChainData {
   chainId: number;
   chainRpc: string;
@@ -17,4 +19,5 @@ export interface SupportedChainData {
   networkCreationFeePercentage?: number;
   closeFeePercentage?: number;
   cancelFeePercentage?: number;
+  networks?: Network[];
 }

@@ -1,84 +1,70 @@
+import {useState} from "react";
+
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import DelegationsView from "components/profile/pages/voting-power/delegations/view";
+import TakeBackModal from "components/profile/pages/voting-power/take-back-modal/take-back-modal.view";
 
-import { Delegation } from "interfaces/curators";
-import { DelegationExtended } from "interfaces/oracles-state";
+import {Curator, Delegation} from "interfaces/curators";
+import {NetworkEvents} from "interfaces/enums/events";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
-import useMarketplace from "x-hooks/use-marketplace";
+import useBepro from "x-hooks/use-bepro";
+import useContractTransaction from "x-hooks/use-contract-transaction";
 
-import DelegationsView from "./view";
 
 interface DelegationsProps {
-  type?: "toMe" | "toOthers";
-  delegations?: Delegation[];
-  variant?: "network" | "multi-network";
-  tokenColor?: string;
+  delegations?: Curator[];
+  disabled?: boolean;
+  updateWalletBalance?: () => void;
 }
 
-type JoinedDelegation = Delegation | DelegationExtended;
-
 export default function Delegations({
-  type = "toMe",
+  disabled,
   delegations,
-  variant = "network",
-  tokenColor,
+  updateWalletBalance,
 }: DelegationsProps) {
-  const { t } = useTranslation(["common", "profile", "my-oracles"]);
+  const { t } = useTranslation("profile");
+  const [delegationToTakeBack, setDelegationToTakeBack] = useState<Delegation>(null);
 
-  const { currentUser } = useUserStore();
-  const marketplace = useMarketplace();
+  const { handleTakeBack } = useBepro();
+  const [isExecuting, execute] = useContractTransaction(NetworkEvents.OraclesTransfer,
+                                                        handleTakeBack,
+                                                        t("take-back-success"),
+                                                        t("take-back-fail"));
 
-  const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
+  function onCloseClick() {
+    setDelegationToTakeBack(null);
+  }
 
-  const walletDelegations = (delegations ||
-    currentUser?.balance?.oracles?.delegations ||
-    []) as JoinedDelegation[];
-  const totalAmountDelegations = walletDelegations
-    .reduce((acc, delegation) => BigNumber(delegation.amount).plus(acc),
-            BigNumber(0))
-    .toFixed();
-
-  const votesSymbol = t("token-votes", {
-    token: networkTokenSymbol,
-  });
-
-  const renderInfo = {
-    toMe: {
-      title: t("profile:deletaged-to-me"),
-      description: t("my-oracles:descriptions.oracles-delegated-to-me", {
-        token: networkTokenSymbol,
-      }),
-      total: undefined,
-      delegations: walletDelegations || [
-        currentUser?.balance?.oracles?.delegatedByOthers || 0,
-      ],
-    },
-    toOthers: {
-      title: t("profile:deletaged-to-others"),
-      total: formatStringToCurrency(totalAmountDelegations),
-      description: t("my-oracles:descriptions.oracles-delegated-to-others", {
-        token: networkTokenSymbol,
-      }),
-      delegations:
-        walletDelegations ||
-        currentUser?.balance?.oracles?.delegations ||
-        [],
-    },
-  };
-
-  const networkTokenName = marketplace?.active?.networkToken?.name || t("profile:oracle-name-placeholder");
+  async function onTakeBackClick () {
+    if (!delegationToTakeBack)
+      return;
+    execute(delegationToTakeBack.contractId, BigNumber(delegationToTakeBack.amount)?.toFixed(), "Oracles")
+      .then(() => {
+        updateWalletBalance();
+        onCloseClick();
+      })
+      .catch((error) => {
+        console.debug("Failed to take back votes", error);
+      });
+  }
 
   return (
-    <DelegationsView
-      type={type}
-      variant={variant}
-      tokenColor={tokenColor}
-      renderInfo={renderInfo}
-      votesSymbol={votesSymbol}
-      networkTokenName={networkTokenName}
-    />
+    <>
+      <DelegationsView
+        disabled={disabled}
+        delegations={delegations}
+        onTakeBackClick={setDelegationToTakeBack}
+      />
+
+      <TakeBackModal
+        delegation={delegationToTakeBack}
+        show={!!delegationToTakeBack && !disabled}
+        isTakingBack={isExecuting}
+        onCloseClick={onCloseClick}
+        onTakeBackClick={onTakeBackClick}
+      />
+    </>
   );
 }

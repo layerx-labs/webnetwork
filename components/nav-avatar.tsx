@@ -21,7 +21,7 @@ import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
 
 export default function NavAvatar() {
-  const { query, asPath } = useRouter();
+  const { asPath } = useRouter();
   const { t } = useTranslation("common");
 
   const [visible, setVisible] = useState(false);
@@ -130,7 +130,7 @@ export default function NavAvatar() {
         </div>
 
         <LinksSession>
-          {getProfileLinks(t, !!query?.network).map(ProfileInternalLink)}
+          {getProfileLinks(t).map(ProfileInternalLink)}
         </LinksSession>
 
         <LinksSession>

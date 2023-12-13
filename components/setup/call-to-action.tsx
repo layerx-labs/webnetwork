@@ -1,7 +1,17 @@
 import Button from "components/button";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import {ContextualSpan} from "components/contextual-span";
 
+interface CallToActionProps {
+  call: string;
+  action: string;
+  onClick: () => void;
+  color: "success" | "danger" | "warning" | "info" | "primary";
+  disabled?: boolean;
+  executing?: boolean;
+  isContractAction?: boolean;
+  variant?: "network" | "registry"
+}
 export function CallToAction({
   call,
   action,
@@ -9,8 +19,9 @@ export function CallToAction({
   color,
   disabled,
   executing,
-  isContractAction = false
-}) {
+  isContractAction = false,
+  variant = "network"
+}: CallToActionProps) {
   const BtnComponent = isContractAction ? ContractButton : Button;
 
   return(
@@ -28,6 +39,7 @@ export function CallToAction({
           withLockIcon={disabled && !executing}
           isLoading={executing}
           onClick={onClick}
+          variant={variant}
         >
           <span>{action}</span>
         </BtnComponent>

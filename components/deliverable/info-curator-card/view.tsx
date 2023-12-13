@@ -1,11 +1,10 @@
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { UrlObject } from "url";
 
 import { ContextualSpan } from "components/contextual-span";
 
 interface DeliverableInfoCardViewProps {
-  votingPowerHref: UrlObject;
+  votingPowerHref: string;
   votingPowerAlias: string;
 }
 

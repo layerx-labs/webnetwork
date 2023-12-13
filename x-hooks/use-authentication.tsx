@@ -19,19 +19,18 @@ import {SESSION_TTL} from "server/auth/config";
 
 import {useSearchCurators} from "x-hooks/api/curator";
 import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
+import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
-import useChain from "x-hooks/use-chain";
 import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
 
-import { useDaoStore } from "./stores/dao/dao.store";
 import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 import { useSettings } from "./use-settings";
-import { useStorageTransactions } from "./use-storage-transactions";
-import useSupportedChain from "./use-supported-chain";
+import { useStorageTransactions } from "x-hooks/use-storage-transactions";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
@@ -42,7 +41,6 @@ export function useAuthentication() {
   const session = useSession();
   const { asPath } = useRouter();
 
-  const { chain } = useChain();
   const transactions = useStorageTransactions();
   const { addWarning } = useToastStore();
   const { service: daoService, serviceStarting} = useDaoStore();
@@ -96,7 +94,7 @@ export function useAuthentication() {
   }
 
   function updateWalletBalance(force = false) {
-    if ((!force && (balance.value || !currentUser?.walletAddress)) || !daoService?.network || !chain)
+    if ((!force && (balance.value || !currentUser?.walletAddress)) || !daoService?.network)
       return;
 
     const update = newBalance => {
@@ -112,7 +110,7 @@ export function useAuthentication() {
       useSearchCurators({
         address: currentUser.walletAddress,
         networkName: marketplace?.active?.name,
-        chainShortName: chain.chainShortName
+        chainShortName: marketplace?.active?.chain?.chainShortName
       })
       .then(v => v?.rows[0]?.tokensLocked || 0).then(value => new BigNumber(value))
     ])

@@ -17,6 +17,7 @@ type UseMarketplaceStore = {
   update: (data: Partial<ActiveMarketplace>) => ActiveMarketplace,
   updateLastVisited: (lastVisited: string) => ActiveMarketplace,
   updateActive: (active: Network) => ActiveMarketplace,
+  updateParamsOfActive: (network: Network) => ActiveMarketplace,
   updateAvailableChains: (availableChains: SupportedChainData[]) => ActiveMarketplace,
   updateTransactionalTokens: (transactionalTokens: Token[]) => ActiveMarketplace,
   updateRewardTokens: (rewardTokens: Token[]) => ActiveMarketplace,
@@ -45,6 +46,16 @@ export const useMarketplaceStore = create<UseMarketplaceStore>((set, get) => {
     update,
     updateLastVisited: (lastVisited: string) => update({ lastVisited }),
     updateActive: (active: Network) => update({ active }),
+    updateParamsOfActive: (network: Network) => update({
+      active: {
+        ...network,
+        name: get().data?.active?.name,
+        description: get().data?.active?.description,
+        colors: get().data?.active?.colors,
+        logoIcon: get().data?.active?.logoIcon,
+        fullLogo: get().data?.active?.fullLogo,
+      }
+    }),
     updateAvailableChains: (availableChains: SupportedChainData[]) => update({ availableChains }),
     updateTransactionalTokens: (transactionalTokens: Token[]) => update({ transactionalTokens }),
     updateRewardTokens: (rewardTokens: Token[]) => update({ rewardTokens }),

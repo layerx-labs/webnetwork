@@ -10,11 +10,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   const bountyDatabase = await getBountyData(query);
 
   if (bountyDatabase) {
-    const { network, id} = bountyDatabase;
+    const { id } = bountyDatabase;
 
     return {
       redirect: {
-        destination: `${network?.chain?.chainShortName}/task/${id}`,
+        destination: `task/${id}`,
         permanent: false,
       },
     };

@@ -2,14 +2,7 @@ import "@testing-library/jest-dom";
 
 import ConnectWalletButtonView from "components/connections/connect-wallet-button/connect-wallet-button.view";
 
-import useBreakPointMocked from "__mocks__/x-hooks/use-breapoint";
-
 import { render } from "__tests__/utils/custom-render";
-
-jest.mock("x-hooks/use-breakpoint", () => ({
-  __esModule: true,
-  default: (prop) => useBreakPointMocked(prop)
-}));
 
 describe("ConnectWalletButtonView", () => {
   let defaultProps;

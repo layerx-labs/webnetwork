@@ -19,14 +19,10 @@ export default function BecomeCuratorCard({
 
   const [show, setShow] = useState<boolean>(!isCouncil);
   
-  const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
+  const { active: activeMarketplace } = useMarketplace();
 
   const councilAmount = formatNumberToNScale(+activeMarketplace?.councilAmount);
   const networkTokenSymbol = activeMarketplace?.networkToken?.symbol || t("common:misc.token");
-  const votingPowerHref = getURLWithNetwork("/profile/[[...profilePage]]");
-  const marketplaceName = activeMarketplace?.name?.toLowerCase();
-  const chainName = activeMarketplace?.chain?.chainShortName?.toLowerCase();
-  const votingPowerAlias = `/${marketplaceName}/${chainName}/profile/voting-power`;
 
   function onHide() {
     setShow(false);
@@ -38,8 +34,8 @@ export default function BecomeCuratorCard({
       onHide={onHide}
       councilAmount={councilAmount}
       networkTokenSymbol={networkTokenSymbol}
-      votingPowerHref={votingPowerHref}
-      votingPowerAlias={votingPowerAlias}
+      votingPowerHref="/profile/[[...profilePage]]"
+      votingPowerAlias="/profile/voting-power"
     />
   );
 }

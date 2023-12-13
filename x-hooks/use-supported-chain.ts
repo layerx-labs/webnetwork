@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 
-import { useRouter } from "next/router";
-
 import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -11,8 +9,6 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function useSupportedChain() {
-  const { query } = useRouter();
-
   const marketplace = useMarketplace();
   const {
     chains: supportedChains,
@@ -20,26 +16,25 @@ export default function useSupportedChain() {
     isGetChainsDatabase,
     updateChains,
     updateConnectedChain,
-    loadChainsDatabase
+    loadChainsDatabase,
+    get
   } = useSupportedChainStore();
 
   const { invalidate } = useReactQuery(QueryKeys.chains(),
-                                       () =>
-      useGetChains().then((chains) => {
-        updateChains(chains);
-        return chains;
-      }),
+                                       () => useGetChains().then((chains) => {
+                                         updateChains(chains);
+                                         return chains;
+                                       }),
                                        {
-      staleTime: MINUTE_IN_MS,
-      enabled: isGetChainsDatabase
+                                          staleTime: MINUTE_IN_MS,
+                                          enabled: isGetChainsDatabase
                                        });
   
   function updateNetworkAndChainMatch() {
     const networkChainId = marketplace?.active?.chain_id;
-    const isOnANetwork = !!query?.network;
-    const matchWithNetworkChain = +connectedChain?.id === +networkChainId
+    const matchWithNetworkChain = +connectedChain?.id === +networkChainId;
 
-    if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain && isOnANetwork)
+    if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain)
       updateConnectedChain({
         ...connectedChain,
         matchWithNetworkChain: matchWithNetworkChain,
@@ -47,8 +42,6 @@ export default function useSupportedChain() {
   }
 
   useEffect(updateNetworkAndChainMatch, [
-    query?.network,
-    query?.chain,
     connectedChain?.id,
     marketplace?.active?.chain_id,
   ])
@@ -59,5 +52,6 @@ export default function useSupportedChain() {
     updateConnectedChain,
     loadChainsDatabase,
     refresh: invalidate,
+    get
   };
 }

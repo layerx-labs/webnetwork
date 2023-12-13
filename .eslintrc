@@ -31,6 +31,7 @@
       }
     ],
     "no-prototype-builtins": 0,
+    "no-useless-catch": 0,
     "no-return-await": 1,
     "camelcase": 0,
     "no-underscore-dangle": 0,

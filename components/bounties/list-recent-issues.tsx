@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import PlusIcon from "assets/icons/plus-icon";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import CustomContainer from "components/custom-container";
 import HorizontalScroll from "components/horizontal-scroll/controller";
 import If from "components/If";
@@ -43,8 +43,12 @@ export default function ListRecentIssues({
   };
 
   function renderNothingFound() {
-    const goToPage = 
-      () => isBountyType ? push("/create-task") : push("/create-task?type=funding", "/create-task");
+    const goToPage = async () => {
+      if (isBountyType)
+        push("/create-task")
+      else
+        push("/create-task?type=funding", "/create-task")
+    };
 
     return (
       <div className="col-12 col-sm-6 col-md">

@@ -14,7 +14,7 @@ import SelectNetworkSection, {
   SelectNetworkSectionProps
 } from "components/bounty/create-bounty/sections/select-network/view";
 import Button from "components/button";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -43,8 +43,8 @@ interface CreateTaskPageViewProps
   isCreating: boolean;
   creationSteps: string[];
   onBackClick: (e?: MouseEvent<HTMLButtonElement>) => void;
-  onApproveClick: () => void;
-  onNextOrCreateButtonClick: () => void;
+  onApproveClick: () => Promise<void>;
+  onNextOrCreateButtonClick: () => Promise<void>;
   onSectionHeaderClick: (i: number) => void;
   allowCreateBounty?: boolean;
   showCannotCreateBountyModal?: boolean;

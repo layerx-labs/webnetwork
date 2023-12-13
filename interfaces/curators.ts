@@ -32,6 +32,7 @@ export interface SearchCuratorParams {
   page?: string;
   address?: string;
   isCurrentlyCurator?: boolean;
+  increaseQuantity?: boolean;
   networkName?: string;
   sortBy?: string;
   order?: string;

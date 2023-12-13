@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import LockedIcon from "assets/icons/locked-icon";
 
-import Button from "components/button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import Icon from "components/icon";
 import Modal from "components/modal";
 
@@ -45,7 +45,7 @@ function NetworkTxButtonModalView({
         disabled={disabled}
       />
 
-      <Button
+      <ContractButton
         color="purple"
         className={buttonClass}
         onClick={makeTx}
@@ -53,7 +53,7 @@ function NetworkTxButtonModalView({
       >
         {disabled && <LockedIcon width={12} height={12} className="mr-1" />}{" "}
         <span>{buttonLabel}</span>
-      </Button>
+      </ContractButton>
 
       <Modal
         show={showModal}

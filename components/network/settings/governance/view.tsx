@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "next-i18next";
 
 import Card from "components/card";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import CopyButton from "components/common/buttons/copy/controller";
 import AmountCard from "components/custom-network/amount-card";
 import NetworkContractSettings from "components/custom-network/network-contract-settings";

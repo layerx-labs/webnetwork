@@ -1,30 +1,77 @@
-import { ReactElement } from "react";
-import { Col } from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
-import { FlexRow } from "components/common/flex-box/view";
+import ChainFilter from "components/lists/filters/chain/controller";
+import MarketplaceFilter from "components/lists/filters/marketplace/controller";
+import NoNetworkTokenModal from "components/modals/no-network-token/no-network-token-modal.view";
+import VotingPowerNetwork from "components/profile/pages/voting-power/network/controller";
 import ProfileLayout from "components/profile/profile-layout";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
+import {Network} from "interfaces/network";
+import {SupportedChainData} from "interfaces/supported-chain-data";
+
+export interface VotingPowerPageViewProps {
+  selectedNetwork: Network;
+  selectedChain: SupportedChainData;
+  chains: SupportedChainData[];
+  networks: Network[];
+  isNoNetworkTokenModalVisible?: boolean;
+  onNetworkSelected: (network: string | number) => void;
+  onChainSelected: (chain: string | number) => void;
+}
 export default function VotingPowerPageView({
-  children,
-}: {
-  children: ReactElement;
-}) {
+  selectedNetwork,
+  selectedChain,
+  chains,
+  networks,
+  isNoNetworkTokenModalVisible,
+  onNetworkSelected,
+  onChainSelected,
+}: VotingPowerPageViewProps) {
   const { t } = useTranslation(["common", "profile"]);
 
   return (
     <ProfileLayout>
       <ReadOnlyButtonWrapper>
         <Col xs={12}>
-          <FlexRow className="mb-3">
-            <h3 className="text-white font-weight-500">
-              {t("profile:voting-power")}
-            </h3>
-          </FlexRow>
+          <Row className="mb-3">
+            <Col>
+              <h3 className="text-white font-weight-500">
+                {t("profile:voting-power")}
+              </h3>
+            </Col>
 
-          {children}
+            <Col xs="12" md="auto" className="mt-2 mb-2 mt-md-0 mb-md-0">
+              <MarketplaceFilter
+                marketplaces={networks}
+                onChange={onNetworkSelected}
+                label={false}
+              />
+            </Col>
+
+            <Col xs="12" md="auto">
+              <ChainFilter
+                chains={chains}
+                onChange={onChainSelected}
+                label={false}
+              />
+            </Col>
+          </Row>
+
+          <NoNetworkTokenModal
+            isVisible={isNoNetworkTokenModalVisible}
+          />
+
+          <Row>
+            <Col>
+              <VotingPowerNetwork
+                selectedNetwork={selectedNetwork}
+                selectedChain={selectedChain}
+              />
+            </Col>
+          </Row>
         </Col>
       </ReadOnlyButtonWrapper>
     </ProfileLayout>

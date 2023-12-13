@@ -39,7 +39,7 @@ export default function HackFestCard() {
 
             <div className="row">
               <div className="col-auto">
-                <Link href="/open-marketplace/polygon">
+                <Link href="/open-marketplace">
                   <span className={`rounded-pill xs-medium px-3 py-2 bg-white-10 
                     bg-white-30-hover cursor-pointer text-uppercase`}>
                     <span className="px-1 py-1">

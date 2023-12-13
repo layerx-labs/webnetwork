@@ -1,90 +1,101 @@
-import { ReactElement } from "react";
-import { Row } from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 
-import BigNumber from "bignumber.js";
+import {useTranslation} from "next-i18next";
 
-import { Divider } from "components/divider";
+import {Divider} from "components/divider";
+import If from "components/If";
 import Delegations from "components/profile/pages/voting-power/delegations/controller";
 import OraclesActions from "components/profile/pages/voting-power/oracles/actions/controller";
 import OraclesDelegate from "components/profile/pages/voting-power/oracles/delegate/controller";
 import TotalVotes from "components/profile/pages/voting-power/total-votes/view";
 
 import { Balance } from "interfaces/balance-state";
-
-interface OracleToken {
-    symbol: string;
-    name: string;
-    icon: ReactElement;
-}
+import {Curator} from "interfaces/curators";
+import {Network} from "interfaces/network";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 interface VotingPowerNetworkViewProps {
-    oraclesLocked: BigNumber;
-    oraclesDelegatedToMe: BigNumber;
-    oraclesDelegatedToOthers: BigNumber;
-    oracleToken: OracleToken;
-    votesSymbol: string;
-    walletAddress: string;
-    userBalance: Balance;
-    userIsCouncil: boolean;
-    userIsGovernor: boolean;
-    handleUpdateWalletBalance: () => void;
-    delegationAddress: string;
+  chains: SupportedChainData[];
+  networks: Network[];
+  locked: Curator[];
+  delegatedToMe: Curator[];
+  delegations: Curator[];
+  isActionsEnabled: boolean;
+  walletAddress: string;
+  userBalance: Balance;
+  userIsCouncil: boolean;
+  userIsGovernor: boolean;
+  isBalanceLoading?: boolean;
+  handleUpdateWalletBalance: () => void;
 }
 
 export default function VotingPowerNetworkView({
-    oraclesLocked,
-    oraclesDelegatedToMe,
-    oraclesDelegatedToOthers,
-    oracleToken,
-    votesSymbol,
-    walletAddress,
-    userBalance,
-    userIsCouncil,
-    userIsGovernor,
-    handleUpdateWalletBalance,
-    delegationAddress
+  locked,
+  delegatedToMe,
+  delegations,
+  isActionsEnabled,
+  walletAddress,
+  userBalance,
+  userIsCouncil,
+  userIsGovernor,
+  isBalanceLoading,
+  handleUpdateWalletBalance,
 }: VotingPowerNetworkViewProps) {
+  const { t } = useTranslation("profile");
 
   return(
     <>
       <TotalVotes
-        votesLocked={oraclesLocked}
-        votesDelegatedToMe={oraclesDelegatedToMe}
-        votesDelegatedToOthers={oraclesDelegatedToOthers}
-        icon={oracleToken.icon}
-        tokenName={oracleToken.name}
-        tokenSymbol={oracleToken.symbol}
-        votesSymbol={votesSymbol}
+        locked={locked}
+        delegatedToMe={delegatedToMe}
       />
 
-      <Row className="mt-4 mb-4">
-        <OraclesActions
-          wallet={{
-            address: walletAddress,
-            balance: userBalance,
-            isCouncil: userIsCouncil,
-            isNetworkGovernor: userIsGovernor
-          }}
-          updateWalletBalance={handleUpdateWalletBalance}
-        />
+      <Row className="mt-4 mb-4 mx-0 border border-gray-800 border-radius-4 p-4">
+        <Col className="p-2">
+          <If condition={!isActionsEnabled}>
+            <div className="bg-gray-900 border-radius-4 px-3 py-5 text-center mb-4">
+                 <span className="base-medium text-white font-weight-normal">
+                   {t("select-marketplace-and-network")}
+                 </span>
+            </div>
+          </If>
 
-        <OraclesDelegate
-          wallet={{
-            address: walletAddress,
-            balance: userBalance,
-            isCouncil: userIsCouncil,
-            isNetworkGovernor: userIsGovernor
-          }}
-          updateWalletBalance={handleUpdateWalletBalance}
-          defaultAddress={delegationAddress}
-        />
+          <Row>
+            <OraclesActions
+              disabled={!isActionsEnabled}
+              wallet={{
+                address: walletAddress,
+                balance: userBalance,
+                isCouncil: userIsCouncil,
+                isNetworkGovernor: userIsGovernor
+              }}
+              isBalanceLoading={isBalanceLoading}
+              updateWalletBalance={handleUpdateWalletBalance}
+            />
+
+            <OraclesDelegate
+              disabled={!isActionsEnabled}
+              wallet={{
+                address: walletAddress,
+                balance: userBalance,
+                isCouncil: userIsCouncil,
+                isNetworkGovernor: userIsGovernor
+              }}
+              isBalanceLoading={isBalanceLoading}
+              updateWalletBalance={handleUpdateWalletBalance}
+              defaultAddress={null}
+            />
+          </Row>
+        </Col>
       </Row>
 
       <Divider bg="gray-800" />
 
-      <Row className="mb-3">
-        <Delegations type="toOthers" />
-      </Row>
+      <Delegations
+        disabled={!isActionsEnabled || isBalanceLoading}
+        delegations={delegations}
+        updateWalletBalance={handleUpdateWalletBalance}
+      />
     </>
   );
 }

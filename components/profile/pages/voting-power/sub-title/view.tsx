@@ -5,6 +5,8 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { formatStringToCurrency } from "helpers/formatNumber";
 
+import If from "../../../../If";
+
 interface ResponsiveProps {
   xs: boolean;
   md: boolean;
@@ -22,9 +24,9 @@ export default function VotingPowerSubTitleView({
   getAmountClass,
 }: {
   label: string;
-  infoTooltip: string;
-  total: string;
-  votesSymbol: string;
+  infoTooltip?: string;
+  total?: string;
+  votesSymbol?: string;
   propsMobile: ResponsiveProps;
   propsDesktopAndTablet: ResponsiveProps;
   getTextColorProps: () => { className: string } | { style: { color: string } };
@@ -62,18 +64,20 @@ export default function VotingPowerSubTitleView({
           {label}
         </span>
       </ResponsiveWrapper>
-      <ResponsiveWrapper
-        {...propsMobile}
-        className={getAmountClass("fs-smallest")}
-      >
-        {renderAmount({icon: false})}
-      </ResponsiveWrapper>
-      <ResponsiveWrapper
-        {...propsDesktopAndTablet}
-        className={getAmountClass("caption-medium")}
-      >
-        {renderAmount({})}
-      </ResponsiveWrapper>
+      <If condition={!!total}>
+        <ResponsiveWrapper
+          {...propsMobile}
+          className={getAmountClass("fs-smallest")}
+        >
+          {renderAmount({icon: false})}
+        </ResponsiveWrapper>
+        <ResponsiveWrapper
+          {...propsDesktopAndTablet}
+          className={getAmountClass("caption-medium")}
+        >
+          {renderAmount({})}
+        </ResponsiveWrapper>
+      </If>
     </>
   );
 }

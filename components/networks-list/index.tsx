@@ -35,10 +35,9 @@ export default function NetworksList({
     setOrder(newOrder);
   }
 
-  function handleRedirect(networkName, chainName) {
-    router.push(getURLWithNetwork("/", {
-        network: networkName,
-        chain: chainName
+  function handleRedirect(networkName) {
+    router.push(getURLWithNetwork("/tasks", {
+        network: networkName
     }));
   }
 

@@ -40,7 +40,7 @@ export default function ChainFilterView({
         </div>
       </If>
 
-      <div className="col">
+      <div className="col" data-testid="chain-filter">
         <NativeSelectWrapper
           options={options}
           onChange={onChange}

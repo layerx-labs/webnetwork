@@ -20,9 +20,8 @@ import {Network} from "interfaces/network";
 import {SearchBountiesPaginated} from "types/api";
 
 import {useUpdateNetwork} from "x-hooks/api/marketplace";
-import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import useBepro from "x-hooks/use-bepro";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
@@ -47,19 +46,18 @@ export default function MyNetworkSettings({
 }: MyNetworkSettingsProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
 
-  const [errorBigImages, setErrorBigImages] = useState(false);
-  const [isGovernorRegistry, setIsGovernorRegistry] = useState(false);
   const [tabs, setTabs] = useState<TabsProps[]>([]);
+  const [errorBigImages, setErrorBigImages] = useState(false);
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
   const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
-  const { isRegistryGovernor } = useBepro();
   const { colorsToCSS } = useNetworkTheme();
   const { service: daoService } = useDaoStore();
   const { connectedChain } = useSupportedChain();
   const { details, settings, forcedNetwork, clearState } = useNetworkSettings();
 
+  const isGovernorRegistry = currentUser?.isAdmin;
   const chainId = connectedChain?.id;
   const { mutate: updateNetwork, isLoading: isUpdating } = useReactQueryMutation({
     queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId),
@@ -126,15 +124,6 @@ export default function MyNetworkSettings({
       setErrorBigImages(false);
     }
   }, [details?.fullLogo, details?.iconLogo]);
-
-  useEffect(() => {
-    if (!daoService?.registry?.contractAddress ||
-        !currentUser?.walletAddress ||
-        !connectedChain?.id) return;
-
-    isRegistryGovernor(currentUser?.walletAddress)
-      .then(setIsGovernorRegistry);
-  }, [currentUser?.walletAddress, daoService?.registry?.contractAddress, connectedChain?.id]);
 
   useEffect(() => {
     if(!network) return;

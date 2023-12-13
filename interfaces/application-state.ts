@@ -13,6 +13,10 @@ export interface ConnectedChain {
   events?: string;
   registry?: string;
   matchWithNetworkChain?: boolean;
+  lockAmountForNetworkCreation?: string;
+  networkCreationFeePercentage?: number;
+  closeFeePercentage?: number;
+  cancelFeePercentage?: number;
 }
 
 export interface CurrentUserState {

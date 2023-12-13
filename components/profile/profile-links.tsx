@@ -7,8 +7,6 @@ import { getProfileLinks } from "helpers/navigation-links";
 
 import { LinkProps } from "types/components";
 
-import useMarketplace from "x-hooks/use-marketplace";
-
 interface ProfileLinksProps {
   onClick?: () => void;
 }
@@ -19,15 +17,10 @@ export default function ProfileLinks({
   const { query, asPath } = useRouter();
   const { t } = useTranslation("common");
 
-  const { getURLWithNetwork } = useMarketplace();
-
   const cleanQuery = { ...query, networkName: null, networkChain: null };
 
-  const getHref = (href = "") =>
-    query?.network ? `/${query?.network}/${query?.chain}/profile/${href}` : `/profile/${href}`;
-  const getUrl = () => query?.network ?
-    getURLWithNetwork("/profile/[[...profilePage]]", cleanQuery) :
-    { pathname: "/profile/[[...profilePage]]", query: cleanQuery };
+  const getHref = (href = "") => `/profile/${href}`;
+  const getUrl = () => ({ pathname: "/profile/[[...profilePage]]", query: cleanQuery });
   const isActive = href => asPath.endsWith(`/profile${href ? `/${href}` : ""}`);
 
   const ProfileLink = ({ label, href, icon }: LinkProps) => (
@@ -50,7 +43,7 @@ export default function ProfileLinks({
 
   return(
     <ul>
-      {getProfileLinks(t, !!query?.network).map(ProfileLink)}
+      {getProfileLinks(t).map(ProfileLink)}
     </ul>
   );
 }

@@ -72,6 +72,13 @@ export interface ChainFilterProps {
   label?: boolean;
 }
 
+export interface MarketplaceFilterProps {
+  marketplaces: Network[];
+  direction?: Direction;
+  onChange?: (value: string | number) => void;
+  label?: boolean;
+}
+
 export interface AmountCardProps {
   title: string;
   amount?: number;
@@ -152,3 +159,5 @@ export interface PaymentInfoProps {
   percentage: string;
   label: string;
 }
+
+export type DeliverableButtonType = "cancel" | "review" | "ready-review";

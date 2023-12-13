@@ -74,10 +74,11 @@ export default function BountiesList({
     updateSearch();
   }
 
-  function handleNotFoundClick() {
-    if (!redirect) return router.push('/create-task');
-
-    router.push(redirect);
+  async function handleNotFoundClick() {
+    if (!redirect)
+      router.push('/create-task');
+    else
+      router.push(redirect);
   }
 
   useEffect(() => {

@@ -46,11 +46,11 @@ export default function PaymentsList({
     const id = payment.issue.id;
 
     return () => 
-      push(getURLWithNetwork("/task/[id]", { id, chain: network?.chain?.chainShortName, network: network?.name }));
+      push(getURLWithNetwork("/task/[id]", { id, network: network?.name }));
   }
 
   function onNetworkRedirect(network: NetworkPaymentsData) {
-    return () => push(getURLWithNetwork("/", { chain: network?.chain?.chainShortName, network: network?.name }));
+    return () => push(getURLWithNetwork("/", { network: network?.name }));
   }
 
   function handleAmount(network: NetworkPaymentsData) {

@@ -48,15 +48,15 @@ export default function PriceConversorModal({
       ? [{ address: token?.address, chainId: token?.chain_id }]
       : null);
 
-  async function handlerChange({value, label}: Options){
-    const currency = value.toLowerCase()
+  async function handlerChange(selected: Options){
+    const currency = selected?.value?.toLowerCase()
     if (!token || !prices) return;
 
     if (!prices[0][currency] || isError) setErrorCoinInfo(true);
 
     if(prices[currency] > 0) setErrorCoinInfo(false)
-    setCurrentCurrency({value, label});
-    setCurrentToken(value.toUpperCase())
+    setCurrentCurrency({value: selected?.value, label: selected?.label});
+    setCurrentToken(selected?.value?.toUpperCase())
     setCurrentPrice(prices[0][currency] || 0);
   }
 

@@ -41,7 +41,6 @@ import {transactionStore} from "x-hooks/stores/transaction-list/transaction.stor
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
-import {useDao} from "x-hooks/use-dao";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkChange from "x-hooks/use-network-change";
@@ -98,8 +97,7 @@ export default function CreateTaskPage({
   const rewardERC20 = useERC20();
   const transactionalERC20 = useERC20();
   const { handleApproveToken } = useBepro();
-  const { changeNetwork, start } = useDao();
-  const { getURLWithNetwork } = useMarketplace();
+  const { updateParamsOfActive, getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
@@ -300,7 +298,6 @@ export default function CreateTaskPage({
 
     setIsLoadingCreateBounty(true);
 
-
     try {
       const payload = {
         title: bountyTitle,
@@ -411,7 +408,6 @@ export default function CreateTaskPage({
 
         if (createdBounty?.[savedIssue.id]) {
           router.push(getURLWithNetwork("/task/[id]", {
-              chain: connectedChain?.shortName,
               network: currentNetwork?.name,
               id: savedIssue.id
           }))
@@ -459,7 +455,7 @@ export default function CreateTaskPage({
     ERC20.setAddress(e.address) 
   }
 
-  function handleNextStep() {
+  async function handleNextStep() {
     if (!userCanCreateBounties)
       return;
 
@@ -473,17 +469,15 @@ export default function CreateTaskPage({
   }
 
   useEffect(() => {
-    if(!connectedChain) return;
-
+    if(!connectedChain || currentSection !== 0) return;
     if (connectedChain.name === UNSUPPORTED_CHAIN) {
       setCurrentNetwork(undefined);
-      
       return;
     }
-      
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
-
     setNetworksOfConnectedChain(networksOfChain);
+    setCurrentNetwork(networksOfChain[0]);
+    updateParamsOfActive(networksOfChain[0]);
   }, [connectedChain]);
 
   useEffect(() => {
@@ -559,7 +553,6 @@ export default function CreateTaskPage({
     transactionalERC20.setAddress(undefined);
     rewardERC20.setAddress(undefined);
     handleAddNetwork(chain)
-      .then(_ => setCurrentNetwork(networksOfConnectedChain[0]))
       .catch((err) => console.log('handle Add Network error', err));
   }
 
@@ -569,8 +562,8 @@ export default function CreateTaskPage({
   }
 
   async function onNetworkSelected(opt) {
-    changeNetwork(opt.chain_id, opt?.networkAddress)
-      .then(() => setCurrentNetwork(opt));
+    setCurrentNetwork(opt);
+    updateParamsOfActive(opt);
   }
 
   function handleSectionHeaderClick(i: number) {
@@ -578,17 +571,6 @@ export default function CreateTaskPage({
       setCurrentSection(i)
     }
   }
-
-  useEffect(() => {
-    start();
-  }, []);
-
-  useEffect(() => {
-    if (!currentNetwork)
-      return;
-
-    changeNetwork(currentNetwork.chain_id, currentNetwork?.networkAddress)
-  }, [currentNetwork, daoService])
 
   return(
     <CreateTaskPageView

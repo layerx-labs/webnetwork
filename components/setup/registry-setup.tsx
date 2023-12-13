@@ -6,7 +6,7 @@ import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import {ContextualSpan} from "components/contextual-span";
 import {FormGroup} from "components/form-group";
 import {CallToAction} from "components/setup/call-to-action";
@@ -34,7 +34,9 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-interface RegistrySetupProps { 
+import {useDao} from "../../x-hooks/use-dao";
+
+interface RegistrySetupProps {
   isVisible?: boolean;
   registryAddress: string;
 }
@@ -82,9 +84,10 @@ export function RegistrySetup({
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
+  const { start: startService } = useDao();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { currentUser } = useUserStore();
-  const { supportedChains, connectedChain } = useSupportedChain();
+  const { supportedChains, connectedChain, refresh: updateChains } = useSupportedChain();
 
   const { mutate: mudateUpdateChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),
@@ -149,6 +152,8 @@ export function RegistrySetup({
 
     setisDeployingRegistry(true);
 
+    let registryAddress = null;
+
     handleDeployRegistry( erc20.value,
                           lockAmountForNetworkCreation,
                           treasury,
@@ -158,9 +163,12 @@ export function RegistrySetup({
                           bountyToken.value )
       .then(async tx => {
         const { contractAddress } = tx as TransactionReceipt;
+        registryAddress = contractAddress;
         setRegistry(previous => ({ ...previous, value: contractAddress}));
 
         daoService?.loadRegistry(false, contractAddress);
+
+        await updateChains();
 
         return setChainRegistry(contractAddress);
       })
@@ -171,6 +179,10 @@ export function RegistrySetup({
             .catch(error => console.debug("useAddToken: ", error));
 
         loadSettings(true);
+        return startService({
+          chainId: +connectedChain?.id,
+          registryAddress: registryAddress
+        });
       })
       .then(() => addSuccess(t("registry.success.deploy.title"), t("registry.success.deploy.content")))
       .catch(error => {
@@ -351,6 +363,7 @@ export function RegistrySetup({
           disabled={!needToSetDispatcher}
           executing={isSettingDispatcher}
           isContractAction
+          variant="registry"
         />
       }
 
@@ -363,6 +376,7 @@ export function RegistrySetup({
           disabled={!!isErc20Allowed?.transactional || !!isAllowingToken}
           executing={isAllowingToken === "transactional"}
           isContractAction
+          variant="registry"
         />
       }
 
@@ -375,6 +389,7 @@ export function RegistrySetup({
           disabled={!!isErc20Allowed?.reward || !!isAllowingToken}
           executing={isAllowingToken === "reward"}
           isContractAction
+          variant="registry"
         />
       }
 
@@ -503,6 +518,7 @@ export function RegistrySetup({
             withLockIcon={isDeployRegistryBtnDisabled}
             isLoading={isDeployingRegistry}
             onClick={deployRegistryContract}
+            variant="registry"
           >
             <span>{t("setup:registry.actions.deploy-registry")}</span>
           </ContractButton>

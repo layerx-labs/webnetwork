@@ -7,6 +7,7 @@ interface ChainSelectorViewProps {
   onSelect: (chain: SupportedChainData) => void | Promise<void>;
   isFilter?: boolean;
   shouldMatchChain?: boolean;
+  placeholder?: string;
 }
 
 export default function ChainSelectorView({
@@ -14,6 +15,7 @@ export default function ChainSelectorView({
   isFilter,
   shouldMatchChain,
   onSelect,
+  placeholder,
 }: ChainSelectorViewProps) {
 
   return(
@@ -23,6 +25,7 @@ export default function ChainSelectorView({
       className={isFilter ? null : 'select-network-dropdown'}
       shouldMatchChain={shouldMatchChain}
       readonly={!shouldMatchChain}
+      placeHolder={placeholder}
     />
   );
 }

@@ -18,7 +18,7 @@ interface DeliverableBodyControllerProps {
   currentBounty: IssueBigNumberData;
   isCreatingReview: boolean;
   updateDeliverableData: () => void;
-  handleShowModal: () => void;
+  handleShowModal: () => Promise<void>;
 }
 
 export default function DeliverableBody({
@@ -54,7 +54,8 @@ export default function DeliverableBody({
     isWalletConnected &&
     isDeliverableReady &&
     !isDeliverableCanceled &&
-    isCouncil
+    isCouncil &&
+    !currentBounty?.isClosed;
 
   const isMakeReadyReviewButton =
     isWalletConnected &&
@@ -70,13 +71,13 @@ export default function DeliverableBody({
 
   function handleMakeReady() {
     if (!currentBounty || !currentDeliverable) return;
-    onMakeReady(currentBounty.contractId, currentDeliverable.prContractId)
+    return onMakeReady(currentBounty.contractId, currentDeliverable.prContractId)
       .then(() => updateDeliverableData())
       .catch(error => console.debug("Failed to make ready for review", error.toString()));
   }
 
   function handleCancel() {
-    onCancel(currentBounty?.contractId, currentDeliverable?.prContractId)
+    return onCancel(currentBounty?.contractId, currentDeliverable?.prContractId)
       .then(() => {
         updateDeliverableData();
         router.push(getURLWithNetwork("/task/[id]", {

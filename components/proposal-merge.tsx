@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import {useTranslation} from "next-i18next";
 
 import Button from "components/button";
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import Modal from "components/modal";
 
 import {formatStringToCurrency} from "helpers/formatNumber";
@@ -54,6 +54,10 @@ export default function ProposalMerge({
     return BigNumber(value).multipliedBy(coinInfo?.prices[settings?.currency?.defaultFiat]).toFixed(4);
   }
 
+  async function handleShowModal () {
+    setShow(true);
+  }
+
   function handleMerge() {
     setShow(false);
     onClickMerge();
@@ -72,7 +76,7 @@ export default function ProposalMerge({
     <>
       <ContractButton
         textClass="text-uppercase text-white"
-        onClick={() => setShow(true)}
+        onClick={handleShowModal}
         disabled={!canMerge || isMerging}
         isLoading={isMerging}
         withLockIcon={!canMerge || isMerging}

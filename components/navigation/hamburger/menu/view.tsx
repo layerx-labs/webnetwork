@@ -12,7 +12,6 @@ import HelpButton from "components/common/buttons/help/view";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
-import ChainSelector from "components/navigation/chain-selector/controller";
 import ProfileLinks from "components/profile/profile-links";
 
 import {truncateAddress} from "helpers/truncate-address";
@@ -147,10 +146,6 @@ export default function HamburgerMenuView({
             </div>
 
             <div className="d-flex justify-content-end">
-              <div className="flex-grow-1">
-                <ChainSelector />
-              </div>
-
               <HelpButton />
             </div>
           </div>

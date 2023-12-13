@@ -54,8 +54,7 @@ export default function SelectChainDropdown({
   const { supportedChains, connectedChain } = useSupportedChain();
   const marketplace = useMarketplace();
 
-  const placeholder = 
-    !shouldMatchChain ? t("misc.all-chains") : placeHolder ? placeHolder : t("forms.select-placeholder");
+  const placeholder = placeHolder ? placeHolder : t("forms.select-placeholder");
 
   function chainToOption(chain: SupportedChainData | Partial<SupportedChainData>, isDisabled?: boolean): ChainOption {
     return {

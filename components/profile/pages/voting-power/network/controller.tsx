@@ -1,63 +1,99 @@
-import { useEffect } from "react";
+import {useEffect} from "react";
 
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useAuthentication } from "x-hooks/use-authentication";
-import useChain from "x-hooks/use-chain";
-import useOracleToken from "x-hooks/use-oracle-token";
+import VotingPowerNetworkView from "components/profile/pages/voting-power/network/view";
 
-import VotingPowerNetworkView from "./view";
+import {FIVE_MINUTES_IN_MS} from "helpers/constants";
+import {QueryKeys} from "helpers/query-keys";
+import {lowerCaseCompare} from "helpers/string";
 
-export default function VotingPowerNetwork() {
-  const { query } = useRouter();
-  const { t } = useTranslation(["common", "profile"]);
+import {Network} from "interfaces/network";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
-  const { updateWalletBalance } = useAuthentication();
-  const { chain } = useChain();
-  const { currentOracleToken } = useOracleToken();
-  const { service: daoService } = useDaoStore();
+import {useSearchCurators} from "x-hooks/api/curator";
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
+import {useAuthentication} from "x-hooks/use-authentication";
+import useMarketplace from "x-hooks/use-marketplace";
+import useReactQuery from "x-hooks/use-react-query";
+import useSupportedChain from "x-hooks/use-supported-chain";
+
+interface VotingPowerNetworkProps {
+  selectedNetwork: Network;
+  selectedChain: SupportedChainData;
+}
+export default function VotingPowerNetwork({
+  selectedNetwork,
+  selectedChain,
+}: VotingPowerNetworkProps) {
+  const daoStore = useDaoStore();
+  const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
+  const { supportedChains } = useSupportedChain();
+  const { updateWalletBalance } = useAuthentication();
 
-  const { curatorAddress } = query;
+  const address = currentUser?.walletAddress;
+  const chainShortName = selectedChain?.chainShortName;
+  const networkName = selectedNetwork?.name;
+  const isActionsEnabled = !!selectedNetwork && !!selectedChain && !!marketplace?.active;
+  const isBalanceLoading = !!daoStore?.serviceStarting;
 
+  const { data: curators, invalidate: updateVotes } =
+    useReactQuery(QueryKeys.votingPowerOf(address, chainShortName, networkName), () => useSearchCurators({
+      address: address,
+      networkName: networkName,
+      chainShortName: chainShortName,
+      increaseQuantity: true,
+    }), {
+      enabled: !!address,
+      staleTime: FIVE_MINUTES_IN_MS
+    });
 
-  const votesSymbol = t("token-votes", { token: currentOracleToken.symbol });
+  const { locked, delegatedToMe, delegations } = (curators?.rows || []).reduce((acc, curr) => {
+    return {
+      locked: [...acc.locked, ...BigNumber(curr.tokensLocked).gt(0) ? [curr] : []],
+      delegatedToMe: [...acc.delegatedToMe, ...BigNumber(curr.delegatedToMe).gt(0) ? [curr] : []],
+      delegations: [...acc.delegations, ...curr.delegations?.length ? [curr] : []],
+    }
+  }, { locked: [], delegatedToMe: [], delegations: [] });
 
-  const oraclesLocked =
-    currentUser?.balance?.oracles?.locked || BigNumber("0");
-  const oraclesDelegatedToMe =
-    currentUser?.balance?.oracles?.delegatedByOthers || BigNumber("0");
-  const oraclesDelegatedToOthers = currentUser?.balance?.oracles?.delegations?.reduce((acc, curr) => 
-    acc.plus(curr?.amount), BigNumber("0")) || BigNumber("0");
+  function updateBalance () {
+    updateWalletBalance(true);
+    updateVotes();
+  }
 
   useEffect(() => {
-    if (
-      !currentUser?.walletAddress ||
-      !daoService?.network ||
-      !chain
-    )
+    if (!currentUser?.walletAddress ||
+        !selectedNetwork ||
+        !selectedChain ||
+        !daoStore?.chainId ||
+        !daoStore?.networkAddress ||
+        !(+daoStore?.chainId === +selectedChain?.chainId &&
+          lowerCaseCompare(daoStore?.networkAddress, selectedNetwork?.networkAddress)))
       return;
 
     updateWalletBalance(true);
-  }, [currentUser?.walletAddress]);
+  }, [currentUser?.walletAddress, daoStore?.chainId, daoStore?.networkAddress]);
+
+  useEffect(() => {
+    updateVotes();
+  }, [selectedNetwork, selectedChain]);
 
   return (
     <VotingPowerNetworkView
-      oraclesLocked={oraclesLocked}
-      oraclesDelegatedToMe={oraclesDelegatedToMe}
-      oraclesDelegatedToOthers={oraclesDelegatedToOthers}
-      oracleToken={currentOracleToken}
-      votesSymbol={votesSymbol}
+      chains={supportedChains}
+      networks={selectedChain?.networks}
+      locked={locked}
+      delegatedToMe={delegatedToMe}
+      delegations={delegations}
+      isActionsEnabled={isActionsEnabled}
       walletAddress={currentUser?.walletAddress}
-      userBalance={currentUser?.balance}
+      userBalance={isActionsEnabled && !!marketplace?.active ? currentUser?.balance : null}
       userIsCouncil={currentUser?.isCouncil}
       userIsGovernor={currentUser?.isGovernor}
-      handleUpdateWalletBalance={() => updateWalletBalance(true)}
-      delegationAddress={curatorAddress?.toString()}
+      isBalanceLoading={isBalanceLoading}
+      handleUpdateWalletBalance={updateBalance}
     />
   );
 }

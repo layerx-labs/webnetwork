@@ -87,7 +87,7 @@
       "disconnect-wallet": "Disconnect"
     }
   },
-  "select-a-network": "Select a marketplace",
+  "select-a-network": "Select marketplace",
   "the-community": "the community",
   "select-multiple": {
     "allowed-transactional-tokens": "Allowed Transactional tokens",
@@ -498,6 +498,7 @@
   },
   "placeholders": {
     "select-chain": "Select Network",
+    "select-marketplace": "Select Marketplace",
     "select-latest": "Select Latest"
   },
   "comments": {

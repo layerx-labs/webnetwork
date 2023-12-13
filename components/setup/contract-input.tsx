@@ -4,7 +4,7 @@ import {Col} from "react-bootstrap";
 import {useTranslation} from "next-i18next";
 import { isAddress } from "web3-utils";
 
-import ContractButton from "components/common/buttons/contract-button";
+import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import {ExternalLink} from "components/external-link";
 import {FormGroup} from "components/form-group";
 
@@ -99,6 +99,7 @@ export function ContractInput({
               withLockIcon={action.disabled || action.executing}
               isLoading={action.executing}
               onClick={action.onClick}
+              variant="registry"
             >
               <span>{action.label}</span>
             </ContractButton>
