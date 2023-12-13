@@ -79,7 +79,7 @@ export async function getNotifications(req: NextApiRequest) {
       currentPage: +page,
       pages: calculateTotalPages(notifications?.count)
     };
-  } 
-  
-  return models.notification.findAll(where)
+  }
+ 
+  return models.notification.findAll({where})
 }
