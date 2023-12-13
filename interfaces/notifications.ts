@@ -1,13 +1,11 @@
 import { PaginatedData } from "./paginated-data";
 
 export type NotificationsType =
-  | "task"
-  | "deliverable"
-  | "proposal"
-  | "dispute"
-  | "open"
-  | "ready"
-  | "canceled";
+  | "NOTIF_TASK_CREATED"
+  | "NOTIF_DELIVERABLE_CREATED"
+  | "NOTIF_DELIVERABLE_READY"
+  | "NOTIF_PROPOSAL_OPEN"
+  | "NOTIF_PROPOSAL_DISPUTED"
 
 export interface Notifications {
   id: number;
