@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import { SearchNotificationsPaginated } from "interfaces/notifications";
 
@@ -8,6 +9,7 @@ import { useUpdateReadNotification } from "x-hooks/api/notification/use-update-r
 import { useUpdateReadAllNotifications } from "x-hooks/api/notifications/use-update-read-all-notifications";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
+import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import NotificationsListView from "./view";
@@ -33,7 +35,9 @@ export default function NotificationsList({
 
   const { addSuccess, addError } = useToastStore();
   const { currentUser } = useUserStore();
-
+  const router = useRouter();
+  const { getURLWithNetwork } = useMarketplace();
+  
   const { mutate: updateReadNotification, isLoading: isReadUploading } =
   useReactQueryMutation({
     mutationFn: useUpdateReadNotification,
@@ -67,6 +71,7 @@ export default function NotificationsList({
       onClickMarkAllRead={() => updateReadAllNotifications(currentUser?.walletAddress)}
       onUpdateBtnUreadActive={updateType}
       onClickRead={(id) => updateReadNotification({id: id.toString(), read: true })}
+      redirectTo={(href, query) => router.push(getURLWithNetwork(href, query))}
     />
   );
 }
