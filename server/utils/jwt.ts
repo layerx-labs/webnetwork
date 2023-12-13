@@ -12,11 +12,11 @@ export class UserRoleUtils {
   }
 
   static hasAdminRole(token: JwtToken) {
-    return !!token?.roles?.includes("admin");
+    return !!token?.roles?.includes(UserRole.ADMIN);
   }
 
   static hasGovernorRole(token: JwtToken) {
-    return !!token?.roles?.find(role => role?.includes("governor"));
+    return !!token?.roles?.find(role => role?.includes(UserRole.GOVERNOR));
   }
 
   static isGovernorOf(token: JwtToken, chainId: string, networkAddress: string) {
@@ -24,7 +24,7 @@ export class UserRoleUtils {
   }
 
   static isGovernorOnChain(roles: string[], chainId: string) {
-    return !!roles?.find(role => role?.includes(`governor:${chainId}`));
+    return !!roles?.find(role => role?.includes(`${UserRole.GOVERNOR}:${chainId}`));
   }
 
   static hasCreateBountyRole(roles: string[] = [], onNetworkId: number) {

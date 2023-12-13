@@ -68,7 +68,8 @@ export const toLower = (str: string) => str?.toLowerCase();
 
 export const isTrue = (str: string) => str === "true";
 
-export const lowerCaseCompare = (str: string, strToCompare: string) => toLower(str) === toLower(strToCompare);
+export const lowerCaseCompare = (str: string, strToCompare: string) =>
+  toLower(str) === toLower(strToCompare);
 
 export const lowerCaseIncludes = (str: string, strToCompare: string|string[]) =>
   typeof strToCompare === "string"

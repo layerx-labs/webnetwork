@@ -23,6 +23,8 @@ import Delegation from './delegation.model'
 import Comments from './comments.model'
 import Deliverables from './deliverable.model'
 import UserLockedRegistry from './user-locked-registry'
+import Notification from './notification.model'
+import UserSetting from './user-settings.model'
 
 const Database = { sequelize: null };
 
@@ -53,6 +55,8 @@ Database.delegation = Delegation;
 Database.comments = Comments;
 Database.deliverable = Deliverables;
 Database.userLockedRegistry = UserLockedRegistry;
+Database.notification = Notification;
+Database.userSetting = UserSetting;
 
 
 Object.values(Database).forEach((model) => {
