@@ -37,7 +37,7 @@ export default function TasksListItemTaskHall ({
             />
           </div>
 
-          <div className="col sm-regular text-white text-truncate">
+          <div className="col sm-regular text-white two-lines-text">
             {task?.title}
           </div>
         </div>
