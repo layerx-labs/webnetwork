@@ -263,5 +263,14 @@
     "design": "Design",
     "other": "Other"
   },
-  "tokens-not-converted": "Some tokens weren't converted"
+  "tokens-not-converted": "Some tokens weren't converted",
+  "browse-by-category": "Browse by category",
+  "want-to-launch-a-task": "Want to launch a task?",
+  "create-your-first-task": "Create your first task",
+  "categories": {
+    "code": "Technology",
+    "design": "Creative",
+    "marketing": "Marketing",
+    "writing": "Writing"
+  }
 }

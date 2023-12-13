@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import CloseIcon from "assets/icons/close-icon";
@@ -8,6 +9,7 @@ import useQueryFilter from "x-hooks/use-query-filter";
 
 export default function TasksListFilteredCategories () {
   const { query } = useRouter();
+  const { t } = useTranslation("bounty");
 
   const { setValue } = useQueryFilter({ categories: query?.categories });
 
@@ -32,7 +34,7 @@ export default function TasksListFilteredCategories () {
             className="border-gray-500 text-gray-400 font-weight-normal py-2 px-3"
             onClick={onClick(c)}
           >
-            <span>{c}</span>
+            <span>{t(`categories.${c}`)}</span>
             <CloseIcon />
           </Button>
         </div>)}

@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -7,27 +8,28 @@ import useQueryFilter from "x-hooks/use-query-filter";
 
 export default function TasksListsCategoryFilter () {
   const { query } = useRouter();
+  const { t } = useTranslation("bounty");
 
   const { setValue } = useQueryFilter({ categories: query?.categories });
 
   const categories = [
     {
-      label: "Technology",
+      label: t("categories.code"),
       color: "blue",
       value: "code"
     },
     {
-      label: "Creative",
+      label: t("categories.design"),
       color: "orange",
       value: "design"
     },
     {
-      label: "Marketing",
+      label: t("categories.marketing"),
       color: "green",
       value: "marketing"
     },
     {
-      label: "Writing",
+      label: t("categories.writing"),
       color: "pink",
       value: "writing"
     }
@@ -49,15 +51,15 @@ export default function TasksListsCategoryFilter () {
       <div className="col">
         <div className="row mb-5">
           <span className="xl-semibold font-weight-medium text-white">
-            Browse by category
+            {t("browse-by-category")}
           </span>
           <div className="mt-2 sm-regular text-white">
             <span className="mr-1">
-              Want to launch a task?
+              {t("want-to-launch-a-task")}
             </span>
             <Link href={"/create-task"}>
               <span className="text-blue-400 text-decoration-underline cursor-pointer font-weight-medium">
-                Create your first task
+                {t("create-your-first-task")}
               </span>
             </Link>
           </div>
