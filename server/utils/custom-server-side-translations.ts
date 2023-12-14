@@ -8,6 +8,5 @@ export default async function customServerSideTranslations (req: IncomingMessage
                                                             defaultLocale: string,
                                                             namespacesRequired?: string | string[] | undefined) {
   const userLocale = (req?.cookies || {})["next-i18next-locale"];
-  console.log("userLocale", userLocale)
   return serverSideTranslations(userLocale || defaultLocale, namespacesRequired);
 }
