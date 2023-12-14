@@ -15,6 +15,7 @@ export interface CustomSession extends Record<string, unknown> {
     isEmailConfirmed?: boolean | null;
     emailVerificationSentAt?: string | null;
     id?: number;
+    language?: string | null;
     notifications?: boolean;
   };
   expires: ISODateString;
