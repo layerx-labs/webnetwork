@@ -49,8 +49,7 @@ export async function getNotifications(req: NextApiRequest) {
     ... address ? {} : {id: {[Op.eq]: +id}},
 
     /** if read is provided, it will look up read as true or false, otherwise "read" state is ignored */
-    ... read !== null ? {read: {[Op.eq]: read.toLowerCase() === "true"}} : {},
-    ... userId ? {userId} : {}
+    ... read !== null ? {read: {[Op.eq]: read.toLowerCase() === "true"}} : {}
   }
 
   const include = []

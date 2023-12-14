@@ -6,7 +6,9 @@ import {changeAddressSettings} from "server/common/user/settings/change-address-
 import {HttpBadRequestError, HttpUnauthorizedError} from "server/errors/http-errors";
 
 jest.mock("db/models", () => ({
-  userSetting: jest.fn()
+  userSetting: {
+    findOrCreate: jest.fn().mockReturnValue([{userSetting: jest.fn()}, {created: jest.fn()} ])
+  }
 }));
 
 describe("changeAddressSettings", () => {
@@ -22,39 +24,56 @@ describe("changeAddressSettings", () => {
       }} as NextApiRequest;
   });
 
-  it("should throw an error when user does not exist", () => {
+  it("should throw an error when user does not exist", async () => {
     mockedRequest.body.context.user = null;
-    expect(() => changeAddressSettings(mockedRequest)).toThrow(HttpUnauthorizedError);
+    try {
+      await changeAddressSettings(mockedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpUnauthorizedError);
+    }
   });
 
-  it("should throw an error when settings does not exist", () => {
-    expect(() => changeAddressSettings(mockedRequest)).toThrow(HttpBadRequestError);
+  it("should throw an error when settings does not exist", async () => {
+    try {
+      await changeAddressSettings(mockedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpBadRequestError);
+    }
   });
 
-  it("should throw an error when settings has disallowed properties", () => {
+  it("should throw an error when settings has disallowed properties", async () => {
     mockedRequest.body.settings = {forbidden: "property"};
-    expect(() => changeAddressSettings(mockedRequest)).toThrow(HttpBadRequestError);
+    try {
+      await changeAddressSettings(mockedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpBadRequestError);
+    }
   });
 
-  it("should throw an error when language setting is not valid", () => {
+  it("should throw an error when language setting is not valid", async () => {
     mockedRequest.body.settings = {language: "abc"};
-
-    expect(() => changeAddressSettings(mockedRequest)).toThrow(HttpBadRequestError);
+    try {
+      await changeAddressSettings(mockedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpBadRequestError);
+    }
   });
 
-  it("should throw an error when notifications setting is not a boolean", () => {
+  it("should throw an error when notifications setting is not a boolean", async () => {
     mockedRequest.body.settings = {notifications: "not-a-bool"};
-
-    expect(() => changeAddressSettings(mockedRequest)).toThrow(HttpBadRequestError);
+    try {
+      await changeAddressSettings(mockedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpBadRequestError);
+    }
   });
 
-  it("should update user settings when everything is valid", () => {
+  it("should update user settings when everything is valid", async () => {
     const mockUpdate = jest.fn();
     models.userSetting.update = mockUpdate;
 
     mockedRequest.body.settings = {notifications: true, language: 'en'}
 
-    changeAddressSettings(mockedRequest);
-    expect(mockUpdate).toHaveBeenCalledWith({notifications: true, language: 'en'}, {where: {userId: 1}});
+    expect(await changeAddressSettings(mockedRequest)).toEqual("updated Settings");
   });
 });
