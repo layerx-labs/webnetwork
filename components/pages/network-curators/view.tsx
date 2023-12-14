@@ -2,10 +2,10 @@ import React from "react";
 
 import { useTranslation } from "next-i18next";
 
-import BountiesList from "components/bounty/bounties-list/controller";
 import If from "components/If";
 import CuratorsPageLayout from "components/layouts/curators-page/controller";
 import CuratorsList from "components/lists/curators/controller";
+import TasksList from "components/lists/tasks/controller";
 
 import { NetworkCuratorsPageProps } from "types/pages";
 
@@ -35,7 +35,7 @@ export default function NetworkCuratorsView({
       <If 
         condition={isCuratorView}
         otherwise={
-          <BountiesList
+          <TasksList
             key={type}
             emptyMessage={t("council:empty")}
             bounties={bounties}

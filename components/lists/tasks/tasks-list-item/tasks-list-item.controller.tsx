@@ -12,14 +12,21 @@ import TrashIcon from "assets/icons/trash-icon";
 
 import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
-import BountyStatusInfo from "components/bounty-status-info";
 import BountyAmount from "components/bounty/amount-info/controller";
+import BountyTagsView from "components/bounty/bounty-tags/view";
+import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.view";
 import CardItem from "components/card-item";
+import ChainIcon from "components/chain-icon";
 import { FlexColumn } from "components/common/flex-box/view";
 import If from "components/If";
+import TasksListItemTaskHall
+  from "components/lists/tasks/tasks-list-item/tasks-list-item-task-hall/tasks-list-item-task-hall.view";
 import Modal from "components/modal";
+import NetworkBadge from "components/network/badge/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
+import TaskStatusInfo from "components/task-status-info";
 import Translation from "components/translation";
+import MoreActionsDropdown from "components/utils/more-actions-dropdown/controller";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import {getIssueState} from "helpers/handleTypeIssue";
@@ -34,34 +41,28 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import { useSettings } from "x-hooks/use-settings";
 
-import BountyTagsView from "./bounty/bounty-tags/view";
-import TaskTypeBadge from "./bounty/task-type-badge/task-type-badge.view";
-import ChainIcon from "./chain-icon";
-import NetworkBadge from "./network/badge/view";
-import MoreActionsDropdown from "./utils/more-actions-dropdown/controller";
-
-interface IssueListItemProps {
+interface TasksListItemProps {
   issue?: IssueBigNumberData;
   xClick?: () => void;
   size?: "sm" | "lg";
   variant?: "network" | "multi-network" | "management";
 }
 
-export default function IssueListItem({
+export default function TasksListItem({
   size = "lg",
   issue = null,
   xClick,
   variant = "network"
-}: IssueListItemProps) {
+}: TasksListItemProps) {
   const router = useRouter();
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
-  
+
   const [visible, setVisible] = useState<boolean>();
   const [isCancelable, setIsCancelable] = useState(false);
   const [hideTrashIcon, setHideTrashIcon] = useState<boolean>();
   const [showHardCancelModal, setShowHardCancelModal] = useState(false);
   const [isLoadingHardCancel, setIsLoadingHardCancel] = useState(false);
-  
+
   const { settings } = useSettings();
   const { getURLWithNetwork } = useMarketplace();
   const { handleHardCancelBounty, getCancelableTime, getTimeChain } = useBepro();
@@ -83,14 +84,13 @@ export default function IssueListItem({
     amount: issue?.amount,
     fundingAmount: issue?.fundingAmount,
   });
-  
+
   const fundedAmount = issue?.fundedAmount?.isNaN() ? BigNumber(0) : issue?.fundedAmount;
-  const fundingAmount = issue?.fundingAmount?.isNaN() ? BigNumber(0) : issue?.fundingAmount;
 
   const percentage =
-  BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
-    .dividedBy(issue?.fundingAmount)
-    .toFixed(0, 1) || 0;
+    BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
+      .dividedBy(issue?.fundingAmount)
+      .toFixed(0, 1) || 0;
 
   function handleClickCard() {
     if (xClick) return xClick();
@@ -116,13 +116,13 @@ export default function IssueListItem({
   function handleHardCancel() {
     setIsLoadingHardCancel(true)
     handleHardCancelBounty(issue?.contractId, issue?.id)
-    .then(() => {
-      addSuccess(t("common:actions.success"), t("bounty:actions.canceled-bounty"));
-      setShowHardCancelModal(false)
-      setHideTrashIcon(true)
-    }).catch(handleToastError)
-    .finally(() => setIsLoadingHardCancel(false))
-  } 
+      .then(() => {
+        addSuccess(t("common:actions.success"), t("bounty:actions.canceled-bounty"));
+        setShowHardCancelModal(false)
+        setHideTrashIcon(true)
+      }).catch(handleToastError)
+      .finally(() => setIsLoadingHardCancel(false))
+  }
 
   useEffect(() => {
     if (daoService && issue && variant === "management")
@@ -212,7 +212,7 @@ export default function IssueListItem({
                   font-weight-normal text-capitalize border-radius-8`}
               >
                 <>
-                  <BountyStatusInfo issueState={issueState} />
+                  <TaskStatusInfo task={issue} />
                   <span>{isSeekingFund ? t("seeking-funding") : issueState}</span>
                 </>
               </Badge>
@@ -220,7 +220,7 @@ export default function IssueListItem({
           </ResponsiveWrapper>
 
           <ResponsiveWrapper xs={true} md={false} className="align-items-center gap-2 mb-3">
-            <BountyStatusInfo issueState={issueState} />
+            <TaskStatusInfo task={issue} />
             <span className="text-truncate text-capitalize">{issue?.title}</span>
           </ResponsiveWrapper>
 
@@ -237,9 +237,9 @@ export default function IssueListItem({
 
           <div className="row align-items-center justify-content-md-end justify-content-between mt-2">
             <If condition={isSeekingFund}>
-              <ResponsiveWrapper 
-                xs={false} 
-                md={true} 
+              <ResponsiveWrapper
+                xs={false}
+                md={true}
                 className="col-6 caption-medium font-weight-normal text-capitalize"
               >
                 <span className="mr-1">{t("info.funded")}</span>
@@ -247,7 +247,7 @@ export default function IssueListItem({
               </ResponsiveWrapper>
             </If>
 
-            <ResponsiveWrapper 
+            <ResponsiveWrapper
               md={false}
               className="mw-50-auto network-name caption-medium font-weight-normal text-capitalize"
             >
@@ -269,80 +269,88 @@ export default function IssueListItem({
   if (variant === "management") {
     return (
       <>
-      <CardItem
-        variant="management"
-        hide={!isVisible}
-        key="management"
-      >
-        <div className="row align-items-center">
-          <div className="col col-md-6 text-overflow-ellipsis">
+        <CardItem
+          variant="management"
+          hide={!isVisible}
+          key="management"
+        >
+          <div className="row align-items-center">
+            <div className="col col-md-6 text-overflow-ellipsis">
             <span className={`text-capitalize
               ${!isVisible && "text-decoration-line text-gray-600" || "text-gray-white"}`}>
               {(issue?.title !== null && issue?.title) || (
                 <Translation ns="bounty" label={"errors.fetching"} />
               )}
             </span>
-            <div className={!isVisible && 'text-decoration-line' || ""}>
-              <IssueTag />
-            </div>
-          </div>
-
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
-              <div
-                className="cursor-pointer"
-                onClick={handleClickCard}
-              >
-                <ArrowUpRightGray />
+              <div className={!isVisible && 'text-decoration-line' || ""}>
+                <IssueTag />
               </div>
-            </FlexColumn>
-          </ResponsiveWrapper>
+            </div>
 
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
+            <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
+              <FlexColumn className="justify-content-center">
+                <div
+                  className="cursor-pointer"
+                  onClick={handleClickCard}
+                >
+                  <ArrowUpRightGray />
+                </div>
+              </FlexColumn>
+            </ResponsiveWrapper>
+
+            <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
+              <FlexColumn className="justify-content-center">
                 <div className="cursor-pointer" onClick={handleUpdateVisibility}>
                   {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
                 </div>
-            </FlexColumn>
-          </ResponsiveWrapper>
+              </FlexColumn>
+            </ResponsiveWrapper>
 
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
-              {!hideTrashIcon && isCancelable && !['canceled', 'closed', 'proposal'].includes(issue?.state) ? (
-              <div className="cursor-pointer m-0 p-0" onClick={() => setShowHardCancelModal(true)}>
-                <TrashIcon />
-              </div>
-              ): '-'}
-            </FlexColumn>
-          </ResponsiveWrapper>
+            <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
+              <FlexColumn className="justify-content-center">
+                {!hideTrashIcon && isCancelable && !['canceled', 'closed', 'proposal'].includes(issue?.state) ? (
+                  <div className="cursor-pointer m-0 p-0" onClick={() => setShowHardCancelModal(true)}>
+                    <TrashIcon />
+                  </div>
+                ): '-'}
+              </FlexColumn>
+            </ResponsiveWrapper>
 
-          <ResponsiveWrapper xs={true} md={false} className="col-auto d-flex justify-content-center">
-            <MoreActionsDropdown
-              actions={[
-                { content: "Task Link", onClick: handleClickCard},
-                { content: isVisible ? "Hide Task" : "Show Task", onClick: handleUpdateVisibility},
-                { content: "Cancel", onClick: () => setShowHardCancelModal(true)},
-              ]}
-            />
-          </ResponsiveWrapper>
-        </div>
-      </CardItem>
-      <Modal
-            title={t("common:modals.hard-cancel.title")}
-            centerTitle
-            show={showHardCancelModal}
-            onCloseClick={() => setShowHardCancelModal(false)}
-            cancelLabel={t("common:actions.close")}
-            okLabel={t("common:actions.continue")}
-            isExecuting={isLoadingHardCancel}
-            okDisabled={isLoadingHardCancel}
-            onOkClick={handleHardCancel}
-      >
-            <h5 className="text-center"><Translation ns="common" label="modals.hard-cancel.content"/></h5>
-      </Modal>
+            <ResponsiveWrapper xs={true} md={false} className="col-auto d-flex justify-content-center">
+              <MoreActionsDropdown
+                actions={[
+                  { content: "Task Link", onClick: handleClickCard},
+                  { content: isVisible ? "Hide Task" : "Show Task", onClick: handleUpdateVisibility},
+                  { content: "Cancel", onClick: () => setShowHardCancelModal(true)},
+                ]}
+              />
+            </ResponsiveWrapper>
+          </div>
+        </CardItem>
+        <Modal
+          title={t("common:modals.hard-cancel.title")}
+          centerTitle
+          show={showHardCancelModal}
+          onCloseClick={() => setShowHardCancelModal(false)}
+          cancelLabel={t("common:actions.close")}
+          okLabel={t("common:actions.continue")}
+          isExecuting={isLoadingHardCancel}
+          okDisabled={isLoadingHardCancel}
+          onOkClick={handleHardCancel}
+        >
+          <h5 className="text-center"><Translation ns="common" label="modals.hard-cancel.content"/></h5>
+        </Modal>
       </>
     );
   }
+
+  if (variant === "multi-network")
+    return(
+      <TasksListItemTaskHall
+        task={issue}
+        onClick={handleClickCard}
+      />
+    );
 
   return (
     <CardItem onClick={handleClickCard} key="default-card">
@@ -350,11 +358,7 @@ export default function IssueListItem({
         <div className="col">
           <div className="row align-items-center">
             <div className="col-auto">
-              <BountyStatusInfo
-                issueState={issueState}
-                fundedAmount={fundedAmount}
-                fundingAmount={fundingAmount}
-              />
+              <TaskStatusInfo task={issue} />
             </div>
 
             <div className="col px-0 text-truncate">
@@ -372,7 +376,7 @@ export default function IssueListItem({
               />
             </div>
           </div>
-          
+
           <ResponsiveWrapper xs={false} xl={true}>
             <div className="d-flex justify-content-md-start mt-2 mb-3">
               <BountyTagsView tags={issue?.tags} />
@@ -416,7 +420,7 @@ export default function IssueListItem({
                     </BountyItemLabel>
 
                     <div className="col d-flex justify-content-end px-0">
-                      <TaskTypeBadge 
+                      <TaskTypeBadge
                         type={issue?.type}
                       />
                     </div>
@@ -433,7 +437,7 @@ export default function IssueListItem({
                 className="row align-items-center justify-content-between"
               >
                 <div className="col mw-50-auto network-name">
-                  <TaskTypeBadge 
+                  <TaskTypeBadge
                     type={issue?.type}
                   />
                 </div>

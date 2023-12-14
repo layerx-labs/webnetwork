@@ -2,9 +2,9 @@ import {useTranslation} from "next-i18next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {GetServerSideProps} from "next/types";
 
-import BountiesList from "components/bounty/bounties-list/controller";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
+import TasksList from "components/lists/tasks/controller";
 
 import { emptyBountiesPaginated } from "helpers/api";
 
@@ -64,7 +64,7 @@ export default function TasksPage({
       />
 
       <CustomContainer>
-        <BountiesList
+        <TasksList
           bounties={bounties}
           variant="network"
         />
