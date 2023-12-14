@@ -1,0 +1,1 @@
+export * from "x-hooks/api/user/settings/use-update-settings";
