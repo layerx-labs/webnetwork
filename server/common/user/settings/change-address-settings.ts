@@ -1,10 +1,11 @@
-import {NextApiRequest} from "next";
+import { addYears } from "date-fns";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import models from "db/models";
 
 import {HttpBadRequestError, HttpUnauthorizedError} from "server/errors/http-errors";
 
-export async function changeAddressSettings(req: NextApiRequest) {
+export async function changeAddressSettings(req: NextApiRequest, res: NextApiResponse) {
   const {context: {user}, settings} = req.body;
 
   if (!user?.id)
@@ -25,7 +26,7 @@ export async function changeAddressSettings(req: NextApiRequest) {
 
   if (settings.notifications && ![true,false].includes(settings.notifications))
     throw new HttpBadRequestError()
-  
+
   const [userSetting, created] = await models.userSetting.findOrCreate({
     where: { userId: user.id },
     defaults: settings
@@ -37,5 +38,9 @@ export async function changeAddressSettings(req: NextApiRequest) {
     await userSetting.save()
   }
 
-  return "updated Settings"
+  const expiresAt = addYears(new Date(), 1).toUTCString();
+
+  res.setHeader("Set-Cookie", `next-i18next-locale=${settings.language}; expires=${expiresAt}`);
+
+  return "updated Settings";
 }
