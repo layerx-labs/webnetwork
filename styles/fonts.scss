@@ -205,6 +205,15 @@ button,
   line-height: 17px; /* 121.429% */
 }
 
+/* Normal Case/XL/Medium */
+.xl-medium {
+  font-family: Space Grotesk;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 26px; /* 130% */
+}
+
 .hack-fest-title {
   font-variant-numeric: lining-nums tabular-nums;
   font-feature-settings: 'ss04' on, 'ss02' on, 'ss03' on;

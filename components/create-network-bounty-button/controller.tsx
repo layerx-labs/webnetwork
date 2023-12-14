@@ -1,37 +1,44 @@
-import {useTranslation} from "next-i18next";
+import { useState } from "react";
+
 import {useRouter} from "next/router";
 
 import CreateNetworkBountyButtonView from "components/create-network-bounty-button/view";
 
 interface CreateNetworkBountyButtonProps {
-  actionCallBack?: () => void;
   label?: string;
+  actionCallBack?: () => void;
 }
 
 export default function CreateNetworkBountyButton({
-  actionCallBack,
-  label
+  label,
+  actionCallBack
 }: CreateNetworkBountyButtonProps) {
-  const { t } = useTranslation("common");
   const { pathname, push } = useRouter();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isOnNetwork = pathname?.includes("[network]");
 
-  function onClick(url) {
-    return () => {
-      push(url);
-      actionCallBack?.();
+  function onClick () {
+    if (!isOnNetwork) {
+      setIsModalVisible(true);
+      return;
     }
+    push("/create-task");
   }
 
-  const actions = [
-    { label: t("misc.bounty"), onClick: onClick("/create-task") },
-    { label: t("misc.network"), onClick: onClick("/new-marketplace") },
-  ];
+  function onCloseClick () {
+    setIsModalVisible(false);
+  }
 
-  return <CreateNetworkBountyButtonView
-    isOnNetwork={isOnNetwork}
-    actions={actions}
-    label={label}
-  />;
+  return(
+    <CreateNetworkBountyButtonView
+      isOnNetwork={isOnNetwork}
+      isModalVisible={isModalVisible}
+      onClick={onClick}
+      onCloseClick={onCloseClick}
+      label={label}
+      actionCallBack={actionCallBack}
+    />
+  );
 }

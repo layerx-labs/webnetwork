@@ -39,6 +39,7 @@ $disabled: #423b51;
 $green-500: #35E0AD;
 $blue-50: #ECEDFC;
 $blue-600: #3540B6;
+$blue-150: #C6CAF7;
 
 $orange-500: #FF6A2C;
 
@@ -105,6 +106,7 @@ $more-bg: (
   "gray-900": $gray-900,
   "gray-950": $gray-950,
   "blue-200": $blue-200,
+  "blue-150": $blue-150,
   "blue-400": $blue-400,
   "orange-500": $orange-500,
   "orange-800": rgba($orange-500, 0.8),
@@ -147,6 +149,7 @@ $more-colors: (
   "green-500": $green-500,
   "green-500-90": #104334E5,
   "blue-50": $blue-50,
+  "blue-150": $blue-150,
   "blue-600": $blue-600,
 );
 
@@ -293,6 +296,13 @@ $utilities: map-merge(
         map-get($utilities, "width"),
         (
           responsive: true
+        )
+      ),
+      "text":
+      map-merge(
+        map-get($utilities, "width"),
+        (
+                responsive: true
         )
       ),
     "border":

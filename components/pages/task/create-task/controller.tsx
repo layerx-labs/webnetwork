@@ -13,6 +13,7 @@ import CreateTaskPageView from "components/pages/task/create-task/view";
 import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import {addFilesToMarkdown} from "helpers/markdown";
+import { lowerCaseCompare } from "helpers/string";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
 
@@ -469,6 +470,15 @@ export default function CreateTaskPage({
   }
 
   useEffect(() => {
+    if (!query?.marketplace)
+      return;
+    const marketplace = allNetworks?.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
+    if (!marketplace)
+      return;
+    handleNetworkSelected(marketplace.chain);
+  }, []);
+
+  useEffect(() => {
     if(!connectedChain || currentSection !== 0) return;
     if (connectedChain.name === UNSUPPORTED_CHAIN) {
       setCurrentNetwork(undefined);
@@ -476,8 +486,16 @@ export default function CreateTaskPage({
     }
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
     setNetworksOfConnectedChain(networksOfChain);
-    setCurrentNetwork(networksOfChain[0]);
-    updateParamsOfActive(networksOfChain[0]);
+    const queryMarketplace = allNetworks.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
+    if (!queryMarketplace) {
+      setCurrentNetwork(networksOfChain[0]);
+      updateParamsOfActive(networksOfChain[0]);
+      return;
+    }
+    if (+connectedChain?.id === +queryMarketplace?.chain_id) {
+      setCurrentNetwork(queryMarketplace);
+      updateParamsOfActive(queryMarketplace);
+    }
   }, [connectedChain]);
 
   useEffect(() => {
@@ -552,7 +570,7 @@ export default function CreateTaskPage({
     setCustomTokens([]);
     transactionalERC20.setAddress(undefined);
     rewardERC20.setAddress(undefined);
-    handleAddNetwork(chain)
+    return handleAddNetwork(chain)
       .catch((err) => console.log('handle Add Network error', err));
   }
 

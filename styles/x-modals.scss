@@ -12,3 +12,36 @@
 .modal-backdrop { 
   z-index: 1055 !important;
 }
+
+.modal {
+  &-header {
+    padding-bottom: 0;
+  }
+  &-content {
+    border-radius: 16px;
+    border: 1px solid $gray-800;
+    background-color: $gray-850;
+    padding: 24px;
+  }
+  &-header,
+  &-footer {
+    justify-content: center;
+    border: 0;
+  }
+  &-header,
+  &-footer,
+  &-body {
+    padding: 0;
+  }
+  .close-button {
+    width: 24px;
+    top: 16px;
+    right: 16px;
+  }
+  &-footer {
+    margin: 0;
+  }
+  .close-icon-search {
+    color: blue !important;
+  }
+}

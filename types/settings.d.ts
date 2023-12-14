@@ -68,5 +68,8 @@ export type SettingsType = {
   kyc: {
     isKycEnabled: boolean;
     tierList: Tier[];
+  },
+  forms?: {
+    createMarketplaceHelp?: string;
   }
 }
