@@ -7,7 +7,7 @@ const useRouter = jest.fn(() => ({
   events: { on: (event, callback) => callback(), off: jest.fn() },
   push: mockPush,
   replace: mockReplace,
-}))
+}));
 
 export {
   useRouter,

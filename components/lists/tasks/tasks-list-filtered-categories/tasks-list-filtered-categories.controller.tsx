@@ -13,10 +13,8 @@ export default function TasksListFilteredCategories () {
   const categories = query?.categories?.toString().split(",").filter(c => c);
 
   function onClick (category: string) {
-    return () => {
-      const newCategories = query?.categories?.toString()?.replace(category, "")?.split(",")?.filter(c => c)?.join(",");
-      setValue({ categories: newCategories }, true);
-    };
+    const newCategories = query?.categories?.toString()?.replace(category, "")?.split(",")?.filter(c => c)?.join(",");
+    setValue({ categories: newCategories }, true);
   }
 
   return(

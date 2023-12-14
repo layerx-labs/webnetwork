@@ -6,7 +6,7 @@ import { Category } from "components/lists/tasks/tasks-lists-category-filter/tas
 
 interface TasksListsCategoryFilterViewProps {
   categories: Category[]
-  onCategoryClick: (category: string) => () => void;
+  onCategoryClick: (category: string) => void;
 }
 export default function TasksListsCategoryFilterView ({
   categories,
@@ -41,7 +41,8 @@ export default function TasksListsCategoryFilterView ({
                   className={`category-filter-${c.color} border-none text-capitalize lg-medium border-radius-16 
                     px-3 pb-3 pt-5`}
                   align="left"
-                  onClick={onCategoryClick(c.value)}
+                  onClick={() => onCategoryClick(c.value)}
+                  data-testid={`category-button-${c.value}`}
                 >
                   {c.label}
                 </Button>

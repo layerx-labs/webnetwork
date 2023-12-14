@@ -41,14 +41,12 @@ export default function TasksListsCategoryFilter () {
   ];
 
   function onCategoryClick (category: string) {
-    return () => {
-      const categories = query?.categories;
-      const alreadySelected = categories?.includes(category);
-      if (alreadySelected)
-        return;
-      const newCategories = [(query.categories || "").toString().split(","), category];
-      setValue({ categories: newCategories.join(",") }, true);
-    };
+    const categories = query?.categories;
+    const alreadySelected = categories?.includes(category);
+    if (alreadySelected)
+      return;
+    const newCategories = [categories?.toString()?.split(","), category].filter(c => c);
+    setValue({ categories: newCategories.join(",") }, true);
   }
 
   return(
