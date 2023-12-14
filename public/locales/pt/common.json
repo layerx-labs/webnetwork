@@ -80,7 +80,24 @@
     "Oracle": "bv{{tokenSymbol}}",
     "create-bounty": "Criar Bounty",
     "get-started": "Comece Agora",
-    "connect": "Conectar"
+    "connect": "Conectar",
+    "nav-avatar": {
+      "my-profile": "Meu perfil",
+      "profile": "Perfil",
+      "wallet": "Carteira",
+      "voting-power": "Poder de Voto",
+      "payments": "Pagamentos",
+      "bounties": "Tarefas",
+      "deliverables": "Entregáveis",
+      "proposals": "Propostas",
+      "my-network": "Meu Marketplace",
+      "support-center": "Support Center",
+      "guides": "Guides",
+      "join-discord": "Join the Discord",
+      "follow-on-twitter": "Follow @bepronet on Twitter",
+      "web-network-1": "Web Marketplace Version 1.0",
+      "disconnect-wallet": "Disconnect"
+    }
   },
   "mobile-information": {},
   "select-a-repository": "escolha um repositório ",
