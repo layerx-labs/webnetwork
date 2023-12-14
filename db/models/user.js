@@ -52,7 +52,10 @@ class User extends Model {
         ownerOrGovernor: {
           attributes: {
             exclude: ["emailVerificationCode"]
-          }
+          },
+          include: [
+            { association: "settings" }
+          ]
         },
         admin: {}
       }
