@@ -72,6 +72,6 @@ describe("changeAddressSettings", () => {
     await changeAddressSettings(mockedRequest, mockedResponse);
     expect(mockUpdate).toHaveBeenCalledWith({notifications: true, language: 'en'}, {where: {userId: 1}});
     expect(mockSetHeader)
-      .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT`);
+      .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT; path=/`);
   });
 });

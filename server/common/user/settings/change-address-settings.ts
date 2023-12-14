@@ -40,7 +40,7 @@ export async function changeAddressSettings(req: NextApiRequest, res: NextApiRes
 
   const expiresAt = addYears(new Date(), 1).toUTCString();
 
-  res.setHeader("Set-Cookie", `next-i18next-locale=${settings.language}; expires=${expiresAt}`);
+  res.setHeader("Set-Cookie", `next-i18next-locale=${settings.language}; expires=${expiresAt}; path=/`);
 
   return "updated Settings";
 }
