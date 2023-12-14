@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
@@ -15,7 +14,6 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 const { publicRuntimeConfig } = getConfig();
 export default function LanguageForm () {
   const router = useRouter();
-  const session = useSession();
   const { t } = useTranslation(["common", "profile"]);
 
   const {currentUser} = useUserStore();
@@ -24,7 +22,6 @@ export default function LanguageForm () {
     mutationFn: (languageOption: SelectOption) =>
       useUpdateUserSettings({language: languageOption?.value?.toString()}),
     onSuccess: () => {
-      session.update();
       router.replace(router.asPath);
       addSuccess(t("actions.success"), t("profile:language-updated"));
     }
