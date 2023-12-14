@@ -3,7 +3,6 @@ import {Container, Row} from "react-bootstrap";
 
 import {GetServerSideProps} from "next";
 import {useTranslation} from "next-i18next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
@@ -14,6 +13,8 @@ import {RegistrySetup} from "components/setup/registry-setup";
 import TabbedNavigation from "components/tabbed-navigation";
 
 import { QueryKeys } from "helpers/query-keys";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import { useUserStore } from "x-hooks/stores/user/user.store";
@@ -134,10 +135,10 @@ export default function SetupPage(){
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "custom-network",

@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
@@ -14,6 +13,8 @@ import { deliverableParser, issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
 
 import { getReactQueryClient } from "services/react-query";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { CreateComment } from "x-hooks/api/comments";
 import { getDeliverable } from "x-hooks/api/deliverable";
@@ -100,7 +101,7 @@ export default function DeliverablePage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const queryClient = getReactQueryClient();
   const { deliverableId } = query;
   const deliverableKey = QueryKeys.deliverable(deliverableId?.toString());
@@ -108,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "proposal",

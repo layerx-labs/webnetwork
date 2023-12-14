@@ -1,9 +1,10 @@
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from "next/types";
 
 import NetworkCurators from "components/pages/network-curators/controller";
 
 import { emptyBountiesPaginated } from "helpers/api";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import useGetCuratorOverview from "x-hooks/api/overview/use-get-overview-curator";
@@ -11,7 +12,7 @@ import { getBountiesListData } from "x-hooks/api/task";
 
 export default NetworkCurators;
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const { type } = query;
 
   const state = {
@@ -41,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
       totalDistributed: overview?.networkTokenOnClosedBounties || 0,
       totalLocked: overview?.curators?.tokensLocked || 0,
       curators,
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "council",

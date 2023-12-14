@@ -1,5 +1,4 @@
 import {useTranslation} from "next-i18next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {GetServerSideProps} from "next/types";
 
 import PageHero from "components/common/page-hero/view";
@@ -7,6 +6,8 @@ import CustomContainer from "components/custom-container";
 import TasksList from "components/lists/tasks/controller";
 
 import { emptyBountiesPaginated } from "helpers/api";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { SearchBountiesPaginated } from "types/api";
 
@@ -73,7 +74,7 @@ export default function TasksPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const [bounties, overview] = await Promise.all([
     getBountiesListData(query)
       .then(({ data }) => data)
@@ -96,7 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale }) 
       bountiesClosed: closed,
       lockedOnNetwork: overview.curators.tokensLocked,
       protocolMembers: overview.members,
-      ...(await serverSideTranslations(locale, ["common", "bounty", "connect-wallet-button"]))
+      ...(await customServerSideTranslations(req, locale, ["common", "bounty", "connect-wallet-button"]))
     }
   };
 };

@@ -1,13 +1,14 @@
 import { GetServerSideProps } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import CreateTaskPage from "components/pages/task/create-task/controller";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
 
 export default CreateTaskPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const networks = await useSearchNetworks({
     isRegistered: true,
     isClosed: false,
@@ -19,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       networks: networks.rows,
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "custom-network",
         "bounty",
