@@ -7,6 +7,7 @@ import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
+import LanguageForm from "components/profile/language-form/language-form.controller";
 import NotificationForm from "components/profile/notification-form/controller";
 import ProfileLayout from "components/profile/profile-layout";
 import UserNameForm from "components/profile/user-name-form/controller";
@@ -71,6 +72,7 @@ export default function ProfilePageView({
             </div>
         </div>
         <NotificationForm />
+        <LanguageForm />
         <Divider bg="gray-850" />
       </ProfileLayout>
     </>
