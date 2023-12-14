@@ -1,6 +1,5 @@
 "use strict";
-const { getValueToLowerCase } = require("../../helpers/db/getters");
-const { Model, DataTypes } = require("sequelize");
+const { Sequelize, Model, DataTypes, Op} = require("sequelize");
 const { BigNumber } = require("bignumber.js");
 class Issue extends Model {
   static init(sequelize) {
@@ -103,7 +102,19 @@ class Issue extends Model {
     },
     {
       sequelize,
-      modelName: "issue"
+      modelName: "issue",
+      scopes: {
+        open: {
+          where: {
+            state: {
+              [Op.notIn]: ["pending", "canceled", "draft", "closed"]
+            },
+            fundingAmount: {
+              [Op.eq]: Sequelize.col("fundedAmount")
+            }
+          }
+        }
+      }
     });
   }
 

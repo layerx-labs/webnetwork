@@ -51,7 +51,10 @@
     "protocol-members": "Protocol members",
     "my-account": "My account",
     "delegated-oracles": "Delegated bv{{token}}",
-    "delegated-by-others": "Delegated by Other"
+    "delegated-by-others": "Delegated by Other",
+    "open-tasks": "Open tasks",
+    "to-grab": "To grab",
+    "users": "Users"
   },
   "main-nav": {
     "curators": "Curators",

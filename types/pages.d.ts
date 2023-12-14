@@ -1,3 +1,4 @@
+import {Curator} from "interfaces/curators";
 import { IssueData } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
@@ -8,17 +9,12 @@ import {
   LeaderBoardPaginated,
   NetworkPaymentsData,
   PaginatedCuratorOverview,
-  ActiveMarketplace, PaginatedData
+  PaginatedData
 } from "types/api";
 
-import {Curator} from "../interfaces/curators";
-
 export interface ExplorePageProps {
-  numberOfNetworks: number;
+  totalOnTasks: number;
   bounties: SearchBountiesPaginated;
-  recentBounties: IssueData[];
-  recentFunding: IssueData[];
-  activeNetworks: ActiveMarketplace[];
   protocolMembers: number;
 }
 
