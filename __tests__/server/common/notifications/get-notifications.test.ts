@@ -94,7 +94,7 @@ describe("getNotifications()", () => {
 
     it("Admin searches for their notifications", async () => {
       mockedRequest.query = {address: mockAddress};
-      console.log('notifcations', await getNotifications(mockedRequest))
+
       expect(await getNotifications(mockedRequest))
         .toEqual({"count": 10, "currentPage": 1, "pages": 1, "rows": [{"mock": "notification"}]});
     })
