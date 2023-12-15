@@ -25,6 +25,20 @@ describe("deleteNotification()", () => {
       .toThrow(HttpUnauthorizedError);
   });
 
+  it("throws because notification does not belong to user", async () => {
+    jest
+    .spyOn(models.notification, "findAll")
+    .mockImplementationOnce(() => [])
+
+    mockedRequest.body.context.token.roles = ["user"];
+    mockedRequest.query = {id: "1"};
+    
+    await expect(() => deleteNotification(mockedRequest))
+      .rejects
+      .toThrow(HttpNotFoundError);
+  });
+
+
   it("calls model.update", async () => {
     mockedRequest.body.context.token.roles = ["user"];
     mockedRequest.body.context.user.id = "1";
