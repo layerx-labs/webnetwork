@@ -263,7 +263,7 @@ export default async function get(query: ParsedUrlQuery) {
         return models.issue.count({
           where: {
             state: {
-              [Op.notIn]: ["pending", "canceled"],
+              [Op.notIn]: ["pending", "canceled", "closed"],
             },
             visible: true,
           }
