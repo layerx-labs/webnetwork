@@ -51,6 +51,7 @@ export interface Network {
   chain?: SupportedChainData;
   issues?: IssueData[];
   banned_domains: string[];
+  closeTaskAllowList: string[];
 }
 
 export interface ThemeColors {

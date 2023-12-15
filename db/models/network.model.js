@@ -98,6 +98,10 @@ class Network extends Model {
         allow_list: {
           type: DataTypes.ARRAY(DataTypes.STRING),
           defaultValue: [],
+        },
+        close_task_allow_list: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          defaultValue: [],
         }
       },
       {
