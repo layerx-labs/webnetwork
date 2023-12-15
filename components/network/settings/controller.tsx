@@ -2,6 +2,7 @@ import {ReactNode, useEffect, useState} from "react";
 
 import {useTranslation} from "next-i18next";
 
+import { Divider } from "components/divider";
 import NetworkGovernanceSettings from "components/network/settings/governance/controller";
 import NetworkLogoAndColorsSettings from "components/network/settings/logo-and-colors/controller";
 import NetworkManagement from "components/network/settings/management/view";
@@ -171,6 +172,8 @@ export default function MyNetworkSettings({
         component: (
           <>
             <NetworkPermissions network={network}/>
+            <AllowList networkId={network.id} networkAddress={network.networkAddress} />
+            <Divider bg="gray-800" />
             <AllowList networkId={network.id} networkAddress={network.networkAddress} />
           </>
         )

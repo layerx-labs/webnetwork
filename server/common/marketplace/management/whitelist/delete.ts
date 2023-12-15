@@ -12,27 +12,35 @@ import {HttpBadRequestError} from "server/errors/http-errors";
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const address = !req.query?.address ? "" : 
     typeof req.query.address !== "string" ? req.query.address.join() : req.query.address;
-  if (!address || !req.query?.networkId || (address && !isAddress(address)))
+  const type = ["open", "close"].includes(req.query?.type?.toString()) ? req.query?.type?.toString() : null;
+
+  if (!address || !req.query?.networkId || (address && !isAddress(address)) || !type)
     throw new HttpBadRequestError(ErrorMessages.InvalidPayload);
 
   const userAddress = req?.body?.context?.token?.address;
 
   const result = await Database.network.findOne({
-    attributes: ["allow_list"],
+    attributes: ["allow_list", "close_task_allow_list"],
     where: {
       id: req.query.networkId,
       creatorAddress: caseInsensitiveEqual("creatorAddress", userAddress)
     }
   });
 
-  if (!result || !lowerCaseIncludes(address, result?.allow_list || []))
+  const isCloseList = type === "close";
+  const columnName = isCloseList ? "close_task_allow_list" : "allow_list";
+
+  if (!result || !lowerCaseIncludes(address, result[columnName] || []))
     throw new HttpBadRequestError(ErrorMessages.NoNetworkFoundOrUserNotAllowed)
 
   const [, updatedAllowList] =
-    await Database.network
-      .update({allow_list: result.allow_list.filter(_a => !lowerCaseCompare(_a, address.toString()))},
-        {where: {id: req.query.networkId}, returning: true})
+    await Database.network.update({
+      [columnName]: result[columnName].filter(_a => !lowerCaseCompare(_a, address.toString()))
+    }, {
+      where: { id: req.query.networkId },
+      returning: true
+    });
 
 
-  return updatedAllowList.allow_list;
+  return updatedAllowList[columnName];
 }

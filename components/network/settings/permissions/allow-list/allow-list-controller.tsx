@@ -11,9 +11,17 @@ import useDeleteAllowListEntry
 import useGetAllowList from "x-hooks/api/marketplace/management/allow-list/use-get-allow-list";
 import useReactQuery from "x-hooks/use-react-query";
 
-type AllowListProps = {networkId: number, networkAddress: string};
+type AllowListProps = {
+  networkId: number,
+  networkAddress: string,
+  type: "open" | "close",
+};
 
-export default function AllowList({networkId, networkAddress}: AllowListProps) {
+export default function AllowList({
+  networkId,
+  networkAddress,
+  type
+}: AllowListProps) {
   const {data: allowListOfNetwork, isFetching, isLoading, invalidate} =
     useReactQuery<string[]>(['allow-list', networkId], () => useGetAllowList(networkId));
   const [address, setAddress] = useState("");
@@ -25,7 +33,7 @@ export default function AllowList({networkId, networkAddress}: AllowListProps) {
 
   async function onTrashClick(address: string) {
     try {
-      await useDeleteAllowListEntry(networkId, address);
+      await useDeleteAllowListEntry(networkId, address, type);
       await invalidate();
     } catch (e) {
       console.warn(`Failed to remove allow-list entry`, e);
@@ -36,7 +44,7 @@ export default function AllowList({networkId, networkAddress}: AllowListProps) {
     if (inputError())
       return;
     try {
-      await useAddAllowListEntry(networkId, dAddress, networkAddress);
+      await useAddAllowListEntry(networkId, dAddress, networkAddress, type);
       await invalidate();
       setAddress("");
     } catch (e) {
