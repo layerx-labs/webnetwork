@@ -46,7 +46,7 @@ export default function TasksListsCategoryFilter () {
     if (alreadySelected)
       return;
     const newCategories = [categories?.toString()?.split(","), category].filter(c => c);
-    setValue({ categories: newCategories.join(",") }, true);
+    setValue({ categories: newCategories.join(","), page: "1" }, true);
   }
 
   return(

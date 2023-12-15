@@ -14,7 +14,7 @@ export default function TasksListFilteredCategories () {
 
   function onClick (category: string) {
     const newCategories = query?.categories?.toString()?.replace(category, "")?.split(",")?.filter(c => c)?.join(",");
-    setValue({ categories: newCategories }, true);
+    setValue({ categories: newCategories, page: "1" }, true);
   }
 
   return(
