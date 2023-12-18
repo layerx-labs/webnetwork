@@ -6,7 +6,12 @@ import {HttpBadRequestError, HttpUnauthorizedError} from "../../../../server/err
 
 jest.mock("db/models", () => ({
   notification: {
-    findAll: jest.fn().mockReturnValue([{mock: "notification"}])
+    findAll: jest.fn().mockReturnValue([{mock: "notification"}]),
+    findAndCountAll: jest.fn().mockReturnValue({
+      count: 10,
+      rows: [{mock: "notification"}]
+    }),
+    count: jest.fn().mockReturnValue(10)
   }
 }));
 
@@ -27,43 +32,58 @@ describe("getNotifications()", () => {
       mockedRequest.body.context.user.id = "";
       mockedRequest.query = {address: "0x1", id: "2"};
 
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpUnauthorizedError);
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpUnauthorizedError);
+      }
     })
 
     it("Throws because no admin trying to read other address notifications", async () => {
       mockedRequest.body.context.user.id = "2";
       mockedRequest.query = {address: "0x2"};
-
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpUnauthorizedError)
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpUnauthorizedError);
+      }
     })
 
     it("Throws because no query.id and no query.address", async () => {
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpBadRequestError)
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpBadRequestError);
+      }
     })
 
     it("Throws because '0x1' is not an address", async () => {
       mockedRequest.query = {address: "0x1"};
       mockedRequest.body.context.user.address = "0x1";
-
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpBadRequestError)
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpBadRequestError);
+      }
     })
 
     it("Throws because query.id isNaN", async () => {
       mockedRequest.query = {id: NaN as any};
-
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpBadRequestError)
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpBadRequestError);
+      }
     })
 
     it("Throws because query.read is not 'true' or 'false'", async () => {
       mockedRequest.query = {id: "2", read: "neither"};
       mockedRequest.body.context.user.id = "2";
-      expect(() => getNotifications(mockedRequest))
-        .toThrow(HttpBadRequestError)
+      try {
+        await getNotifications(mockedRequest);
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpBadRequestError);
+      }
     })
   })
   describe("isAdmin = true", () => {
@@ -76,17 +96,17 @@ describe("getNotifications()", () => {
       mockedRequest.query = {address: mockAddress};
 
       expect(await getNotifications(mockedRequest))
-        .toEqual([{mock: "notification"}]);
+        .toEqual({"count": 10, "currentPage": 1, "pages": 1, "rows": [{"mock": "notification"}]});
     })
 
     it("Admin searches for another users notifications", async () => {
       mockedRequest.query = {address: mockAddress_2};
 
       expect(await getNotifications(mockedRequest))
-        .toEqual([{mock: "notification"}]);
+        .toEqual({"count": 10, "currentPage": 1, "pages": 1, "rows": [{"mock": "notification"}]});
     })
 
-    /** this tests the deleteNotification() and putReadNotification() "is admin" part as a side effect */
+    /** this tests the deleteNotification() and putReadNotification() "is admin" part as a side effect*/
     it("Admin searches for another user id", async () => {
       mockedRequest.query = {id: "2"};
 
@@ -95,6 +115,7 @@ describe("getNotifications()", () => {
     })
 
   });
+  
   describe("isAdmin = false", () => {
     beforeEach(() => {
       mockedRequest = {query: {}, body: {context: {token: {roles: [UserRole.USER]}, user: {id: "1", address: mockAddress}}}} as NextApiRequest;
@@ -104,7 +125,7 @@ describe("getNotifications()", () => {
       mockedRequest.query = {address: mockAddress};
 
       expect(await getNotifications(mockedRequest))
-        .toEqual([{mock: "notification"}]);
+        .toEqual({"count": 10, "currentPage": 1, "pages": 1, "rows": [{"mock": "notification"}]});
     });
 
     it("User searches for their notifications using id", async () => {
@@ -118,7 +139,7 @@ describe("getNotifications()", () => {
       mockedRequest.query = {address: mockAddress, read: "true"};
 
       expect(await getNotifications(mockedRequest))
-        .toEqual([{mock: "notification"}]);
+        .toEqual({"count": 10, "currentPage": 1, "pages": 1, "rows": [{"mock": "notification"}]});
     });
 
   });

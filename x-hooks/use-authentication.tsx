@@ -158,7 +158,8 @@ export function useAuthentication() {
       updateCurrentUser({
         id: user.id,
         walletAddress: user.address,
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
+        notifications: user.notifications
       })
 
       sessionStorage.setItem("currentWallet", user.address);

@@ -1228,6 +1228,16 @@ $c_props: (
   }
 }
 
+#notifications-indicator {
+  @extend #transactions-indicator;
+  
+  .popover-arrow {
+    &::after {
+      border-bottom-color: $gray-850;
+    }
+  }
+}
+
 .transaction-list {
   .tx-container {
     max-height: 244px;
@@ -1246,6 +1256,24 @@ $c_props: (
   svg {
     width: 18px !important;
     height: 18px !important;
+  }
+}
+
+.notification-list {
+  @extend .transaction-list;
+  .tx-container {
+    max-height: 549px !important;
+  }
+  .tx-row {
+    background-color: $gray-850;
+  }
+  .unread-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, $primary 28%, transparent 28%, transparent 100%) 2;
+  }
+  .all-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, transparent 28%, $primary 28%, $primary 46%, transparent 46%) 2;
   }
 }
 
@@ -1270,8 +1298,8 @@ $c_props: (
 
 .hover {
   &-white:hover {
-    background-color: rgba(rgba($white, 0), 0.2);
-    color: #fff;
+    background-color: rgba(rgba($white, 0), 0.2) !important;
+    color: #fff !important;
   }
 
   &-blue:hover {
@@ -1309,6 +1337,11 @@ a.row-button svg {
 .spinner-border-xs {
   width: 12px;
   height: 12px;
+}
+
+.text-normal {
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .text-danger {
@@ -1419,6 +1452,13 @@ textarea.form-control {
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
+}
+
+.notification-title {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .overflow-wrap {
@@ -1902,6 +1942,11 @@ input[type="color"] {
     border-right: 1px solid $gray-850;
   }
 }
+
+.border-active {
+  
+}
+
 .svg {
   &-gray {
     svg {
@@ -1918,6 +1963,12 @@ input[type="color"] {
 
 .border-bottom-dashed {
   border-bottom: 1px dashed $white;
+}
+
+.border-top-line {
+  border-top: 1px solid $gray-800;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
 }
 
 .bg {

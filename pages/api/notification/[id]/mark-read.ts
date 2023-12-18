@@ -1,6 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {UserRoute, WithValidChainId} from "../../../../middleware";
+import { withUser } from "middleware/with-user";
+
+import {WithValidChainId, withProtected} from "../../../../middleware";
 import {markNotificationRead} from "../../../../server/common/notifications/mark-notification-read";
 import {Logger} from "../../../../services/logging";
 
@@ -20,4 +22,4 @@ async function markNotificationAsRead(req: NextApiRequest, res: NextApiResponse)
 }
 
 Logger.changeActionName("MarkNotificationRead");
-export default UserRoute(WithValidChainId(markNotificationAsRead));
+export default withProtected(withUser(WithValidChainId(markNotificationAsRead), []));

@@ -5,6 +5,7 @@ import ConnectWalletButton from "components/connections/connect-wallet-button/co
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import NavAvatar from "components/nav-avatar";
 import HamburgerButton from "components/navigation/hamburger/controller";
+import Notifications from "components/notifications/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
@@ -32,7 +33,7 @@ export default function NavBarActions() {
           >
             <div className="d-flex gap-3 align-items-center">
               <TransactionsStateIndicator />
-
+              <Notifications />
               <NavAvatar />
             </div>
           </ResponsiveWrapper>

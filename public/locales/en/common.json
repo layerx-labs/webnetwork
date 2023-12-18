@@ -458,6 +458,20 @@
       "fee-for-network-creation": "Fee For Marketplace Creation"
     }
   },
+  "notifications": {
+    "title": "Notification",
+    "title_other": "Notifications",
+    "mark-read": "Mark all as read",
+    "unread": "Unread",
+    "no-unread-notifications": "You have no unread notifications",
+    "no-notifications": "You have no notifications",
+    "success": {
+      "update-read": "reading updated successfully"
+    },
+    "erros": {
+      "update-notifications": "error updating notification readings"
+    }
+  },
   "sort": {
     "label": "Sort by",
     "types": {

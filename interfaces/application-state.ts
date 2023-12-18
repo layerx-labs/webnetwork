@@ -33,6 +33,7 @@ export interface CurrentUserState {
   kycSession?: kycSession;
   id?: number;
   isCouncil?: boolean;
+  notifications?: boolean;
   isGovernor?: boolean;
 }
 

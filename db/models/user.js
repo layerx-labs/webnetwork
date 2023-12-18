@@ -94,7 +94,8 @@ class User extends Model {
     return this.findOne({
       where: {
         address: Sequelize.where(Sequelize.fn("lower", Sequelize.col("address")), address?.toLowerCase())
-      }
+      },
+      include: [{ association: "settings" }]
     });
   }
 
