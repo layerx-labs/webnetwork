@@ -37,6 +37,6 @@ describe("TasksListFilteredCategories", () => {
     const result = render(<TasksListFilteredCategories />);
     const codeButton = result.getByTestId("category-button-code");
     fireEvent.click(codeButton);
-    expect(mockSetValue).toHaveBeenCalledWith({ categories: "design" }, true);
+    expect(mockSetValue).toHaveBeenCalledWith({ categories: "design", page: "1" }, true);
   });
 });
