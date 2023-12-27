@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 
 import {GetServerSideProps} from "next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import router from "next/router";
 
 import NetworksStep from "components/administration/networks-step";
@@ -9,6 +8,8 @@ import ConnectWalletButton from "components/connections/connect-wallet-button/co
 import Stepper from "components/stepper";
 
 import {Network} from "interfaces/network";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import { useUserStore } from "x-hooks/stores/user/user.store";
@@ -54,10 +55,10 @@ export default function AdministrationPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "connect-wallet-button",

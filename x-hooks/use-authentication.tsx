@@ -25,12 +25,12 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSignature from "x-hooks/use-signature";
+import { useStorageTransactions } from "x-hooks/use-storage-transactions";
+import useSupportedChain from "x-hooks/use-supported-chain";
 
 import { useLoadersStore } from "./stores/loaders/loaders.store";
 import { useUserStore } from "./stores/user/user.store";
 import { useSettings } from "./use-settings";
-import { useStorageTransactions } from "x-hooks/use-storage-transactions";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
@@ -138,10 +138,12 @@ export function useAuthentication() {
       sessionStorage.setItem("currentWallet", "");
       return;
     }
-
     const user = session?.data?.user as CustomSession["user"];
     const isSameGithubAccount = user.login === currentUser?.login;
     const isSameWallet = AddressValidator.compare(user.address, currentUser?.walletAddress);
+
+    if (user.language !== currentUser?.language)
+      updateCurrentUser({language: user.language})
 
     if (user.accountsMatch !== currentUser?.match)
       updateCurrentUser({match: user.accountsMatch})

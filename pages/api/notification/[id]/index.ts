@@ -1,7 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Logger} from "../../../../services/logging";
-import {deleteNotification} from "../../../../server/common/notifications/delete-notification";
-import {UserRoute, WithValidChainId} from "../../../../middleware";
+
+import {UserRoute, WithValidChainId} from "middleware";
+
+import {Logger} from "services/logging";
+
+import {deleteNotification} from "server/common/notifications/delete-notification";
 
 async function singleNotificationHandler(req: NextApiRequest, res: NextApiResponse) {
   try {

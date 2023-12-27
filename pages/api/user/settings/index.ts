@@ -14,7 +14,7 @@ async function userSettingsHandler(req: NextApiRequest, res: NextApiResponse) {
       res.status(200).json(await getAddressSettings(req));
       break;
     case "post":
-      res.status(200).json(await changeAddressSettings(req));
+      res.status(200).json(await changeAddressSettings(req, res));
       break;
     default:
       res.status(405);

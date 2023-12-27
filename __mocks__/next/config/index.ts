@@ -4,6 +4,7 @@ export default function () {
       urls: {
         api: "http://example.com",
       },
+      locales: ["en", "pt"]
     },
     serverRuntimeConfig: { }
   }

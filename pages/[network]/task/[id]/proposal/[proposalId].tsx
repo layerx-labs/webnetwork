@@ -1,5 +1,4 @@
 import { dehydrate } from "@tanstack/react-query";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from "next/types";
 
 import ProposalPage from "components/pages/task/proposal/controller";
@@ -8,12 +7,15 @@ import { QueryKeys } from "helpers/query-keys";
 
 import { getReactQueryClient } from "services/react-query";
 
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
+
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
 
 export default ProposalPage;
 
 export const getServerSideProps: GetServerSideProps = async ({
+  req,
   query,
   locale,
 }) => {
@@ -26,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "proposal",

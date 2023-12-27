@@ -2,13 +2,14 @@ import {useState} from "react";
 
 import {GetServerSideProps} from "next";
 import {useTranslation} from "next-i18next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 
 import PageHero from "components/common/page-hero/view";
 import NetworksList from "components/networks-list";
 import NotListedTokens from "components/not-listed-tokens";
 
 import { Network } from "interfaces/network";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { HeroInfo } from "types/components";
 
@@ -78,7 +79,7 @@ export default function NetworksPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const [header, networks] = await Promise.all([
     useGetHeaderNetworks(),
     useSearchNetworks({
@@ -93,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
     props: {
       header,
       networks,
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "connect-wallet-button",

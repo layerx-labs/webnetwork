@@ -1,8 +1,8 @@
 import { useTranslation } from "next-i18next";
 
-import TasksList from "components/lists/tasks/controller";
 import GlobalHero from "components/common/global-hero/global-hero.view";
 import CustomContainer from "components/custom-container";
+import TasksList from "components/lists/tasks/controller";
 
 import { formatNumberToNScale } from "helpers/formatNumber";
 

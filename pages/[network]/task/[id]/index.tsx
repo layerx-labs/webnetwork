@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
@@ -22,6 +21,8 @@ import { QueryKeys } from "helpers/query-keys";
 import { IssueData } from "interfaces/issue-data";
 
 import { getReactQueryClient } from "services/react-query";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getBountyData } from "x-hooks/api/task";
@@ -111,7 +112,7 @@ export default function TaskPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({query, locale}) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const queryClient = getReactQueryClient();
   const bountyId = query.id?.toString();
 
@@ -149,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async ({query, locale}) =>
     props: {
       seoData,
       dehydratedState: dehydrate(queryClient),
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "proposal",

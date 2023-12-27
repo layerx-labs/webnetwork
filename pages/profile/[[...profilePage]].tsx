@@ -1,9 +1,10 @@
 import { GetServerSideProps } from "next";
 import { getToken } from "next-auth/jwt";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import getConfig from "next/config";
 
 import ProfileRouter from "components/profile/profile-router";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import { ProfilePageProps } from "types/pages";
 
@@ -50,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   return {
     props: {
       ...pageData,
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "my-oracles",

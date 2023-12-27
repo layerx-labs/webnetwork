@@ -1,8 +1,9 @@
 import {useEffect} from "react";
 
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 export default function SignIn() {
   const router = useRouter();
@@ -15,10 +16,10 @@ export default function SignIn() {
   return <></>;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "bounty", "connect-wallet-button"]))
+      ...(await customServerSideTranslations(req, locale, ["common", "bounty", "connect-wallet-button"]))
     }
   };
 };

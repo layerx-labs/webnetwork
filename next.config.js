@@ -5,6 +5,7 @@ require("dotenv").config();
 const { i18n } = require("./next-i18next.config");
 
 const publicRuntimeConfig = {
+  locales: i18n?.locales || ["en"],
   urls: {
     api: process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3000",
     home: process.env.NEXT_PUBLIC_HOME_URL || "http://localhost:3000",

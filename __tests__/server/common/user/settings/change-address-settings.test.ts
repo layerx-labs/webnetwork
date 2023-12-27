@@ -1,4 +1,4 @@
-import {NextApiRequest} from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import models from "db/models";
 
@@ -11,6 +11,14 @@ jest.mock("db/models", () => ({
   }
 }));
 
+jest.mock("date-fns", () => ({
+  addYears: () => new Date("Sat, 14 Dec 2024 17:43:00 GMT")
+}));
+
+const mockSetHeader = jest.fn();
+const mockedResponse = {
+  setHeader: mockSetHeader
+} as unknown as NextApiResponse;
 describe("changeAddressSettings", () => {
 
   let mockedRequest: NextApiRequest;
@@ -26,54 +34,60 @@ describe("changeAddressSettings", () => {
 
   it("should throw an error when user does not exist", async () => {
     mockedRequest.body.context.user = null;
-    try {
-      await changeAddressSettings(mockedRequest);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpUnauthorizedError);
-    }
+    await expect(() =>
+      changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpUnauthorizedError);
   });
 
   it("should throw an error when settings does not exist", async () => {
-    try {
-      await changeAddressSettings(mockedRequest);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpBadRequestError);
-    }
+    await expect(() =>
+      changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpBadRequestError);
   });
 
   it("should throw an error when settings has disallowed properties", async () => {
     mockedRequest.body.settings = {forbidden: "property"};
-    try {
-      await changeAddressSettings(mockedRequest);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpBadRequestError);
-    }
+    await expect(() =>
+      changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpBadRequestError);
   });
 
   it("should throw an error when language setting is not valid", async () => {
     mockedRequest.body.settings = {language: "abc"};
-    try {
-      await changeAddressSettings(mockedRequest);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpBadRequestError);
-    }
+
+    await expect(() =>
+      changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpBadRequestError);
   });
 
   it("should throw an error when notifications setting is not a boolean", async () => {
     mockedRequest.body.settings = {notifications: "not-a-bool"};
-    try {
-      await changeAddressSettings(mockedRequest);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpBadRequestError);
-    }
+
+    await expect(() =>
+      changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpBadRequestError);
   });
 
-  it("should update user settings when everything is valid", async () => {
-    const mockUpdate = jest.fn();
-    models.userSetting.update = mockUpdate;
+  it("should not update because user settings doesn't exists", async () => {
+    const saveMock = jest.fn();
+    jest
+      .spyOn(models.userSetting, "findOrCreate")
+      .mockImplementationOnce(() => [{ save: saveMock }, true ]);
 
     mockedRequest.body.settings = {notifications: true, language: 'en'}
 
-    expect(await changeAddressSettings(mockedRequest)).toEqual("updated Settings");
+    await changeAddressSettings(mockedRequest, mockedResponse);
+    expect(saveMock).not.toHaveBeenCalled();
+    expect(mockSetHeader)
+      .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT; path=/`);
+  });
+
+  it("should update user settings when everything is valid", async () => {
+    const saveMock = jest.fn();
+    jest
+      .spyOn(models.userSetting, "findOrCreate")
+      .mockImplementationOnce(() => [{ save: saveMock }, false ]);
+
+    mockedRequest.body.settings = {notifications: true, language: 'en'}
+
+    await changeAddressSettings(mockedRequest, mockedResponse);
+    expect(saveMock).toHaveBeenCalled();
+    expect(mockSetHeader)
+      .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT; path=/`);
   });
 });

@@ -35,6 +35,7 @@ export interface CurrentUserState {
   isCouncil?: boolean;
   notifications?: boolean;
   isGovernor?: boolean;
+  language?: string;
 }
 
 export interface CurrentBounty {

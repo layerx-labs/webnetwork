@@ -1,9 +1,10 @@
 
 import {GetServerSideProps} from "next";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 
 import CustomContainer from "components/custom-container";
 import { NewNetworkStepper } from "components/custom-network/new-network-stepper";
+
+import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 export default function NewMarketplacePage() {
   return (
@@ -13,10 +14,10 @@ export default function NewMarketplacePage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, [
+      ...(await customServerSideTranslations(req, locale, [
         "common",
         "bounty",
         "custom-network",
