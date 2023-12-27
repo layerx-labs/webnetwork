@@ -13,7 +13,9 @@ interface ListSortProps {
   options: SortOption[];
   labelLineBreak?: boolean;
   asSelect?: boolean;
+  rounded?: boolean;
   index?: number;
+  labelColor?: string;
   updateIndex?: (e: number) => void;
 }
 
@@ -22,8 +24,10 @@ export default function ListSort({
   options,
   labelLineBreak,
   asSelect,
+  rounded,
   index,
-  updateIndex
+  updateIndex,
+  labelColor
 }: ListSortProps) {
   const router = useRouter();
 
@@ -84,6 +88,8 @@ export default function ListSort({
       asSelect={asSelect}
       selectedIndex={updateIndex ? index : selectedIndex}
       componentVersion={componentVersion}
+      labelColor={labelColor}
+      rounded={rounded}
     />
   );
 }

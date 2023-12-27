@@ -24,6 +24,7 @@ interface TasksListProps {
   buttonMessage?: string;
   variant?: "bounty-hall" | "profile" | "network" | "management"
   type?: "bounties" | "deliverables" | "proposals";
+  filterType?: "category" | "search";
   hideFilter?: boolean;
 }
 
@@ -35,6 +36,7 @@ export default function TasksList({
   bounties,
   type = "bounties",
   hideFilter,
+  filterType = "search"
 }: TasksListProps) {
   const router = useRouter();
   
@@ -49,9 +51,9 @@ export default function TasksList({
   const { getChainFromUrl } = useChain();
   const { supportedChains } = useSupportedChain();
   
-  const { state, time, networkName, networkChain } = router.query;
+  const { state, time, networkName, networkChain, categories } = router.query;
 
-  const hasFilter = !!(state || time || search || networkName || networkChain);
+  const hasFilter = !!(state || time || search || networkName || networkChain || categories);
   const isOnNetwork = !!router?.query?.network;
 
   function handleSearchChange(e) {
@@ -130,6 +132,7 @@ export default function TasksList({
       onSearchInputChange={handleSearchChange}
       hideFilter={hideFilter}
       chains={supportedChains}
+      filterType={filterType}
     />
   );
 }

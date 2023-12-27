@@ -30,9 +30,9 @@ export default function PaymentsListMobileFilters({
   }
 
   useEffect(() => {
-    if (value?.endDate !== endDate) onEndDateChange(value?.endDate);
-    if (value?.startDate !== startDate) onStartDateChange(value?.startDate);
-    if (value?.networkChain !== networkChain) onChainChange(value?.networkChain);
+    if (value?.endDate !== endDate) onEndDateChange(value?.endDate?.toString());
+    if (value?.startDate !== startDate) onStartDateChange(value?.startDate?.toString());
+    if (value?.networkChain !== networkChain) onChainChange(value?.networkChain?.toString());
   }, [value]);
 
   return(

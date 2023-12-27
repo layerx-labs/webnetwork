@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useTranslation } from "next-i18next";
 
 import FilterIcon from "assets/icons/filter-icon";
@@ -13,8 +14,10 @@ interface ListSortProps {
   options: SortOption[];
   dropdownItems: CustomDropdownItem[];
   asSelect?: boolean;
+  rounded?: boolean;
   selectedIndex?: number;
   componentVersion: string;
+  labelColor?: string;
   onChange: (newValue: SortOption) => void;
   labelLineBreak?: boolean;
 }
@@ -24,17 +27,25 @@ export default function ListSortView({
   options,
   dropdownItems,
   selectedIndex,
+  rounded,
   onChange,
   labelLineBreak = false,
   componentVersion,
-  asSelect
+  asSelect,
+  labelColor
 }: ListSortProps) {
   const { t } = useTranslation("common");
 
-  const labelClass = (asSelect || labelLineBreak) ? 
-    "sm-regular font-weight-medium text-white text-capitalize" :
-    "sm-regular text-white text-nowrap mr-1";
-  const containerClass = (asSelect || labelLineBreak) ? "d-flex flex-column gap-1" : "d-flex align-items-center";
+  const labelClass = clsx([
+    "sm-regular",
+    `text-${labelColor || "white"}`,
+    (asSelect || labelLineBreak) ? "font-weight-medium text-capitalize" : "text-nowrap mr-1",
+  ]);
+  const containerClass = clsx([
+    "d-flex",
+    rounded ? "rounded-select" : "",
+    (asSelect || labelLineBreak) ? "flex-column gap-1" : "align-items-center"
+  ]);
 
   if (!componentVersion)
     return <></>;

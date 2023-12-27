@@ -1,19 +1,16 @@
-import {FormControl, InputGroup} from "react-bootstrap";
-
 import {useTranslation} from "next-i18next";
 
-import CloseIcon from "assets/icons/close-icon";
-import SearchIcon from "assets/icons/search-icon";
-
-import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
-import IssueFilters from "components/issue-filters";
-import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
+import TasksListFilteredCategories
+  from "components/lists/tasks/tasks-list-filtered-categories/tasks-list-filtered-categories.controller";
 import TasksListItem from "components/lists/tasks/tasks-list-item/tasks-list-item.controller";
+import TasksListsSearchFilters from "components/lists/tasks/tasks-list-search-filters/tasks-list-search-filters.view";
+import TasksListsCategoryFilter
+  from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
@@ -35,6 +32,7 @@ interface TasksListViewProps {
   hasFilter?: boolean;
   currentChain?: SupportedChainData;
   chains?: SupportedChainData[];
+  filterType?: "category" | "search";
   onClearSearch: () => void;
   onNotFoundClick: () => Promise<void>;
   onNextPage: () => void;
@@ -61,7 +59,8 @@ export default function TasksListView({
   onSearchClick,
   onEnterPressed,
   currentChain,
-  chains
+  chains,
+  filterType
 }: TasksListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
@@ -72,7 +71,8 @@ export default function TasksListView({
   const hasMorePages = hasIssues && bounties?.currentPage < bounties?.pages;
   const showClearButton = searchString?.trim() !== "";
   const showSearchFilter = hasIssues || !hasIssues && hasFilter;
-  const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network"
+  const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network";
+  const isCategoryFilter = filterType === "category";
 
   const columns = [
     t("bounty:management.name"),
@@ -126,8 +126,12 @@ export default function TasksListView({
     <>
       <div className="row mb-4">
         <div className="col">
+          <If condition={isCategoryFilter}>
+            <TasksListsCategoryFilter />
+          </If>
+
           <If condition={isBountyHall || isProfile || isManagement}>
-            <div className="d-flex flex-wrap justify-content-between">
+            <div className={`d-flex flex-wrap justify-content-between ${isCategoryFilter ? "mb-3" : ""}`}>
               <div className="d-flex flex-row flex-wrap align-items-center gap-2">
                 <div className="d-flex gap-2 align-items-center">
                   <h4 className="text-capitalize font-weight-medium">
@@ -146,6 +150,14 @@ export default function TasksListView({
                   )}
                 </div>
               </div>
+
+              <If condition={isCategoryFilter}>
+                <ListSort
+                  options={sortOptions}
+                  labelColor={"gray-500 text-uppercase"}
+                  rounded
+                />
+              </If>
 
               <If condition={isProfile && isOnNetwork}>
                 <ResponsiveWrapper md={false} xs={true} sm={true}>
@@ -170,66 +182,28 @@ export default function TasksListView({
             </div>
           </If>
 
-          <If condition={showSearchFilter}>
-            <div
-              className={"row align-items-center list-actions sticky-top bg-body"}
-            >
-              <div className="col">
-                <InputGroup className="border-radius-4">
-                  <InputGroup.Text className="cursor-pointer" onClick={onSearchClick}>
-                    <SearchIcon />
-                  </InputGroup.Text>
+          <If condition={isCategoryFilter}>
+            <TasksListFilteredCategories />
+          </If>
 
-                  <FormControl
-                    value={searchString}
-                    onChange={onSearchInputChange}
-                    className="p-2"
-                    placeholder={t("bounty:search")}
-                    onKeyDown={onEnterPressed}
-                  />
-
-                  <If condition={showClearButton}>
-                    <button
-                      className="btn bg-gray-850 border-0 py-0 px-3"
-                      onClick={onClearSearch}
-                    >
-                      <CloseIcon width={10} height={10} />
-                    </button>
-                  </If>
-                </InputGroup>
-              </div>
-
-              <ResponsiveWrapper xs={isManagement} xl={true} className="col-auto">
-                <ListSort options={sortOptions} />
-              </ResponsiveWrapper>
-
-              <If condition={!hideFilter && (!isManagement || isProfile)}>
-                <div className="col-auto">
-                  <If condition={!isManagement}>
-                    <IssueFilters
-                      sortOptions={sortOptions}
-                      onlyProfileFilters={isProfile}
-                      chains={isProfile ? chains : null}
-                    />
-                  </If>
-
-                  <div className="d-none d-xl-flex">
-                    <If condition={isProfile}>
-                      <SelectNetwork
-                        isCurrentDefault={isProfile && isOnNetwork}
-                        filterByConnectedChain={isOnNetwork ? true : false}
-                      />
-                      <div className="d-flex align-items-center ms-3">
-                        <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
-                          {t("misc.chain")}
-                        </label>
-                        <ChainFilter chains={chains} label={false} />
-                      </div>
-                    </If>
-                  </div>
-                </div>
-              </If>
-            </div>
+          <If condition={!isCategoryFilter}>
+            <If condition={showSearchFilter}>
+              <TasksListsSearchFilters
+                isManagement={isManagement}
+                isProfile={isProfile}
+                isOnNetwork={isOnNetwork}
+                hideFilter={hideFilter}
+                sortOptions={sortOptions}
+                chains={chains}
+                searchString={searchString}
+                placeholder={t("bounty:search")}
+                hasFilter={showClearButton}
+                onSearchClick={onSearchClick}
+                onSearchInputChange={onSearchInputChange}
+                onEnterPressed={onEnterPressed}
+                onClearSearch={onClearSearch}
+              />
+            </If>
           </If>
 
           <If condition={isManagement && hasIssues}>
@@ -273,10 +247,9 @@ export default function TasksListView({
               className="row gy-3 gx-3"
             >
               {bounties?.rows?.map(issue =>
-                <div className={isBountyHall ? "col-12 col-lg-6" : "col-12"}>
+                <div className={isBountyHall ? "col-12 col-lg-6" : "col-12"} key={`issue-list-item-${issue.id}`}>
                   <TasksListItem
                     issue={issue}
-                    key={`issue-list-item-${issue.id}`}
                     variant={variantIssueItem}
                   />
                 </div>)}

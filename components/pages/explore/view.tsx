@@ -43,6 +43,7 @@ export default function ExplorePageView({
       <TasksList
         bounties={bounties}
         variant="bounty-hall"
+        filterType="category"
       />
     </CustomContainer>
   );

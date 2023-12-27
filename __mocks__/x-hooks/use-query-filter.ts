@@ -1,9 +1,12 @@
 import { QueryParams } from "types/utils";
 
-export default function (params: QueryParams) {
+export const mockSetValue = jest.fn();
+export const mockApply = jest.fn();
+
+export default function useQueryFilter (params: QueryParams) {
   return {
     value: {},
-    setValue: jest.fn(),
-    apply: jest.fn(),
+    setValue: mockSetValue,
+    apply: mockApply,
   }
 }
