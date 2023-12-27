@@ -63,14 +63,30 @@ describe("changeAddressSettings", () => {
       changeAddressSettings(mockedRequest, mockedResponse)).rejects.toBeInstanceOf(HttpBadRequestError);
   });
 
-  it("should update user settings when everything is valid", async () => {
-    const mockUpdate = jest.fn();
-    models.userSetting.update = mockUpdate;
+  it("should not update because user settings doesn't exists", async () => {
+    const saveMock = jest.fn();
+    jest
+      .spyOn(models.userSetting, "findOrCreate")
+      .mockImplementationOnce(() => [{ save: saveMock }, true ]);
 
     mockedRequest.body.settings = {notifications: true, language: 'en'}
 
     await changeAddressSettings(mockedRequest, mockedResponse);
-    expect(mockUpdate).toHaveBeenCalledWith({notifications: true, language: 'en'}, {where: {userId: 1}});
+    expect(saveMock).not.toHaveBeenCalled();
+    expect(mockSetHeader)
+      .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT; path=/`);
+  });
+
+  it("should update user settings when everything is valid", async () => {
+    const saveMock = jest.fn();
+    jest
+      .spyOn(models.userSetting, "findOrCreate")
+      .mockImplementationOnce(() => [{ save: saveMock }, false ]);
+
+    mockedRequest.body.settings = {notifications: true, language: 'en'}
+
+    await changeAddressSettings(mockedRequest, mockedResponse);
+    expect(saveMock).toHaveBeenCalled();
     expect(mockSetHeader)
       .toHaveBeenCalledWith("Set-Cookie", `next-i18next-locale=en; expires=Sat, 14 Dec 2024 17:43:00 GMT; path=/`);
   });
