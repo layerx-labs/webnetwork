@@ -16,7 +16,8 @@ export const QueryKeys = {
   tokensOf: (wallet: string) => ["tokens", wallet],
   votingPowerOf: (wallet: string, chain?: string, network?: string) => ["voting-power-multi", wallet, chain, network],
   votingPowerMultiOf: (wallet: string) => ["voting-power-multi", wallet],
-  pricesByCoingecko: (tokens: {address: string, chainId: number}[]) => ['price', ...tokens?.map(v => v.address)],
+  pricesByCoingecko: (tokens: { address: string, chainId: number }[]) => ['price', ...tokens?.map(v => v.address)],
   totalNetworkToken: (chain: string, network: string) => ["totalNetworkToken", chain, network],
-  notifications: (address: string, page: string, read: string) => ["notifications", address, page, read]
+  notifications: (address: string, page: string, read: string) => ["notifications", address, page, read],
+  allowListByType: (type: string, networkId: number) => ["allow-list", type, networkId],
 };
