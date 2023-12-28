@@ -4,9 +4,9 @@ import { withProtected, WithValidChainId, withGovernor } from "middleware";
 
 import { Logger } from "services/logging";
 
-import deleteEntry from "server/common/marketplace/management/whitelist/delete";
-import get from "server/common/marketplace/management/whitelist/get";
-import post from "server/common/marketplace/management/whitelist/post";
+import deleteEntry from "server/common/marketplace/management/allowlist/delete";
+import get from "server/common/marketplace/management/allowlist/get";
+import post from "server/common/marketplace/management/allowlist/post";
 
 async function handler (req: NextApiRequest, res: NextApiResponse) {
   Logger.changeActionName(`AllowList`);
@@ -27,9 +27,9 @@ async function handler (req: NextApiRequest, res: NextApiResponse) {
       res.status(405);
     }
   } catch (e) {
-    Logger.error(e, `AllowListError`, {method: req.method});
+    Logger.error(e, `AllowListError`, { method: req.method });
     res.status(e?.status || 500)
-      .json({message: e?.message || e?.toString()});
+      .json({ message: e?.message || e?.toString() });
     return;
   }
 
