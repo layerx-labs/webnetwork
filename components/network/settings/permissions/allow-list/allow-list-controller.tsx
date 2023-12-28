@@ -6,6 +6,7 @@ import { isAddress } from "web3-utils";
 
 import AllowListView from "components/network/settings/permissions/allow-list/allow-list-view";
 
+import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
 import { AllowListTypes } from "interfaces/enums/marketplace";
@@ -39,7 +40,9 @@ export default function AllowList ({
     data: allowListOfNetwork,
     isFetching,
     isLoading
-  } = useReactQuery<string[]>(queryKey, () => useGetAllowList(networkId, type));
+  } = useReactQuery<string[]>(queryKey, () => useGetAllowList(networkId, type), {
+    staleTime: MINUTE_IN_MS
+  });
   const { mutate: onAddClick, isLoading: isAdding } = useReactQueryMutation({
     queryKey,
     mutationFn: useAddAllowListEntry,
