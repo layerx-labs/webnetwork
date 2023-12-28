@@ -1,27 +1,27 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { withProtected, WithValidChainId, withGovernor } from "middleware";
 
-import {Logger} from "services/logging";
+import { Logger } from "services/logging";
 
 import deleteEntry from "server/common/marketplace/management/whitelist/delete";
 import get from "server/common/marketplace/management/whitelist/get";
 import post from "server/common/marketplace/management/whitelist/post";
 
-
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler (req: NextApiRequest, res: NextApiResponse) {
   Logger.changeActionName(`AllowList`);
 
   try {
     switch (req.method) {
     case "GET":
-      res.status(200).json(await get(req, res));
+      res.status(200).json(await get(req));
       break;
     case "POST":
-      res.status(200).json(await post(req, res));
+      res.status(200).json(await post(req));
       break;
+
     case "DELETE":
-      res.status(200).json(await deleteEntry(req, res));
+      res.status(200).json(await deleteEntry(req));
       break;
     default:
       res.status(405);

@@ -1,7 +1,9 @@
-import {api} from "../../../../../services/api";
+import { AllowListTypes } from "interfaces/enums/marketplace";
 
-export default async function useGetAllowList(networkId: number) {
-  return api.get<string[]>(`/marketplace/management/${networkId}/whitelist/`)
+import { api } from "services/api";
+
+export default async function useGetAllowList(networkId: number, type: AllowListTypes) {
+  return api.get<string[]>(`/marketplace/management/${networkId}/allowlist/${type}`)
     .then(d => d.data)
     .catch(e => {
       console.debug(`Error fetching allow list`, e);
