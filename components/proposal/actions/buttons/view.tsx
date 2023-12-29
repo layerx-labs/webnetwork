@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
+import { ContextualSpan } from "components/contextual-span";
 import If from "components/If";
 import ProposalMerge from "components/proposal-merge";
 
@@ -20,13 +21,14 @@ interface ProposalActionsButtonsViewProps {
   isDisputing: boolean;
   isRefusing: boolean;
   onlyMerge?: boolean;
+  canCloseTask?: boolean;
   distributedAmounts: DistributedAmounts;
   onMerge: () => Promise<void>;
   onDispute: () => Promise<void>;
   onRefuse: () => Promise<void>;
 }
 
-export default function ProposalActionsButtonsView({
+export default function ProposalActionsButtonsView ({
   issueAmount,
   issueDbId,
   token,
@@ -37,6 +39,7 @@ export default function ProposalActionsButtonsView({
   isDisputing,
   isRefusing,
   onlyMerge,
+  canCloseTask,
   distributedAmounts,
   onMerge,
   onDispute,
@@ -48,43 +51,44 @@ export default function ProposalActionsButtonsView({
   const isRefuseButtonDisabled = !isAbleToRefuse || isRefusing || isDisputing || isMerging;
   const responsiveClass = onlyMerge ? "d-block d-xl-none" : "d-none d-xl-block";
 
-  return(
-    <div className="row justify-content-center justify-content-xl-between gap-2">
-      <If condition={isAbleToMerge}>
-        <div className={`col-12 col-xl ${responsiveClass}`}>
-          <div className="row">
-            <ProposalMerge
-              amountTotal={issueAmount}
-              token={token}
-              isMerging={isMerging}
-              idBounty={issueDbId}
-              canMerge={isAbleToMerge && !isRefusing && !isDisputing}
-              distributedAmounts={distributedAmounts}
-              onClickMerge={onMerge}
-            />
+  return (
+    <>
+      <div className="row justify-content-center justify-content-xl-between gap-2">
+        <If condition={isAbleToMerge}>
+          <div className={`col-12 col-xl ${responsiveClass}`}>
+            <div className="row">
+              <ProposalMerge
+                amountTotal={issueAmount}
+                token={token}
+                isMerging={isMerging}
+                idBounty={issueDbId}
+                canMerge={isAbleToMerge && !isRefusing && !isDisputing && canCloseTask}
+                distributedAmounts={distributedAmounts}
+                onClickMerge={onMerge}
+              />
+            </div>
           </div>
-        </div>
-      </If>
+        </If>
 
-      <If condition={isAbleToDispute && !onlyMerge}>
-        <div className="col-12 col-xl">
-          <div className="row">
-            <ContractButton
-              textClass="text-uppercase text-white"
-              color="purple"
-              disabled={isDisputeButtonDisabled}
-              onClick={onDispute}
-              isLoading={isDisputing}
-              withLockIcon={!isAbleToDispute || isMerging || isRefusing}
-            >
-              <span>{t("actions.dispute")}</span>
-            </ContractButton>
+        <If condition={isAbleToDispute && !onlyMerge}>
+          <div className="col-12 col-xl">
+            <div className="row">
+              <ContractButton
+                textClass="text-uppercase text-white"
+                color="purple"
+                disabled={isDisputeButtonDisabled}
+                onClick={onDispute}
+                isLoading={isDisputing}
+                withLockIcon={!isAbleToDispute || isMerging || isRefusing}
+              >
+                <span>{t("actions.dispute")}</span>
+              </ContractButton>
+            </div>
           </div>
-        </div>
-      </If>
+        </If>
 
-      <If condition={isAbleToRefuse && !onlyMerge}>
-        <div className="col-12 col-xl">
+        <If condition={isAbleToRefuse && !onlyMerge}>
+          <div className="col-12 col-xl">
             <div className="row">
               <ContractButton
                 textClass="text-uppercase text-white"
@@ -98,7 +102,16 @@ export default function ProposalActionsButtonsView({
               </ContractButton>
             </div>
           </div>
+        </If>
+      </div>
+
+      <If condition={!canCloseTask}>
+        <div className="row mt-2">
+          <ContextualSpan context="info">
+            Your address is not on the closing tasks allowed list
+          </ContextualSpan>
+        </div>
       </If>
-    </div>
+    </>
   );
 }

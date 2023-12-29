@@ -1,44 +1,45 @@
-import {useEffect, useState} from "react";
-import {NumberFormatValues} from "react-number-format";
+import { useEffect, useState } from "react";
+import { NumberFormatValues } from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import {useSession} from "next-auth/react";
-import {useTranslation} from "next-i18next";
-import router, {useRouter} from "next/router";
-import {useDebouncedCallback} from "use-debounce";
+import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
+import router, { useRouter } from "next/router";
+import { useDebouncedCallback } from "use-debounce";
 
-import {IFilesProps} from "components/drag-and-drop";
+import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import {BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN} from "helpers/constants";
-import {formatStringToCurrency} from "helpers/formatNumber";
-import {addFilesToMarkdown} from "helpers/markdown";
+import { BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN } from "helpers/constants";
+import { formatStringToCurrency } from "helpers/formatNumber";
+import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
-import {parseTransaction} from "helpers/transactions";
-import {isValidUrl} from "helpers/validateUrl";
+import { parseTransaction } from "helpers/transactions";
+import { isValidUrl } from "helpers/validateUrl";
 
-import {EventName} from "interfaces/analytics";
-import {BountyPayload} from "interfaces/create-bounty";
-import {CustomSession} from "interfaces/custom-session";
-import {CreateTaskSections} from "interfaces/enums/create-task-sections";
-import {MetamaskErrors, OriginLinkErrors} from "interfaces/enums/Errors";
-import {NetworkEvents} from "interfaces/enums/events";
-import {TransactionStatus} from "interfaces/enums/transaction-status";
-import {TransactionTypes} from "interfaces/enums/transaction-types";
-import {Network} from "interfaces/network";
-import {DistributionsProps} from "interfaces/proposal";
-import {SupportedChainData} from "interfaces/supported-chain-data";
-import {Token} from "interfaces/token";
-import {SimpleBlockTransactionPayload} from "interfaces/transaction";
+import { EventName } from "interfaces/analytics";
+import { BountyPayload } from "interfaces/create-bounty";
+import { CustomSession } from "interfaces/custom-session";
+import { CreateTaskSections } from "interfaces/enums/create-task-sections";
+import { MetamaskErrors, OriginLinkErrors } from "interfaces/enums/Errors";
+import { NetworkEvents } from "interfaces/enums/events";
+import { AllowListTypes } from "interfaces/enums/marketplace";
+import { TransactionStatus } from "interfaces/enums/transaction-status";
+import { TransactionTypes } from "interfaces/enums/transaction-types";
+import { Network } from "interfaces/network";
+import { DistributionsProps } from "interfaces/proposal";
+import { SupportedChainData } from "interfaces/supported-chain-data";
+import { Token } from "interfaces/token";
+import { SimpleBlockTransactionPayload } from "interfaces/transaction";
 
-import {UserRoleUtils} from "server/utils/jwt";
+import { UserRoleUtils } from "server/utils/jwt";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import useGetIsAllowed from "x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
 import { useCreatePreBounty } from "x-hooks/api/task";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import { transactionStore } from "x-hooks/stores/transaction-list/transaction.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
@@ -59,7 +60,7 @@ interface CreateTaskPageProps {
   networks: Network[];
 }
 
-export default function CreateTaskPage({
+export default function CreateTaskPage ({
   networks: allNetworks
 }: CreateTaskPageProps) {
   const { query } = useRouter();
@@ -112,7 +113,7 @@ export default function CreateTaskPage({
     mutationFn: useCreatePreBounty,
   });
 
-  const {add: addTx, update: updateTx, list: transactions} = transactionStore()
+  const { add: addTx, update: updateTx, list: transactions } = transactionStore()
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -127,11 +128,11 @@ export default function CreateTaskPage({
   const handleIsLessThan = (v: number, min: string) =>
     BigNumber(v).isLessThan(BigNumber(min));
 
-  async function addToken(newToken: Token) {
+  async function addToken (newToken: Token) {
     setCustomTokens([...customTokens, newToken]);
   }
 
-  function validateBannedDomain(link: string) {
+  function validateBannedDomain (link: string) {
     return !!currentNetwork?.banned_domains?.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 
@@ -144,22 +145,22 @@ export default function CreateTaskPage({
     const isBanned = validateBannedDomain(link);
     if (!isValid)
       setOriginLinkError(OriginLinkErrors.Invalid);
-    else if (isBanned) 
+    else if (isBanned)
       setOriginLinkError(OriginLinkErrors.Banned);
-    else 
+    else
       setOriginLinkError(undefined);
   }, 500);
 
-  function handleOriginLinkChange(newLink: string) {
+  function handleOriginLinkChange (newLink: string) {
     setOriginLink(newLink);
     validateDomainDebounced(newLink);
   }
 
-  function onUpdateFiles(files: IFilesProps[]) {
+  function onUpdateFiles (files: IFilesProps[]) {
     return setFiles(files);
   }
 
-  function handleRewardChecked(e) {
+  function handleRewardChecked (e) {
     setRewardChecked(e.target.checked);
     if (!e.target.checked) {
       setRewardAmount(ZeroNumberFormatValues);
@@ -167,7 +168,7 @@ export default function CreateTaskPage({
     }
   }
 
-  function verifyNextStepAndCreate(newSection?: number) {
+  function verifyNextStepAndCreate (newSection?: number) {
     if (!userCanCreateBounties)
       return true;
 
@@ -178,7 +179,7 @@ export default function CreateTaskPage({
       issueAmount.floatValue <= 0 ||
       issueAmount.floatValue === undefined ||
       handleIsLessThan(issueAmount.floatValue, transactionalToken?.minimum) ||
-      (!isFundingType && BigNumber(issueAmount.floatValue).gt(transactionalERC20?.balance)) 
+      (!isFundingType && BigNumber(issueAmount.floatValue).gt(transactionalERC20?.balance))
 
     const isRewardAmount =
       rewardAmount.floatValue <= 0 ||
@@ -194,7 +195,7 @@ export default function CreateTaskPage({
         !bountyDescription ||
         isUploading ||
         addFilesInDescription(bountyDescription).length >
-          BODY_CHARACTERES_LIMIT ||
+        BODY_CHARACTERES_LIMIT ||
         bountyTitle.length >= 131)
     )
       return true;
@@ -232,11 +233,11 @@ export default function CreateTaskPage({
     return section === 3 && isLoadingCreateBounty;
   }
 
-  function addFilesInDescription(str) {
+  function addFilesInDescription (str) {
     return addFilesToMarkdown(str, files, settings?.urls?.ipfs);
   }
 
-  async function allowCreateIssue() {
+  async function allowCreateIssue () {
     if (!daoService || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
       return;
 
@@ -260,7 +261,7 @@ export default function CreateTaskPage({
     handleApproveToken(tokenAddress, bountyValue, undefined, transactionalToken?.symbol)
       .then(() =>
         tokenERC20.updateAllowanceAndBalance()
-          .then(({allowance}) => {
+          .then(({ allowance }) => {
             pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
               neededAmount: bountyValue,
               currentAllowance: allowance.toFixed(),
@@ -280,8 +281,8 @@ export default function CreateTaskPage({
 
   const verifyTransactionState = (type: TransactionTypes): boolean =>
     !!transactions.find((transactions) =>
-        transactions.type === type &&
-        transactions.status === TransactionStatus.pending);
+      transactions.type === type &&
+      transactions.status === TransactionStatus.pending);
 
   const isApproveButtonDisabled = (): boolean =>
     [
@@ -290,11 +291,11 @@ export default function CreateTaskPage({
       !verifyTransactionState(TransactionTypes.approveTransactionalERC20Token),
     ].some((value) => value === false);
 
-  async function createBounty() {
+  async function createBounty () {
     if (!deliverableType || !transactionalToken || !daoService || !currentUser)
       return;
 
-    if (!(await useGetIsAllowed(currentNetwork.id, currentUser.walletAddress))?.allowed) // triple check for bounty creation permission
+    if (!(await useGetIsAllowed(currentNetwork.id, currentUser.walletAddress, AllowListTypes.OPEN_TASK))?.allowed) // triple check for bounty creation permission
       return (setShowCannotCreateBountyModal(true), null);
 
     setIsLoadingCreateBounty(true);
@@ -310,23 +311,23 @@ export default function CreateTaskPage({
         originLink
       };
 
-      pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
+      pushAnalytic(EventName.CREATE_PRE_TASK, { start: true })
 
       const savedIssue = await useCreatePreBounty({
-          title: payload.title,
-          body: payload.body,
-          creator: payload.githubUser,
-          deliverableType,
-          origin: originLink,
-          tags: selectedTags,
-          isKyc: isKyc,
-          tierList: tierList?.length ? tierList : null,
-          amount: issueAmount.value,
-          networkName: currentNetwork?.name
+        title: payload.title,
+        body: payload.body,
+        creator: payload.githubUser,
+        deliverableType,
+        origin: originLink,
+        tags: selectedTags,
+        isKyc: isKyc,
+        tierList: tierList?.length ? tierList : null,
+        amount: issueAmount.value,
+        networkName: currentNetwork?.name
       });
 
       if (!savedIssue) {
-        pushAnalytic(EventName.CREATE_PRE_TASK, {error: true})
+        pushAnalytic(EventName.CREATE_PRE_TASK, { error: true })
         addError(t("actions.failed"), t("bounty:errors.creating-bounty"));
         return;
       }
@@ -409,8 +410,8 @@ export default function CreateTaskPage({
 
         if (createdBounty?.[savedIssue.id]) {
           router.push(getURLWithNetwork("/task/[id]", {
-              network: currentNetwork?.name,
-              id: savedIssue.id
+            network: currentNetwork?.name,
+            id: savedIssue.id
           }))
             .then(() => cleanFields());
         }
@@ -420,7 +421,7 @@ export default function CreateTaskPage({
     }
   }
 
-  function cleanFields() {
+  function cleanFields () {
     setFiles([]);
     setSelectedTags([]);
     setBountyTitle("");
@@ -436,34 +437,34 @@ export default function CreateTaskPage({
     transactionalERC20.setAddress(undefined);
   }
 
-  function handleMinAmount(type: "reward" | "transactional") {
-    if(currentSection === 3){
-      const amount = type === "reward" ? rewardAmount : issueAmount 
+  function handleMinAmount (type: "reward" | "transactional") {
+    if (currentSection === 3) {
+      const amount = type === "reward" ? rewardAmount : issueAmount
       const isAmount =
-      amount.floatValue <= 0 ||
-      amount.floatValue === undefined ||
-      handleIsLessThan(amount.floatValue, transactionalToken?.minimum);
+        amount.floatValue <= 0 ||
+        amount.floatValue === undefined ||
+        handleIsLessThan(amount.floatValue, transactionalToken?.minimum);
 
-      if(isAmount) setCurrentSection(2)
+      if (isAmount) setCurrentSection(2)
     }
   }
 
-  
-  function handleUpdateToken(e: Token, type: 'transactional' | 'reward') {
+
+  function handleUpdateToken (e: Token, type: 'transactional' | 'reward') {
     const ERC20 = type === 'transactional' ? transactionalERC20 : rewardERC20
     const setToken = type === 'transactional' ? setTransactionalToken : setRewardToken
     setToken(e)
-    ERC20.setAddress(e.address) 
+    ERC20.setAddress(e.address)
   }
 
-  async function handleNextStep() {
+  async function handleNextStep () {
     if (!userCanCreateBounties)
       return;
 
-    if (currentSection + 1 < steps.length){
+    if (currentSection + 1 < steps.length) {
       setCurrentSection((prevState) => prevState + 1);
     }
-      
+
     if (currentSection === 3) {
       createBounty();
     }
@@ -479,7 +480,7 @@ export default function CreateTaskPage({
   }, []);
 
   useEffect(() => {
-    if(!connectedChain || currentSection !== 0) return;
+    if (!connectedChain || currentSection !== 0) return;
     if (connectedChain.name === UNSUPPORTED_CHAIN) {
       setCurrentNetwork(undefined);
       return;
@@ -549,7 +550,7 @@ export default function CreateTaskPage({
   useEffect(() => {
     setUserCanCreateBounties(!currentNetwork?.id ? true :
       (session?.data as CustomSession)?.user?.roles
-        ? UserRoleUtils.hasCreateBountyRole((session?.data as CustomSession)?.user?.roles, currentNetwork?.id)
+        ? UserRoleUtils.hasCreateTaskRole((session?.data as CustomSession)?.user?.roles, currentNetwork?.id)
         : true) // if no session roles are found we will let the normal flow deal with an unauthenticated user
   }, [currentNetwork]);
   useEffect(() => {
@@ -558,12 +559,12 @@ export default function CreateTaskPage({
 
   useEffect(() => {
     cleanFields();
-    
+
     if (query?.type === "funding")
       setIsFundingType(true);
   }, []);
 
-  async function handleNetworkSelected(chain: SupportedChainData) {
+  async function handleNetworkSelected (chain: SupportedChainData) {
     setCurrentNetwork(null);
     setTransactionalToken(null);
     setRewardToken(null);
@@ -574,23 +575,23 @@ export default function CreateTaskPage({
       .catch((err) => console.log('handle Add Network error', err));
   }
 
-  function handleBackButton() {
-    if(currentSection !== 0)
+  function handleBackButton () {
+    if (currentSection !== 0)
       setCurrentSection((prevState) => prevState - 1);
   }
 
-  async function onNetworkSelected(opt) {
+  async function onNetworkSelected (opt) {
     setCurrentNetwork(opt);
     updateParamsOfActive(opt);
   }
 
-  function handleSectionHeaderClick(i: number) {
-    if(!verifyNextStepAndCreate(i === 0 ? i : i-1) || currentSection > i){
+  function handleSectionHeaderClick (i: number) {
+    if (!verifyNextStepAndCreate(i === 0 ? i : i - 1) || currentSection > i) {
       setCurrentSection(i)
     }
   }
 
-  return(
+  return (
     <CreateTaskPageView
       isConnected={!!currentUser?.walletAddress}
       deliverableType={deliverableType}
@@ -626,24 +627,24 @@ export default function CreateTaskPage({
       originLinkError={originLinkError}
       onOriginLinkChange={handleOriginLinkChange}
       setDeliverableType={setDeliverableType}
-      isFundingType={isFundingType} 
-      rewardChecked={rewardChecked} 
-      transactionalToken={transactionalToken} 
-      rewardToken={rewardToken} 
-      bountyDecimals={transactionalERC20?.decimals} 
-      rewardDecimals={transactionalERC20?.decimals} 
-      issueAmount={issueAmount} 
-      rewardAmount={rewardAmount} 
-      bountyTokens={customTokens.filter((token) => !!token?.network_tokens?.isTransactional)} 
-      rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)} 
-      rewardBalance={rewardERC20.balance} 
-      bountyBalance={transactionalERC20.balance} 
-      updateRewardToken={(v) => handleUpdateToken(v, 'reward')} 
-      updateTransactionalToken={(v) => handleUpdateToken(v, 'transactional')} 
-      addToken={addToken} 
-      handleRewardChecked={handleRewardChecked} 
-      updateIssueAmount={setIssueAmount} 
-      updateRewardAmount={setRewardAmount} 
+      isFundingType={isFundingType}
+      rewardChecked={rewardChecked}
+      transactionalToken={transactionalToken}
+      rewardToken={rewardToken}
+      bountyDecimals={transactionalERC20?.decimals}
+      rewardDecimals={transactionalERC20?.decimals}
+      issueAmount={issueAmount}
+      rewardAmount={rewardAmount}
+      bountyTokens={customTokens.filter((token) => !!token?.network_tokens?.isTransactional)}
+      rewardTokens={customTokens.filter((token) => !!token?.network_tokens?.isReward)}
+      rewardBalance={rewardERC20.balance}
+      bountyBalance={transactionalERC20.balance}
+      updateRewardToken={(v) => handleUpdateToken(v, 'reward')}
+      updateTransactionalToken={(v) => handleUpdateToken(v, 'transactional')}
+      addToken={addToken}
+      handleRewardChecked={handleRewardChecked}
+      updateIssueAmount={setIssueAmount}
+      updateRewardAmount={setRewardAmount}
       updateIsFundingType={setIsFundingType}
       payload={{
         marketplace: currentNetwork?.name,

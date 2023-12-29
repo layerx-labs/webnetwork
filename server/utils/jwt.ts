@@ -31,7 +31,11 @@ export class UserRoleUtils {
     return !!roles?.find(role => role?.includes(`${UserRole.GOVERNOR}:${chainId}`));
   }
 
-  static hasCreateBountyRole (roles: string[] = [], onNetworkId: number) {
+  static hasCreateTaskRole (roles: string[] = [], onNetworkId: number) {
     return !onNetworkId ? false : roles.includes(UserRoleUtils.getCreateTaskRole(onNetworkId));
+  }
+
+  static hasCloseTaskRole (roles: string[] = [], onNetworkId: number) {
+    return !onNetworkId ? false : roles.includes(UserRoleUtils.getCloseTaskRole(onNetworkId));
   }
 }
