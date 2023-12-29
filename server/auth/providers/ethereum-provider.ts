@@ -1,20 +1,21 @@
-import {NextApiRequest} from "next";
-import {JWT} from "next-auth/jwt";
+import { NextApiRequest } from "next";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {getCsrfToken} from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
+import { Op, Sequelize } from "sequelize";
 
 import models from "db/models";
 
-import {caseInsensitiveEqual} from "helpers/db/conditionals";
-import {toLower} from "helpers/string";
-import {AddressValidator} from "helpers/validators/address";
+import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { lowerCaseCompare } from "helpers/string";
+import { AddressValidator } from "helpers/validators/address";
 
-import {UserRole} from "interfaces/enums/roles";
+import { UserRole } from "interfaces/enums/roles";
 
-import {siweMessageService} from "services/ethereum/siwe";
+import { siweMessageService } from "services/ethereum/siwe";
 
-import {AuthProvider} from "server/auth/providers";
-import {UserRoleUtils} from "server/utils/jwt";
+import { AuthProvider } from "server/auth/providers";
+import { UserRoleUtils } from "server/utils/jwt";
 
 export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider => ({
   config: CredentialsProvider({
@@ -34,7 +35,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         type: "number"
       }
     },
-    async authorize(credentials) {      
+    async authorize (credentials) {
       const { signature, issuedAt, expiresAt } = credentials;
 
       const nonce = await getCsrfToken({ req: { headers: req.headers } });
@@ -55,7 +56,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
     }
   }),
   callbacks: {
-    async signIn({ account }) {
+    async signIn ({ account }) {
       const accountAddress = account?.providerAccountId;
 
       if (accountAddress) {
@@ -70,10 +71,10 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
 
         return true;
       }
-      
+
       return false;
     },
-    async jwt({ token }) {
+    async jwt ({ token }) {
       const nonce = await getCsrfToken({ req: { headers: req.headers } });
 
       const signature = req?.body?.signature || currentToken?.signature;
@@ -87,20 +88,32 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       if (AddressValidator.isAdmin(address))
         roles.push(UserRole.ADMIN);
 
-      const activeNetwork = ({ isClosed, isRegistered }) => !isClosed && isRegistered;
-      const getRole = ({ networkAddress, chain_id }) => UserRoleUtils.getGovernorRole(chain_id, networkAddress);
-      const governorOf = await models.network.findAllOfCreatorAddress(address)
-        .then(networks => networks.filter(activeNetwork).map(getRole))
-        .catch(() => []);
+      const networks = await models.network.findAll({
+        attributes: ["creatorAddress", "networkAddress", "chain_id", "allow_list", "close_task_allow_list", "id"],
+        where: {
+          isClosed: false,
+          isRegistered: true
+        }
+      });
 
-      const allowBountyCreationOnNetworks = await models.network
-        .findAll({attributes: ["allow_list", "id"],})
-        .then((rows) =>
-          rows.filter(({allow_list}) =>
-              (!allow_list.length || (allow_list.length && (allow_list.map(toLower)).includes(toLower(address)))))
-            .map(({id}) => UserRoleUtils.getCreateBountyRole(id)))
+      const { governorOf, taskRoles } = networks.reduce((acc, curr) => {
+        const governorOf = [...acc.governorOf];
+        const taskRoles = [...acc.taskRoles];
 
-      roles.push(...governorOf, ...allowBountyCreationOnNetworks);
+        if (lowerCaseCompare(curr.creatorAddress, address))
+          governorOf.push(UserRoleUtils.getGovernorRole(curr.chain_id, curr.networkAddress));
+        if (!curr.close_task_allow_list?.length || curr.close_task_allow_list?.includes(address))
+          taskRoles.push(UserRoleUtils.getCloseTaskRole(curr.id));
+        if (!curr.allow_list?.length || curr.allow_list?.includes(address))
+          taskRoles.push(UserRoleUtils.getCreateTaskRole(curr.id));
+
+        return {
+          governorOf,
+          taskRoles
+        };
+      }, { governorOf: [], taskRoles: [] });
+
+      roles.push(...governorOf, ...taskRoles);
 
       return {
         ...token,
