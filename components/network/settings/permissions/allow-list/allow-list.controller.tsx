@@ -4,7 +4,7 @@ import { useTranslation } from "next-i18next";
 import { useDebounce } from "use-debounce";
 import { isAddress } from "web3-utils";
 
-import AllowListView from "components/network/settings/permissions/allow-list/allow-list-view";
+import AllowListView from "components/network/settings/permissions/allow-list/allow-list.view";
 
 import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";

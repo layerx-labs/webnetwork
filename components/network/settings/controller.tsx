@@ -6,7 +6,7 @@ import { Divider } from "components/divider";
 import NetworkGovernanceSettings from "components/network/settings/governance/controller";
 import NetworkLogoAndColorsSettings from "components/network/settings/logo-and-colors/controller";
 import NetworkManagement from "components/network/settings/management/view";
-import AllowList from "components/network/settings/permissions/allow-list/allow-list-controller";
+import AllowList from "components/network/settings/permissions/allow-list/allow-list.controller";
 import NetworkPermissions from "components/network/settings/permissions/banned-words/controller";
 import NetworkRegistrySettings from "components/network/settings/registry/controller";
 import MyNetworkSettingsView from "components/network/settings/view";
