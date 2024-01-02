@@ -24,6 +24,19 @@ type AllowListProps = {
   type: AllowListTypes,
 };
 
+type AddAddressMutationProps = {
+  networkId: number,
+  address: string,
+  networkAddress: string,
+  type: AllowListTypes,
+};
+
+type RemoveAddressMutationProps = {
+  networkId: number,
+  address: string,
+  type: AllowListTypes,
+};
+
 export default function AllowList ({
   networkId,
   networkAddress,
@@ -45,7 +58,8 @@ export default function AllowList ({
   });
   const { mutate: onAddClick, isLoading: isAdding } = useReactQueryMutation({
     queryKey,
-    mutationFn: useAddAllowListEntry,
+    mutationFn: (props: AddAddressMutationProps) =>
+      useAddAllowListEntry(props.networkId, props.address, props.networkAddress, props.type),
     toastSuccess: t("steps.permissions.allow-list.success.address-allowed"),
     toastError: t("steps.permissions.allow-list.error.could-not-add-address"),
     onSuccess: () => setAddress(""),
@@ -53,7 +67,8 @@ export default function AllowList ({
   });
   const { mutate: onTrashClick, isLoading: isRemoving } = useReactQueryMutation({
     queryKey,
-    mutationFn: useDeleteAllowListEntry,
+    mutationFn: (props: RemoveAddressMutationProps) =>
+      useDeleteAllowListEntry(props.networkId, props.address, props.type),
     toastSuccess: t("steps.permissions.allow-list.success.address-removed"),
     toastError: t("steps.permissions.allow-list.error.could-not-remove-address"),
     onError: console.debug
