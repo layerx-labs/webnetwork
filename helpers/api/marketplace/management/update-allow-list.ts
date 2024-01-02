@@ -29,14 +29,14 @@ export async function updateAllowListByType (address: string,
   });
 
   if (!network)
-    throw new HttpBadRequestError(ErrorMessages.NoNetworkFoundOrUserAllowed);
+    throw new HttpBadRequestError(ErrorMessages.NetworkNotFound);
 
   const isPresentOnList = lowerCaseIncludes(address, network[listColumn] || []);
 
   if (operation === "add" && isPresentOnList)
-    throw new HttpBadRequestError(ErrorMessages.NoNetworkFoundOrUserAllowed);
+    throw new HttpBadRequestError(ErrorMessages.UserAllowed);
   else if (operation === "remove" && !isPresentOnList)
-    throw new HttpBadRequestError(ErrorMessages.NoNetworkFoundOrUserNotAllowed);
+    throw new HttpBadRequestError(ErrorMessages.UserNotAllowed);
 
   const newList = [];
 
