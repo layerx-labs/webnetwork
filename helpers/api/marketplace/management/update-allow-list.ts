@@ -16,7 +16,7 @@ export async function updateAllowListByType (address: string,
                                              operation: "add" | "remove"): Promise<string[]> {
   const isValidType = Object.values(AllowListTypes).includes(type);
 
-  if (!address || !networkId || (address && !isAddress(address as string)) || !type || !isValidType)
+  if (!address || !networkId || (address && !isAddress(address)) || !type || !isValidType)
     throw new HttpBadRequestError(ErrorMessages.InvalidPayload);
 
   const listColumn = getAllowListColumnFromType(type);
