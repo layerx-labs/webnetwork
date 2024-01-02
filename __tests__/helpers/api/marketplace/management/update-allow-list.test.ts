@@ -8,7 +8,6 @@ import { AllowListTypes } from "interfaces/enums/marketplace";
 import { ErrorMessages } from "server/errors/error-messages";
 import { HttpBadRequestError } from "server/errors/http-errors";
 
-import ethereum from "__mocks__/ethereum";
 import { isAddress } from "__mocks__/web3-utils";
 
 jest.mock("db/models", () => ({
@@ -26,7 +25,6 @@ jest.mock("db/models", () => ({
 
 const networkId = 1;
 const address = "0x194EA394D10e014D79dB10607ACFCAfF299d0dfa";
-const address2 = "0x720063CE70FC9b3f2eda200C83bCFfcce44897B2";
 const invalidAddress = "0x1234";
 const updateCondition = {
   where: {

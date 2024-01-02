@@ -34,6 +34,7 @@ export default function PermissionListItem ({
             className="not-svg p-1 border border-gray-700 border-radius-4"
             onClick={() => onTrashClick(value)}
             disabled={disabled}
+            data-testid={`permission-item-button-${value}`}
           >
             <TrashIcon/>
           </Button>

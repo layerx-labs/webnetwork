@@ -75,7 +75,7 @@ export default function AllowList ({
   })
 
   function inputError () {
-    return !isAddress(address) ? "not-address" : allowListOfNetwork.includes(address) ? "already-exists" : "";
+    return !isAddress(address) ? "not-address" : allowListOfNetwork?.includes(address) ? "already-exists" : "";
   }
 
   return (

@@ -43,9 +43,17 @@ export default function PermissionInput ({
         label=""
         error={error}
         disabled={isLoading}
+        data-testid="permission-input"
       />
       <div className={clsx({ "mt-1": !error, "mtn-4": error, "d-grid d-md-block col-12 col-md-1": true })}>
-        <Button onClick={onClickAdd} disabled={disabledButton} isLoading={isLoading}>{t("misc.add")}</Button>
+        <Button
+          onClick={onClickAdd}
+          disabled={disabledButton}
+          isLoading={isLoading}
+          data-testid="permission-add-button"
+        >
+          {t("misc.add")}
+        </Button>
       </div>
     </div>
   );
