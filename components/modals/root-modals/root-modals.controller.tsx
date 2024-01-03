@@ -1,3 +1,4 @@
+import WalletSelectorModal from "components/connections/wallet-selector-modal/wallet-selector-modal.controller";
 import InvalidAccountWalletModal from "components/invalid-account-wallet-modal";
 import MissingMetamaskModal from "components/missing-metamask-modal/controller";
 import WalletMismatchModal from "components/modals/wallet-mismatch/controller";
@@ -12,6 +13,7 @@ export default function RootModals() {
       <MissingMetamaskModal />
       <WrongNetworkModal />
       <WalletMismatchModal />
+      <WalletSelectorModal />
     </>
   );
 }

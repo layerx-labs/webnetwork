@@ -9,16 +9,18 @@ type LoadersStore = {
   reAuthorizeGithub: boolean;
   wrongNetworkModal: boolean;
   walletMismatchModal: boolean;
+  walletSelectorModal: boolean;
   updateLoading: (loading: LoadingState) => void;
   updateWeb3Dialog: (web3Dialog: boolean) => void;
   updateMissingMetamask: (missingMetamask: boolean) => void;
   updateReAuthorizeGithub: (reAuthorizeGithub: boolean) => void;
   updateWrongNetworkModal: (wrongNetworkModal: boolean) => void;
   updateWalletMismatchModal: (walletMismatchModal: boolean) => void;
+  updateWalletSelectorModal: (walletMismatchModal: boolean) => void;
 };
 
 type Properties = "loading" | "web3Dialog" | "missingMetamask" | "reAuthorizeGithub" |
-  "wrongNetworkModal" | "walletMismatchModal";
+  "wrongNetworkModal" | "walletMismatchModal" | "walletSelectorModal";
 
 const updateState = (property: Properties, value: boolean | LoadingState) =>
   (state: LoadersStore) => ({
@@ -33,6 +35,7 @@ export const useLoadersStore = create<LoadersStore>((set) => ({
   reAuthorizeGithub: false,
   wrongNetworkModal: false,
   walletMismatchModal: false,
+  walletSelectorModal: false,
   updateLoading: (loading: LoadingState) => set(updateState("loading", loading)),
   updateWeb3Dialog: (web3Dialog: boolean) => set(updateState("web3Dialog", web3Dialog)),
   updateMissingMetamask: (missingMetamask: boolean) => set(updateState("missingMetamask", missingMetamask)),
@@ -40,4 +43,6 @@ export const useLoadersStore = create<LoadersStore>((set) => ({
   updateWrongNetworkModal: (wrongNetworkModal: boolean) => set(updateState("wrongNetworkModal", wrongNetworkModal)),
   updateWalletMismatchModal: (walletMismatchModal: boolean) =>
     set(updateState("walletMismatchModal", walletMismatchModal)),
+  updateWalletSelectorModal: (walletSelectorModal: boolean) =>
+    set(updateState("walletSelectorModal", walletSelectorModal)),
 }));

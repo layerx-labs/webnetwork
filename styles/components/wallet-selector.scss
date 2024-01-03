@@ -1,0 +1,34 @@
+$grid-gap: 30px;
+$grid-column-desktop: calc(50% - $grid-gap/2);
+$grid-column-mobile: 100%;
+
+.wallet-selector-buttons {
+  display: grid;
+  grid-template-columns: $grid-column-desktop $grid-column-desktop;
+  grid-gap: $grid-gap;
+
+  @media (max-width: map-get($grid-breakpoints, "md")) {
+    grid-template-columns: $grid-column-mobile;
+  }
+
+  div {
+    width: 100%;
+    margin: 0 !important;
+
+    button {
+      @extend .btn;
+      @extend .btn-gray-850;
+      @extend .d-flex;
+      @extend .flex-row;
+      @extend .align-items-center;
+      @extend .border-radius-4;
+      @extend .border;
+      @extend .border-gray-700;
+      @extend .sm-regular;
+      @extend .text-capitalize;
+
+      gap: 16px;
+      width: 100%;
+    }
+  }
+}
