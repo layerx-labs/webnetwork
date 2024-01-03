@@ -72,7 +72,7 @@ export default function AllowListView ({
             condition={!isLoading}
             otherwise={
               <div className="col-md-5 col-12 text-center">
-                <Spinner animation={"border"}/>
+                <Spinner animation={"border"} data-testid="allow-list-spinner" />
               </div>
             }
           >
