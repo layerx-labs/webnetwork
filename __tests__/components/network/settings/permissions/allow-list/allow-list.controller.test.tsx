@@ -12,6 +12,7 @@ import useDeleteAllowListEntry from "x-hooks/api/marketplace/management/allow-li
 
 import { isAddress } from "__mocks__/web3-utils";
 import { mockAddSuccess } from "__mocks__/x-hooks/stores/toasts/toasts.store";
+import useReactQueryMutation from "__mocks__/x-hooks/use-react-query-mutation";
 
 import { render } from "__tests__/utils/custom-render";
 
@@ -57,6 +58,20 @@ describe("AllowList", () => {
     expect(mockSetState).toHaveBeenCalledWith("");
   });
 
+  it("Should pass addresses list to view component", async () => {
+    const mockUseGetAllowList = jest.requireMock("x-hooks/api/marketplace/management/allow-list/use-get-allow-list");
+    mockUseGetAllowList
+      .mockImplementationOnce(() => ([address]));
+    const result = render(<QueryClientProvider client={queryClient}>
+      <AllowList
+        networkId={networkId}
+        networkAddress={networkAddress}
+        type={AllowListTypes.OPEN_TASK}
+      />
+    </QueryClientProvider>);
+    expect(result.getByTestId(`permission-item-button-${address}`)).toBeDefined();
+  });
+
   it("Should remove address from list", async () => {
     const mockUseGetAllowList = jest.requireMock("x-hooks/api/marketplace/management/allow-list/use-get-allow-list");
     mockUseGetAllowList
@@ -68,11 +83,31 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-
     const removeButton = result.getByTestId(`permission-item-button-${address}`);
     fireEvent.click(removeButton);
     expect(useDeleteAllowListEntry).toHaveBeenCalledWith(networkId, address, type);
     expect(mockAddSuccess).toHaveBeenCalled();
+  });
+
+  it("Should disable input and add button because request is pending", async () => {
+    const result = render(<QueryClientProvider client={queryClient}>
+      <AllowList
+        networkId={networkId}
+        networkAddress={networkAddress}
+        type={AllowListTypes.OPEN_TASK}
+      />
+    </QueryClientProvider>);
+    useReactQueryMutation
+      .mockImplementation(() => ({
+        ...jest.requireActual("x-hooks/use-react-query-mutation"),
+        mutate: jest.fn(),
+        isLoading: true
+      }));
+    const input = result.getByTestId("permission-input");
+    fireEvent.change(input, { target: { value: address } });
+    const button = result.getByTestId("permission-add-button");
+    fireEvent.click(button);
+    expect(button).toBeDisabled();
   });
 
   it("Should disable add button because address is invalid", async () => {
@@ -85,7 +120,6 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-
     const input = result.getByTestId("permission-input");
     fireEvent.change(input, { target: { value: "invalid-address" } });
     const button = result.getByTestId("permission-add-button");

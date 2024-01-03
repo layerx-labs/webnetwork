@@ -1,12 +1,12 @@
 import { mockAddSuccess } from "__mocks__/x-hooks/stores/toasts/toasts.store";
 
-export default function useReactQueryMutation({
+const useReactQueryMutation = jest.fn(({
   mutationFn,
   onSuccess = () => {},
   onError  = () => {},
   toastSuccess = undefined,
   toastError = undefined,
-}) {
+}) => {
   const mutate = jest.fn((props) => {
     mutationFn(props);
     onSuccess();
@@ -16,6 +16,9 @@ export default function useReactQueryMutation({
     mutate: mutate,
     mutateAsync: mutate,
     onSuccess: onSuccess,
-    onError
+    onError,
+    isLoading: false
   };
-}
+});
+
+export default useReactQueryMutation;
