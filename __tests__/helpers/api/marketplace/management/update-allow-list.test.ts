@@ -39,37 +39,36 @@ describe("updateAllowListByType", () => {
     jest.clearAllMocks();
   });
 
-  types
-    .forEach(type => {
-      it(`Should add address to ${type} list successfully`, async () => {
-        const listColumn = getAllowListColumnFromType(type);
-        const result = await updateAllowListByType(address, networkId, type, "add");
-        const updateSpy = jest.spyOn(Database.network, "update");
-        expect(updateSpy).toHaveBeenCalledWith({
-          [listColumn]: [address]
-        }, updateCondition);
-        expect(result.includes(address)).toBe(true);
-      });
+  it
+    .each(types)("Should add address to %s list successfully", async (type) => {
+      const listColumn = getAllowListColumnFromType(type);
+      const result = await updateAllowListByType(address, networkId, type, "add");
+      const updateSpy = jest.spyOn(Database.network, "update");
+      expect(updateSpy).toHaveBeenCalledWith({
+        [listColumn]: [address]
+      }, updateCondition);
+      expect(result.includes(address)).toBe(true);
+    });
 
-      it(`Should remove address from ${type} list successfully`, async () => {
-        Database.network.findOne
-          .mockReturnValueOnce(({
-            allow_list: [address],
-            close_task_allow_list: [address],
-          }));
-        Database.network.update
-          .mockReturnValueOnce(([true, {
-            allow_list: [],
-            close_task_allow_list: [],
-          }]));
-        const listColumn = getAllowListColumnFromType(type);
-        const result = await updateAllowListByType(address, networkId, type, "remove");
-        const updateSpy = jest.spyOn(Database.network, "update");
-        expect(updateSpy).toHaveBeenCalledWith({
-          [listColumn]: []
-        }, updateCondition);
-        expect(result.includes(address)).toBe(false);
-      });
+  it
+    .each(types)("Should remove address from %s list successfully", async (type) => {
+      Database.network.findOne
+        .mockReturnValueOnce(({
+          allow_list: [address],
+          close_task_allow_list: [address],
+        }));
+      Database.network.update
+        .mockReturnValueOnce(([true, {
+          allow_list: [],
+          close_task_allow_list: [],
+        }]));
+      const listColumn = getAllowListColumnFromType(type);
+      const result = await updateAllowListByType(address, networkId, type, "remove");
+      const updateSpy = jest.spyOn(Database.network, "update");
+      expect(updateSpy).toHaveBeenCalledWith({
+        [listColumn]: []
+      }, updateCondition);
+      expect(result.includes(address)).toBe(false);
     });
 
   it("Should throw because address was not provided", async () => {
