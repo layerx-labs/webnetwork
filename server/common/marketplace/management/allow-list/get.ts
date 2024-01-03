@@ -30,7 +30,7 @@ export default async function get (req: NextApiRequest) {
   });
 
   if (!result)
-    throw new HttpBadRequestError(ErrorMessages.NoNetworkFound)
+    throw new HttpBadRequestError(ErrorMessages.NoNetworkFound);
 
   return address
     ? {allowed: !result[listColumn].length ? true : result[listColumn].map(toLower).includes(toLower(address))}
