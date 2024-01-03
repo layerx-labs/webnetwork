@@ -4,9 +4,9 @@ import { withProtected, WithValidChainId, withGovernor } from "middleware";
 
 import { Logger } from "services/logging";
 
-import deleteEntry from "server/common/marketplace/management/allowlist/delete";
-import get from "server/common/marketplace/management/allowlist/get";
-import post from "server/common/marketplace/management/allowlist/post";
+import deleteEntry from "server/common/marketplace/management/allow-list/delete";
+import get from "server/common/marketplace/management/allow-list/get";
+import post from "server/common/marketplace/management/allow-list/post";
 
 async function handler (req: NextApiRequest, res: NextApiResponse) {
   Logger.changeActionName(`AllowList`);
