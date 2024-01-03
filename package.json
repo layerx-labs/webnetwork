@@ -41,7 +41,7 @@
     "@elastic/apm-rum": "^5.14.0",
     "@elastic/apm-rum-core": "^5.19.0",
     "@elastic/elasticsearch": "^8.2.1",
-    "@layerx-labs/dappkit-react": "github:moshmage/dappkit-react#live-test",
+    "@layerx-labs/dappkit-react": "./layerx-labs-dappkit-react-0.1.5.tgz",
     "@metamask/eth-sig-util": "^5.0.2",
     "@metamask/jazzicon": "^2.0.0",
     "@primer/css": "^20.8.0",
