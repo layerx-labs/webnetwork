@@ -108,7 +108,7 @@ export default function ProposalActionsButtonsView ({
       <If condition={!canCloseTask}>
         <div className="row mt-2">
           <ContextualSpan context="info">
-            Your address is not on the closing tasks allowed list
+            {t("closing-task-list-warning")}
           </ContextualSpan>
         </div>
       </If>
