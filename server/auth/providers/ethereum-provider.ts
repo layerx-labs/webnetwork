@@ -7,7 +7,7 @@ import { Op, Sequelize } from "sequelize";
 import models from "db/models";
 
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { lowerCaseCompare } from "helpers/string";
+import { lowerCaseCompare, lowerCaseIncludes } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
 import { UserRole } from "interfaces/enums/roles";
@@ -99,9 +99,9 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       const { governorOf, taskRoles } = networks.reduce(({governorOf, taskRoles}, curr) => {
         if (lowerCaseCompare(curr.creatorAddress, address))
           governorOf.push(UserRoleUtils.getGovernorRole(curr.chain_id, curr.networkAddress));
-        if (!curr.close_task_allow_list?.length || curr.close_task_allow_list?.includes(address))
+        if (!curr.close_task_allow_list?.length || lowerCaseIncludes(address, curr.close_task_allow_list))
           taskRoles.push(UserRoleUtils.getCloseTaskRole(curr.id));
-        if (!curr.allow_list?.length || curr.allow_list?.includes(address))
+        if (!curr.allow_list?.length || lowerCaseIncludes(address, curr.allow_list))
           taskRoles.push(UserRoleUtils.getCreateTaskRole(curr.id));
 
         return {
