@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useDebounce } from "use-debounce";
 import { isAddress } from "web3-utils";
@@ -42,6 +43,7 @@ export default function AllowList ({
   networkAddress,
   type
 }: AllowListProps) {
+  const session = useSession();
   const { t } = useTranslation(["custom-network"]);
 
   const [address, setAddress] = useState("");
@@ -62,7 +64,10 @@ export default function AllowList ({
       useAddAllowListEntry(props.networkId, props.address, props.networkAddress, props.type),
     toastSuccess: t("steps.permissions.allow-list.success.address-allowed"),
     toastError: t("steps.permissions.allow-list.error.could-not-add-address"),
-    onSuccess: () => setAddress(""),
+    onSuccess: () => {
+      setAddress("");
+      session.update();
+    },
     onError: console.debug
   });
   const { mutate: onTrashClick, isLoading: isRemoving } = useReactQueryMutation({
@@ -71,6 +76,7 @@ export default function AllowList ({
       useDeleteAllowListEntry(props.networkId, props.address, props.type),
     toastSuccess: t("steps.permissions.allow-list.success.address-removed"),
     toastError: t("steps.permissions.allow-list.error.could-not-remove-address"),
+    onSuccess: () => session.update(),
     onError: console.debug
   })
 
