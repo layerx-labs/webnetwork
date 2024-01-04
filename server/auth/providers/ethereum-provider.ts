@@ -96,10 +96,7 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         }
       });
 
-      const { governorOf, taskRoles } = networks.reduce((acc, curr) => {
-        const governorOf = [...acc.governorOf];
-        const taskRoles = [...acc.taskRoles];
-
+      const { governorOf, taskRoles } = networks.reduce(({governorOf, taskRoles}, curr) => {
         if (lowerCaseCompare(curr.creatorAddress, address))
           governorOf.push(UserRoleUtils.getGovernorRole(curr.chain_id, curr.networkAddress));
         if (!curr.close_task_allow_list?.length || curr.close_task_allow_list?.includes(address))
