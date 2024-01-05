@@ -1,57 +1,61 @@
-import {useState} from "react";
+import { useState } from "react";
 
+import { Web3Connection } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
-import {getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession} from "next-auth/react";
+import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import getConfig from "next/config";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
-import {IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
-import {AddressValidator} from "helpers/validators/address";
+import { AddressValidator } from "helpers/validators/address";
+import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
-import {EventName} from "interfaces/analytics";
-import {CustomSession} from "interfaces/custom-session";
-import {UserRole} from "interfaces/enums/roles";
+import { EventName } from "interfaces/analytics";
+import { CustomSession } from "interfaces/custom-session";
+import { UserRole } from "interfaces/enums/roles";
+import { StorageKeys } from "interfaces/enums/storage-keys";
 
-import {WinStorage} from "services/win-storage";
+import { WinStorage } from "services/win-storage";
 
-import {SESSION_TTL} from "server/auth/config";
+import { SESSION_TTL } from "server/auth/config";
 
-import {useSearchCurators} from "x-hooks/api/curator";
-import {useGetKycSession, useValidateKycSession} from "x-hooks/api/kyc";
+import { useSearchCurators } from "x-hooks/api/curator";
+import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
+import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
-import {useDao} from "x-hooks/use-dao";
+import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
+import { useSettings } from "x-hooks/use-settings";
 import useSignature from "x-hooks/use-signature";
 import { useStorageTransactions } from "x-hooks/use-storage-transactions";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-import { useLoadersStore } from "./stores/loaders/loaders.store";
-import { useUserStore } from "./stores/user/user.store";
-import { useSettings } from "./use-settings";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
 const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
-  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
   const session = useSession();
   const { asPath } = useRouter();
 
-  const transactions = useStorageTransactions();
-  const { addWarning } = useToastStore();
-  const { service: daoService, serviceStarting} = useDaoStore();
+  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
+
+  const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { connect, disconnect } = useDao();
-  const { settings } = useSettings();
   const { pushAnalytic } = useAnalyticEvents();
-  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
+  const transactions = useStorageTransactions();
   const { connectedChain } = useSupportedChain();
+  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
+
+  const { addWarning } = useToastStore();
   const { currentUser, updateCurrentUser} = useUserStore();
-  const { updateReAuthorizeGithub} = useLoadersStore();
+  const { service: daoService, serviceStarting } = useDaoStore();
+  const { updateWalletSelectorModal } = useLoadersStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -70,19 +74,24 @@ export function useAuthentication() {
     });
   }
 
-  async function signInWallet() {
-    const { address, web3Connection } = await connect();
+  async function signInWallet(connection: Web3Connection) {
+    const address = await connection.getAddress();
 
     if (!address) return;
 
+    const providerName = getProviderNameFromConnection(connection);
+    window.localStorage.setItem(StorageKeys.lastProviderConnected, providerName);
+
     const csrfToken = await getCsrfToken();
-    
+
     const issuedAt = new Date();
     const expiresAt = new Date(+issuedAt + SESSION_TTL);
 
-    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, web3Connection);
+    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, connection);
 
     if (!signature) return;
+
+    updateWalletSelectorModal(false);
 
     nextSignIn("credentials", {
       redirect: false,
@@ -105,7 +114,6 @@ export function useAuthentication() {
 
     Promise.all([
       daoService.getOraclesResume(currentUser.walletAddress),
-
       daoService.getBalance('settler', currentUser.walletAddress),
       useSearchCurators({
         address: currentUser.walletAddress,
@@ -169,15 +177,9 @@ export function useAuthentication() {
 
     await connect();
 
-    updateCurrentUser({connected: true})
+    updateCurrentUser({connected: true});
 
     pushAnalytic(EventName.USER_LOGGED_IN, { login: user.login });
-  }
-
-  function verifyReAuthorizationNeed() {
-    const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
-
-    updateReAuthorizeGithub(!!expirationStorage.value && new Date(expirationStorage.value) < new Date())
   }
 
   function signMessage(message?: string) {
@@ -249,14 +251,13 @@ export function useAuthentication() {
 
     useGetKycSession()
       .then((data) => data.status !== 'VERIFIED' ? useValidateKycSession(data.session_id) : data)
-      .then((session)=> updateCurrentUser({kycSession: session}))
+      .then((session)=> updateCurrentUser({kycSession: session}));
   }
 
   return {
     signOut,
     signInWallet,
     updateWalletBalance,
-    verifyReAuthorizationNeed,
     signMessage,
     updateKycSession,
     syncUserDataWithSession,
