@@ -280,20 +280,6 @@
     "set-bounty-draft": {
       "title": "Set task as draft"
     },
-    "mobile-information": {
-      "title": "MetaMask Mobile",
-      "description": "MetaMask is not available on this mobile browser. In order to interact with this DApp on a mobile you need to access using Metamask app built-in browser.",
-      "open-in-metamask": "Open in MetaMask"
-    },
-    "web3-dialog": {
-      "title": "MetaMask not Detected",
-      "eth-not-available": "No ETH account available",
-      "message": "It seems that you don't have a MetaMask account selected. If using MetaMask, please make sure that your wallet is unlocked and that you have at least one account in your accounts list."
-    },
-    "missing-metamask": {
-      "title": "Metamask communication problem",
-      "description": "The application could not communicate properly with the Metamask extension, please disable other wallets that you might have"
-    },
     "wrong-network": {
       "please-connect": "Please, connect to a supported network",
       "connect-to-network-chain": "To interact with this marketplace, please connect to the network below",
@@ -361,6 +347,16 @@
     "wallet-selector": {
       "title": "Select a wallet",
       "subtitle": "Please select a wallet to be connect with this website."
+    },
+    "no-wallet-modal": {
+      "title": "Wallet not detected",
+      "description": "It seems that you don't have a wallet extension installed. In order to interact with BEPRO platform, please install one of the supported wallets.",
+      "title-mobile": "Mobile Wallet",
+      "description-mobile": "In order to interact with this DApp on a mobile you need to access using a supported wallet app built-in browser.",
+      "install-metamask": "Install MetaMask",
+      "open-in-metamask": "Open in MetaMask",
+      "install-coinbase": "Install CoinBase",
+      "open-in-coinbase": "Open in CoinBase"
     }
   },
   "forms": {
