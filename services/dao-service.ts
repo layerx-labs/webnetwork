@@ -34,18 +34,6 @@ interface DAOServiceProps {
 type ResolveReject = (values?: any) => void
 
 export default class DAO {
-  private _web3Connection: Web3Connection;
-  private _network: Network_v2;
-  private _registry: NetworkRegistry;
-  private _web3Host: string;
-  private _registryAddress: string;
-
-  get web3Connection() { return this._web3Connection; }
-  get network() { return this._network; }
-  get registry() { return this._registry; }
-  get web3Host() { return this._web3Host; }
-  get registryAddress() { return this._registryAddress; }
-
   constructor({ skipWindowAssignment, web3Connection, web3Host, registryAddress, provider } : DAOServiceProps = {}) {
     if (!web3Host && !web3Connection && !provider)
       throw new Error("Missing web3 provider URL, web3 connection or provider object");
@@ -60,13 +48,33 @@ export default class DAO {
     });
   }
 
+  private _web3Connection: Web3Connection;
+
+  get web3Connection() { return this._web3Connection; }
+
+  private _network: Network_v2;
+
+  get network() { return this._network; }
+
+  private _registry: NetworkRegistry;
+
+  get registry() { return this._registry; }
+
+  private _web3Host: string;
+
+  get web3Host() { return this._web3Host; }
+
+  private _registryAddress: string;
+
+  get registryAddress() { return this._registryAddress; }
+
   async loadNetwork(networkAddress: string, skipAssignment?: boolean): Promise<Network_v2 | boolean> {
     try {
       if (!networkAddress) throw new Error("Missing Network_v2 Contract Address");
 
       const network = new Network_v2(this.web3Connection, networkAddress);
 
-      await network.loadContract();
+      await network.start();
 
       if (!skipAssignment)
         this._network = network;
@@ -101,7 +109,7 @@ export default class DAO {
   async loadERC20(tokenAddress: string): Promise<ERC20> {
     const erc20 = new ERC20(this.web3Connection, tokenAddress);
 
-    await erc20.loadContract();
+    await erc20.start();
 
     return erc20;
   }
@@ -109,7 +117,7 @@ export default class DAO {
   async loadBountyToken(tokenAddress: string): Promise<BountyToken> {
     const token = new BountyToken(this.web3Connection, tokenAddress);
 
-    await token.loadContract();
+    await token.start();
 
     return token;
   }
@@ -655,7 +663,7 @@ export default class DAO {
 
   async approveToken(tokenAddress: string = undefined, amount: string) {
     const erc20 = await this.loadERC20(tokenAddress);
-
+    console.log("amount to approve", amount)
     return erc20.approve(this.network.contractAddress, amount);
   }
 
