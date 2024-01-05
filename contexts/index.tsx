@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 
+import { useDappkit } from "@taikai/dappkit-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -16,12 +17,13 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 const RootProviders = ({ children }) => {
   const router = useRouter();
   const session = useSession();
+  const { chainId } = useDappkit();
 
+  const { updateChain } = useDao();
   const { loadSettings } = useSettings();
-  const { listenChainChanged } = useDao();
   const { clear, refresh } = useMarketplace();
   const { supportedChains } = useSupportedChain();
-  const { syncUserDataWithSession, updateWalletBalance, verifyReAuthorizationNeed } = useAuthentication();
+  const { syncUserDataWithSession, updateWalletBalance } = useAuthentication();
 
   const { currentUser } = useUserStore();
   const { service: daoService } = useDaoStore();
@@ -37,6 +39,12 @@ const RootProviders = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (!chainId || !supportedChains)
+      return;
+    updateChain(+chainId);
+  }, [chainId, supportedChains]);
+
+  useEffect(() => {
     if (currentUser?.connected)
       session.update();
   }, [currentUser?.connected]);
@@ -45,11 +53,7 @@ const RootProviders = ({ children }) => {
     syncUserDataWithSession();
   }, [daoService, session]);
 
-  useEffect(listenChainChanged, [supportedChains]);
-
   useEffect(updateWalletBalance, [currentUser?.walletAddress, daoService?.network?.contractAddress]);
-
-  useEffect(verifyReAuthorizationNeed, [currentUser?.walletAddress]);
 
   return (
     <>
