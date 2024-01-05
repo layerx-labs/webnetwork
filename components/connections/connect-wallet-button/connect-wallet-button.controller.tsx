@@ -5,40 +5,30 @@ import ConnectWalletButtonView from "components/connections/connect-wallet-butto
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useAuthentication } from "x-hooks/use-authentication";
 
 export default function ConnectWalletButton({
   children = null,
   asModal = false,
-  forceLogin = false,
   btnColor = "white",
 }) {
   const [showModal, setShowModal] = useState(false);
 
-  const { updateWeb3Dialog, loading } = useLoadersStore();
-  const { service: daoService, serviceStarting } = useDaoStore();
   const { currentUser } = useUserStore();
-  const { signInWallet } = useAuthentication();
+  const { serviceStarting } = useDaoStore();
+  const { updateWeb3Dialog, updateWalletSelectorModal, loading } = useLoadersStore();
 
-  async function handleLogin()  {
+  async function onConnectClick()  {
     if(!window?.ethereum) {
-      updateWeb3Dialog(true)
+      updateWeb3Dialog(true);
       return;
     }
 
-    signInWallet();
+    updateWalletSelectorModal(true);
   }
 
   function onWalletChange() {
     setShowModal(!currentUser?.walletAddress);
   }
-
-  useEffect(() => {
-    if (!daoService) return;
-
-    if (forceLogin)
-      signInWallet();
-  }, [daoService, forceLogin]);
 
   useEffect(onWalletChange, [currentUser?.walletAddress]);
 
@@ -50,7 +40,7 @@ export default function ConnectWalletButton({
       isModalVisible={showModal}
       isConnected={!!currentUser?.walletAddress}
       buttonColor={btnColor}
-      onConnectClick={handleLogin}
+      onConnectClick={onConnectClick}
     />
   );
 }
