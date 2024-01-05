@@ -357,6 +357,10 @@
           "description":  "Create your marketplace effortlessly using our user-friendly platform."
         }
       }
+    },
+    "wallet-selector": {
+      "title": "Select a wallet",
+      "subtitle": "Please select a wallet to be connect with this website."
     }
   },
   "forms": {

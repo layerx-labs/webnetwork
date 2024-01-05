@@ -1,29 +1,26 @@
-import { WalletSelector } from "@layerx-labs/dappkit-react";
-
-import Modal from "components/modal";
+import WalletSelectorModalView from "components/connections/wallet-selector-modal/wallet-selector-modal.view";
 
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
+import { useAuthentication } from "x-hooks/use-authentication";
+import { useSettings } from "x-hooks/use-settings";
 
 export default function WalletSelectorModal () {
+  const { settings } = useSettings();
+  const { signInWallet } = useAuthentication();
+
   const { walletSelectorModal, updateWalletSelectorModal } = useLoadersStore();
 
   function onCloseClick () {
     updateWalletSelectorModal(false);
   }
 
-  return(
-    <Modal
-      title="Select a wallet"
-      subTitle="Please select a wallet to be connect with this website."
+  return (
+    <WalletSelectorModalView
       show={walletSelectorModal}
+      availableWallets={settings?.availableWallets || ["Metamask"]}
       onCloseClick={onCloseClick}
-      cancelLabel={"Cancel"}
-      backdrop
-    >
-      <WalletSelector
-        availableWallets={["Metamask", "Coinbase", "WalletConnect", "GnosisSafe"]}
-        onConnectorConnect={console.log}
-      />
-    </Modal>
+      onConnectorConnect={signInWallet}
+      onConnectorDisconnect={console.log}
+    />
   );
 }
