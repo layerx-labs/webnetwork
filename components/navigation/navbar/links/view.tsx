@@ -29,7 +29,7 @@ export default function NavBarLinks() {
       xs={false}
       md={true}
     >
-      <ul className="nav-links gap-44">
+      <ul className="nav-links nav-gap">
         {links.map(({ href, label}) => 
           <li key={`nav-${label}`}>
             <InternalLink

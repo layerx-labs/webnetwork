@@ -422,8 +422,12 @@ li {
     margin: 0;
   }
 
+  .nav-gap {
+    gap: 44px
+  }
+
   @media (max-width: 860px) {
-    .gap-44 {
+    .nav-gap {
        gap: 12px;
      }
   }
