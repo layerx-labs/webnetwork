@@ -32,7 +32,7 @@ export default function useSupportedChain() {
   
   function updateNetworkAndChainMatch() {
     const networkChainId = marketplace?.active?.chain_id;
-    const matchWithNetworkChain = +connectedChain?.id === +networkChainId;
+    const matchWithNetworkChain = networkChainId ? +connectedChain?.id === +networkChainId : null;
 
     if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain)
       updateConnectedChain({
