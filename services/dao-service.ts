@@ -663,7 +663,7 @@ export default class DAO {
 
   async approveToken(tokenAddress: string = undefined, amount: string) {
     const erc20 = await this.loadERC20(tokenAddress);
-    console.log("amount to approve", amount)
+
     return erc20.approve(this.network.contractAddress, amount);
   }
 
