@@ -16,8 +16,8 @@ export default function NavBarActions() {
     <>
       <div className="d-flex flex-row align-items-center gap-3">
         <ResponsiveWrapper
-          xs={false}
-          xl={true}
+          xs={false}  
+          md={true}
         >
           <div className="d-flex gap-3 align-items-center">
             <CreateNetworkBountyButton />
@@ -29,7 +29,7 @@ export default function NavBarActions() {
         <ConnectWalletButton>
           <ResponsiveWrapper
             xs={false}
-            xl={true}
+            md={true}
           >
             <div className="d-flex gap-3 align-items-center">
               <TransactionsStateIndicator />
@@ -40,7 +40,7 @@ export default function NavBarActions() {
 
           <ResponsiveWrapper
             xs={true}
-            xl={false}
+            md={false}
           >
             <CreateNetworkBountyButton label={t("misc.bounty")}/>
           </ResponsiveWrapper>
@@ -48,7 +48,7 @@ export default function NavBarActions() {
 
         <ResponsiveWrapper
             xs={true}
-            xl={false}
+            md={false}
           >
             <HamburgerButton />
           </ResponsiveWrapper>
