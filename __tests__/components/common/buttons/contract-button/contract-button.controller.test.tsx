@@ -62,13 +62,9 @@ jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
   useLoadersStore: () => useLoadersStore
 }));
 
-jest.mock("x-hooks/use-dappkit", () => ({
+jest.mock("@layerx-labs/dappkit-react", () => ({
   useDappkit: () => ({
-    connection: {
-      async getAddress () {
-        return defaultAddress;
-      }
-    }
+    address: defaultAddress
   })
 }));
 
