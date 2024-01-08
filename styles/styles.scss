@@ -422,13 +422,18 @@ li {
     margin: 0;
   }
 
+  @media (max-width: 860px) {
+    .gap-44 {
+       gap: 12px;
+     }
+  }
+
   .nav-links {
     display: flex;
     align-items: center;
     margin: 0px;
     padding: 0px;
     list-style: none;
-    gap: 44px;
 
     a:not(.brand) {
       color: $gray-500;
