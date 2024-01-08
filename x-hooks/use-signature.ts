@@ -20,7 +20,7 @@ export default function useSignature() {
       return;
 
     const typedMessage = ethereumMessageService.getMessage({
-      chainId: +chainId,
+      chainId: chainId?.toString(),
       message
     });
 
