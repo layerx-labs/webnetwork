@@ -539,5 +539,6 @@
   "locales": {
     "en": "English",
     "pt": "Português"
-  }
+  },
+  "closing-task-list-warning": "Your address is not on the closing tasks allowed list."
 }

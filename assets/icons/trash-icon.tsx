@@ -1,73 +1,25 @@
 import { SVGProps } from "react";
 
-export default function TrashIcon(props: SVGProps<SVGSVGElement>) {
+export default function TrashIcon (props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      width="166"
-      height="32"
-      viewBox="0 0 166 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <rect
-        x="71.6665"
-        y="4.5"
-        width="23"
-        height="23"
-        rx="3.5"
-        fill="#2E2F38"
-      />
-      <g clipPath="url(#clip0_1270_16879)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <g clipPath="url(#clip0_3716_25969)">
+        <path d="M13.5 3.5H2.5" stroke="#ECEEFC" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M6.5 6.5V10.5" stroke="#ECEEFC" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9.5 6.5V10.5" stroke="#ECEEFC" strokeLinecap="round" strokeLinejoin="round"/>
         <path
-          d="M88.6665 11.5H77.6665"
-          stroke="#ECEEFC"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+          d="M12.5 3.5V13C12.5 13.1326 12.4473 13.2598 12.3536 13.3536C12.2598 13.4473 12.1326 13.5 12 13.5H4C3.86739 13.5 3.74021 13.4473 3.64645 13.3536C3.55268 13.2598 3.5 13.1326 3.5 13V3.5"
+          stroke="#ECEEFC" strokeLinecap="round" strokeLinejoin="round"/>
         <path
-          d="M81.6665 14.5V18.5"
-          stroke="#ECEEFC"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M84.6665 14.5V18.5"
-          stroke="#ECEEFC"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M87.6665 11.5V21C87.6665 21.1326 87.6138 21.2598 87.5201 21.3536C87.4263 21.4473 87.2991 21.5 87.1665 21.5H79.1665C79.0339 21.5 78.9067 21.4473 78.813 21.3536C78.7192 21.2598 78.6665 21.1326 78.6665 21V11.5"
-          stroke="#ECEEFC"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M85.6665 11.5V10.5C85.6665 10.2348 85.5611 9.98043 85.3736 9.79289C85.1861 9.60536 84.9317 9.5 84.6665 9.5H81.6665C81.4013 9.5 81.1469 9.60536 80.9594 9.79289C80.7719 9.98043 80.6665 10.2348 80.6665 10.5V11.5"
-          stroke="#ECEEFC"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+          d="M10.5 3.5V2.5C10.5 2.23478 10.3946 1.98043 10.2071 1.79289C10.0196 1.60536 9.76522 1.5 9.5 1.5H6.5C6.23478 1.5 5.98043 1.60536 5.79289 1.79289C5.60536 1.98043 5.5 2.23478 5.5 2.5V3.5"
+          stroke="#ECEEFC" strokeLinecap="round" strokeLinejoin="round"/>
       </g>
-      <rect
-        x="71.6665"
-        y="4.5"
-        width="23"
-        height="23"
-        rx="3.5"
-        stroke="#454654"
-      />
       <defs>
-        <clipPath id="clip0_1270_16879">
-          <rect
-            width="16"
-            height="16"
-            fill="white"
-            transform="translate(75.1665 8)"
-          />
+        <clipPath id="clip0_3716_25969">
+          <rect width="16" height="16" fill="white"/>
         </clipPath>
       </defs>
     </svg>
+
   );
 }

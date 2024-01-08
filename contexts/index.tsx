@@ -19,25 +19,29 @@ const RootProviders = ({ children }) => {
   const { supportedChains } = useSupportedChain();
   const { listenChainChanged } = useDao();
   const { syncUserDataWithSession, updateWalletBalance, verifyReAuthorizationNeed } = useAuthentication();
-  
+
   useEffect(() => {
-    session.update();
     loadSettings()
   }, []);
+
+  useEffect(() => {
+    if (currentUser?.connected)
+      session.update();
+  }, [currentUser?.connected]);
 
   useEffect(() => {
     syncUserDataWithSession();
   }, [daoService, session]);
 
-  useEffect(listenChainChanged, [ supportedChains ]);
-  
+  useEffect(listenChainChanged, [supportedChains]);
+
   useEffect(updateWalletBalance, [currentUser?.walletAddress, daoService?.network?.contractAddress]);
 
   useEffect(verifyReAuthorizationNeed, [currentUser?.walletAddress]);
 
   return (
     <>
-      <NetworkThemeInjector />
+      <NetworkThemeInjector/>
       {children}
     </>
   );

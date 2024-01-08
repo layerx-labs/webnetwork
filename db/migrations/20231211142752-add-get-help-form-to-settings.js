@@ -11,7 +11,7 @@ module.exports = {
       group: "forms",
       createdAt: new Date(),
       updatedAt: new Date(),
-    }]);
+    }]).catch(error => console.log("Failed to insert", error.toString()));
   },
 
   async down (queryInterface, Sequelize) {

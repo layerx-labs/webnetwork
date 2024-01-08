@@ -1,8 +1,14 @@
-import {api} from "../../../../../services/api";
+import { AllowListTypes } from "interfaces/enums/marketplace";
 
-export default async function useAddAllowListEntry(networkId: number, address: string, networkAddress: string) {
-  return api.post<string[]>(`/marketplace/management/${networkId}/whitelist/${address}`, {
-    networkAddress
-  })
+import { api } from "services/api";
+
+export default async function useAddAllowListEntry (networkId: number,
+                                                    address: string,
+                                                    networkAddress: string,
+                                                    type: AllowListTypes) {
+  return api
+    .post<string[]>(`/marketplace/management/${networkId}/allowlist/${type}/${address}`, {
+      networkAddress
+    })
     .then(d => d.data);
 }

@@ -1,6 +1,8 @@
-import {api} from "../../../../../services/api";
+import { AllowListTypes } from "interfaces/enums/marketplace";
 
-export default function useGetIsAllowed(networkId: number, address: string) {
-  return api.get<{ allowed: boolean }>(`/marketplace/management/${networkId}/whitelist/${address}`)
+import { api } from "services/api";
+
+export default function useGetIsAllowed (networkId: number, address: string, type: AllowListTypes) {
+  return api.get<{ allowed: boolean }>(`/marketplace/management/${networkId}/allowlist/${type}/${address}`)
     .then(d => d.data);
 }

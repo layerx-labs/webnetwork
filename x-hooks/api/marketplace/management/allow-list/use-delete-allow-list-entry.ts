@@ -1,6 +1,11 @@
-import {api} from "../../../../../services/api";
+import { AllowListTypes } from "interfaces/enums/marketplace";
 
-export default async function useDeleteAllowListEntry(networkId: number, address: string) {
-  return api.delete<string[]>(`/marketplace/management/${networkId}/whitelist/${address}`)
+import { api } from "services/api";
+
+export default async function useDeleteAllowListEntry (networkId: number,
+                                                       address: string,
+                                                       type: AllowListTypes) {
+  return api
+    .delete<string[]>(`/marketplace/management/${networkId}/allowlist/${type}/${address}`)
     .then(d => d.data);
 }
