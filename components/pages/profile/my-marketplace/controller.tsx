@@ -68,7 +68,8 @@ export function MyMarketplace({
     data: myNetwork,
     isFetching,
     isSuccess,
-    invalidate
+    invalidate,
+    isLoading
   } = useReactQuery(networkQueryKey, 
                     getNetwork,
                     {
@@ -91,6 +92,7 @@ export function MyMarketplace({
 
   return(
     <MyNetworkPageView
+      isLoading={isLoading}
       myNetwork={myNetwork}
       bounties={bounties}
       updateEditingNetwork={invalidate}
