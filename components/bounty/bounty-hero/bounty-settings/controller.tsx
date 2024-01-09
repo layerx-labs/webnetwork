@@ -32,9 +32,10 @@ export default function BountySettings({
   const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
   const isGovernor = state.Service?.network?.active?.isGovernor;
+  const isDraftFunding = currentBounty?.isDraft || !currentBounty?.isFunded 
   const objViewProps = {
     isWalletConnected: !!state.currentUser?.walletAddress,
-    isBountyInDraft: !!currentBounty?.isDraft,
+    isBountyInDraft: currentBounty?.isFundingRequest ? isDraftFunding : currentBounty?.isDraft,
     isBountyOwner:
       !!state.currentUser?.walletAddress &&
       currentBounty?.user?.address &&
