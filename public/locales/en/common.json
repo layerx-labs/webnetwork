@@ -318,8 +318,8 @@
     "wallet-mismatch": {
       "title": "Wallet Mismatch",
       "description-pre": "You are logged in with the wallet",
-      "description-pos": "but your Metamask is connected to another wallet.",
-      "recommendation": "Please, change the wallet on Metamask or sign in with the current wallet."
+      "description-pos": "but your {{extension}} is connected to another wallet.",
+      "recommendation": "Please, change the wallet on {{extension}} or sign in with the current wallet."
     },
     "no-network-token": {
       "title": "Network token usage",
@@ -539,6 +539,10 @@
   "locales": {
     "en": "English",
     "pt": "Português"
+  },
+  "wallets": {
+    "metamask": "MetaMask",
+    "coinbasewallet": "CoinBase"
   },
   "closing-task-list-warning": "Your address is not on the closing tasks allowed list."
 }
