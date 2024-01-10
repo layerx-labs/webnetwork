@@ -1,18 +1,19 @@
 import React from "react";
 
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+import {useTranslation} from "next-i18next";
+import {useRouter} from "next/router";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
+import {SearchNotificationsPaginated} from "interfaces/notifications";
 
-import { useUpdateReadNotification } from "x-hooks/api/notification/use-update-read-notification";
-import { useUpdateReadAllNotifications } from "x-hooks/api/notifications/use-update-read-all-notifications";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUpdateReadNotification} from "x-hooks/api/notification/use-update-read-notification";
+import {useUpdateReadAllNotifications} from "x-hooks/api/notifications/use-update-read-all-notifications";
+import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 import NotificationsListView from "./view";
+
 interface NotificationListProps {
   notifications: SearchNotificationsPaginated;
   updateNotifications: () => void;
@@ -62,6 +63,14 @@ export default function NotificationsList({
     },
   });
 
+  async function redirectAndMarkRead(href: string, query: unknown) {
+    await router.push(getURLWithNetwork(href, query));
+    const [,id] = href.match(/\/(\d+)\?.+$/);
+
+    if (notifications.rows.find(n => n.id === +id))
+      updateReadNotification({id: id.toString(), read: true });
+  }
+
   return (
     <NotificationsListView
       notifications={notifications}
@@ -71,7 +80,7 @@ export default function NotificationsList({
       onClickMarkAllRead={() => updateReadAllNotifications(currentUser?.walletAddress)}
       onUpdateBtnUreadActive={updateType}
       onClickRead={(id) => updateReadNotification({id: id.toString(), read: true })}
-      redirectTo={(href, query) => router.push(getURLWithNetwork(href, query))}
+      redirectTo={redirectAndMarkRead}
     />
   );
 }

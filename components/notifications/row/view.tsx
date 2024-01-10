@@ -1,10 +1,10 @@
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import If from "components/If";
 
-import { extractNetworkAndChain } from "helpers/extract-network-and-chain";
-import { getTimeDifferenceInWords } from "helpers/formatDate";
+import {extractNetworkAndChain} from "helpers/extract-network-and-chain";
+import {getTimeDifferenceInWords} from "helpers/formatDate";
 
-import { Notifications } from "interfaces/notifications";
+import {Notifications} from "interfaces/notifications";
 
 export default  function NotificationRow({
   item,
@@ -38,8 +38,6 @@ export default  function NotificationRow({
                 chain: chain, 
                 network: network
               })
-              if(!item?.read)
-                onClickRead(item?.id)
             }}>
               <AvatarOrIdenticon address={extractAddress} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
