@@ -1,12 +1,16 @@
 import { useDappkit } from "@taikai/dappkit-react";
+import { coinbaseWallet } from "@taikai/dappkit-react/dist/connectors/wallets/coinbase-wallet";
+import { metamaskWallet } from "@taikai/dappkit-react/dist/connectors/wallets/metamask-wallet";
 import { isZeroAddress } from "ethereumjs-util";
 import { useRouter } from "next/router";
 import { isAddress } from "web3-utils";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
 import { lowerCaseCompare } from "helpers/string";
+import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
 import { StorageKeys } from "interfaces/enums/storage-keys";
+import { WalletProviders } from "interfaces/enums/wallet-providers";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
@@ -33,13 +37,19 @@ export function useDao() {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
   }
 
-  function disconnect () {
+  async function disconnect () {
+    const isMetamask = getProviderNameFromConnection(dappkitReact.connection) === WalletProviders.MetaMask;
+    const walletConnector = isMetamask ? metamaskWallet : coinbaseWallet;
+    if (walletConnector?.deactivate)
+      walletConnector?.deactivate();
+    else
+      walletConnector?.resetState();
     dappkitReact.disconnect();
   }
 
   async function connect () {
     const lastProvider = window.localStorage.getItem(StorageKeys.lastProviderConnected);
-    const selectedProvider = (window?.ethereum as any)?.providerMap.get(lastProvider);
+    const selectedProvider = (window?.ethereum as any)?.providerMap?.get(lastProvider);
     if (selectedProvider)
       dappkitReact.setProvider(selectedProvider);
   }
