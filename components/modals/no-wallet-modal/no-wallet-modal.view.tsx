@@ -1,16 +1,10 @@
-import { ReactElement } from "react";
-
-import {kebabCase} from "lodash";
+import { kebabCase } from "lodash";
 import { useTranslation } from "next-i18next";
 
 import CoinbaseWalletIcon from "assets/icons/wallets/coinbase-wallet-icon";
 import MetamaskWalletIcon from "assets/icons/wallets/metamask-wallet-icon";
-import WCWalletIcon from "assets/icons/wallets/wc-wallet-icon";
-import WebThreeUnavailable from "assets/web3-unavailable";
 
 import Button from "components/button";
-import { ExternalLink } from "components/external-link";
-import If from "components/If";
 import Modal from "components/modal";
 import WalletItem from "components/modals/no-wallet-modal/wallet-item/wallet-item.view";
 
