@@ -38,7 +38,7 @@ export default function NavBarView({
             paddingY
           ])}
         >
-          <div className="d-flex align-items-center gap-44">
+          <div className="d-flex align-items-center nav-gap">
             <div className="d-flex gap-32">
               <ResponsiveWrapper xs={false} xl={true}>
                 <BrandLogo

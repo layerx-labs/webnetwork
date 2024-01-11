@@ -27,9 +27,9 @@ export default function NavBarLinks() {
   return(
     <ResponsiveWrapper
       xs={false}
-      xl={true}
+      md={true}
     >
-      <ul className="nav-links">
+      <ul className="nav-links nav-gap">
         {links.map(({ href, label}) => 
           <li key={`nav-${label}`}>
             <InternalLink
