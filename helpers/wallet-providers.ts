@@ -3,10 +3,10 @@ import { Web3Connection } from "@taikai/dappkit";
 import { WalletProviders } from "interfaces/enums/wallet-providers";
 
 export function getProviderNameFromConnection (connection: Web3Connection) {
-  const selectedProvider = connection?.web3?.currentProvider?.selectedProvider;
-  if (selectedProvider?.isCoinbaseWallet)
+  const currentProvider = connection?.web3?.currentProvider;
+  if (currentProvider?.isCoinbaseWallet)
     return WalletProviders.CoinBase;
-  else if (selectedProvider?.isMetamask)
+  else if (currentProvider?.isMetaMask)
     return WalletProviders.MetaMask;
   return WalletProviders.Unsupported;
 }
