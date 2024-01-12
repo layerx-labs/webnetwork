@@ -45,6 +45,11 @@ export default function useSupportedChain() {
       });
   }
 
+  function refresh() {
+    loadChainsDatabase();
+    invalidate();
+  }
+
   useEffect(updateNetworkAndChainMatch, [
     query,
     connectedChain?.id,
@@ -56,7 +61,7 @@ export default function useSupportedChain() {
     connectedChain,
     updateConnectedChain,
     loadChainsDatabase,
-    refresh: invalidate,
+    refresh,
     get
   };
 }
