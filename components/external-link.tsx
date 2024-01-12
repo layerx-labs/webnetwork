@@ -1,8 +1,13 @@
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
-export function ExternalLink({ label, href }) {
+interface ExternalLinkProps {
+  label: string;
+  href: string;
+  align?: "start" | "center" | "end";
+}
+export function ExternalLink({ label, href, align = "center" }: ExternalLinkProps) {
   return(
-    <div className={`d-flex flex-row align-items-center justify-content-center mt-1 gap-2 text-blue-200`} key={label}>
+    <div className={`d-flex flex-row align-items-center justify-content-${align} mt-1 gap-2 text-blue-200`} key={label}>
       <a
         href={href}
         className={`text-decoration-none p family-Regular text-blue-200`}

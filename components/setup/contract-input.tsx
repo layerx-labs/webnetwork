@@ -88,6 +88,7 @@ export function ContractInput({
             <ExternalLink
               label={t("setup:registry.fields.contract-field.hint", { contract: contractName })}
               href={docsLink}
+              align={"start"}
             />
           }
         />
