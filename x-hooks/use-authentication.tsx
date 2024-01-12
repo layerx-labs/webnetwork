@@ -5,6 +5,7 @@ import BigNumber from "bignumber.js";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
+import type { provider as Provider } from "web3-core";
 
 import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
@@ -74,7 +75,13 @@ export function useAuthentication() {
     });
   }
 
-  async function signInWallet(connection: Web3Connection) {
+  async function signInWallet(provider: Provider) {
+    updateWalletSelectorModal(false);
+
+    const connection = new Web3Connection({
+      web3CustomProvider: provider
+    });
+
     const address = await connection.getAddress();
 
     if (!address) return;
@@ -90,8 +97,6 @@ export function useAuthentication() {
     const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, connection);
 
     if (!signature) return;
-
-    updateWalletSelectorModal(false);
 
     nextSignIn("credentials", {
       redirect: false,
