@@ -1,4 +1,4 @@
-import { useDappkit } from "@layerx-labs/dappkit-react";
+import { useDappkit } from "dappkit-react";
 
 import WalletMismatchModalView from "components/modals/wallet-mismatch/wallet-mismatch-modal.view";
 
