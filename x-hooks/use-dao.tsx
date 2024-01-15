@@ -51,7 +51,9 @@ export function useDao() {
     const lastProvider = window.localStorage.getItem(StorageKeys.lastProviderConnected);
     const selectedProvider = (window?.ethereum as any)?.providerMap?.get(lastProvider);
     if (selectedProvider)
-      dappkitReact.setProvider(selectedProvider);
+      dappkitReact
+        .setProvider(selectedProvider)
+        .catch(console.debug);
   }
 
   async function start({
