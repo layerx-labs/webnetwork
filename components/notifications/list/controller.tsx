@@ -51,7 +51,7 @@ export default function NotificationsList({
     },
   });
 
-  const { mutate: updateReadAllNotifications, isLoading: isReadAllUploading } =
+  const {mutateAsync: updateReadAllNotifications, isLoading: isReadAllUploading } =
   useReactQueryMutation({
     mutationFn: useUpdateReadAllNotifications,
     onSuccess: () => {
@@ -64,11 +64,12 @@ export default function NotificationsList({
   });
 
   async function redirectAndMarkRead(href: string, query: unknown) {
-    await router.push(getURLWithNetwork(href, query));
     const [,id] = href.match(/\/(\d+)\?.+$/);
 
-    if (notifications.rows.find(n => n.id === +id))
-      updateReadNotification({id: id.toString(), read: true });
+    if (!notifications.rows.find(n => n.id === +id)?.read)
+      await updateReadNotification({id: id.toString(), read: true });
+
+    await router.push(getURLWithNetwork(href, query));
   }
 
   return (
