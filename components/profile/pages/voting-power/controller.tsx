@@ -32,7 +32,7 @@ export default function VotingPowerPage() {
   const chains =
     supportedChains?.filter(c => c?.networks?.find(n => lowerCaseCompare(n?.name, selectedNetwork?.name)) ||
       !selectedNetwork);
-  const isNoNetworkTokenModalVisible = !!marketplace?.active && !marketplace?.active?.networkToken &&
+  const isNoNetworkTokenModalVisible = !!marketplace?.active && !marketplace?.active?.network_token_id &&
     lowerCaseCompare(currentUser?.walletAddress, marketplace?.active?.creatorAddress);
 
   function handleService (network: Network, chain: SupportedChainData) {
