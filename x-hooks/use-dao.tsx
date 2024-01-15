@@ -48,7 +48,7 @@ export function useDao() {
   /**
    * Enables the user/dapp to connect to the active DAOService
    */
-  async function connect(): Promise<string | null> {
+  async function connect(): Promise<{ address: string; web3Connection: Web3Connection } | null> {
     try {
       await metamaskWallet.activate();
 
@@ -76,7 +76,11 @@ export function useDao() {
           if (address === "0x00") return null;
 
           handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
-          return address;
+
+          return {
+            address,
+            web3Connection
+          };
         })
         .catch(error => {
           console.debug(`Failed to connect`, error);
