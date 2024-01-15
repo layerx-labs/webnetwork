@@ -17,7 +17,7 @@ export function DeployBountyTokenModal({
   handleHide,
   onChange
 }) {
-  const { t } = useTranslation("setup");
+  const { t } = useTranslation(["setup", "common"]);
 
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
@@ -42,10 +42,10 @@ export function DeployBountyTokenModal({
 
       onChange(tx.contractAddress, true);
       handleClose();
-      addSuccess(t("actions.success"), t("registry.modals.deploy-bounty-token.success.deploy"));
+      addSuccess(t("common:actions.success"), t("registry.modals.deploy-bounty-token.success.deploy"));
     } catch (error) {
       if (error?.code !== MetamaskErrors.UserRejected)
-        addError(t("actions.failed"), t("registry.modals.deploy-bounty-token.errors.deploy"));
+        addError(t("common:actions.failed"), t("registry.modals.deploy-bounty-token.errors.deploy"));
     } finally {
       setIsExecuting(false);
     }
