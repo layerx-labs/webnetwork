@@ -1,9 +1,10 @@
 import {NextApiRequest} from "next";
 import {Op} from "sequelize";
+import {validate as isUUID} from 'uuid'
 
 import models from "db/models";
 
-import paginate, { calculateTotalPages } from "helpers/paginate";
+import paginate, {calculateTotalPages} from "helpers/paginate";
 
 import {BadRequestErrors} from "interfaces/enums/Errors";
 import {UserRole} from "interfaces/enums/roles";
@@ -19,8 +20,6 @@ export async function getNotifications(req: NextApiRequest) {
 
   const userIsAdmin = roles.includes(UserRole.ADMIN);
 
-  console.log(`UserId`, userId);
-
   if (!userId)
     throw new HttpUnauthorizedError();
 
@@ -33,8 +32,8 @@ export async function getNotifications(req: NextApiRequest) {
   if (address && !isAddress(address))
     throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotAnAddress);
 
-  if (id && isNaN(+id))
-    throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotANumber);
+  if (id && !isUUID(id))
+    throw new HttpBadRequestError(BadRequestErrors.WrongParamsNotUUID);
   
   if (read && !["true", "false"].includes(read.toLowerCase()))
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
@@ -46,7 +45,7 @@ export async function getNotifications(req: NextApiRequest) {
     ... !roles.includes(UserRole.ADMIN) ? {userId: {[Op.eq]: userId}} : {},
 
     /** if address search, we need to include the user instead */
-    ... address ? {} : {id: {[Op.eq]: +id}},
+    ... address ? {} : {uuid: {[Op.eq]: id}},
 
     /** if read is provided, it will look up read as true or false, otherwise "read" state is ignored */
     ... read !== null ? {read: {[Op.eq]: read.toLowerCase() === "true"}} : {}
@@ -57,7 +56,7 @@ export async function getNotifications(req: NextApiRequest) {
     include.push({ association: "user", attributes: ['address'] });
 
   /** if "address" is provided, we paginate the result, otherwise we return a simple "findAll" */
-  if(address){
+  if (address) {
     const notifications = 
       await models.notification.findAndCountAll(paginate({ where, include }, { page: +page }, [["createdAt", "DESC"]]));
 

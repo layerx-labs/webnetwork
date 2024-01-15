@@ -3,7 +3,6 @@ import React from "react";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
-import {SearchNotificationsPaginated} from "interfaces/notifications";
 
 import {useUpdateReadNotification} from "x-hooks/api/notification/use-update-read-notification";
 import {useUpdateReadAllNotifications} from "x-hooks/api/notifications/use-update-read-all-notifications";
@@ -12,6 +11,7 @@ import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
+import {SearchNotificationsPaginated, UserNotification} from "../../../interfaces/user-notification";
 import NotificationsListView from "./view";
 
 interface NotificationListProps {
@@ -63,13 +63,18 @@ export default function NotificationsList({
     },
   });
 
-  async function redirectAndMarkRead(href: string, query: unknown) {
-    const [,id] = href.match(/\/(\d+)\?.+$/);
+  async function redirectAndMarkRead(notif: UserNotification, {chain, network, link}: {
+    chain: string;
+    link: string;
+    network: string
+  }) {
 
-    if (!notifications.rows.find(n => n.id === +id)?.read)
-      await updateReadNotification({id: id.toString(), read: true });
+    if (!notif?.read)
+      await new Promise((onSuccess, onError) => {
+        updateReadNotification({id: notif.uuid.toString(), read: true}, {onSuccess, onError})
+      })
 
-    await router.push(getURLWithNetwork(href, query));
+    await router.replace(getURLWithNetwork(link, {chain, network}));
   }
 
   return (

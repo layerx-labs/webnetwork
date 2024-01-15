@@ -4,7 +4,7 @@ import If from "components/If";
 import {extractNetworkAndChain} from "helpers/extract-network-and-chain";
 import {getTimeDifferenceInWords} from "helpers/formatDate";
 
-import {Notifications} from "interfaces/notifications";
+import {UserNotification} from "../../../interfaces/user-notification";
 
 export default  function NotificationRow({
   item,
@@ -12,9 +12,9 @@ export default  function NotificationRow({
   onClickRead,
   redirectTo,
 }: {
-  item: Notifications;
+  item: UserNotification;
   key: number;
-  redirectTo: (href: string, query) => void;
+  redirectTo: (item: UserNotification, query) => void;
   onClickRead: (id: number) => void;
 }) {
   const className = `h-100 w-100 px-3 py-2 tx-row ${
@@ -33,12 +33,9 @@ export default  function NotificationRow({
       <div className={className} key={item?.id}>
         <div className="d-flex flex-column">
           <div className="d-flex justify-content-between mt-2">
-            <div className="d-flex cursor-pointer" key={item?.id} onClick={() => {
-              redirectTo(link, {
-                chain: chain, 
-                network: network
-              })
-            }}>
+            <div className="d-flex cursor-pointer"
+                 key={item?.id}
+                 onClick={() => redirectTo(item, {chain, network})}>
               <AvatarOrIdenticon address={extractAddress} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>

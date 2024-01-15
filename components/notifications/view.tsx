@@ -1,11 +1,11 @@
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import BellIcon from "assets/icons/bell-icon";
 
 import Button from "components/button";
 import NotificationsList from "components/notifications/list/controller";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
+import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
 
 export default function NotificationsView({
   notificationsList,

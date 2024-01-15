@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
 
-import { useUpdateReadNotification } from "x-hooks/api/notification/use-update-read-notification";
-import { useGetNotifications } from "x-hooks/api/notifications/use-get-notifications";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUpdateReadNotification} from "x-hooks/api/notification/use-update-read-notification";
+import {useGetNotifications} from "x-hooks/api/notifications/use-get-notifications";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
+import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
 import NotificationsView from "./view";
 
 export default function Notifications() {
