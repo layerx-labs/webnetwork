@@ -82,6 +82,8 @@ export function useAuthentication() {
       web3CustomProvider: provider
     });
 
+    await connection.connect();
+
     const address = await connection.getAddress();
 
     if (!address) return;
