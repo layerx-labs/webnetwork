@@ -41,8 +41,8 @@ export async function getNotifications(req: NextApiRequest) {
   const where = {
     /** Because we already checked for address vs userAddress we don't need to, but we haven't made the
      * same for the userId so instead of returning unauthorized we add that to the statement and return results
-     * only if the requesting user matches the notification.userId (or requesting user is Admin) */
-    ... !roles.includes(UserRole.ADMIN) ? {userId: {[Op.eq]: userId}} : {},
+     * only if the requesting user matches the notification.userId */
+    userId: {[Op.eq]: userId},
 
     /** if address search, we need to include the user instead */
     ... address ? {} : {uuid: {[Op.eq]: id}},
