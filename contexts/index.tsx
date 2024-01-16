@@ -39,6 +39,11 @@ const RootProviders = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if ((window?.ethereum as any)?.selectedProvider)
+      (window.ethereum as any).selectedProvider = null;
+  }, []);
+
+  useEffect(() => {
     if (!chainId || !supportedChains)
       return;
     updateChain(+chainId);
