@@ -50,7 +50,10 @@ export default function useSignature() {
 
     return siweMessageService
       .sendMessage(actualConnection, address, message)
-      .catch(() => null);
+      .catch(error => {
+        console.debug("signInWithEthereum", error);
+        return null;
+      });
   }
 
   return {
