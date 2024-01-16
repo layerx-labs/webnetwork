@@ -62,6 +62,7 @@ export default function AmountTokenInformation({
       >
         <InputNumber
           symbol={currentToken?.symbol}
+          data-test-id={isFunding ? 'funded-reward-input' : 'reward-input'}
           classSymbol=""
           thousandSeparator
           value={rewardAmount?.value}
@@ -84,6 +85,7 @@ export default function AmountTokenInformation({
         classNameChildren={classNameInputs}
       >
         <InputNumber
+          data-test-id="service-fee-input"
           symbol={currentToken?.symbol}
           classSymbol=""
           thousandSeparator
@@ -98,6 +100,7 @@ export default function AmountTokenInformation({
         classNameChildren={classNameInputs}
       >
         <InputNumber
+          data-test-id="total-amount-input"
           symbol={currentToken?.symbol}
           classSymbol=""
           thousandSeparator

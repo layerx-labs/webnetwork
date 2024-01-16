@@ -14,6 +14,7 @@ interface PageActionsButtonProps {
   isLoading?: boolean;
   forcePath?: string;
   hrefPath?: string;
+  dataTestId?: string;
 }
 
 export default function PageActionsButton({
@@ -23,7 +24,8 @@ export default function PageActionsButton({
   disabled,
   buttonType = "contract",
   isLoading,
-  forcePath
+  forcePath,
+  dataTestId
 }: PageActionsButtonProps) {
   if (buttonType === "contract") {
     return (
@@ -54,7 +56,7 @@ export default function PageActionsButton({
   }
 
   return (
-    <Button onClick={onClick} className={className}>
+    <Button onClick={onClick} className={className} data-test-id={dataTestId}>
       {children}
     </Button>
   );

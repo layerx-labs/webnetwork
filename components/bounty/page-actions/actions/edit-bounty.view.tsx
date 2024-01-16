@@ -9,6 +9,7 @@ export default function EditBountyButton({ onClick }: { onClick: () => void }) {
     <PageActionsButton
       className="read-only-button bounty-outline-button me-1"
       onClick={onClick}
+      dataTestId="edit-bounty-btn"
     >
       <>
         <EditIcon className="me-1" />
