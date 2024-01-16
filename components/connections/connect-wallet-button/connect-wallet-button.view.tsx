@@ -43,6 +43,7 @@ export default function ConnectWalletButtonView ({
       <Button
         color={buttonColor}
         className="text-dark bg-opacity-100"
+        data-test-id="connect-wallet-button"
         onClick={onConnectClick}>
         <span>
           <ResponsiveWrapper xs={true} xl={false}>

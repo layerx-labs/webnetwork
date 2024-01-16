@@ -22,7 +22,8 @@ export default function AvatarOrIdenticon({
   if (!user && !address) return <></>;
 
   return(
-    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}>
+    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
+    data-test-id="avatar-or-identicon">
       { 
          //disabled until image integration
         /* user ?

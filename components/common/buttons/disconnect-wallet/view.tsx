@@ -15,6 +15,7 @@ export default function DisconnectWalletButton({
     <div
       className="d-flex flex-row align-items-center justify-content-between pt-3 pb-1 px-0 cursor-pointer text-danger"
       onClick={onClick}
+      data-test-id="disconnect-wallet-btn"
       role="button"
     >
       <span className="caption-medium text-capitalize family-Regular font-weight-medium">

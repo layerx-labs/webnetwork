@@ -52,6 +52,7 @@ export default function DescriptionAndPreviewView({
             className={
               isPreview ? "description-button text-gray" : "active-description-button"
             }
+            data-test-id="write-btn"
           >
             {t("write")}
           </Button>
@@ -62,6 +63,7 @@ export default function DescriptionAndPreviewView({
             className={
               !isPreview ? "description-button text-gray" : "active-description-button"
             }
+            data-test-id="preview-btn"
           >
             {t("preview")}
           </Button>
@@ -70,6 +72,7 @@ export default function DescriptionAndPreviewView({
           <>
             <textarea
               tabIndex={0}
+              data-test-id="description-textarea"
               className={clsx(`form-control ${
                 textAreaColor ? `bg-${textAreaColor}` : ""
               }`,

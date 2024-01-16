@@ -84,6 +84,7 @@ export default function NotificationFormView({
                   onClick={onSave}
                   disabled={isSaveButtonDisabled}
                   isLoading={isExecuting}
+                  data-test-id="notification-save-btn"
                 >
                   {t("actions.save")}
                 </Button>
@@ -114,6 +115,7 @@ export default function NotificationFormView({
                   onClick={onResend}
                   disabled={isExecuting || !emailVerificationError}
                   isLoading={emailVerificationError && isExecuting}
+                  data-test-id="notification-re-send-btn"
                 >
                   {t("profile:notifications-form.re-send")}
                 </Button>

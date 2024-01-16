@@ -90,6 +90,7 @@ export default function UserNameFormView({
               onClick={onSave}
               disabled={isSaveButtonDisabled}
               isLoading={isExecuting}
+              data-test-id='user-name-save-button'
             >
               {t("actions.save")}
             </Button>
