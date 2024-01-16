@@ -42,7 +42,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     const _network = _query?.network ? String(_query?.network)?.toLowerCase()?.replaceAll(" ", "-") : undefined;
     const cleanHref =  href.replace("/[network]", "");
     return {
-      pathname: `/[network]/${cleanHref}`.replace(/\/\//g, "/"),
+      pathname: `/[network]/${cleanHref}`.replace("//", "/"),
       query: {
         ..._query,
         network: _network || query?.network || data?.active?.name

@@ -63,18 +63,16 @@ export default function NotificationsList({
     },
   });
 
-  async function redirectAndMarkRead(notif: UserNotification, {chain, network, link}: {
-    chain: string;
-    link: string;
-    network: string
-  }) {
+  async function redirectAndMarkRead(notif: UserNotification, {network, link}: { link: string; network: string }) {
 
     if (!notif?.read)
       await new Promise((onSuccess, onError) => {
         updateReadNotification({id: notif.uuid.toString(), read: true}, {onSuccess, onError})
       })
 
-    await router.replace(getURLWithNetwork(link, {chain, network}));
+
+
+    await router.push(getURLWithNetwork(link, {network}));
   }
 
   return (
