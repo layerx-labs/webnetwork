@@ -35,7 +35,7 @@ export default  function NotificationRow({
           <div className="d-flex justify-content-between mt-2">
             <div className="d-flex cursor-pointer"
                  key={item?.id}
-                 onClick={() => redirectTo(item, {chain, network})}>
+                 onClick={() => redirectTo(item, {chain, network, link})}>
               <AvatarOrIdenticon address={extractAddress} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>
