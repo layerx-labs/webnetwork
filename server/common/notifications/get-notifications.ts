@@ -39,13 +39,10 @@ export async function getNotifications(req: NextApiRequest) {
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
   const where = {
-    /** Because we already checked for address vs userAddress we don't need to, but we haven't made the
-     * same for the userId so instead of returning unauthorized we add that to the statement and return results
-     * only if the requesting user matches the notification.userId */
-    ... address && address !== userAddress ? {userId: {[Op.eq]: userId}} : {},
 
-    /** if address search, we need to include the user instead */
-    ... address ? {} : {uuid: {[Op.eq]: id}},
+    userId: {[Op.eq]: userId},
+
+    ... !id ? {} : {uuid: {[Op.eq]: id}},
 
     /** if read is provided, it will look up read as true or false, otherwise "read" state is ignored */
     ... read !== null ? {read: {[Op.eq]: read.toLowerCase() === "true"}} : {}
