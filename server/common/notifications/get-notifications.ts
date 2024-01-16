@@ -42,7 +42,7 @@ export async function getNotifications(req: NextApiRequest) {
     /** Because we already checked for address vs userAddress we don't need to, but we haven't made the
      * same for the userId so instead of returning unauthorized we add that to the statement and return results
      * only if the requesting user matches the notification.userId */
-    ... !address ? {userId: {[Op.eq]: userId}} : {},
+    ... address && address !== userAddress ? {userId: {[Op.eq]: userId}} : {},
 
     /** if address search, we need to include the user instead */
     ... address ? {} : {uuid: {[Op.eq]: id}},
