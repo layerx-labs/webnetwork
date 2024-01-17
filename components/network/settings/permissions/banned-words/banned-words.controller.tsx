@@ -23,7 +23,7 @@ export default function BannedWords({
 }: NetworkPermissionsProps) {
   const { t } = useTranslation(["custom-network", "common"]);
 
-  const [currentDomain, setCurrentDomain] = useState<string>();
+  const [currentDomain, setCurrentDomain] = useState<string>("");
 
   const { currentUser } = useUserStore();
   const { addError } = useToastStore();
