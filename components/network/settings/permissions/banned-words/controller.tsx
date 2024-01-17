@@ -60,9 +60,9 @@ export default function NetworkPermissions({
     },
     onError: (error) => {
       if((error as AxiosError).response?.status === 404)
-        addError(t("common.actions.failed"), t("steps.permissions.domains.remove-not-found"));
+        addError(t("common:actions.failed"), t("steps.permissions.domains.remove-not-found"));
       else
-      addError(t("common.actions.failed"), t("steps.permissions.domains.remove-error"));
+      addError(t("common:actions.failed"), t("steps.permissions.domains.remove-error"));
     }
   });
 
