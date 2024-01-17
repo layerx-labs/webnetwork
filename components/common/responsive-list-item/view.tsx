@@ -48,7 +48,10 @@ export default function ResponsiveListItem({
           <div className="col px-0">
             <div className="row align-items-center">
               <div className="col-auto">
-                <span className="caption-small overflow-wrap-anywhere font-weight-medium text-white">
+              <span
+                  className="caption-small overflow-wrap-anywhere font-weight-medium text-white"
+                  data-test-id={label}
+                >
                   {label}
                 </span>
               </div>

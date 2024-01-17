@@ -69,7 +69,7 @@ export default function ItemRowView({
   }
 
   return (
-    <Link passHref key={`${id}`} href={href || "#"}>
+    <Link passHref key={`${id}`} data-test-id={`item-${id}`} href={href || "#"}>
       <div
         className={`row d-flex flex-row py-3 px-2 border-radius-8 bg-gray-900 align-items-center ${
           href ? "cursor-pointer" : ""

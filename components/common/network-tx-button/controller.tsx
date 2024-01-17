@@ -143,7 +143,7 @@ export default function NetworkTxButton({
   }
 
   const modalFooter = (
-    <Button color="dark-gray" onClick={() => setShowModal(false)}>
+    <Button color="dark-gray" onClick={() => setShowModal(false)}> 
       {t("actions.close")}
     </Button>
   );

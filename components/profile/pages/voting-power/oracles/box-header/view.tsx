@@ -38,6 +38,7 @@ export default function OraclesBoxHeader({
               className={clsx("btn p-0 subnav-item text-capitalize", {
                 active: action === currentAction
               })}
+              data-test-id={action}
             >
               <h4 className={`h4 mb-0 mr-2 ${action === currentAction ? "tex-white" : "text-gray-500"}`}>{action}</h4>
             </Button>

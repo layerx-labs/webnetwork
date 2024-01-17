@@ -47,6 +47,7 @@ export default function PaymentItem({
         color="gray-900"
         className="border border-gray-800 font-weight-medium"
         onClick={handleItemClick}
+        data-test-id={`${labelBounty}-${issue?.id}`}
       >
         <span className="text-white text-nowrap">
           {labelBounty} #{issue?.id}

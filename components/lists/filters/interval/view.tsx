@@ -55,6 +55,7 @@ export default function IntervalFiltersView({
               <ReactSelect
                 options={intervals}
                 value={interval}
+                inputProps={{ 'data-test-id': 'latest-select' }}
                 onChange={onIntervalChange}
                 isSearchable={false}
                 placeholder={t("placeholders.select-latest")}
@@ -76,6 +77,7 @@ export default function IntervalFiltersView({
             <input
               type="date"
               key="startDate"
+              data-test-id="period-start-input"
               className="form-control"
               onChange={onStartDateChange}
               value={startDate}
@@ -91,6 +93,7 @@ export default function IntervalFiltersView({
             <input
               type="date"
               key="endDate"
+              data-test-id="period-end-input"
               className="form-control"
               onChange={onEndDateChange}
               value={endDate}

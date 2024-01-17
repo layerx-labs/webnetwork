@@ -71,6 +71,7 @@ export default function UserNameFormView({
                 validity?.invalid ? "is-invalid" : ""
               }`}
               value={userhandle}
+              data-test-id="user-name-edit-input"
               onChange={onChange}
               disabled={isExecuting}
             />

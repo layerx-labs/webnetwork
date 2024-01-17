@@ -292,6 +292,7 @@ export default function TasksListItem({
                 <div
                   className="cursor-pointer"
                   onClick={handleClickCard}
+                  data-test-id="arrow-up-right-gray-btn"
                 >
                   <ArrowUpRightGray />
                 </div>
@@ -300,7 +301,7 @@ export default function TasksListItem({
 
             <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
               <FlexColumn className="justify-content-center">
-                <div className="cursor-pointer" onClick={handleUpdateVisibility}>
+                <div className="cursor-pointer" onClick={handleUpdateVisibility} data-test-id="hide-btn">
                   {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
                 </div>
               </FlexColumn>
@@ -309,9 +310,13 @@ export default function TasksListItem({
             <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
               <FlexColumn className="justify-content-center">
                 {!hideTrashIcon && isCancelable && !['canceled', 'closed', 'proposal'].includes(issue?.state) ? (
-                  <div className="cursor-pointer m-0 p-0" onClick={() => setShowHardCancelModal(true)}>
-                    <TrashIcon />
-                  </div>
+                  <div
+                  className="cursor-pointer m-0 p-0"
+                  onClick={() => setShowHardCancelModal(true)}
+                  data-test-id="trash-btn"
+                >
+                  <TrashIcon />
+                </div>
                 ): '-'}
               </FlexColumn>
             </ResponsiveWrapper>

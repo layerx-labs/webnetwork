@@ -66,6 +66,7 @@ export default function NotificationFormView({
               <input
                 type="text"
                 className={`form-control ${isInvalid ? "is-invalid" : ""}`}
+                data-test-id="email-input"
                 value={userEmail}
                 onChange={onChange}
                 disabled={isExecuting}

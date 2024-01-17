@@ -18,6 +18,7 @@ export default function PullRequestLabelsView({
     <div className={className}>
       <span
         className={`caption-small text-uppercase text-${colorLabel} mx-1 text-nowrap`}
+        data-test-id="deliverable-state"
       >
         {state}
       </span>

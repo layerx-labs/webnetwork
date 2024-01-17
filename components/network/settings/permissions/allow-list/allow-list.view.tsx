@@ -61,6 +61,7 @@ export default function AllowListView ({
           onChange={onValueChange}
           onClickAdd={onAddClick}
           isLoading={isAdding}
+          type={type}
         />
 
         <div className="mt-4">
@@ -72,7 +73,7 @@ export default function AllowListView ({
             condition={!isLoading}
             otherwise={
               <div className="col-md-5 col-12 text-center">
-                <Spinner animation={"border"} data-testid="allow-list-spinner" />
+                <Spinner animation={"border"} data-test-id="allow-list-spinner" />
               </div>
             }
           >

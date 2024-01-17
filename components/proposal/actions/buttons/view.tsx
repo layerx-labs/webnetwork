@@ -80,6 +80,7 @@ export default function ProposalActionsButtonsView ({
                 onClick={onDispute}
                 isLoading={isDisputing}
                 withLockIcon={!isAbleToDispute || isMerging || isRefusing}
+                data-test-id="dispute-btn"
               >
                 <span>{t("actions.dispute")}</span>
               </ContractButton>
@@ -97,6 +98,7 @@ export default function ProposalActionsButtonsView ({
                 onClick={onRefuse}
                 isLoading={isRefusing}
                 withLockIcon={isDisputing || isMerging}
+                data-test-id="refuse-btn"
               >
                 <span>{t("actions.refuse")}</span>
               </ContractButton>

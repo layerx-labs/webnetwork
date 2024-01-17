@@ -12,6 +12,7 @@ import Translation from "components/translation";
 
 import { Deliverable } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
+import { useTranslation } from "next-i18next";
 
 interface ItemRowProps {
   isProposal: boolean;
@@ -37,6 +38,7 @@ export default function ProposalOrDeliverableView({
   totalToBeDisputed,
   isRefused
 }: ItemRowProps) {
+  const { t } = useTranslation(["proposal", "deliverable", "common"]);
   return (
     <>
       <If 
@@ -63,6 +65,7 @@ export default function ProposalOrDeliverableView({
               <Button
                 className="read-only-button text-truncate ms-1"
                 onClick={handleBtn}
+                data-test-id={t(btnLabel)}
               >
                 <span className="label-m text-white">
                   <Translation label={btnLabel} />

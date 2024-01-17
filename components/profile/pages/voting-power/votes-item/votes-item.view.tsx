@@ -73,6 +73,7 @@ export default function VotesItem({
                 className="border-radius-4 border border-gray-700"
                 onClick={onTakeBackClick}
                 disabled={disabled}
+                data-test-id="take-back-btn"
               >
                 {t("actions.take-back")}
               </ContractButton>

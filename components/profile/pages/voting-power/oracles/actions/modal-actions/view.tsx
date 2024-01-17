@@ -24,10 +24,10 @@ export default function ModalOraclesActionView({
       onCloseClick={handleCancel}
       footer={
         <div className="d-flex justify-content-between">
-          <Button color="dark-gray" onClick={handleCancel}>
+          <Button color="dark-gray" onClick={handleCancel} data-test-id="modal-oracle-cancel-btn">
             {t("actions.cancel")}
           </Button>
-          <Button onClick={handleConfirm}>{t("actions.confirm")}</Button>
+          <Button onClick={handleConfirm} data-test-id="modal-oracle-confirm-btn">{t("actions.confirm")}</Button>
         </div>
       }
     >

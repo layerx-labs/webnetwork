@@ -37,6 +37,7 @@ export default function BodyNetworkView({
       <Button
         className={`${className} cursor-pointer p-1 not-svg border border-gray-700 bg-gray-850 border-radius-4`}
         onClick={handleNetworkLink}
+        data-test-id="arrow-up-right-btn"
       >
         <ArrowUpRight />
       </Button>
@@ -74,6 +75,7 @@ export default function BodyNetworkView({
       <div
         className="col-xl-3 col-6 d-flex justify-content-end cursor-pointer"
         onClick={handleToggleCollapse}
+        data-test-id="collapse-arrow-btn"
       >
         <FlexColumn className="justify-content-center text-gray-200">
           <ResponsiveWrapper

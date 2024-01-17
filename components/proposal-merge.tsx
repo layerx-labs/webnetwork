@@ -80,6 +80,7 @@ export default function ProposalMerge({
         disabled={!canMerge || isMerging}
         isLoading={isMerging}
         withLockIcon={!canMerge || isMerging}
+        data-test-id="proposal-accept-btn"
       >
         <span>{t("actions.accept")}</span>
       </ContractButton>
@@ -102,6 +103,7 @@ export default function ProposalMerge({
             <Button
               color="dark-gray"
               onClick={() => setShow(false)}
+              data-test-id="modal-proposal-cancel-btn"
             >
               <span>{t("common:actions.cancel")}</span>
             </Button>
@@ -110,6 +112,7 @@ export default function ProposalMerge({
               className="btn-block"
               onClick={handleMerge}
               disabled={!canMerge}
+              data-test-id="modal-proposal-merge-btn"
             >
               <span>{t("proposal:merge-modal.confirm-merge")}</span>
             </Button>

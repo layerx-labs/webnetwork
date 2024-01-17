@@ -66,6 +66,7 @@ export default function WalletBalanceView({
             <FormControl
               value={searchString}
               onChange={onSearchInputChange}
+              data-test-id="wallet-search-input"
               className="p-2"
               placeholder={t("profile:search-wallet")}
               onKeyDown={onEnterPressed}

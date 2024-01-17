@@ -73,7 +73,7 @@ export default function NewProposalModalView({
       onCloseClick={onClose}
       footer={
         <div className="d-flex justify-content-between">
-          <Button color="dark-gray" onClick={onClose}>
+          <Button color="dark-gray" onClick={onClose} data-test-id="modal-proposal-cancel-btn">
             {t("actions.cancel")}
           </Button>
 
@@ -82,6 +82,7 @@ export default function NewProposalModalView({
             disabled={!isConnected || isExecuting}
             isLoading={isExecuting}
             withLockIcon={!isConnected}
+            data-test-id="modal-proposal-create-btn"
           >
             <span>{t("actions.create")}</span>
           </ContractButton>
@@ -94,6 +95,7 @@ export default function NewProposalModalView({
 
       <ReactSelect
         id="deliverableSelect"
+        data-test-id="deliverable-select"
         components={{
           Option: IconOption,
           SingleValue
