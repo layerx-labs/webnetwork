@@ -3,7 +3,7 @@ import {useState} from "react";
 import { AxiosError } from "axios";
 import { useTranslation } from "next-i18next";
 
-import NetworkPermissionsView from "components/network/settings/permissions/banned-words/view";
+import NetworkPermissionsView from "components/network/settings/permissions/banned-words/banned-words.view";
 
 import { QueryKeys } from "helpers/query-keys";
 
