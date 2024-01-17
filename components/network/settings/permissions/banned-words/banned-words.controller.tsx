@@ -3,7 +3,7 @@ import {useState} from "react";
 import { AxiosError } from "axios";
 import { useTranslation } from "next-i18next";
 
-import NetworkPermissionsView from "components/network/settings/permissions/banned-words/banned-words.view";
+import BannedWordsView from "components/network/settings/permissions/banned-words/banned-words.view";
 
 import { QueryKeys } from "helpers/query-keys";
 
@@ -18,7 +18,7 @@ interface NetworkPermissionsProps {
   network: Network;
 }
 
-export default function NetworkPermissions({
+export default function BannedWords({
   network
 }: NetworkPermissionsProps) {
   const { t } = useTranslation(["custom-network", "common"]);
@@ -65,7 +65,7 @@ export default function NetworkPermissions({
   });
 
   return (
-    <NetworkPermissionsView
+    <BannedWordsView
       domain={currentDomain}
       domains={network?.banned_domains}
       onChangeDomain={setCurrentDomain}
