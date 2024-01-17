@@ -12,7 +12,6 @@ import { Network } from "interfaces/network";
 import { CreateBannedWord, RemoveBannedWord } from "x-hooks/api/marketplace/management/banned-words";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import useChain from "x-hooks/use-chain";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 interface NetworkPermissionsProps {
@@ -26,11 +25,10 @@ export default function NetworkPermissions({
 
   const [currentDomain, setCurrentDomain] = useState<string>();
 
-  const { chain } = useChain();
   const { currentUser } = useUserStore();
   const { addError } = useToastStore();
 
-  const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, chain?.chainId?.toString());
+  const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, network?.chain_id?.toString());
 
   const { mutate: addBannedWord, isLoading: isAdding } = useReactQueryMutation({
     queryKey: networkQueryKey,
