@@ -1,5 +1,5 @@
 import { Web3Connection } from "@taikai/dappkit";
-import { useDappkit } from "dappkit-react";
+import { useDappkit } from "@taikai/dappkit-react";
 
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";

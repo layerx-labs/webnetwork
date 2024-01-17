@@ -1,5 +1,5 @@
 import { Web3Connection } from "@taikai/dappkit";
-import { WalletSelector, ConnectorsNames } from "dappkit-react";
+import { WalletSelector, ConnectorsNames } from "@taikai/dappkit-react";
 import { useTranslation } from "next-i18next";
 
 import Modal from "components/modal";

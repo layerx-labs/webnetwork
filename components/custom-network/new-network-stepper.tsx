@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
+import { useDappkit } from "@taikai/dappkit-react";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
-import { useDappkit } from "dappkit-react";
 import {isZeroAddress} from "ethereumjs-util";
 import { useSession } from "next-auth/react";
 import {useTranslation} from "next-i18next";

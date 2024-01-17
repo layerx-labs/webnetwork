@@ -1,4 +1,4 @@
-import { useDappkit } from "dappkit-react";
+import { useDappkit } from "@taikai/dappkit-react";
 
 import WalletMismatchModalView from "components/modals/wallet-mismatch/wallet-mismatch-modal.view";
 

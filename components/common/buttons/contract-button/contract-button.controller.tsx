@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useDappkit } from "dappkit-react";
+import { useDappkit } from "@taikai/dappkit-react";
 import { useTranslation } from "next-i18next";
 
 import { ButtonProps } from "components/button";
