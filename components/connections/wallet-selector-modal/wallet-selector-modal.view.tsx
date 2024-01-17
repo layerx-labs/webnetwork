@@ -6,6 +6,7 @@ import Modal from "components/modal";
 
 interface WalletSelectorModalViewProps {
   show: boolean;
+  defaultChainId: number;
   availableWallets: ConnectorsNames[];
   onCloseClick: () => void;
   onConnectorConnect: (connection: Web3Connection) => Promise<void>;
@@ -14,6 +15,7 @@ interface WalletSelectorModalViewProps {
 
 export default function WalletSelectorModalView ({
   show,
+  defaultChainId,
   availableWallets,
   onCloseClick,
   onConnectorConnect,
@@ -32,6 +34,7 @@ export default function WalletSelectorModalView ({
     >
       <WalletSelector
         availableWallets={availableWallets}
+        defaultChain={defaultChainId}
         onConnectorConnect={onConnectorConnect}
         onConnectorDisconnect={onConnectorDisconnect}
       />
