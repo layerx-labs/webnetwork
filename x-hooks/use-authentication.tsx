@@ -75,14 +75,8 @@ export function useAuthentication() {
     });
   }
 
-  async function signInWallet(provider: Provider) {
+  async function signInWallet(connection: Web3Connection) {
     updateWalletSelectorModal(false);
-
-    const connection = new Web3Connection({
-      web3CustomProvider: provider
-    });
-
-    await connection.connect();
 
     const address = await connection.getAddress();
 
