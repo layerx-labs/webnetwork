@@ -24,7 +24,7 @@ export default  function NotificationRow({
   const regexLink = /<div id="link">([^<]+)<\/div>/;
   const extractLink = item?.template?.match(regexLink)?.[1] || null;
   const extractAddress = item?.template?.match(regexAvatar)?.[1] || null;
-  const { network, chain, link } = extractNetworkAndChain(extractLink);
+  const { network, link } = extractNetworkAndChain(extractLink);
   const template = item?.template?.replace("%DATE%",
                                            getTimeDifferenceInWords(new Date(item.createdAt), new Date()));
   const finalTemplate = template?.replace(regexAvatar, '')?.replace(regexLink, '')
@@ -35,7 +35,7 @@ export default  function NotificationRow({
           <div className="d-flex justify-content-between mt-2">
             <div className="d-flex cursor-pointer"
                  key={item?.id}
-                 onClick={() => redirectTo(item, {chain, network, link})}>
+                 onClick={() => redirectTo(item, {network, link})}>
               <AvatarOrIdenticon address={extractAddress} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>

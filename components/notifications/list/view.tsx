@@ -17,7 +17,7 @@ interface NotificationListViewProps {
   onClickMarkAllRead: () => void;
   onClickRead: (id: number) => void;
   onUpdateBtnUreadActive: (v: "Unread" | "All") => void;
-  redirectTo: (href: UserNotification, query: {chain: string; link: string; network: string}) => void;
+  redirectTo: (href: UserNotification, query: {link: string; network: string}) => void;
 }
 
 export default function NotificationsListView({

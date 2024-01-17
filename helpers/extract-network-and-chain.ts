@@ -1,6 +1,6 @@
 export function extractNetworkAndChain(path: string) {
   if (!path)
-    return "";
+    return {network: '', link: ''};
 
   const [network, ...link] = path.split("/");
   return {
