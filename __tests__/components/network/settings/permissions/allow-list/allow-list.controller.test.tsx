@@ -78,7 +78,7 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    expect(result.getByTestId(`permission-item-button-${address}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${address}`)).toBeDefined();
   });
 
   it("Should remove address from list", async () => {
@@ -93,7 +93,7 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    const removeButton = result.getByTestId(`permission-item-button-${address}`);
+    const removeButton = result.getByTestId(`permission-trash-btn-${address}`);
     fireEvent.click(removeButton);
     expect(useDeleteAllowListEntry).toHaveBeenCalledWith(networkId, address, type);
     expect(mockAddSuccess).toHaveBeenCalled();

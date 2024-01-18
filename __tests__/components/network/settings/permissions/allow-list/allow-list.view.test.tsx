@@ -26,8 +26,8 @@ describe("AllowListView", () => {
     />);
     expect(result.getByText(truncateAddress(allowList[0], 10, 8))).toBeDefined();
     expect(result.getByText(truncateAddress(allowList[1], 10, 8))).toBeDefined();
-    expect(result.getByTestId(`permission-item-button-${allowList[0]}`)).toBeDefined();
-    expect(result.getByTestId(`permission-item-button-${allowList[1]}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[0]}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[1]}`)).toBeDefined();
   });
 
   it("Should show spinner if list is loading", async () => {
@@ -109,8 +109,8 @@ describe("AllowListView", () => {
       type={type}
       isRemoving
     />);
-    expect(result.getByTestId(`permission-item-button-${allowList[0]}`)).toBeDisabled();
-    expect(result.getByTestId(`permission-item-button-${allowList[1]}`)).toBeDisabled();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[0]}`)).toBeDisabled();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[1]}`)).toBeDisabled();
   });
 
   it("Should call on input change callback", async () => {
@@ -155,7 +155,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const removeButton = result.getByTestId(`permission-item-button-${allowList[0]}`);
+    const removeButton = result.getByTestId(`permission-trash-btn-${allowList[0]}`);
     fireEvent.click(removeButton);
     expect(mockOnTrashClick).toHaveBeenCalled();
   });

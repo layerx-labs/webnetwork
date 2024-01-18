@@ -43,6 +43,7 @@ export default function TasksListsCategoryFilterView ({
                   align="left"
                   onClick={() => onCategoryClick(c.value)}
                   data-test-id={`category-button-${c.value}`}
+                  data-testid={`category-button-${c.value}`}
                 >
                   {c.label}
                 </Button>

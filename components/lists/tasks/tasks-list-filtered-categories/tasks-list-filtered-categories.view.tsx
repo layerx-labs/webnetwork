@@ -18,7 +18,7 @@ export default function TasksListFilteredCategoriesView ({
     return <></>;
 
   return(
-    <div className="row mb-4 pb-2 gx-3 gy-3" data-test-id="categories-container">
+    <div className="row mb-4 pb-2 gx-3 gy-3" data-test-id="categories-container" data-testid="categories-container">
       {categories?.map(c =>
         <div className="col-auto" key={c}>
           <Button
@@ -26,6 +26,7 @@ export default function TasksListFilteredCategoriesView ({
             className="border-gray-500 text-gray-400 font-weight-normal py-2 px-3"
             onClick={() => onClick(c)}
             data-test-id={`category-button-${c}`}
+            data-testid={`category-button-${c}`}
           >
             <span>{t(`categories.${c}`)}</span>
             <CloseIcon />

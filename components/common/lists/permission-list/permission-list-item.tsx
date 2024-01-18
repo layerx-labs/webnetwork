@@ -35,6 +35,7 @@ export default function PermissionListItem ({
             onClick={() => onTrashClick(value)}
             disabled={disabled}
             data-test-id={`permission-trash-btn-${value}`}
+            data-testid={`permission-trash-btn-${value}`}
           >
             <TrashIcon/>
           </Button>

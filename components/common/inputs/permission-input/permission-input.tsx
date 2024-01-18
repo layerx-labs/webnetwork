@@ -48,6 +48,7 @@ export default function PermissionInput ({
         error={error}
         disabled={isLoading}
         data-test-id={`${type}-input` || "permission-input"}
+        data-testid="permission-input"
       />
       <div className={clsx({ "mt-1": !error, "mtn-4": error, "d-grid d-md-block col-12 col-md-1": true })}>
         <Button
@@ -55,6 +56,7 @@ export default function PermissionInput ({
           disabled={disabledButton}
           isLoading={isLoading}
           data-test-id={`${type}-btn` || "permission-add-btn"}
+          data-testid="permission-add-button"
         >
           {t("misc.add")}
         </Button>

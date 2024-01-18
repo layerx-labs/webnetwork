@@ -5,7 +5,7 @@ import { components } from "react-select";
 
 function ClearIndicatorWithTestId (props) {
   return(
-    <div data-test-id="react-select-clear-indicator">
+    <div data-testId="react-select-clear-indicator">
       <components.ClearIndicator {...props} />
     </div>
   );
