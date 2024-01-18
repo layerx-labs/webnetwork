@@ -90,6 +90,7 @@ export default function Notifications() {
       showOverlay={showOverlay}
       updateShowOverlay={(v: boolean) => setShowOverlay(v)}
       updateNotifications={updateNotifications}
+      hasUnread={notificationsList?.rows?.length > 0 && !showOverlay}
     />
   );
 }

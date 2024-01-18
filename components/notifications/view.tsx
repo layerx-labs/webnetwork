@@ -15,7 +15,8 @@ export default function NotificationsView({
   loading,
   updateNotifications,
   updateType,
-  typeIsUnread
+  typeIsUnread,
+  hasUnread,
 }: {
   notificationsList: SearchNotificationsPaginated;
   updatePage: () => void;
@@ -25,6 +26,7 @@ export default function NotificationsView({
   updateNotifications: () => void;
   updateType: (v: 'Unread' | 'All') => void;
   typeIsUnread: boolean;
+  hasUnread: boolean;
 }) {
   const overlay = (
     <Popover id="notifications-indicator">
@@ -52,7 +54,8 @@ export default function NotificationsView({
       >
         <div>
           <Button
-            className="bg-gray-850 border-gray-850 rounded p-2"
+            id="notification-icon"
+            className={`bg-gray-850 border-gray-850 rounded p-2 ${hasUnread ? "unread" : ""}`}
             transparent
             onClick={() => updateShowOverlay(!showOverlay)}
           >
