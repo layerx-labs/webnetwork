@@ -36,6 +36,7 @@ export default function PageActionsButton({
           className={className}
           disabled={disabled}
           isLoading={isLoading}
+          data-test-id={dataTestId}
         >
           {children}
         </ContractButton>
@@ -49,6 +50,7 @@ export default function PageActionsButton({
         forcePath={forcePath}
         hrefPath="fork"
         className="btn btn-primary bounty-outline-button"
+        data-test-id={dataTestId}
       >
         {children}
       </GithubLink>
