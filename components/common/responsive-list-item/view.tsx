@@ -45,16 +45,16 @@ export default function ResponsiveListItem({
             {icon}
           </div>
 
-          <div className="col px-0">
+          <div className="col text-truncate px-0">
             <div className="row align-items-center">
-              <div className="col-auto">
-                <span className="caption-small overflow-wrap-anywhere font-weight-medium text-white">
+              <div className="col-auto text-truncate">
+                <span className="caption-small font-weight-medium text-white">
                   {label}
                 </span>
               </div>
 
               <If condition={!!secondaryLabel}>
-                <div className="col-auto mt-2 px-0">
+                <div className="col-auto mt-2">
                   {secondaryLabel}
                 </div>
               </If>
