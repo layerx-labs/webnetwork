@@ -49,6 +49,8 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSignature from "x-hooks/use-signature";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+import NetworkStep from "./network-step";
+
 function NewNetwork() {
   const router = useRouter();
   const { update: updateSession } = useSession();
@@ -77,7 +79,7 @@ function NewNetwork() {
   const { mutateAsync: createNetwork } = useReactQueryMutation({
     mutationFn: useCreateNetwork
   });
-  const { connectedChain } = useSupportedChain();
+  const { connectedChain, supportedChains } = useSupportedChain();
   
   const isSetupPage = router?.pathname?.toString()?.includes("setup");
 
@@ -290,6 +292,9 @@ function NewNetwork() {
       </If>
 
       <Stepper dark={isSetupPage} disableActiveStep={hasNetwork}>
+
+        <NetworkStep validated={!hasNetwork && !!supportedChains?.find(e => e.chainId === +connectedChain.id)}/>
+
         <LockBeproStep validated={tokensLocked?.validated} />
 
         <NetworkInformationStep validated={details?.validated} />
