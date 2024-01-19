@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {UserRoute, WithValidChainId} from "middleware";
+import {UserRoute} from "middleware";
 
 import {Logger} from "services/logging";
 
@@ -22,4 +22,4 @@ async function markAllNotificationsAsReadHandler(req: NextApiRequest, res: NextA
 }
 
 Logger.changeActionName("MarkAllNotificationsAsReadHandler");
-export default UserRoute(WithValidChainId(markAllNotificationsAsReadHandler));
+export default UserRoute(markAllNotificationsAsReadHandler);
