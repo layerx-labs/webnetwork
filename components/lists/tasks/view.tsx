@@ -1,6 +1,6 @@
 import {useTranslation} from "next-i18next";
 
-import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
+import Button from "components/button";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
@@ -232,9 +232,9 @@ export default function TasksListView({
                 <NothingFound description={emptyMessage || t("filters.bounties.not-found")}>
                   {(isConnected && !isBountyHall && !isManagement) && (
                     <ReadOnlyButtonWrapper>
-                      <ContractButton onClick={onNotFoundClick}>
+                      <Button onClick={onNotFoundClick}>
                         {buttonMessage || String(t("actions.create-one"))}
-                      </ContractButton>
+                      </Button>
                     </ReadOnlyButtonWrapper>
                   )}
                 </NothingFound>
