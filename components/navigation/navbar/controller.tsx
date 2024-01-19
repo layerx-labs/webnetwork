@@ -23,7 +23,7 @@ export default function NavBar() {
     fullLogo: activeMarketplace?.fullLogo && `${logoPath}/${activeMarketplace.fullLogo}`,
     logoIcon: activeMarketplace?.logoIcon && `${logoPath}/${activeMarketplace.logoIcon}` 
   };
-  const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/", {
+  const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/tasks", {
     network: activeMarketplace?.name,
   });
 
