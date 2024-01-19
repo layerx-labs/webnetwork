@@ -1,65 +1,29 @@
 @use "sass:math";
 
-#transaction-popover {
-  border: none;
-  background-color: transparent;
-  margin-top: $m;
-  .popover-body {
-    background-color: $bg-shadow;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: math.div($m, 2);
-
-    display: flex;
-    align-items: center;
-    text-align: center;
-
-    padding: 20px;
-    width: fit-content;
-    height: fit-content;
-  }
-  .popover-arrow {
-    &::after {
-      border-bottom-color: $bg-shadow;
-    }
-  }
-
-  .transaction {
-    &.box {
-      cursor: pointer;
-      width: 327px;
-      background-color: $black;
-    }
-    &.status {
-      > p {
-        font-size: 14px;
-        color: $info;
-      }
-    }
-    &.header {
-      p {
-        font-size: 14px;
-        color: var(--bs-gray);
-      }
-    }
-  }
-}
-
 #transactions-indicator {
   border: 0;
   background-color: transparent;
+
   &.popover {
     border-radius: 8px;
     min-width: 415px;
     min-height: 96px;
   }
+
   .popover-body {
     border-radius: 8px;
     min-height: 96px;
   }
+
   .popover-arrow {
-    &::after {
-      border-bottom-color: $bg-shadow;
+    &::after, &::before {
+      border-bottom-color: $gray-850;
+      border-top-color: $gray-850;
     }
+  }
+
+  &[x-placement="top"] .popover-arrow {
+    bottom: -8px;
   }
 }
 
@@ -72,6 +36,7 @@
       display: none;
     }
   }
+
   .tx-row {
     background-color: $dark-gray;
     border-radius: 8px;

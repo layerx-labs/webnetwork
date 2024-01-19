@@ -10,10 +10,11 @@ import TransactionsList from "components/transactions-list";
 import {TransactionStatus} from "interfaces/enums/transaction-status";
 import {Transaction} from "interfaces/transaction";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {transactionStore} from "../x-hooks/stores/transaction-list/transaction.store";
+import useBreakPoint from "../x-hooks/use-breakpoint";
 import {useStorageTransactions} from "../x-hooks/use-storage-transactions";
 
 export default function TransactionsStateIndicator() {
@@ -26,6 +27,8 @@ export default function TransactionsStateIndicator() {
   const {loadFromStorage} = useStorageTransactions();
   const {list: transactions, isPending} = transactionStore();
   const { connectedChain } = useSupportedChain();
+
+  const {isDesktopView} = useBreakPoint();
 
   function updateLoadingState() {
     if (!transactions.length) {
@@ -56,7 +59,7 @@ export default function TransactionsStateIndicator() {
 
   const overlay = (
     <Popover id="transactions-indicator">
-      <Popover.Body className="bg-shadow p-3">
+      <Popover.Body className="bg-gray-850 border border-gray-800 p-3">
         <TransactionsList onActiveTransactionChange={onActiveTransactionChange} />
       </Popover.Body>
     </Popover>
@@ -66,7 +69,7 @@ export default function TransactionsStateIndicator() {
     <span>
       <OverlayTrigger
         trigger="click"
-        placement={"bottom-end"}
+        placement={isDesktopView ? "bottom-end" : "top-end"}
         show={showOverlay}
         rootClose={true}
         onToggle={(next) => setShowOverlay(next)}

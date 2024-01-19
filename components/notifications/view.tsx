@@ -6,6 +6,7 @@ import Button from "components/button";
 import NotificationsList from "components/notifications/list/controller";
 
 import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
+import useBreakPoint from "../../x-hooks/use-breakpoint";
 
 export default function NotificationsView({
   notificationsList,
@@ -28,6 +29,8 @@ export default function NotificationsView({
   typeIsUnread: boolean;
   hasUnread: boolean;
 }) {
+  const {isDesktopView} = useBreakPoint();
+
   const overlay = (
     <Popover id="notifications-indicator">
       <Popover.Body className="bg-gray-850 border border-gray-800 p-3">
@@ -46,7 +49,7 @@ export default function NotificationsView({
     <>
       <OverlayTrigger
         trigger="click"
-        placement={"bottom-end"}
+        placement={isDesktopView ? "bottom-end" : "top-end"}
         show={showOverlay}
         rootClose={true}
         onToggle={updateShowOverlay}

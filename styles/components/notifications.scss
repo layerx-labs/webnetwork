@@ -20,9 +20,14 @@
   @extend #transactions-indicator;
 
   .popover-arrow {
-    &::after {
+    &::after,&::before {
       border-bottom-color: $gray-850;
+      border-top-color: $gray-850;
     }
+  }
+
+  &[x-placement="top"] .popover-arrow {
+    bottom: -8px;
   }
 }
 
