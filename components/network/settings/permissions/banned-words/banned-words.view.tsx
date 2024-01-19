@@ -5,7 +5,7 @@ import PermissionListItem from "components/common/lists/permission-list/permissi
 import {Divider} from "components/divider";
 import NetworkTabContainer from "components/network/settings/tab-container/view";
 
-interface NetworkPermissionsViewProps {
+interface BannedWordsViewProps {
   domain: string;
   domains: string[];
   isExecuting?: boolean;
@@ -14,14 +14,14 @@ interface NetworkPermissionsViewProps {
   handleRemoveDomain: (v: string) => void;
 }
 
-export default function NetworkPermissionsView({
+export default function BannedWordsView({
   domain,
   domains,
   isExecuting,
   onChangeDomain,
   handleAddDomain,
   handleRemoveDomain,
-}: NetworkPermissionsViewProps) {
+}: BannedWordsViewProps) {
   const { t } = useTranslation(["custom-network"]);
   
   return (
