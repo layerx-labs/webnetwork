@@ -71,16 +71,16 @@ export function useAuthentication() {
   }
 
   async function signInWallet() {
-    const address = await connect();
+    const { address, web3Connection } = await connect();
 
     if (!address) return;
 
     const csrfToken = await getCsrfToken();
-
+    
     const issuedAt = new Date();
     const expiresAt = new Date(+issuedAt + SESSION_TTL);
 
-    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt);
+    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, web3Connection);
 
     if (!signature) return;
 

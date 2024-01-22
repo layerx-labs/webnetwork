@@ -1,3 +1,5 @@
+import { Web3Connection } from "@taikai/dappkit";
+
 import decodeMessage from "helpers/decode-message";
 import {messageFor} from "helpers/message-for";
 
@@ -33,17 +35,22 @@ export default function useSignature() {
       });
   }
 
-  async function signInWithEthereum(nonce: string, address: string, issuedAt: Date, expiresAt: Date) {
-    if ((!connection && !window.ethereum) || !nonce || !address)
-      return;
+  async function signInWithEthereum(nonce: string,
+                                    address: string,
+                                    issuedAt: Date,
+                                    expiresAt: Date,
+                                    web3Connection?: Web3Connection) {
+    
+    if (((!connection && !web3Connection) && !window.ethereum) || !nonce || !address) return;
 
     const message = siweMessageService.getMessage({
       nonce,
       issuedAt,
-      expiresAt
+      expiresAt,
     });
 
-    const signature = await siweMessageService.sendMessage(connection, address, message)
+    const signature = await siweMessageService
+      .sendMessage(web3Connection || connection, address, message)
       .catch(() => null);
 
     return signature;
