@@ -12,8 +12,6 @@ import GithubInfo from "components/github-info";
 
 import {truncateAddress} from "helpers/truncate-address";
 
-import {Token} from "interfaces/token";
-
 import { Token } from "interfaces/token";
 
 interface PullAndProposalHeroViewPRops {

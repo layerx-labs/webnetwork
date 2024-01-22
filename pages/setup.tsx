@@ -16,8 +16,6 @@ import { QueryKeys } from "helpers/query-keys";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { QueryKeys } from "helpers/query-keys";
-
 import { useSearchNetworks } from "x-hooks/api/marketplace";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";

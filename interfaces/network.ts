@@ -52,6 +52,7 @@ export interface Network {
   issues?: IssueData[];
   banned_domains: string[];
   closeTaskAllowList: string[];
+  allow_list: string[];
   network_token_id?: number;
 }
 
