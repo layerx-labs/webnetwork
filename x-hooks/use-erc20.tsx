@@ -124,7 +124,6 @@ export default function useERC20() {
     } else if ( address &&
                 !name &&
                 isServiceReady &&
-                connectedChain?.matchWithNetworkChain !== false &&
                 +connectedChain?.id === +daoStore?.chainId)
       getERC20TokenData(address)
         .then(({ name, symbol, decimals, totalSupply }) => {
