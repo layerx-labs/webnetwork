@@ -22,7 +22,7 @@ export default function WalletSelectorModal () {
     if (!window.ethereum) return;
     const provider = (window?.ethereum as any)?.providers ?
       (window?.ethereum as any)?.providers?.find(p => p.isMetaMask) : window.ethereum;
-    setCurrentChainId(+provider.chainId);
+    setCurrentChainId(provider.chainId);
   }, []);
 
   return (
