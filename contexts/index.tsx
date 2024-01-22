@@ -27,7 +27,7 @@ const RootProviders = ({ children }) => {
   const { service: daoService } = useDaoStore();
 
   useEffect(() => {
-    if (router?.pathname?.includes("[network")) return;
+    if (router?.pathname?.includes("[network]")) return;
     clear();
     refresh();
   }, [router?.pathname]);
