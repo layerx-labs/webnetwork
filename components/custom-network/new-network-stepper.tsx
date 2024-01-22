@@ -80,7 +80,7 @@ function NewNetwork() {
     mutationFn: useCreateNetwork
   });
   const { connectedChain, supportedChains } = useSupportedChain();
-  
+
   const isSetupPage = router?.pathname?.toString()?.includes("setup");
 
   const creationSteps = [

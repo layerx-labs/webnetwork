@@ -237,7 +237,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
 
     if (feesBlocks.length) {
       const ordered = [...feesBlocks].sort();
-      await processEvent(RegistryEvents.ChangedFee, undefined, { 
+      await processEvent(RegistryEvents.ChangedFee, undefined, {
         fromBlock: ordered.shift(),
         toBlock: ordered.pop()
       });

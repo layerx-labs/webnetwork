@@ -53,6 +53,7 @@ export interface Network {
   banned_domains: string[];
   closeTaskAllowList: string[];
   network_token_id?: number;
+  allow_list: string[];
 }
 
 export interface ThemeColors {

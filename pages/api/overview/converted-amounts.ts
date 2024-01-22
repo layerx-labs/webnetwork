@@ -5,7 +5,11 @@ import { WithValidChainId } from "middleware/with-valid-chain-id";
 
 import { error as LogError } from "services/logging";
 
+<<<<<<<< HEAD:pages/api/overview/converted-amounts.ts
 import get from "server/common/overview/converted-amounts";
+========
+import get from "server/common/overview/marketplace";
+>>>>>>>> layerx/master:pages/api/overview/marketplace.ts
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

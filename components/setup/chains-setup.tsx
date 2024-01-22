@@ -19,10 +19,12 @@ import { QueryKeys } from "helpers/query-keys";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
+import { useGetChains } from "x-hooks/api/chain";
 import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
+import useReactQuery from "x-hooks/use-react-query";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);

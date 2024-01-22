@@ -6,6 +6,8 @@ import VotingPowerPageView from "components/profile/pages/voting-power/view";
 
 import {lowerCaseCompare} from "helpers/string";
 
+import {lowerCaseCompare} from "helpers/string";
+
 import {Network} from "interfaces/network";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 

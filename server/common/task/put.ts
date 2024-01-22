@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { NextApiRequest } from "next";
 
 import models from "db/models";
@@ -31,13 +32,18 @@ export async function put(req: NextApiRequest): Promise<DatabaseId> {
   if (!issue)
     throw new HttpNotFoundError("Bounty not found");
 
-  if(issue.state !== "draft")
-    throw new HttpConflictError("Bounty can't be edited");
+  const isFundingDraft =
+    issue.state === "open" &&
+    BigNumber(issue.fundingAmount || 0).gt(BigNumber(issue.fundedAmount || 0));
 
-  if(body) issue.body = body;
-  if(tags) issue.tags = tags;
+  if(issue.state === "draft" || isFundingDraft){
+    if(body) issue.body = body;
+    if(tags) issue.tags = tags;
 
-  await issue.save();
+    await issue.save();
 
-  return issue.id;
+    return issue.id;
+  }
+
+  throw new HttpConflictError("Bounty can't be edited");
 }

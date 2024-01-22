@@ -15,6 +15,7 @@ interface CreateNetworkBountyButtonViewProps {
   onClick?: () => void;
   onCloseClick?: () => void;
   actionCallBack?: () => void;
+  label?: string;
 }
 
 export default function CreateNetworkBountyButtonView({

@@ -35,9 +35,9 @@ export default function DeliverablePage() {
   const { addError, addSuccess } = useToastStore();
   const { updateParamsOfActive } = useMarketplace();
   const { currentUser } = useUserStore();
-  const { data: deliverableData, invalidate: invalidateDeliverable } = 
+  const { data: deliverableData, invalidate: invalidateDeliverable } =
   useReactQuery(QueryKeys.deliverable(deliverableId?.toString()), () => getDeliverable(+deliverableId));
-  
+
   const currentBounty = issueParser(deliverableData?.issue);
   const currentDeliverable = deliverableParser(deliverableData, currentBounty?.mergeProposals);
   const isDeliverableReady = !!currentDeliverable?.markedReadyForReview;

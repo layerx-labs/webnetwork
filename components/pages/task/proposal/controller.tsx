@@ -54,7 +54,7 @@ export default function ProposalPage() {
   const commentsQueryKey = QueryKeys.proposalComments(proposalId);
 
   const { data: proposalData } = useReactQuery(proposalQueryKey, () => getProposalData(query));
-  const { data: comments } = 
+  const { data: comments } =
     useReactQuery(commentsQueryKey, () => getCommentsData({ proposalId }));
 
   const parsedProposal = proposalData ? mergeProposalParser(proposalData, proposalData?.issue?.merged) : null;
@@ -65,7 +65,7 @@ export default function ProposalPage() {
 
   const isWalletConnected = !!currentUser?.walletAddress;
 
-  const isUserAbleToDispute = isWalletConnected ? !parsedProposal?.disputes?.some(({ address, weight }) => 
+  const isUserAbleToDispute = isWalletConnected ? !parsedProposal?.disputes?.some(({ address, weight }) =>
     lowerCaseCompare(address, currentUser?.walletAddress) && weight.gt(0)) : false;
 
   const isDisputable = [
