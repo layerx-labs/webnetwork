@@ -91,8 +91,8 @@ module.exports = () => {
     serverRuntimeConfig,
     // webpack5: true,
     compiler: {
-      //removeConsole: process.env.NODE_ENV === "production",
-      reactRemoveProperties: process.env.NODE_ENV === "production"
+      removeConsole: process.env.NODE_ENV === "production",
+      reactRemoveProperties: process.env.APP_ENV === "production"
     },
     async headers() {
       return [
