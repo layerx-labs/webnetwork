@@ -10,7 +10,7 @@ export default ExplorePage;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const data = await getExplorePageData(query);
-
+  console.log('NODE_ENV', process.env.NODE_ENV)
   return {
     props: {
       ...data,
