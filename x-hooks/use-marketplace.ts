@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
@@ -8,7 +9,7 @@ import { FIVE_MINUTES_IN_MS, MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
-import {Network} from "interfaces/network";
+import { Network } from "interfaces/network";
 import { ProfilePages } from "interfaces/utils";
 
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
@@ -19,13 +20,14 @@ import useReactQuery from "x-hooks/use-react-query";
 
 export default function useMarketplace(marketplaceName?: string, chainName?: string) {
   const { query, push } = useRouter();
+  const queryClient = useQueryClient();
 
   const marketplace = marketplaceName || query?.network?.toString();
   const chain = chainName;
 
   const { data, clear, update, updateParamsOfActive } = useMarketplaceStore();
   const { currentUser, updateCurrentUser} = useUserStore();
-  const { data: searchData, isError, isFetching, isStale, invalidate } =
+  const { data: searchData, isError, isFetching, isStale } =
     useReactQuery(QueryKeys.networksByName(marketplace), () => useSearchNetworks({
       name: marketplace,
       isNeedCountsAndTokensLocked: true,
@@ -83,6 +85,10 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     }
   }
 
+  function refresh() {
+    queryClient.invalidateQueries({ queryKey: ["networks"] });
+  }
+
   function _updateParamsOfActive (network: Network) {
     updateCuratorAndGovernor(network);
     updateParamsOfActive(network);
@@ -130,7 +136,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
 
   return {
     ...data,
-    refresh: invalidate,
+    refresh,
     clear,
     updateParamsOfActive: _updateParamsOfActive,
     getURLWithNetwork,
