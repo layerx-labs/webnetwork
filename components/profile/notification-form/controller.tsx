@@ -23,25 +23,26 @@ export default function NotificationForm() {
   const { query } = useRouter();
   const { t } = useTranslation("profile");
   const { data: sessionData, update: updateSession } = useSession();
-  const { currentUser } = useUserStore();
 
   const [inputEmail, setInputEmail] = useState("");
-
   const [isEmailInvalid, setIsEmailInvalid] = useState(false);
   const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+
+  const { goToProfilePage } = useMarketplace();
+
+  const { currentUser } = useUserStore();
+  const { addSuccess, addError } = useToastStore();
 
   const emailValidator = useDebouncedCallback(email => {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const { goToProfilePage } = useMarketplace();
-  const { addSuccess } = useToastStore();
   const { mutate: updateEmail, isLoading: isExecutingEmail } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
-    toastError: t("profile:email-errors.failed-to-update"),
     onSuccess: () => {
       updateSession();
-    }
+    },
+    onError: error => addError(t("profile:email-errors.failed-to-update"), t(`profile:email-errors.${error}`)),
   });
   const { mutate: updateUserSettings, isLoading: isExecutingSettings } = useReactQueryMutation({
     mutationFn: useUpdateUserSettings,
