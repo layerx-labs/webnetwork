@@ -21,9 +21,9 @@ export default function NavBar() {
   const logoPath = settings?.urls?.ipfs;
   const logos = {
     fullLogo: activeMarketplace?.fullLogo && `${logoPath}/${activeMarketplace.fullLogo}`,
-    logoIcon: activeMarketplace?.logoIcon && `${logoPath}/${activeMarketplace.logoIcon}` 
+    logoIcon: activeMarketplace?.logoIcon && `${logoPath}/${activeMarketplace.logoIcon}`
   };
-  const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/", {
+  const brandHref = !isOnNetwork ? "/" : getURLWithNetwork("/tasks", {
     network: activeMarketplace?.name,
   });
 

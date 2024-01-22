@@ -39,7 +39,7 @@ export default function WrongNetworkModal() {
   const { supportedChains, connectedChain } = useSupportedChain();
   const { wrongNetworkModal: show, loading, updateWrongNetworkModal } = useLoadersStore();
 
-  const isRequired = pathname?.includes("new-network");
+  const isRequired = pathname?.includes("new-marketplace");
   const canBeHided = !isRequired;
 
   async function selectSupportedChain(chain: SupportedChainData) {

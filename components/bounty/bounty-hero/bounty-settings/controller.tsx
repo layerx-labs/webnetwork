@@ -28,12 +28,13 @@ export default function BountySettings({
   const { handleReedemIssue, handleHardCancelBounty } = useBepro();
 
   const isGovernor = currentUser?.isGovernor;
+  const isDraftFunding = currentBounty?.isDraft || !currentBounty?.isFunded
   const cancelableTime = currentBounty?.network?.cancelableTime;
   const isCancelable = +new Date() >= +new Date(+currentBounty.createdAt + cancelableTime);
   const objViewProps = {
     onEditIssue,
     isWalletConnected: !!currentUser?.walletAddress,
-    isBountyInDraft: !!currentBounty?.isDraft,
+    isBountyInDraft: currentBounty?.isFundingRequest ? isDraftFunding : currentBounty?.isDraft,
     isBountyOwner:
       !!currentUser?.walletAddress &&
       currentBounty?.user?.address &&

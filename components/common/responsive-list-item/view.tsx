@@ -39,25 +39,22 @@ export default function ResponsiveListItem({
       ])} 
       onClick={onClick}
     >
-      <div className="col-sm-12 col-md px-0">
+      <div className="col-sm-12 col-md mw-md-25">
         <div className="row align-items-center">
           <div className="col-auto">
             {icon}
           </div>
 
-          <div className="col px-0">
+          <div className="col text-truncate px-0">
             <div className="row align-items-center">
-              <div className="col-auto">
-              <span
-                  className="caption-small overflow-wrap-anywhere font-weight-medium text-white"
-                  data-test-id={label}
-                >
+              <div className="col-auto text-truncate">
+                <span className="caption-small font-weight-medium text-white" data-test-id={label}>
                   {label}
                 </span>
               </div>
 
               <If condition={!!secondaryLabel}>
-                <div className="col-auto mt-2 px-0">
+                <div className="col-auto mt-2">
                   {secondaryLabel}
                 </div>
               </If>

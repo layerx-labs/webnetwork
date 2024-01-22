@@ -6,3 +6,9 @@ export enum ErrorMessages {
   NoNetworkFound = "invalid network",
   CreateBountyNotAllowList = "User is not on create-task allow-list",
 }
+
+export enum UserEmailErrors {
+  InvalidEmail = "invalid-email",
+  EmailAlreadyInUse = "email-already-in-use",
+  NothingToChange = "nothing-to-change",
+}

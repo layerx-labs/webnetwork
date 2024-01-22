@@ -32,10 +32,10 @@ export default function CreateDeliverablePage() {
   const [title, setTitle] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [createdDeliverableId, setCreatedDeliverableId] = useState<number>();
-  
+
   const { handleCreatePullRequest } = useBepro();
   const { active: activeMarketplace, getURLWithNetwork } = useMarketplace();
-  
+
   const bountyQueryKey = QueryKeys.bounty(query?.id?.toString());
   const { data: bountyData } = useReactQuery(bountyQueryKey, () => getBountyData(query));
 

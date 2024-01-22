@@ -11,10 +11,10 @@ import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 interface CreateNetworkBountyButtonViewProps {
   isOnNetwork: boolean;
   isModalVisible?: boolean;
-  label?: string;
   onClick?: () => void;
   onCloseClick?: () => void;
   actionCallBack?: () => void;
+  label?: string;
 }
 
 export default function CreateNetworkBountyButtonView({

@@ -13,7 +13,9 @@ export default function EditBountyButton({ onClick }: { onClick: () => void }) {
     >
       <>
         <EditIcon className="me-1" />
-        <Translation ns="bounty" label="actions.edit-bounty" />
+        <span>
+          <Translation ns="bounty" label="actions.edit-bounty" />
+        </span>
       </>
     </PageActionsButton>
   );

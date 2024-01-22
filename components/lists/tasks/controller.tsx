@@ -50,7 +50,7 @@ export default function TasksList({
   const { search, setSearch, clearSearch } = useSearch();
   const { getChainFromUrl } = useChain();
   const { supportedChains } = useSupportedChain();
-  
+
   const { state, time, networkName, networkChain, categories } = router.query;
 
   const hasFilter = !!(state || time || search || networkName || networkChain || categories);

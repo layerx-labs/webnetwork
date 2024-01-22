@@ -21,7 +21,7 @@ export default async function put(req: NextApiRequest) {
 
   const user = context.user;
 
-  const userIsAlreadyWorking = issue.working.find(el => +el === user.id);
+  const userIsAlreadyWorking = issue.working.find((el) => +el === user.id);
   if (userIsAlreadyWorking)
     throw new HttpConflictError("User is already working");
 

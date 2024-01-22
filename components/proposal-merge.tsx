@@ -99,9 +99,11 @@ export default function ProposalMerge({
         titlePosition="center"
         onCloseClick={() => setShow(false)}
         footer={
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between px-0 mt-3">
             <Button
-              color="dark-gray"
+              color="gray-800"
+              className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium 
+                  py-2 px-3`}
               onClick={() => setShow(false)}
               data-test-id="modal-proposal-cancel-btn"
             >
@@ -109,7 +111,9 @@ export default function ProposalMerge({
             </Button>
 
             <Button
-              className="btn-block"
+              color="primary"
+              className={`border-radius-4 border border-${canMerge ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
               onClick={handleMerge}
               disabled={!canMerge}
               data-test-id="modal-proposal-merge-btn"
