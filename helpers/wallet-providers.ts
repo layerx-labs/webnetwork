@@ -4,9 +4,10 @@ import { WalletProviders } from "interfaces/enums/wallet-providers";
 
 export function getProviderNameFromConnection (connection: Web3Connection) {
   const selectedProvider = connection?.web3?.givenProvider?.selectedProvider;
-  if (selectedProvider?.isCoinbaseWallet)
+  const provider = selectedProvider ? selectedProvider : connection?.web3?.givenProvider;
+  if (provider?.isCoinbaseWallet)
     return WalletProviders.CoinBase;
-  else if (selectedProvider?.isMetaMask)
+  if (provider?.isMetaMask)
     return WalletProviders.MetaMask;
   return WalletProviders.Unsupported;
 }

@@ -49,7 +49,9 @@ export function useDao() {
 
   async function connect () {
     const lastProvider = window.localStorage.getItem(StorageKeys.lastProviderConnected);
-    const selectedProvider = (window?.ethereum as any)?.providerMap?.get(lastProvider);
+    const hasProviderMap = !!(window?.ethereum as any)?.providerMap;
+    const selectedProvider =
+      hasProviderMap ? (window?.ethereum as any)?.providerMap?.get(lastProvider) : window.ethereum;
     if (selectedProvider) {
       if ((window?.ethereum as any)?.setSelectedProvider)
         (window.ethereum as any).setSelectedProvider(selectedProvider);
