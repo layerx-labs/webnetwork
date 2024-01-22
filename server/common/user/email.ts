@@ -12,6 +12,7 @@ import { isValidEmail } from "helpers/validators/email";
 import { UserTableScopes } from "interfaces/enums/api";
 import { EmailConfirmationErrors } from "interfaces/enums/Errors";
 
+import { UserEmailErrors } from "server/errors/error-messages";
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
 import { EmailTemplates } from "server/templates";
@@ -76,10 +77,19 @@ export async function put(req: NextApiRequest) {
   }
 
   if (!isValidEmail(email))
-    throw new HttpBadRequestError("Invalid email");
+    throw new HttpBadRequestError(UserEmailErrors.InvalidEmail);
+
+  const userCheck = await models.user.findOne({
+    where: {
+      email
+    }
+  });
+
+  if (!!userCheck && userCheck?.id !== user.id)
+    throw new HttpConflictError(UserEmailErrors.EmailAlreadyInUse);
 
   if (lowerCaseCompare(user.email, email) && user.isEmailConfirmed)
-    throw new HttpConflictError("Nothing to change");
+    throw new HttpConflictError(UserEmailErrors.NothingToChange);
 
   const verificationCode = uuidv4();
 
