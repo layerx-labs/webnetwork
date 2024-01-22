@@ -496,7 +496,8 @@ export const NetworkSettingsProvider = ({ children }) => {
       !currentUser?.walletAddress,
       !isCreating && lowerCaseCompare(networkSettings?.networkAddress, network?.networkAddress) &&
         !!network?.tokensLocked &&
-        (!network?.name || !forcedService || !!networkSettings?.settings?.parameters?.councilAmount?.value),
+        (!network?.name || !forcedService ||
+          (!!networkSettings?.settings?.parameters?.councilAmount?.value && !!forcedNetwork?.councilAmount)),
       isCreating && !daoService?.registry?.token?.contractAddress,
       !needsToLoad,
       !settings

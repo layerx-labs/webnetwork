@@ -11,7 +11,7 @@ import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
 import { BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN } from "helpers/constants";
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
 import { parseTransaction } from "helpers/transactions";
@@ -27,7 +27,7 @@ import { AllowListTypes } from "interfaces/enums/marketplace";
 import { TransactionStatus } from "interfaces/enums/transaction-status";
 import { TransactionTypes } from "interfaces/enums/transaction-types";
 import { Network } from "interfaces/network";
-import { DistributionsProps } from "interfaces/proposal";
+import {DistributionsProps} from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 import { SimpleBlockTransactionPayload } from "interfaces/transaction";
@@ -548,7 +548,7 @@ export default function CreateTaskPage ({
   useEffect(() => handleMinAmount('transactional'), [issueAmount])
   useEffect(() => handleMinAmount('reward'), [rewardAmount])
   useEffect(() => {
-    setUserCanCreateBounties(!currentNetwork?.id ? true :
+    setUserCanCreateBounties(!currentNetwork?.id ? true : !currentNetwork?.allow_list?.length ? true :
       (session?.data as CustomSession)?.user?.roles
         ? UserRoleUtils.hasCreateTaskRole((session?.data as CustomSession)?.user?.roles, currentNetwork?.id)
         : true) // if no session roles are found we will let the normal flow deal with an unauthenticated user

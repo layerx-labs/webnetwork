@@ -56,7 +56,7 @@ export function useDao() {
 
       setProvider(null)
       setProvider(metamaskWallet.provider as unknown as Provider);
-      const web3Connection = new Web3Connection({ 
+      const web3Connection = new Web3Connection({
         web3CustomProvider: metamaskWallet.provider,
         skipWindowAssignment: true
       });

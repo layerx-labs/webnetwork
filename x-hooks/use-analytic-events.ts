@@ -46,7 +46,6 @@ export default function useAnalyticEvents() {
       };
     }
 
-
     if (connectedChain)
       details = {
         ...details,

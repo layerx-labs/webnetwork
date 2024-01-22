@@ -70,7 +70,7 @@ export function MyMarketplace({
     isSuccess,
     invalidate,
     isLoading
-  } = useReactQuery(networkQueryKey, 
+  } = useReactQuery(networkQueryKey,
                     getNetwork,
                     {
                       enabled: !!currentUser?.walletAddress && !!chainId,

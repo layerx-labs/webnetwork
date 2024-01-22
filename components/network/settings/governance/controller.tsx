@@ -155,7 +155,7 @@ export default function NetworkGovernanceSettings({
     const allowedTransactions = settingsTokens?.allowedTransactions?.map(getAddress);
 
     const networkRewards = networkToken?.filter(token => token?.network_tokens?.isReward).map(getAddress);
-    const networkTransactions = 
+    const networkTransactions =
       networkToken?.filter(token => token?.network_tokens?.isTransactional).map(getAddress);
 
     if (!hasEqualLength(allowedRewards, networkRewards))

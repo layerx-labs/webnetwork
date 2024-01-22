@@ -21,7 +21,7 @@ export default function DeliverablesPage({
   const { getURLWithNetwork } = useMarketplace();
 
   const isOnNetwork = pathname?.includes("[network]");
-  
+
   return(
     <ProfileLayout>
       <TasksList
