@@ -78,7 +78,7 @@ describe("BannedWords", () => {
 
     const input = result.getByTestId("permission-input");
     fireEvent.change(input, { target: { value: testDomain } });
-    const button = result.getByTestId(`permission-item-button-${testDomain}`);
+    const button = result.getByTestId(`permission-trash-btn-${testDomain}`);
     fireEvent.click(button);
 
     expect(RemoveBannedWord)
