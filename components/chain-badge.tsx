@@ -12,7 +12,7 @@ export default function ChainBadge({
   transparent
 } : ChainBadgeProps) {
   const badgeProps = transparent ? {
-    className: "caption-small font-weight-normal bg-transparent text-gray-500 border border-gray-850"
+    className: "caption-small font-weight-normal px-0 bg-transparent text-gray-500 border border-gray-850"
   } : {
     className: "caption-small font-weight-normal",
     style: {

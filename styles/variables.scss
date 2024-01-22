@@ -396,15 +396,30 @@ $utilities: map-merge(
         )
       ),
     "rounded-bottom":
-        map-merge(
-          map-get($utilities, "rounded-bottom"),
+      map-merge(
+        map-get($utilities, "rounded-bottom"),
+        (
+          values:
+            map-merge(
+              map-get(map-get($utilities, "rounded-bottom"), "values"),
+              $more-roundend
+            )
+        )
+      ),
+    "max-width": map-merge(
+      map-get($utilities, "max-width"),
+      (
+        responsive: true,
+        values: map-merge(
+          map-get(map-get($utilities, "max-width"), "values"),
           (
-            values:
-              map-merge(
-                map-get(map-get($utilities, "rounded-bottom"), "values"),
-                $more-roundend
-              )
+            25: 25%,
+            50: 50%,
+            75: 75%,
+            100: 100%,
           )
         )
+      )
+    ),
   )
 );
