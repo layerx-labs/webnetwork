@@ -23,11 +23,22 @@ export default function ModalOraclesActionView({
       titlePosition="center"
       onCloseClick={handleCancel}
       footer={
-        <div className="d-flex justify-content-between">
-          <Button color="dark-gray" onClick={handleCancel}>
+        <div className="d-flex justify-content-between mt-3">
+          <Button
+            color="gray-800"
+            className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium 
+                  py-2 px-3`}
+            onClick={handleCancel}
+          >
             {t("actions.cancel")}
           </Button>
-          <Button onClick={handleConfirm}>{t("actions.confirm")}</Button>
+          <Button
+            color="primary"
+            className={`border-radius-4 border border-primary sm-regular text-capitalize font-weight-medium py-2 px-3`}
+            onClick={handleConfirm}
+          >
+            {t("actions.confirm")}
+          </Button>
         </div>
       }
     >
