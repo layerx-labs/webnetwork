@@ -1,10 +1,10 @@
 import {useTranslation} from "next-i18next";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import TasksList from "components/lists/tasks/controller";
 import ProfileLayout from "components/profile/profile-layout";
 
-import { SearchBountiesPaginated } from "types/api";
+import {SearchBountiesPaginated} from "types/api";
 
 import useMarketplace from "x-hooks/use-marketplace";
 
@@ -22,6 +22,8 @@ export default function DeliverablesPage({
 
   const isOnNetwork = pathname?.includes("[network]");
 
+  const isOnNetwork = pathname?.includes("[network]");
+  
   return(
     <ProfileLayout>
       <TasksList

@@ -14,14 +14,15 @@ import {ContextualSpan} from "components/contextual-span";
 import AddChainModal from "components/setup/add-chain-modal";
 import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
+
+import {MINUTE_IN_MS} from "helpers/constants";
 
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import { useGetChains } from "x-hooks/api/chain";
-import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
-import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
+import {useAddChain, useDeleteChain, useGetChains} from "x-hooks/api/chain";
+import {useLoadersStore} from "x-hooks/stores/loaders/loaders.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
 import useReactQuery from "x-hooks/use-react-query";
@@ -56,6 +57,14 @@ export default function ChainsSetup() {
     toastSuccess: "Chain removed",
     toastError: "Failed to remove chain"
   });
+
+  const { invalidate } = useReactQuery(["supportedChains"], () => useGetChains().then(chains => { 
+    dispatch(updateSupportedChains(chains));
+    return chains; 
+  }), {
+    staleTime: MINUTE_IN_MS
+  });
+
 
   function updateMiniChainInfo() {
     if (chains.length)

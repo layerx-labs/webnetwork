@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 
 import {useRouter} from "next/router";
 
@@ -7,6 +7,7 @@ import CreateNetworkBountyButtonView from "components/create-network-bounty-butt
 interface CreateNetworkBountyButtonProps {
   label?: string;
   actionCallBack?: () => void;
+  label?: string;
 }
 
 export default function CreateNetworkBountyButton({
