@@ -4,6 +4,9 @@ const { getAllFromTable } = require("../../helpers/db/rawQueries");
 
 module.exports = {
   async up (queryInterface, Sequelize) {
+    if (process.env?.SKIP_FILL_MIGRATIONS?.toLowerCase() === "true")
+      return console.log("20231027181209-fill-fees-columns-on-chains-table.js SKIPPED");
+
     const chains = await getAllFromTable(queryInterface, "chains");
     if (!chains?.length) 
       return;
