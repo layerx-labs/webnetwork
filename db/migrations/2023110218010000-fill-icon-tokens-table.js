@@ -8,6 +8,8 @@ const COINGECKO_API = axios.create({
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    if (process.env?.SKIP_FILL_MIGRATIONS?.toLowerCase() === "true")
+      return console.log("2023110218010000-fill-icon-tokens-table.js SKIPPED");
     try {
       const tokens = await getAllFromTable(queryInterface, "tokens")
 
