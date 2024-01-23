@@ -5,11 +5,11 @@ module.exports = {
     await queryInterface.addColumn("tokens", "last_price_used", {
       type: Sequelize.JSON,
       allowNull: true,
-    });
+    }).catch(error => console.log(error?.message));
     await queryInterface.addColumn("tokens", "icon", {
       type: Sequelize.STRING,
       allowNull: true,
-    });
+    }).catch(error => console.log(error?.message));
   },
 
   async down(queryInterface, Sequelize) {
