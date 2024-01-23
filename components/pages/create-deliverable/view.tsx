@@ -105,6 +105,7 @@ export default function CreateDeliverablePageView({
                   placeholder={originLinkPlaceHolder}
                   value={originLink}
                   onChange={onChangeOriginLink}
+                  data-test-id="origin-link-input"
                 />
 
                 <If condition={previewError && !originLinkError}>
@@ -158,6 +159,7 @@ export default function CreateDeliverablePageView({
                   placeholder={t("deliverable:create.placeholders.title")}
                   value={title}
                   onChange={onChangeTitle}
+                  data-test-id="title-input"
                 />
               </div>
             </div>
@@ -178,6 +180,7 @@ export default function CreateDeliverablePageView({
               href="https://www.markdownguide.org/getting-started/"
               target="_blank"
               rel="noopener noreferer"
+              data-test-id="markdown-link"
             >
               {t("deliverable:create.markdown-link")}
             </a>
