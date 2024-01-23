@@ -43,7 +43,7 @@ export default function CategoryButton({
       align="left"
       onClick={() => onCategoryClick(value)}
       style={{ maxHeight: '85px'}}
-      data-testid={`category-button-${value}`}
+      data-testid={`category${icon ? '-': '-mobile-'}button-${value}`}
     >
       <If condition={icon} otherwise={(label)}>
         <div className="d-flex flex-column justify-content-end h-100 mb-1">
