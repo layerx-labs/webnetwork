@@ -33,7 +33,7 @@ export default function CategoryButton({
 
   return (
     <Button
-      className={`category-filter-${color} 
+      className={`category-filter-${color} category-size
            border-none text-capitalize lg-medium border-radius-16
           ${
             icon
@@ -42,7 +42,6 @@ export default function CategoryButton({
           }`}
       align="left"
       onClick={() => onCategoryClick(value)}
-      style={{ maxHeight: '85px'}}
       data-testid={`category${icon ? '-': '-mobile-'}button-${value}`}
     >
       <If condition={icon} otherwise={(label)}>
