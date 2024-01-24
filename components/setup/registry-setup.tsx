@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 
-import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
@@ -29,12 +28,10 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
-import useChain from "x-hooks/use-chain";
+import {useDao} from "x-hooks/use-dao";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-import {useDao} from "../../x-hooks/use-dao";
 
 interface RegistrySetupProps {
   isVisible?: boolean;
@@ -80,7 +77,6 @@ export function RegistrySetup({
   const [registrySaveCTA, setRegistrySaveCTA] = useState(false);
 
   const { loadSettings } = useSettings();
-  const { findSupportedChain } = useChain();
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
@@ -93,7 +89,11 @@ export function RegistrySetup({
     queryKey: QueryKeys.chains(),
     mutationFn: useUpdateChain,
     toastSuccess: "Chain registry updated",
-    toastError: "Failed to update chain registry"
+    toastError: "Failed to update chain registry",
+    onSettled: () => {
+      loadChainsDatabase();
+      updateChains();
+    }
   });
 
   function isEmpty(value: string) {
@@ -169,8 +169,6 @@ export function RegistrySetup({
 
       setRegistry(previous => ({ ...previous, value: deployedAddress}));
       await setChainRegistry(deployedAddress);
-      loadChainsDatabase();
-      updateChains();
 
       useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: +connectedChain?.id})
         .catch(error => console.debug("useAddToken: ", error));
