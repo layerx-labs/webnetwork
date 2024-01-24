@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Category } from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import CategoryButton from "./category-button/view";
+import CategoryButton from "./category-button/category.view";
 interface TasksListsCategoryFilterViewProps {
   categories: Category[]
   onCategoryClick: (category: string) => void;
