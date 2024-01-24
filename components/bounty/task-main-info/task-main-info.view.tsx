@@ -25,7 +25,7 @@ export default function TaskMainInfo ({
 
   const types = {
     funding: {
-      value: formatNumberToString(task?.fundedPercent, 2),
+      value: +formatNumberToString(task?.fundedPercent, 2),
       translation: t("info.funded")
     },
     open: {
