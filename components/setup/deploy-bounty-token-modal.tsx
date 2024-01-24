@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
@@ -73,16 +73,19 @@ export function DeployBountyTokenModal({
         />
       </Row>
 
-      <Button
-        onClick={deployContract}
-        isLoading={isExecuting}
-        withLockIcon={deployBtnDisabled}
-        disabled={deployBtnDisabled || isExecuting}
-        className={`border-radius-4 border border-${deployBtnDisabled || isExecuting ? "gray-700" : "primary"} 
-                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
-      >
-        <span>{t("registry.modals.deploy-bounty-token.actions.deploy")}</span>
-      </Button>
+      <Row className="justify-content-end">
+        <Col xs="auto">
+          <Button
+            onClick={deployContract}
+            isLoading={isExecuting}
+            withLockIcon={deployBtnDisabled}
+            disabled={deployBtnDisabled || isExecuting}
+            className={`border-radius-4 border border-${deployBtnDisabled || isExecuting ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}>
+            <span>{t("registry.modals.deploy-bounty-token.actions.deploy")}</span>
+          </Button>
+        </Col>
+      </Row>
     </Modal>
   );
 }
