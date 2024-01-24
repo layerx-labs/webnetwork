@@ -5,9 +5,6 @@ import { useTranslation } from "next-i18next";
 
 import Button from "components/button";
 import { FormGroup } from "components/form-group";
-
-import { AllowListTypes } from "interfaces/enums/marketplace";
-
 interface PermissionInputProps {
   placeholder?: string;
   value: string;
@@ -18,7 +15,7 @@ interface PermissionInputProps {
   error?: string | ReactNode;
   hint?: string | ReactNode;
   isLoading?: boolean;
-  type?: AllowListTypes
+  type?: string
 }
 
 export default function PermissionInput ({
@@ -47,7 +44,7 @@ export default function PermissionInput ({
         label=""
         error={error}
         disabled={isLoading}
-        data-test-id={`${type}-input` || "permission-input"}
+        data-test-id={type ? `${type}-input` : "permission-input"}
         data-testid="permission-input"
       />
       <div className={clsx({ "mt-1": !error, "mtn-4": error, "d-grid d-md-block col-12 col-md-1": true })}>
@@ -55,7 +52,7 @@ export default function PermissionInput ({
           onClick={onClickAdd}
           disabled={disabledButton}
           isLoading={isLoading}
-          data-test-id={`${type}-btn` || "permission-add-btn"}
+          data-test-id={type ? `${type}-btn` : "permission-add-btn"}
           data-testid="permission-add-button"
         >
           {t("misc.add")}
