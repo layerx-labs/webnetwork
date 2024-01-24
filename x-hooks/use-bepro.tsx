@@ -405,7 +405,7 @@ export default function useBepro() {
                                       lockFeePercentage: string,
                                       closeFee: string,
                                       cancelFee: string,
-                                      bountyToken: string): Promise<TransactionReceipt | Error> {
+                                      bountyToken: string): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.deployNetworkRegistry,
@@ -419,7 +419,7 @@ export default function useBepro() {
                                                BigNumber(closeFee).multipliedBy(DIVISOR).toString(),
                                                BigNumber(cancelFee).multipliedBy(DIVISOR).toString(),
                                                bountyToken)
-        .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
+        .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload));
           resolve(txInfo);
         })

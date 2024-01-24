@@ -98,7 +98,7 @@ export function useDao() {
       const daoProps = isChainEqualToConnected ?
         { web3Connection: dappkitReact?.connection } :
         { web3Host: chainToConnect?.chainRpc };
-      const dao = !daoService || !isSameChain || needsToUpdateConnection ?
+      const dao = !daoService || !isSameChain || needsToUpdateConnection || !isSameRegistryAddress ?
         new DAO({
           ...daoProps,
           registryAddress: registryToLoad
