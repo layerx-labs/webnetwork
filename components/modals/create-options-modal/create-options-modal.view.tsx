@@ -45,7 +45,7 @@ export default function CreateOptionsModalView ({
         {options.map((opt, i) => <div className="col-11 col-lg px-0 px-md-2" key={`options-modal-${i}`}>
           <SelectableCard
             isSelected={selectedOption === i}
-            icon={<opt.icon width="auto" height="auto" color={selectedOption === i ? "white" : "gray"}/>}
+            icon={<opt.icon width="100%" height="100%" color={selectedOption === i ? "white" : "gray"}/>}
             title={opt.title}
             description={opt.description}
             onClick={() => setSelectedOption(i)}

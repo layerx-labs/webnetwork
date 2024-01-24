@@ -65,7 +65,7 @@ export default function NetworksPage({
           infos={infos}
         />
 
-        <div className="mt-4">
+        <div className="my-4">
           <NetworksList networks={networks} />
         </div>
       </div>

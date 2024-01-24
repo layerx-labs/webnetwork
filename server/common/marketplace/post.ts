@@ -35,7 +35,7 @@ export async function post(req: NextApiRequest) {
   const chain = await chainFromHeader(req);
 
   const typedMessage = ethereumMessageService.getMessage({
-    chainId: chain.chainId,
+    chainId: chain.chainId?.toString(),
     message: WANT_TO_CREATE_NETWORK
   });
 

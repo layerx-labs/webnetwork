@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 
+import { useDappkit } from "@taikai/dappkit-react";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import {isZeroAddress} from "ethereumjs-util";
 import { useSession } from "next-auth/react";
@@ -42,7 +43,6 @@ import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import {useDao} from "x-hooks/use-dao";
-import {useDappkit} from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";

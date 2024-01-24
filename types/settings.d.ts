@@ -71,5 +71,6 @@ export type SettingsType = {
   },
   forms?: {
     createMarketplaceHelp?: string;
-  }
+  },
+  availableWallets?: string[];
 }

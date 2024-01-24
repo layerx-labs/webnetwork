@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-import {useSession} from "next-auth/react";
-import {useTranslation} from "next-i18next";
+import { useSession} from "next-auth/react";
+import { useTranslation } from "next-i18next";
 
 import NetworkGovernanceSettingsView from "components/network/settings/governance/view";
 
@@ -9,9 +9,9 @@ import { useNetworkSettings } from "contexts/network-settings";
 
 import {IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
 
-import {StandAloneEvents} from "interfaces/enums/events";
-import {Network} from "interfaces/network";
-import {Token} from "interfaces/token";
+import { StandAloneEvents } from "interfaces/enums/events";
+import { Network } from "interfaces/network";
+import { Token } from "interfaces/token";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/marketplace";
@@ -44,9 +44,6 @@ export default function NetworkGovernanceSettings({
   
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { currentUser } = useUserStore();
-  const { addError, addSuccess } = useToastStore();
-  const { service: daoService } = useDaoStore();
   const { updateWalletBalance, signMessage } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
   const {
@@ -55,6 +52,10 @@ export default function NetworkGovernanceSettings({
     isAbleToClosed,
     forcedNetwork,
   } = useNetworkSettings();
+
+  const { currentUser } = useUserStore();
+  const { service: daoService } = useDaoStore();
+  const { addError, addSuccess } = useToastStore();
 
   const symbol = forcedNetwork?.networkToken?.symbol
   const networkTokenSymbol =
@@ -192,15 +193,14 @@ export default function NetworkGovernanceSettings({
     const failed = [];
     const success = {};
 
-    const promises = await Promise.allSettled(changedParameters
-      .map(async ({ param, value }) => 
-        handleChangeNetworkParameter(param, value, networkAddress)
-          .then(() => ({ param, value }))));
-
-    promises.forEach((promise) => {
-      if (promise.status === "fulfilled") success[promise.value.param] = promise.value.value;
-      else failed.push(promise.reason);
-    });
+    for (const { param, value } of changedParameters) {
+      await handleChangeNetworkParameter(param, value, networkAddress)
+        .then(() => success[param] = param)
+        .catch(error => {
+          console.debug("Tx error: ", error);
+          failed.push(param);
+        });
+    }
 
     if (failed.length) {
       addError(t("custom-network:errors.updating-values"), t("custom-network:errors.updated-parameters", {
@@ -223,7 +223,7 @@ export default function NetworkGovernanceSettings({
 
       addSuccess(t("actions.success"), t("custom-network:messages.updated-parameters", {
           updated: successQuantity,
-          total: promises.length,
+          total: changedParameters.length,
       }));
     }
 

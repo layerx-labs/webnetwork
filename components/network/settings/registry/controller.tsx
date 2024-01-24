@@ -174,6 +174,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
         const currentToken = findMinAmount(isTransactional ? transactionalTokens : rewardTokens, address)
         if(currentToken?.minimum !== '0'){
           return useAddToken({address, minAmount: currentToken?.minimum, chainId: +connectedChain.id})
+            .catch(console.debug);
         }
       }))
 

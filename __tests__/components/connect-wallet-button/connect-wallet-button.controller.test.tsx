@@ -12,11 +12,12 @@ const defaultAddress = "0x000000";
 
 const currentUser = {
   walletAddress: null
-}
+};
 
 const useLoadersStore = {
-  updateWeb3Dialog: jest.fn()
-}
+  updateWeb3Dialog: jest.fn(),
+  updateWalletSelectorModal: jest.fn(),
+};
 
 jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
   useLoadersStore: () => useLoadersStore
@@ -26,21 +27,11 @@ jest.mock("x-hooks/stores/dao/dao.store", () => ({
   useDaoStore: () => ({
     service: jest.fn()
   })
-}))
+}));
 
 jest.mock("x-hooks/stores/user/user.store", () => ({
   useUserStore: () => ({
     currentUser
-  })
-}))
-
-const mockedSignInWallet = jest.fn(() => {
-  currentUser.walletAddress = defaultAddress;
-});
-
-jest.mock("x-hooks/use-authentication", () => ({
-  useAuthentication: () => ({ 
-    signInWallet: mockedSignInWallet
   })
 }));
 
@@ -51,38 +42,34 @@ describe("ConnectWalletButton", () => {
     jest.clearAllMocks();
   });
 
-  it("Should render children if connect succeeds", async () => {
+  it("Should render button if wallet is not connected", async () => {
     const result = render(<ConnectWalletButton>
       <span data-testid="address">{defaultAddress}</span>
       </ConnectWalletButton>);
 
-    await userEvent.click(result.getByRole("button"));
+    expect(result.queryByRole("button")).toBeDefined();
+    expect(result.queryByTestId("address")).toBeNull();
+  });
 
-    result.rerender(<ConnectWalletButton>
+  it("Should render children if wallet is connected", async () => {
+    currentUser.walletAddress = defaultAddress;
+    const result = render(<ConnectWalletButton>
       <span data-testid="address">{defaultAddress}</span>
-      </ConnectWalletButton>);
+    </ConnectWalletButton>);
 
     expect(result.queryByRole("button")).toBeNull();
     expect(result.getByTestId("address").textContent).toBe(defaultAddress);
   });
 
-  it("Should call useAuthentication().signInWallet if forceLogin is true", async () => {
-    render(<ConnectWalletButton forceLogin={true}></ConnectWalletButton>);
-
-    expect(mockedSignInWallet).toHaveBeenCalled();
-  });
-
-  it("Should not call useAuthentication().signInWallet if ethereum is not available", async () => {
-    window.ethereum = null;
-
+  it("Should change WalletSelectorModal visibility if ethereum is available", async () => {
     const result = render(<ConnectWalletButton></ConnectWalletButton>);
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(mockedSignInWallet).not.toHaveBeenCalled();
+    expect(useLoadersStore.updateWalletSelectorModal).toHaveBeenCalledWith(true);
   });
 
-  it("Should change NoMetamaskModal visibility if ethereum is not available", async () => {
+  it("Should change NoWalletModal visibility if ethereum is not available", async () => {
     window.ethereum = null;
     
     const result = render(<ConnectWalletButton></ConnectWalletButton>);
@@ -90,5 +77,6 @@ describe("ConnectWalletButton", () => {
     await userEvent.click(result.getByRole("button"));
 
     expect(useLoadersStore.updateWeb3Dialog).toHaveBeenCalledWith(true);
+    expect(useLoadersStore.updateWalletSelectorModal).not.toHaveBeenCalled();
   });
 });
