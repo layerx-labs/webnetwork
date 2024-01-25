@@ -164,3 +164,17 @@ export const BOUNTY_TAGS = [
   },
 ];
 export const CHAIN_DEFAULT_DECIMALS = 18;
+export const METAMASK_DOWNLOAD_LINK = "https://metamask.io/download.html";
+export const COINBASE_DOWNLOAD_LINK = "https://www.coinbase.com/wallet/downloads";
+export const METAMASK_DEEPLINK_LINK = "https://metamask.app.link/dapp/";
+export const COINBASE_DEEPLINK_LINK = "https://go.cb-w.com/dapp?cb_url=";
+export const walletExtensionsLinks = {
+  metamask: {
+    download: METAMASK_DOWNLOAD_LINK,
+    deepLink: METAMASK_DEEPLINK_LINK
+  },
+  coinbase: {
+    download: COINBASE_DOWNLOAD_LINK,
+    deepLink: COINBASE_DEEPLINK_LINK
+  },
+};

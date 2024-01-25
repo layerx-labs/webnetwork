@@ -1,0 +1,23 @@
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.bulkInsert("settings", [
+      {
+        key: "availableWallets",
+        value: `["Metamask", "Coinbase"]`,
+        type: "json",
+        visibility: "public",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ]);
+  },
+
+  async down (queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("settings", {
+      key: "availableWallets"
+    })
+  }
+};

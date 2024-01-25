@@ -29,7 +29,7 @@
 @import "components/custom-dropdown";
 @import "components/native-select-wrapper";
 @import "components/category-filter";
-
+@import "components/wallet-selector";
 @import "components/swagger-ui";
 
 @function toRGB($color) {
@@ -1267,6 +1267,10 @@ $c_props: (
     width: 18px !important;
     height: 18px !important;
   }
+}
+
+.category-size {
+  max-height: 85px;
 }
 
 .notification-list {

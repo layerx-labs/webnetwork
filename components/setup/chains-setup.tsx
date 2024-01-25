@@ -37,7 +37,7 @@ export default function ChainsSetup() {
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
   const { updateLoading } = useLoadersStore();
-  const { supportedChains } = useSupportedChain();
+  const { supportedChains, refresh } = useSupportedChain();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),
@@ -47,6 +47,7 @@ export default function ChainsSetup() {
     onSettled: () => {
       setShowChainModal(null);
       setShowCustomAdd(false);
+      refresh();
     }
   });
 
@@ -54,7 +55,10 @@ export default function ChainsSetup() {
     queryKey: QueryKeys.chains(),
     mutationFn: useDeleteChain,
     toastSuccess: "Chain removed",
-    toastError: "Failed to remove chain"
+    toastError: "Failed to remove chain",
+    onSettled: () => {
+      refresh();
+    }
   });
 
   function updateMiniChainInfo() {

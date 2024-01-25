@@ -14,8 +14,11 @@ export const chain2 = {
 };
 export const supportedChains = [ chain1, chain2 ];
 
+export const mockLoadChainsDatabase = jest.fn();
+
 export default function () {
   return {
-    supportedChains
+    supportedChains,
+    loadChainsDatabase: mockLoadChainsDatabase
   };
 }

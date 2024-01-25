@@ -1,20 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Spinner} from "react-bootstrap";
+import { useEffect, useState } from "react";
 
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
-import Button from "components/button";
-import TermsAndConditions from "components/common/terms-and-conditions/view";
-import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
-import Modal from "components/modal";
-import SelectChainDropdown from "components/select-chain-dropdown";
+import WrongNetworkModalView from "components/modals/wrong-network-modal/wrong-network-modal.view";
 
-import {UNSUPPORTED_CHAIN} from "helpers/constants";
+import { UNSUPPORTED_CHAIN } from "helpers/constants";
 
-import {SupportedChainData} from "interfaces/supported-chain-data";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import {useLoadersStore} from "x-hooks/stores/loaders/loaders.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
@@ -34,23 +29,22 @@ export default function WrongNetworkModal() {
 
   const { connect } = useDao();
   const marketplace = useMarketplace();
-  const { currentUser } = useUserStore();
   const { handleAddNetwork } = useNetworkChange();
   const { supportedChains, connectedChain } = useSupportedChain();
+
+  const { currentUser } = useUserStore();
   const { wrongNetworkModal: show, loading, updateWrongNetworkModal } = useLoadersStore();
 
   const isRequired = pathname?.includes("new-marketplace");
   const canBeHided = !isRequired;
 
   async function selectSupportedChain(chain: SupportedChainData) {
-    if (!chain)
-      return;
-
+    if (!chain) return;
     setChosenSupportedChain(chain);
   }
 
   function onClose () {
-    updateWrongNetworkModal(false);
+    if (canBeHided) updateWrongNetworkModal(false);
   }
 
   async function _handleAddNetwork() {
@@ -109,51 +103,17 @@ export default function WrongNetworkModal() {
     isRequired
   ]);
 
-  if (show && !currentUser?.walletAddress)
-    return <ConnectWalletButton asModal={true} />;
-
   return (
-    <Modal
-      title={t("modals.wrong-network.change-network")}
-      titlePosition="center"
-      titleClass="h4 text-white bg-opacity-100"
+    <WrongNetworkModalView
+      walletAddress={currentUser?.walletAddress}
+      error={error}
+      networkChain={networkChain}
       show={show}
-      onCloseClick={canBeHided ? onClose : undefined}
-    >
-      <div className="d-flex flex-column text-center align-items-center">
-        <strong className="caption-small d-block text-uppercase text-white-50 mb-3 pb-1">
-          {networkChain ? t("modals.wrong-network.connect-to-network-chain") : t("modals.wrong-network.please-connect")}
-        </strong>
-
-        {!isAddingNetwork ? '' :
-          <Spinner
-            className="text-primary align-self-center p-2 mt-1 mb-2"
-            style={{ width: "5rem", height: "5rem" }}
-            animation="border"
-          />
-        }
-
-        <SelectChainDropdown
-          defaultChain={networkChain}
-          onSelect={selectSupportedChain}
-          isDisabled={isAddingNetwork}
-          placeHolder={t("forms.select-placeholder-chain")}
-        />
-
-        <Button
-          className="my-3"
-          disabled={isButtonDisabled()}
-          onClick={_handleAddNetwork}
-        >
-          {t("modals.wrong-network.change-network")}
-        </Button>
-
-        {error && (
-          <p className="caption-small text-uppercase text-danger">{error}</p>
-        )}
-
-        <TermsAndConditions />
-      </div>
-    </Modal>
+      isAddingNetwork={isAddingNetwork}
+      isButtonDisabled={isButtonDisabled()}
+      onCloseClick={onClose}
+      onButtonClick={_handleAddNetwork}
+      onSelectChain={selectSupportedChain}
+    />
   );
 }
