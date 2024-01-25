@@ -1269,6 +1269,10 @@ $c_props: (
   }
 }
 
+.category-size {
+  max-height: 85px;
+}
+
 .notification-list {
   @extend .transaction-list;
   .tx-container {

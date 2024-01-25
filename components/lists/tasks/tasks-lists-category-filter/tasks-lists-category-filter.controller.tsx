@@ -9,7 +9,7 @@ import useQueryFilter from "x-hooks/use-query-filter";
 export interface Category {
   label: string;
   color: string;
-  value: string;
+  value: "code" | "design" | "marketing" | "writing";
 }
 export default function TasksListsCategoryFilter () {
   const { query } = useRouter();

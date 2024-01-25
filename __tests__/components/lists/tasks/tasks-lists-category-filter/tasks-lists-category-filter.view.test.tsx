@@ -7,7 +7,11 @@ import { render } from "__tests__/utils/custom-render";
 
 const mockOnClick = jest.fn();
 
-const categories = [
+const categories: {
+  label: string;
+  color: string;
+  value: "code" | "design" | "marketing"
+}[] = [
   {
     label: "code",
     color: "blue",
