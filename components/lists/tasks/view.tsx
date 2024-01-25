@@ -69,11 +69,11 @@ export default function TasksListView({
   const isBountyHall = variant === "bounty-hall";
   const hasIssues = !!bounties?.count;
   const hasMorePages = hasIssues && bounties?.currentPage < bounties?.pages;
-  const showClearButton = searchString?.trim() !== "";
+  const showClearButton = !!searchString && searchString?.trim() !== "";
   const showSearchFilter = hasIssues || !hasIssues && hasFilter;
   const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network";
   const isCategoryFilter = filterType === "category";
-
+  console.log("searchString", searchString)
   const columns = [
     t("bounty:management.name"),
     t("bounty:management.link"),
