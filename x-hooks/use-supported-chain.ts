@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import { useRouter } from "next/router";
+
 import { MINUTE_IN_MS } from "helpers/constants";
 import { QueryKeys } from "helpers/query-keys";
 
@@ -9,6 +11,8 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function useSupportedChain() {
+  const { query } = useRouter();
+
   const marketplace = useMarketplace();
   const {
     chains: supportedChains,
@@ -32,7 +36,7 @@ export default function useSupportedChain() {
   
   function updateNetworkAndChainMatch() {
     const networkChainId = marketplace?.active?.chain_id;
-    const matchWithNetworkChain = +connectedChain?.id === +networkChainId;
+    const matchWithNetworkChain = networkChainId && query?.network ? +connectedChain?.id === +networkChainId : null;
 
     if (matchWithNetworkChain !== connectedChain?.matchWithNetworkChain)
       updateConnectedChain({
@@ -41,7 +45,13 @@ export default function useSupportedChain() {
       });
   }
 
+  function refresh() {
+    loadChainsDatabase();
+    invalidate();
+  }
+
   useEffect(updateNetworkAndChainMatch, [
+    query,
     connectedChain?.id,
     marketplace?.active?.chain_id,
   ])
@@ -51,7 +61,7 @@ export default function useSupportedChain() {
     connectedChain,
     updateConnectedChain,
     loadChainsDatabase,
-    refresh: invalidate,
+    refresh,
     get
   };
 }

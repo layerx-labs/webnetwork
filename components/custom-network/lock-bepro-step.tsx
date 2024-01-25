@@ -41,23 +41,24 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   const session = useSession();
   const { t } = useTranslation(["common", "bounty","custom-network"]);
 
+  const [inputError, setInputError] = useState("")
   const [amount, setAmount] = useState<BigNumber>();
   const [isLocking, setIsLocking] = useState(false);
-  const [inputError, setInputError] = useState("")
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [showUnlockBepro, setShowUnlockBepro] = useState(false);
   const [hasNetworkRegistered, setHasNetworkRegistered] = useState(false);
 
   const registryToken = useERC20();
-  const { service: daoService, ...daoStore } = useDaoStore();
-  const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
-  const { updateWalletBalance } = useAuthentication();
-  const { tokensLocked, updateTokenBalance } = useNetworkSettings();
   const { processEvent } = useProcessEvent();
   const { connectedChain } = useSupportedChain();
-  const {add: addTx, update: updateTx} = transactionStore();
+  const { updateWalletBalance } = useAuthentication();
+  const { tokensLocked, updateTokenBalance } = useNetworkSettings();
+  const { lockInRegistry, approveTokenInRegistry, unlockFromRegistry } = useBepro();
+
   const { currentUser } = useUserStore();
+  const { add: addTx, update: updateTx } = transactionStore();
+  const { service: daoService, ...daoStore } = useDaoStore();
 
   const registryTokenSymbol = registryToken.symbol || t("misc.$token");
 
@@ -202,6 +203,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
   useEffect(() => {
     const tokenAddress = daoService?.registry?.token?.contractAddress;
     const registryAddress = daoService?.registry?.contractAddress;
+
     if (tokenAddress &&
         registryAddress &&
         connectedChain?.name !== UNSUPPORTED_CHAIN &&

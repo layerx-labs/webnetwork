@@ -25,7 +25,7 @@ export class EthereumMessage<T extends MessageTypes> {
   getMessage({ chainId, message }: GetMessageParams): TypedMessage<T | MessageTypes> {
     return {
       domain: {
-        chainId: +chainId,
+        chainId,
         name: this.contractName,
         version: "1"
       },

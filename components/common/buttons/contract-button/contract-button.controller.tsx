@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useDappkit } from "@taikai/dappkit-react";
 import { useTranslation } from "next-i18next";
 
 import { ButtonProps } from "components/button";
@@ -12,7 +13,6 @@ import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import { useDao } from "x-hooks/use-dao";
-import {useDappkit} from "x-hooks/use-dappkit";
 import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
@@ -27,14 +27,15 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
+  const { address: connectedAddress } = useDappkit();
 
   const [isValidating, setIsValidating] = useState(false);
 
   const { start } = useDao();
-  const { connection } = useDappkit();
-  const { addError } = useToastStore();
   const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
+
+  const { addError } = useToastStore();
   const { currentUser } = useUserStore();
   const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
@@ -62,7 +63,6 @@ export default function ContractButton({
 
   async function validateWallet() {
     const sessionWallet = currentUser?.walletAddress;
-    const connectedAddress = await connection?.getAddress();
 
     if (!connectedAddress || !sessionWallet) return false;
 

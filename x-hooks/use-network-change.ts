@@ -19,7 +19,7 @@ export default function useNetworkChange() {
       ],
     })
       .catch(error => {
-        if ((error as any)?.message?.indexOf('wallet_addEthereumChain') > -1) {
+        if ((error as any)?.message?.indexOf('addEthereumChain') > -1) {
           return window.ethereum.request({
             method: "wallet_addEthereumChain",
             params: [

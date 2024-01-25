@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { UserRoute, WithValidChainId } from "middleware";
+import { UserRoute } from "middleware";
 
 import { Logger } from "services/logging";
 
@@ -25,4 +25,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 Logger.changeActionName(`Issue/Working`);
-export default UserRoute(WithValidChainId(handler));
+export default UserRoute(handler);
