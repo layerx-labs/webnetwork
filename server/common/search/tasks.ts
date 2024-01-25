@@ -41,7 +41,7 @@ export default async function get(query: ParsedUrlQuery) {
   if (["disputable", "mergeable", "proposable"].includes(state?.toString()))
     defaultStatesToIgnore.push("closed", "draft");
 
-  if (!network && !networkName)
+  if (!network && !networkName && !proposer && !deliverabler && !creator)
     defaultStatesToIgnore.push("closed");
 
   if (!creator)

@@ -55,6 +55,9 @@ export default function UpdateBountyAmountModalView({
 }: UpdateBountyAmountModalViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
+  const isApproveButtonDisabled = isExecuting || exceedsBalance;
+  const isConfirmButtonDisabled =  isExecuting || exceedsBalance || !issueAmount || !!inputError || !!isSameValue;
+
   return (
     <Modal
       show={show}
@@ -63,13 +66,20 @@ export default function UpdateBountyAmountModalView({
       titlePosition="center"
       footer={
         <div className="d-flex pt-2 justify-content-between">
-          <Button color="dark-gray" onClick={handleClose} data-testid="update-amount-modal-cancel-btn">
+          <Button
+            color="gray-800"
+            className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium py-2 px-3`}
+            data-testid="update-amount-modal-cancel-btn"
+            onClick={handleClose}
+          >
             {t("actions.cancel")}
           </Button>
           {needsApproval ? (
             <ContractButton
               onClick={handleApprove}
-              disabled={isExecuting || exceedsBalance}
+              disabled={isApproveButtonDisabled}
+              className={`border-radius-4 border border-${isApproveButtonDisabled ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
               withLockIcon={exceedsBalance}
               isLoading={isExecuting}
               data-testid="update-amount-modal-approve-btn"
@@ -78,8 +88,10 @@ export default function UpdateBountyAmountModalView({
             </ContractButton>
           ) : (
             <ContractButton
-              disabled={isExecuting || exceedsBalance || !issueAmount || !!inputError || !!isSameValue}
+              disabled={isConfirmButtonDisabled}
               withLockIcon={exceedsBalance || !issueAmount || !!inputError || !!isSameValue}
+              className={`border-radius-4 border border-${isConfirmButtonDisabled ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
               onClick={handleSubmit}
               isLoading={isExecuting}
               data-testid="update-amount-modal-confirm-btn"

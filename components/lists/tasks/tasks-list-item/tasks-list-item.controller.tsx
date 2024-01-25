@@ -90,7 +90,7 @@ export default function TasksListItem({
   const percentage =
     BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
       .dividedBy(issue?.fundingAmount)
-      .toFixed(0, 1) || 0;
+      .toFixed(2, 1) || 0;
 
   function handleClickCard() {
     if (xClick) return xClick();
@@ -143,7 +143,7 @@ export default function TasksListItem({
 
     return (
       <span className={clsx([
-        "caption-small font-weight-normal",
+        "caption-small font-weight-normal text-truncate",
         isVisible && "text-gray-500" || "text-decoration-line text-gray-600",
       ])}>
         {tag ? `${tag}-${id}` : `#${id}`}
@@ -276,12 +276,13 @@ export default function TasksListItem({
         >
           <div className="row align-items-center">
             <div className="col col-md-6 text-overflow-ellipsis">
-            <span className={`text-capitalize
-              ${!isVisible && "text-decoration-line text-gray-600" || "text-gray-white"}`}>
-              {(issue?.title !== null && issue?.title) || (
-                <Translation ns="bounty" label={"errors.fetching"} />
-              )}
-            </span>
+              <span className={`text-capitalize
+                ${!isVisible && "text-decoration-line text-gray-600" || "text-gray-white"}`}>
+                {(issue?.title !== null && issue?.title) || (
+                  <Translation ns="bounty" label={"errors.fetching"} />
+                )}
+              </span>
+
               <div className={!isVisible && 'text-decoration-line' || ""}>
                 <IssueTag />
               </div>
@@ -401,7 +402,7 @@ export default function TasksListItem({
               <ResponsiveWrapper xs={false} xl={true} className="row">
                 <div className="col-12">
                   <div className="row align-items-center justify-content-md-start">
-                    <BountyItemLabel label="ID" className="col-auto">
+                    <BountyItemLabel label="ID" className="mw-25 col-auto">
                       <IssueTag />
                     </BountyItemLabel>
 

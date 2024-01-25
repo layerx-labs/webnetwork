@@ -19,7 +19,7 @@ import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function useMarketplace(marketplaceName?: string, chainName?: string) {
-  const { query, push } = useRouter();
+  const { query, asPath, push } = useRouter();
   const queryClient = useQueryClient();
 
   const marketplace = marketplaceName || query?.network?.toString();
@@ -64,8 +64,13 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   function getTotalNetworkToken() {
     const network = data?.active?.name;
     const chain = data?.active?.chain_id;
+
     return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
-                          () => getNetworkOverviewData(query)
+                          () => getNetworkOverviewData({
+                            ...query,
+                            network,
+                            chain: data?.active?.chain?.chainShortName,
+                          })
                             .then(overview => BigNumber(overview?.curators?.tokensLocked || 0)),
                           {
                             enabled: !!network && !!chain,
@@ -95,7 +100,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   useEffect(() => {
-    if (isFetching || isError || isStale)
+    if (isFetching || isError || isStale || asPath?.includes("profile/my-marketplace"))
       return;
     if (!marketplace && !chain) {
       clear();

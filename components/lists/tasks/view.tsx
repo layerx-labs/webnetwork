@@ -82,7 +82,7 @@ export default function TasksListView({
   ];
 
   const listTitleByType = {
-    "bounties": t("bounty:label_other"),
+    "bounties": isBountyHall ? t("bounty:all-bounties") : t("bounty:label_other"),
     "deliverables": t("deliverable:label_other"),
     "proposals": t("proposal:label_other")
   };
@@ -146,18 +146,10 @@ export default function TasksListView({
                     </span>
                     </>
                   ) : (
-                    <CountComponent count={bounties?.count} />
+                    <CountComponent count={bounties?.totalBounties} />
                   )}
                 </div>
               </div>
-
-              <If condition={isCategoryFilter}>
-                <ListSort
-                  options={sortOptions}
-                  labelColor={"gray-500 text-uppercase"}
-                  rounded
-                />
-              </If>
 
               <If condition={isProfile && isOnNetwork}>
                 <ResponsiveWrapper md={false} xs={true} sm={true}>
@@ -182,28 +174,27 @@ export default function TasksListView({
             </div>
           </If>
 
-          <If condition={isCategoryFilter}>
-            <TasksListFilteredCategories />
+          <If condition={showSearchFilter}>
+            <TasksListsSearchFilters
+              isManagement={isManagement}
+              isProfile={isProfile}
+              isOnNetwork={isOnNetwork}
+              isBountyHall={isBountyHall}
+              hideFilter={hideFilter || isBountyHall}
+              sortOptions={sortOptions}
+              chains={chains}
+              searchString={searchString}
+              placeholder={t("bounty:search")}
+              hasFilter={showClearButton}
+              onSearchClick={onSearchClick}
+              onSearchInputChange={onSearchInputChange}
+              onEnterPressed={onEnterPressed}
+              onClearSearch={onClearSearch}
+            />
           </If>
 
-          <If condition={!isCategoryFilter}>
-            <If condition={showSearchFilter}>
-              <TasksListsSearchFilters
-                isManagement={isManagement}
-                isProfile={isProfile}
-                isOnNetwork={isOnNetwork}
-                hideFilter={hideFilter}
-                sortOptions={sortOptions}
-                chains={chains}
-                searchString={searchString}
-                placeholder={t("bounty:search")}
-                hasFilter={showClearButton}
-                onSearchClick={onSearchClick}
-                onSearchInputChange={onSearchInputChange}
-                onEnterPressed={onEnterPressed}
-                onClearSearch={onClearSearch}
-              />
-            </If>
+          <If condition={isCategoryFilter}>
+            <TasksListFilteredCategories />
           </If>
 
           <If condition={isManagement && hasIssues}>

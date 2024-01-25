@@ -18,7 +18,7 @@ export default function TasksListFilteredCategoriesView ({
     return <></>;
 
   return(
-    <div className="row mb-4 pb-2 gx-3 gy-3" data-testid="categories-container">
+    <div className="row mb-4 gx-3 gy-3" data-testid="categories-container">
       {categories?.map(c =>
         <div className="col-auto" key={c}>
           <Button

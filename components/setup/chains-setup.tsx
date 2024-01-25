@@ -16,15 +16,12 @@ import AddCustomChainModal from "components/setup/add-custom-chain-modal";
 
 import { QueryKeys } from "helpers/query-keys";
 
-
 import {MiniChainInfo} from "interfaces/mini-chain";
 
-import { useGetChains } from "x-hooks/api/chain";
 import { useAddChain, useDeleteChain } from "x-hooks/api/chain";
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import useSupportedChain from "x-hooks/use-supported-chain";
-import useReactQuery from "x-hooks/use-react-query";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);
@@ -37,7 +34,7 @@ export default function ChainsSetup() {
   const [showChainModal, setShowChainModal] = useState<MiniChainInfo|null>(null);
   
   const { updateLoading } = useLoadersStore();
-  const { supportedChains } = useSupportedChain();
+  const { supportedChains, loadChainsDatabase, refresh } = useSupportedChain();
 
   const { mutate: mutateAddChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),
@@ -47,6 +44,8 @@ export default function ChainsSetup() {
     onSettled: () => {
       setShowChainModal(null);
       setShowCustomAdd(false);
+      loadChainsDatabase();
+      refresh();
     }
   });
 
@@ -54,7 +53,11 @@ export default function ChainsSetup() {
     queryKey: QueryKeys.chains(),
     mutationFn: useDeleteChain,
     toastSuccess: "Chain removed",
-    toastError: "Failed to remove chain"
+    toastError: "Failed to remove chain",
+    onSettled: () => {
+      loadChainsDatabase();
+      refresh();
+    }
   });
 
   function updateMiniChainInfo() {

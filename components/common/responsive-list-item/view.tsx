@@ -52,13 +52,15 @@ export default function ResponsiveListItem({
                   {label}
                 </span>
               </div>
+            </div>
 
-              <If condition={!!secondaryLabel}>
+            <If condition={!!secondaryLabel}>
+              <div className="row align-items-center">
                 <div className="col-auto mt-2">
                   {secondaryLabel}
                 </div>
-              </If>
-            </div>
+              </div>
+            </If>
 
             <If condition={!!thirdLabel}>
               <div className="mt-2">

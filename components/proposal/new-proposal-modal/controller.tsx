@@ -87,7 +87,8 @@ export default function ProposalModal({
       .then(() => {
         handleClose();
         updateBountyData();
-      });
+      })
+      .catch(console.debug);
   }
 
   function handleClose() {

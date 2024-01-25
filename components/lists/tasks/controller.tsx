@@ -39,20 +39,19 @@ export default function TasksList({
   filterType = "search"
 }: TasksListProps) {
   const router = useRouter();
-  
-  const [searchState, setSearchState] = useState("");
+
+  const [searchState, setSearchState] = useState(router?.query?.search?.toString());
   const [bountiesList, setBountiesList] = useState<SearchBountiesPaginatedBigNumber>();
 
   const debouncedSearchUpdater = useDebouncedCallback((value) => setSearch(value), 500);
 
   const { nextPage } = usePage();
-  const { currentUser } = useUserStore();
-  const { search, setSearch, clearSearch } = useSearch();
   const { getChainFromUrl } = useChain();
   const { supportedChains } = useSupportedChain();
+  const { search, setSearch, clearSearch } = useSearch();
 
+  const { currentUser } = useUserStore();
   const { state, time, networkName, networkChain, categories } = router.query;
-
   const hasFilter = !!(state || time || search || networkName || networkChain || categories);
   const isOnNetwork = !!router?.query?.network;
 

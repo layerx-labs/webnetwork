@@ -72,11 +72,10 @@ export default function NewProposalModalView({
       titlePosition="center"
       onCloseClick={onClose}
       footer={
-        <div className="d-flex justify-content-between px-0">
+        <div className="d-flex px-0 mt-2 justify-content-between">
           <Button
             color="gray-800"
-            className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium 
-                  py-2 px-3`}
+            className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium py-2 px-3`}
             onClick={onClose}
             data-testid="modal-proposal-cancel-btn"
           >
@@ -89,7 +88,6 @@ export default function NewProposalModalView({
             isLoading={isExecuting}
             withLockIcon={!isConnected}
             data-testid="modal-proposal-create-btn"
-            color="primary"
             className={`border-radius-4 border border-${!isConnected || isExecuting ? "gray-700" : "primary"} 
                   sm-regular text-capitalize font-weight-medium py-2 px-3`}
           >

@@ -195,8 +195,8 @@ export function ERC20Details({
       </Row>
 
       { isDeployer &&
-        <Row className="mt-2">
-          <Col>
+        <Row className="mt-2 justify-content-end">
+          <Col xs="auto">
             <ContractButton
               disabled={isDeployBtnDisabled || isDeploying}
               withLockIcon={isDeployBtnDisabled}
@@ -204,6 +204,8 @@ export function ERC20Details({
               onClick={handleDeploy}
               variant="registry"
               data-testid={`${title}-deploy-btn`}
+              className={`border-radius-4 border border-${isDeployBtnDisabled || isDeploying ? "gray-700" : "primary"} 
+                  sm-regular text-capitalize font-weight-medium py-2 px-3`}
             >
               {t("custom-network:steps.token-configuration.actions.deploy")}
             </ContractButton>

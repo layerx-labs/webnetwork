@@ -70,18 +70,20 @@ export default function NetworkTxButton({
   const { currentUser, updateCurrentUser } = useUserStore();
 
   const { addError, addSuccess } = useToastStore();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, get: getDao } = useDaoStore();
   const { updateWalletBalance } = useAuthentication();
 
   function checkForTxMethod() {
-    if (!daoService?.network || !currentUser) return;
+    const service = getDao().service;
+    if (!service?.network || !currentUser) return;
 
-    if (!txMethod || typeof daoService?.network[txMethod] !== "function")
+    if (!txMethod || typeof service?.network[txMethod] !== "function")
       throw new Error("Wrong txMethod");
   }
 
   function makeTx() {
-    if (!daoService?.network || !currentUser) return;
+    const service = getDao().service;
+    if (!service?.network || !currentUser) return;
 
     const tmpTransaction = addTx({
       type: txType,
@@ -92,8 +94,8 @@ export default function NetworkTxButton({
     
     const methodName = txMethod === 'delegateOracles' ? 'delegate' : txMethod;
     const currency = txCurrency || t("misc.$token");
-    
-    daoService?.network[txMethod](txParams.tokenAmount, txParams.from)
+
+    service?.network[txMethod](txParams.tokenAmount, txParams.from)
       .then(async answer => {
         if (answer.status) {
           if (onSuccess) onSuccess();
@@ -123,7 +125,7 @@ export default function NetworkTxButton({
       })
       .finally(() => {
         updateWalletBalance(true);
-        daoService.isCouncil(currentUser?.walletAddress).then((isCouncil) =>
+        service.isCouncil(currentUser?.walletAddress).then((isCouncil) =>
           updateCurrentUser({
             isCouncil,
           }));
