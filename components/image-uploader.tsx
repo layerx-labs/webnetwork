@@ -71,7 +71,7 @@ export default function ImageUploader({
 
       <input
         type="file"
-        data-test-id={name}
+        data-testid={name}
         id={name}
         style={{ display: "none" }}
         accept={accept}

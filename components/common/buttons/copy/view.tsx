@@ -31,7 +31,7 @@ export default function CopyButtonView({
         color="gray-800"
         textClass="text-gray-50"
         className="border-radius-4 p-1 border-gray-700 not-svg"
-        data-test-id="copy-button"
+        data-testid="copy-button"
       >
         <CopyIcon />
       </Button>

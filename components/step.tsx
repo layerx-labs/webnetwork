@@ -48,7 +48,7 @@ export default function Step({
 
           {(validated && (
             <div className="d-flex flex-row justify-content-center">
-              <Button onClick={handleAction} data-test-id={`${title}-next-step-btn`}>
+              <Button onClick={handleAction} data-testid={`${title}-next-step-btn`}>
                 {finishLabel || t("misc.next-step")}
               </Button>
             </div>

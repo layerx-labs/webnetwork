@@ -60,7 +60,7 @@ export default function MultiActionButton({
         otherwise={
           <ReactSelect
             options={actionsToOptions(actions)}
-            data-test-id={label}
+            data-testid={label}
             value={defaultOption}
             isSearchable={false}
             onChange={onRSChange}
@@ -76,7 +76,7 @@ export default function MultiActionButton({
       >
         <div className="select-container">
             <Button
-              data-test-id={label}
+              data-testid={label}
               {...rest}
             >
               {icon}

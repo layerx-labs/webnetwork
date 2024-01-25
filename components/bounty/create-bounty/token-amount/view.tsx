@@ -86,7 +86,7 @@ export default function CreateBountyTokenAmountView({
       <InputNumber
         symbol={currentToken?.symbol}
         classSymbol=""
-        data-test-id="funders-reward-input"
+        data-testid="funders-reward-input"
         thousandSeparator
         value={issueAmount?.value}
         placeholder="0"

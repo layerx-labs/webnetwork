@@ -37,7 +37,7 @@ export default function DeliverableHeroView({
                   width={16}
                   height={16}
                   className="border rounded-circle border-primary p-1"
-                  data-test-id="deliverable-back"
+                  data-testid="deliverable-back"
                 />
               </div>
 

@@ -55,7 +55,7 @@ export default function NotificationsView({
             className="bg-gray-850 border-gray-850 rounded p-2"
             transparent
             onClick={() => updateShowOverlay(!showOverlay)}
-            data-test-id="notifications-btn"
+            data-testid="notifications-btn"
           >
             {(loading && (
               <span className="spinner-border spinner-border-sm" />

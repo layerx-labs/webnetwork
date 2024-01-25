@@ -32,10 +32,10 @@ export default function ProfileLinks({
             "text-gray-150 border-radius-1 p-2 text-white-hover",
             isActive(href) ? "profile-side-link-active" : ""
           ])}
-          data-test-id={label}
+          data-testid={label}
           onClick={onClick}
         >
-          <Icon data-test-id={label} />
+          <Icon data-testid={label} />
           <span>{label}</span>
         </a>
       </Link>

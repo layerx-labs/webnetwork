@@ -121,7 +121,7 @@ export function ERC20Details({
           onChange={setTokenAddress}
           onBlur={handleBlur}
           placeholder={adressPlaceholder}
-          data-test-id={`${title}-address-input`}
+          data-testid={`${title}-address-input`}
           error={ erc20?.loadError &&
             <>
               {t("custom-network:steps.token-configuration.fields.nft-token.error.pre")}
@@ -142,7 +142,7 @@ export function ERC20Details({
           value={tokenInfo.name}
           readOnly={!isDeployer || isDeploying}
           onChange={setTokenName}
-          data-test-id={`${title}-name-input`}
+          data-testid={`${title}-name-input`}
         />
 
         <FormGroup
@@ -150,14 +150,14 @@ export function ERC20Details({
           value={tokenInfo.symbol}
           readOnly={!isDeployer || isDeploying}
           onChange={setTokenSymbol}
-          data-test-id={`${title}-symbol-input`}
+          data-testid={`${title}-symbol-input`}
         />
 
         <FormGroup
           label={t("custom-network:steps.token-configuration.fields.decimals.label")}
           value={tokenInfo.decimals}
           readOnly
-          data-test-id={`${title}-decimals-input`}
+          data-testid={`${title}-decimals-input`}
         />
       </Row>
 
@@ -170,7 +170,7 @@ export function ERC20Details({
           onChange={setTokenTotalSupply}
           variant="numberFormat"
           error={hasTotalSupplyError && numberError(tokenInfo.totalSupply) || ""}
-          data-test-id={`${title}-total-supply-input`}
+          data-testid={`${title}-total-supply-input`}
         />
 
       {minimum && (
@@ -178,7 +178,7 @@ export function ERC20Details({
             label={"Minimum Token value"}
             value={tokenInfo.minimumValue}
             variant="numberFormat"
-            data-test-id={`${title}-minimal-token-input`}
+            data-testid={`${title}-minimal-token-input`}
             onChange={(e) => {
               setTokenMinAmount(e);
               onChangeMinAmount(e);
@@ -189,7 +189,7 @@ export function ERC20Details({
         <FormGroup
           label={t("custom-network:steps.token-configuration.fields.your-balance.label")}
           value={formatStringToCurrency(erc20?.balance?.toFixed())}
-          data-test-id={`${title}-your-balance-input`}
+          data-testid={`${title}-your-balance-input`}
           readOnly
         />
       </Row>
@@ -203,7 +203,7 @@ export function ERC20Details({
               isLoading={isDeploying}
               onClick={handleDeploy}
               variant="registry"
-              data-test-id={`${title}-deploy-btn`}
+              data-testid={`${title}-deploy-btn`}
             >
               {t("custom-network:steps.token-configuration.actions.deploy")}
             </ContractButton>

@@ -63,7 +63,7 @@ export default function UpdateBountyAmountModalView({
       titlePosition="center"
       footer={
         <div className="d-flex pt-2 justify-content-between">
-          <Button color="dark-gray" onClick={handleClose} data-test-id="update-amount-modal-cancel-btn">
+          <Button color="dark-gray" onClick={handleClose} data-testid="update-amount-modal-cancel-btn">
             {t("actions.cancel")}
           </Button>
           {needsApproval ? (
@@ -72,7 +72,7 @@ export default function UpdateBountyAmountModalView({
               disabled={isExecuting || exceedsBalance}
               withLockIcon={exceedsBalance}
               isLoading={isExecuting}
-              data-test-id="update-amount-modal-approve-btn"
+              data-testid="update-amount-modal-approve-btn"
             >
               <span>{t("actions.approve")}</span>
             </ContractButton>
@@ -82,7 +82,7 @@ export default function UpdateBountyAmountModalView({
               withLockIcon={exceedsBalance || !issueAmount || !!inputError || !!isSameValue}
               onClick={handleSubmit}
               isLoading={isExecuting}
-              data-test-id="update-amount-modal-confirm-btn"
+              data-testid="update-amount-modal-confirm-btn"
             >
               <span>{t("actions.confirm")}</span>
             </ContractButton>

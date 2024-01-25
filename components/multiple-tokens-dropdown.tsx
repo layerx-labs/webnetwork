@@ -71,7 +71,7 @@ export default function MultipleTokensDropdown({
         ref={innerRef}
         {...innerProps}
         disabled
-        data-test-id={`select-item-${data?.value?.symbol || data?.value}`}
+        data-testid={`select-item-${data?.value?.symbol || data?.value}`}
         className={`proposal__select-options d-flex align-items-center text-center p-small p-1 my-1
         `}
       >

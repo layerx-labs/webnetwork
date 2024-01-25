@@ -29,7 +29,7 @@ export default function ModalOraclesActionView({
             className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium 
                   py-2 px-3`}
             onClick={handleCancel}
-            data-test-id="modal-oracle-cancel-btn"
+            data-testid="modal-oracle-cancel-btn"
           >
             {t("actions.cancel")}
           </Button>
@@ -37,7 +37,7 @@ export default function ModalOraclesActionView({
             color="primary"
             className={`border-radius-4 border border-primary sm-regular text-capitalize font-weight-medium py-2 px-3`}
             onClick={handleConfirm}
-            data-test-id="modal-oracle-confirm-btn"
+            data-testid="modal-oracle-confirm-btn"
           >
             {t("actions.confirm")}
           </Button>

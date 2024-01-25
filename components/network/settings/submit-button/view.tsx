@@ -30,7 +30,7 @@ export default function SubmitButton({
           <ContractButton
             disabled={isDisabled}
             onClick={onClick}
-            data-test-id="submit-btn"
+            data-testid="submit-btn"
           >
             {t("misc.save-changes")}
           </ContractButton>

@@ -34,7 +34,6 @@ export default function NavBarLinks() {
           <li key={`nav-${label}`}>
             <InternalLink
               href={href}
-              data-test-id={label}
               label={label}
               nav
               uppercase

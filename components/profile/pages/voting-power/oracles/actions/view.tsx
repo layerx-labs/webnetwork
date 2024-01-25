@@ -75,7 +75,7 @@ export default function OraclesActionsView({
                 ? "text-purple"
                 : "text-primary"
             }`}
-            data-test-id={t("my-oracles:fields.amount.label", {
+            data-testid={t("my-oracles:fields.amount.label", {
               currency: currentLabel
             })}
             max={wallet?.balance?.bepro?.toFixed()}
@@ -123,7 +123,7 @@ export default function OraclesActionsView({
                   isLoading={isApproving || verifyTransactionState(TransactionTypes.approveSettlerToken)}
                   className="ms-0 read-only-button mt-3"
                   onClick={approveSettlerToken}
-                  data-test-id="approve-btn"
+                  data-testid="approve-btn"
                 >
                   <span>
                     {t("actions.approve")}
@@ -137,7 +137,7 @@ export default function OraclesActionsView({
                     ? "purple"
                     : "primary"
                 }
-                data-test-id="get-votes-btn"
+                data-testid="get-votes-btn"
                 className="ms-0 read-only-button"
                 disabled={disabled || isButtonDisabled}
                 withLockIcon={disabled || isButtonDisabled}

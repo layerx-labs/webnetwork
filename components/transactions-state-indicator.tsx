@@ -76,7 +76,7 @@ export default function TransactionsStateIndicator() {
             className="bg-gray-850 border-gray-850 rounded p-2"
             transparent
             onClick={() => setShowOverlay(!showOverlay)}
-            data-test-id="transactions-btn"
+            data-testid="transactions-btn"
           >
             {(loading && (
               <span className="spinner-border spinner-border-sm" />

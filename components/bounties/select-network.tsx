@@ -135,7 +135,7 @@ export default function SelectNetwork({
           value={selected}
           options={options}
           onChange={handleChange}
-          inputProps={{ 'data-test-id': 'network-select' }}
+          inputProps={{ 'data-testid': 'network-select' }}
           placeholder={t("select-a-network")}
           components={{
             Option: IconOption,

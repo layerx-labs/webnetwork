@@ -36,7 +36,7 @@ export default function DeliverableButton({
         disabled={disabled}
         isLoading={isLoading}
         withLockIcon={withLockIcon}
-        data-test-id={type}
+        data-testid={type}
       >
         {Labels[type]}
       </ContractButton>

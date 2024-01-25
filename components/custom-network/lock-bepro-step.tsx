@@ -259,7 +259,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                   <div className="col px-0">
                     <InputNumber
                       classSymbol={"text-primary"}
-                      data-test-id="amount-input"
+                      data-testid="amount-input"
                       max={maxValue?.toFixed()}
                       value={amount?.toFixed()}
                       error={amount?.gt(maxValue) || !!inputError}
@@ -420,7 +420,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                   disabled={isApproving || !!lockingPercent?.gt(100)}
                   onClick={handleApproval}
                   variant="registry"
-                  data-test-id="approve-btn"
+                  data-testid="approve-btn"
                 >
                   {t("actions.approve")}
                   {isApproving && (
@@ -434,7 +434,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                   isLoading={isLocking}
                   withLockIcon={!isLocking && isLockBtnDisabled}
                   variant="registry"
-                  data-test-id="lock-btn"
+                  data-testid="lock-btn"
                 >
                   <span>
                     {t("transactions.types.lock")} {registryTokenSymbol}
@@ -451,7 +451,7 @@ export default function LockBeproStep({ activeStep, index, handleClick, validate
                 isLoading={isUnlocking}
                 withLockIcon={!isUnlocking && isUnlockBtnDisabled}
                 variant="registry"
-                data-test-id="unlock-btn"
+                data-testid="unlock-btn"
               >
                 <span>{t("transactions.types.unlock")}</span>
               </ContractButton>

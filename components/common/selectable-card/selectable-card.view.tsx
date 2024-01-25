@@ -24,7 +24,7 @@ export default function SelectableCard ({
         isSelected ? "bg-primary border-primary" : "bg-gray-800 border-gray-700",
       ])}
       onClick={onClick}
-      data-test-id={title}
+      data-testid={title}
       role="button"
     >
       <div className="position-relative">

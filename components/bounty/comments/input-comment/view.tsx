@@ -40,7 +40,7 @@ export default function InputCommentView({
         tabIndex={0}
         className="ps-0 form-control input-comment"
         rows={2}
-        data-test-id="comments-textarea"
+        data-testid="comments-textarea"
         placeholder={t("comments.input.placeholder")}
         value={comment}
         onChange={onCommentChange}
@@ -49,7 +49,7 @@ export default function InputCommentView({
       <div className="d-flex justify-content-end mt-2">
       <Button
           className="btn-comment"
-          data-test-id="comments-btn"
+          data-testid="comments-btn"
           onClick={onCommentSubmit}
           disabled={!comment?.length}
         >

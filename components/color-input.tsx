@@ -50,7 +50,7 @@ export default function ColorInput({ label, code, onChange, onlyColorCode = fals
             onBlur={handleBlur}
             ref={inputRef}
             className={'cursor-pointer'}
-            data-test-id={label}
+            data-testid={label}
           />
         </div>
 

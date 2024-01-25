@@ -151,7 +151,7 @@ export default function CreateTaskPageView({
             className="col-12 bounty-outline-button"
             onClick={onBackClick}
             disabled={isBackButtonDisabled}
-            data-test-id="create-task-back-button"
+            data-testid="create-task-back-button"
           >
             {t("actions.back")}
           </Button>
@@ -164,7 +164,7 @@ export default function CreateTaskPageView({
               disabled={isApproveButtonDisabled}
               onClick={onApproveClick}
               isLoading={isApproving}
-              data-test-id="create-task-approve-button"
+              data-testid="create-task-approve-button"
             >
               {t("actions.approve")}
             </ContractButton>
@@ -176,7 +176,7 @@ export default function CreateTaskPageView({
               disabled={isNextOrCreateButtonDisabled}
               isLoading={isCreating}
               onClick={onNextOrCreateButtonClick}
-              data-test-id={isReviewSection ? "create-task-button" : "create-task-next-button"}
+              data-testid={isReviewSection ? "create-task-button" : "create-task-next-button"}
             >
               <If 
                 condition={isReviewSection}

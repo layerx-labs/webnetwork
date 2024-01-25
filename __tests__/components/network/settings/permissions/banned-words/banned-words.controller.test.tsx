@@ -45,9 +45,9 @@ describe("BannedWords", () => {
       <BannedWords network={mockNetwork} />
     </QueryClientProvider>);
 
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`banned-word-input`);
     fireEvent.change(input, { target: { value: testDomain } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`banned-word-btn`);
     fireEvent.click(button);
 
     expect(CreateBannedWord)
@@ -76,7 +76,7 @@ describe("BannedWords", () => {
       <BannedWords network={mockNetworkWithDomain} />
     </QueryClientProvider>);
 
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId("banned-word-input");
     fireEvent.change(input, { target: { value: testDomain } });
     const button = result.getByTestId(`permission-trash-btn-${testDomain}`);
     fireEvent.click(button);

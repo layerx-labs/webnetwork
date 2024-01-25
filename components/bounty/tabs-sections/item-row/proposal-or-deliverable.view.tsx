@@ -65,7 +65,7 @@ export default function ProposalOrDeliverableView({
               <Button
                 className="read-only-button text-truncate ms-1"
                 onClick={handleBtn}
-                data-test-id={t(btnLabel)}
+                data-testid={t(btnLabel)}
               >
                 <span className="label-m text-white">
                   <Translation label={btnLabel} />

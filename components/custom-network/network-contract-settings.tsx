@@ -121,7 +121,7 @@ export default function NetworkContractSettings() {
       {parameterInputs.map((input) => (
         <NetworkParameterInput
           key={input.label}
-          data-test-id={input.label}
+          data-testid={input.label}
           {...input}
         />
       ))}

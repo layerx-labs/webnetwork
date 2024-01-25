@@ -40,7 +40,7 @@ export default function ChainFilterView({
         </div>
       </If>
 
-      <div className="col" data-test-id="chain-filter" data-testid="chain-filter">
+      <div className="col" data-testid="chain-filter">
         <NativeSelectWrapper
           options={options}
           onChange={onChange}
@@ -52,7 +52,7 @@ export default function ChainFilterView({
             value={option}
             onChange={onChange}
             isSearchable={false}
-            inputProps={{ 'data-test-id': 'chain-select' }}
+            inputProps={{ 'data-testid': 'chain-select' }}
             placeholder={t("placeholders.select-chain")}
             isClearable={!isMobile}
             components={{

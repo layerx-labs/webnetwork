@@ -28,7 +28,7 @@ export default function TasksListsCategoryFilterView ({
             <Link href={"/create-task"}>
               <span
                   className="text-blue-400 text-decoration-underline cursor-pointer font-weight-medium"
-                  data-test-id="first-task-link"
+                  data-testid="first-task-link"
                 >
                   {t("create-your-first-task")}
               </span>
@@ -45,7 +45,6 @@ export default function TasksListsCategoryFilterView ({
                     px-3 pb-3 pt-5`}
                   align="left"
                   onClick={() => onCategoryClick(c.value)}
-                  data-test-id={`category-button-${c.value}`}
                   data-testid={`category-button-${c.value}`}
                 >
                   {c.label}

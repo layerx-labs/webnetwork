@@ -11,7 +11,7 @@ import ColorInput from "components/color-input";
 const MoreColoursButton = ({label, isVisible, onClick}) => {
   const posfix = isVisible ? <ArrowUp width={6.33} height={3.22} /> : <ArrowDown width={6.33} height={3.22} />;
 
-  return <Button onClick={onClick} textClass="px-0 text-primary font-weight-medium" data-test-id={label} transparent>
+  return <Button onClick={onClick} textClass="px-0 text-primary font-weight-medium" data-testid={label} transparent>
     {label}
     <span className="ml-1 svg-primary">{posfix}</span>
   </Button>;

@@ -25,7 +25,6 @@ export default function ConnectWalletModal({
       centerTitle
       titleClass="h3 text-white bg-opacity-100"
       show={isVisible}
-      data-test-id="connect-wallet-modal"
       data-testid="connect-wallet-modal"
     >
       <div className="d-flex flex-column text-center align-items-center">

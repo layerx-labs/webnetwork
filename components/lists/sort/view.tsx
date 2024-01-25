@@ -64,7 +64,7 @@ export default function ListSortView({
         >
           <ReactSelect
             defaultValue={defaultOption}
-            inputProps={{ 'data-test-id': 'sort-by-select' }}
+            inputProps={{ 'data-testid': 'sort-by-select' }}
             options={options}
             isSearchable={false}
             onChange={onChange}

@@ -23,7 +23,7 @@ export default function AvatarOrIdenticon({
 
   return(
     <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
-    data-test-id="avatar-or-identicon">
+    data-testid="avatar-or-identicon">
       { 
          //disabled until image integration
         /* user ?

@@ -29,7 +29,7 @@ export default function MarkedRender({ className = "", source = "_loading..._" }
   return (
     <div
       className={`marked-render markdown-body ${className}`}
-      data-test-id="marked-render"
+      data-testid="marked-render"
       dangerouslySetInnerHTML={innerHtml}
     ></div>
   );

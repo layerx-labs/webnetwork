@@ -22,7 +22,7 @@ export default function Switch({
   return(
     <Form.Check
       type="switch"
-      data-test-id="switch"
+      data-testid="switch"
       label={label}
       checked={value}
       onChange={handleChange}

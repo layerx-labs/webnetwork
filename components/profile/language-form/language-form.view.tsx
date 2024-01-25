@@ -23,7 +23,6 @@ export default function LanguageFormView ({
     <div className="row mb-4 mt-4">
       <div
         className="col-12 col-sm-auto"
-        data-test-id="language-selector-container"
         data-testid="language-selector-container"
       >
         <span className="base-medium text-white mb-1 d-block">
@@ -33,7 +32,7 @@ export default function LanguageFormView ({
         <ReactSelect
           value={currentLanguage}
           options={languages}
-          inputProps={{ 'data-test-id': 'language-select' }}
+          inputProps={{ 'data-testid': 'language-select' }}
           onChange={onLanguageChange}
           isDisabled={isLoading}
         />

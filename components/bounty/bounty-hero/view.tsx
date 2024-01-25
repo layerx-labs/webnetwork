@@ -88,7 +88,7 @@ export default function BountyHeroView({
                     <TaskStatusInfo
                       task={bounty}
                     />
-                    <span className="ms-1 text-white text-capitalize" data-test-id="task-status">
+                    <span className="ms-1 text-white text-capitalize" data-testid="task-status">
                       {currentState}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export default function BountyHeroView({
               </div>
             </div>
 
-            <h5 className="mt-3 break-title" data-test-id="task-title">
+            <h5 className="mt-3 break-title" data-testid="task-title">
               {bounty?.title}
             </h5>
 
@@ -157,9 +157,9 @@ export default function BountyHeroView({
                     onClick={showOriginModal}
                     className="p-0 m-0 font-weight-medium text-decoration-underline"
                     textClass="text-primary"
-                    data-test-id="task-origin-btn"
+                    data-testid="task-origin-btn"
                   >
-                    <span className="text-lowercase" data-test-id="task-origin">
+                    <span className="text-lowercase" data-testid="task-origin">
                       {bounty?.origin}
                     </span>
                   </Button>
@@ -167,7 +167,7 @@ export default function BountyHeroView({
               </If>
 
               <BountyItemLabel label={t("common:misc.type")} className="col-12 col-sm-auto">
-                <span className={`text-truncate text-capitalize`} data-test-id="task-type">
+                <span className={`text-truncate text-capitalize`} data-testid="task-type">
                   {bounty?.type}
                 </span>
               </BountyItemLabel>
@@ -175,7 +175,7 @@ export default function BountyHeroView({
               <BountyItemLabel
                 label={t("info.working")}
                 className="col-12 col-sm-auto"
-                data-test-id="task-users-working"
+                data-testid="task-users-working"
               >
                 <span className={`text-truncate`}>
                   {bounty?.working?.length}

@@ -213,7 +213,7 @@ export default function TokensDropdown({
   return (
     <Label>
       <Creatable
-        data-test-id={label}
+        data-testid={label}
         className="react-select-container"
         classNamePrefix="react-select"
         createOptionPosition="first"

@@ -65,7 +65,7 @@ export default function MyNetworkSettingsView({
                 onClick={handleSubmit}
                 disabled={isUpdating}
                 isLoading={isUpdating}
-                data-test-id="save-changes-btn"
+                data-testid="save-changes-btn"
               >
                 <span>{t("misc.save-changes")}</span>
               </ContractButton>

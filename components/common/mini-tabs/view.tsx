@@ -14,7 +14,7 @@ export default function MiniTabs({
       {items.map((item) => (
         <div
           key={item.label}
-          data-test-id={item.label}
+          data-testid={item.label}
           className={clsx("mini-tabs-item", item.active && "active")}
           onClick={item.onClick}
         >

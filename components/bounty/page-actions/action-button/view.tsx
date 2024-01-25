@@ -36,7 +36,7 @@ export default function PageActionsButton({
           className={className}
           disabled={disabled}
           isLoading={isLoading}
-          data-test-id={dataTestId}
+          data-testid={dataTestId}
         >
           {children}
         </ContractButton>
@@ -50,7 +50,7 @@ export default function PageActionsButton({
         forcePath={forcePath}
         hrefPath="fork"
         className="btn btn-primary bounty-outline-button"
-        data-test-id={dataTestId}
+        data-testid={dataTestId}
       >
         {children}
       </GithubLink>
@@ -58,7 +58,7 @@ export default function PageActionsButton({
   }
 
   return (
-    <Button onClick={onClick} className={className} data-test-id={dataTestId}>
+    <Button onClick={onClick} className={className} data-testid={dataTestId}>
       {children}
     </Button>
   );

@@ -66,7 +66,7 @@ export default function NotificationFormView({
               <input
                 type="text"
                 className={`form-control ${isInvalid ? "is-invalid" : ""}`}
-                data-test-id="email-input"
+                data-testid="email-input"
                 value={userEmail}
                 onChange={onChange}
                 disabled={isExecuting}
@@ -85,7 +85,7 @@ export default function NotificationFormView({
                   onClick={onSave}
                   disabled={isSaveButtonDisabled}
                   isLoading={isExecuting}
-                  data-test-id="notification-save-btn"
+                  data-testid="notification-save-btn"
                 >
                   {t("actions.save")}
                 </Button>
@@ -116,7 +116,7 @@ export default function NotificationFormView({
                   onClick={onResend}
                   disabled={isExecuting || !emailVerificationError}
                   isLoading={emailVerificationError && isExecuting}
-                  data-test-id="notification-re-send-btn"
+                  data-testid="notification-re-send-btn"
                 >
                   {t("profile:notifications-form.re-send")}
                 </Button>

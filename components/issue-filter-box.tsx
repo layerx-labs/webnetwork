@@ -38,7 +38,7 @@ export default function IssueFilterBox({
             type="text"
             className="form-control"
             placeholder={filterPlaceholder}
-            data-test-id="filter-box-input"
+            data-testid="filter-box-input"
           />
         </div>
       )) ||
@@ -56,7 +56,7 @@ export default function IssueFilterBox({
             type={type}
             label={option.label}
             id={getKey(title, option.value)}
-            data-test-id={getKey(title, option.value)}
+            data-testid={getKey(title, option.value)}
             checked={option.checked}
             onChange={(e) => onChange(option, e.target.checked)}
           />

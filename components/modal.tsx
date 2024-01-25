@@ -53,7 +53,7 @@ export default function Modal({
                   py-2 px-3`}
                   onClick={onCloseClick}
                   disabled={onCloseDisabled || isExecuting}
-                  data-test-id={cancelLabel}
+                  data-testid={cancelLabel}
                 >
                   <span>{cancelLabel}</span>
                 </Button>
@@ -70,7 +70,7 @@ export default function Modal({
                   sm-regular text-capitalize font-weight-medium py-2 px-3`}
                  onClick={onOkClick}
                  disabled={okDisabled || isExecuting}
-                 data-test-id={okLabel}
+                 data-testid={okLabel}
                  isLoading={isExecuting}
                >
                  <span>{okLabel}</span>

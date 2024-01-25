@@ -54,7 +54,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if has error", async () => {
@@ -67,7 +67,7 @@ describe("AllowListView", () => {
       error={"not-address"}
       type={type}
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if is adding", async () => {
@@ -81,7 +81,7 @@ describe("AllowListView", () => {
       type={type}
       isAdding
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if is removing", async () => {
@@ -95,7 +95,7 @@ describe("AllowListView", () => {
       type={type}
       isRemoving
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable all remove buttons if is removing", async () => {
@@ -123,7 +123,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: "0x000" } });
     expect(mockOnValueChange).toHaveBeenCalledWith("0x000");
   });
@@ -138,9 +138,9 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: "0x000" } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`allow-list-${type}-btn`);
     fireEvent.click(button);
     expect(mockOnAddClick).toHaveBeenCalled();
   });

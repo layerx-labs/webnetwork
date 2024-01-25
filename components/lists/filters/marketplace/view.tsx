@@ -40,7 +40,7 @@ export default function MarketplaceFilterView({
         </div>
       </If>
 
-      <div className="col" data-test-id="marketplace-filter" data-testid="marketplace-filter">
+      <div className="col" data-testid="marketplace-filter">
         <NativeSelectWrapper
           options={options}
           onChange={onChange}
@@ -51,7 +51,7 @@ export default function MarketplaceFilterView({
             options={options}
             value={option}
             onChange={onChange}
-            inputProps={{ 'data-test-id': 'marketplace-select' }}
+            inputProps={{ 'data-testid': 'marketplace-select' }}
             isSearchable={false}
             placeholder={t("placeholders.select-marketplace")}
             isClearable={!isMobile}

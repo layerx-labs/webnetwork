@@ -34,7 +34,7 @@ export default function CreateNetworkBountyButtonView({
         otherwise={
           <Button
             className="read-only-button w-100"
-            data-test-id="create-btn"
+            data-testid="create-btn"
             onClick={onClick}
           >
             <PlusIcon />
@@ -44,7 +44,7 @@ export default function CreateNetworkBountyButtonView({
       >
         <InternalLink
           href={"/create-task"}
-          data-test-id="create-task-link"
+          data-testid="create-task-link"
           icon={<PlusIcon />}
           label={label ? label : t("main-nav.new-bounty") as string}
           iconBefore
