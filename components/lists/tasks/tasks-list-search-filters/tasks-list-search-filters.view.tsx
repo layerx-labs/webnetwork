@@ -16,6 +16,7 @@ interface TasksListsSearchFiltersProps extends ListSearchBarProps {
   isManagement?: boolean;
   isProfile?: boolean;
   isOnNetwork?: boolean;
+  isBountyHall?: boolean;
   hideFilter?: boolean;
   sortOptions: SortOption[];
   chains?: SupportedChainData[];
@@ -25,6 +26,7 @@ export default function TasksListsSearchFilters ({
   isManagement,
   isProfile,
   isOnNetwork,
+  isBountyHall,
   hideFilter,
   sortOptions,
   chains,
@@ -48,7 +50,7 @@ export default function TasksListsSearchFilters ({
         />
       </div>
 
-      <ResponsiveWrapper xs={isManagement} xl={true} className="col-auto">
+      <ResponsiveWrapper xs={isManagement || isBountyHall} xl={true} className="col-auto">
         <ListSort options={sortOptions} />
       </ResponsiveWrapper>
 
