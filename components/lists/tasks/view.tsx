@@ -73,7 +73,7 @@ export default function TasksListView({
   const showSearchFilter = hasIssues || !hasIssues && hasFilter;
   const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network";
   const isCategoryFilter = filterType === "category";
-  console.log("searchString", searchString)
+
   const columns = [
     t("bounty:management.name"),
     t("bounty:management.link"),
