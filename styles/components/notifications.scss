@@ -1,0 +1,61 @@
+#notification {
+  &-icon {
+    position: relative;
+
+    &.unread::after {
+      display: block;
+      border-radius: .5rem;
+      background-color: var(--bs-primary);
+      content: " ";
+      position: absolute;
+      right: -.3rem;
+      top: -.3rem;
+      height: .6rem;
+      width: .6rem;
+    }
+  }
+}
+
+#notifications-indicator {
+  @extend #transactions-indicator;
+
+  .popover-arrow {
+    &::after,&::before {
+      border-bottom-color: $gray-850;
+      border-top-color: $gray-850;
+    }
+  }
+
+  &[x-placement="top"] .popover-arrow {
+    bottom: -8px;
+  }
+}
+
+.notification-list {
+  @extend .transaction-list;
+
+  .tx-container {
+    max-height: 549px !important;
+  }
+
+  .tx-row {
+    background-color: $gray-850;
+  }
+
+  .unread-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, var(--bs-primary) 28%, transparent 28%, transparent 100%) 2;
+  }
+
+  .all-active {
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, transparent 28%, var(--bs-primary) 28%, var(--bs-primary) 46%, transparent 46%) 2;
+  }
+}
+
+.notification-title {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

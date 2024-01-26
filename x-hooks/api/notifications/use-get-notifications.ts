@@ -1,10 +1,10 @@
-import { ParsedUrlQuery } from "querystring";
+import {ParsedUrlQuery} from "querystring";
 
-import { emptyPaginatedData } from "helpers/api";
+import {emptyPaginatedData} from "helpers/api";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
+import {api} from "services/api";
 
-import { api } from "services/api";
+import {SearchNotificationsPaginated} from "../../../interfaces/user-notification";
 
 
 /**

@@ -1,11 +1,13 @@
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import BellIcon from "assets/icons/bell-icon";
 
 import Button from "components/button";
 import NotificationsList from "components/notifications/list/controller";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
+import useBreakPoint from "x-hooks/use-breakpoint";
+
+import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
 
 export default function NotificationsView({
   notificationsList,
@@ -15,7 +17,8 @@ export default function NotificationsView({
   loading,
   updateNotifications,
   updateType,
-  typeIsUnread
+  typeIsUnread,
+  hasUnread,
 }: {
   notificationsList: SearchNotificationsPaginated;
   updatePage: () => void;
@@ -25,7 +28,10 @@ export default function NotificationsView({
   updateNotifications: () => void;
   updateType: (v: 'Unread' | 'All') => void;
   typeIsUnread: boolean;
+  hasUnread?: boolean;
 }) {
+  const {isDesktopView} = useBreakPoint();
+
   const overlay = (
     <Popover id="notifications-indicator">
       <Popover.Body className="bg-gray-850 border border-gray-800 p-3">
@@ -44,7 +50,7 @@ export default function NotificationsView({
     <>
       <OverlayTrigger
         trigger="click"
-        placement={"bottom-end"}
+        placement={isDesktopView ? "bottom-end" : "top-end"}
         show={showOverlay}
         rootClose={true}
         onToggle={updateShowOverlay}
@@ -52,7 +58,8 @@ export default function NotificationsView({
       >
         <div>
           <Button
-            className="bg-gray-850 border-gray-850 rounded p-2"
+            id="notification-icon"
+            className={`bg-gray-850 border-gray-850 rounded p-2 ${hasUnread ? "unread" : ""}`}
             transparent
             onClick={() => updateShowOverlay(!showOverlay)}
           >

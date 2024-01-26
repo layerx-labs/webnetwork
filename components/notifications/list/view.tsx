@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import DoubleCheckIcon from "assets/icons/double-check-icon";
 
@@ -6,11 +6,9 @@ import Button from "components/button";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
 
-import {
-  SearchNotificationsPaginated,
-} from "interfaces/notifications";
-
+import {SearchNotificationsPaginated, UserNotification,} from "../../../interfaces/user-notification";
 import NotificationRow from "../row/view";
+
 interface NotificationListViewProps {
   notifications: SearchNotificationsPaginated;
   btnUnreadActive: boolean;
@@ -19,7 +17,7 @@ interface NotificationListViewProps {
   onClickMarkAllRead: () => void;
   onClickRead: (id: number) => void;
   onUpdateBtnUreadActive: (v: "Unread" | "All") => void;
-  redirectTo: (href: string, query) => void;
+  redirectTo: (href: UserNotification, query: {link: string; network: string}) => void;
 }
 
 export default function NotificationsListView({
