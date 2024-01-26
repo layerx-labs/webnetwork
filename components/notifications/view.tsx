@@ -27,7 +27,7 @@ export default function NotificationsView({
   updateNotifications: () => void;
   updateType: (v: 'Unread' | 'All') => void;
   typeIsUnread: boolean;
-  hasUnread: boolean;
+  hasUnread?: boolean;
 }) {
   const {isDesktopView} = useBreakPoint();
 
