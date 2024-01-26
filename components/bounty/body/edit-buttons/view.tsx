@@ -33,6 +33,7 @@ export default function BodyEditButtons({
             className="col-12"
             disabled={isDisableUpdateIssue}
             isLoading={isUploading}
+            data-testid="edit-task-save-btn"
           >
             {t("bounty:save-changes")}
           </Button>
@@ -43,6 +44,7 @@ export default function BodyEditButtons({
             className="col-12"
             onClick={handleIsPreview}
             disabled={isUploading}
+            data-testid="edit-task-preview-btn"
           >
             {!isPreview ? t("bounty:preview") : t("bounty:edit")}
           </Button>
@@ -53,6 +55,7 @@ export default function BodyEditButtons({
             color="danger"
             onClick={handleCancelEdit}
             disabled={false}
+            data-testid="edit-task-cancel-btn"
           >
             {t("bounty:cancel-changes")}
           </Button>
