@@ -85,9 +85,9 @@ export default function WrongNetworkModal() {
       updateWrongNetworkModal(false);
       return;
     }
-
+    const connectedWithSupportedChain = !!supportedChains?.find(e => e.chainId === +connectedChain.id)
     updateWrongNetworkModal([
-      connectedChain?.matchWithNetworkChain === false && isRequired,
+      !connectedWithSupportedChain && isRequired,
       connectedChain?.name === UNSUPPORTED_CHAIN && isRequired
     ].some(c => c));
   }
@@ -97,7 +97,6 @@ export default function WrongNetworkModal() {
   useEffect(updateNetworkChain, [marketplace?.active?.chain_id, supportedChains]);
   useEffect(changeShowNetworkModal, [
     currentUser?.walletAddress,
-    connectedChain?.matchWithNetworkChain,
     connectedChain?.id,
     supportedChains,
     loading,

@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 
-import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import {isZeroAddress} from "ethereumjs-util";
 import {useTranslation} from "next-i18next";
 import {isAddress} from "web3-utils";
@@ -29,12 +28,10 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
-import useChain from "x-hooks/use-chain";
+import {useDao} from "x-hooks/use-dao";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-import {useDao} from "../../x-hooks/use-dao";
 
 interface RegistrySetupProps {
   isVisible?: boolean;
@@ -80,20 +77,23 @@ export function RegistrySetup({
   const [registrySaveCTA, setRegistrySaveCTA] = useState(false);
 
   const { loadSettings } = useSettings();
-  const { findSupportedChain } = useChain();
   const { processEvent } = useProcessEvent();
   const { addError, addSuccess, addInfo } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { start: startService } = useDao();
   const { handleDeployRegistry, handleSetDispatcher, handleChangeAllowedTokens } = useBepro();
   const { currentUser } = useUserStore();
-  const { supportedChains, connectedChain, refresh: updateChains } = useSupportedChain();
+  const { supportedChains, connectedChain, loadChainsDatabase, refresh: updateChains } = useSupportedChain();
 
-  const { mutate: mudateUpdateChain } = useReactQueryMutation({
+  const { mutateAsync: mutateUpdateChain } = useReactQueryMutation({
     queryKey: QueryKeys.chains(),
     mutationFn: useUpdateChain,
     toastSuccess: "Chain registry updated",
-    toastError: "Failed to update chain registry"
+    toastError: "Failed to update chain registry",
+    onSettled: () => {
+      loadChainsDatabase();
+      updateChains();
+    }
   });
 
   function isEmpty(value: string) {
@@ -147,49 +147,41 @@ export function RegistrySetup({
     setVisibleModal(undefined);
   }
 
-  function deployRegistryContract() {
-    if (isDeployRegistryBtnDisabled || !currentUser?.walletAddress) return;
+  async function deployRegistryContract() {
+    try {
+      if (isDeployRegistryBtnDisabled || !currentUser?.walletAddress) return;
 
-    setisDeployingRegistry(true);
+      setisDeployingRegistry(true);
 
-    let registryAddress = null;
+      const deployedAddress =
+        await handleDeployRegistry( erc20.value,
+                                    lockAmountForNetworkCreation,
+                                    treasury,
+                                    networkCreationFeePercentage,
+                                    closeFeePercentage,
+                                    cancelFeePercentage,
+                                    bountyToken.value )
+          .then(tx => tx?.contractAddress)
+          .catch(() => null);
 
-    handleDeployRegistry( erc20.value,
-                          lockAmountForNetworkCreation,
-                          treasury,
-                          networkCreationFeePercentage,
-                          closeFeePercentage,
-                          cancelFeePercentage,
-                          bountyToken.value )
-      .then(async tx => {
-        const { contractAddress } = tx as TransactionReceipt;
-        registryAddress = contractAddress;
-        setRegistry(previous => ({ ...previous, value: contractAddress}));
+      if (!deployedAddress)
+        throw new Error("Registry not deployed");
 
-        daoService?.loadRegistry(false, contractAddress);
+      setRegistry(previous => ({ ...previous, value: deployedAddress}));
+      await setChainRegistry(deployedAddress);
 
-        await updateChains();
+      useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: +connectedChain?.id})
+        .catch(error => console.debug("useAddToken: ", error));
 
-        return setChainRegistry(contractAddress);
-      })
-      .then(() => {
-        const chain = findSupportedChain({ chainId: +connectedChain?.id, chainShortName: connectedChain?.shortName});
-        if (chain) 
-          useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: chain?.chainId})
-            .catch(error => console.debug("useAddToken: ", error));
+      loadSettings(true);
 
-        loadSettings(true);
-        return startService({
-          chainId: +connectedChain?.id,
-          registryAddress: registryAddress
-        });
-      })
-      .then(() => addSuccess(t("registry.success.deploy.title"), t("registry.success.deploy.content")))
-      .catch(error => {
-        addError(t("common:actions.failed"), t("registry.errors.deploy"));
-        console.debug("Failed to deploy network registry", error);
-      })
-      .finally(() => setisDeployingRegistry(false));
+      addSuccess(t("registry.success.deploy.title"), t("registry.success.deploy.content"));
+    } catch (error) {
+      addError(t("common:actions.failed"), t("registry.errors.deploy"));
+      console.debug("Failed to deploy network registry", error);
+    } finally {
+      setisDeployingRegistry(false)
+    }
   }
 
   function updateData(forcedValue?: string) {
@@ -276,7 +268,7 @@ export function RegistrySetup({
   }
 
   function setChainRegistry(address = registryAddress) {
-    const chain = supportedChains?.find(({chainId}) => chainId === +connectedChain?.id);
+    const chain = supportedChains?.find(({chainId}) => +chainId === +connectedChain?.id);
     if (!chain || !address)
       return;
 
@@ -285,7 +277,7 @@ export function RegistrySetup({
       return;
     }
 
-    mudateUpdateChain({
+    return mutateUpdateChain({
       chainId: chain.chainId,
       registryAddress: address,
       lockAmountForNetworkCreation,
@@ -341,6 +333,14 @@ export function RegistrySetup({
     if (connectedChain?.id && !registryAddress)
       setDefaults();
   }, [connectedChain?.id, registryAddress]);
+
+  useEffect(() => {
+    if (!connectedChain?.registry || !isVisible) return;
+    startService({
+        chainId: +connectedChain.id,
+        registryAddress: connectedChain.registry
+    });
+  }, [connectedChain, isVisible]);
 
   return(
     <div className="content-wrapper border-top-0 px-3 py-3">
