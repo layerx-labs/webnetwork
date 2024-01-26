@@ -16,7 +16,7 @@ export default function NavBarActions() {
     <>
       <div className="d-flex flex-row align-items-center gap-3">
         <ResponsiveWrapper
-          xs={false}  
+          xs={false}
           md={true}
         >
           <div className="d-flex gap-3 align-items-center">

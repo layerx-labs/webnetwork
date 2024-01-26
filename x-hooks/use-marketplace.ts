@@ -1,21 +1,21 @@
-import { useEffect } from "react";
+import {useEffect} from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
-import { useRouter } from "next/router";
-import { UrlObject } from "url";
+import {useRouter} from "next/router";
+import {UrlObject} from "url";
 
-import { FIVE_MINUTES_IN_MS, MINUTE_IN_MS } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
-import { lowerCaseCompare } from "helpers/string";
+import {FIVE_MINUTES_IN_MS, MINUTE_IN_MS} from "helpers/constants";
+import {QueryKeys} from "helpers/query-keys";
+import {lowerCaseCompare} from "helpers/string";
 
-import { Network } from "interfaces/network";
-import { ProfilePages } from "interfaces/utils";
+import {Network} from "interfaces/network";
+import {ProfilePages} from "interfaces/utils";
 
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
-import { useSearchNetworks } from "x-hooks/api/marketplace";
-import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
+import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 
 export default function useMarketplace(marketplaceName?: string, chainName?: string) {

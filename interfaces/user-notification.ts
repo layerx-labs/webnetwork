@@ -1,4 +1,4 @@
-import { PaginatedData } from "./paginated-data";
+import {PaginatedData} from "./paginated-data";
 
 export type NotificationsType =
   | "NOTIF_TASK_CREATED"
@@ -7,7 +7,7 @@ export type NotificationsType =
   | "NOTIF_PROPOSAL_OPEN"
   | "NOTIF_PROPOSAL_DISPUTED"
 
-export interface Notifications {
+export interface UserNotification {
   id: number;
   type?: NotificationsType;
   userId?: number;
@@ -23,7 +23,7 @@ export interface Notifications {
 }
 
 export interface SearchNotificationsPaginated
-  extends PaginatedData<Notifications> {
+  extends PaginatedData<UserNotification> {
   currentPage: number;
   pages: number;
 }

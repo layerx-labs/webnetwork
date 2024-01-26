@@ -1,5 +1,3 @@
-import { NotificationsType } from "interfaces/notifications";
-
 export const DEFAULT_CANCEL_FEE = 1;
 export const DEFAULT_CLOSE_FEE = 5;
 export const DEFAULT_DISPUTE_TIME = 259200;

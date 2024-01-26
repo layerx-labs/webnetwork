@@ -1,4 +1,5 @@
 import {NextApiRequest} from "next";
+import {v4 as uuidv4} from "uuid";
 
 import models from "../../../../db/models";
 import {markNotificationRead} from "../../../../server/common/notifications/mark-notification-read";
@@ -47,7 +48,7 @@ describe("markNotificationRead()", () => {
   })
 
   it("calls model.update", async () => {
-    mockedRequest.query = {id: "1", read: "true"};
+    mockedRequest.query = {id: uuidv4(), read: "true"};
 
     expect(await markNotificationRead(mockedRequest))
       .toBe(true)
@@ -55,7 +56,7 @@ describe("markNotificationRead()", () => {
 
   it("throws because not found", async () => {
     models.notification.findAll.mockReturnValue([]);
-    mockedRequest.query = {id: "1", read: "true"};
+    mockedRequest.query = {id: uuidv4(), read: "true"};
 
     await expect(() =>
       markNotificationRead(mockedRequest))

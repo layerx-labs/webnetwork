@@ -25,6 +25,7 @@ export enum BadRequestErrors {
   WrongParameters = "wrong parameters",
   WrongParamsNotAnAddress = "expected and address",
   WrongParamsNotANumber = "expected a number",
+  WrongParamsNotUUID = "expected a UUID"
 }
 
 export enum ForbiddenErrors {

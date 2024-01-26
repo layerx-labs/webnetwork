@@ -1,4 +1,5 @@
 import {NextApiRequest} from "next";
+import {v4} from "uuid";
 
 import models from "db/models";
 
@@ -31,7 +32,7 @@ describe("deleteNotification()", () => {
     .mockImplementationOnce(() => [])
 
     mockedRequest.body.context.token.roles = ["user"];
-    mockedRequest.query = {id: "1"};
+    mockedRequest.query = {id: v4()};
     
     await expect(() => deleteNotification(mockedRequest))
       .rejects
@@ -42,7 +43,7 @@ describe("deleteNotification()", () => {
   it("calls model.update", async () => {
     mockedRequest.body.context.token.roles = ["user"];
     mockedRequest.body.context.user.id = "1";
-    mockedRequest.query = {id: "1"};
+    mockedRequest.query = {id: v4()};
     expect(await deleteNotification(mockedRequest)).toBe(true);
   })
 
@@ -50,7 +51,7 @@ describe("deleteNotification()", () => {
     models.notification.findAll.mockReturnValue([]);
     mockedRequest.body.context.token.roles = ["user"];
     mockedRequest.body.context.user.id = "1";
-    mockedRequest.query = {id: "1"};
+    mockedRequest.query = {id: v4()};
     await expect(() => deleteNotification(mockedRequest))
       .rejects
       .toThrow(HttpNotFoundError)
