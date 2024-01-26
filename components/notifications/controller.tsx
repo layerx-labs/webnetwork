@@ -43,8 +43,11 @@ export default function Notifications() {
   });
 
   function updateType(v: "Unread" | "All") {
-    v === "Unread" ? setIsUnread(true) : setIsUnread(false);
     setPage(1);
+    if (v === "Unread")
+      setIsUnread(true)
+    else
+      setIsUnread(false);
   }
 
   useEffect(() => {
@@ -90,7 +93,7 @@ export default function Notifications() {
       showOverlay={showOverlay}
       updateShowOverlay={(v: boolean) => setShowOverlay(v)}
       updateNotifications={updateNotifications}
-      hasUnread={notificationsList?.rows?.length > 0 && !showOverlay}
+      hasUnread={notificationsList?.rows?.length > 0 && isUnread && !showOverlay}
     />
   );
 }
