@@ -5,8 +5,9 @@ import BellIcon from "assets/icons/bell-icon";
 import Button from "components/button";
 import NotificationsList from "components/notifications/list/controller";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
-import useBreakPoint from "../../x-hooks/use-breakpoint";
 
 export default function NotificationsView({
   notificationsList,
