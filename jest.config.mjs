@@ -15,7 +15,6 @@ const config = {
   collectCoverage: true,
   coverageProvider: "v8",
   testMatch: [ "**/?(*.)+(spec|test).[jt]s?(x)" ],
-  automock: true,
   collectCoverageFrom: [
     "components/**/*.{ts,tsx}",
   ],
