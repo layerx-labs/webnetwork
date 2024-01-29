@@ -193,6 +193,7 @@ export default function CreateTaskPage ({
       section === 1 &&
       (!bountyTitle ||
         !bountyDescription ||
+        selectedTags?.length === 0 ||
         isUploading ||
         addFilesInDescription(bountyDescription).length >
         BODY_CHARACTERES_LIMIT ||
