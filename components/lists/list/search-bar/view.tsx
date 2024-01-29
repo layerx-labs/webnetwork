@@ -45,7 +45,7 @@ export default function ListSearchBar({
 
       <If condition={hasFilter}>
         <Button
-          className="btn bg-gray-850 border-0 py-0 px-3"
+          className="btn bg-gray-850 border-0 py-0 px-3 svg-gray rounded-0"
           onClick={onClearSearch}
         >
           <CloseIcon width={10} height={10} />

@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
-import { SearchNotificationsPaginated } from "interfaces/notifications";
 
-import { useUpdateReadNotification } from "x-hooks/api/notification/use-update-read-notification";
-import { useGetNotifications } from "x-hooks/api/notifications/use-get-notifications";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUpdateReadNotification} from "x-hooks/api/notification/use-update-read-notification";
+import {useGetNotifications} from "x-hooks/api/notifications/use-get-notifications";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
+import {SearchNotificationsPaginated} from "../../interfaces/user-notification";
 import NotificationsView from "./view";
 
 export default function Notifications() {
@@ -43,8 +43,11 @@ export default function Notifications() {
   });
 
   function updateType(v: "Unread" | "All") {
-    v === "Unread" ? setIsUnread(true) : setIsUnread(false);
     setPage(1);
+    if (v === "Unread")
+      setIsUnread(true)
+    else
+      setIsUnread(false);
   }
 
   useEffect(() => {
@@ -90,6 +93,7 @@ export default function Notifications() {
       showOverlay={showOverlay}
       updateShowOverlay={(v: boolean) => setShowOverlay(v)}
       updateNotifications={updateNotifications}
+      hasUnread={notificationsList?.rows?.length > 0 && isUnread && !showOverlay}
     />
   );
 }

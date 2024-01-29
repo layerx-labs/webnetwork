@@ -1,9 +1,10 @@
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 
-import Button from "components/button";
 import { Category } from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
+import ResponsiveWrapper from "components/responsive-wrapper";
 
+import CategoryButton from "./category-button/category.view";
 interface TasksListsCategoryFilterViewProps {
   categories: Category[]
   onCategoryClick: (category: string) => void;
@@ -36,17 +37,20 @@ export default function TasksListsCategoryFilterView ({
         <div className="row gy-3 gx-3">
           {categories.map(c =>
             <div className="col-6 col-lg" key={c.label}>
-              <div className="row mx-0">
-                <Button
-                  className={`category-filter-${c.color} border-none text-capitalize lg-medium border-radius-16 
-                    px-3 pb-3 pt-5`}
-                  align="left"
-                  onClick={() => onCategoryClick(c.value)}
-                  data-testid={`category-button-${c.value}`}
-                >
-                  {c.label}
-                </Button>
-              </div>
+                <ResponsiveWrapper className="row mx-0 h-100" xl={true} xs={false}>
+                  <CategoryButton
+                    category={c}
+                    icon
+                    onCategoryClick={onCategoryClick}
+                  />
+                </ResponsiveWrapper>
+                <ResponsiveWrapper className="row mx-0" xl={false} xs={true}>
+                  <CategoryButton
+                    category={c}
+                    icon={false}
+                    onCategoryClick={onCategoryClick}
+                  />
+                </ResponsiveWrapper>
             </div>)}
         </div>
       </div>

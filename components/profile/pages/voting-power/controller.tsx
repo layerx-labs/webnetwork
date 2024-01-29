@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useEffect, useState } from "react";
 
 import {useDebouncedCallback} from "use-debounce";
 
@@ -23,7 +23,7 @@ export default function VotingPowerPage() {
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
   const { update } = useMarketplaceStore();
-  const { supportedChains } = useSupportedChain();
+  const { supportedChains, loadChainsDatabase } = useSupportedChain();
 
   const networks =
     Object.values(Object.fromEntries(supportedChains?.
@@ -76,6 +76,10 @@ export default function VotingPowerPage() {
     setSelectedChain(selected);
     debouncedHandleService(selectedNetwork, selected);
   }
+
+  useEffect(() => {
+    loadChainsDatabase();
+  }, []);
 
   return (
     <VotingPowerPageView

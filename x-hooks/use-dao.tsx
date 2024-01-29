@@ -1,96 +1,67 @@
-import { Web3Connection } from "@taikai/dappkit";
+import { useDappkit } from "@taikai/dappkit-react";
+import { coinbaseWallet } from "@taikai/dappkit-react/dist/connectors/wallets/coinbase-wallet";
+import { metamaskWallet } from "@taikai/dappkit-react/dist/connectors/wallets/metamask-wallet";
 import { isZeroAddress } from "ethereumjs-util";
 import { useRouter } from "next/router";
-import type { provider as Provider } from "web3-core";
 import { isAddress } from "web3-utils";
 
 import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
-import handleEthereumProvider from "helpers/handle-ethereum-provider";
 import { lowerCaseCompare } from "helpers/string";
+import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
+import { StorageKeys } from "interfaces/enums/storage-keys";
+import { WalletProviders } from "interfaces/enums/wallet-providers";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { metamaskWallet, useDappkit } from "x-hooks/use-dappkit";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
+  const dappkitReact = useDappkit();
   const { replace, asPath } = useRouter();
+
+  const { supportedChains, updateConnectedChain, get } = useSupportedChain();
 
   const { currentUser } = useUserStore();
   const {
     service: daoService,
-    serviceStarting,
     updateService,
     updateServiceStarting,
     ...daoStore
   } = useDaoStore();
-  const { updateMissingMetamask } = useLoadersStore();
-  const { disconnect: dappkitDisconnect, connection, setProvider, setConnection } = useDappkit();
-  const { connectedChain, supportedChains, updateConnectedChain, get } = useSupportedChain();
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
   }
 
-  function isServiceReady() {
-    return !serviceStarting;
+  async function disconnect () {
+    const isMetamask = getProviderNameFromConnection(dappkitReact.connection) === WalletProviders.MetaMask;
+    const walletConnector = isMetamask ? metamaskWallet : coinbaseWallet;
+    if (walletConnector?.deactivate)
+      walletConnector?.deactivate();
+    else
+      walletConnector?.resetState();
+    dappkitReact.disconnect();
   }
 
-  function disconnect () {
-    return dappkitDisconnect();
-  }
+  async function connect () {
+    const lastProvider = window.localStorage.getItem(StorageKeys.lastProviderConnected);
+    const hasProviderMap = !!(window?.ethereum as any)?.providerMap;
+    const selectedProvider =
+      hasProviderMap ? (window?.ethereum as any)?.providerMap?.get(lastProvider) : window.ethereum;
+    if (selectedProvider) {
+      if ((window?.ethereum as any)?.setSelectedProvider)
+        (window.ethereum as any).setSelectedProvider(selectedProvider);
 
-  /**
-   * Enables the user/dapp to connect to the active DAOService
-   */
-  async function connect(): Promise<{ address: string; web3Connection: Web3Connection } | null> {
-    try {
-      await metamaskWallet.activate();
-
-      if (!metamaskWallet.provider) return null;
-
-      setProvider(null)
-      setProvider(metamaskWallet.provider as unknown as Provider);
-      const web3Connection = new Web3Connection({
-        web3CustomProvider: metamaskWallet.provider,
-        skipWindowAssignment: true
-      });
-
-      return web3Connection.connect()
-        .then((connected) => {
-          setConnection(web3Connection);
-          if (!connected) {
-            console.debug(`Failed to connect`, daoService);
-
-            return "0x00";
-          }
-
-          return web3Connection.getAddress();
-        })
-        .then(address => {
-          if (address === "0x00") return null;
-
-          handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
-
-          return {
-            address,
-            web3Connection
-          };
-        })
-        .catch(error => {
-          console.debug(`Failed to connect`, error);
-          return null;
-        });
-    } catch(error) {
-      console.debug(`Failed to connect`, error);
-      return null;
+      dappkitReact
+        .setProvider(selectedProvider)
+        .catch(console.debug);
     }
   }
+
   async function start({
     chainId,
     networkAddress,
@@ -102,7 +73,7 @@ export function useDao() {
   }): Promise<void> {
     try {
       updateServiceStarting(true);
-      if (!connection)
+      if (!dappkitReact?.connection)
         throw new Error("Missing connection");
       if (!supportedChains?.length)
         throw new Error("No supported chains found");
@@ -123,11 +94,11 @@ export function useDao() {
       const needsToUpdateConnection = !!daoService?.web3Host;
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress && !needsToUpdateConnection)
         return;
-      const isChainEqualToConnected = +connectedChain?.id === +chainToConnect?.chainId;
+      const isChainEqualToConnected = +dappkitReact?.chainId === +chainToConnect?.chainId;
       const daoProps = isChainEqualToConnected ?
-        { web3Connection: connection } :
+        { web3Connection: dappkitReact?.connection } :
         { web3Host: chainToConnect?.chainRpc };
-      const dao = !daoService || !isSameChain || needsToUpdateConnection ?
+      const dao = !daoService || !isSameChain || needsToUpdateConnection || !isSameRegistryAddress ?
         new DAO({
           ...daoProps,
           registryAddress: registryToLoad
@@ -167,18 +138,10 @@ export function useDao() {
     })
   }
 
-  function listenChainChanged() {
-    if (!window.ethereum || !supportedChains?.length)
-      return;
-
-    handleEthereumProvider(updateChain, () => updateMissingMetamask(true))
-  }
-
   return {
     connect,
     disconnect,
     start,
-    isServiceReady,
-    listenChainChanged
+    updateChain
   };
 }

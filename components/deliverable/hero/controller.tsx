@@ -16,10 +16,12 @@ export default function DeliverableHero({currentDeliverable, currentBounty}: Del
   
   const { getURLWithNetwork } = useMarketplace();
 
-  function handleBack() {
-    router.push(getURLWithNetwork("/task/[id]", {
-      id: currentBounty?.id
-    }))
+  function handleBack () {
+    if (router?.query?.fromProposal) {
+      router.back();
+      return;
+    }
+    router.push(getURLWithNetwork("/task/[id]", { id: currentBounty?.id }));
   }
 
   return (

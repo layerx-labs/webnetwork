@@ -1,0 +1,61 @@
+@use "sass:math";
+
+#transactions-indicator {
+  border: 0;
+  background-color: transparent;
+
+  &.popover {
+    border-radius: 8px;
+    min-width: 415px;
+    min-height: 96px;
+  }
+
+  .popover-body {
+    border-radius: 8px;
+    min-height: 96px;
+  }
+
+  .popover-arrow {
+    &::after, &::before {
+      border-bottom-color: $gray-850;
+      border-top-color: $gray-850;
+    }
+  }
+
+  &[x-placement="top"] .popover-arrow {
+    bottom: -8px;
+  }
+}
+
+.transaction-list {
+  .tx-container {
+    max-height: 244px;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .tx-row {
+    background-color: $gray-800;
+    border-radius: 4px;
+    width: 333px;
+  }
+
+  svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+#transaction-modal {
+  .modal-content {
+    background-color: $bg-shadow;
+    border-radius: math.div($m, 2);
+  }
+
+  .modal-body {
+    padding: 28px 30px 6px;
+  }
+}

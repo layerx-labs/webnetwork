@@ -18,7 +18,9 @@ export default function ProposalDeliverableDetails({
   const deliverableHref = getURLWithNetwork("/task/[id]/deliverable/[deliverableId]", {
     id: issue?.id,
     deliverableId: deliverable?.id,
+    fromProposal: true
   });
+  const asPath = `/task/${issue?.id}/deliverable/${deliverable?.id}`;
 
   return(
     <DeliverableDetailsView
@@ -26,7 +28,8 @@ export default function ProposalDeliverableDetails({
       createdAt={deliverable?.createdAt}
       deliverableHref={deliverableHref}
       deliverableTitle={deliverable?.title}
-      user={deliverable?.user}    
+      user={deliverable?.user}
+      asPath={asPath}
     />
   );
 }

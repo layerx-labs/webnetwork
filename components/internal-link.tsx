@@ -14,6 +14,7 @@ interface InternalLinkProps {
   uppercase?: boolean;
   iconBefore?: boolean;
   activeClass?: string;
+  asPath?: string;
   blank?: boolean;
   brand?: boolean;
   style?: CSSProperties;
@@ -63,7 +64,11 @@ export default function InternalLink({
   }
 
   return (
-    <Link href={props.href} passHref>
+    <Link
+      href={props.href}
+      as={props?.asPath}
+      passHref
+    >
       <a
         className={getClasses()}
         target={`${blank ? "_blank" : ""}`}

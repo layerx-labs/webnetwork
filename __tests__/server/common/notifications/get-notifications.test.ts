@@ -1,4 +1,5 @@
 import {NextApiRequest} from "next";
+import {v4} from "uuid";
 
 import {UserRole} from "../../../../interfaces/enums/roles";
 import {getNotifications} from "../../../../server/common/notifications/get-notifications";
@@ -108,7 +109,7 @@ describe("getNotifications()", () => {
 
     /** this tests the deleteNotification() and putReadNotification() "is admin" part as a side effect*/
     it("Admin searches for another user id", async () => {
-      mockedRequest.query = {id: "2"};
+      mockedRequest.query = {id: v4()};
 
       expect(await getNotifications(mockedRequest))
         .toEqual([{mock: "notification"}]);
@@ -129,7 +130,7 @@ describe("getNotifications()", () => {
     });
 
     it("User searches for their notifications using id", async () => {
-      mockedRequest.query = {id: "1"};
+      mockedRequest.query = {id: v4()};
 
       expect(await getNotifications(mockedRequest))
         .toEqual([{mock: "notification"}]);

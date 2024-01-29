@@ -82,6 +82,7 @@ export default async function get(query: ParsedUrlQuery) {
 
   const networks = await models.network.findAll({
     attributes: ["name", "networkAddress", "councilMembers"],
+    where: networkWhere,
     include: [
       {
         association: "chain",

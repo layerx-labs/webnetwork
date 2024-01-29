@@ -18,6 +18,9 @@ import {truncateAddress} from "helpers/truncate-address";
 
 import {Link} from "types/utils";
 
+import Notifications from "../../../notifications/controller";
+import TransactionsStateIndicator from "../../../transactions-state-indicator";
+
 interface HamburgerMenuViewProps {
   show: boolean;
   userLogin: string;
@@ -147,6 +150,8 @@ export default function HamburgerMenuView({
 
             <div className="d-flex justify-content-end">
               <HelpButton />
+              <div className="mx-2"><TransactionsStateIndicator /></div>
+              <Notifications/>
             </div>
           </div>
         </Offcanvas.Body>

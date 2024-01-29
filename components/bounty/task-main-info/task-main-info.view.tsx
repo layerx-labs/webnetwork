@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import BountyItemLabel from "components/bounty-item-label";
 
+import { formatNumberToString } from "helpers/formatNumber";
 import { getIssueState } from "helpers/handleTypeIssue";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
@@ -24,7 +25,7 @@ export default function TaskMainInfo ({
 
   const types = {
     funding: {
-      value: task?.fundedPercent,
+      value: +formatNumberToString(task?.fundedPercent, 2),
       translation: t("info.funded")
     },
     open: {
