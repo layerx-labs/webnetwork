@@ -7,6 +7,8 @@ import PullAndProposalHeroView from "components/bounty/pull-and-proposal-hero/vi
 import {Deliverable} from "interfaces/issue-data";
 import {Proposal} from "interfaces/proposal";
 
+import useMarketplace from "x-hooks/use-marketplace";
+
 interface PullAndProposalHeroPRops {
   proposal?: Proposal;
   pullRequest?: Deliverable;
@@ -16,13 +18,24 @@ export default function PullAndProposalHero({
   proposal,
   pullRequest,
 }: PullAndProposalHeroPRops) {
-  const { back } = useRouter();
+  const { query, back, push } = useRouter();
+
+  const { getURLWithNetwork } = useMarketplace();
 
   const isProposal = !!proposal;
   const { createdAt, issue } = proposal || pullRequest || {};
   const contractId = isProposal ? proposal?.contractId : pullRequest?.prContractId;
   const handle = isProposal ? proposal?.handle : pullRequest?.user?.handle;
   const creatorAddress = proposal?.creator || pullRequest?.user?.address || nativeZeroAddress;
+
+  function onBackClick () {
+    if (!isProposal && !!query?.fromProposal) {
+      back();
+      return;
+    }
+    const taskId = (proposal || pullRequest)?.issueId;
+    push(getURLWithNetwork("/task/[id]", { id: taskId }));
+  }
 
   return (
     <PullAndProposalHeroView
@@ -35,7 +48,7 @@ export default function PullAndProposalHero({
       isProposal={isProposal}
       token={issue?.transactionalToken}
       issueAmount={BigNumber(issue?.developerAmount)}
-      onBackClick={back}
+      onBackClick={onBackClick}
     />
   );
 }
