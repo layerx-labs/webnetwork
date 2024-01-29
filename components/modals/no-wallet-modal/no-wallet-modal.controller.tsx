@@ -21,7 +21,7 @@ export default function NoWalletModal() {
 
   const isRequired = [
     pathname?.includes("new-marketplace"),
-    pathname?.includes("/profile")
+    pathname?.includes("/dashboard")
   ].some(c => c);
   const availableWallets = settings?.availableWallets?.map(wallet => {
     const links = walletExtensionsLinks[wallet?.toLowerCase()];

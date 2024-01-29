@@ -2,11 +2,11 @@ import { GetServerSideProps } from "next";
 import { getToken } from "next-auth/jwt";
 import getConfig from "next/config";
 
-import ProfileRouter from "components/profile/profile-router";
+import DashboardRouter from "components/profile/dashboard-router";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { ProfilePageProps } from "types/pages";
+import { DashboardPageProps } from "types/pages";
 
 import { useGetChains } from "x-hooks/api/chain";
 import { useGetProfileBounties, useGetProfilePayments } from "x-hooks/api/pages/profile";
@@ -14,14 +14,14 @@ import { useGetTokens } from "x-hooks/api/token";
 
 const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
-export default function Profile(props: ProfilePageProps) {
-  return <ProfileRouter {...props} />;
+export default function Profile(props: DashboardPageProps) {
+  return <DashboardRouter {...props} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const token = await getToken({ req, secret: secret });
-  const { profilePage } = query || {};
-  const [pageName] = (profilePage || ["profile"]);
+  const { dashboardPage } = query || {};
+  const [pageName] = (dashboardPage || ["dashboard"]);
   const queryWithWallet = {
     ...query,
     wallet: token?.address as string

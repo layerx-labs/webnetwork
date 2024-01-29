@@ -7,9 +7,9 @@ import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
 import { Divider } from "components/divider";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
+import DashboardLayout from "components/profile/dashboard-layout";
 import LanguageForm from "components/profile/language-form/language-form.controller";
 import NotificationForm from "components/profile/notification-form/controller";
-import ProfileLayout from "components/profile/profile-layout";
 import UserNameForm from "components/profile/user-name-form/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -40,7 +40,7 @@ export default function ProfilePageView({
         </CustomContainer>
       </div>
 
-      <ProfileLayout>
+      <DashboardLayout>
         <div className="row mb-4">
           <div className="col">
             <div
@@ -74,7 +74,7 @@ export default function ProfilePageView({
         <NotificationForm />
         <LanguageForm />
         <Divider bg="gray-850" />
-      </ProfileLayout>
+      </DashboardLayout>
     </>
   );
 }

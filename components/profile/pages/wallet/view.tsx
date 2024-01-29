@@ -1,22 +1,21 @@
 import {Col, Row} from "react-bootstrap";
 
-import ProfileLayout from "components/profile/profile-layout";
+import DashboardLayout from "components/profile/dashboard-layout";
+import WalletBalance from "components/profile/pages/wallet/wallet-balance/controller";
 
 import { WalletPageProps } from "types/pages";
-
-import WalletBalance from "./wallet-balance/controller";
 
 export default function WalletPage({
   chains,
   tokens
 }: WalletPageProps) {
   return (
-    <ProfileLayout>
+    <DashboardLayout>
       <Col xs={12}>
         <Row className="mb-3">
           <WalletBalance chains={chains} tokens={tokens} />
         </Row>
       </Col>
-    </ProfileLayout>
+    </DashboardLayout>
   );
 }

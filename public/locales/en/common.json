@@ -75,6 +75,7 @@
     "nav-avatar": {
       "my-profile": "Settings",
       "profile": "Settings",
+      "dashboard": "Dashboard",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
       "payments": "Payments",

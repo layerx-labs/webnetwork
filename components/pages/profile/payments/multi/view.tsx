@@ -7,7 +7,7 @@ import IntervalFilters from "components/lists/filters/interval/controller";
 import PaymentsList from "components/lists/payments/controller";
 import PaymentsListMobileFilters from "components/lists/payments/mobile-filters/controller";
 import NothingFound from "components/nothing-found";
-import ProfileLayout from "components/profile/profile-layout";
+import DashboardLayout from "components/profile/dashboard-layout";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { formatNumberToCurrency } from "helpers/formatNumber";
@@ -88,7 +88,7 @@ export default function PaymentsMultiView({
         </ResponsiveWrapper>
       </ResponsiveWrapper>
 
-      <ProfileLayout>
+      <DashboardLayout>
         <div className="col-12">
           <ResponsiveWrapper 
             xs={false}
@@ -149,7 +149,7 @@ export default function PaymentsMultiView({
             </FlexColumn>
           </FlexRow>
         </div>
-      </ProfileLayout>
+      </DashboardLayout>
     </>
   );
 }

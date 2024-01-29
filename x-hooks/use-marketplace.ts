@@ -51,9 +51,9 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   function goToProfilePage(profilePage: ProfilePages, params = undefined) {
-    const path = profilePage === "profile" ? "profile" : `profile/${profilePage}`;
+    const path = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
     return push({
-      pathname: "/profile/[[...profilePage]]",
+      pathname: "/dashboard/[[...dashboardPage]]",
       query: {
         ...query,
         ...params
@@ -100,7 +100,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
   }
 
   useEffect(() => {
-    if (isFetching || isError || isStale || asPath?.includes("profile/my-marketplace"))
+    if (isFetching || isError || isStale || asPath?.includes("dashboard/my-marketplace"))
       return;
     if (!marketplace && !chain) {
       clear();

@@ -44,7 +44,7 @@ const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefi
 
 const ALLOWED_PATHS = [
   "/new-marketplace",
-  "/profile/[[...profilePage]]",
+  "/dashboard/[[...dashboardPage]]",
   "/administration",
   "/setup",
 ];

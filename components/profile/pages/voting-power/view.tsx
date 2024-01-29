@@ -5,8 +5,8 @@ import { useTranslation } from "next-i18next";
 import ChainFilter from "components/lists/filters/chain/controller";
 import MarketplaceFilter from "components/lists/filters/marketplace/controller";
 import NoNetworkTokenModal from "components/modals/no-network-token/no-network-token-modal.view";
+import DashboardLayout from "components/profile/dashboard-layout";
 import VotingPowerNetwork from "components/profile/pages/voting-power/network/controller";
-import ProfileLayout from "components/profile/profile-layout";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
 import {Network} from "interfaces/network";
@@ -33,7 +33,7 @@ export default function VotingPowerPageView({
   const { t } = useTranslation(["common", "profile"]);
 
   return (
-    <ProfileLayout>
+    <DashboardLayout>
       <ReadOnlyButtonWrapper>
         <Col xs={12}>
           <Row className="mb-3">
@@ -74,6 +74,6 @@ export default function VotingPowerPageView({
           </Row>
         </Col>
       </ReadOnlyButtonWrapper>
-    </ProfileLayout>
+    </DashboardLayout>
   );
 }
