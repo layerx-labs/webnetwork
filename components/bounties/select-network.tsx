@@ -88,7 +88,7 @@ export default function SelectNetwork({
       const newQuery = {
         ...query,
         page: "1",
-        networkName: newValue?.value?.name || "all"
+        networkName: newValue?.value?.name
       };
       push({ pathname: pathname, query: newQuery }, asPath);
     }
