@@ -1,13 +1,11 @@
-import BigNumber from "bignumber.js";
 import { endOfDay, isAfter, parseISO, startOfDay } from "date-fns";
 import { ParsedUrlQuery } from "querystring";
-import { Op, Sequelize, WhereOptions } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
+
 
 import models from "db/models";
 
-import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import paginate, { calculateTotalPages } from "helpers/paginate";
 
 import { HttpBadRequestError } from "server/errors/http-errors";
 
@@ -19,10 +17,6 @@ export default async function get(query: ParsedUrlQuery) {
     networkName,
     networkChain,
     groupBy,
-    search,
-    page,
-    sortBy,
-    order,
   } = query;
 
   if (!wallet)
@@ -54,40 +48,12 @@ export default async function get(query: ParsedUrlQuery) {
     };
   }
 
-  const sort = [];
-  const PAGE = +(page || 1);
-  const COLS_TO_CAST = ["ammount", "fundingAmount"];
-
-  if (sortBy) {
-    const columns = sortBy
-      .toString()
-      .replaceAll(",", ",+,")
-      .split(",")
-      .map(column => {
-        if (column === "+") return Sequelize.literal("+");
-        const col = column === "amount" ? "ammount" : column;
-        if (COLS_TO_CAST.includes(col)) return Sequelize.cast(Sequelize.col(col), "DECIMAL");
-
-        return col;
-      });
-
-    sort.push(...columns);
-  } else
-    sort.push("createdAt");
-  console.log("sort", sort)
-  const payments = await models.userPayments.findAndCountAll(paginate({
+  const payments = await models.userPayments.findAll({
     include: [
       {
         association: "issue",
+        attributes: ["id", "title", "amount", "fundingAmount", "rewardAmount"],
         required: true,
-        where: {
-          ...search ? {
-            [Op.or]: [
-              { title: { [Op.iLike]: `%${search}%` } },
-              { body: { [Op.iLike]: `%${search}%` } },
-            ]
-          } : {}
-        },
         include: [
           {
             association: "transactionalToken",
@@ -95,11 +61,13 @@ export default async function get(query: ParsedUrlQuery) {
           },
           {
             association: "network",
+            attributes: ["id", "name", "colors", "logoIcon", "fullLogo", "networkAddress"],
             required: !!networkName || !!networkChain,
             where: networkWhere,
             include: [
               {
                 association: "chain",
+                attributes: ["chainShortName"],
                 required: !!networkChain,
                 where: chainWhere
               }
@@ -117,26 +85,10 @@ export default async function get(query: ParsedUrlQuery) {
       },
       ...timeFilter
     }
-  }, { page: PAGE }, [[...sort, order || "DESC"]]))
-    .then(result => {
-      const rows = result.rows.map(payment => {
-        const closeFee = payment.issue.network.chain.closeFeePercentage;
-        payment.dataValues.issue.dataValues.developerAmount =
-          getDeveloperAmount(closeFee,
-                             payment.issue.network.mergeCreatorFeeShare,
-                             payment.issue.network.proposerFeeShare,
-                             BigNumber(payment.issue?.amount));
-        return payment;
-      });
+  });
 
-      return {
-        ...result,
-        rows
-      }
-    });
-
-  if (payments.count && groupBy === "network") {
-    return payments.rows
+  if (payments.length && groupBy === "network") {
+    return payments
       .map(p => p.get({ plain: true }))
       .reduce((acc, cur) => {
         const curNetworkIndex = acc.findIndex(n => n.id === cur.issue.network.id);
@@ -159,9 +111,5 @@ export default async function get(query: ParsedUrlQuery) {
       }, []);
   }
 
-  return {
-    ...payments,
-    currentPage: PAGE,
-    pages: calculateTotalPages(payments.count)
-  };
+  return payments;
 }
