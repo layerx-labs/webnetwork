@@ -1,9 +1,11 @@
+import BigNumber from "bignumber.js";
 import { endOfDay, isAfter, parseISO, startOfDay } from "date-fns";
 import { ParsedUrlQuery } from "querystring";
 import { Op, Sequelize, WhereOptions } from "sequelize";
 
 import models from "db/models";
 
+import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
 import paginate, { calculateTotalPages } from "helpers/paginate";
 
@@ -75,7 +77,6 @@ export default async function get(query: ParsedUrlQuery) {
     include: [
       {
         association: "issue",
-        attributes: ["id", "title", "amount", "fundingAmount", "rewardAmount"],
         required: true,
         include: [
           {
@@ -84,13 +85,11 @@ export default async function get(query: ParsedUrlQuery) {
           },
           {
             association: "network",
-            attributes: ["id", "name", "colors", "logoIcon", "fullLogo", "networkAddress"],
             required: !!networkName || !!networkChain,
             where: networkWhere,
             include: [
               {
                 association: "chain",
-                attributes: ["chainShortName"],
                 required: !!networkChain,
                 where: chainWhere
               }
@@ -108,7 +107,23 @@ export default async function get(query: ParsedUrlQuery) {
       },
       ...timeFilter
     }
-  }, { page: PAGE }, [[...sort, order || "DESC"]]));
+  }, { page: PAGE }, [[...sort, order || "DESC"]]))
+    .then(result => {
+      const rows = result.rows.map(payment => {
+        const closeFee = payment.issue.network.chain.closeFeePercentage;
+        payment.dataValues.issue.dataValues.developerAmount =
+          getDeveloperAmount(closeFee,
+                             payment.issue.network.mergeCreatorFeeShare,
+                             payment.issue.network.proposerFeeShare,
+                             BigNumber(payment.issue?.amount));
+        return payment;
+      });
+
+      return {
+        ...result,
+        rows
+      }
+    });
 
   if (payments.count && groupBy === "network") {
     return payments.rows
