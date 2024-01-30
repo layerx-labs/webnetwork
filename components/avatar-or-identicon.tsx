@@ -6,7 +6,7 @@ import { SizeOptions } from "interfaces/utils";
 interface AvatarOrIdenticonProps {
   user?: string;
   address?: string;
-  size?: SizeOptions;
+  size?: SizeOptions | number;
   withBorder?: boolean;
   active?: boolean;
 }
