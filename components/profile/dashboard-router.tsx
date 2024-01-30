@@ -28,7 +28,7 @@ export default function DashboardRouter(props: DashboardPageProps) {
     Route("/dashboard/proposals", ProposalsPage),
     Route("/dashboard/my-marketplace", MyMarketplacePage),
   ];
-  const currentRoute = routes.find(({ path }) => asPath.split("?")[0].startsWith(path));
+  const currentRoute = routes.find(({ path }) => asPath.split("?")[0].endsWith(path));
 
   useEffect(() => {
     if (!currentRoute)
