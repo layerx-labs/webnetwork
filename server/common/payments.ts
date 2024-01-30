@@ -19,6 +19,7 @@ export default async function get(query: ParsedUrlQuery) {
     networkName,
     networkChain,
     groupBy,
+    search,
     page,
     sortBy,
     order,
@@ -55,7 +56,7 @@ export default async function get(query: ParsedUrlQuery) {
 
   const sort = [];
   const PAGE = +(page || 1);
-  const COLS_TO_CAST = ["ammount"];
+  const COLS_TO_CAST = ["ammount", "fundingAmount"];
 
   if (sortBy) {
     const columns = sortBy
@@ -64,20 +65,29 @@ export default async function get(query: ParsedUrlQuery) {
       .split(",")
       .map(column => {
         if (column === "+") return Sequelize.literal("+");
-        if (COLS_TO_CAST.includes(column)) return Sequelize.cast(Sequelize.col(column), "DECIMAL");
+        const col = column === "amount" ? "ammount" : column;
+        if (COLS_TO_CAST.includes(col)) return Sequelize.cast(Sequelize.col(col), "DECIMAL");
 
-        return column;
+        return col;
       });
 
     sort.push(...columns);
   } else
     sort.push("createdAt");
-
+  console.log("sort", sort)
   const payments = await models.userPayments.findAndCountAll(paginate({
     include: [
       {
         association: "issue",
         required: true,
+        where: {
+          ...search ? {
+            [Op.or]: [
+              { title: { [Op.iLike]: `%${search}%` } },
+              { body: { [Op.iLike]: `%${search}%` } },
+            ]
+          } : {}
+        },
         include: [
           {
             association: "transactionalToken",
