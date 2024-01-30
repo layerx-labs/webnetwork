@@ -1,10 +1,8 @@
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import PlusIcon from "assets/icons/plus-icon";
 
 import Button from "components/button";
-import If from "components/If";
-import InternalLink from "components/internal-link";
 import CreateOptionsModal from "components/modals/create-options-modal/create-options-modal.controller";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 
@@ -23,37 +21,28 @@ export default function CreateNetworkBountyButtonView({
   onClick,
   onCloseClick,
   actionCallBack,
-  label
+  label,
 }: CreateNetworkBountyButtonViewProps) {
   const { t } = useTranslation("common");
 
-  return(
+  return (
     <ReadOnlyButtonWrapper>
-      <If 
-        condition={isOnNetwork}
-        otherwise={
-          <Button
-            className="read-only-button w-100"
-            onClick={onClick}
-          >
-            <PlusIcon />
-            <span>{t("misc.create")}</span>
-          </Button>
-        }
-      >
-        <InternalLink
-          href={"/create-task"}
-          icon={<PlusIcon />}
-          label={label ? label : t("main-nav.new-bounty") as string}
-          iconBefore
-          uppercase
-        />
-      </If>
+      <Button className="read-only-button w-100" onClick={onClick}>
+        <PlusIcon />
+        <span>
+          {!isOnNetwork
+            ? t("misc.create")
+            : label
+            ? label
+            : (t("main-nav.new-bounty") as string)}
+        </span>
+      </Button>
+
       <CreateOptionsModal
         show={isModalVisible}
         actionCallBack={actionCallBack}
         onCloseClick={onCloseClick}
       />
-  </ReadOnlyButtonWrapper>
+    </ReadOnlyButtonWrapper>
   );
 }
