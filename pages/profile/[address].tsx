@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const getDataFn = {
     won: () => getPaymentsData({ wallet: address, ...query })
       .then(({ data }) => ({ payments: data }))
-      .catch(() => ({ payments: [] }))
+      .catch(() => ({ payments: { count: 0, rows: [] } }))
   };
   const pageData = address ? await getDataFn[type]?.() : {};
 
