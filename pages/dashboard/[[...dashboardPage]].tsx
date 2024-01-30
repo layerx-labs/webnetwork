@@ -14,7 +14,7 @@ import { useGetTokens } from "x-hooks/api/token";
 
 const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
-export default function Profile(props: DashboardPageProps) {
+export default function Dashboard(props: DashboardPageProps) {
   return <DashboardRouter {...props} />;
 }
 
