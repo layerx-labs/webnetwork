@@ -71,7 +71,7 @@ export default function TasksListsSearchFilters ({
                 filterByConnectedChain={isOnNetwork}
               />
               <div className="d-flex align-items-center ms-3">
-                <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+                <label className="sm-regular text-capitalize font-weight-medium text-gray-100 text-nowrap mr-1">
                   {t("misc.chain")}
                 </label>
                 <ChainFilter chains={chains} label={false} />

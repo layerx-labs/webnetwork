@@ -118,8 +118,8 @@ export default function SelectNetwork({
       <If condition={!hideLabel}>
         <span
         className={`${
-          fontRegular ? "sm-regular text-white" : "caption-small  text-gray-100"
-        } font-weight-medium text-nowrap mr-1`}
+          fontRegular ? "sm-regular text-white" : "sm-regular  text-gray-100"
+        } font-weight-medium text-nowrap mr-1 text-capitalize`}
       >
           {t("misc.network")}
         </span>
