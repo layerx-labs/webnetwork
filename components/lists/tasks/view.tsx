@@ -4,7 +4,6 @@ import Button from "components/button";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
-import ListSort from "components/lists/sort/controller";
 import TasksListFilteredCategories
   from "components/lists/tasks/tasks-list-filtered-categories/tasks-list-filtered-categories.controller";
 import TasksListItem from "components/lists/tasks/tasks-list-item/tasks-list-item.controller";
@@ -30,6 +29,7 @@ interface TasksListViewProps {
   isConnected?: boolean;
   hideFilter?: boolean;
   hasFilter?: boolean;
+  hideTitle?: boolean;
   currentChain?: SupportedChainData;
   chains?: SupportedChainData[];
   filterType?: "category" | "search";
@@ -60,7 +60,8 @@ export default function TasksListView({
   onEnterPressed,
   currentChain,
   chains,
-  filterType
+  filterType,
+  hideTitle
 }: TasksListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
@@ -132,24 +133,26 @@ export default function TasksListView({
 
           <If condition={isBountyHall || isProfile || isManagement}>
             <div className={`d-flex flex-wrap justify-content-between ${isCategoryFilter ? "mb-3" : ""}`}>
-              <div className="d-flex flex-row flex-wrap align-items-center gap-2">
-                <div className="d-flex gap-2 align-items-center">
-                  <h4 className="text-capitalize font-weight-medium">
-                    {listTitleByType[type]}
-                  </h4>
-                  {["deliverables", "proposals"].includes(type) ? (
-                    <>
-                      <CountComponent count={bounties?.totalBounties} />
-                      <span className="caption-small text-gray font-weight-medium mt-1">
+              <If condition={!hideTitle}>
+                <div className="d-flex flex-row flex-wrap align-items-center gap-2">
+                  <div className="d-flex gap-2 align-items-center">
+                    <h4 className="text-capitalize font-weight-medium">
+                      {listTitleByType[type]}
+                    </h4>
+                    {["deliverables", "proposals"].includes(type) ? (
+                      <>
+                        <CountComponent count={bounties?.totalBounties}/>
+                        <span className="caption-small text-gray font-weight-medium mt-1">
                       {t("bounty:label", { count: bounties?.count })}{" "}
-                        {bounties?.count}
+                          {bounties?.count}
                     </span>
-                    </>
-                  ) : (
-                    <CountComponent count={bounties?.totalBounties} />
-                  )}
+                      </>
+                    ) : (
+                      <CountComponent count={bounties?.totalBounties}/>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </If>
 
               <If condition={isProfile && isOnNetwork}>
                 <ResponsiveWrapper md={false} xs={true} sm={true}>

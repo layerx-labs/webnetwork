@@ -22,10 +22,11 @@ interface TasksListProps {
   redirect?: string | UrlObject;
   emptyMessage?: string;
   buttonMessage?: string;
-  variant?: "bounty-hall" | "profile" | "network" | "management"
+  variant?: "bounty-hall" | "profile" | "network" | "management";
   type?: "bounties" | "deliverables" | "proposals";
   filterType?: "category" | "search";
   hideFilter?: boolean;
+  hideTitle?: boolean;
 }
 
 export default function TasksList({
@@ -36,6 +37,7 @@ export default function TasksList({
   bounties,
   type = "bounties",
   hideFilter,
+  hideTitle,
   filterType = "search"
 }: TasksListProps) {
   const router = useRouter();
@@ -133,6 +135,7 @@ export default function TasksList({
       hideFilter={hideFilter}
       chains={supportedChains}
       filterType={filterType}
+      hideTitle={hideTitle}
     />
   );
 }
