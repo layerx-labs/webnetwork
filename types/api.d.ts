@@ -15,7 +15,7 @@ export interface PaginatedData<T> {
 }
 
 export interface SearchBountiesPaginated extends PaginatedData<IssueData> {
-  totalBounties: number;
+  totalBounties?: number;
 }
 
 export type LeaderBoardPaginated = PaginatedData<LeaderBoard>;
