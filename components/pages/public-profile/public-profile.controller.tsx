@@ -11,20 +11,17 @@ import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import { truncateAddress } from "helpers/truncate-address";
 
 import { User } from "interfaces/api";
-import { Payment } from "interfaces/payments";
 
-import { PaginatedData, SearchBountiesPaginated } from "types/api";
+import { SearchBountiesPaginated } from "types/api";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface PublicProfilePageProps {
   user: User;
-  payments?: PaginatedData<Payment>;
-  tasks?: SearchBountiesPaginated;
+  tasks: SearchBountiesPaginated;
 }
 export default function PublicProfilePage ({
   user,
-  payments,
   tasks,
 }: PublicProfilePageProps) {
   const { query, asPath, push } = useRouter();
@@ -35,16 +32,10 @@ export default function PublicProfilePage ({
   const hasHandle = !!user?.handle;
   const truncatedAddress = truncateAddress(user?.address || "");
   const [primaryText, secondaryText] = hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle];
-  const tasksList = type === "won" ? {
-    count: payments?.count,
-    currentPage: payments?.currentPage,
-    pages: payments?.pages,
-    rows: payments?.rows?.map(p => p?.issue)
-  } : tasks ;
   const tabs = [
     {
       label: "Bounties Won",
-      active: !query?.type || query?.type === "won",
+      active: type === "won",
       onClick: () => push({
         pathname: asPath,
         query: {
@@ -54,7 +45,7 @@ export default function PublicProfilePage ({
     },
     {
       label: "Submissions",
-      active: query?.type === "submissions",
+      active: type === "submissions",
       onClick: () => push({
         pathname: asPath,
         query: {
@@ -64,7 +55,7 @@ export default function PublicProfilePage ({
     },
     {
       label: "Proposals",
-      active: query?.type === "proposals",
+      active: type === "proposals",
       onClick: () => push({
         pathname: asPath,
         query: {
@@ -74,7 +65,7 @@ export default function PublicProfilePage ({
     },
     {
       label: "Bounties Opened",
-      active: query?.type === "opened",
+      active: type === "opened",
       onClick: () => push({
         pathname: asPath,
         query: {
@@ -126,7 +117,7 @@ export default function PublicProfilePage ({
       <div className="row">
         <div className="col">
           <TasksList
-            bounties={tasksList}
+            bounties={tasks}
             variant="profile"
             hideTitle
           />

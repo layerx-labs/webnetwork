@@ -2,20 +2,20 @@ import { GetServerSideProps } from "next";
 
 import PublicProfilePage from "components/pages/public-profile/public-profile.controller";
 
+import { emptyPaginatedData } from "helpers/api";
+
 import { User } from "interfaces/api";
-import { Payment } from "interfaces/payments";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { PaginatedData, SearchBountiesPaginated } from "types/api";
+import { SearchBountiesPaginated } from "types/api";
 
-import { getPaymentsData } from "x-hooks/api/task";
+import { getBountiesListData } from "x-hooks/api/task";
 import { useGetUserByAddress } from "x-hooks/api/user";
 
 export interface PublicProfileProps {
   user: User;
-  payments?: PaginatedData<Payment>;
-  tasks?: SearchBountiesPaginated;
+  tasks: SearchBountiesPaginated;
 }
 
 export default function PublicProfile(props: PublicProfileProps) {
@@ -27,9 +27,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const address = query?.address?.toString();
   const user = address ? await useGetUserByAddress(address) : null;
   const getDataFn = {
-    won: () => getPaymentsData({ wallet: address, ...query })
-      .then(({ data }) => ({ payments: data }))
-      .catch(() => ({ payments: { count: 0, rows: [] } }))
+    won: () => getBountiesListData({
+      receiver: address,
+      ...query,
+    })
+      .then(({ data }) => ({ tasks: data }))
+      .catch(() => emptyPaginatedData as SearchBountiesPaginated)
   };
   const pageData = address ? await getDataFn[type]?.() : {};
 
