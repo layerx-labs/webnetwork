@@ -162,7 +162,7 @@ export default async function get(query: ParsedUrlQuery) {
                       "proposerFeeShare"
                     ], 
                     true, 
-                    networkName === 'all' ? {} : (networkName || network) ? { 
+                    (networkName || network) ? {
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", 
@@ -242,7 +242,7 @@ export default async function get(query: ParsedUrlQuery) {
               address: caseInsensitiveEqual("address", deliverabler.toString())
             }: {}),
             getAssociation("issue", undefined, true, {}, [
-              getAssociation("network", undefined, true, networkName === 'all' ? {} : networkName || network ? 
+              getAssociation("network", undefined, true, networkName || network ?
               { 
                 name: caseInsensitiveEqual("name", (networkName || network).toString())
               } : {}, [])])
