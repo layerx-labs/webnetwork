@@ -51,6 +51,7 @@ export default function MarketplaceFilterView({
             options={options}
             value={option}
             onChange={onChange}
+            inputProps={{ 'data-testid': 'marketplace-select' }}
             isSearchable={false}
             placeholder={t("placeholders.select-marketplace")}
             isClearable={!isMobile}

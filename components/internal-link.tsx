@@ -74,6 +74,7 @@ export default function InternalLink({
         target={`${blank ? "_blank" : ""}`}
         style={{ ...style }}
         title={props?.title}
+        data-testid={props.label}
         onClick={onClick}
       >
         {(iconBefore && props.icon) || ""}

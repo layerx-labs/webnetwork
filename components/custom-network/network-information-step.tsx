@@ -116,6 +116,7 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
             type="text"
             name="display-name"
             id="display-name"
+            data-testid="diplay-name-input"
             placeholder={t("custom-network:steps.network-information.fields.name.default")}
             className={`form-control ${nameInputClass}`}
             defaultValue={nameInput}
@@ -149,6 +150,7 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
           <textarea
             name="description"
             id="description"
+            data-testid="description-textarea"
             placeholder={t("custom-network:steps.network-information.fields.description.placeholder")}
             cols={30}
             rows={5}

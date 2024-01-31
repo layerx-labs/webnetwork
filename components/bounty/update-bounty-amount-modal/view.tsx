@@ -69,6 +69,7 @@ export default function UpdateBountyAmountModalView({
           <Button
             color="gray-800"
             className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium py-2 px-3`}
+            data-testid="update-amount-modal-cancel-btn"
             onClick={handleClose}
           >
             {t("actions.cancel")}
@@ -81,6 +82,7 @@ export default function UpdateBountyAmountModalView({
                   sm-regular text-capitalize font-weight-medium py-2 px-3`}
               withLockIcon={exceedsBalance}
               isLoading={isExecuting}
+              data-testid="update-amount-modal-approve-btn"
             >
               <span>{t("actions.approve")}</span>
             </ContractButton>
@@ -92,6 +94,7 @@ export default function UpdateBountyAmountModalView({
                   sm-regular text-capitalize font-weight-medium py-2 px-3`}
               onClick={handleSubmit}
               isLoading={isExecuting}
+              data-testid="update-amount-modal-confirm-btn"
             >
               <span>{t("actions.confirm")}</span>
             </ContractButton>

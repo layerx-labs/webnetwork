@@ -11,10 +11,16 @@ export default function MiniTabs({
 } : MiniTabsProps) {
   return(
     <div className="mini-tabs">
-      {items.map(item => (
-        <div key={item.label} className={clsx("mini-tabs-item", item.active && "active")} onClick={item.onClick}>
-        <span>{item.label}</span>
-      </div>))}
+      {items.map((item) => (
+        <div
+          key={item.label}
+          data-testid={item.label}
+          className={clsx("mini-tabs-item", item.active && "active")}
+          onClick={item.onClick}
+        >
+          <span>{item.label}</span>
+        </div>
+      ))}
     </div>
   );
 }

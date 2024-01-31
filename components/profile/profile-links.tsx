@@ -23,7 +23,7 @@ export default function ProfileLinks({
   const getUrl = () => ({ pathname: "/profile/[[...profilePage]]", query: cleanQuery });
   const isActive = href => asPath.endsWith(`/profile${href ? `/${href}` : ""}`);
 
-  const ProfileLink = ({ label, href, icon }: LinkProps) => (
+  const ProfileLink = ({ label, href, icon: Icon }: LinkProps) => (
     <li className="mb-2" key={label}>
       <Link href={getUrl()} as={getHref(href)} passHref>
         <a
@@ -32,9 +32,10 @@ export default function ProfileLinks({
             "text-gray-150 border-radius-1 p-2 text-white-hover",
             isActive(href) ? "profile-side-link-active" : ""
           ])}
+          data-testid={label}
           onClick={onClick}
         >
-          {icon()}
+          <Icon data-testid={label} />
           <span>{label}</span>
         </a>
       </Link>

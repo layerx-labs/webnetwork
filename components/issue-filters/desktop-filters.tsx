@@ -77,6 +77,7 @@ export default function IssueDesktopFilters({ onlyTimeFrame = false }) {
           textClass="text-primary"
           className="p-0 mr-2"
           onClick={handleClearFilters}
+          data-testid="filter-clear-btn"
         >
           <Translation label="misc.clear" />
         </Button>
@@ -86,6 +87,7 @@ export default function IssueDesktopFilters({ onlyTimeFrame = false }) {
         color="gray-850"
         className={`${(show && "border-primary") || ""} rounded-2 m-0`}
         onClick={() => setShow(!show)}
+        data-testid="filter-btn"
       >
         {countFiltersLabel()}{" "}
         <span>

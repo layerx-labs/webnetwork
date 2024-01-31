@@ -50,6 +50,7 @@ function NetworkTxButtonModalView({
         className={buttonClass}
         onClick={makeTx}
         disabled={disabled}
+        data-testid={buttonLabel}
       >
         {disabled && <LockedIcon width={12} height={12} className="mr-1" />}{" "}
         <span>{buttonLabel}</span>

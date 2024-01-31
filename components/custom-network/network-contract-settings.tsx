@@ -118,7 +118,13 @@ export default function NetworkContractSettings() {
   
   return (
     <div className="row mt-2 gy-3">
-      { parameterInputs.map(input => <NetworkParameterInput  key={input.label} {...input} />) }
+      {parameterInputs.map((input) => (
+        <NetworkParameterInput
+          key={input.label}
+          data-testid={input.label}
+          {...input}
+        />
+      ))}
     </div>
   );
 }

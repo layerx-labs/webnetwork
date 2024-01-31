@@ -52,6 +52,7 @@ export default function ChainFilterView({
             value={option}
             onChange={onChange}
             isSearchable={false}
+            inputProps={{ 'data-testid': 'chain-select' }}
             placeholder={t("placeholders.select-chain")}
             isClearable={!isMobile}
             components={{
