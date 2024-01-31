@@ -27,6 +27,10 @@ export default function MarkedRender({ className = "", source = "_loading..._" }
   }, [source]);
 
   return (
-    <div className={`marked-render markdown-body ${className}`} dangerouslySetInnerHTML={innerHtml}></div>
+    <div
+      className={`marked-render markdown-body ${className}`}
+      data-testid="marked-render"
+      dangerouslySetInnerHTML={innerHtml}
+    ></div>
   );
 }

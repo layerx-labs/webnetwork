@@ -71,6 +71,7 @@ export default function UserNameFormView({
                 validity?.invalid ? "is-invalid" : ""
               }`}
               value={userhandle}
+              data-testid="user-name-edit-input"
               onChange={onChange}
               disabled={isExecuting}
             />
@@ -90,6 +91,7 @@ export default function UserNameFormView({
               onClick={onSave}
               disabled={isSaveButtonDisabled}
               isLoading={isExecuting}
+              data-testid='user-name-save-button'
             >
               {t("actions.save")}
             </Button>

@@ -98,6 +98,7 @@ export default function BountyDetailsSectionView({
               className={clsx("form-control rounded-lg", {
                 "border border-1 border-danger border-radius-8": titleExceedsLimit,
               })}
+              data-testid="title-input"
               placeholder={t("fields.title.placeholder")}
               value={title}
               onChange={onTitlechange}
@@ -137,6 +138,7 @@ export default function BountyDetailsSectionView({
         </label>
 
         <ReactSelect
+          data-testid="tags"
           value={tags}
           options={tagsOptions}
           onChange={onTagsChange}
@@ -153,6 +155,7 @@ export default function BountyDetailsSectionView({
         <>
           <div className="col-md-12 d-flex flex-row gap-2 mt-4">
             <FormCheck
+              data-testid="checkbox-kyc"
               className="form-control-md pb-0"
               type="checkbox"
               label={t("bounty:kyc.is-required")}
@@ -170,6 +173,7 @@ export default function BountyDetailsSectionView({
 
           <If condition={kycCheck && !!kycOptions?.length}>
             <DropDown
+              data-testid="dropdown-kyc"
               className="mt-2"
               onSelected={onKycTierChange}
               options={kycOptions}
@@ -218,6 +222,7 @@ export default function BountyDetailsSectionView({
                 type="text"
                 name="origin-link"
                 id="origin-link"
+                data-testid="origin-link-input"
                 placeholder={originLinkPlaceHolder}
                 className={`form-control ${originLinkError ? "is-invalid" : ""}`}
                 value={originLink}

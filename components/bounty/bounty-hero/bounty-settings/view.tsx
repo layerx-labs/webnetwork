@@ -91,6 +91,7 @@ export default function BountySettingsView({
           transparent
           align="left"
           onClick={handleCancelClick(isHard)}
+          data-testid="cancel-btn"
         >
           <Translation
             ns={isHard ? "common" : "bounty"}
@@ -125,6 +126,7 @@ export default function BountySettingsView({
             transparent
             align="left"
             onClick={handleEditIssue}
+            data-testid="task-edit-btn"
           >
             <Translation ns="bounty" label="actions.edit-bounty" />
           </ContractButton>
@@ -142,6 +144,7 @@ export default function BountySettingsView({
               (show && "border-primary") || "border-gray-850"
             } border-radius-8 d-flex`}
             onClick={() => setShow(!show)}
+            data-testid="task-options"
           >
             <span className="mx-2 my-1">{t("common:misc.options")}</span>
           </div>

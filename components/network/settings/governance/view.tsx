@@ -99,6 +99,7 @@ export default function NetworkGovernanceSettingsView({
               withLockIcon={!isAbleToClosed}
               onClick={onCloseNetworkClick}
               isLoading={isClosing}
+              data-testid="close-network-btn"
             >
               <span>{t("custom-network:close-network")}</span>
             </ContractButton>

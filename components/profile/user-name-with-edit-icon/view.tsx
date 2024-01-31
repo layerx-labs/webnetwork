@@ -23,6 +23,7 @@ export default function UserNameWithEditIcon({
         color="gray-900"
         textClass="text-gray-50"
         className="border-radius-8 p-1 not-svg"
+        data-testid="user-edit-icon-btn"
       >
         <ProfileEditIcon />
       </Button>

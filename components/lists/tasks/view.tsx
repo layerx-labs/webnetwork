@@ -223,7 +223,7 @@ export default function TasksListView({
                 <NothingFound description={emptyMessage || t("filters.bounties.not-found")}>
                   {(isConnected && !isBountyHall && !isManagement) && (
                     <ReadOnlyButtonWrapper>
-                      <Button onClick={onNotFoundClick}>
+                      <Button onClick={onNotFoundClick} data-testid="create-one-btn">
                         {buttonMessage || String(t("actions.create-one"))}
                       </Button>
                     </ReadOnlyButtonWrapper>
@@ -237,13 +237,15 @@ export default function TasksListView({
               hasMore={hasMorePages}
               className="row gy-3 gx-3"
             >
-              {bounties?.rows?.map(issue =>
-                <div className={isBountyHall ? "col-12 col-lg-6" : "col-12"} key={`issue-list-item-${issue.id}`}>
-                  <TasksListItem
-                    issue={issue}
-                    variant={variantIssueItem}
-                  />
-                </div>)}
+              {bounties?.rows?.map((issue) => (
+                <div
+                  className={isBountyHall ? "col-12 col-lg-6" : "col-12"}
+                  key={`issue-list-item-${issue.id}`}
+                  data-testid={`issue-list-item-${issue.id}`}
+                >
+                  <TasksListItem issue={issue} variant={variantIssueItem} />
+                </div>
+              ))}
             </InfiniteScroll>
           </If>
         </div>
