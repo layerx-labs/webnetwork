@@ -26,8 +26,8 @@ describe("AllowListView", () => {
     />);
     expect(result.getByText(truncateAddress(allowList[0], 10, 8))).toBeDefined();
     expect(result.getByText(truncateAddress(allowList[1], 10, 8))).toBeDefined();
-    expect(result.getByTestId(`permission-item-button-${allowList[0]}`)).toBeDefined();
-    expect(result.getByTestId(`permission-item-button-${allowList[1]}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[0]}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[1]}`)).toBeDefined();
   });
 
   it("Should show spinner if list is loading", async () => {
@@ -54,7 +54,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if has error", async () => {
@@ -67,7 +67,7 @@ describe("AllowListView", () => {
       error={"not-address"}
       type={type}
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if is adding", async () => {
@@ -81,7 +81,7 @@ describe("AllowListView", () => {
       type={type}
       isAdding
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable add button if is removing", async () => {
@@ -95,7 +95,7 @@ describe("AllowListView", () => {
       type={type}
       isRemoving
     />);
-    expect(result.getByTestId("permission-add-button")).toBeDisabled();
+    expect(result.getByTestId(`allow-list-${type}-btn`)).toBeDisabled();
   });
 
   it("Should disable all remove buttons if is removing", async () => {
@@ -109,8 +109,8 @@ describe("AllowListView", () => {
       type={type}
       isRemoving
     />);
-    expect(result.getByTestId(`permission-item-button-${allowList[0]}`)).toBeDisabled();
-    expect(result.getByTestId(`permission-item-button-${allowList[1]}`)).toBeDisabled();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[0]}`)).toBeDisabled();
+    expect(result.getByTestId(`permission-trash-btn-${allowList[1]}`)).toBeDisabled();
   });
 
   it("Should call on input change callback", async () => {
@@ -123,7 +123,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: "0x000" } });
     expect(mockOnValueChange).toHaveBeenCalledWith("0x000");
   });
@@ -138,9 +138,9 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: "0x000" } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`allow-list-${type}-btn`);
     fireEvent.click(button);
     expect(mockOnAddClick).toHaveBeenCalled();
   });
@@ -155,7 +155,7 @@ describe("AllowListView", () => {
       error={""}
       type={type}
     />);
-    const removeButton = result.getByTestId(`permission-item-button-${allowList[0]}`);
+    const removeButton = result.getByTestId(`permission-trash-btn-${allowList[0]}`);
     fireEvent.click(removeButton);
     expect(mockOnTrashClick).toHaveBeenCalled();
   });

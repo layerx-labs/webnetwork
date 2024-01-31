@@ -57,9 +57,10 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    const input = result.getByTestId("permission-input");
+    
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: address } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`allow-list-${type}-btn`);
     fireEvent.click(button);
     expect(useAddAllowListEntry).toHaveBeenCalledWith(networkId, address, networkAddress, type);
     expect(mockAddSuccess).toHaveBeenCalled();
@@ -78,7 +79,7 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    expect(result.getByTestId(`permission-item-button-${address}`)).toBeDefined();
+    expect(result.getByTestId(`permission-trash-btn-${address}`)).toBeDefined();
   });
 
   it("Should remove address from list", async () => {
@@ -93,7 +94,7 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    const removeButton = result.getByTestId(`permission-item-button-${address}`);
+    const removeButton = result.getByTestId(`permission-trash-btn-${address}`);
     fireEvent.click(removeButton);
     expect(useDeleteAllowListEntry).toHaveBeenCalledWith(networkId, address, type);
     expect(mockAddSuccess).toHaveBeenCalled();
@@ -114,9 +115,9 @@ describe("AllowList", () => {
         mutate: jest.fn(),
         isLoading: true
       }));
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: address } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`allow-list-${type}-btn`);
     fireEvent.click(button);
     expect(button).toBeDisabled();
   });
@@ -131,9 +132,9 @@ describe("AllowList", () => {
         type={AllowListTypes.OPEN_TASK}
       />
     </QueryClientProvider>);
-    const input = result.getByTestId("permission-input");
+    const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: "invalid-address" } });
-    const button = result.getByTestId("permission-add-button");
+    const button = result.getByTestId(`allow-list-${type}-btn`);
     expect(button).toBeDisabled();
   });
 });

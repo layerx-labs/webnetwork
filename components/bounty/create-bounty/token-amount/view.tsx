@@ -62,11 +62,11 @@ export default function CreateBountyTokenAmountView({
 }: CreateBountyTokenAmountViewProps) {
   const { t } = useTranslation(["bounty", "common", "proposal"]);
 
-  function selectTokens() {
+  function selectTokens(label?: string) {
     return (
       <TokensDropdown
         token={currentToken}
-        label={labelSelect}
+        label={label ? label : labelSelect}
         tokens={customTokens}
         userAddress={userAddress}
         canAddToken={canAddCustomToken}
@@ -86,6 +86,7 @@ export default function CreateBountyTokenAmountView({
       <InputNumber
         symbol={currentToken?.symbol}
         classSymbol=""
+        data-testid="funders-reward-input"
         thousandSeparator
         value={issueAmount?.value}
         placeholder="0"
@@ -121,7 +122,7 @@ export default function CreateBountyTokenAmountView({
       <div>
         <div className="row d-flex flex-wrap justify-content-between">
           <div className="col col-md-5 mb-0 pb-0">
-            {selectTokens()}
+            {selectTokens("token-select")}
             <ResponsiveWrapper className="mt-1" xs={true} md={false}>
               <RenderBalance />
             </ResponsiveWrapper>
@@ -168,7 +169,7 @@ export default function CreateBountyTokenAmountView({
           ) : (
             <div className="row d-flex flex-wrap justify-content-between">
               <div className="col col-md-5 mb-0 pb-0">
-                {selectTokens()}
+                {selectTokens("funders-reward-select")}
                 <ResponsiveWrapper className="mt-1 mb-4" xs={true} md={false}>
                   <RenderBalance />
                 </ResponsiveWrapper>

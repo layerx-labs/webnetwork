@@ -20,6 +20,7 @@ export default function StartWorkingButton({
       className={`read-only-button ${
         (isTabletView || isMobileView) ? "col-12" : "bounty-outline-button"
       }`}
+      dataTestId="start-working-btn"
       disabled={isExecuting}
       isLoading={isExecuting}
       buttonType="normal"

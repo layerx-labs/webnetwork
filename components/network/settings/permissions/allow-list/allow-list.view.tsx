@@ -61,6 +61,7 @@ export default function AllowListView ({
           onChange={onValueChange}
           onClickAdd={onAddClick}
           isLoading={isAdding}
+          type={`allow-list-${type}`}
         />
 
         <div className="mt-4">

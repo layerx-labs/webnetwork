@@ -32,6 +32,7 @@ export default function NotFound({
           className="w-100 w-xl-auto"
           href={href}
           label={action || String(t("actions.create-one"))}
+          data-testid={action || String(t("actions.create-one"))}
           uppercase
         />
       </If>

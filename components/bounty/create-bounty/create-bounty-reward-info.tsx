@@ -39,12 +39,14 @@ export default function CreateBountyRewardInfo({
           <Button
             className={!isFunding ? "bounty-button" : "bounty-outline-button"}
             onClick={() => updateIsFunding(false)}
+            data-testid="self-fund-btn"
           >
             {t("self-fund")}
           </Button>
           <Button
             className={isFunding ? "bounty-button" : "bounty-outline-button"}
             onClick={() => updateIsFunding(true)}
+            data-testid="seek-funding-btn"
           >
             {t("seek-funding")}
           </Button>

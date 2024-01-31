@@ -14,6 +14,7 @@ export default function CreateProposalButton({
       className="read-only-button bounty-outline-button"
       onClick={onClick}
       disabled={disabled}
+      dataTestId="proposal-btn"
     >
       <Translation ns="proposal" label="actions.create" />
     </PageActionsButton>

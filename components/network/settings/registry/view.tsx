@@ -115,6 +115,7 @@ export default function NetworkRegistrySettingsView({
         <NetworkParameterInput
           disabled={isFieldsDisabled}
           key="cancel-fee"
+          data-testid="cancel-fee-input"
           label={t("custom-network:steps.treasury.fields.cancel-fee.label")}
           description={
             t("custom-network:steps.treasury.fields.cancel-fee.description", REGISTRY_LIMITS["cancelFeePercentage"])
@@ -129,6 +130,7 @@ export default function NetworkRegistrySettingsView({
         <NetworkParameterInput
           disabled={isFieldsDisabled}
           key="close-fee"
+          data-testid="close-fee-input"
           label={t("custom-network:steps.treasury.fields.close-fee.label")}
           description={
             t("custom-network:steps.treasury.fields.close-fee.description", REGISTRY_LIMITS["closeFeePercentage"])
@@ -142,6 +144,7 @@ export default function NetworkRegistrySettingsView({
 
         <FormGroup
           label={t("setup:registry.fields.network-creation-fee.label")}
+          data-testid="creation-fee-input"
           placeholder="0"
           symbol="%"
           value={creationFeePercentage?.value?.toString()}
@@ -155,6 +158,7 @@ export default function NetworkRegistrySettingsView({
 
         <FormGroup
           label={t("setup:registry.fields.network-creation-amount.label")}
+          data-testid="creation-fee-amount-input"
           placeholder="0"
           value={creationLockAmount?.value?.toString()}
           onChange={onCreationLockAmountChange}

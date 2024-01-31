@@ -41,12 +41,14 @@ export default function ListSearchBar({
         className="p-2"
         placeholder={placeholder}
         onKeyDown={onEnterPressed}
+        data-testid="search-input"
       />
 
       <If condition={hasFilter}>
         <Button
           className="btn bg-gray-850 border-0 py-0 px-3 svg-gray rounded-0"
           onClick={onClearSearch}
+          data-testid="filter-clear-btn"
         >
           <CloseIcon width={10} height={10} />
         </Button>

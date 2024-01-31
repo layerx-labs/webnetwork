@@ -20,7 +20,7 @@ export default function FooterButtons({
   return (
     <>
       <div className="col-6 mx-0 pe-3">
-        <Button className="col-12 bounty-outline-button" onClick={handleBack}>
+        <Button className="col-12 bounty-outline-button" onClick={handleBack} data-testid="cancel-deliverable-btn">
           {t("actions.cancel")}
         </Button>
       </div>
@@ -31,6 +31,7 @@ export default function FooterButtons({
           onClick={handleCreate}
           disabled={disabledCreate}
           isLoading={isLoadingCreate}
+          data-testid="create-deliverable-btn"
         >
           <ResponsiveWrapper xs={true} md={false}>
             {t("common:misc.create")}

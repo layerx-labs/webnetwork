@@ -24,6 +24,7 @@ export default function CheckButtonsView({
         <Button
           key={`${opt.label}-${index}`}
           color={opt.selected ? selectedColor : defaultColor}
+          data-testid={opt.label}
           className={`border-radius-4 text-capitalize font-weight-normal text-gray-50 ${
             disabled ? "cursor-default" : ""
           }`}

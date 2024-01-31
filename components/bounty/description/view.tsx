@@ -44,6 +44,7 @@ export default function BountyDescriptionView({
                     (bodyLength || body.length) > BODY_CHARACTERES_LIMIT ||
                     body.length === 0,
                 })}
+                data-testid="description-textarea"
                 placeholder={t("bounty:fields.description.placeholder")}
                 value={body}
                 rows={24}

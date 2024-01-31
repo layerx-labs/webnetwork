@@ -37,6 +37,7 @@ export default function BannedWordsView({
           onClickAdd={handleAddDomain}
           placeholder={t("steps.permissions.domains.placeholder")}
           disabledButton={!domain || isExecuting}
+          type="banned-word"
         />
         {domains?.length > 0 ? (
           <div className="d-flex flex-column mt-4">
