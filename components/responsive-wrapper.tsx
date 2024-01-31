@@ -4,6 +4,8 @@ import clsx from "clsx";
 
 import { BreakpointOptions } from "types/utils";
 
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 interface ResponsiveWrapperProps extends BreakpointOptions {
   children?: ReactNode;
   className?: string;
@@ -19,11 +21,27 @@ export default function ResponsiveWrapper({
   children,
   className
 } : ResponsiveWrapperProps) {
+  const {
+    isDesktopView,
+    isMobileView,
+    isTabletView,
+  } = useBreakPoint();
+
+  const shouldRender = (
+    (isMobileView && (xs || sm)) ||
+    (isTabletView && md) ||
+    (isDesktopView && (md || lg || xl || xxl))
+  );
+
   function getClass(condition, ifTrue, ifFalse) {
     if (typeof condition === "boolean")
       return condition ? ifTrue : ifFalse;
 
     return "";
+  }
+
+  if (!shouldRender) {
+    return null;
   }
 
   return(

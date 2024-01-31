@@ -88,7 +88,7 @@ export default function BountyHeroView({
                     <TaskStatusInfo
                       task={bounty}
                     />
-                    <span className="ms-1 text-white text-capitalize">
+                    <span className="ms-1 text-white text-capitalize" data-testid="task-status">
                       {currentState}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export default function BountyHeroView({
               </div>
             </div>
 
-            <h5 className="mt-3 break-title">
+            <h5 className="mt-3 break-title" data-testid="task-title">
               {bounty?.title}
             </h5>
 
@@ -157,8 +157,9 @@ export default function BountyHeroView({
                     onClick={showOriginModal}
                     className="p-0 m-0 font-weight-medium text-decoration-underline"
                     textClass="text-primary"
+                    data-testid="task-origin-btn"
                   >
-                    <span className="text-lowercase">
+                    <span className="text-lowercase" data-testid="task-origin">
                       {bounty?.origin}
                     </span>
                   </Button>
@@ -166,12 +167,16 @@ export default function BountyHeroView({
               </If>
 
               <BountyItemLabel label={t("common:misc.type")} className="col-12 col-sm-auto">
-                <span className={`text-truncate text-capitalize`}>
+                <span className={`text-truncate text-capitalize`} data-testid="task-type">
                   {bounty?.type}
                 </span>
               </BountyItemLabel>
 
-              <BountyItemLabel label={t("info.working")} className="col-12 col-sm-auto">
+              <BountyItemLabel
+                label={t("info.working")}
+                className="col-12 col-sm-auto"
+                data-testid="task-users-working"
+              >
                 <span className={`text-truncate`}>
                   {bounty?.working?.length}
                 </span>

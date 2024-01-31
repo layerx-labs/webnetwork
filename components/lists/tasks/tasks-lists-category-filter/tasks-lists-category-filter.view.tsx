@@ -27,8 +27,11 @@ export default function TasksListsCategoryFilterView ({
               {t("want-to-launch-a-task")}
             </span>
             <Link href={"/create-task"}>
-              <span className="text-blue-400 text-decoration-underline cursor-pointer font-weight-medium">
-                {t("create-your-first-task")}
+              <span
+                  className="text-blue-400 text-decoration-underline cursor-pointer font-weight-medium"
+                  data-testid="first-task-link"
+                >
+                  {t("create-your-first-task")}
               </span>
             </Link>
           </div>

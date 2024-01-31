@@ -12,7 +12,7 @@ export default function RewardInformationBalanceView({
   const { t } = useTranslation(["common", "bounty"]);
 
   return (
-    <div className="text-truncate">
+    <div className="text-truncate"  data-testid="total-balance">
       <span className="text-gray">{t("bounty:balance")}</span> {formatStringToCurrency(amount)}{" "}
       {symbol || t("common:misc.token")}
     </div>

@@ -77,6 +77,7 @@ export default function NewProposalModalView({
             color="gray-800"
             className={`border-radius-4 border border-gray-700 sm-regular text-capitalize font-weight-medium py-2 px-3`}
             onClick={onClose}
+            data-testid="modal-proposal-cancel-btn"
           >
             {t("actions.cancel")}
           </Button>
@@ -86,6 +87,7 @@ export default function NewProposalModalView({
             disabled={!isConnected || isExecuting}
             isLoading={isExecuting}
             withLockIcon={!isConnected}
+            data-testid="modal-proposal-create-btn"
             className={`border-radius-4 border border-${!isConnected || isExecuting ? "gray-700" : "primary"} 
                   sm-regular text-capitalize font-weight-medium py-2 px-3`}
           >
@@ -100,6 +102,7 @@ export default function NewProposalModalView({
 
       <ReactSelect
         id="deliverableSelect"
+        data-testid="deliverable-select"
         components={{
           Option: IconOption,
           SingleValue

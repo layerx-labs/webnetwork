@@ -36,11 +36,7 @@ describe("ConnectWalletButtonView", () => {
                           >
                           </ConnectWalletButtonView>);
     const button = result.queryByRole("button");
-    const mobileLabel = button.firstChild.firstChild;
     const desktopLabel = button.firstChild.lastChild;
-    expect(mobileLabel).toHaveClass("d-flex d-xl-none");
-    expect(mobileLabel.textContent).toBe("Connect");
-    expect(desktopLabel).toHaveClass("d-none d-xl-flex");
     expect(desktopLabel.textContent).toBe("Connect Wallet");
   });
 
