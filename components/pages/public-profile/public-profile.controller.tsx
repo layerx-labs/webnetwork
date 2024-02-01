@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
+import DeliverablesList from "components/lists/deliverables/deliverables-list.controller";
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
@@ -12,67 +13,55 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { User } from "interfaces/api";
 
-import { SearchBountiesPaginated } from "types/api";
+import { DeliverablePaginatedData, SearchBountiesPaginated } from "types/api";
+import { TasksListItemVariant } from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface PublicProfilePageProps {
   user: User;
-  tasks: SearchBountiesPaginated;
+  tasks?: SearchBountiesPaginated;
+  deliverables?: DeliverablePaginatedData;
 }
 export default function PublicProfilePage ({
   user,
   tasks,
+  deliverables,
 }: PublicProfilePageProps) {
-  const { query, asPath, push } = useRouter();
+  const { query, pathname, asPath, push } = useRouter();
   const { isMobileView, isTabletView } = useBreakPoint();
 
   const type = query?.type?.toString() || "won";
-  const isTabletOrMobile = isMobileView || isTabletView ? true : false;
+  const isTaskList = ["won", "opened"].includes(type);
+  const isDeliverableList = type === "submissions";
+  const isProposalsList = type === "proposals";
+  const isTabletOrMobile = isMobileView || isTabletView;
   const hasHandle = !!user?.handle;
   const truncatedAddress = truncateAddress(user?.address || "");
   const [primaryText, secondaryText] = hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle];
+  const listItemVariant = ({
+    won: "network",
+    opened: "network",
+    submissions: "submissions",
+    proposals: "proposals"
+  }[type] || "network") as TasksListItemVariant;
+
+  const getTab = (label: string, key: string) => ({
+    label,
+    active: type === key,
+    onClick: () => push({
+      pathname: pathname,
+      query: {
+        type: key
+      }
+    }, asPath)
+  });
+
   const tabs = [
-    {
-      label: "Bounties Won",
-      active: type === "won",
-      onClick: () => push({
-        pathname: asPath,
-        query: {
-          type: "won"
-        }
-      }, asPath)
-    },
-    {
-      label: "Submissions",
-      active: type === "submissions",
-      onClick: () => push({
-        pathname: asPath,
-        query: {
-          type: "submissions"
-        }
-      }, asPath)
-    },
-    {
-      label: "Proposals",
-      active: type === "proposals",
-      onClick: () => push({
-        pathname: asPath,
-        query: {
-          type: "proposals"
-        }
-      }, asPath)
-    },
-    {
-      label: "Bounties Opened",
-      active: type === "opened",
-      onClick: () => push({
-        pathname: asPath,
-        query: {
-          type: "opened"
-        }
-      }, asPath)
-    },
+    getTab("Bounties Won", "won"),
+    getTab("Submissions", "submissions"),
+    getTab("Proposals", "proposals"),
+    getTab("Bounties Opened", "opened"),
   ];
   
   return (
@@ -116,11 +105,19 @@ export default function PublicProfilePage ({
 
       <div className="row">
         <div className="col">
-          <TasksList
-            bounties={tasks}
-            variant="profile"
-            hideTitle
-          />
+          <If condition={isTaskList}>
+            <TasksList
+              bounties={tasks}
+              variant="profile"
+              itemVariant={listItemVariant}
+              hideTitle
+            />
+          </If>
+          <If condition={isDeliverableList}>
+            <DeliverablesList
+              deliverables={deliverables}
+            />
+          </If>
         </div>
       </div>
     </CustomContainer>
