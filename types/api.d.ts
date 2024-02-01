@@ -1,5 +1,5 @@
 import { Curator } from "interfaces/curators";
-import { IssueData } from "interfaces/issue-data";
+import { Deliverable, IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
 import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
@@ -23,6 +23,8 @@ export type LeaderBoardPaginated = PaginatedData<LeaderBoard>;
 export interface CuratorsListPaginated extends PaginatedData<Curator> {
   totalCurators: number;
 }
+
+export type DeliverablePaginatedData = PaginatedData<Deliverable>;
 
 export interface NetworkOverviewData {
   name: string;
