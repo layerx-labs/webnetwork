@@ -82,8 +82,8 @@
     "get-started": "Comece Agora",
     "connect": "Conectar",
     "nav-avatar": {
-      "my-profile": "Meu perfil",
-      "profile": "Perfil",
+      "my-profile": "Configurações",
+      "profile": "Configurações",
       "wallet": "Carteira",
       "voting-power": "Poder de Voto",
       "payments": "Pagamentos",

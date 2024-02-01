@@ -73,8 +73,8 @@
     "bounties": "Tasks",
     "tasks": "Tasks",
     "nav-avatar": {
-      "my-profile": "My profile",
-      "profile": "Profile",
+      "my-profile": "Settings",
+      "profile": "Settings",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
       "payments": "Payments",
