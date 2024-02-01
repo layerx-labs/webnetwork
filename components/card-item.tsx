@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 
 export default function CardItem({
   children,
@@ -6,7 +6,7 @@ export default function CardItem({
   variant,
   hide = false
 }: {
-  children?: ReactElement;
+  children?: ReactNode;
   onClick?: () => void;
   variant?: "management";
   hide?: boolean;
