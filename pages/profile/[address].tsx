@@ -8,14 +8,16 @@ import { User } from "interfaces/api";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { SearchBountiesPaginated } from "types/api";
+import { DeliverablePaginatedData, SearchBountiesPaginated } from "types/api";
 
+import { useSearchDeliverables } from "x-hooks/api/deliverable/use-search-deliverables";
 import { getBountiesListData } from "x-hooks/api/task";
 import { useGetUserByAddress } from "x-hooks/api/user";
 
 export interface PublicProfileProps {
   user: User;
-  tasks: SearchBountiesPaginated;
+  tasks?: SearchBountiesPaginated;
+  deliverables?: DeliverablePaginatedData;
 }
 
 export default function PublicProfile(props: PublicProfileProps) {
@@ -26,15 +28,30 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const type = query?.type?.toString() || "won";
   const address = query?.address?.toString();
   const user = address ? await useGetUserByAddress(address) : null;
-  const getDataFn = {
-    won: () => getBountiesListData({
-      receiver: address,
-      ...query,
-    })
-      .then(({ data }) => ({ tasks: data }))
-      .catch(() => emptyPaginatedData as SearchBountiesPaginated)
+  const pageData = {
+    tasks: emptyPaginatedData,
+    deliverables: emptyPaginatedData,
+    proposals: emptyPaginatedData,
   };
-  const pageData = address ? await getDataFn[type]?.() : {};
+
+  const getTasks = async (filter: "receiver" | "creator") => getBountiesListData({
+    [filter]: address,
+    ...query,
+  })
+    .then(({ data }) => data)
+    .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+
+  switch (type) {
+  case "won":
+    pageData.tasks = await getTasks("receiver");
+    break;
+  case "opened":
+    pageData.tasks = await getTasks("creator");
+    break;
+  case "submissions":
+    pageData.deliverables = await useSearchDeliverables({ creator: address, ...query });
+    break;
+  }
 
   return {
     props: {
