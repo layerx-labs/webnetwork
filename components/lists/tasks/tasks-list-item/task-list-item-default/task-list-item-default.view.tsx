@@ -16,16 +16,12 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 import TaskStatusInfo from "components/task-status-info";
 import Translation from "components/translation";
 
-import { IssueBigNumberData } from "interfaces/issue-data";
+import { TaskListItemVariantProps } from "types/components";
 
-interface TaskListItemDefaultProps {
-  task: IssueBigNumberData;
-  onClick?: () => void;
-}
 export default function TaskListItemDefault ({
   task,
   onClick,
-}: TaskListItemDefaultProps) {
+}: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
 
   return (

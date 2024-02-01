@@ -11,18 +11,14 @@ import TaskStatusInfo from "components/task-status-info";
 import { formatNumberToCurrency } from "helpers/formatNumber";
 import { getIssueState } from "helpers/handleTypeIssue";
 
-import { IssueBigNumberData } from "interfaces/issue-data";
+import { TaskListItemVariantProps } from "types/components";
 
 import { useSettings } from "x-hooks/use-settings";
 
-interface TaskListItemSmallProps {
-  task: IssueBigNumberData;
-  onClick?: () => void;
-}
 export default function TaskListItemSmall ({
   task,
   onClick,
-}: TaskListItemSmallProps) {
+}: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
 
   const { settings } = useSettings();

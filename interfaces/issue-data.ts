@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { Network } from "interfaces/network";
 import { Payment } from "interfaces/payments";
 import { Proposal } from "interfaces/proposal";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
 import { User } from "./api";
@@ -54,6 +55,7 @@ export interface IssueData {
   disputes?: Disputes[];
   payments: Payment[];
   network?: Network;
+  chain?: SupportedChainData;
   tags: string[];
   isDraft: boolean;
   isClosed: boolean;

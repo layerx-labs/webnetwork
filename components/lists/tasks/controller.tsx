@@ -9,7 +9,7 @@ import TasksListView from "components/lists/tasks/view";
 import { issueParser } from "helpers/issue";
 
 import { SearchBountiesPaginated } from "types/api";
-import { SearchBountiesPaginatedBigNumber } from "types/components";
+import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
 
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useChain from "x-hooks/use-chain";
@@ -25,6 +25,7 @@ interface TasksListProps {
   variant?: "bounty-hall" | "profile" | "network" | "management";
   type?: "bounties" | "deliverables" | "proposals";
   filterType?: "category" | "search";
+  itemVariant?: TasksListItemVariant;
   hideFilter?: boolean;
   hideTitle?: boolean;
 }
@@ -38,7 +39,8 @@ export default function TasksList({
   type = "bounties",
   hideFilter,
   hideTitle,
-  filterType = "search"
+  filterType = "search",
+  itemVariant
 }: TasksListProps) {
   const router = useRouter();
 
@@ -92,13 +94,13 @@ export default function TasksList({
       if (!previous || bounties.currentPage === 1) 
         return {
           ...bounties,
-          rows: bounties.rows.map(issueParser)
+          rows: bounties?.rows?.map(issueParser)
         };
 
       return {
         ...previous,
         ...bounties,
-        rows: previous.rows.concat(bounties.rows.map(issueParser))
+        rows: previous?.rows?.concat(bounties?.rows?.map(issueParser))
       };
     });
   }, [bounties]);
@@ -136,6 +138,7 @@ export default function TasksList({
       chains={supportedChains}
       filterType={filterType}
       hideTitle={hideTitle}
+      itemVariant={itemVariant}
     />
   );
 }

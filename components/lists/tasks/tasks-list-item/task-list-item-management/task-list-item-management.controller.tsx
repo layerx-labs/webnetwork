@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import TaskListItemManagementView
   from "components/lists/tasks/tasks-list-item/task-list-item-management/task-list-item-management.view";
 
-import { IssueBigNumberData } from "interfaces/issue-data";
+import { TaskListItemVariantProps } from "types/components";
 
 import { useUpdateBountyVisibility } from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
@@ -13,15 +13,10 @@ import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
-interface TaskListItemManagementProps {
-  task: IssueBigNumberData;
-  onClick?: () => void;
-}
-
 export default function TaskListItemManagement ({
   task,
   onClick,
-}: TaskListItemManagementProps) {
+}: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
   
   const [visible, setVisible] = useState<boolean>();

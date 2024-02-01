@@ -10,17 +10,17 @@ import TasksListItemTaskHall
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
+import { TasksListItemVariant } from "types/components";
+
 import useMarketplace from "x-hooks/use-marketplace";
 
 interface TasksListItemProps {
   issue?: IssueBigNumberData;
   xClick?: () => void;
-  size?: "sm" | "lg";
-  variant?: "network" | "multi-network" | "management";
+  variant?: TasksListItemVariant;
 }
 
 export default function TasksListItem({
-  size = "lg",
   issue = null,
   xClick,
   variant = "network"
@@ -28,6 +28,13 @@ export default function TasksListItem({
   const router = useRouter();
 
   const { getURLWithNetwork } = useMarketplace();
+
+  const itemComponent = {
+    small: TaskListItemSmall,
+    network: TaskListItemDefault,
+    "multi-network": TasksListItemTaskHall,
+    management: TaskListItemManagement
+  }[variant] || TaskListItemDefault;
 
   function handleClickCard() {
     if (xClick) return xClick();
@@ -37,36 +44,8 @@ export default function TasksListItem({
     }));
   }
 
-  if (size === "sm") {
-    return (
-      <TaskListItemSmall
-        task={issue}
-        onClick={handleClickCard}
-      />
-    );
-  }
-
-  if (variant === "management") {
-    return (
-      <TaskListItemManagement
-        task={issue}
-        onClick={handleClickCard}
-      />
-    );
-  }
-
-  if (variant === "multi-network")
-    return (
-      <TasksListItemTaskHall
-        task={issue}
-        onClick={handleClickCard}
-      />
-    );
-
-  return (
-    <TaskListItemDefault
-      task={issue}
-      onClick={handleClickCard}
-    />
-  );
+  return itemComponent({
+      task: issue,
+      onClick: handleClickCard
+  });
 }

@@ -16,7 +16,7 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import { SearchBountiesPaginatedBigNumber } from "types/components";
+import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
 
 interface TasksListViewProps {
   bounties?: SearchBountiesPaginatedBigNumber;
@@ -24,6 +24,7 @@ interface TasksListViewProps {
   buttonMessage?: string;
   variant: "bounty-hall" | "profile" | "network" | "management";
   type: "bounties" | "deliverables" | "proposals";
+  itemVariant?: TasksListItemVariant;
   searchString: string;
   isOnNetwork?: boolean;
   isConnected?: boolean;
@@ -47,6 +48,7 @@ export default function TasksListView({
   variant,
   bounties,
   type,
+  itemVariant,
   searchString,
   isOnNetwork,
   isConnected,
@@ -72,7 +74,8 @@ export default function TasksListView({
   const hasMorePages = hasIssues && bounties?.currentPage < bounties?.pages;
   const showClearButton = !!searchString && searchString?.trim() !== "";
   const showSearchFilter = hasIssues || !hasIssues && hasFilter;
-  const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network";
+  const variantIssueItem = itemVariant ||
+    (isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network");
   const isCategoryFilter = filterType === "category";
 
   const columns = [
