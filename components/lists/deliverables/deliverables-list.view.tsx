@@ -17,7 +17,7 @@ export default function DeliverablesListView ({
     {
       label: "Newest",
       value: "newest",
-      sortBy: "created",
+      sortBy: "createdAt",
       order: "DESC",
     }, {
       label: "Oldest",
