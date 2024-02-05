@@ -169,4 +169,4 @@ export interface TaskListItemVariantProps {
   onClick?: () => void;
 }
 
-export type Status = "review" | "not-accepted" | "canceled" | "accepted" | "draft";
+export type Status = "review" | "not-accepted" | "canceled" | "accepted" | "draft" | "refused" | "disputed";
