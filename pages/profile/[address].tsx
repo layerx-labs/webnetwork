@@ -8,9 +8,15 @@ import { User } from "interfaces/api";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { DeliverablePaginatedData, ProposalPaginatedData, SearchBountiesPaginated } from "types/api";
+import {
+  DeliverablePaginatedData,
+  PaymentPaginatedData,
+  ProposalPaginatedData,
+  SearchBountiesPaginated
+} from "types/api";
 
 import { useSearchDeliverables } from "x-hooks/api/deliverable/use-search-deliverables";
+import { useSearchPayments } from "x-hooks/api/payment/use-search-payments";
 import { useSearchProposals } from "x-hooks/api/proposal/use-search-proposals";
 import { getBountiesListData } from "x-hooks/api/task";
 import { useGetUserByAddress } from "x-hooks/api/user";
@@ -20,6 +26,7 @@ export interface PublicProfileProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
+  payments?: PaymentPaginatedData;
 }
 
 export default function PublicProfile(props: PublicProfileProps) {
@@ -34,6 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     tasks: emptyPaginatedData,
     deliverables: emptyPaginatedData,
     proposals: emptyPaginatedData,
+    payments: emptyPaginatedData,
   };
 
   const getTasks = async (filter: "receiver" | "creator") => getBountiesListData({
@@ -56,6 +64,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   case "proposals":
     pageData.proposals = await useSearchProposals({ creator: address, ...query });
     break;
+  case "nfts":
+    pageData.payments = await useSearchPayments({ wallet: address, ... query });
   }
 
   return {

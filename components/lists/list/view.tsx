@@ -43,6 +43,7 @@ interface ListViewProps {
   onSearchInputChange: (event) => void;
   onSearchClick: () => void;
   onEnterPressed: (event) => void;
+  itemsContainerClassName?: string;
 }
 
 export default function ListView(props: ListViewProps) {
@@ -65,6 +66,7 @@ export default function ListView(props: ListViewProps) {
     hasMorePages,
     chainFilters,
     chains,
+    itemsContainerClassName,
     onNextPage,
     onSearchClick,
     onClearSearch,
@@ -150,7 +152,7 @@ export default function ListView(props: ListViewProps) {
           <InfiniteScroll
             handleNewPage={onNextPage}
             hasMore={hasMorePages}
-            className="d-flex flex-column gap-2"
+            className={itemsContainerClassName || "d-flex flex-column gap-2"}
           >
             {children}
           </InfiniteScroll>
