@@ -24,9 +24,10 @@ export default function CreateNetworkBountyButton({
       setIsModalVisible(true);
       return;
     }
-    query?.network
-      ? push(`/create-task?marketplace=${query?.network}`)
-      : push("/create-task");
+    if (query?.network)
+      push(`/create-task?marketplace=${query?.network}`);
+    else
+      push("/create-task");
   }
 
   function onCloseClick () {
