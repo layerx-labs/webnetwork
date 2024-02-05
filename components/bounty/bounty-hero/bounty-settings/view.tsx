@@ -1,14 +1,9 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-  } from "react";
-  
-import { useTranslation } from "next-i18next";
+import {useEffect, useRef, useState,} from "react";
+
+import {useTranslation} from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import Modal from "components/modal";
-import ResponsiveWrapper from "components/responsive-wrapper";
 import Translation from "components/translation";
 
 interface BountySettingsViewProps {
@@ -120,7 +115,6 @@ export default function BountySettingsView({
   function renderEditButton() {
     if (isBountyOwner && isBountyInDraft)
       return (
-        <ResponsiveWrapper xs={true} md={false}>
           <ContractButton
             className="px-0 mx-0 p font-weight-normal text-capitalize"
             transparent
@@ -130,7 +124,6 @@ export default function BountySettingsView({
           >
             <Translation ns="bounty" label="actions.edit-bounty" />
           </ContractButton>
-        </ResponsiveWrapper>
       );
   }
 

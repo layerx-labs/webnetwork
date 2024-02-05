@@ -5,7 +5,7 @@ import ClosedNetworkAlert from "components/closed-network-alert";
 import BrandLogo from "components/common/brand-logo/view";
 import NavBarActions from "components/navigation/navbar/actions/view";
 import NavBarLinks from "components/navigation/navbar/links/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 interface NavBarViewProps {
   isOnNetwork: boolean;
@@ -40,20 +40,8 @@ export default function NavBarView({
         >
           <div className="d-flex align-items-center nav-gap">
             <div className="d-flex gap-32">
-              <ResponsiveWrapper xs={false} xl={true}>
-                <BrandLogo
-                  href={brandHref}
-                  logoUrl={logos.fullLogo}
-                  showDefaultBepro={!isOnNetwork}
-                />
-              </ResponsiveWrapper>
-              <ResponsiveWrapper xs={true} xl={false}>
-                <BrandLogo
-                  href={brandHref}
-                  logoUrl={logos.logoIcon}
-                  showDefaultBepro={!isOnNetwork}
-                />
-              </ResponsiveWrapper>
+              <ResponsiveEle mobileView={<BrandLogo href={brandHref} logoUrl={logos.fullLogo} showDefaultBepro={!isOnNetwork}/>}
+                             tabletView={<BrandLogo href={brandHref} logoUrl={logos.logoIcon} showDefaultBepro={!isOnNetwork}/>} />
             </div>
 
             <NavBarLinks />

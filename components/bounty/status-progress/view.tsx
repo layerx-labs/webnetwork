@@ -1,12 +1,12 @@
-import { Fragment } from "react";
+import {Fragment} from "react";
 
-import { add, addSeconds, compareAsc, intervalToDuration } from "date-fns";
-import { useTranslation } from "next-i18next";
+import {add, addSeconds, compareAsc, intervalToDuration} from "date-fns";
+import {useTranslation} from "next-i18next";
 
 import { Tooltip } from "components/common/tooltip/tooltip.view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { formatDate, getTimeDifferenceInWords } from "helpers/formatDate";
+import {formatDate, getTimeDifferenceInWords} from "helpers/formatDate";
 
 interface BountyStatusProgressProps {
   steps: string[];
@@ -123,18 +123,11 @@ export default function BountyStatusProgressView({
     if (closedDate && index === currentStep && currentStep === 4)
       item(closedDate).At;
 
+    const className =
+      `white-space text-${currentValue.color && currentValue.color} text-uppercase caption-small secondary-text`
+
     if (currentValue)
-      return (
-        <ResponsiveWrapper xs={false} lg={true}>
-          <span
-            className={`white-space text-${
-              currentValue.color && currentValue.color
-            } text-uppercase caption-small secondary-text `}
-          >
-            {currentValue.text}
-          </span>
-        </ResponsiveWrapper>
-      );
+      return <ResponsiveEle tabletView={<span className={className}>{currentValue.text}</span>} />
   }
 
   function renderColumn(stepLabel, index) {

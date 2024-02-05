@@ -241,13 +241,9 @@ export default function CreateTaskPageView({
       </If>
 
       <CustomContainer className='d-flex flex-column justify-content-end'>
-        <ResponsiveWrapper className="row my-4" xs={false} md={true}>
+        <div className="row my-4 mx-xs-1 mx-sm-1">
           {renderButtons()}
-        </ResponsiveWrapper>
-
-        <ResponsiveWrapper className="row my-4 mx-1" xs={true} md={false}>
-          {renderButtons()}
-        </ResponsiveWrapper>
+        </div>
       </CustomContainer>
     </CreateBountyContainer>
   );

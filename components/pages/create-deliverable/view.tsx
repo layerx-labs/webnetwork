@@ -1,21 +1,20 @@
-import { ChangeEvent } from "react";
+import {ChangeEvent} from "react";
 
 import clsx from "clsx";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import BountyLabel from "components/bounty/create-bounty/create-bounty-label";
 import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
-import { ContextualSpan } from "components/contextual-span";
+import {ContextualSpan} from "components/contextual-span";
 import If from "components/If";
 import MakeDeliverableRedyModal from "components/modals/make-deliverable-ready/controller";
 import OpenGraphPreview from "components/open-graph-preview/controller";
 import FooterButtons from "components/pages/create-deliverable/footer-buttons/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { OriginLinkErrors } from "interfaces/enums/Errors";
+import {OriginLinkErrors} from "interfaces/enums/Errors";
 
-import { SelectOption } from "types/utils";
+import {SelectOption} from "types/utils";
 
 interface CreateDeliverablePageViewProps {
   checkButtonsOptions: SelectOption[];
@@ -189,22 +188,14 @@ export default function CreateDeliverablePageView({
       </div>
       <div className="row justify-content-center px-0 mx-0">
       <div className="col-md-8 mx-0 px-0">
-      <ResponsiveWrapper className="d-flex justify-content-center my-4" xs={false} md={true}>
+        <div className="my-4 mx-1 mx-md-0">
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
             disabledCreate={isCreateButtonDisabled}
             isLoadingCreate={createIsLoading}
           />
-        </ResponsiveWrapper>
-        <ResponsiveWrapper className="my-4 mx-1" xs={true} md={false}>
-          <FooterButtons
-            handleBack={onHandleBack}
-            handleCreate={onHandleCreate}
-            disabledCreate={isCreateButtonDisabled}
-            isLoadingCreate={createIsLoading}
-          />
-        </ResponsiveWrapper>
+        </div>
       </div>
 
       </div>

@@ -1,10 +1,10 @@
-
 import TokenSymbolView from "components/common/token-symbol/view";
 import InfoTooltip from "components/info-tooltip";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 
+import useBreakPoint from "../../../../../x-hooks/use-breakpoint";
 import If from "../../../../If";
 
 interface ResponsiveProps {
@@ -13,16 +13,16 @@ interface ResponsiveProps {
 }
 
 export default function VotingPowerSubTitleView({
-  label,
-  total,
-  votesSymbol,
-  propsMobile,
-  propsDesktopAndTablet,
-  infoTooltip,
-  getTextColorProps,
-  getTitleSpanClass,
-  getAmountClass,
-}: {
+                                                  label,
+                                                  total,
+                                                  votesSymbol,
+                                                  propsMobile,
+                                                  propsDesktopAndTablet,
+                                                  infoTooltip,
+                                                  getTextColorProps,
+                                                  getTitleSpanClass,
+                                                  getAmountClass,
+                                                }: {
   label: string;
   infoTooltip?: string;
   total?: string;
@@ -34,7 +34,9 @@ export default function VotingPowerSubTitleView({
   getAmountClass: (type: string) => string;
 }) {
 
-  function renderAmount({icon = true}) {
+  const {isMobileView, isTabletView} = useBreakPoint(true)
+
+  function renderAmount({icon}: { icon: boolean }) {
     return (
       <>
         <span>
@@ -54,30 +56,14 @@ export default function VotingPowerSubTitleView({
 
   return (
     <>
-      <ResponsiveWrapper {...propsMobile}>
-        <span className={getTitleSpanClass("fs-small")}>
-          {label}
-        </span>
-      </ResponsiveWrapper>
-      <ResponsiveWrapper {...propsDesktopAndTablet}>
-        <span className={getTitleSpanClass("h4")}>
-          {label}
-        </span>
-      </ResponsiveWrapper>
-      <If condition={!!total}>
-        <ResponsiveWrapper
-          {...propsMobile}
-          className={getAmountClass("fs-smallest")}
-        >
-          {renderAmount({icon: false})}
-        </ResponsiveWrapper>
-        <ResponsiveWrapper
-          {...propsDesktopAndTablet}
-          className={getAmountClass("caption-medium")}
-        >
-          {renderAmount({})}
-        </ResponsiveWrapper>
-      </If>
+
+      <ResponsiveEle mobileView={<span className={getTitleSpanClass("fs-small")}>{label}</span>}
+                     tabletView={<span className={getTitleSpanClass("h4")}>{label}</span>}/>
+
+      <If condition={!!total}
+          children={<ResponsiveEle className={`${isMobileView && isTabletView && "fs-smallest" || "caption-medium"}`}
+                                   mobileView={<span className="fs-smallest">{renderAmount({icon: !(isMobileView && isTabletView)})}</span>}/>}
+      />
     </>
   );
 }

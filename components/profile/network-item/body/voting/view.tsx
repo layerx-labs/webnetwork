@@ -1,11 +1,12 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ArrowUpRight from "assets/icons/arrow-up-right";
 
 import Button from "components/button";
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {FlexColumn, FlexRow} from "components/common/flex-box/view";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
+import If from "../../../../If";
 import NetworkItemAmountView from "../../amount/view";
 
 
@@ -54,28 +55,14 @@ export default function BodyVotingView({
       <FlexColumn className="justify-content-center py-3 ms-2">
         <FlexRow>
           <RenderAmount />
-          {handleNetworkLink && (
-            <ResponsiveWrapper xl={true} lg={true} md={true} xs={false}>
-              <Button
-                className="button-gray-850 ms-3 cursor-pointer"
-                onClick={handleNetworkLink}
-              >
-                <span>{t("go-to-network")}&nbsp;</span>
-                <ArrowUpRight className="w-9-p h-9-p" />
-              </Button>
-            </ResponsiveWrapper>
-          )}
+          <If condition={!!handleNetworkLink}
+              children={<>
+                <ResponsiveEle tabletView={<Button className="button-gray-850 ms-3 cursor-pointer" onClick={handleNetworkLink}><span>{t("go-to-network")}&nbsp;</span><ArrowUpRight className="w-9-p h-9-p" /></Button>} />
+              </>} />
         </FlexRow>
       </FlexColumn>
-      {handleNetworkLink && (
-        <ResponsiveWrapper xs={true} md={false} >
-          <FlexRow className="justify-content-center">
-            <div>
-              <NetworkLinkIconButton className="px-2" />
-            </div>
-          </FlexRow>
-        </ResponsiveWrapper>
-      )}
+      <If condition={!!handleNetworkLink}
+          children={<ResponsiveEle mobileView={<FlexRow className="justify-content-center"><div><NetworkLinkIconButton className="px-2" /></div></FlexRow>}/>} />
     </>
   );
 }

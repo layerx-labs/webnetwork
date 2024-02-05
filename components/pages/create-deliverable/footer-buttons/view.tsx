@@ -1,8 +1,8 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Button from "components/button";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 export default function FooterButtons({
   handleBack,
@@ -33,12 +33,8 @@ export default function FooterButtons({
           isLoading={isLoadingCreate}
           data-testid="create-deliverable-btn"
         >
-          <ResponsiveWrapper xs={true} md={false}>
-            {t("common:misc.create")}
-          </ResponsiveWrapper>
-          <ResponsiveWrapper xs={false} md={true}>
-            {t("deliverable:actions.create.title")}
-          </ResponsiveWrapper>
+          <ResponsiveEle mobileView={t("common:misc.create")}
+                         tabletView={t("deliverable:actions.create.title")} />
         </ContractButton>
       </div>
     </>

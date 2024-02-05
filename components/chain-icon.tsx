@@ -1,11 +1,10 @@
-import { CSSProperties } from "react";
+import {CSSProperties} from "react";
 
 import getConfig from "next/config";
 
 import QuestionMarkIcon from "assets/icons/question-mark-icon";
 
 import If from "./If";
-import ResponsiveWrapper from "./responsive-wrapper";
 
 interface ChainIconProps {
   src?: string;
@@ -34,9 +33,7 @@ export default function ChainIcon({
     <div className="d-flex align-items-center gap-1">
       {chainIcon}
       <If condition={!!label}>
-        <ResponsiveWrapper xs={!responsiveLabel} sm={responsiveLabel}>
           <span className="sm-regular font-weight-normal text-gray-200 lh-1">{label}</span>
-        </ResponsiveWrapper>
       </If>
     </div>
   );

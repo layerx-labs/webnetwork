@@ -1,8 +1,6 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
-import ResponsiveWrapper from "components/responsive-wrapper";
-
-import { FlexRow } from "../../common/flex-box/view";
+import {FlexRow} from "../../common/flex-box/view";
 import NetworkItemBody from "./body/controller";
 import NetworkItemTitleView from "./title/view";
 
@@ -57,11 +55,11 @@ export default function NetworkItemView({
           subNetworkText={subNetworkText}
         />
         {subNetworkText && (
-          <ResponsiveWrapper xs={true} md={false} className="py-3 ms-4">
+          <div className="d-block d-md-none py-3 ms-4">
             <div className="mw-repo text-truncate">
               <span className="text-gray fs-8">{subNetworkText}</span>
             </div>
-          </ResponsiveWrapper>
+          </div>
         )}
         <NetworkItemBody
           isCollapsed={isCollapsed}

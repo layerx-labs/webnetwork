@@ -1,13 +1,13 @@
-import { NumberFormatValues } from "react-number-format";
+import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import AmountTokenInformation from "components/bounty/amount-token-information/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { DistributionsProps } from "interfaces/proposal";
-import { Token } from "interfaces/token";
+import {DistributionsProps} from "interfaces/proposal";
+import {Token} from "interfaces/token";
 
 import InputNumber from "../../../input-number";
 import TokensDropdown from "../../../tokens-dropdown";
@@ -123,18 +123,10 @@ export default function CreateBountyTokenAmountView({
         <div className="row d-flex flex-wrap justify-content-between">
           <div className="col col-md-5 mb-0 pb-0">
             {selectTokens("token-select")}
-            <ResponsiveWrapper className="mt-1" xs={true} md={false}>
-              <RenderBalance />
-            </ResponsiveWrapper>
+            <ResponsiveEle className="mt-1" mobileView={<RenderBalance />} tabletView={null} />
           </div>
 
-          <ResponsiveWrapper
-            className="d-flex justify-content-end mt-3"
-            xs={false}
-            md={true}
-          >
-            <RenderBalance />
-          </ResponsiveWrapper>
+          <ResponsiveEle className="d-flex justify-content-end mt-3" tabletView={<RenderBalance />} />
         </div>
 
         <AmountTokenInformation 
@@ -170,9 +162,7 @@ export default function CreateBountyTokenAmountView({
             <div className="row d-flex flex-wrap justify-content-between">
               <div className="col col-md-5 mb-0 pb-0">
                 {selectTokens("funders-reward-select")}
-                <ResponsiveWrapper className="mt-1 mb-4" xs={true} md={false}>
-                  <RenderBalance />
-                </ResponsiveWrapper>
+                <ResponsiveEle className="mt-1 mb-4" mobileView={<RenderBalance />} tabletView={null} />
               </div>
               <div className="col-md-4 col-12">{inputNumber()}</div>
             </div>

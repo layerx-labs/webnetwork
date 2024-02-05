@@ -5,16 +5,16 @@ import If from "components/If";
 import ProposalActionsButtons from "components/proposal/actions/buttons/controller";
 import ProposalActions from "components/proposal/actions/controller";
 import ProposalDeliverableDetails from "components/proposal/deliverable-details/controller";
-import { ProposalDisputes } from "components/proposal/disputes-list/controller";
+import {ProposalDisputes} from "components/proposal/disputes-list/controller";
 import DistributionBar from "components/proposal/distribution/bar/view";
 import ProposalDistributionList from "components/proposal/distribution/list/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { CurrentUserState } from "interfaces/application-state";
-import { Deliverable, IssueBigNumberData, IssueDataComment } from "interfaces/issue-data";
-import { DistributedAmounts } from "interfaces/proposal";
+import {CurrentUserState} from "interfaces/application-state";
+import {Deliverable, IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
+import {DistributedAmounts} from "interfaces/proposal";
 
-import { ProposalPageProps } from "types/pages";
+import {ProposalPageProps} from "types/pages";
 
 interface ProposalPageViewProps extends ProposalPageProps {
   deliverable: Deliverable;
@@ -75,11 +75,8 @@ export default function ProposalPageView({
               issue={issue}
             />
 
-            <ResponsiveWrapper xs={false} xl={true}>
-              <div className="mt-4 w-100">
-                <DistributionBar distributedAmounts={distributedAmounts} />
-              </div>
-            </ResponsiveWrapper>
+            <ResponsiveEle desktopView={<div className="mt-4 w-100"><DistributionBar distributedAmounts={distributedAmounts}/></div>} />
+
           </div>
         </div>
 

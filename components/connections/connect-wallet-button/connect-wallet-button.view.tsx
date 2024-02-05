@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Button from "components/button";
 import ConnectWalletModal from "components/connections/connect-wallet-modal/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 interface ConnectWalletButtonViewProps {
   children?: ReactNode;
@@ -46,13 +46,8 @@ export default function ConnectWalletButtonView ({
         data-testid="connect-wallet-button"
         onClick={onConnectClick}>
         <span>
-          <ResponsiveWrapper xs={true} xl={false}>
-            {t("main-nav.connect")}
-          </ResponsiveWrapper>
-
-          <ResponsiveWrapper xs={false} xl={true}>
-            {t("main-nav.connect-wallet")}
-          </ResponsiveWrapper>
+          <ResponsiveEle mobileView={t("main-nav.connect")}
+                         desktopView={t("main-nav.connect-wallet")} />
         </span>
       </Button>
     );

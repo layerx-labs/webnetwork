@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ApprovedIcon from "assets/icons/approved-icon";
 import InfoIconEmpty from "assets/icons/info-icon-empty";
@@ -8,9 +8,8 @@ import InfoIconEmpty from "assets/icons/info-icon-empty";
 import Button from "components/button";
 import If from "components/If";
 import UserNameWithEditIcon from "components/profile/user-name-with-edit-icon/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { UserhandleInvalid } from "./controller";
+import {UserhandleInvalid} from "./controller";
 
 type UserNameFormViewProps = {
   userhandle: string;
@@ -82,9 +81,6 @@ export default function UserNameFormView({
             </If>
           </div>
         </div>
-        <ResponsiveWrapper xl={false} xs={true}>
-          <InvalidMessage />
-        </ResponsiveWrapper>
         <div className="col-12 col-lg-auto">
           <div className="row mx-0">
             <Button
@@ -97,9 +93,7 @@ export default function UserNameFormView({
             </Button>
           </div>
         </div>
-        <ResponsiveWrapper xl={true} xs={false}>
-          <InvalidMessage />
-        </ResponsiveWrapper>
+        <InvalidMessage />
       </If>
     </div>
   );

@@ -1,8 +1,8 @@
-import { Fragment } from "react";
+import {Fragment} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 export default function CreateBountySteps({
   steps,
@@ -45,23 +45,26 @@ export default function CreateBountySteps({
             </div>
           </div>
         </div>
-        <ResponsiveWrapper  className="d-flex flex-column" xs={false} md={true}>
-          <span className="text-gray">{t("bounty:step", {currentStep: (index + 1)})}</span>
-          <span>{label}</span>
-        </ResponsiveWrapper>
-      </div>
+          <ResponsiveEle className="d-flex flex-column"
+                         tabletView={<>
+                           <span className="text-gray">{t("bounty:step", {currentStep: (index + 1)})}</span>
+                           <span>{label}</span>
+                         </>}/>
+        </div>
     </Fragment>
     );
   }
 
+  const renderedSteps = steps.map(renderColumn);
+
   return (
     <>
-      <ResponsiveWrapper className="row mb-4 mt-1 mx-2" xs={true} md={false}>
-        {steps.map(renderColumn)}
-      </ResponsiveWrapper>
-      <ResponsiveWrapper className="row my-4 mx-1" xs={false} md={true}>
-        {steps.map(renderColumn)}
-      </ResponsiveWrapper>
+      <ResponsiveEle className="row mb-4 mt-1 mx-2"
+                     tabletView={null}
+                     mobileView={renderedSteps} />
+
+      <ResponsiveEle className="row my-4 mx-1"
+                     tabletView={renderedSteps} />
     </>
   );
 }

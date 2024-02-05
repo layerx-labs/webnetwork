@@ -1,12 +1,10 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
 import clsx from "clsx";
 
-import { BOOTSTRAP_BREAKPOINTS } from "helpers/constants";
-
 import { BreakpointOptions } from "types/utils";
 
-import useBreakPoint from "x-hooks/use-breakpoint";
+import useBreakPoint from "../x-hooks/use-breakpoint";
 
 interface ResponsiveWrapperProps extends BreakpointOptions {
   children?: ReactNode;
@@ -55,7 +53,7 @@ export default function ResponsiveWrapper({
   }
 
   return(
-    <div 
+    <div
       className={clsx([
         getClass(xs, "d-flex", "d-none"),
         getClass(sm, "d-sm-flex", "d-sm-none"),

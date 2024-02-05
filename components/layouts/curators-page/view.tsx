@@ -1,15 +1,15 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import BecomeCuratorCard from "components/cards/become-curator/controller";
 import MiniTabs from "components/common/mini-tabs/view";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { HeroInfo, MiniTabsItem } from "types/components";
+import {HeroInfo, MiniTabsItem} from "types/components";
 
 interface CuratorsPageLayoutViewProps {
   children?: ReactNode;
@@ -36,17 +36,10 @@ export default function CuratorsPageLayoutView({
         infos={heroInfos}
       />
 
-      <CustomContainer
-        className="pt-3 pb-5"
-        col = "col-xs-12 col-xl-10"
-      >
-        <ResponsiveWrapper xs={false} xl={true} className="justify-content-center align-items-center">
-          <MiniTabs items={tabsItems} />
-        </ResponsiveWrapper>
-
-        <ResponsiveWrapper xs={true} xl={false} className="justify-content-start align-items-center">
-          <ScrollableTabs tabs={tabsItems} />
-        </ResponsiveWrapper>
+      <CustomContainer className="pt-3 pb-5" col = "col-xs-12 col-xl-10">
+        <ResponsiveEle className="justify-content-center align-items-center"
+                       mobileView={<MiniTabs items={tabsItems} />}
+                       tabletView={<ScrollableTabs tabs={tabsItems} />} />
 
         <div className="row justify-content-center mt-3">
           <div className="mb-3">

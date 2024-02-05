@@ -1,10 +1,10 @@
-import { ReactElement } from "react";
+import {ReactElement} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 export default function RenderItemRow({
   children,
@@ -46,29 +46,16 @@ export default function RenderItemRow({
             <InfoTooltip description={tooltip} />
           </If>
         </label>
-        {handleLink && (
-          <ResponsiveWrapper xs={true} md={false}>
-            {Link()}
-          </ResponsiveWrapper>
-        )}
+        {handleLink && <ResponsiveEle mobileView={Link()} />}
       </div>
 
       <div className="row justify-content-between">
         <div className="col-md-6 col-12 text-gray mt-1">
-          {handleLink ? (
-            <>
-              <ResponsiveWrapper xs={false} md={true}>
-                <div>
-                  {description} {Link()}
-                </div>
-              </ResponsiveWrapper>
-              <ResponsiveWrapper xs={true} md={false}>
-                {description}
-              </ResponsiveWrapper>
-            </>
-          ) : (
-            description
-          )}
+          {handleLink
+            ? <ResponsiveEle mobileView={description}
+                             desktopView={<>{description} {Link()}</>} />
+            : description
+          }
         </div>
         <div
           className={

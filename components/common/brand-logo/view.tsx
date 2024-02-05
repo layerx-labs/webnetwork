@@ -1,9 +1,9 @@
-import { UrlObject } from "url";
+import {UrlObject} from "url";
 
 import LogoPlaceholder from "assets/icons/logo-placeholder";
 
 import InternalLink from "components/internal-link";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 interface BrandLogoProps {
   href: string | UrlObject;
@@ -11,39 +11,14 @@ interface BrandLogoProps {
   showDefaultBepro?: boolean;
 }
 
-export default function BrandLogo({
-  href,
-  logoUrl,
-  showDefaultBepro
-} : BrandLogoProps) {
+export default function BrandLogo({href, logoUrl, showDefaultBepro} : BrandLogoProps) {
   const defaultLogo = `/images/Bepro_Logo_Light.svg`;
 
   const icon =
-    showDefaultBepro || logoUrl ? (
-      <>
-        <ResponsiveWrapper xs={false} xl={true}>
-          <img src={showDefaultBepro ? defaultLogo : logoUrl} height={32} />
-        </ResponsiveWrapper>
-        <ResponsiveWrapper xs={true} xl={false}>
-          <img
-            src={showDefaultBepro ? defaultLogo : logoUrl}
-            height={32}
-            className="mw-45-vw"
-          />
-        </ResponsiveWrapper>
-      </>
-    ) : (
-      <LogoPlaceholder />
-    );
+    showDefaultBepro || logoUrl
+      ? <ResponsiveEle mobileView={<img src={showDefaultBepro ? defaultLogo : logoUrl} height={32}/>}
+                       tabletView={<img src={showDefaultBepro ? defaultLogo : logoUrl} height={32}/>}/>
+      : <LogoPlaceholder />
 
-  return(
-    <InternalLink
-      href={href}
-      icon={icon}
-      className="brand"
-      nav
-      active
-      brand
-    />
-  );
+  return <InternalLink href={href} icon={icon} className="brand" nav active brand />
 }

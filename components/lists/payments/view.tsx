@@ -1,14 +1,14 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import PaymentItem from "components/lists/payments/item/view";
 import NetworkItem from "components/profile/network-item/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { Payment } from "interfaces/payments";
+import {Payment} from "interfaces/payments";
 
-import { NetworkPaymentsData } from "types/api";
+import {NetworkPaymentsData} from "types/api";
 
-import { FlexColumn } from "../../../components/common/flex-box/view";
+import {FlexColumn} from "../../../components/common/flex-box/view";
 
 interface HeaderItem {
   label: string;
@@ -32,20 +32,18 @@ export default function PaymentsListView({
   onPaymentRedirect,
 }: PaymentsListViewProps) {
   const { t } = useTranslation("common");
-  return(
+
+  const mapLabels = ({ label, align }: HeaderItem) => (
+    <div className="col-3">
+      <div className={`row text-${align}`}>
+        <span className="caption-medium text-gray-500 font-weight-normal text-capitalize">{label}</span>
+      </div>
+    </div>
+  )
+
+  return (
     <>
-      <ResponsiveWrapper
-        xs={false}
-        xl={true}
-        className="row"
-      >
-        {headers.map(({ label, align }) => 
-          <div className="col-3">
-            <div className={`row text-${align}`}>
-              <span className="caption-medium text-gray-500 font-weight-normal text-capitalize">{label}</span>
-            </div>
-          </div>)}
-      </ResponsiveWrapper>
+      <ResponsiveEle className="row" desktopView={headers.map(mapLabels)} />
 
       {payments?.map(network => (
         <NetworkItem
@@ -57,8 +55,7 @@ export default function PaymentsListView({
           networkChain={network?.chain?.chainShortName}
           handleNetworkLink={onNetworkRedirect(network)}
           amount={convertNetworkValue(network)}
-          symbol={symbol}
-        >
+          symbol={symbol}>
           <FlexColumn className="col-12 gap-2">
             {network?.payments
               .map((payment: Payment) =>

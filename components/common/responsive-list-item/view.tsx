@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
 import clsx from "clsx";
 
 import ResponsiveListItemColumn from "components/common/responsive-list-item/column/view";
 import If from "components/If";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { ResponsiveListItemColumnProps } from "types/components";
+import {ResponsiveListItemColumnProps} from "types/components";
 
 interface NetworkListItemProps {
   onClick?: () => void;
@@ -80,9 +80,9 @@ export default function ResponsiveListItem({
               </div>
             </If>
             <If condition={!!action}>
-              <ResponsiveWrapper className={`mt-2`} xs={true} md={false}>
-                {action}
-              </ResponsiveWrapper>
+              <div className="mt-xs-2 mt-md-0">
+                <ResponsiveEle tabletView={null} mobileView={action} />
+              </div>
             </If>
           </div>
         </div>
@@ -91,16 +91,13 @@ export default function ResponsiveListItem({
       {columns?.map((column, index) => <ResponsiveListItemColumn key={`list-item-${index}`} {...column} />)}
 
       <If condition={!!action}>
-        <ResponsiveWrapper
-          className={`col d-flex flex-row align-items-center justify-content-center`}
-          xs={false}
-          md={true}
-        >
+        <div className="d-none d-md-flex col flex-row align-items-center justify-content-center">
           <div className="d-flex ms-3">
             {action}
           </div>
-        </ResponsiveWrapper>
+        </div>
       </If>
+
     </div>
   );
 }

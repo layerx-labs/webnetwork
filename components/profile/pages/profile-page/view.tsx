@@ -12,7 +12,7 @@ import DashboardLayout from "components/profile/dashboard-layout";
 import LanguageForm from "components/profile/language-form/language-form.controller";
 import NotificationForm from "components/profile/notification-form/controller";
 import UserNameForm from "components/profile/user-name-form/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -35,9 +35,10 @@ export default function ProfilePageView({
     <>
       <div className="border-bottom border-gray-850 border-xl-0">
         <CustomContainer>
-          <ResponsiveWrapper xl={false} xs={true} className="mb-4">
-            <h4>{t(`common:main-nav.nav-avatar.profile`)}</h4>
-          </ResponsiveWrapper>
+          <ResponsiveEle className="mb-4"
+                         desktopView={null}
+                         mobileView={<h4>{t(`common:main-nav.nav-avatar.profile`)}</h4>}/>
+
         </CustomContainer>
       </div>
 

@@ -1,13 +1,12 @@
 import React from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import InfoIconEmpty from "assets/icons/info-icon-empty";
 
 import Button from "components/button";
 import Switch from "components/common/switch/view";
 import If from "components/If";
-import ResponsiveWrapper from "components/responsive-wrapper";
 
 interface NotificationFormViewProps {
   userEmail: string;
@@ -72,15 +71,15 @@ export default function NotificationFormView({
                 disabled={isExecuting}
               />
             </div>
-            <ResponsiveWrapper lg={false} xs={true}>
-              <If condition={isInvalid}>
+            <If condition={isInvalid}>
+              <div className="d-flex d-md-none">
                 <small className="xs-small text-danger">
                   {t("profile:notifications-form.invalid-email")}
                 </small>
-              </If>
-            </ResponsiveWrapper>
+              </div>
+            </If>
             <div className="col-12 col-lg-auto">
-              <div className="row mx-0">
+            <div className="row mx-0">
                 <Button
                   onClick={onSave}
                   disabled={isSaveButtonDisabled}
@@ -91,16 +90,16 @@ export default function NotificationFormView({
                 </Button>
               </div>
             </div>
-            <ResponsiveWrapper lg={true} xs={false}>
-              <If condition={isInvalid}>
-                <div className="d-flex align-items-center gap-1 mt-1">
-                  <InfoIconEmpty className="text-danger" width="13px" />{" "}
-                  <small className="xs-small text-danger">
-                    {t("profile:notifications-form.invalid-email")}
-                  </small>
-                </div>
-              </If>
-            </ResponsiveWrapper>
+
+            <If condition={isInvalid}>
+              <div className="d-none d-md-flex align-items-center gap-1 mt-1">
+                <InfoIconEmpty className="text-danger" width="13px" />{" "}
+                <small className="xs-small text-danger">
+                  {t("profile:notifications-form.invalid-email")}
+                </small>
+              </div>
+            </If>
+
           </div>
 
           <If condition={!!emailVerificationError}>

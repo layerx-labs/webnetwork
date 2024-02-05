@@ -1,6 +1,6 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
+import {FlexColumn, FlexRow} from "components/common/flex-box/view";
 import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
 import IntervalFilters from "components/lists/filters/interval/controller";
@@ -8,12 +8,12 @@ import PaymentsList from "components/lists/payments/controller";
 import PaymentsListMobileFilters from "components/lists/payments/mobile-filters/controller";
 import NothingFound from "components/nothing-found";
 import DashboardLayout from "components/profile/dashboard-layout";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { formatNumberToCurrency } from "helpers/formatNumber";
+import {formatNumberToCurrency} from "helpers/formatNumber";
 
-import { PaymentsPageProps } from "types/pages";
-import { TotalFiatNetworks } from "types/utils";
+import {PaymentsPageProps} from "types/pages";
+import {TotalFiatNetworks} from "types/utils";
 
 interface PaymentsMultiViewProps extends PaymentsPageProps {
   fiatSymbol: string;
@@ -63,74 +63,42 @@ export default function PaymentsMultiView({
 
   return (
     <>
-      <ResponsiveWrapper
-        xs={true}
-        xl={false}
-        className={`align-items-center justify-content-between mb-2 border-bottom 
-        border-gray-850 border-xl-0 pb-3 px-3 mt-2`}
-      >
-        <FlexColumn>
-          <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
-        </FlexColumn>
+      <ResponsiveEle className="align-items-center justify-content-between mb-2 border-bottom border-gray-850 border-xl-0 pb-3 px-3 mt-2"
+                     tabletView={null}
+                     mobileView={<>
+                       <FlexColumn>
+                         <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
+                       </FlexColumn>
 
-        <ResponsiveWrapper xs={false} lg={true}>
-          <FlexRow className="align-items-center">
-            <TotalReceived />
-          </FlexRow>
-        </ResponsiveWrapper>
-
-        <ResponsiveWrapper xs={true} lg={false}>
-          <PaymentsListMobileFilters
-            defaultInterval={defaultInterval}
-            intervals={intervals}
-            chains={chains}
-          />
-        </ResponsiveWrapper>
-      </ResponsiveWrapper>
-
+                       <ResponsiveEle mobileView={<PaymentsListMobileFilters defaultInterval={defaultInterval}
+                                                                             intervals={intervals}
+                                                                             chains={chains}/>}
+                                      desktopView={<FlexRow className="align-items-center"><TotalReceived /></FlexRow>} />
+                     </>} />
       <DashboardLayout>
         <div className="col-12">
-          <ResponsiveWrapper 
-            xs={false}
-            xl={true}
-            className={`align-items-center justify-content-between mb-2 border-bottom 
-            border-gray-850 border-xl-0 pb-3`}
-          >
-            <FlexColumn>
-              <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
-            </FlexColumn>
 
-            <ResponsiveWrapper xs={false} md={true}>
-              <FlexRow className="align-items-center">
-                <TotalReceived />
-              </FlexRow>
-            </ResponsiveWrapper>
-          </ResponsiveWrapper>
+          <ResponsiveEle className="align-items-center justify-content-between mb-2 border-bottom border-gray-850 border-xl-0 pb-3"
+                         desktopView={null}
+                         mobileView={<>
+                           <FlexColumn>
+                             <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
+                           </FlexColumn>
 
-          <ResponsiveWrapper xs={true} lg={false}>
-            <FlexRow className="align-items-center justify-content-between w-100 mb-3">
-              <TotalReceived />
-            </FlexRow>
-          </ResponsiveWrapper>
+                           <ResponsiveEle mobileView={<FlexRow className="align-items-center justify-content-between w-100 mb-3"><TotalReceived /></FlexRow>}
+                                          tabletView={<FlexRow className="align-items-center"><TotalReceived /></FlexRow>} />
+                         </>} />
 
-          <ResponsiveWrapper
-            xs={false}
-            lg={true}
-            className="row align-items-center mb-4"
-          >
-            <div className="col">
-              <IntervalFilters
-                defaultInterval={defaultInterval}
-                intervals={intervals}
-              />
-            </div>
+          <ResponsiveEle className="row align-items-center mb-4"
+                         desktopView={<>
+                           <div className="col">
+                             <IntervalFilters defaultInterval={defaultInterval} intervals={intervals}/>
+                           </div>
 
-            <div className="col-3">
-              <ChainFilter
-                chains={chains}
-              />
-            </div>
-          </ResponsiveWrapper>
+                           <div className="col-3">
+                             <ChainFilter chains={chains}/>
+                           </div>
+                         </>}/>
 
           <FlexRow className="justify-content-center">
             <FlexColumn className="col-12">

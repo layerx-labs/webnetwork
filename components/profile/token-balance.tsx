@@ -1,14 +1,14 @@
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {FlexColumn, FlexRow} from "components/common/flex-box/view";
+import ResponsiveWrapper, {ResponsiveEle} from "components/responsive-wrapper";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 
-import { DelegationExtended } from "interfaces/oracles-state";
-import { TokenInfo } from "interfaces/token";
+import {DelegationExtended} from "interfaces/oracles-state";
+import {TokenInfo} from "interfaces/token";
 
 export type TokenBalanceType = Partial<TokenInfo>;
 
@@ -69,11 +69,7 @@ export default function TokenBalance({
           <span className="caption text-white font-weight-500">
           {overSymbol ? overSymbol : delegationSymbol || symbol}
           </span>
-          <ResponsiveWrapper xs={false} sm={false} md={true} xxl={true}>
-            <span className="caption text-gray-500 text-capitalize font-weight-500">
-              {delegation?.to || name}
-            </span>
-          </ResponsiveWrapper>
+          <ResponsiveEle tabletView={<span className="caption text-gray-500 text-capitalize font-weight-500">{delegation?.to || name}</span>}/>
         </FlexColumn>
       </FlexRow>
       <ResponsiveWrapper

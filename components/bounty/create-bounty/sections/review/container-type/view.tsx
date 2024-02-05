@@ -1,20 +1,13 @@
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
+
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 export function ContainerTypeFlex({ children }) {
-  const CLASS = "d-flex border-top border-gray-700 py-3 px-2";
+  const {isMobileView} = useBreakPoint(true);
 
-  return (
-    <>
-      <ResponsiveWrapper
-        xs={true}
-        md={false}
-        className={`${CLASS} flex-column`}
-      >
-        {children}
-      </ResponsiveWrapper>
-      <ResponsiveWrapper xs={false} md={true} className={CLASS}>
-        {children}
-      </ResponsiveWrapper>
-    </>
-  );
+  const className = [
+    "d-flex border-top border-gray-700 py-3 px-2", ... isMobileView ? ["flex-column"] : [""]
+  ].join(" ")
+
+  return <ResponsiveEle mobileView={children} className={className} />;
 }

@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import SelectNetwork from "components/bounties/select-network";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
@@ -14,7 +14,7 @@ import ListSearchBar from "components/lists/list/search-bar/view";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
@@ -140,13 +140,9 @@ export default function ListView(props: ListViewProps) {
               </If>
             </NothingFound>
           </div>
-        }
-      >
-        <If condition={!!header}>
-          <ResponsiveWrapper xs={false} xl={true} className="row">
-            <ListHeader columns={header} />
-          </ResponsiveWrapper>
-        </If>
+        }>
+
+        <ResponsiveEle className="row" desktopView={<ListHeader columns={header} />} />
 
         <If condition={infinite} otherwise={<div className="d-flex flex-column gap-3">{children}</div>}>
           <InfiniteScroll

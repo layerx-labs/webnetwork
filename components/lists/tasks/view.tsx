@@ -14,7 +14,7 @@ import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
 
@@ -158,24 +158,22 @@ export default function TasksListView({
               </If>
 
               <If condition={isProfile && isOnNetwork}>
-                <ResponsiveWrapper md={false} xs={true} sm={true}>
-                  <div className="d-flex align-items-center">
-                    <div
-                      className={`d-flex py-1 pe-2 justify-content-center text-truncate border border-gray-800
-                          border-radius-4 text-white-40 bg-gray-850 text-uppercase`}
-                    >
-                      <div className="d-flex flex-column justify-content-center">
-                        <div
-                          className="d-flex ball mx-2"
-                          style={{
-                            backgroundColor: currentChain?.color,
-                          }}
-                        />
-                      </div>
-                      {currentChain?.chainShortName}
+                <div className="d-flex d-md-none align-items-center">
+                  <div
+                    className={`d-flex py-1 pe-2 justify-content-center text-truncate border border-gray-800
+                        border-radius-4 text-white-40 bg-gray-850 text-uppercase`}
+                  >
+                    <div className="d-flex flex-column justify-content-center">
+                      <div
+                        className="d-flex ball mx-2"
+                        style={{
+                          backgroundColor: currentChain?.color,
+                        }}
+                      />
                     </div>
+                    {currentChain?.chainShortName}
                   </div>
-                </ResponsiveWrapper>
+                </div>
               </If>
             </div>
           </If>

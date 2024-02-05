@@ -1,22 +1,22 @@
-import { FormControl, InputGroup } from "react-bootstrap";
+import {FormControl, InputGroup} from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
+import {FlexColumn, FlexRow} from "components/common/flex-box/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 import IssueMobileFilters from "components/issue-filters/mobile-filters";
 import ChainFilter from "components/lists/filters/chain/controller";
 import NothingFound from "components/nothing-found";
-import { TokenBalanceType } from "components/profile/token-balance";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {TokenBalanceType} from "components/profile/token-balance";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatStringToCurrency} from "helpers/formatNumber";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import NetworkItem from "../../../network-item/controller";
 
@@ -83,20 +83,14 @@ export default function WalletBalanceView({
           </InputGroup>
         </div>
         <div className="col-auto px-0">
-          <ResponsiveWrapper xs={true} md={false}>
-            <IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />
-          </ResponsiveWrapper>
-          <ResponsiveWrapper xs={false} md={true}>
-            <div className="d-flex align-items-center me-3">
-              <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
-                {t("misc.chain")}
-              </label>
-              <ChainFilter
-                chains={chains}
-                label={false}
-              />
-            </div>
-          </ResponsiveWrapper>
+          <ResponsiveEle mobileView={<IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />} />
+          <ResponsiveEle tabletView={<div className="d-flex align-items-center me-3">
+            <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+              {t("misc.chain")}
+            </label>
+            <ChainFilter chains={chains} label={false}/>
+          </div>}/>
+
         </div>
       </div>
 
@@ -112,18 +106,8 @@ export default function WalletBalanceView({
           <span className="text-white-30 ml-1 mr-2">
             {!hasNoConvertedToken ? defaultFiat : t("misc.token_other")}
           </span>
-          <ResponsiveWrapper
-            className="d-flex align-items-center"
-            xs={false}
-            sm={false}
-            md={true}
-            xl={true}
-          >
-            <InfoTooltip
-              description={t("profile:tips.total-balance")}
-              secondaryIcon
-            />
-          </ResponsiveWrapper>
+          <ResponsiveEle className="d-flex align-items-center"
+                         tabletView={<InfoTooltip description={t("profile:tips.total-balance")} secondaryIcon/>} />
         </div>
       </FlexRow>
       <If
