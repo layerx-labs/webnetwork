@@ -1,6 +1,9 @@
 import { addSeconds } from "date-fns";
 
-import { IssueBigNumberData, IssueData } from "interfaces/issue-data";
+import { Deliverable, IssueBigNumberData, IssueData } from "interfaces/issue-data";
+import { Proposal } from "interfaces/proposal";
+
+import { Status } from "types/components";
 
 export function isProposalDisputable(createdAt: Date | number, disputableTime: number, chainTime?: number): boolean {
   return (chainTime && new Date(chainTime) || (new Date())) <= addSeconds(new Date(createdAt), disputableTime);
@@ -26,4 +29,18 @@ export const bountyReadyPRsHasNoInvalidProposals = (bounty: IssueData | IssueBig
   if (invalidProposals.length && proposalsWithDisputeState.length === invalidProposals.length) return 1;
 
   return 2;
+}
+
+export function getProposalStatus (proposal: Proposal): Status {
+  const isTaskClosed = proposal?.issue?.isClosed;
+  const proposalMerged = proposal?.issue?.merged;
+  if (isTaskClosed && +proposalMerged !== +proposal?.contractId)
+    return "not-accepted";
+  if (isTaskClosed && +proposalMerged === +proposal?.contractId)
+    return "accepted";
+  if (proposal?.refusedByBountyOwner)
+    return "refused";
+  if (proposal?.isDisputed)
+    return "disputed";
+  return "review";
 }

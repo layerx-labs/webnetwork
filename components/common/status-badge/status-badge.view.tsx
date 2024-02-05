@@ -20,6 +20,8 @@ export default function StatusBadge ({
     draft: <DashedCircleIcon />,
     "not-accepted": <ErrorMarkRegular />,
     canceled: <ErrorMarkRegular />,
+    refused: <ErrorMarkRegular />,
+    disputed: <ErrorMarkRegular />,
     accepted: <CheckMarkIcon />,
   }[status];
   const colors = {
@@ -27,6 +29,8 @@ export default function StatusBadge ({
     draft: getColors("gray-800", "gray", "gray-400"),
     "not-accepted": getColors("red-10", "red-100", "red-25"),
     canceled: getColors("red-10", "red-100", "red-25"),
+    refused: getColors("red-10", "red-100", "red-25"),
+    disputed: getColors("red-10", "red-100", "red-25"),
     accepted: getColors("success-10", "success", "success-25"),
   }[status];
   const label = {
@@ -35,6 +39,8 @@ export default function StatusBadge ({
     "not-accepted": "Not accepted",
     canceled: "Canceled",
     accepted: "Accepted",
+    refused: "Refused",
+    disputed: "Disputed",
   }[status];
 
   return (
