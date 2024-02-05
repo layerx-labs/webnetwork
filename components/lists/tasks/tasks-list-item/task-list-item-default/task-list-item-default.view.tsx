@@ -12,7 +12,7 @@ import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.vie
 import CardItem from "components/card-item";
 import ChainIcon from "components/chain-icon";
 import If from "components/If";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import { ResponsiveEle } from "components/responsive-wrapper";
 import TaskStatusInfo from "components/task-status-info";
 import Translation from "components/translation";
 
@@ -49,78 +49,92 @@ export default function TaskListItemDefault ({
             </div>
           </div>
 
-          <ResponsiveWrapper xs={false} xl={true}>
-            <div className="d-flex justify-content-md-start mt-2 mb-3">
-              <BountyTagsView tags={task?.tags} />
+          <ResponsiveEle
+            tabletView={
+              <div className="d-flex justify-content-md-start mt-2 mb-3">
+                <BountyTagsView tags={task?.tags}/>
 
-              <If condition={task?.isKyc}>
-                <Badge
-                  className={`d-flex status caption-medium py-1 px-3 
+                <If condition={task?.isKyc}>
+                  <Badge
+                    className={`d-flex status caption-medium py-1 px-3 
                   ms-2 bg-transparent border border-gray-700 text-gray-300`}
-                  label={t("bounty:kyc.label")}
-                />
-              </If>
-            </div>
-          </ResponsiveWrapper>
+                    label={t("bounty:kyc.label")}
+                  />
+                </If>
+              </div>
+            }
+          />
 
           <div className="row align-items-center border-xl-top border-gray-850 pt-3">
             <div className="col-12">
-              <ResponsiveWrapper xs={false} xl={true} className="row">
-                <div className="col-12">
-                  <div className="row align-items-center justify-content-md-start">
-                    <BountyItemLabel label="ID" className="mw-25 col-auto">
-                      <TaskIdTag
-                        taskId={task?.id}
-                        marketplaceName={task?.network?.name}
-                      />
-                    </BountyItemLabel>
+              <div className="row">
+                <ResponsiveEle
+                  col={12}
+                  tabletView={
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="row align-items-center justify-content-md-start">
+                          <BountyItemLabel label="ID" className="mw-25 col-auto">
+                            <TaskIdTag
+                              taskId={task?.id}
+                              marketplaceName={task?.network?.name}
+                            />
+                          </BountyItemLabel>
 
-                    <BountyItemLabel label="Type" className="col-auto">
-                      <span className="text-gray text-truncate text-capitalize">
-                        {task?.type}
-                      </span>
-                    </BountyItemLabel>
+                          <BountyItemLabel label="Type" className="col-auto">
+                          <span className="text-gray text-truncate text-capitalize">
+                            {task?.type}
+                          </span>
+                          </BountyItemLabel>
 
-                    <ResponsiveWrapper xs={false} xxl={true} className="col-auto">
-                      <TaskMainInfo task={task} />
-                    </ResponsiveWrapper>
+                          <ResponsiveEle
+                            col={"auto"}
+                            desktopView={
+                              <TaskMainInfo task={task}/>
+                            }
+                          />
 
-                    <BountyItemLabel
-                      label={t("info.opened-on")}
-                      className="col-auto"
-                    >
+                          <BountyItemLabel
+                            label={t("info.opened-on")}
+                            className="col-auto"
+                          >
                       <span className="text-gray text-truncate">
                         {task?.createdAt?.toLocaleDateString("PT")}
                       </span>
-                    </BountyItemLabel>
+                          </BountyItemLabel>
 
-                    <div className="col d-flex justify-content-end px-0">
+                          <div className="col d-flex justify-content-end px-0">
+                            <TaskTypeBadge
+                              type={task?.type}
+                            />
+                          </div>
+
+                          <div className="col-auto d-flex justify-content-end">
+                            <BountyAmount bounty={task} size={"lg"}/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                />
+              </div>
+
+              <ResponsiveEle
+                tabletView={null}
+                mobileView={
+                  <div className="row align-items-center justify-content-between">
+                    <div className="col mw-50-auto network-name">
                       <TaskTypeBadge
                         type={task?.type}
                       />
                     </div>
 
-                    <div className="col-auto d-flex justify-content-end">
-                      <BountyAmount bounty={task} size={"lg"} />
+                    <div className="col-auto">
+                      <BountyAmount bounty={task} size={"lg"}/>
                     </div>
                   </div>
-                </div>
-              </ResponsiveWrapper>
-              <ResponsiveWrapper
-                xs={true}
-                xl={false}
-                className="row align-items-center justify-content-between"
-              >
-                <div className="col mw-50-auto network-name">
-                  <TaskTypeBadge
-                    type={task?.type}
-                  />
-                </div>
-
-                <div className="col-auto">
-                  <BountyAmount bounty={task} size={"lg"} />
-                </div>
-              </ResponsiveWrapper>
+                }
+              />
             </div>
           </div>
         </div>

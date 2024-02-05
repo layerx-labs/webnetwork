@@ -12,7 +12,7 @@ import CardItem from "components/card-item";
 import { FlexColumn } from "components/common/flex-box/view";
 import If from "components/If";
 import Modal from "components/modal";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import { ResponsiveEle } from "components/responsive-wrapper";
 import Translation from "components/translation";
 import MoreActionsDropdown from "components/utils/more-actions-dropdown/controller";
 
@@ -69,47 +69,64 @@ export default function TaskListItemManagementView ({
             </div>
           </div>
 
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
-              <div
-                className="cursor-pointer"
-                onClick={onClick}
-              >
-                <ArrowUpRightGray />
-              </div>
-            </FlexColumn>
-          </ResponsiveWrapper>
-
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
-              <div className="cursor-pointer" onClick={onVisiblityClick}>
-                {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
-              </div>
-            </FlexColumn>
-          </ResponsiveWrapper>
-
-          <ResponsiveWrapper xs={false} md={true} className="col-2 d-flex justify-content-center">
-            <FlexColumn className="justify-content-center">
-              <If
-                condition={isCancelButtonVisible}
-                otherwise={"-"}
-              >
-                <div className="cursor-pointer m-0 p-0" onClick={onCancelClick}>
-                  <TrashIcon/>
+          <ResponsiveEle
+            col={2}
+            className={"d-flex justify-content-center"}
+            tabletView={
+              <FlexColumn className="justify-content-center">
+                <div
+                  className="cursor-pointer"
+                  onClick={onClick}
+                >
+                  <ArrowUpRightGray />
                 </div>
-              </If>
-            </FlexColumn>
-          </ResponsiveWrapper>
+              </FlexColumn>
+            }
+          />
 
-          <ResponsiveWrapper xs={true} md={false} className="col-auto d-flex justify-content-center">
-            <MoreActionsDropdown
-              actions={[
-                { content: "Task Link", onClick: onClick},
-                { content: isVisible ? "Hide Task" : "Show Task", onClick: onVisiblityClick},
-                { content: "Cancel", onClick: onCancelClick},
-              ]}
-            />
-          </ResponsiveWrapper>
+          <ResponsiveEle
+            col={2}
+            className={"d-flex justify-content-center"}
+            tabletView={
+              <FlexColumn className="justify-content-center">
+                <div className="cursor-pointer" onClick={onVisiblityClick}>
+                  {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
+                </div>
+              </FlexColumn>
+            }
+          />
+
+          <ResponsiveEle
+            col={2}
+            className={"d-flex justify-content-center"}
+            tabletView={
+              <FlexColumn className="justify-content-center">
+                <If
+                  condition={isCancelButtonVisible}
+                  otherwise={"-"}
+                >
+                  <div className="cursor-pointer m-0 p-0" onClick={onCancelClick}>
+                    <TrashIcon/>
+                  </div>
+                </If>
+              </FlexColumn>
+            }
+          />
+
+          <ResponsiveEle
+            col={"auto"}
+            className={"d-flex justify-content-center"}
+            tabletView={null}
+            mobileView={
+              <MoreActionsDropdown
+                actions={[
+                  { content: "Task Link", onClick: onClick},
+                  { content: isVisible ? "Hide Task" : "Show Task", onClick: onVisiblityClick},
+                  { content: "Cancel", onClick: onCancelClick},
+                ]}
+              />
+            }
+          />
         </div>
       </CardItem>
       
