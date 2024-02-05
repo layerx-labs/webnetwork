@@ -77,5 +77,10 @@
   "no-votes-found": "No votes found",
   "platform-language": "Platform Language",
   "language-updated": "Language updated",
-  "refresh-the-page": "Please refresh the page"
+  "refresh-the-page": "Please refresh the page",
+  "tasks-won": "Tasks won",
+  "submissions": "Submissions",
+  "deliverables": "Deliverables",
+  "proposals": "Proposals",
+  "tasks-opened": "Tasks opened"
 }

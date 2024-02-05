@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "next-i18next";
+
 import MessageBalloonIcon from "assets/icons/message-balloon.icon";
 
 import CardItem from "components/card-item";
@@ -21,6 +23,8 @@ export function DeliverablesListItemView ({
   deliverable,
   onClick,
 }: DeliverablesListItemViewProps) {
+  const { t } = useTranslation("common");
+  
   const status = getDeliverableStatus(deliverable);
 
   return (
@@ -60,7 +64,7 @@ export function DeliverablesListItemView ({
 
         <div className="col-auto">
           <span className="xs-small font-weight-normal text-gray-400">
-            Opened {getTimeDifferenceInWords(new Date(deliverable?.createdAt), new Date(), true)}
+            {t("misc.opened")} {getTimeDifferenceInWords(new Date(deliverable?.createdAt), new Date(), true)}
           </span>
         </div>
 

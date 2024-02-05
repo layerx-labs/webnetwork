@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 import CheckMarkIcon from "assets/icons/checkmark-icon";
 import DashedCircleIcon from "assets/icons/dashed-circle-icon";
 import ErrorMarkRegular from "assets/icons/error-mark-regular";
@@ -14,6 +16,8 @@ const getColors = (badge: string, text: string, border: string) => ({ badge, tex
 export default function StatusBadge ({
   status
 }: StatusBadgeProps) {
+  const { t } = useTranslation("common");
+  
   const baseClasses = "d-flex align-items-center rounded-pill px-2 py-1 gap-1 border";
   const icon = {
     review: <DashedCircleIcon />,
@@ -34,13 +38,13 @@ export default function StatusBadge ({
     accepted: getColors("success-10", "success", "success-25"),
   }[status];
   const label = {
-    review: "In review",
-    draft: "Draft",
-    "not-accepted": "Not accepted",
-    canceled: "Canceled",
-    accepted: "Accepted",
-    refused: "Refused",
-    disputed: "Disputed",
+    review: t("statuses.review"),
+    draft: t("statuses.draft"),
+    "not-accepted": t("statuses.not-accepted"),
+    canceled: t("statuses.canceled"),
+    accepted: t("statuses.accepted"),
+    refused: t("statuses.refused"),
+    disputed: t("statuses.disputed"),
   }[status];
 
   return (

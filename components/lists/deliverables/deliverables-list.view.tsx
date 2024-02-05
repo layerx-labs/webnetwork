@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 import {
   DeliverablesListItemView
 } from "components/lists/deliverables/deliverables-list-item/deliverables-list-item.view";
@@ -13,14 +15,16 @@ export default function DeliverablesListView ({
   deliverables,
   hasMorePages
 }: DeliverablesListViewProps) {
+  const { t } = useTranslation(["common", "deliverable"]);
+  
   const sortOptions = [
     {
-      label: "Newest",
+      label: t("sort.types.newest"),
       value: "newest",
       sortBy: "createdAt",
       order: "DESC",
     }, {
-      label: "Oldest",
+      label: t("sort.types.oldest"),
       value: "oldest",
       sortBy: "createdAt",
       order: "ASC",
@@ -30,7 +34,7 @@ export default function DeliverablesListView ({
   return (
     <div className="mb-4">
       <List
-        searchPlaceholder={"Search for a submission by its title or task title"}
+        searchPlaceholder={t("deliverable:search-for-a-deliverable")}
         sortOptions={sortOptions}
         hasMorePages={hasMorePages}
         chainFilters

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
@@ -31,6 +32,7 @@ export default function PublicProfilePage ({
   deliverables,
   proposals,
 }: PublicProfilePageProps) {
+  const { t } = useTranslation("profile");
   const { query, pathname, asPath, push } = useRouter();
   const { isMobileView, isTabletView } = useBreakPoint();
 
@@ -61,10 +63,10 @@ export default function PublicProfilePage ({
   });
 
   const tabs = [
-    getTab("Bounties Won", "won"),
-    getTab("Submissions", "submissions"),
-    getTab("Proposals", "proposals"),
-    getTab("Bounties Opened", "opened"),
+    getTab(t("tasks-won"), "won"),
+    getTab(t("deliverables"), "submissions"),
+    getTab(t("proposals"), "proposals"),
+    getTab(t("tasks-opened"), "opened"),
   ];
   
   return (

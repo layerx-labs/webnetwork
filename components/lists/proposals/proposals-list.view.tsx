@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 import List from "components/lists/list/controller";
 import { ProposalsListItem } from "components/lists/proposals/proposals-list-item/proposals-list-item.controller";
 
@@ -11,14 +13,16 @@ export default function ProposalsListView ({
   proposals,
   hasMorePages
 }: ProposalsListViewProps) {
+  const { t } = useTranslation("common");
+
   const sortOptions = [
     {
-      label: "Newest",
+      label: t("sort.types.newest"),
       value: "newest",
       sortBy: "createdAt",
       order: "DESC",
     }, {
-      label: "Oldest",
+      label: t("sort.types.oldest"),
       value: "oldest",
       sortBy: "createdAt",
       order: "ASC",
@@ -28,7 +32,7 @@ export default function ProposalsListView ({
   return (
     <div className="mb-4">
       <List
-        searchPlaceholder={"Search for a proposal by tastk title or description"}
+        searchPlaceholder={t("search-for-proposal")}
         sortOptions={sortOptions}
         hasMorePages={hasMorePages}
         chainFilters
