@@ -27,7 +27,7 @@ export default function CreateNetworkBountyButtonView({
 
   return (
     <ReadOnlyButtonWrapper>
-      <Button className="read-only-button w-100" onClick={onClick}>
+      <Button className="read-only-button w-100" onClick={onClick} data-testid="create-marketplace-options-button">
         <PlusIcon />
         <span>
           {!isOnNetwork
