@@ -76,8 +76,9 @@ export default function TasksList({
   }
 
   async function handleNotFoundClick() {
+    const queryNetwork = router?.query?.network;
     if (!redirect)
-      router.push('/create-task');
+      router.push(`/create-task${ queryNetwork ? `?marketplace=${queryNetwork}`: ""}`);
     else
       router.push(redirect);
   }
