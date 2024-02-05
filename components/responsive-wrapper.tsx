@@ -89,12 +89,13 @@ type ResponsiveProps = {
    *  Wrapper is d-[current-breakpoint]-flex by default
    *  Wrapper is d-[not-current-breakpoint]-none by default
    *  */
-  "col-xs"?: number;
-  "col-sm"?: number;
-  "col-md"?: number;
-  "col-lg"?: number;
-  "col-xl"?: number;
-  "col-xxl"?: number;
+  col?: number | string;
+  "col-xs"?: number | string;
+  "col-sm"?: number | string;
+  "col-md"?: number | string;
+  "col-lg"?: number | string;
+  "col-xl"?: number | string;
+  "col-xxl"?: number | string;
 
   /**
    * Provide more classes as needed but avoid doing so;
@@ -112,16 +113,16 @@ export function ResponsiveEle({
   mobileView,
   className = "",
   ...classColumns}: ResponsiveProps) {
-  const {isMobileView, isTabletView, isDesktopView, currentBreakPoint} = useBreakPoint();
+  const {isMobileView, isTabletView, isDesktopView} = useBreakPoint();
 
   const columns =
     Object.entries(classColumns)
       .map(([col, n]) => `${col}-${n}`)
-      .join(" ")
+      .join(" ");
 
-  const columnsClassName = (columns.length > 1 && "col-12 ".concat(columns)) || ""
+  const columnsClassName = (columns.length > 1 && " ".concat(columns)) || "";
 
-  const wrapperClassName = `d-${currentBreakPoint}-flex ${columnsClassName}`
+  const wrapperClassName = `${columnsClassName}`;
 
   if (mobileView && tabletView === undefined)
     tabletView = mobileView;
