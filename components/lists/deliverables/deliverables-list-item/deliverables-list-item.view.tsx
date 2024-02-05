@@ -29,7 +29,7 @@ export function DeliverablesListItemView ({
   const { t } = useTranslation("common");
 
   return (
-    <CardItem onClick={onClick}>
+    <CardItem onClick={onClick} data-testid={`deliverable-list-item-${deliverable?.id}`}>
       <div className="row align-items-center mb-4 pb-2">
         <div className="col-auto">
           <MarketplaceWithNetworkLogo

@@ -33,7 +33,7 @@ export function ProposalsListItemView ({
   const { t } = useTranslation("common");
   
   return (
-    <CardItem onClick={onClick}>
+    <CardItem onClick={onClick} data-testid={`proposal-list-item-${proposal?.id}`}>
       <div className="row align-items-center mb-4">
         <div className="col-auto">
           <MarketplaceWithNetworkLogo
