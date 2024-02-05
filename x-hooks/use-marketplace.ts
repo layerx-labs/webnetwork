@@ -61,13 +61,12 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     }, `/${path}`);
   }
 
-  function getTotalNetworkToken() {
-    const network = data?.active?.name;
-    const chain = data?.active?.chain_id;
+  function getTotalNetworkToken(networkName?: string, chainShortName?: string) {
+    const network = networkName || data?.active?.name;
+    const chain = chainShortName || data?.active?.chain_id;
 
     return useReactQuery( QueryKeys.totalNetworkToken(chain, network), 
                           () => getNetworkOverviewData({
-                            ...query,
                             network,
                             chain: data?.active?.chain?.chainShortName,
                           })
