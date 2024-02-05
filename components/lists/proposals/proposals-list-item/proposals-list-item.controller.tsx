@@ -1,6 +1,7 @@
 import React from "react";
 
 import BigNumber from "bignumber.js";
+import { useRouter } from "next/router";
 
 import { ProposalsListItemView } from "components/lists/proposals/proposals-list-item/proposals-list-item.view";
 
@@ -13,19 +14,27 @@ import useMarketplace from "x-hooks/use-marketplace";
 
 interface ProposalsListItemProps {
   proposal: Proposal;
-  onClick?: () => void;
 }
 export function ProposalsListItem ({
   proposal,
-  onClick,
 }: ProposalsListItemProps) {
-  const { getTotalNetworkToken } = useMarketplace();
+  const router = useRouter();
+
+  const { getURLWithNetwork, getTotalNetworkToken } = useMarketplace();
 
   const { data: totalNetworkToken } =
     getTotalNetworkToken(proposal?.network?.name, proposal?.network?.chain?.chainShortName);
   const disputePercentage = totalNetworkToken ?
     +BigNumber(proposal?.disputeWeight || 0).dividedBy(totalNetworkToken).multipliedBy(100).toFixed(2) : 0;
   const status = getProposalStatus(proposal);
+
+  function onClick () {
+    router.push(getURLWithNetwork("/task/[id]/proposal/[proposalId]", {
+      network: proposal?.network?.name,
+      id: proposal?.issue?.id,
+      proposalId: proposal?.id,
+    }));
+  }
 
   return (
     <ProposalsListItemView

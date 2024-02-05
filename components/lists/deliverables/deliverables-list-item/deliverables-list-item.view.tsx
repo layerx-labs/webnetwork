@@ -10,22 +10,23 @@ import MarketplaceWithNetworkLogo
 import StatusBadge from "components/common/status-badge/status-badge.view";
 import { ResponsiveEle } from "components/responsive-wrapper";
 
-import { getDeliverableStatus } from "helpers/deliverable";
-import { getTimeDifferenceInWords } from "helpers/formatDate";
-
 import { Deliverable } from "interfaces/issue-data";
+
+import { Status } from "types/components";
 
 interface DeliverablesListItemViewProps {
   deliverable: Deliverable;
+  status: Status;
+  timeDifferenceText: string;
   onClick?: () => void;
 }
 export function DeliverablesListItemView ({
   deliverable,
+  status,
+  timeDifferenceText,
   onClick,
 }: DeliverablesListItemViewProps) {
   const { t } = useTranslation("common");
-  
-  const status = getDeliverableStatus(deliverable);
 
   return (
     <CardItem onClick={onClick}>
@@ -64,7 +65,7 @@ export function DeliverablesListItemView ({
 
         <div className="col-auto">
           <span className="xs-small font-weight-normal text-gray-400">
-            {t("misc.opened")} {getTimeDifferenceInWords(new Date(deliverable?.createdAt), new Date(), true)}
+            {t("misc.opened")} {timeDifferenceText}
           </span>
         </div>
 

@@ -1,8 +1,8 @@
 import { useTranslation } from "next-i18next";
 
 import {
-  DeliverablesListItemView
-} from "components/lists/deliverables/deliverables-list-item/deliverables-list-item.view";
+  DeliverablesListItem
+} from "components/lists/deliverables/deliverables-list-item/deliverables-list-item.controller";
 import List from "components/lists/list/controller";
 
 import { Deliverable } from "interfaces/issue-data";
@@ -41,7 +41,7 @@ export default function DeliverablesListView ({
         networkFilter
         infinite
       >
-        {deliverables?.map(deliverable => <DeliverablesListItemView deliverable={deliverable} />)}
+        {deliverables?.map(deliverable => <DeliverablesListItem deliverable={deliverable} />)}
       </List>
     </div>
   );
