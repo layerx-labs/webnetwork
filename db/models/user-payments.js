@@ -26,6 +26,12 @@ class UserPayments extends Model {
       foreignKey: "issueId",
       sourceKey: "id"
     });
+
+    this.belongsTo(models.user, {
+      foreignKey: "address",
+      sourceKey: "address",
+      as: "user"
+    });
   }
 }
 

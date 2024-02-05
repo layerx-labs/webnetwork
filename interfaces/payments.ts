@@ -1,3 +1,5 @@
+import { User } from "interfaces/api";
+
 import { IssueData } from "./issue-data";
 
 export interface Payment {
@@ -10,4 +12,5 @@ export interface Payment {
   labelBounty?: string;
   labelToken?: string;
   handleItemClick?: () => void;
+  user?: User;
 }
