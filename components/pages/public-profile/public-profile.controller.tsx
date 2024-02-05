@@ -6,6 +6,7 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import DeliverablesList from "components/lists/deliverables/deliverables-list.controller";
+import ProposalsList from "components/lists/proposals/proposals-list.controller";
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
@@ -13,7 +14,7 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { User } from "interfaces/api";
 
-import { DeliverablePaginatedData, SearchBountiesPaginated } from "types/api";
+import { DeliverablePaginatedData, ProposalPaginatedData, SearchBountiesPaginated } from "types/api";
 import { TasksListItemVariant } from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
@@ -22,11 +23,13 @@ interface PublicProfilePageProps {
   user: User;
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
+  proposals?: ProposalPaginatedData;
 }
 export default function PublicProfilePage ({
   user,
   tasks,
   deliverables,
+  proposals,
 }: PublicProfilePageProps) {
   const { query, pathname, asPath, push } = useRouter();
   const { isMobileView, isTabletView } = useBreakPoint();
@@ -113,9 +116,16 @@ export default function PublicProfilePage ({
               hideTitle
             />
           </If>
+
           <If condition={isDeliverableList}>
             <DeliverablesList
               deliverables={deliverables}
+            />
+          </If>
+
+          <If condition={isProposalsList}>
+            <ProposalsList
+              proposals={proposals}
             />
           </If>
         </div>
