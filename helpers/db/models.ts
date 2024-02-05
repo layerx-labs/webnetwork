@@ -1,7 +1,7 @@
-import { WhereOptions } from "sequelize";
+import { WhereOptions, FindAttributeOptions } from "sequelize";
 
 export function getAssociation(association: string,
-                               attributes: string[] = undefined, 
+                               attributes: FindAttributeOptions = undefined,
                                required = false, 
                                where: WhereOptions = {},
                                include = [],

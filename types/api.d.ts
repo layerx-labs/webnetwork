@@ -3,6 +3,7 @@ import { Deliverable, IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
 import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
@@ -25,6 +26,8 @@ export interface CuratorsListPaginated extends PaginatedData<Curator> {
 }
 
 export type DeliverablePaginatedData = PaginatedData<Deliverable>;
+
+export type ProposalPaginatedData = PaginatedData<Proposal>;
 
 export interface NetworkOverviewData {
   name: string;
