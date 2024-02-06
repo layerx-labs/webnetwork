@@ -59,7 +59,10 @@ export async function post(req: NextApiRequest) {
     },
     include: [
       { association: "network" },
-      { association: "chain" }
+      {
+        association: "chain",
+        scope: "internal"
+      }
     ]
   });
 
@@ -80,16 +83,17 @@ export async function post(req: NextApiRequest) {
 
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
-    web3Host: chain?.chainRpc,
+    web3Host: chain?.privateChainRpc,
   });
 
   if (!await DAOService.start())
-    throw new HttpServerError(`Failed to connect to chainRpc ${chain?.chainRpc} for id ${chain?.chainId}`);
+    throw new HttpServerError(`Failed to connect to chainRpc ${chain?.privateChainRpc} for id ${chain?.chainId}`);
 
   const { networkAddress } = issue.network;
 
   if(!await DAOService.loadNetwork(networkAddress))
-    throw new HttpServerError(`Failed to load networks on chainRpc ${chain?.chainRpc} for address ${networkAddress}`);
+    throw new HttpServerError(`Failed to load networks on chainRpc ${chain?.privateChainRpc} for 
+      address ${networkAddress}`);
 
   const network = DAOService.network;
   await network.start();

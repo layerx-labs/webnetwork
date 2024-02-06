@@ -80,7 +80,7 @@ export async function post(req: NextApiRequest) {
   // Contract Validations
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
-    web3Host: chain.chainRpc,
+    web3Host: chain.privateChainRpc,
     registryAddress: chain.registryAddress,
   });
 
@@ -96,7 +96,7 @@ export async function post(req: NextApiRequest) {
   if (tokens?.settler && tokens?.settlerTokenMinAmount) {
     await handleCreateSettlerToken( tokens?.settler,
                                     tokens?.settlerTokenMinAmount,
-                                    chain.chainRpc,
+                                    chain.privateChainRpc,
                                     +chain?.chainId);
   }
 

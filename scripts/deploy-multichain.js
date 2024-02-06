@@ -237,6 +237,7 @@ async function main(option = 0) {
         defaults: {
           chainId: chainId,
           chainRpc: web3Host,
+          privateChainRpc: web3Host,
           chainName: chainData?.name || chainName,
           chainShortName: chainData?.shortName || chainName,
           chainCurrencyName: chainData?.nativeCurrency?.name || chainTokenName,
