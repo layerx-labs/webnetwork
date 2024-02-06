@@ -17,6 +17,7 @@ export async function post(req: NextApiRequest) {
     [body.name, "name"],
     [body.shortName, "shortName"],
     [body.activeRPC, "rpc"],
+    [body.privateRpc, "privateRpc"],
     [body.nativeCurrency?.name, "currencyName"],
     [body.nativeCurrency?.symbol, "currencySymbol"],
     [body.nativeCurrency?.decimals, "currencyDecimals"],
@@ -39,6 +40,7 @@ export async function post(req: NextApiRequest) {
   const model = {
     chainId: body.chainId,
     chainRpc: body.activeRPC,
+    privateChainRpc: body.privateRpc,
     chainName: body.name,
     chainShortName: body.shortName,
     chainCurrencySymbol: body.nativeCurrency?.symbol,
