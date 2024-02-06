@@ -81,6 +81,9 @@ class Chain extends Model {
       cancelFeePercentage: {
         type: DataTypes.FLOAT
       },
+      privateChainRpc: {
+        type: DataTypes.STRING,
+      },
       startBlock: {
         type: DataTypes.INTEGER
       },
