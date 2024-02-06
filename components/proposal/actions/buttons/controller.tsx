@@ -95,6 +95,8 @@ export default function ProposalActionsButtons ({
       refresh();
     } catch (error) {
       console.debug("Failed to close bounty", error);
+    } finally {
+      setIsMerging(false);
     }
   }
 
