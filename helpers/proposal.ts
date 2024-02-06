@@ -34,13 +34,13 @@ export const bountyReadyPRsHasNoInvalidProposals = (bounty: IssueData | IssueBig
 export function getProposalStatus (proposal: Proposal): Status {
   const isTaskClosed = proposal?.issue?.isClosed;
   const proposalMerged = proposal?.issue?.merged;
-  if (isTaskClosed && +proposalMerged !== +proposal?.contractId)
-    return "not-accepted";
-  if (isTaskClosed && +proposalMerged === +proposal?.contractId)
-    return "accepted";
   if (proposal?.refusedByBountyOwner)
     return "refused";
   if (proposal?.isDisputed)
     return "disputed";
+  if (isTaskClosed && +proposalMerged === +proposal?.contractId)
+    return "accepted";
+  if (isTaskClosed && +proposalMerged !== +proposal?.contractId)
+    return "not-accepted";
   return "review";
 }
