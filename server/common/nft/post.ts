@@ -58,16 +58,21 @@ export async function post(req: NextApiRequest) {
       id: +issueId
     },
     include: [
-      { association: "network" },
-      {
-        association: "chain",
-        scope: "internal"
-      }
+      { association: "network" }
     ]
   });
 
   if (!issue)
     throw new HttpNotFoundError("Bounty not found");
+
+  const chain = await models.chain.scope("internal").findOne({
+    where: {
+      chainId: issue.chain_id
+    }
+  });
+
+  if (!chain)
+    throw new HttpServerError("Invalid chain");
 
   const proposal = await models.mergeProposal.findOne({
     where: {
@@ -78,8 +83,6 @@ export async function post(req: NextApiRequest) {
 
   if (!proposal)
     throw new HttpNotFoundError("Proposal not found");
-
-  const chain = issue.chain;
 
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
