@@ -61,7 +61,7 @@ export default function PublicProfilePage ({
     getTab(t("deliverables"), "submissions"),
     getTab(t("proposals"), "proposals"),
     getTab(t("tasks-opened"), "opened"),
-    getTab("NFTs", "nfts"),
+    getTab(t("nfts"), "nfts"),
   ];
 
   return (

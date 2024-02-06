@@ -1,4 +1,4 @@
-import OpenGraphPreview from "components/open-graph-preview/controller";
+import NftsListItemView from "components/lists/nfts/nfts-list-item/nfts-list-item.view";
 
 import { Payment } from "interfaces/payments";
 
@@ -13,15 +13,13 @@ export default function NftsListItem ({
 }: NftsListItemProps) {
   const { settings } = useSettings();
 
-  const imageUrl = `${settings?.urls?.ipfs}/${payment?.issue?.nftImage}`;
-  const previewUrl = `${payment?.issue?.chain?.blockScanner}/${payment?.transactionHash}`;
+  const imageUrl = payment?.issue?.nftImage ? `${settings?.urls?.ipfs}/${payment?.issue?.nftImage}` : null;
+  const transactionUrl = `${payment?.issue?.chain?.blockScanner}/${payment?.transactionHash}`;
 
   return (
-    <OpenGraphPreview
-      url={imageUrl}
-      link={previewUrl}
-      openLinkText={"View on chain explorer"}
-      showOpenLink
+    <NftsListItemView
+      imageUrl={imageUrl}
+      transactionUrl={transactionUrl}
     />
   );
 }
