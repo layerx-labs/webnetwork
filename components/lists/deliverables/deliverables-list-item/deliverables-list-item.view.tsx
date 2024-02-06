@@ -41,7 +41,7 @@ export function DeliverablesListItemView ({
         <div className="col text-truncate">
           <h4 className="base-medium text-white text-truncate mb-1">{deliverable?.title}</h4>
 
-          <div className="d-flex">
+          <div className="d-flex align-items-center">
             <span className="xs-medium text-gray-200 text-capitalize mr-1">
               {deliverable?.issue?.network?.name} #{deliverable?.issue?.id}
             </span>
