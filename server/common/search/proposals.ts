@@ -1,5 +1,6 @@
 import { ParsedUrlQuery } from "querystring";
 import { Op, Sequelize, WhereOptions } from "sequelize";
+import { isAddress } from "web3-utils";
 
 import models from "db/models";
 
@@ -21,6 +22,12 @@ export default async function get(query: ParsedUrlQuery) {
     sortBy = "createdAt",
     order = "DESC",
   } = query;
+
+  if (taskId && isNaN(+taskId))
+    throw new HttpBadRequestError("taskId is not a valid number");
+
+  if (creator && !isAddress(creator?.toString()))
+    throw new HttpBadRequestError("creator is not a valid address");
 
   const proposalWhere: WhereOptions = {};
   const taskWhere: WhereOptions = {};
