@@ -2,6 +2,7 @@ import {Col, Row} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 
+import { ContextualSpan } from "components/contextual-span";
 import {Divider} from "components/divider";
 import If from "components/If";
 import Delegations from "components/profile/pages/voting-power/delegations/controller";
@@ -26,6 +27,7 @@ interface VotingPowerNetworkViewProps {
   userIsCouncil: boolean;
   userIsGovernor: boolean;
   isBalanceLoading?: boolean;
+  isMarketplaceClosed?: boolean;
   handleUpdateWalletBalance: () => void;
 }
 
@@ -39,6 +41,7 @@ export default function VotingPowerNetworkView({
   userIsCouncil,
   userIsGovernor,
   isBalanceLoading,
+  isMarketplaceClosed,
   handleUpdateWalletBalance,
 }: VotingPowerNetworkViewProps) {
   const { t } = useTranslation("profile");
@@ -49,6 +52,14 @@ export default function VotingPowerNetworkView({
         locked={locked}
         delegatedToMe={delegatedToMe}
       />
+
+      <If condition={isMarketplaceClosed}>
+        <Row className="mb-3 mx-0">
+          <ContextualSpan context="warning" isAlert>
+            {t("closed-marketplace-warning")}
+          </ContextualSpan>
+        </Row>
+      </If>
 
       <Row className="mt-4 mb-4 mx-0 border border-gray-800 border-radius-4 p-4">
         <Col className="p-2">
