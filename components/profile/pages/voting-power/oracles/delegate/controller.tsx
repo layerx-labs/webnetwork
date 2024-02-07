@@ -40,6 +40,7 @@ export default function OraclesDelegate({
 
   const networkTokenDecimals = marketplace?.active?.networkToken?.decimals || 18;
   const networkTokenSymbol = marketplace?.active?.networkToken?.symbol;
+  const isMarketplaceClosed = marketplace?.active?.isClosed;
 
   function handleChangeOracles(params: NumberFormatValues) {
     if (params.value === "") return setTokenAmount("");
@@ -96,6 +97,7 @@ export default function OraclesDelegate({
       wallet?.balance?.oracles?.locked?.lt(tokenAmount),
       !delegatedTo,
       disabled,
+      isMarketplaceClosed,
       isAddressesEqual(),
       BigNumber(tokenAmount).isZero(),
       BigNumber(tokenAmount).isNaN(),
@@ -119,7 +121,7 @@ export default function OraclesDelegate({
   return (
     <OraclesDelegateView
       isBalanceLoading={isBalanceLoading}
-      disabled={disabled}
+      disabled={disabled || isMarketplaceClosed}
       tokenAmount={tokenAmount}
       handleChangeOracles={handleChangeOracles}
       error={error}

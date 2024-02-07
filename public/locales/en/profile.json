@@ -77,5 +77,6 @@
   "no-votes-found": "No votes found",
   "platform-language": "Platform Language",
   "language-updated": "Language updated",
-  "refresh-the-page": "Please refresh the page"
+  "refresh-the-page": "Please refresh the page",
+  "closed-marketplace-warning": "The selected marketplace is closed. Only Unlock and Take Back actions are available."
 }
