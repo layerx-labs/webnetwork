@@ -77,6 +77,7 @@ export default function PublicProfilePage ({
       tasks={tasks}
       deliverables={deliverables}
       proposals={proposals}
+      payments={payments}
       type={type}
     />
   );
