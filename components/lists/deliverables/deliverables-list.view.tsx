@@ -41,7 +41,8 @@ export default function DeliverablesListView ({
         networkFilter
         infinite
       >
-        {deliverables?.map(deliverable => <DeliverablesListItem deliverable={deliverable} />)}
+        {deliverables?.map(deliverable =>
+          <DeliverablesListItem deliverable={deliverable} key={`deliverable-item-${deliverable?.id}`} />)}
       </List>
     </div>
   );

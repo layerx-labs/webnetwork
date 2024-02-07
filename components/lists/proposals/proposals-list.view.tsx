@@ -39,7 +39,7 @@ export default function ProposalsListView ({
         networkFilter
         infinite
       >
-        {proposals?.map(proposal => <ProposalsListItem proposal={proposal} />)}
+        {proposals?.map(proposal => <ProposalsListItem proposal={proposal} key={`proposal-item-${proposal?.id}`} />)}
       </List>
     </div>
   );
