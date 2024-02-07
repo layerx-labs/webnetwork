@@ -81,7 +81,9 @@ class Chain extends Model {
       cancelFeePercentage: {
         type: DataTypes.FLOAT
       },
-
+      startBlock: {
+        type: DataTypes.INTEGER
+      },
     }, {sequelize: sqlz, modelName: 'chain', tableName: 'chains'})
   };
 
