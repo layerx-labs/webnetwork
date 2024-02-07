@@ -13,18 +13,21 @@ export default function CreateNetworkBountyButton({
   label,
   actionCallBack
 }: CreateNetworkBountyButtonProps) {
-  const { pathname, push } = useRouter();
+  const { pathname, push, query } = useRouter();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isOnNetwork = pathname?.includes("[network]");
 
-  function onClick () {
+  function onClick() {
     if (!isOnNetwork) {
       setIsModalVisible(true);
       return;
     }
-    push("/create-task");
+    if (query?.network)
+      push(`/create-task?marketplace=${query?.network}`);
+    else
+      push("/create-task");
   }
 
   function onCloseClick () {

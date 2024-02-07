@@ -22,16 +22,24 @@ export default function ResponsiveWrapper({
   className
 } : ResponsiveWrapperProps) {
   const {
-    isDesktopView,
-    isMobileView,
-    isTabletView,
+    currentBreakPoint
   } = useBreakPoint();
 
-  const shouldRender = (
-    (isMobileView && (xs || sm)) ||
-    (isTabletView && md) ||
-    (isDesktopView && (md || lg || xl || xxl))
-  );
+  const xsVisibility = xs ?? false;
+  const smVisibility = sm ?? xsVisibility ?? false;
+  const mdVisibility = md ?? smVisibility ?? false;
+  const lgVisibility = lg ?? mdVisibility ?? false;
+  const xlVisibility = xl ?? lgVisibility ?? false;
+  const xxlVisibility = xxl ?? xlVisibility ?? false;
+
+  const breakpoints = {
+    xs: xsVisibility,
+    sm: smVisibility,
+    md: mdVisibility,
+    lg: lgVisibility,
+    xl: xlVisibility,
+    xxl: xxlVisibility,
+  };
 
   function getClass(condition, ifTrue, ifFalse) {
     if (typeof condition === "boolean")
@@ -40,7 +48,7 @@ export default function ResponsiveWrapper({
     return "";
   }
 
-  if (!shouldRender) {
+  if (!breakpoints[currentBreakPoint]) {
     return null;
   }
 
