@@ -8,7 +8,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 
 export default function NetworkThemeInjector() {
-  const { pathname } = useRouter();
+  const { pathname, asPath } = useRouter();
   
   const [currentColors, setCurrentColors] = useState("");
 
@@ -16,9 +16,10 @@ export default function NetworkThemeInjector() {
   const { colorsToCSS } = useNetworkTheme();
 
   const isOnNetwork = isOnNetworkPath(pathname);
+  const isVotingPowerPage = asPath === "/profile/voting-power";
 
   useEffect(() => {
-    if (marketplace?.active?.colors && isOnNetwork)
+    if (marketplace?.active?.colors && (isOnNetwork || isVotingPowerPage))
       setCurrentColors(colorsToCSS());
     else
       setCurrentColors("");
