@@ -43,6 +43,9 @@ export default function DelegationsView({
           {
             delegations?.map(curator => curator?.delegations?.map(delegation =>
               <VotesItem
+                key={
+                `delegation-${delegation?.networkId}-${delegation?.from}-${delegation?.to}-${delegation?.contractId}`
+                }
                 disabled={disabled}
                 networkLogo={curator?.network?.logoIcon}
                 networkName={curator?.network?.name}
