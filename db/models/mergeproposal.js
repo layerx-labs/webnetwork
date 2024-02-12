@@ -82,6 +82,11 @@ class MergeProposal extends Model {
       sourceKey: "id",
       as: "comments"
     });
+
+    this.belongsTo(models.user, {
+      foreignKey: "creator",
+      targetKey: "address"
+    })
   }
 }
 

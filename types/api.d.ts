@@ -1,8 +1,9 @@
 import { Curator } from "interfaces/curators";
-import { IssueData } from "interfaces/issue-data";
+import { Deliverable, IssueData } from "interfaces/issue-data";
 import { LeaderBoard } from "interfaces/leaderboard";
 import { Network, ThemeColors } from "interfaces/network";
 import { Payment } from "interfaces/payments";
+import { Proposal } from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 
@@ -15,7 +16,7 @@ export interface PaginatedData<T> {
 }
 
 export interface SearchBountiesPaginated extends PaginatedData<IssueData> {
-  totalBounties: number;
+  totalBounties?: number;
 }
 
 export type LeaderBoardPaginated = PaginatedData<LeaderBoard>;
@@ -23,6 +24,10 @@ export type LeaderBoardPaginated = PaginatedData<LeaderBoard>;
 export interface CuratorsListPaginated extends PaginatedData<Curator> {
   totalCurators: number;
 }
+
+export type DeliverablePaginatedData = PaginatedData<Deliverable>;
+
+export type ProposalPaginatedData = PaginatedData<Proposal>;
 
 export interface NetworkOverviewData {
   name: string;

@@ -2,7 +2,7 @@ import {useTranslation} from "next-i18next";
 import { useRouter } from "next/router";
 
 import TasksList from "components/lists/tasks/controller";
-import ProfileLayout from "components/profile/profile-layout";
+import DashboardLayout from "components/profile/dashboard-layout";
 
 import { SearchBountiesPaginated } from "types/api";
 
@@ -23,7 +23,7 @@ export default function ProposalsPage({
   const isOnNetwork = pathname?.includes("[network]");
 
   return(
-    <ProfileLayout>
+    <DashboardLayout>
       <TasksList
         bounties={bounties}
         redirect={isOnNetwork ? getURLWithNetwork("/tasks") : "/explore"}
@@ -32,6 +32,6 @@ export default function ProposalsPage({
         variant="profile"
         type="proposals"
       />
-    </ProfileLayout>
+    </DashboardLayout>
   );
 }

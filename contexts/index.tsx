@@ -29,7 +29,7 @@ const RootProviders = ({ children }) => {
   const { service: daoService } = useDaoStore();
 
   useEffect(() => {
-    if (router?.pathname?.includes("[network]") || router?.asPath?.includes("profile/my-marketplace")) return;
+    if (router?.pathname?.includes("[network]") || router?.asPath?.includes("dashboard/my-marketplace")) return;
     clear();
     refresh();
   }, [router?.pathname]);

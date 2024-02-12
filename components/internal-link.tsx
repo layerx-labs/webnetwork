@@ -58,7 +58,7 @@ export default function InternalLink({
 
     if (props.icon) classes += " d-flex align-items-center justify-content-center ";
 
-    return `${(!nav && `btn btn-${outline && "outline-" || ""}primary`) || " main-nav-link "} ${
+    return `${(!nav && `btn btn-${outline && "outline-" || ""}primary border-radius-4`) || " main-nav-link "} ${
       brand ? "" : " text-gray-50 "
     } bg-opacity-100 text-decoration-none shadow-none ${classes}`;
   }

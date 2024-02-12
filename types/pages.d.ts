@@ -38,7 +38,7 @@ interface MyMarketplacePageProps {
   bounties: SearchBountiesPaginated;
 }
 
-interface ProfilePageProps {
+interface DashboardPageProps {
   bounties?: SearchBountiesPaginated;
   payments?: NetworkPaymentsData[];
   chains?: SupportedChainData[];

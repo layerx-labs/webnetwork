@@ -7,21 +7,21 @@ import { getProfileLinks } from "helpers/navigation-links";
 
 import { LinkProps } from "types/components";
 
-interface ProfileLinksProps {
+interface DashboardLinksProps {
   onClick?: () => void;
 }
 
-export default function ProfileLinks({
+export default function DashboardLinks({
   onClick
-}: ProfileLinksProps) {
+}: DashboardLinksProps) {
   const { query, asPath } = useRouter();
   const { t } = useTranslation("common");
 
   const cleanQuery = { ...query, networkName: null, networkChain: null };
 
-  const getHref = (href = "") => `/profile/${href}`;
-  const getUrl = () => ({ pathname: "/profile/[[...profilePage]]", query: cleanQuery });
-  const isActive = href => asPath.endsWith(`/profile${href ? `/${href}` : ""}`);
+  const getHref = (href = "") => `/dashboard/${href}`;
+  const getUrl = () => ({ pathname: "/dashboard/[[...dashboardPage]]", query: cleanQuery });
+  const isActive = href => asPath.endsWith(`/dashboard${href ? `/${href}` : ""}`);
 
   const ProfileLink = ({ label, href, icon: Icon }: LinkProps) => (
     <li className="mb-2" key={label}>

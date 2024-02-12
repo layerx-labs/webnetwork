@@ -41,6 +41,13 @@ $blue-50: #ECEDFC;
 $blue-600: #3540B6;
 $blue-150: #C6CAF7;
 
+$red-10: hsla(0, 84%, 60%, 0.1);
+$red-25: hsla(0, 84%, 60%, 0.25);
+$red-100: hsla(5, 96%, 73%, 1);
+
+$orange-10: hsla(25, 95%, 53%, 0.1);
+$orange-25: hsla(25, 95%, 53%, 0.25);
+$orange-100: #FCA078;
 $orange-500: #FF6A2C;
 
 $bg: #0B0C0E;
@@ -86,6 +93,8 @@ $more-bg: (
   "primary-30": rgba($primary, 0.3),
   "info-30": rgba($info, 0.3),
   "info-80": rgba($info, 0.8),
+  "success-10": rgba($success, 0.1),
+  "success-25": rgba($success, 0.25),
   "success-30": rgba($success, 0.3),
   "success-80": rgba($success, 0.8),
   "danger-30": rgba($danger, 0.3),
@@ -108,8 +117,14 @@ $more-bg: (
   "blue-200": $blue-200,
   "blue-150": $blue-150,
   "blue-400": $blue-400,
+  "orange-10": $orange-10,
+  "orange-25": $orange-25,
+  "orange-100": $orange-100,
   "orange-500": $orange-500,
   "orange-800": rgba($orange-500, 0.8),
+  "red-10": $red-10,
+  "red-25": $red-25,
+  "red-100": $red-100,
   "light-warning-30": rgba($light-warning, 0.3),
   "light-warning": $light-warning,
   "blue-dark": $blue-dark,
@@ -151,6 +166,14 @@ $more-colors: (
   "blue-50": $blue-50,
   "blue-150": $blue-150,
   "blue-600": $blue-600,
+  "orange-10": $orange-10,
+  "orange-25": $orange-25,
+  "orange-100": $orange-100,
+  "red-10": $red-10,
+  "red-25": $red-25,
+  "red-100": $red-100,
+  "success-10": rgba($success, 0.1),
+  "success-25": rgba($success, 0.25),
 );
 
 $more-roundend: (

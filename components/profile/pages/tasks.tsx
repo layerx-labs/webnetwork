@@ -1,5 +1,5 @@
 import TasksList from "components/lists/tasks/controller";
-import ProfileLayout from "components/profile/profile-layout";
+import DashboardLayout from "components/profile/dashboard-layout";
 
 import { SearchBountiesPaginated } from "types/api";
 
@@ -11,11 +11,11 @@ export default function TasksPage({
   bounties
 }: TasksPageProps) {
   return(
-    <ProfileLayout>
+    <DashboardLayout>
       <TasksList
         bounties={bounties}
         variant="profile"
       />
-    </ProfileLayout>
+    </DashboardLayout>
   );
 }

@@ -135,7 +135,7 @@ module.exports = () => {
         },
         {
           source: '/:network/:chain/profile/my-network',
-          destination: '/profile/my-marketplace',
+          destination: '/dashboard/my-marketplace',
           permanent: true,
         },
         {

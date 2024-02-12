@@ -71,7 +71,7 @@ export default function NotificationForm() {
   function onResend() {
     updateEmail(userEmail, {
       onSuccess: () => {
-        goToProfilePage("profile", { emailVerificationError: "" });
+        goToProfilePage("dashboard", { emailVerificationError: "" });
       }
     });
   }
