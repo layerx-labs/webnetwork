@@ -62,12 +62,14 @@ export default function BountyBody({
   function handleCancelEdit() {
     setIsPreview(false);
     cancelEditIssue();
+    setSelectedTags(currentBounty.tags);
   }
 
   function isDisableUpdateIssue() {
     return (
       isEditing ||
       isUploading ||
+      selectedTags?.length === 0 ||
       addFilesInDescription(body)?.length > BODY_CHARACTERES_LIMIT ||
       body?.length === 0
     );
