@@ -83,7 +83,7 @@ export default function NetworkTxButton({
 
   function makeTx() {
     const service = getDao().service;
-    if (!service?.network || !currentUser) return;
+    if (!service?.network || !currentUser || disabled) return;
 
     const tmpTransaction = addTx({
       type: txType,
