@@ -90,7 +90,7 @@ export default function TasksListItem({
   const percentage =
     BigNumber(fundedAmount.multipliedBy(100).toFixed(2, 1))
       .dividedBy(issue?.fundingAmount)
-      .toFixed(0, 1) || 0;
+      .toFixed(2, 1) || 0;
 
   function handleClickCard() {
     if (xClick) return xClick();
