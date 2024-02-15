@@ -871,7 +871,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .become-council {
   border-radius: math.div($m, 2);
   background-color: rgba(var(--bs-purple-rgb), 0.3) !important;
-  border: 2px solid $purple !important;
+  border: 2px solid var(--bs-purple-rgb) !important;
 }
 
 .circle-5 {

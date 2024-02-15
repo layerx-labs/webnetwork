@@ -41,7 +41,6 @@ export default function NetworkSettingsStep({ activeStep, index, validated, hand
         <div className="col">
           <ThemeColors
             colors={settings?.theme?.colors}
-            similar={settings?.theme?.similar}
             setColor={handleColorChange}
           />
         </div>

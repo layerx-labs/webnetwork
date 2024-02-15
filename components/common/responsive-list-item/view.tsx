@@ -72,6 +72,7 @@ export default function ResponsiveListItem({
               <div className="d-flex flex-column">
                 {mobileColumns.map(col =>
                   <ResponsiveListItemColumn
+                    key={`col-${col?.label}`}
                     {...col}
                     justify="start"
                     breakpoints={{ xs: true, md: false }}

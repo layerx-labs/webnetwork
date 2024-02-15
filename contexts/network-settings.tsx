@@ -4,8 +4,6 @@ import BigNumber from "bignumber.js";
 import {isZeroAddress} from "ethereumjs-util";
 import {useRouter} from "next/router";
 
-import {isSameSet} from "helpers/array";
-import {isColorsSimilar} from "helpers/colors";
 import {
   DEFAULT_CANCEL_FEE,
   DEFAULT_CANCELABLE_TIME,
@@ -127,28 +125,6 @@ export const NetworkSettingsProvider = ({ children }) => {
     settings.parameters.proposerFeeShare.validated = parametersValidations[6];
     settings.parameters.cancelableTime.validated = parametersValidations[7];
     settings.parameters.validated = parametersValidations.every(condition => condition);
-
-    //Theme
-    const colors = settings.theme?.colors;
-
-    if (colors?.primary){
-      const similar = [];
-
-      similar.push(...isColorsSimilar({ label: "text", code: colors.text }, [
-      { label: "primary", code: colors.primary },
-      { label: "background", code: colors.background },
-      { label: "shadow", code: colors.shadow },
-      ]));
-
-      similar.push(...isColorsSimilar({ label: "background", code: colors.background }, [
-        { label: "success", code: colors.success },
-        { label: "danger", code: colors.danger },
-        { label: "warning", code: colors.warning },
-      ]));
-
-      if (!isSameSet(new Set(similar), new Set(settings.theme?.similar)))
-        settings.theme.similar = similar;
-    }
 
     return settings;
   }
