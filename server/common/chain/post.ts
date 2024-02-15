@@ -5,6 +5,8 @@ import models from "db/models";
 
 import { MiniChainInfo } from "interfaces/mini-chain";
 
+import DAO from "services/dao-service";
+
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 
 export async function post(req: NextApiRequest) {
@@ -27,6 +29,13 @@ export async function post(req: NextApiRequest) {
   if (missingValues.length)
     throw new HttpBadRequestError(`Missing parameters: ${missingValues.join(", ")}`);
 
+  const dao = new DAO({
+    skipWindowAssignment: true,
+    web3Host: body.activeRPC,
+  });
+
+  await dao.start();
+
   const model = {
     chainId: body.chainId,
     chainRpc: body.activeRPC,
@@ -39,7 +48,8 @@ export async function post(req: NextApiRequest) {
     blockScanner: body.explorer,
     eventsApi: body.eventsApi,
     color: body.color,
-    icon: body.icon
+    icon: body.icon,
+    startBlock: (await dao.web3Connection.Web3.eth.getBlock("latest")).number
   };
 
   const existentChain = await models.chain.findOne({
