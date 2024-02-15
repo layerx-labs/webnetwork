@@ -4,7 +4,6 @@ import Button from "components/button";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
-import ListSort from "components/lists/sort/controller";
 import TasksListFilteredCategories
   from "components/lists/tasks/tasks-list-filtered-categories/tasks-list-filtered-categories.controller";
 import TasksListItem from "components/lists/tasks/tasks-list-item/tasks-list-item.controller";
