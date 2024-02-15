@@ -176,3 +176,4 @@ export const walletExtensionsLinks = {
     deepLink: COINBASE_DEEPLINK_LINK
   },
 };
+export const MIN_RENDER_AMOUNT = 0.0005;
