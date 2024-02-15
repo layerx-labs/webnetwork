@@ -106,6 +106,13 @@ export default function CreateBountyTokenAmount({
     formattedValue: v.decimalPlaces(10, 0).toFixed()
   });
 
+  function checkMinimumAmount (value: BigNumber) {
+    if (value.isLessThan(BigNumber(currentToken?.minimum)))
+      setInputError(t("bounty:errors.exceeds-minimum-amount", {
+        amount: currentToken?.minimum,
+      }));
+  }
+
   function handleDistributions(value, type) {
     if (!currentNetwork || !isFunders) return;
     if (!value) {
@@ -141,13 +148,15 @@ export default function CreateBountyTokenAmount({
     const proposerAmountValue = new BigNumber(proposerAmount.value);
     const treasuryAmountValue = new BigNumber(treasuryAmount.value);
 
-    const totalServiceFees = mergerAmountValue.plus(proposerAmountValue).plus(treasuryAmountValue) || BigNumber(0)
+    const totalServiceFees = mergerAmountValue.plus(proposerAmountValue).plus(treasuryAmountValue) || BigNumber(0);
 
-    const distributions = { totalServiceFees, ...initialDistributions}
+    const distributions = { totalServiceFees, ...initialDistributions};
+
+    const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
+    checkMinimumAmount(total);
 
     if(type === 'reward'){
-      const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
-      updateIssueAmount(handleNumberFormat(total))
+      updateIssueAmount(handleNumberFormat(total));
       if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding)
         setInputError(t("bounty:errors.exceeds-allowance"));
     }
@@ -157,7 +166,7 @@ export default function CreateBountyTokenAmount({
       setPreviewAmount(handleNumberFormat(rewardValue));
     }
 
-    setDistributions(distributions)
+    setDistributions(distributions);
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
@@ -174,14 +183,6 @@ export default function CreateBountyTokenAmount({
       setInputError(t("bounty:errors.exceeds-allowance"));
     } else if (values.floatValue < 0) {
       setType(ZeroNumberFormatValues);
-    } else if (
-      values.floatValue !== 0 &&
-      BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
-    ) {
-      setType(values); 
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
     } else {
       debouncedDistributionsUpdater(values.value, type);
       setType(handleNumberFormat(BigNumber(values.value)));
