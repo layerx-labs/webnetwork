@@ -49,7 +49,7 @@
     "@taikai/dappkit": "2.3.3",
     "@taikai/dappkit-react": "^0.1.10",
     "@taikai/scribal": "^1.0.3",
-    "@tanstack/react-query": "^4.33.0",
+    "@tanstack/react-query": "^5.20.5",
     "@vlsergey/react-bootstrap-pagination": "^3.2.1",
     "@web3-react/core": "^8.2.3",
     "@web3-react/metamask": "^8.2.4",
@@ -97,6 +97,8 @@
     "tiny-emitter": "^2.1.0",
     "use-debounce": "^9.0.4",
     "uuid": "^9.0.1",
+    "viem": "^2.7.9",
+    "wagmi": "^2.5.7",
     "yargs": "^17.4.0",
     "zustand": "^4.4.4"
   },
