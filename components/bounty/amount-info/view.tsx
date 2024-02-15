@@ -46,7 +46,7 @@ export default function BountyAmountView({
           >
             {(+bountyAmount >= MIN_RENDER_AMOUNT &&
               formatNumberToNScale(bountyAmount?.toFixed())) ||
-              `< 0.0005`}
+              `< ${MIN_RENDER_AMOUNT}`}
           </span>
           <div className="text-truncate token-symbol">
             <span className={`text-uppercase text-gray-500 `}>
