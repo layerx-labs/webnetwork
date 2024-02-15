@@ -160,4 +160,13 @@ export interface PaymentInfoProps {
   label: string;
 }
 
-export type DeliverableButtonType = "cancel" | "review" | "ready-review";
+export type DeliverableButtonType = "cancel" | "review" | "ready-review"
+
+export type TasksListItemVariant = "small" | "network" | "multi-network" | "management" | "submissions" | "proposals";
+
+export interface TaskListItemVariantProps {
+  task: IssueBigNumberData;
+  onClick?: () => void;
+}
+
+export type Status = "review" | "not-accepted" | "canceled" | "accepted" | "draft" | "refused" | "disputed";

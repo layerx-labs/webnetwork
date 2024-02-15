@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import NotFound from "components/common/not-found/view";
 import If from "components/If";
 import MyNetworkSettings from "components/network/settings/controller";
-import ProfileLayout from "components/profile/profile-layout";
+import DashboardLayout from "components/profile/dashboard-layout";
 
 import { Network } from "interfaces/network";
 
@@ -28,7 +28,7 @@ export default function MyMarketplacePageView({
   const isNotFound = !myNetwork && !isLoading;
 
   return (
-    <ProfileLayout>
+    <DashboardLayout>
       <If condition={isLoading}>
         <div className="d-flex py-5 justify-content-center">
           <div className="spinner-border spinner-border-md ml-1" />
@@ -52,6 +52,6 @@ export default function MyMarketplacePageView({
           href="/new-marketplace"
         />
       </If>
-    </ProfileLayout>
+    </DashboardLayout>
   );
 }

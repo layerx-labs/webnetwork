@@ -18,6 +18,7 @@ export default async function get(query: ParsedUrlQuery) {
     chainId,
     proposalId,
     chain,
+    networkChain,
     visible,
     creator,
     proposer,
@@ -31,7 +32,8 @@ export default async function get(query: ParsedUrlQuery) {
     count,
     sortBy,
     order,
-    categories
+    categories,
+    receiver
   } = query;
 
   const whereCondition: WhereOptions = {};
@@ -41,7 +43,7 @@ export default async function get(query: ParsedUrlQuery) {
   if (["disputable", "mergeable", "proposable"].includes(state?.toString()))
     defaultStatesToIgnore.push("closed", "draft");
 
-  if (!network && !networkName && !proposer && !deliverabler && !creator)
+  if (!network && !networkName && !proposer && !deliverabler && !creator && !receiver)
     defaultStatesToIgnore.push("closed");
 
   if (!creator)
@@ -68,6 +70,9 @@ export default async function get(query: ParsedUrlQuery) {
     else
       whereCondition.state[Op.eq] = state;
   }
+
+  if (receiver)
+    whereCondition.state[Op.eq] = "closed";
 
   if (issueId) 
     whereCondition.id = +issueId;
@@ -162,14 +167,14 @@ export default async function get(query: ParsedUrlQuery) {
                       "proposerFeeShare"
                     ], 
                     true, 
-                    networkName === 'all' ? {} : (networkName || network) ? { 
+                    (networkName || network) ? {
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", 
                                     ["chainId", "chainName", "chainShortName", "color", "closeFeePercentage", "icon"], 
                                     true, 
-                                    chain ? {
-                                      chainShortName: { [Op.iLike]: chain.toString()}
+                                    networkChain || chain ? {
+                                      chainShortName: { [Op.iLike]: (networkChain || chain).toString()}
                                     } : {})]);
 
   const transactionalTokenAssociation = 
@@ -180,6 +185,10 @@ export default async function get(query: ParsedUrlQuery) {
 
   const userAssociation = getAssociation("user", undefined, !!creator, creator ? {
     address: caseInsensitiveEqual("user.address", creator.toString())
+  } : {});
+
+  const paymentsAssociation = getAssociation("payments", undefined, !!receiver, receiver ? {
+    address: caseInsensitiveEqual("payments.address", receiver.toString())
   } : {});
 
   const COLS_TO_CAST = ["amount", "fundingAmount"];
@@ -214,6 +223,7 @@ export default async function get(query: ParsedUrlQuery) {
       deliverableAssociation,
       transactionalTokenAssociation,
       userAssociation,
+      paymentsAssociation,
     ]
   }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT))
     .then(result => {
@@ -242,7 +252,7 @@ export default async function get(query: ParsedUrlQuery) {
               address: caseInsensitiveEqual("address", deliverabler.toString())
             }: {}),
             getAssociation("issue", undefined, true, {}, [
-              getAssociation("network", undefined, true, networkName === 'all' ? {} : networkName || network ? 
+              getAssociation("network", undefined, true, networkName || network ?
               { 
                 name: caseInsensitiveEqual("name", (networkName || network).toString())
               } : {}, [])])

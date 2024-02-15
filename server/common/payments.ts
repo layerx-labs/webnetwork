@@ -35,7 +35,7 @@ export default async function get(query: ParsedUrlQuery) {
   if (startDate && endDate) {
     const initialDate = parseISO(startDate.toString())
     const finalDate = parseISO(endDate.toString())
-  
+
     if (isAfter(initialDate, finalDate))
       throw new HttpBadRequestError("Invalid time interval");
 
@@ -55,7 +55,7 @@ export default async function get(query: ParsedUrlQuery) {
         attributes: ["id", "title", "amount", "fundingAmount", "rewardAmount"],
         required: true,
         include: [
-          { 
+          {
             association: "transactionalToken",
             attributes: ["address", "name", "symbol", "chain_id"]
           },
@@ -65,7 +65,7 @@ export default async function get(query: ParsedUrlQuery) {
             required: !!networkName || !!networkChain,
             where: networkWhere,
             include: [
-              { 
+              {
                 association: "chain",
                 attributes: ["chainShortName"],
                 required: !!networkChain,
@@ -92,7 +92,7 @@ export default async function get(query: ParsedUrlQuery) {
       .map(p => p.get({ plain: true }))
       .reduce((acc, cur) => {
         const curNetworkIndex = acc.findIndex(n => n.id === cur.issue.network.id);
-        
+
         const newAcc = [...acc];
         const withoutNetwork = {
           ...cur,
@@ -101,12 +101,12 @@ export default async function get(query: ParsedUrlQuery) {
             network: undefined,
           }
         };
-        
+
         if (curNetworkIndex > -1)
           newAcc[curNetworkIndex].payments.push(withoutNetwork);
         else
           newAcc.push({ ...cur.issue.network, payments: [withoutNetwork] });
-          
+
         return newAcc;
       }, []);
   }

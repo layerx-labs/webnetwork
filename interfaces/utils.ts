@@ -1,6 +1,6 @@
 export type SizeOptions = "xsm"|"sm" | "md" | "lg";
 export type ProfilePages = 
-  "profile" |
+  "dashboard" |
   "wallet" |
   "voting-power" |
   "payments" |

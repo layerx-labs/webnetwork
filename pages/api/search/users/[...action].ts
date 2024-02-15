@@ -50,7 +50,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const isAdmin = UserRoleUtils.hasAdminRole(token);
     const isGovernor = UserRoleUtils.hasGovernorRole(token);
-    const isSameUser = lowerCaseCompare(token?.address, req?.body[0]) || lowerCaseCompare(token?.login, req?.body[1]);
+    const isSameUser = !!token?.address && lowerCaseCompare(token?.address, req?.body[0]) ||
+      !!token?.login && lowerCaseCompare(token?.login, req?.body[1]);
 
     if (isAdmin)
       scope = UserTableScopes.admin;

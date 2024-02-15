@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import {User} from "interfaces/api";
 import {BaseModel} from "interfaces/db/base";
 import {Deliverable, IssueBigNumberData, IssueData, IssueDataComment} from "interfaces/issue-data";
+import { Network } from "interfaces/network";
 
 export interface ProposalDistribution extends BaseModel {
   recipient: string;
@@ -35,6 +36,8 @@ export interface Proposal extends BaseModel {
   issue?: IssueData | IssueBigNumberData;
   deliverable?: Deliverable;
   comments?: IssueDataComment[];
+  user?: User;
+  network?: Network;
 }
 
 export interface INetworkProposal {

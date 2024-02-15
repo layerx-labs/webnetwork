@@ -9,7 +9,7 @@ import TasksListView from "components/lists/tasks/view";
 import { issueParser } from "helpers/issue";
 
 import { SearchBountiesPaginated } from "types/api";
-import { SearchBountiesPaginatedBigNumber } from "types/components";
+import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
 
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useChain from "x-hooks/use-chain";
@@ -22,10 +22,12 @@ interface TasksListProps {
   redirect?: string | UrlObject;
   emptyMessage?: string;
   buttonMessage?: string;
-  variant?: "bounty-hall" | "profile" | "network" | "management"
+  variant?: "bounty-hall" | "profile" | "network" | "management";
   type?: "bounties" | "deliverables" | "proposals";
   filterType?: "category" | "search";
+  itemVariant?: TasksListItemVariant;
   hideFilter?: boolean;
+  hideTitle?: boolean;
 }
 
 export default function TasksList({
@@ -36,7 +38,9 @@ export default function TasksList({
   bounties,
   type = "bounties",
   hideFilter,
-  filterType = "search"
+  hideTitle,
+  filterType = "search",
+  itemVariant
 }: TasksListProps) {
   const router = useRouter();
 
@@ -90,13 +94,13 @@ export default function TasksList({
       if (!previous || bounties.currentPage === 1) 
         return {
           ...bounties,
-          rows: bounties.rows.map(issueParser)
+          rows: bounties?.rows?.map(issueParser)
         };
 
       return {
         ...previous,
         ...bounties,
-        rows: previous.rows.concat(bounties.rows.map(issueParser))
+        rows: previous?.rows?.concat(bounties?.rows?.map(issueParser))
       };
     });
   }, [bounties]);
@@ -133,6 +137,8 @@ export default function TasksList({
       hideFilter={hideFilter}
       chains={supportedChains}
       filterType={filterType}
+      hideTitle={hideTitle}
+      itemVariant={itemVariant}
     />
   );
 }

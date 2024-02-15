@@ -79,4 +79,9 @@
   "language-updated": "Language updated",
   "refresh-the-page": "Please refresh the page",
   "closed-marketplace-warning": "The selected marketplace is closed. Only Unlock and Take Back actions are available."
+  "tasks-won": "Tasks won",
+  "submissions": "Submissions",
+  "deliverables": "Deliverables",
+  "proposals": "Proposals",
+  "tasks-opened": "Tasks opened"
 }

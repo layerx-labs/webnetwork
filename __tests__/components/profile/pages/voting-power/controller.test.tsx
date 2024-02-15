@@ -56,7 +56,7 @@ jest.mock("components/profile/pages/voting-power/network/controller", () => {
   };
 });
 
-jest.mock("components/profile/profile-layout", () => {
+jest.mock("components/profile/dashboard-layout", () => {
   return {
     __esModule: true,
     default: jest.fn((props) => (

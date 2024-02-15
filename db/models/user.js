@@ -78,19 +78,25 @@ class User extends Model {
       foreignKey: "address",
       sourceKey: "address",
       as: "curation"
-    })
+    });
 
     this.hasOne(models.userSetting, {
       foreignKey: "userId",
       sourceKey: "id",
       as: "settings"
-    })
+    });
 
     this.hasMany(models.notification, {
       foreignKey: "userId",
       sourceKey: "id",
       as: "notifications"
-    })
+    });
+
+    this.hasMany(models.mergeProposal, {
+      foreignKey: "creator",
+      sourceKey: "address",
+      as: "mergeProposals"
+    });
   }
 
   static findByAddress(address) {

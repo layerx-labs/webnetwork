@@ -6,7 +6,7 @@ import { SizeOptions } from "interfaces/utils";
 
 interface IdenticonProps {
   address: string;
-  size?: SizeOptions;
+  size?: SizeOptions | number;
   className?: string;
 }
 
@@ -23,14 +23,15 @@ export default function Identicon({
     md: 32,
     lg: 72
   };
+  const sizeValue = typeof size === "number" ? size : SIZES[size];
 
   useEffect(() => {
     if (address && ref.current) {
       ref.current.innerHTML = "";
 
-      const icon = jazzicon(SIZES[size], parseInt(address.slice(2, 10), 16));
+      const icon = jazzicon(sizeValue, parseInt(address.slice(2, 10), 16));
 
-      if (size === "lg") icon.style.height = `${SIZES[size]}px`;
+      if (size === "lg") icon.style.height = `${sizeValue}px`;
       icon.style.borderRadius = '50%'
       ref.current.appendChild(icon);
     }

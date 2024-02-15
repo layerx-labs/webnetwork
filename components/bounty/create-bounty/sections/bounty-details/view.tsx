@@ -133,9 +133,9 @@ export default function BountyDetailsSectionView({
       </span>
 
       <div className="form-group mt-4 mb-0">
-        <label htmlFor="" className="mb-2">
+        <BountyLabel className="mb-2" required data-testid="task-tags-select">
           {t("fields.tags")}
-        </label>
+        </BountyLabel>
 
         <ReactSelect
           data-testid="tags"
@@ -187,9 +187,9 @@ export default function BountyDetailsSectionView({
       <div className="row">
         <div className="col">
           <div className="row">
-            <span className="lg-medium text-gray-50">
+            <BountyLabel className="lg-medium text-gray-50" required>
               {t("fields.deliverable-types.label")}
-            </span>
+            </BountyLabel>
           </div>
 
           <div className="row mt-2">

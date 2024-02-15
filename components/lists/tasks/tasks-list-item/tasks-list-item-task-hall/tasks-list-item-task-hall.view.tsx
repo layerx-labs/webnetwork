@@ -10,16 +10,12 @@ import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.vie
 import MarketplaceWithNetworkLogo
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
 
-import { IssueBigNumberData } from "interfaces/issue-data";
+import { TaskListItemVariantProps } from "types/components";
 
-interface TasksListItemTaskHallProps {
-  task: IssueBigNumberData;
-  onClick?: () => void;
-}
 export default function TasksListItemTaskHall ({
   task,
   onClick
-}: TasksListItemTaskHallProps) {
+}: TaskListItemVariantProps) {
   const { t } = useTranslation("bounty");
 
   return(

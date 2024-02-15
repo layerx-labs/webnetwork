@@ -88,7 +88,7 @@ export default function SelectNetwork({
       const newQuery = {
         ...query,
         page: "1",
-        networkName: newValue?.value?.name || "all"
+        networkName: newValue?.value?.name
       };
       push({ pathname: pathname, query: newQuery }, asPath);
     }
@@ -118,8 +118,8 @@ export default function SelectNetwork({
       <If condition={!hideLabel}>
         <span
         className={`${
-          fontRegular ? "sm-regular text-white" : "caption-small  text-gray-100"
-        } font-weight-medium text-nowrap mr-1`}
+          fontRegular ? "sm-regular text-white" : "sm-regular  text-gray-100"
+        } font-weight-medium text-nowrap mr-1 text-capitalize`}
       >
           {t("misc.network")}
         </span>

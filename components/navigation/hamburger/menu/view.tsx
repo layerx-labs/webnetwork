@@ -12,14 +12,13 @@ import HelpButton from "components/common/buttons/help/view";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
-import ProfileLinks from "components/profile/profile-links";
+import Notifications from "components/notifications/controller";
+import DashboardLinks from "components/profile/dashboard-links";
+import TransactionsStateIndicator from "components/transactions-state-indicator";
 
 import {truncateAddress} from "helpers/truncate-address";
 
 import {Link} from "types/utils";
-
-import Notifications from "../../../notifications/controller";
-import TransactionsStateIndicator from "../../../transactions-state-indicator";
 
 interface HamburgerMenuViewProps {
   show: boolean;
@@ -140,7 +139,7 @@ export default function HamburgerMenuView({
             </If>
 
             <If condition={isProfileLinksVisible}>
-              <ProfileLinks onClick={onHideHamburger} />
+              <DashboardLinks onClick={onHideHamburger} />
             </If>
 
 

@@ -19,5 +19,6 @@ export interface SupportedChainData {
   networkCreationFeePercentage?: number;
   closeFeePercentage?: number;
   cancelFeePercentage?: number;
+  startBlock?: number;
   networks?: Network[];
 }

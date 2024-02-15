@@ -193,6 +193,7 @@ export default function CreateTaskPage ({
       section === 1 &&
       (!bountyTitle ||
         !bountyDescription ||
+        selectedTags?.length === 0 ||
         isUploading ||
         addFilesInDescription(bountyDescription).length >
         BODY_CHARACTERES_LIMIT ||
@@ -402,7 +403,8 @@ export default function CreateTaskPage ({
 
         const createdBounty = await processEvent(NetworkEvents.BountyCreated, currentNetwork?.networkAddress, {
           fromBlock: networkBounty?.blockNumber
-        }, currentNetwork?.name);
+        }, currentNetwork?.name)
+          .catch(() => null);
 
         if (!createdBounty) {
           addWarning(t("actions.warning"), t("bounty:errors.sync"));

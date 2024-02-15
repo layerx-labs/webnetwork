@@ -30,7 +30,7 @@ export default  function NotificationRow({
   const finalTemplate = template?.replace(regexAvatar, '')?.replace(regexLink, '')
 
   return (
-      <div className={className} key={item?.id}>
+      <div className={className} key={`notification-${item?.id}`}>
         <div className="d-flex flex-column">
           <div className="d-flex justify-content-between mt-2">
             <div className="d-flex cursor-pointer"

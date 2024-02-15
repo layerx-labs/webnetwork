@@ -75,6 +75,7 @@
     "nav-avatar": {
       "my-profile": "Settings",
       "profile": "Settings",
+      "dashboard": "Dashboard",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
       "payments": "Payments",
@@ -215,7 +216,9 @@
     "origin": "Origin",
     "type": "Type",
     "all-chains": "All Networks",
-    "available-on": "Available on"
+    "available-on": "Available on",
+    "opened": "Opened",
+    "proposal": "Proposal"
   },
   "modals": {
     "help-modal": {
@@ -544,5 +547,16 @@
     "metamask": "MetaMask",
     "coinbasewallet": "CoinBase"
   },
-  "closing-task-list-warning": "Your address is not on the closing tasks allowed list."
+  "closing-task-list-warning": "Your address is not on the closing tasks allowed list.",
+  "statuses": {
+    "review": "In review",
+    "draft": "Draft",
+    "not-accepted": "Not accepted",
+    "canceled": "Canceled",
+    "accepted": "Accepted",
+    "refused": "Refused",
+    "disputed": "Disputed"
+  },
+  "solution-by": "Solution by",
+  "search-for-proposal": "Search for a proposal by tastk title or description"
 }
