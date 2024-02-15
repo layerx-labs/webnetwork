@@ -3,6 +3,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import BigNumber from "bignumber.js";
 import { useTranslation } from "next-i18next";
 
+import { MIN_RENDER_AMOUNT } from "helpers/constants";
 import {
   formatNumberToNScale,
   formatStringToCurrency,
@@ -43,9 +44,9 @@ export default function BountyAmountView({
           <span
             className={`text-opacity-1 text-white${isActive && "-40"}`}
           >
-            {(+bountyAmount >= 1e-6 &&
-              formatNumberToNScale(bountyAmount?.toFixed())) ||
-              bountyAmount?.toExponential()}
+            {(+bountyAmount >= MIN_RENDER_AMOUNT &&
+                formatNumberToNScale(bountyAmount?.toFixed())) ||
+              `< ${MIN_RENDER_AMOUNT}`}
           </span>
           <div className="text-truncate token-symbol">
             <span className={`text-uppercase text-gray-500 `}>

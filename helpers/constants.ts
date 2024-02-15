@@ -164,3 +164,4 @@ export const BOUNTY_TAGS = [
   },
 ];
 export const CHAIN_DEFAULT_DECIMALS = 18;
+export const MIN_RENDER_AMOUNT = 0.0005;
