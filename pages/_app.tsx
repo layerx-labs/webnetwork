@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import {QueryClientProvider, Hydrate} from '@tanstack/react-query'
+import {QueryClientProvider, HydrationBoundary} from '@tanstack/react-query'
 import {GetServerSideProps} from "next";
 import {SessionProvider} from "next-auth/react";
 import {appWithTranslation} from "next-i18next";
@@ -40,7 +40,7 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
           <RootProviders>
-            <Hydrate state={pageProps.dehydratedState}>
+            <HydrationBoundary state={pageProps.dehydratedState}>
               <Seo issueMeta={seoData} />
               <ReadOnlyContainer>
                 <RootModals />
@@ -51,7 +51,7 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
                 <Toaster />
                 <Loading />
               </ReadOnlyContainer>
-            </Hydrate>
+            </HydrationBoundary>
           </RootProviders>
         </QueryClientProvider>
       </SessionProvider>

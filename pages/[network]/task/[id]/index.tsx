@@ -137,8 +137,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   }
 
   await queryClient.setQueryData(QueryKeys.bounty(bountyId), bountyData);
-  await queryClient.prefetchQuery(QueryKeys.bountyComments(bountyId), () =>
-    getCommentsData({ issueId: bountyId, type: "issue" }));
+  await queryClient.prefetchQuery({
+    queryKey: QueryKeys.bountyComments(bountyId),
+    queryFn: () => getCommentsData({ issueId: bountyId, type: "issue" }),
+  });
 
   const seoData: Partial<IssueData> = {
     title: bountyData?.title,
