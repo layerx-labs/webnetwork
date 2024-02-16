@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import {QueryClientProvider, HydrationBoundary} from '@tanstack/react-query'
 import {GetServerSideProps} from "next";
 import {SessionProvider} from "next-auth/react";
@@ -8,6 +9,8 @@ import {AppProps} from "next/app";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 import {GoogleAnalytics} from "nextjs-google-analytics";
+import { rainbowKitConfig } from "rainbowkit-config.mjs";
+import { WagmiProvider } from "wagmi";
 
 import ConsentCookie from "components/consent-cokie";
 import Loading from "components/loading";
@@ -23,6 +26,7 @@ import { getReactQueryClient } from "services/react-query";
 
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
+import '@rainbow-me/rainbowkit/styles.css';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -35,28 +39,30 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
     return <Component {...pageProps}></Component>
 
   return (
-    <>
+    <WagmiProvider config={rainbowKitConfig}>
       <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
-          <RootProviders>
-            <HydrationBoundary state={pageProps.dehydratedState}>
-              <Seo issueMeta={seoData} />
-              <ReadOnlyContainer>
-                <RootModals />
-                <NavBar />
-                <div id="root-container">
-                  <Component {...pageProps} />
-                </div>
-                <Toaster />
-                <Loading />
-              </ReadOnlyContainer>
-            </HydrationBoundary>
-          </RootProviders>
+          <RainbowKitProvider>
+            <RootProviders>
+              <HydrationBoundary state={pageProps.dehydratedState}>
+                <Seo issueMeta={seoData} />
+                <ReadOnlyContainer>
+                  <RootModals />
+                  <NavBar />
+                  <div id="root-container">
+                    <Component {...pageProps} />
+                  </div>
+                  <Toaster />
+                  <Loading />
+                </ReadOnlyContainer>
+              </HydrationBoundary>
+            </RootProviders>
+          </RainbowKitProvider>
         </QueryClientProvider>
       </SessionProvider>
       <ConsentCookie />
-    </>
+    </WagmiProvider>
   );
 }
 
