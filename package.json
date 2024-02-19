@@ -94,6 +94,7 @@
     "sass": "^1.49.9",
     "sequelize": "6.17.0",
     "sequelize-cli": "^6.4.1",
+    "siwe": "^2.1.4",
     "swagger-ui-react": "^4.15.5",
     "tiny-emitter": "^2.1.0",
     "use-debounce": "^9.0.4",
