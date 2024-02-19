@@ -1,21 +1,19 @@
 import { useState } from "react";
 
-import { Web3Connection } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
-import type { provider as Provider } from "web3-core";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 
 import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
+import { getSiweMessage } from "helpers/siwe";
 import { AddressValidator } from "helpers/validators/address";
-import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
 import { EventName } from "interfaces/analytics";
 import { CustomSession } from "interfaces/custom-session";
 import { UserRole } from "interfaces/enums/roles";
-import { StorageKeys } from "interfaces/enums/storage-keys";
 
 import { WinStorage } from "services/win-storage";
 
@@ -24,7 +22,6 @@ import { SESSION_TTL } from "server/auth/config";
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
@@ -41,22 +38,24 @@ const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
   const session = useSession();
+  const account = useAccount();
   const { asPath } = useRouter();
+  const { disconnect } = useDisconnect();
+  const { signMessageAsync } = useSignMessage();
 
   const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
 
   const { settings } = useSettings();
   const marketplace = useMarketplace();
-  const { connect, disconnect } = useDao();
+  const { connect } = useDao();
   const { pushAnalytic } = useAnalyticEvents();
   const transactions = useStorageTransactions();
   const { connectedChain } = useSupportedChain();
-  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
+  const { signMessage: _signMessage } = useSignature();
 
   const { addWarning } = useToastStore();
   const { currentUser, updateCurrentUser} = useUserStore();
   const { service: daoService, serviceStarting } = useDaoStore();
-  const { updateWalletSelectorModal } = useLoadersStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -75,28 +74,36 @@ export function useAuthentication() {
     });
   }
 
-  async function signInWallet(connection: Web3Connection) {
-    updateWalletSelectorModal(false);
-
-    const address = await connection.getAddress();
+  async function signInWallet() {
+    const address = account?.address;
 
     if (!address) return;
 
-    const providerName = getProviderNameFromConnection(connection);
-    window.localStorage.setItem(StorageKeys.lastProviderConnected, providerName);
-
     const csrfToken = await getCsrfToken();
-
     const issuedAt = new Date();
     const expiresAt = new Date(+issuedAt + SESSION_TTL);
 
-    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, connection);
+    const siweMessage = getSiweMessage({
+      nonce: csrfToken,
+      address,
+      issuedAt,
+      expiresAt
+    });
 
-    if (!signature) return;
+    const signature = await signMessageAsync({
+      account: address,
+      message: siweMessage.prepareMessage(),
+    }).catch(() => null);
+
+    if (!signature) {
+      disconnect();
+      return;
+    }
 
     nextSignIn("credentials", {
       redirect: false,
       signature,
+      address,
       issuedAt: +issuedAt,
       expiresAt: +expiresAt,
       callbackUrl: `${URL_BASE}${asPath}`

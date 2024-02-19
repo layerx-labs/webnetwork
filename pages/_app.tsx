@@ -27,6 +27,7 @@ import { getReactQueryClient } from "services/react-query";
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
 import '@rainbow-me/rainbowkit/styles.css';
+import { AuthenticationProvider } from "contexts/authentication";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -44,20 +45,22 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>
-            <RootProviders>
-              <HydrationBoundary state={pageProps.dehydratedState}>
-                <Seo issueMeta={seoData} />
-                <ReadOnlyContainer>
-                  <RootModals />
-                  <NavBar />
-                  <div id="root-container">
-                    <Component {...pageProps} />
-                  </div>
-                  <Toaster />
-                  <Loading />
-                </ReadOnlyContainer>
-              </HydrationBoundary>
-            </RootProviders>
+            <AuthenticationProvider>
+              <RootProviders>
+                <HydrationBoundary state={pageProps.dehydratedState}>
+                  <Seo issueMeta={seoData} />
+                  <ReadOnlyContainer>
+                    <RootModals />
+                    <NavBar />
+                    <div id="root-container">
+                      <Component {...pageProps} />
+                    </div>
+                    <Toaster />
+                    <Loading />
+                  </ReadOnlyContainer>
+                </HydrationBoundary>
+              </RootProviders>
+            </AuthenticationProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
       </SessionProvider>

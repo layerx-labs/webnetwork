@@ -2,17 +2,15 @@ import { NextApiRequest } from "next";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
-import { Op, Sequelize } from "sequelize";
 
 import models from "db/models";
 
 import { caseInsensitiveEqual } from "helpers/db/conditionals";
+import { getSiweMessage, verifySiweSignature } from "helpers/siwe";
 import { lowerCaseCompare, lowerCaseIncludes } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
 import { UserRole } from "interfaces/enums/roles";
-
-import { siweMessageService } from "services/ethereum/siwe";
 
 import { AuthProvider } from "server/auth/providers";
 import { UserRoleUtils } from "server/utils/jwt";
@@ -26,6 +24,10 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
         type: "text",
         placeholder: "0x0"
       },
+      address: {
+        label: "Address",
+        type: "text"
+      },
       issuedAt: {
         label: "Issued at",
         type: "number"
@@ -33,20 +35,21 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       expiresAt: {
         label: "Expires at",
         type: "number"
-      }
+      },
     },
     async authorize (credentials) {
-      const { signature, issuedAt, expiresAt } = credentials;
+      const { signature, address, issuedAt, expiresAt } = credentials;
 
       const nonce = await getCsrfToken({ req: { headers: req.headers } });
 
-      const message = siweMessageService.getMessage({
+      const siweMessage = getSiweMessage({
         nonce,
+        address,
         issuedAt: +issuedAt,
-        expiresAt: +expiresAt
+        expiresAt: +expiresAt,
       });
 
-      const signer = siweMessageService.getSigner(message, signature);
+      const signer = await verifySiweSignature(siweMessage, signature, nonce);
 
       if (!signer) return null;
 
