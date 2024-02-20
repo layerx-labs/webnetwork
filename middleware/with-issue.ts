@@ -3,8 +3,7 @@ import { NextApiHandler } from "next";
 import models from "db/models";
 
 import { NOT_AN_CREATOR_ISSUE, MISSING_CHAIN_ID } from "helpers/constants";
-
-import { siweMessageService } from "services/ethereum/siwe";
+import { verifySiweSignature } from "helpers/siwe";
 
 export const withIssue = (handler: NextApiHandler, methods: string[] = [ `PUT` ]) => {
   return async (req, res) => {
@@ -39,11 +38,11 @@ export const withIssue = (handler: NextApiHandler, methods: string[] = [ `PUT` ]
     if (!chainId)
       return res.status(401).json({ message: MISSING_CHAIN_ID });
 
-    const signature = req.body?.context?.token?.signature;
-    const typedMessage = req.body?.context?.typedMessage;
-    const issueCreator = issue?.user?.address?.toString();
+    const signature = req.body?.context?.token?.signature?.toString();
+    const nonce = req.body?.context?.token?.nonce?.toString();
+    const siweMessage = req.body?.context?.siweMessage;
 
-    if (!(await siweMessageService.decodeMessage(typedMessage, signature?.toString(), issueCreator)))
+    if (!(await verifySiweSignature(siweMessage, signature, nonce)))
       return res.status(401).json({ message: NOT_AN_CREATOR_ISSUE });
 
     return handler(req, res);
