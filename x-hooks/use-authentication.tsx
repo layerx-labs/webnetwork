@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 
 import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
@@ -25,7 +25,6 @@ import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
-import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import { useSettings } from "x-hooks/use-settings";
 import useSignature from "x-hooks/use-signature";
@@ -40,14 +39,12 @@ export function useAuthentication() {
   const session = useSession();
   const account = useAccount();
   const { asPath } = useRouter();
-  const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
 
   const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
 
   const { settings } = useSettings();
   const marketplace = useMarketplace();
-  const { connect } = useDao();
   const { pushAnalytic } = useAnalyticEvents();
   const transactions = useStorageTransactions();
   const { connectedChain } = useSupportedChain();
@@ -67,7 +64,7 @@ export function useAuthentication() {
     expirationStorage.removeItem();
     transactions.deleteFromStorage();
 
-    disconnect();
+    account?.connector?.disconnect();
 
     nextSignOut({
       callbackUrl: `${URL_BASE}/${redirect || ""}`
@@ -96,7 +93,7 @@ export function useAuthentication() {
     }).catch(() => null);
 
     if (!signature) {
-      disconnect();
+      account?.connector?.disconnect();
       return;
     }
 
@@ -183,7 +180,7 @@ export function useAuthentication() {
       sessionStorage.setItem("currentWallet", user.address);
     }
 
-    await connect();
+    await account?.connector?.connect?.();
 
     updateCurrentUser({connected: true});
 
