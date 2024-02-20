@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { useDappkit } from "@taikai/dappkit-react";
 import { useTranslation } from "next-i18next";
+import { useAccount } from "wagmi";
 
 import { ButtonProps } from "components/button";
 import ContractButtonView from "components/common/buttons/contract-button/contract-button.view";
@@ -27,7 +27,7 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
-  const { address: connectedAddress } = useDappkit();
+  const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
