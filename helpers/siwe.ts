@@ -38,8 +38,6 @@ export async function verifySiweSignature (siwe: SiweMessage, signature: string,
       success: false
     }));
 
-  console.log("result", result)
-
   if (result.success)
     return siwe.address;
 
