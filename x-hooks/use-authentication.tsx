@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 import BigNumber from "bignumber.js";
+import { addDays } from "date-fns";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import getConfig from "next/config";
 import { useRouter } from "next/router";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 
 import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
 import decodeMessage from "helpers/decode-message";
@@ -17,7 +18,7 @@ import { UserRole } from "interfaces/enums/roles";
 
 import { WinStorage } from "services/win-storage";
 
-import { SESSION_TTL } from "server/auth/config";
+import { SESSION_TTL_IN_DAYS } from "server/auth/config";
 
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
@@ -39,6 +40,7 @@ export function useAuthentication() {
   const session = useSession();
   const account = useAccount();
   const { asPath } = useRouter();
+  const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
 
   const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
@@ -65,6 +67,7 @@ export function useAuthentication() {
     transactions.deleteFromStorage();
 
     account?.connector?.disconnect();
+    disconnect();
 
     nextSignOut({
       callbackUrl: `${URL_BASE}/${redirect || ""}`
@@ -78,7 +81,7 @@ export function useAuthentication() {
 
     const csrfToken = await getCsrfToken();
     const issuedAt = new Date();
-    const expiresAt = new Date(+issuedAt + SESSION_TTL);
+    const expiresAt = addDays(issuedAt, SESSION_TTL_IN_DAYS);
 
     const siweMessage = getSiweMessage({
       nonce: csrfToken,
@@ -94,6 +97,7 @@ export function useAuthentication() {
 
     if (!signature) {
       account?.connector?.disconnect();
+      disconnect();
       return;
     }
 
@@ -179,8 +183,6 @@ export function useAuthentication() {
 
       sessionStorage.setItem("currentWallet", user.address);
     }
-
-    await account?.connector?.connect?.();
 
     updateCurrentUser({connected: true});
 
