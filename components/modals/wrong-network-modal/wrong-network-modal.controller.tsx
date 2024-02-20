@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useSwitchChain } from "wagmi";
 
 import WrongNetworkModalView from "components/modals/wrong-network-modal/wrong-network-modal.view";
 
@@ -11,25 +11,19 @@ import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
-import useNetworkChange from "x-hooks/use-network-change";
 import useSupportedChain from "x-hooks/use-supported-chain";
-
-type typeError = { code?: number; message?: string }
 
 export default function WrongNetworkModal() {
   const { pathname } = useRouter();
-  const { t } = useTranslation("common");
+  const { switchChain } = useSwitchChain();
 
   const [error, setError] = useState<string>("");
   const [isAddingNetwork, setIsAddingNetwork] = useState(false);
   const [networkChain, setNetworkChain] = useState<SupportedChainData>(null);
   const [chosenSupportedChain, setChosenSupportedChain] = useState<SupportedChainData>(null);
 
-  const { connect } = useDao();
   const marketplace = useMarketplace();
-  const { handleAddNetwork } = useNetworkChange();
   const { supportedChains, connectedChain } = useSupportedChain();
 
   const { currentUser } = useUserStore();
@@ -50,23 +44,13 @@ export default function WrongNetworkModal() {
   async function _handleAddNetwork() {
     setIsAddingNetwork(true);
     setError("");
-    handleAddNetwork(chosenSupportedChain)
-      .then(() => {
-        if (!currentUser?.walletAddress)
-          return connect();
-      })
-      .catch(error => {
-        if ((error as typeError).code === -32602) {
-          setError(t("modals.wrong-network.error-invalid-rpcUrl"));
-        }
-        if ((error as typeError).code === -32603) {
-          setError(t("modals.wrong-network.error-failed-rpcUrl"));
-        }
-      })
-      .finally(() => {
+    switchChain({ chainId: chosenSupportedChain?.chainId }, {
+      onSettled: (_data, error) => {
         setIsAddingNetwork(false);
-        onClose()
-      });
+        if (!error)
+          onClose();
+      }
+    });
   }
 
   function updateNetworkChain() {
