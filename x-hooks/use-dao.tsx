@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import { provider as Provider } from "web3-core";
 import { isAddress } from "web3-utils";
 
-import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { SUPPORT_LINK, UNSUPPORTED_CHAIN } from "helpers/constants";
 import { lowerCaseCompare } from "helpers/string";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
@@ -67,7 +67,6 @@ export function useDao() {
       const daoProps = isChainEqualToConnected ?
         { provider: await account?.connector?.getProvider() as Provider } :
         { web3Host: chainToConnect?.chainRpc };
-      console.log("daoProps", daoProps)
       const dao = !daoService || !isSameChain || needsToUpdateConnection || !isSameRegistryAddress ?
         new DAO({
           ...daoProps,
