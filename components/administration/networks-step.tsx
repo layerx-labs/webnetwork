@@ -48,7 +48,6 @@ export default function NetworksStep({
     setNetworkParameter,
     treasuryInfo
   } = useBepro();
-  const { signMessage } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { currentUser } = useUserStore();
@@ -224,16 +223,14 @@ export default function NetworksStep({
       console.log(error);
     }
 
-    await signMessage(IM_AM_CREATOR_NETWORK).then(async () => {
-      await useUpdateNetwork(json)
+    await useUpdateNetwork(json)
       .then(() => {
         addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
         setIsUpdatingNetwork(false);
       })
       .catch(handleError)
-    })
-    .catch(handleError)
-    .finally(() => setIsUpdatingNetwork(false))
+      .finally(() => setIsUpdatingNetwork(false))
+
 
 
     if (forcedNetwork.draftTime !== parameters.draftTime.value)
