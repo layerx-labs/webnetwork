@@ -21,6 +21,7 @@ export function AuthenticationProvider ({ children }: AuthenticationProviderProp
     const isUnauthenticated = session?.status === "unauthenticated";
     if (!isWalletConnected || !isUnauthenticated || isSigning)
       return;
+    setIsSigning(true);
     signInWallet()
       .finally(() => setIsSigning(false));
   }, [session?.status, account?.status]);
