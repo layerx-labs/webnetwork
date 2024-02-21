@@ -37,20 +37,12 @@ export default function ContractButton({
 
   const { addError } = useToastStore();
   const { currentUser } = useUserStore();
-  const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
+  const { updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
   const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
     +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
   const isUnsupportedChain = connectedChain?.name === UNSUPPORTED_CHAIN;
-
-  async function validateEthereum() {
-    if(window.ethereum) return true;
-
-    updateWeb3Dialog(true)
-
-    return false;
-  }
 
   async function validateChain() {
     if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
@@ -96,7 +88,6 @@ export default function ContractButton({
       setIsValidating(true);
 
       const validations: (() => Promise<boolean>)[] = [
-        validateEthereum,
         validateChain,
         validateWallet,
         validateService
