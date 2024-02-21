@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import router, { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
+import { useSwitchChain } from "wagmi";
 
 import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
@@ -45,7 +46,6 @@ import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
-import useNetworkChange from "x-hooks/use-network-change";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import { useSettings } from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
@@ -63,8 +63,9 @@ interface CreateTaskPageProps {
 export default function CreateTaskPage ({
   networks: allNetworks
 }: CreateTaskPageProps) {
-  const { query } = useRouter();
   const session = useSession();
+  const { query } = useRouter();
+  const { switchChainAsync } = useSwitchChain();
   const { t } = useTranslation(["common", "bounty"]);
 
   const [files, setFiles] = useState<IFilesProps[]>([]);
@@ -101,7 +102,6 @@ export default function CreateTaskPage ({
   const { handleApproveToken } = useBepro();
   const { updateParamsOfActive, getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { handleAddNetwork } = useNetworkChange();
   const { addError, addWarning } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { pushAnalytic } = useAnalyticEvents();
@@ -573,7 +573,9 @@ export default function CreateTaskPage ({
     setCustomTokens([]);
     transactionalERC20.setAddress(undefined);
     rewardERC20.setAddress(undefined);
-    return handleAddNetwork(chain)
+    return switchChainAsync({
+      chainId: chain?.chainId
+    })
       .catch((err) => console.log('handle Add Network error', err));
   }
 
