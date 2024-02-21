@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { addDays } from "date-fns";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useChains, useDisconnect, useSignMessage, useSwitchChain } from "wagmi";
 
 import { getSiweMessage } from "helpers/siwe";
 import { AddressValidator } from "helpers/validators/address";
@@ -29,10 +29,12 @@ import { useStorageTransactions } from "x-hooks/use-storage-transactions";
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
 export function useAuthentication() {
+  const chains = useChains();
   const session = useSession();
   const account = useAccount();
   const { asPath } = useRouter();
   const { disconnect } = useDisconnect();
+  const { switchChainAsync } = useSwitchChain();
   const { signMessageAsync } = useSignMessage();
 
   const { settings } = useSettings();
@@ -67,40 +69,46 @@ export function useAuthentication() {
   }
 
   async function signInWallet() {
-    const address = account?.address;
+    try {
+      const address = account?.address;
 
-    if (!address) return;
+      if (!address)
+        throw new Error("Missing address");
 
-    const csrfToken = await getCsrfToken();
-    const issuedAt = new Date();
-    const expiresAt = addDays(issuedAt, SESSION_TTL_IN_DAYS);
+      if (!chains.find(c => +c.id === +account?.chainId)) {
+        await switchChainAsync({
+          chainId: chains[0]?.id
+        });
+      }
 
-    const siweMessage = getSiweMessage({
-      nonce: csrfToken,
-      address,
-      issuedAt,
-      expiresAt
-    });
+      const csrfToken = await getCsrfToken();
+      const issuedAt = new Date();
+      const expiresAt = addDays(issuedAt, SESSION_TTL_IN_DAYS);
 
-    const signature = await signMessageAsync({
-      account: address,
-      message: siweMessage.prepareMessage(),
-    }).catch(() => null);
+      const siweMessage = getSiweMessage({
+        nonce: csrfToken,
+        address,
+        issuedAt,
+        expiresAt
+      });
 
-    if (!signature) {
+      const signature = await signMessageAsync({
+        account: address,
+        message: siweMessage.prepareMessage(),
+      });
+
+      nextSignIn("credentials", {
+        redirect: false,
+        signature,
+        address,
+        issuedAt: +issuedAt,
+        expiresAt: +expiresAt,
+        callbackUrl: `${URL_BASE}${asPath}`
+      });
+    } catch (e) {
       account?.connector?.disconnect();
       disconnect();
-      return;
     }
-
-    nextSignIn("credentials", {
-      redirect: false,
-      signature,
-      address,
-      issuedAt: +issuedAt,
-      expiresAt: +expiresAt,
-      callbackUrl: `${URL_BASE}${asPath}`
-    });
   }
 
   function updateWalletBalance(force = false) {
