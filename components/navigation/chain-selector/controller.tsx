@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useSwitchChain } from "wagmi";
 
 import ChainSelectorView from "components/navigation/chain-selector/view";
 
@@ -6,10 +7,7 @@ import { isOnNetworkPath } from "helpers/network";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
-import useNetworkChange from "x-hooks/use-network-change";
 
 export default function ChainSelector({
   isFilter = false,
@@ -18,13 +16,11 @@ export default function ChainSelector({
   isFilter?: boolean;
   placeholder?: string;
 }) {
+  const { switchChainAsync } = useSwitchChain();
   const { query, pathname, asPath, push } = useRouter();
 
-  const { connect } = useDao();
   const { getURLWithNetwork } = useMarketplace();
-  const { handleAddNetwork } = useNetworkChange();
-  const { currentUser } = useUserStore();
-  
+
   const isOnNetwork = isOnNetworkPath(pathname);
   const isWalletPage = asPath?.includes("wallet");
   const isCreateBountyPage = pathname?.includes("create-task");
@@ -38,12 +34,7 @@ export default function ChainSelector({
     if (!shouldMatchChain) return;
 
     if (!isOnNetwork) {
-      handleAddNetwork(chain)
-        .then(() => {
-          if (currentUser?.walletAddress) return;
-
-          connect();
-        })
+      switchChainAsync(chain)
         .catch(() => null);
 
       return;
