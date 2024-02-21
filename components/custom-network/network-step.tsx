@@ -1,12 +1,11 @@
 import { useTranslation } from "next-i18next";
+import { useSwitchChain } from "wagmi";
 
 import SelectChainDropdown from "components/select-chain-dropdown";
 import Step from "components/step";
 
 import { StepWrapperProps } from "interfaces/stepper";
 import { SupportedChainData } from "interfaces/supported-chain-data";
-
-import useNetworkChange from "x-hooks/use-network-change";
 
 export default function NetworkStep({
   activeStep,
@@ -15,11 +14,15 @@ export default function NetworkStep({
   validated,
 }: StepWrapperProps) {
   const { t } = useTranslation("common");
-  const { handleAddNetwork } = useNetworkChange();
+  const { switchChainAsync } = useSwitchChain();
   
   async function handleNetworkSelected(chain: SupportedChainData) {
-    return handleAddNetwork(chain).catch((err) =>
-      console.log("handle Add Network error", err));
+    if (!chain)
+      return;
+    return switchChainAsync({
+      chainId: chain.chainId
+    })
+      .catch((err) => console.log("handle Add Network error", err));
   }
 
   return (
