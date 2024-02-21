@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import getConfig from "next/config";
-import { mainnet } from "viem/chains";
+import { polygon } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 
 import chainToWagmiChain from "helpers/chain-to-wagmi-chain";
@@ -25,7 +25,7 @@ export default function Wagmi ({
   const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId,
-    chains: [mainnet, ...(supportedChains ? supportedChains.map(chainToWagmiChain) : [])],
+    chains: [polygon, ...(supportedChains ? supportedChains.map(chainToWagmiChain) : [])],
     ssr: true,
   });
 
