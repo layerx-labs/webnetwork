@@ -3,12 +3,9 @@ import { useState } from "react";
 import BigNumber from "bignumber.js";
 import { addDays } from "date-fns";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
-import getConfig from "next/config";
 import { useRouter } from "next/router";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 
-import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
-import decodeMessage from "helpers/decode-message";
 import { getSiweMessage } from "helpers/siwe";
 import { AddressValidator } from "helpers/validators/address";
 
@@ -23,18 +20,13 @@ import { SESSION_TTL_IN_DAYS } from "server/auth/config";
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useMarketplace from "x-hooks/use-marketplace";
 import { useSettings } from "x-hooks/use-settings";
-import useSignature from "x-hooks/use-signature";
 import { useStorageTransactions } from "x-hooks/use-storage-transactions";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
-
-const { publicRuntimeConfig } = getConfig();
 
 export function useAuthentication() {
   const session = useSession();
@@ -43,31 +35,31 @@ export function useAuthentication() {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
 
-  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
-
   const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { pushAnalytic } = useAnalyticEvents();
   const transactions = useStorageTransactions();
-  const { connectedChain } = useSupportedChain();
-  const { signMessage: _signMessage } = useSignature();
 
-  const { addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { currentUser, updateCurrentUser} = useUserStore();
-  const { service: daoService, serviceStarting } = useDaoStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
   const URL_BASE = typeof window !== "undefined" ? `${window.location.protocol}//${ window.location.host}` : "";
 
-  function signOut(redirect?: string) {
+  async function signOut(redirect?: string) {
     const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
 
     expirationStorage.removeItem();
     transactions.deleteFromStorage();
 
-    account?.connector?.disconnect();
     disconnect();
+    account?.connector?.disconnect();
+
+    if (account?.connector?.name === "Coinbase Wallet") {
+      const provider = await account?.connector?.getProvider();
+      (provider as any)?.close();
+    }
 
     nextSignOut({
       callbackUrl: `${URL_BASE}/${redirect || ""}`
@@ -189,66 +181,6 @@ export function useAuthentication() {
     pushAnalytic(EventName.USER_LOGGED_IN, { login: user.login });
   }
 
-  function signMessage(message?: string) {
-    return new Promise<string>(async (resolve, reject) => {
-      if (!currentUser?.walletAddress ||
-          !connectedChain?.id ||
-          serviceStarting ||
-          isLoadingSigningMessage) {
-        reject("Wallet not connected, service not started or already signing a message");
-        return;
-      }
-
-      const currentWallet = currentUser?.walletAddress?.toLowerCase();
-      const isAdminUser = currentWallet === publicRuntimeConfig?.adminWallet?.toLowerCase();
-
-      if (!isAdminUser && connectedChain?.name === UNSUPPORTED_CHAIN) {
-        addWarning("Unsupported chain", "To sign a message, connect to a supported chain");
-
-        reject("Unsupported chain");
-        return;
-      }
-
-      const messageToSign = message || (isAdminUser ? IM_AN_ADMIN : NOT_AN_ADMIN);
-
-      const storedSignature = sessionStorage.getItem("currentSignature");
-
-      if (decodeMessage(connectedChain?.id,
-                        messageToSign,
-                        storedSignature || currentUser?.signature,
-                        currentWallet)) {
-        if (storedSignature)
-          updateCurrentUser({signature: storedSignature})
-        else
-          sessionStorage.setItem("currentSignature", currentUser?.signature);
-
-        resolve(storedSignature || currentUser?.signature);
-        return;
-      }
-
-      setIsLoadingSigningMessage(true)
-
-      await _signMessage(messageToSign)
-        .then(signature => {
-          setIsLoadingSigningMessage(false)
-
-          if (signature) {
-            updateCurrentUser({signature})
-            sessionStorage.setItem("currentSignature", signature);
-
-            resolve(signature);
-            return;
-          }
-
-          updateCurrentUser({signature: undefined})
-          sessionStorage.removeItem("currentSignature");
-
-          reject("Message not signed");
-          return;
-        });
-    });
-  }
-
   function updateKycSession(){
     if(!currentUser?.match
         || !currentUser?.accessToken
@@ -265,7 +197,6 @@ export function useAuthentication() {
     signOut,
     signInWallet,
     updateWalletBalance,
-    signMessage,
     updateKycSession,
     syncUserDataWithSession,
   }
