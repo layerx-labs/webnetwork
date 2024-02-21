@@ -11,7 +11,6 @@ import Step from "components/step";
 
 import {useNetworkSettings} from "contexts/network-settings";
 
-import { IM_AM_CREATOR_NETWORK } from "helpers/constants";
 import {psReadAsText} from "helpers/file-reader";
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
@@ -20,7 +19,6 @@ import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useSettings } from "x-hooks/use-settings";
 
