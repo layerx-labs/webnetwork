@@ -24,7 +24,7 @@ export default function Wagmi ({
 
   const config = getDefaultConfig({
     appName: "BEPRO",
-    projectId: publicRuntimeConfig?.walletConnectProjectId,
+    projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [polygon, ...(supportedChains ? supportedChains.map(chainToWagmiChain) : [])],
     ssr: true,
   });
