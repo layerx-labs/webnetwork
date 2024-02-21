@@ -6,6 +6,7 @@ import { polygon } from "viem/chains";
 import { WagmiProvider } from "wagmi";
 
 import chainToWagmiChain from "helpers/chain-to-wagmi-chain";
+import { QueryKeys } from "helpers/query-keys";
 
 import { useGetChains } from "x-hooks/api/chain";
 import useReactQuery from "x-hooks/use-react-query";
@@ -20,7 +21,7 @@ export default function Wagmi ({
   children
 }: WagmiProps) {
   const { data: supportedChains } =
-    useReactQuery(["wagmi-config-chains"], () => useGetChains(), { staleTime: Infinity });
+    useReactQuery(QueryKeys.wagmiConfigChains(), () => useGetChains(), { staleTime: Infinity });
 
   const config = getDefaultConfig({
     appName: "BEPRO",
