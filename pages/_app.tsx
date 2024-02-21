@@ -9,8 +9,6 @@ import {AppProps} from "next/app";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 import {GoogleAnalytics} from "nextjs-google-analytics";
-import { rainbowKitConfig } from "rainbowkit-config.mjs";
-import { WagmiProvider } from "wagmi";
 
 import ConsentCookie from "components/consent-cokie";
 import Loading from "components/loading";
@@ -21,13 +19,14 @@ import Seo from "components/seo";
 import Toaster from "components/toaster";
 
 import RootProviders from "contexts";
-
-import { getReactQueryClient } from "services/react-query";
+import Wagmi from "contexts/wagmi-provider";
 
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { AuthenticationProvider } from "contexts/authentication";
+
+import { getReactQueryClient } from "services/react-query";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -40,32 +39,32 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
     return <Component {...pageProps}></Component>
 
   return (
-    <WagmiProvider config={rainbowKitConfig}>
-      <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
-      <SessionProvider session={session}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
-            <AuthenticationProvider>
-              <RootProviders>
-                <HydrationBoundary state={pageProps.dehydratedState}>
-                  <Seo issueMeta={seoData} />
-                  <ReadOnlyContainer>
-                    <RootModals />
-                    <NavBar />
-                    <div id="root-container">
-                      <Component {...pageProps} />
-                    </div>
-                    <Toaster />
-                    <Loading />
-                  </ReadOnlyContainer>
-                </HydrationBoundary>
-              </RootProviders>
-            </AuthenticationProvider>
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </SessionProvider>
-      <ConsentCookie />
-    </WagmiProvider>
+    <QueryClientProvider client={queryClient}>
+      <Wagmi>
+        <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
+        <SessionProvider session={session}>
+            <RainbowKitProvider>
+              <AuthenticationProvider>
+                <RootProviders>
+                  <HydrationBoundary state={pageProps.dehydratedState}>
+                    <Seo issueMeta={seoData} />
+                    <ReadOnlyContainer>
+                      <RootModals />
+                      <NavBar />
+                      <div id="root-container">
+                        <Component {...pageProps} />
+                      </div>
+                      <Toaster />
+                      <Loading />
+                    </ReadOnlyContainer>
+                  </HydrationBoundary>
+                </RootProviders>
+              </AuthenticationProvider>
+            </RainbowKitProvider>
+        </SessionProvider>
+        <ConsentCookie />
+      </Wagmi>
+    </QueryClientProvider>
   );
 }
 

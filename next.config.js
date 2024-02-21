@@ -29,6 +29,7 @@ const publicRuntimeConfig = {
   kyc:{
     isEnabled: process.env.NEXT_PUBLIC_ENABLE_KYC || false
   },
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
 }
 
 // Will only be available on the server-side
