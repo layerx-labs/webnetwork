@@ -9,15 +9,13 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { User } from "interfaces/api";
 
-import {
+
+import { 
   DeliverablePaginatedData,
   PaymentPaginatedData,
   ProposalPaginatedData,
-  SearchBountiesPaginated
+  SearchBountiesPaginated 
 } from "types/api";
-import { TasksListItemVariant } from "types/components";
-
-import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface PublicProfilePageProps {
   user: User;
