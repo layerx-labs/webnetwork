@@ -39,7 +39,7 @@ export default function BountyBody({
   const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
-  const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
+  const { mutate: editBounty, isPending: isEditing } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: useEditBounty,
     toastSuccess: t("bounty:actions.edit-bounty"),

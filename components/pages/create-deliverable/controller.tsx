@@ -44,7 +44,7 @@ export default function CreateDeliverablePage() {
                                                                     t("deliverable:actions.create.success"),
                                                                     t("deliverable:actions.create.error"));
 
-  const { mutate: createPreDeliverable, isLoading: isCreatingPreDeliverable } = useReactQueryMutation({
+  const { mutate: createPreDeliverable, isPending: isCreatingPreDeliverable } = useReactQueryMutation({
     queryKey: bountyQueryKey,
     toastError: t("deliverable:actions.create.error"),
     mutationFn: () => CreatePreDeliverable({

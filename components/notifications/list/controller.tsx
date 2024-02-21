@@ -4,6 +4,8 @@ import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
 
+import {SearchNotificationsPaginated, UserNotification} from "interfaces/user-notification";
+
 import {useUpdateReadNotification} from "x-hooks/api/notification/use-update-read-notification";
 import {useUpdateReadAllNotifications} from "x-hooks/api/notifications/use-update-read-all-notifications";
 import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
@@ -11,7 +13,6 @@ import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
-import {SearchNotificationsPaginated, UserNotification} from "../../../interfaces/user-notification";
 import NotificationsListView from "./view";
 
 interface NotificationListProps {
@@ -39,7 +40,7 @@ export default function NotificationsList({
   const router = useRouter();
   const { getURLWithNetwork } = useMarketplace();
   
-  const { mutate: updateReadNotification, isLoading: isReadUploading } =
+  const { mutate: updateReadNotification } =
   useReactQueryMutation({
     mutationFn: useUpdateReadNotification,
     onSuccess: () => {
@@ -51,7 +52,7 @@ export default function NotificationsList({
     },
   });
 
-  const {mutateAsync: updateReadAllNotifications, isLoading: isReadAllUploading } =
+  const { mutateAsync: updateReadAllNotifications } =
   useReactQueryMutation({
     mutationFn: useUpdateReadAllNotifications,
     onSuccess: () => {

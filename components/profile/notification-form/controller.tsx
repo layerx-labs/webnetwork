@@ -37,14 +37,14 @@ export default function NotificationForm() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const { mutate: updateEmail, isLoading: isExecutingEmail } = useReactQueryMutation({
+  const { mutate: updateEmail, isPending: isExecutingEmail } = useReactQueryMutation({
     mutationFn: useUpdateEmail,
     onSuccess: () => {
       updateSession();
     },
     onError: error => addError(t("profile:email-errors.failed-to-update"), t(`profile:email-errors.${error}`)),
   });
-  const { mutate: updateUserSettings, isLoading: isExecutingSettings } = useReactQueryMutation({
+  const { mutate: updateUserSettings, isPending: isExecutingSettings } = useReactQueryMutation({
     mutationFn: useUpdateUserSettings,
     toastError: t("profile:notifications-form.errors.update-settings"),
     toastSuccess: t("profile:notifications-form.success-toast.settings"),

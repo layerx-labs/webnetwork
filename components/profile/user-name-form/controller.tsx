@@ -29,7 +29,7 @@ export default function UserNameForm() {
     invalid: null
   });
 
-  const { mutate: updateHandle, isLoading: isExecutingHandle } = useReactQueryMutation({
+  const { mutate: updateHandle, isPending: isExecutingHandle } = useReactQueryMutation({
     mutationFn: useUpdateHandle,
     toastError: t("profile:user-name.errors.update-handle"),
     onSuccess: () => {

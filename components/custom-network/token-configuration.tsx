@@ -57,13 +57,13 @@ export default function TokenConfiguration({
     
     setAllowedTransactionalTokens(transactional);
     setAllowedRewardTokens(reward);
+    return tokens;
   }
 
   useReactQuery(QueryKeys.tokensByChain(connectedChainId),
-                () => useGetTokens({ chainId: connectedChainId }),
+                () => useGetTokens({ chainId: connectedChainId }).then(processTokens),
                 {
-                  enabled: !!connectedChainId,
-                  onSuccess: processTokens
+                  enabled: !!connectedChainId
                 });
 
   const networkTokenSymbol = settings?.beproToken?.symbol || t("misc.$token");

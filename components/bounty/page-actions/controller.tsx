@@ -23,7 +23,7 @@ export default function PageActions({
 
   const { getURLWithNetwork } = useMarketplace();
   const { currentUser } = useUserStore();
-  const { mutate: startWorking, isLoading: isExecuting } = useReactQueryMutation({
+  const { mutate: startWorking, isPending: isExecuting } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: () => useStartWorking({
       id: currentBounty?.id
