@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import { addDays } from "date-fns";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useAccount, useChains, useDisconnect, useSignMessage, useSwitchChain } from "wagmi";
+import { useAccount, useChains, useSignMessage, useSwitchChain } from "wagmi";
 
 import { getSiweMessage } from "helpers/siwe";
 import { AddressValidator } from "helpers/validators/address";
@@ -22,6 +22,7 @@ import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
+import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import { useSettings } from "x-hooks/use-settings";
 import { useStorageTransactions } from "x-hooks/use-storage-transactions";
@@ -33,10 +34,10 @@ export function useAuthentication() {
   const session = useSession();
   const account = useAccount();
   const { asPath } = useRouter();
-  const { disconnect } = useDisconnect();
   const { switchChainAsync } = useSwitchChain();
   const { signMessageAsync } = useSignMessage();
 
+  const { disconnect } = useDao();
   const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { pushAnalytic } = useAnalyticEvents();
@@ -55,8 +56,7 @@ export function useAuthentication() {
     expirationStorage.removeItem();
     transactions.deleteFromStorage();
 
-    disconnect();
-    account?.connector?.disconnect();
+    await disconnect();
 
     if (account?.connector?.name === "Coinbase Wallet") {
       const provider = await account?.connector?.getProvider();
@@ -183,8 +183,6 @@ export function useAuthentication() {
 
       sessionStorage.setItem("currentWallet", user.address);
     }
-
-    updateCurrentUser({connected: true});
 
     pushAnalytic(EventName.USER_LOGGED_IN, { login: user.login });
   }
