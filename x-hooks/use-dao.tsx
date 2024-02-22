@@ -1,6 +1,6 @@
 import { isZeroAddress } from "ethereumjs-util";
 import { useRouter } from "next/router";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect, useConnectors, useDisconnect } from "wagmi";
 import { provider as Provider } from "web3-core";
 import { isAddress } from "web3-utils";
 
@@ -17,11 +17,14 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
   const account = useAccount();
+  const connectors = useConnectors();
+  const { connectAsync } = useConnect();
+  const { disconnectAsync } = useDisconnect();
   const { replace, asPath } = useRouter();
 
   const { supportedChains, updateConnectedChain, get } = useSupportedChain();
 
-  const { currentUser } = useUserStore();
+  const { currentUser, updateCurrentUser } = useUserStore();
   const {
     service: daoService,
     updateService,
@@ -31,6 +34,33 @@ export function useDao() {
 
   function isChainConfigured(chain: SupportedChainData) {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
+  }
+
+  function getLastConnector () {
+    const recentConnectorId = window.localStorage.getItem("wagmi.recentConnectorId")?.replaceAll("\"", "");
+    if (!recentConnectorId)
+      return null;
+    return connectors?.find(c => lowerCaseCompare(c?.id, recentConnectorId));
+  }
+
+  async function connect (): Promise<boolean> {
+    const lastConnector = getLastConnector();
+    if (!lastConnector)
+      return false;
+    const connected = await connectAsync({
+      connector: lastConnector
+    })
+      .catch(() => false);
+    updateCurrentUser({ connected: !!connected });
+    return !!connected;
+  }
+
+  async function disconnect () {
+    const lastConnector = getLastConnector();
+    if (lastConnector)
+      await disconnectAsync({
+        connector: lastConnector
+      });
   }
 
   async function start({
@@ -113,6 +143,8 @@ export function useDao() {
 
   return {
     start,
-    updateChain
+    connect,
+    disconnect,
+    updateChain,
   };
 }
