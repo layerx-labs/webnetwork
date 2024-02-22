@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTranslation } from "next-i18next";
 import { useAccount } from "wagmi";
 
@@ -27,11 +28,12 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
+  const { openConnectModal } = useConnectModal();
   const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
-  const { start } = useDao();
+  const { start, connect } = useDao();
   const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
 
@@ -56,7 +58,12 @@ export default function ContractButton({
   async function validateWallet() {
     const sessionWallet = currentUser?.walletAddress;
 
-    if (!connectedAddress || !sessionWallet) return false;
+    if (!sessionWallet) return false;
+    
+    if (!connectedAddress) {
+      await connect();
+      return false;
+    }
 
     const isSameWallet = AddressValidator.compare(sessionWallet, connectedAddress);
 
@@ -88,9 +95,9 @@ export default function ContractButton({
       setIsValidating(true);
 
       const validations: (() => Promise<boolean>)[] = [
-        validateChain,
         validateWallet,
-        validateService
+        validateChain,
+        validateService,
       ];
 
       for (const validation of validations) {
