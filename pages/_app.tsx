@@ -19,14 +19,15 @@ import Seo from "components/seo";
 import Toaster from "components/toaster";
 
 import RootProviders from "contexts";
+import { AuthenticationProvider } from "contexts/authentication";
 import Wagmi from "contexts/wagmi-provider";
+
+import { getReactQueryClient } from "services/react-query";
 
 import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
 import '@rainbow-me/rainbowkit/styles.css';
-import { AuthenticationProvider } from "contexts/authentication";
 
-import { getReactQueryClient } from "services/react-query";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -39,8 +40,8 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
     return <Component {...pageProps}></Component>
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Wagmi>
+    <Wagmi>
+      <QueryClientProvider client={queryClient}>
         <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
         <SessionProvider session={session}>
             <RainbowKitProvider>
@@ -63,8 +64,8 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: AppPr
             </RainbowKitProvider>
         </SessionProvider>
         <ConsentCookie />
-      </Wagmi>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </Wagmi>
   );
 }
 
