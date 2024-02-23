@@ -16,7 +16,7 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function WrongNetworkModal() {
   const { pathname } = useRouter();
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
 
   const [error, setError] = useState<string>("");
   const [isAddingNetwork, setIsAddingNetwork] = useState(false);
@@ -44,13 +44,14 @@ export default function WrongNetworkModal() {
   async function _handleAddNetwork() {
     setIsAddingNetwork(true);
     setError("");
-    switchChain({ chainId: chosenSupportedChain?.chainId }, {
-      onSettled: (_data, error) => {
+    switchChainAsync({ chainId: chosenSupportedChain?.chainId })
+      .then(() => {
+        onClose();
+      })
+      .catch(console.debug)
+      .finally(() => {
         setIsAddingNetwork(false);
-        if (!error)
-          onClose();
-      }
-    });
+      });
   }
 
   function updateNetworkChain() {
