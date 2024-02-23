@@ -1,5 +1,6 @@
 import { isZeroAddress } from "ethereumjs-util";
 import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
 import { useAccount, useConnect, useConnectors, useDisconnect } from "wagmi";
 import { provider as Provider } from "web3-core";
 import { isAddress } from "web3-utils";
@@ -17,10 +18,11 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
   const account = useAccount();
+  const cookies = parseCookies();
   const connectors = useConnectors();
   const { connectAsync } = useConnect();
-  const { disconnectAsync } = useDisconnect();
   const { replace, asPath } = useRouter();
+  const { disconnectAsync } = useDisconnect();
 
   const { supportedChains, updateConnectedChain, get } = useSupportedChain();
 
@@ -37,30 +39,36 @@ export function useDao() {
   }
 
   function getLastConnector () {
-    const recentConnectorId = window.localStorage.getItem("wagmi.recentConnectorId")?.replaceAll("\"", "");
+    const ids = {
+      "coinbase": "coinbaseWalletSDK",
+      "metamask": "metaMask"
+    };
+    const recentConnectorId = cookies ? cookies["wagmi.recentConnectorId"]?.toLowerCase()?.replace("\"", "") : null;
     if (!recentConnectorId)
       return null;
-    return connectors?.find(c => lowerCaseCompare(c?.id, recentConnectorId));
+    if (recentConnectorId === "walletConnect")
+      return connectors?.find(c => (c as any)?.rkDetails?.isWalletConnectModalConnector);
+    return connectors?.find(c => lowerCaseCompare(c?.id, ids[recentConnectorId] || recentConnectorId));
   }
 
-  async function connect (): Promise<boolean> {
+  async function connect (): Promise<string | null> {
     const lastConnector = getLastConnector();
     if (!lastConnector)
-      return false;
+      return null;
     const connected = await connectAsync({
       connector: lastConnector
     })
-      .catch(() => false);
+      .then(result => result.accounts[0])
+      .catch(() => null);
     updateCurrentUser({ connected: !!connected });
-    return !!connected;
+    return connected;
   }
 
   async function disconnect () {
     const lastConnector = getLastConnector();
-    if (lastConnector)
-      await disconnectAsync({
-        connector: lastConnector
-      });
+    await disconnectAsync({
+      connector: lastConnector
+    });
   }
 
   async function start({
@@ -94,8 +102,9 @@ export function useDao() {
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress && !needsToUpdateConnection)
         return;
       const isChainEqualToConnected = +account?.chainId === +chainToConnect?.chainId;
+      const connectorProvider = await account?.connector?.getProvider() as Provider;
       const daoProps = isChainEqualToConnected ?
-        { provider: await account?.connector?.getProvider() as Provider } :
+        { provider: connectorProvider } :
         { web3Host: chainToConnect?.chainRpc };
       const dao = !daoService || !isSameChain || needsToUpdateConnection || !isSameRegistryAddress ?
         new DAO({
@@ -105,8 +114,8 @@ export function useDao() {
       if (!isChainEqualToConnected)
         await dao.start();
       else {
-        dao.web3Connection.web3.givenProvider = await account?.connector?.getProvider() as Provider;
-        dao.web3Connection.web3.eth.givenProvider = await account?.connector?.getProvider() as Provider;
+        dao.web3Connection.web3.givenProvider = connectorProvider;
+        dao.web3Connection.web3.eth.givenProvider = connectorProvider;
       }
       if (!isSameRegistryAddress || needsToUpdateConnection)
         await dao.loadRegistry();
