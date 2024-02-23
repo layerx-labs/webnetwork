@@ -2,12 +2,14 @@ import React, { useState } from "react";
 
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTranslation } from "next-i18next";
-import { useAccount } from "wagmi";
+import { parseCookies } from "nookies";
+import { useAccount, useConnectors } from "wagmi";
 
 import { ButtonProps } from "components/button";
 import ContractButtonView from "components/common/buttons/contract-button/contract-button.view";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import { lowerCaseCompare } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
@@ -28,14 +30,16 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
+  const cookies = parseCookies();
   const { openConnectModal } = useConnectModal();
+  const connectors = useConnectors();
   const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
-  const { start, connect } = useDao();
   const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
+  const { start, connect, disconnect } = useDao();
 
   const { addError } = useToastStore();
   const { currentUser } = useUserStore();
@@ -45,6 +49,8 @@ export default function ContractButton({
     +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
   const isUnsupportedChain = connectedChain?.name === UNSUPPORTED_CHAIN;
+  const recentConnectorId = cookies ? cookies["wagmi.recentConnectorId"]?.toLowerCase()?.replace("\"", "")  : null;
+  const isLastProviderInjected = connectors?.find(c => lowerCaseCompare(c.id, recentConnectorId))?.type === "injected";
 
   async function validateChain() {
     if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
@@ -59,13 +65,21 @@ export default function ContractButton({
     const sessionWallet = currentUser?.walletAddress;
 
     if (!sessionWallet) return false;
-    
-    if (!connectedAddress) {
-      await connect();
-      return false;
+
+    let address = connectedAddress?.toString();
+    if (!address) {
+      if (isLastProviderInjected) {
+        address = await connect();
+        if (!address)
+          return false;
+      } else {
+        await disconnect();
+        openConnectModal();
+        return false;
+      }
     }
 
-    const isSameWallet = AddressValidator.compare(sessionWallet, connectedAddress);
+    const isSameWallet = AddressValidator.compare(sessionWallet, address);
 
     if (isSameWallet) return true;
 
