@@ -31,8 +31,8 @@ export default function ContractButton({
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
   const cookies = parseCookies();
-  const { openConnectModal } = useConnectModal();
   const connectors = useConnectors();
+  const { openConnectModal } = useConnectModal();
   const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);

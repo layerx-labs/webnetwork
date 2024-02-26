@@ -17,7 +17,7 @@ const useReactQueryMutation = jest.fn(({
     mutateAsync: mutate,
     onSuccess: onSuccess,
     onError,
-    isLoading: false
+    isPending: false
   };
 });
 
