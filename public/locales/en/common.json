@@ -153,7 +153,8 @@
     "accept": "Accept",
     "reload": "Reload",
     "warning": "Warning",
-    "info": "Info"
+    "info": "Info",
+    "view-on-explorer": "View on chain explorer"
   },
   "misc": {
     "by": "by",

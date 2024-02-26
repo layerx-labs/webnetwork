@@ -2,12 +2,18 @@ import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import DeliverablesList from "components/lists/deliverables/deliverables-list.controller";
+import NftsList from "components/lists/nfts/nfts-list.controller";
 import ProposalsList from "components/lists/proposals/proposals-list.controller";
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
 
-import { DeliverablePaginatedData, ProposalPaginatedData, SearchBountiesPaginated } from "types/api";
+import {
+  DeliverablePaginatedData,
+  PaymentPaginatedData,
+  ProposalPaginatedData,
+  SearchBountiesPaginated
+} from "types/api";
 import { MiniTabsItem, TasksListItemVariant } from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
@@ -20,9 +26,11 @@ interface PublicProfileViewProps {
   isTaskList?: boolean;
   isDeliverableList?: boolean;
   isProposalsList?: boolean;
+  isNftsList?: boolean;
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
+  payments?: PaymentPaginatedData;
   type?: string;
 }
 
@@ -34,9 +42,11 @@ export default function PublicProfileView ({
   isTaskList,
   isDeliverableList,
   isProposalsList,
+  isNftsList,
   tasks,
   deliverables,
   proposals,
+  payments,
   type = "won"
 }: PublicProfileViewProps) {
   const { isMobileView, isTabletView } = useBreakPoint();
@@ -46,7 +56,8 @@ export default function PublicProfileView ({
     won: "network",
     opened: "network",
     submissions: "submissions",
-    proposals: "proposals"
+    proposals: "proposals",
+    nfts: "nfts",
   }[type] || "network") as TasksListItemVariant;
 
   return (
@@ -108,6 +119,12 @@ export default function PublicProfileView ({
           <If condition={isProposalsList}>
             <ProposalsList
               proposals={proposals}
+            />
+          </If>
+
+          <If condition={isNftsList}>
+            <NftsList
+              payments={payments}
             />
           </If>
         </div>

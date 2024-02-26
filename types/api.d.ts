@@ -29,6 +29,8 @@ export type DeliverablePaginatedData = PaginatedData<Deliverable>;
 
 export type ProposalPaginatedData = PaginatedData<Proposal>;
 
+export type PaymentPaginatedData = PaginatedData<Payment>;
+
 export interface NetworkOverviewData {
   name: string;
   networkAddress: string;

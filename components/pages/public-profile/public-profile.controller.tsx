@@ -9,7 +9,12 @@ import { truncateAddress } from "helpers/truncate-address";
 
 import { User } from "interfaces/api";
 
-import { DeliverablePaginatedData, ProposalPaginatedData, SearchBountiesPaginated } from "types/api";
+import {
+  DeliverablePaginatedData,
+  PaymentPaginatedData,
+  ProposalPaginatedData,
+  SearchBountiesPaginated
+} from "types/api";
 import { TasksListItemVariant } from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
@@ -19,12 +24,14 @@ interface PublicProfilePageProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
+  payments?: PaymentPaginatedData;
 }
 export default function PublicProfilePage ({
   user,
   tasks,
   deliverables,
   proposals,
+  payments,
 }: PublicProfilePageProps) {
   const { t } = useTranslation("profile");
   const { query, pathname, asPath, push } = useRouter();
@@ -33,6 +40,7 @@ export default function PublicProfilePage ({
   const isTaskList = ["won", "opened"].includes(type);
   const isDeliverableList = type === "submissions";
   const isProposalsList = type === "proposals";
+  const isNftsList = type === "nfts";
   const hasHandle = !!user?.handle;
   const truncatedAddress = truncateAddress(user?.address || "");
   const [primaryText, secondaryText] = hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle];
@@ -53,6 +61,7 @@ export default function PublicProfilePage ({
     getTab(t("deliverables"), "submissions"),
     getTab(t("proposals"), "proposals"),
     getTab(t("tasks-opened"), "opened"),
+    getTab(t("nfts"), "nfts"),
   ];
 
   return (
@@ -64,9 +73,11 @@ export default function PublicProfilePage ({
       isTaskList={isTaskList}
       isDeliverableList={isDeliverableList}
       isProposalsList={isProposalsList}
+      isNftsList={isNftsList}
       tasks={tasks}
       deliverables={deliverables}
       proposals={proposals}
+      payments={payments}
       type={type}
     />
   );

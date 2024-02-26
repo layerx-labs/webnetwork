@@ -97,6 +97,12 @@ class User extends Model {
       sourceKey: "address",
       as: "mergeProposals"
     });
+
+    this.hasMany(models.userPayments, {
+      foreignKey: "address",
+      sourceKey: "address",
+      as: "payments"
+    });
   }
 
   static findByAddress(address) {
