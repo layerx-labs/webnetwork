@@ -14,7 +14,7 @@ export async function post(req: NextApiRequest) {
   if ([address, minAmount, chainId ].some(p => !p))
     throw new HttpBadRequestError("Missing parameters");
 
-  const chain = await models.chain.findOne({
+  const chain = await models.chain.scope("internal").findOne({
     where: {
       chainId: {
         [Op.eq]: chainId
@@ -35,7 +35,7 @@ export async function post(req: NextApiRequest) {
   if (existentToken)
     throw new HttpConflictError("Token already saved");
 
-  const createdToken = await handleCreateSettlerToken(address, minAmount, chain.chainRpc, chain.chainId);
+  const createdToken = await handleCreateSettlerToken(address, minAmount, chain.privateChainRpc, chain.chainId);
 
   return createdToken;
 }

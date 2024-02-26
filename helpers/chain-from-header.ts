@@ -11,5 +11,5 @@ export async function chainFromHeader(req: NextApiRequest, force = false) {
     ... !req.headers.chain ? {isDefault: {[Op.eq]: true}} : {chainId: {[Op.eq]: +req.headers.chain}},
   }
 
-  return models.chain.findOne({where});
+  return models.chain.scope("internal").findOne({where});
 }

@@ -10,6 +10,7 @@ export interface MiniChainInfo {
   };
   rpc: string[];
   activeRPC?: string;
+  privateRpc?: string;
   loading?: boolean;
   explorer?: string;
   eventsApi?: string;

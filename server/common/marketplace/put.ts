@@ -54,12 +54,12 @@ export async function put(req: NextApiRequest) {
     return "Network closed";
   }
 
-  if (!chain.chainRpc || !chain.registryAddress)
+  if (!chain.privateChainRpc || !chain.registryAddress)
     throw new HttpServerError("Chain is not configured");
 
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
-    web3Host: chain.chainRpc,
+    web3Host: chain.privateChainRpc,
     registryAddress: chain.registryAddress,
   });
 

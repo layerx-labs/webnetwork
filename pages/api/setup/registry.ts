@@ -21,7 +21,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   try {
 
     const chain = await chainFromHeader(req);
-    const web3Host = chain?.chainRpc;
+    const web3Host = chain?.privateChainRpc;
 
     const messages = [
       [wallet, 'Missing wallet address'],
