@@ -3,7 +3,7 @@ import {useTranslation} from "next-i18next";
 
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import {FlexColumn, FlexRow} from "components/common/flex-box/view";
-import ResponsiveWrapper, {ResponsiveEle} from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 import {formatStringToCurrency} from "helpers/formatNumber";
 
@@ -72,17 +72,10 @@ export default function TokenBalance({
           <ResponsiveEle tabletView={<span className="caption text-gray-500 text-capitalize font-weight-500">{delegation?.to || name}</span>}/>
         </FlexColumn>
       </FlexRow>
-      <ResponsiveWrapper
-        xs={true}
-        md={false}
-        sm={true}
-        xxl={false}
-        className="text-truncate"
-      >
-        <span className="my-3 fs-smallest text-gray-500 text-capitalize font-weight-500 text-truncate">
-          {delegation?.to || name}
-        </span>
-      </ResponsiveWrapper>
+
+      <ResponsiveEle tabletView={null} className="text-truncate"
+                     mobileView={<span className="my-3 fs-smallest text-gray-500 text-capitalize font-weight-500 text-truncate">{delegation?.to || name}</span>}/>
+
       <FlexRow>
         {(type === "delegation" && onTakeBackClick && variant === 'network') &&
           <ContractButton

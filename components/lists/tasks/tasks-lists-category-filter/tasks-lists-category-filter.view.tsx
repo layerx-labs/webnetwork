@@ -1,10 +1,11 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 import Link from "next/link";
 
-import { Category } from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {Category} from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
 
+import useBreakPoint from "../../../../x-hooks/use-breakpoint";
 import CategoryButton from "./category-button/category.view";
+
 interface TasksListsCategoryFilterViewProps {
   categories: Category[]
   onCategoryClick: (category: string) => void;
@@ -14,6 +15,7 @@ export default function TasksListsCategoryFilterView ({
   onCategoryClick
 }: TasksListsCategoryFilterViewProps) {
   const { t } = useTranslation("bounty");
+  const {isMobileView} = useBreakPoint();
 
   return(
     <div className="row mb-5">
@@ -40,20 +42,9 @@ export default function TasksListsCategoryFilterView ({
         <div className="row gy-3 gx-3">
           {categories.map(c =>
             <div className="col-6 col-lg" key={c.label}>
-                <ResponsiveWrapper className="row mx-0 h-100" xl={true} xs={false}>
-                  <CategoryButton
-                    category={c}
-                    icon
-                    onCategoryClick={onCategoryClick}
-                  />
-                </ResponsiveWrapper>
-                <ResponsiveWrapper className="row mx-0" xl={false} xs={true}>
-                  <CategoryButton
-                    category={c}
-                    icon={false}
-                    onCategoryClick={onCategoryClick}
-                  />
-                </ResponsiveWrapper>
+              <div className="row-mx-0 h-100">
+                <CategoryButton category={c} icon={!isMobileView} onCategoryClick={onCategoryClick} />
+              </div>
             </div>)}
         </div>
       </div>

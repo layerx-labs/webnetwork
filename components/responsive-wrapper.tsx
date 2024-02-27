@@ -78,22 +78,9 @@ type ResponsiveProps = {
    *
    * Use `[mobile|tablet|desktop]View: null` to explicitly hide something on a specific view
    *  */
-  mobileView?: string|ReactNode|null;
-  tabletView?: string|ReactNode|null;
-  desktopView?: string|ReactNode|null;
-
-  /**
-   * Column spacing will be dealt by concatenating all the provided ones into a single string.
-   *  Wrapper is d-[current-breakpoint]-flex by default
-   *  Wrapper is d-[not-current-breakpoint]-none by default
-   *  */
-  col?: number | string;
-  "col-xs"?: number | string;
-  "col-sm"?: number | string;
-  "col-md"?: number | string;
-  "col-lg"?: number | string;
-  "col-xl"?: number | string;
-  "col-xxl"?: number | string;
+  mobileView?: string | ReactNode | null;
+  tabletView?: string | ReactNode | null;
+  desktopView?: string | ReactNode | null;
 
   /**
    * Provide more classes as needed but avoid doing so;
@@ -106,28 +93,20 @@ type ResponsiveProps = {
 };
 
 export function ResponsiveEle({
-  desktopView,
-  tabletView,
-  mobileView,
-  className = "",
-  ...classColumns}: ResponsiveProps) {
+                                desktopView,
+                                tabletView,
+                                mobileView,
+                                className = ""
+                              }: ResponsiveProps) {
   const {isMobileView, isTabletView, isDesktopView} = useBreakPoint();
-
-  const columns =
-    Object.entries(classColumns)
-      .map(([col, n]) => `${col}-${n}`)
-      .join(" ");
-
-  const columnsClassName = (columns.length > 1 && " ".concat(columns)) || "";
-
-  const wrapperClassName = `${columnsClassName}`;
 
   if (mobileView && tabletView === undefined)
     tabletView = mobileView;
   if (tabletView && desktopView === undefined)
     desktopView = tabletView;
 
-  return <div className={[wrapperClassName, className].join(" ")}>
-    {isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}
-  </div>
+  if (className)
+    return <div className={className}>{isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}</div>
+
+  return <>{isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}</>
 }

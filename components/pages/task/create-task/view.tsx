@@ -19,7 +19,6 @@ import ConnectWalletButton from "components/connections/connect-wallet-button/co
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import Modal from "components/modal";
-import ResponsiveWrapper from "components/responsive-wrapper";
 import {WarningSpan} from "components/warning-span";
 
 import {TERMS_AND_CONDITIONS_LINK} from "helpers/constants";
@@ -27,6 +26,8 @@ import {TERMS_AND_CONDITIONS_LINK} from "helpers/constants";
 import {BountyDetailsSectionProps} from "interfaces/create-bounty";
 
 import {RewardInformationSectionProps} from "types/components";
+
+import useBreakPoint from "../../../../x-hooks/use-breakpoint";
 
 interface CreateTaskPageViewProps 
   extends SelectNetworkSectionProps, 
@@ -68,7 +69,7 @@ export default function CreateTaskPageView({
   ...rest
 }: CreateTaskPageViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
-
+  const {isMobileView, isTabletView, isDesktopView} = useBreakPoint();
   const isReviewSection = currentSection === 3;
 
   function section() {
@@ -176,22 +177,10 @@ export default function CreateTaskPageView({
               disabled={isNextOrCreateButtonDisabled}
               isLoading={isCreating}
               onClick={onNextOrCreateButtonClick}
-              data-testid={isReviewSection ? "create-task-button" : "create-task-next-button"}
-            >
-              <If 
-                condition={isReviewSection}
-                otherwise={t("bounty:next-step")}
-              >
-                <>
-                  <ResponsiveWrapper xs={true} md={false}>
-                    {t("common:misc.create")}
-                  </ResponsiveWrapper>
-
-                  <ResponsiveWrapper xs={false} md={true}>
-                    {t("bounty:create-bounty")}
-                  </ResponsiveWrapper>
-                </>
-              </If>
+              data-testid={isReviewSection ? "create-task-button" : "create-task-next-button"}>
+              <If condition={isReviewSection}
+                  children={isMobileView && t("common:misc.create") || t("bounty:create-bounty")}
+                  otherwise={t("bounty:next-step")} />
             </ContractButton>
           </If>
 

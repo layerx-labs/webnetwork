@@ -12,7 +12,7 @@ import TasksListsCategoryFilter
   from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
@@ -202,22 +202,19 @@ export default function TasksListView({
           </If>
 
           <If condition={isManagement && hasIssues}>
-            <ResponsiveWrapper
-              xs={false}
-              md={true}
-              className="row align-items-center mb-2 pb-1 px-3"
-            >
-              {columns?.map((item) => (
-                <div
-                  className={`d-flex col-${
-                    item === "Name" ? "6" : "2 justify-content-center"
-                  }`}
-                  key={item}
-                >
-                  <span className="caption-medium font-weight-normal text-capitalize text-gray-500">{item}</span>
-                </div>
-              ))}
-            </ResponsiveWrapper>
+            <ResponsiveEle mobileView={null}
+                           tabletView={<div className="row align-items-center mb-2 pb-1 px-3">
+                             {columns?.map((item) => (
+                               <div
+                                 className={`d-flex col-${
+                                   item === "Name" ? "6" : "2 justify-content-center"
+                                 }`}
+                                 key={item}
+                               >
+                                 <span className="caption-medium font-weight-normal text-capitalize text-gray-500">{item}</span>
+                               </div>
+                             ))}
+                           </div>}/>
           </If>
 
           <If

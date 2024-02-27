@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import HelpButton from "components/common/buttons/help/view";
 import { Tooltip } from "components/common/tooltip/tooltip.view";
@@ -7,7 +7,7 @@ import CreateNetworkBountyButton from "components/create-network-bounty-button/c
 import NavAvatar from "components/nav-avatar";
 import HamburgerButton from "components/navigation/hamburger/controller";
 import Notifications from "components/notifications/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
 export default function NavBarActions() {
@@ -16,57 +16,45 @@ export default function NavBarActions() {
   return(
     <>
       <div className="d-flex flex-row align-items-center gap-3">
-        <ResponsiveWrapper
-          xs={false}
-          md={true}
-        >
-          <div className="d-flex gap-3 align-items-center">
-            <CreateNetworkBountyButton />
+        <ResponsiveEle 
+          mobileView={null}
+          tabletView={
+            <div className="d-flex gap-3 align-items-center">
+              <CreateNetworkBountyButton/>
 
-            <Tooltip tip={t("main-nav.tips.help")}>
-              <div>
-                <HelpButton />
-              </div>
-            </Tooltip>
-          </div>
-        </ResponsiveWrapper>
+              <Tooltip tip={t("main-nav.tips.help")}>
+                <div>
+                  <HelpButton />
+                </div>
+              </Tooltip>
+            </div>
+          }
+        />
 
         <ConnectWalletButton>
-          <ResponsiveWrapper
-            xs={false}
-            md={true}
-          >
-            <div className="d-flex gap-3 align-items-center">
-              <Tooltip tip={t("main-nav.tips.transactions-list")}>
-                <div>
-                  <TransactionsStateIndicator />
-                </div>
-              </Tooltip>
+          <ResponsiveEle 
+            mobileView={<CreateNetworkBountyButton label={t("misc.bounty")}/>}
+            tabletView={
+              <div className="d-flex gap-3 align-items-center">
+                <Tooltip tip={t("main-nav.tips.transactions-list")}>
+                  <div>
+                    <TransactionsStateIndicator />
+                  </div>
+                </Tooltip>
 
-              <Tooltip tip={t("main-nav.tips.notifications-list")}>
-                <div>
-                  <Notifications />
-                </div>
-              </Tooltip>
+                <Tooltip tip={t("main-nav.tips.notifications-list")}>
+                  <div>
+                    <Notifications />
+                  </div>
+                </Tooltip>
 
-              <NavAvatar />
-            </div>
-          </ResponsiveWrapper>
-
-          <ResponsiveWrapper
-            xs={true}
-            md={false}
-          >
-            <CreateNetworkBountyButton label={t("misc.bounty")}/>
-          </ResponsiveWrapper>
+                <NavAvatar/>
+              </div>
+            }
+          />
         </ConnectWalletButton>
 
-        <ResponsiveWrapper
-            xs={true}
-            md={false}
-          >
-            <HamburgerButton />
-          </ResponsiveWrapper>
+        <ResponsiveEle mobileView={<HamburgerButton />} tabletView={null} />
       </div>
     </>
   );

@@ -1,16 +1,16 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import SelectNetwork from "components/bounties/select-network";
 import If from "components/If";
 import IssueFilters from "components/issue-filters";
 import ChainFilter from "components/lists/filters/chain/controller";
-import ListSearchBar, { ListSearchBarProps } from "components/lists/list/search-bar/view";
+import ListSearchBar, {ListSearchBarProps} from "components/lists/list/search-bar/view";
 import ListSort from "components/lists/sort/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import {ResponsiveEle} from "components/responsive-wrapper";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { SortOption } from "types/components";
+import {SortOption} from "types/components";
 
 interface TasksListsSearchFiltersProps extends ListSearchBarProps {
   isManagement?: boolean;
@@ -50,9 +50,8 @@ export default function TasksListsSearchFilters ({
         />
       </div>
 
-      <ResponsiveWrapper xs={isManagement || isBountyHall} xl={true} className="col-auto">
-        <ListSort options={sortOptions} />
-      </ResponsiveWrapper>
+      <ResponsiveEle mobileView={(isManagement || isBountyHall) && <ListSort options={sortOptions} />}
+                     tabletView={<ListSort options={sortOptions} />} />
 
       <If condition={!hideFilter && (!isManagement || isProfile)}>
         <div className="col-auto">
