@@ -66,6 +66,7 @@ export function useDao() {
 
   async function disconnect () {
     await disconnectAsync();
+    await account?.connector?.disconnect();
   }
 
   async function start({

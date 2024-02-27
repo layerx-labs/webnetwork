@@ -106,7 +106,6 @@ export function useAuthentication() {
         callbackUrl: `${URL_BASE}${asPath}`
       });
     } catch (e) {
-      account?.connector?.disconnect();
       disconnect();
     }
   }
