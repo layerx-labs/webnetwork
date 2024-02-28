@@ -106,7 +106,11 @@ export function ResponsiveEle({
     desktopView = tabletView;
 
   if (className)
-    return <div className={className}>{isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}</div>
+    return (
+      <div className={className}>
+        {isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}
+      </div>
+    )
 
   return <>{isMobileView && mobileView || isTabletView && tabletView || isDesktopView && desktopView || (<></>)}</>
 }

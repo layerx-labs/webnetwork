@@ -33,6 +33,8 @@ export default function TasksListsSearchFilters ({
  ...rest
 }: TasksListsSearchFiltersProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
+
+  const SortComponent = <div className="col-auto"><ListSort options={sortOptions} /></div>;
   
   return(
     <div
@@ -50,8 +52,10 @@ export default function TasksListsSearchFilters ({
         />
       </div>
 
-      <ResponsiveEle mobileView={(isManagement || isBountyHall) && <ListSort options={sortOptions} />}
-                     tabletView={<ListSort options={sortOptions} />} />
+      <ResponsiveEle 
+        mobileView={(isManagement || isBountyHall) && SortComponent}
+        desktopView={SortComponent}
+      />
 
       <If condition={!hideFilter && (!isManagement || isProfile)}>
         <div className="col-auto">

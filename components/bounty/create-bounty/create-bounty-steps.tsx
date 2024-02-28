@@ -29,7 +29,7 @@ export default function CreateBountySteps({
     return (
     <Fragment key={index}>
         <div
-          className="my-4 col-3 d-flex flex-column cursor-pointer"
+          className="mt-4 col-3 d-flex flex-column cursor-pointer"
           onClick={() => updateCurrentSection(index)}
         >
         <div className="row mb-2">
@@ -59,7 +59,7 @@ export default function CreateBountySteps({
 
   return (
     <>
-      <ResponsiveEle className="row mb-4 mt-1 mx-2"
+      <ResponsiveEle className="row mt-1 mx-2"
                      tabletView={null}
                      mobileView={renderedSteps} />
 

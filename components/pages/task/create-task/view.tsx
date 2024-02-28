@@ -147,7 +147,7 @@ export default function CreateTaskPageView({
   function renderButtons() {
     return (
       <>
-        <div className="col-6 ps-2">
+        <div className="col-6 ps-0">
           <Button
             className="col-12 bounty-outline-button"
             onClick={onBackClick}
@@ -158,7 +158,7 @@ export default function CreateTaskPageView({
           </Button>
         </div>
 
-        <div className="col-6 pe-2">
+        <div className="col-6 pe-0">
           <If condition={!isTokenApproved && isReviewSection}>
             <ContractButton
               className="col-12 bounty-button"
@@ -229,8 +229,8 @@ export default function CreateTaskPageView({
         </div>
       </If>
 
-      <CustomContainer className='d-flex flex-column justify-content-end'>
-        <div className="row my-4 mx-xs-1 mx-sm-1">
+      <CustomContainer className="d-flex flex-column justify-content-end">
+        <div className="row my-4 mx-0">
           {renderButtons()}
         </div>
       </CustomContainer>

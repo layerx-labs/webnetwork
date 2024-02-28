@@ -2014,3 +2014,11 @@ input[type="color"] {
 .text-decoration-underline-hover:hover {
   text-decoration: underline;
 }
+
+.create-task-container-height {
+  min-height: max-content;
+
+  @media (max-width: map-get($grid-breakpoints, "lg")) {
+    min-height: calc(100vh - 70px);
+  }
+}

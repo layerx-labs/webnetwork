@@ -202,19 +202,23 @@ export default function TasksListView({
           </If>
 
           <If condition={isManagement && hasIssues}>
-            <ResponsiveEle mobileView={null}
-                           tabletView={<div className="row align-items-center mb-2 pb-1 px-3">
-                             {columns?.map((item) => (
-                               <div
-                                 className={`d-flex col-${
-                                   item === "Name" ? "6" : "2 justify-content-center"
-                                 }`}
-                                 key={item}
-                               >
-                                 <span className="caption-medium font-weight-normal text-capitalize text-gray-500">{item}</span>
-                               </div>
-                             ))}
-                           </div>}/>
+            <ResponsiveEle 
+              mobileView={null}
+              tabletView={
+                <div className="row align-items-center mb-2 pb-1 px-3">
+                  {columns?.map((item) => (
+                    <div
+                      className={`d-flex col-${
+                        item === "Name" ? "6" : "2 justify-content-center"
+                      }`}
+                      key={item}
+                    >
+                      <span className="caption-medium font-weight-normal text-capitalize text-gray-500">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                }
+              />
           </If>
 
           <If
