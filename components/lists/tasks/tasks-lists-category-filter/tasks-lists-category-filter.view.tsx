@@ -41,8 +41,8 @@ export default function TasksListsCategoryFilterView ({
 
         <div className="row gy-3 gx-3">
           {categories.map(c =>
-            <div className="col-6 col-lg" key={c.label}>
-              <div className="row-mx-0 h-100">
+            <div className="col-6 col-md" key={c.label}>
+              <div className="row mx-0 h-100">
                 <CategoryButton category={c} icon={!isMobileView} onCategoryClick={onCategoryClick} />
               </div>
             </div>)}

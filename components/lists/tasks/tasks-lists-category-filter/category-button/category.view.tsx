@@ -33,8 +33,8 @@ export default function CategoryButton({
 
   return (
     <Button
-      className={`category-filter-${color} category-size
-           border-none text-capitalize lg-medium border-radius-16
+      className={`category-filter category-filter-${color} category-size 
+      border-none text-capitalize lg-medium border-radius-16
           ${
             icon
               ? "justify-content-between ps-3 pe-0 pb-2 pt-0"

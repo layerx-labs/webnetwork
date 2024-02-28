@@ -1,4 +1,6 @@
 .category-filter {
+  overflow: hidden;
+
   &-blue {
     background: linear-gradient(180deg, #3500FF 0%, #4329A6 100%);
     box-shadow: 0px 0px 0px 1px #000, 0px 1px 0.2px 0px rgba(255, 255, 255, 0.20) inset, 0px 0px 0px 1px rgba(255, 255, 255, 0.10) inset;
