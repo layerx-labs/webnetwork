@@ -381,6 +381,7 @@ $utilities: map-merge(
         map-get($utilities, "background-color"),
         (
           state: hover,
+          responsive: true,
           values:
             map-merge(
               map-get(map-get($utilities, "background-color"), "values"),
@@ -443,6 +444,6 @@ $utilities: map-merge(
           )
         )
       )
-    ),
+    )
   )
 );
