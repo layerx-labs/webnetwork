@@ -63,8 +63,8 @@ export default function CreateDeliverablePageView({
     previewError || previewLoading;
 
   return (
-    <div className="row justify-content-center mx-0">
-      <div className="col-md-8 bg-gray-900 border border-gray-800 border-radius-4 mt-5 p-4">
+    <div className="row justify-content-center mx-0 bg-gray-900 bg-md-gray-950">
+      <div className="col-md-10 col-xl-8 bg-gray-900 border-md border-md-gray-800 border-radius-4 mt-md-5 p-3 p-md-4">
         <div>
           <h5>{t("deliverable:create.title")}</h5>
           <p className="text-gray-200">{t("deliverable:create.description")}</p>
@@ -186,18 +186,18 @@ export default function CreateDeliverablePageView({
           </p>
         </div>
       </div>
-      <div className="row justify-content-center px-0 mx-0">
-      <div className="col-md-8 mx-0 px-0">
-        <div className="my-4 mx-1 mx-md-0">
+
+      <div className="row justify-content-center px-0 mx-0 my-3">
+        <div className="col-md-10 col-xl-8 px-md-0">
+          <div className="row">
           <FooterButtons
             handleBack={onHandleBack}
             handleCreate={onHandleCreate}
             disabledCreate={isCreateButtonDisabled}
             isLoadingCreate={createIsLoading}
           />
+          </div>
         </div>
-      </div>
-
       </div>
 
       <MakeDeliverableRedyModal
