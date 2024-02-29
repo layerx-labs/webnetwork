@@ -71,7 +71,7 @@ export default function TaskListItemManagementView ({
 
           <ResponsiveEle
             tabletView={
-              <div className="col-2">
+              <div className="col-2 d-flex justify-content-center">
                 <FlexColumn className="justify-content-center">
                   <div
                     className="cursor-pointer"
@@ -86,7 +86,7 @@ export default function TaskListItemManagementView ({
 
           <ResponsiveEle
             tabletView={
-              <div className="col-2">
+              <div className="col-2 d-flex justify-content-center">
                 <FlexColumn className="justify-content-center">
                   <div className="cursor-pointer" onClick={onVisiblityClick}>
                     {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
@@ -98,7 +98,7 @@ export default function TaskListItemManagementView ({
 
           <ResponsiveEle
             tabletView={
-              <div className="col-2">
+              <div className="col-2 d-flex justify-content-center">
                 <FlexColumn className="justify-content-center">
                   <If
                     condition={isCancelButtonVisible}
