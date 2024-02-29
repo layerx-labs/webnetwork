@@ -60,11 +60,17 @@ export default function BodyNetworkView({
   return (
     <>
 
-      <ResponsiveEle mobileView={null}
-                     desktopView={<>
-                       <div className="d-flex align-items-center justify-content-center col-xl-3"><RenderAmount /></div>
-                       <div className="d-flex align-items-center justify-content-center col-xl-3"><NetworkLinkIconButton className="px-1 ms-3" /></div>
-                     </>} />
+      <ResponsiveEle 
+        mobileView={null}
+        desktopView={<>
+          <div className="d-flex align-items-center justify-content-center col-xl-3">
+            <RenderAmount />
+          </div>
+          <div className="d-flex align-items-center justify-content-center col-xl-3">
+            <NetworkLinkIconButton className="px-1 ms-3" />
+          </div>
+        </>} 
+      />
 
       <div
         className="col-xl-3 col-6 d-flex justify-content-end cursor-pointer"
@@ -73,18 +79,24 @@ export default function BodyNetworkView({
       >
         <FlexColumn className="justify-content-center text-gray-200">
 
-          <ResponsiveEle mobileView={<ChevronRightIcon width={14} height={14} />}
-                         desktopView={<CollapseArrows isCollapsed={isCollapsed} />} />
+          <ResponsiveEle 
+            mobileView={<ChevronRightIcon width={14} height={14} />}
+            desktopView={<CollapseArrows isCollapsed={isCollapsed} />}
+          />
         </FlexColumn>
       </div>
 
-      <ResponsiveEle tabletView={null} className="d-flex flex-column col-12 justify-content-center mt-3 pb-3"
-                     mobileView={<>
-                       <span className="font-weight-normal text-gray-500 text-capitalize mb-2">
-                         {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
-                       </span>
-                       <RenderAmount />
-                     </>}/>
+      <ResponsiveEle 
+        desktopView={null}
+        mobileView={
+          <div className="d-flex flex-column col-12 justify-content-center mt-3 pb-3">
+            <span className="font-weight-normal text-gray-500 text-capitalize mb-2">
+              {type === "network" ? t("network-columns.total-votes") : t("network-columns.total-received")}
+            </span>
+            <RenderAmount />
+          </div>
+        }
+      />
     </>
   );
 }
