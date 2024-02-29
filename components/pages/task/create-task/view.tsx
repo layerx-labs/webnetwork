@@ -69,7 +69,7 @@ export default function CreateTaskPageView({
   ...rest
 }: CreateTaskPageViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
-  const {isMobileView, isTabletView, isDesktopView} = useBreakPoint();
+  const {isMobileView} = useBreakPoint();
   const isReviewSection = currentSection === 3;
 
   function section() {

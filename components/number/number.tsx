@@ -5,5 +5,7 @@ export function Number({number, symbol, separator = "."}: {symbol?: string; numb
   const zerosAmount = matcher ? matcher[0].length : 0;
 
   const decimal = zerosAmount ? _decimal.replace(regex, "") : _decimal;
-  return <>{symbol ? <>{symbol} </> : ""}{_number}{separator}{zerosAmount ? <>0<sub>{zerosAmount}</sub></> : ""}{decimal}</>
+  return <>
+    {symbol ? <>{symbol} </> : ""}{_number}{separator}{zerosAmount ? <>0<sub>{zerosAmount}</sub></> : ""}{decimal}
+  </>
 }

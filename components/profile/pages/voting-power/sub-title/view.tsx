@@ -16,12 +16,9 @@ export default function VotingPowerSubTitleView({
                                                   label,
                                                   total,
                                                   votesSymbol,
-                                                  propsMobile,
-                                                  propsDesktopAndTablet,
                                                   infoTooltip,
                                                   getTextColorProps,
                                                   getTitleSpanClass,
-                                                  getAmountClass,
                                                 }: {
   label: string;
   infoTooltip?: string;

@@ -21,7 +21,6 @@ export default function ChainIcon({
   src,
   size = "18",
   label,
-  responsiveLabel = true,
   className
 } : ChainIconProps) {
   const ipfsUrl = publicRuntimeConfig?.urls?.ipfs;
