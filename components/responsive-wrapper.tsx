@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { BreakpointOptions } from "types/utils";
 
-import useBreakPoint from "../x-hooks/use-breakpoint";
+import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface ResponsiveWrapperProps extends BreakpointOptions {
   children?: ReactNode;

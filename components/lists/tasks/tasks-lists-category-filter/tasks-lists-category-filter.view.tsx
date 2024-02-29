@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import {Category} from "components/lists/tasks/tasks-lists-category-filter/tasks-lists-category-filter.controller";
 
-import useBreakPoint from "../../../../x-hooks/use-breakpoint";
+import useBreakPoint from "x-hooks/use-breakpoint";
+
 import CategoryButton from "./category-button/category.view";
 
 interface TasksListsCategoryFilterViewProps {
