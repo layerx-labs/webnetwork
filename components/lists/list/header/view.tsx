@@ -27,7 +27,7 @@ export default function ListHeader({
 
   return (
     <div className="row pb-0 pt-2 mb-2 svg-with-text-color">
-      {columns.map(renderListBarColumn)}
+      {columns?.map(renderListBarColumn)}
     </div>
   );
 }

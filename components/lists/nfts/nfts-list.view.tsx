@@ -20,7 +20,7 @@ export default function NftsListView ({
         itemsContainerClassName="row gy-4 gx-4"
         infinite
       >
-        {payments?.map(payment => <div className="col-12 col-sm-6 col-md-4" key={payment?.transactionHash}>
+        {payments?.map(payment => <div className="col-12 col-sm-6 col-lg-4" key={payment?.transactionHash}>
           <NftsListItem payment={payment} />
         </div>)}
       </List>
