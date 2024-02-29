@@ -33,13 +33,14 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         ]
       },
       login: { handle: { [Op.in]: req.body || [] } },
-      address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")), 
-                                Op.in, 
+      address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")),
+                                Op.in,
                                 Sequelize.literal(`('${(req.body || []).map((s) => s?.toLowerCase()).join("','")}')`))
     };
   
     const queryOptions = {
       raw: true,
+      logging: console.log,
       attributes: {
         exclude: ["resetedAt", "createdAt", "updatedAt"]
       },
