@@ -32,9 +32,9 @@ export default function DelegationsView({
         <If
           otherwise={
             <div className="bg-gray-900 border-radius-4 px-3 py-4 text-center">
-             <span className="base-medium text-white font-weight-normal">
-               {t("my-oracles:errors.no-delegates")}
-             </span>
+              <span className="base-medium text-white font-weight-normal">
+                {t("my-oracles:errors.no-delegates")}
+              </span>
             </div>
           }
           condition={!!delegations?.length}

@@ -33,14 +33,16 @@ export default function ProfilePageView({
 
   return (
     <>
-      <div className="border-bottom border-gray-850 border-xl-0">
-        <CustomContainer>
-          <ResponsiveEle className="mb-4"
-                         desktopView={null}
-                         mobileView={<h4>{t(`common:main-nav.nav-avatar.profile`)}</h4>}/>
-
-        </CustomContainer>
-      </div>
+    <ResponsiveEle
+      desktopView={null}
+      mobileView={
+        <div className="border-bottom border-gray-850 border-xl-0">
+          <CustomContainer className="mb-4">
+            <h4>{t(`common:main-nav.nav-avatar.profile`)}</h4>
+          </CustomContainer>
+        </div>
+      }
+    />
 
       <DashboardLayout>
         <div className="row mb-4">

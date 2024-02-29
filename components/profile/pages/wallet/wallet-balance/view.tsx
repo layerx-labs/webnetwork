@@ -82,15 +82,25 @@ export default function WalletBalanceView({
             </If>
           </InputGroup>
         </div>
-        <div className="col-auto px-0">
-          <ResponsiveEle mobileView={<IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />} />
-          <ResponsiveEle tabletView={<div className="d-flex align-items-center me-3">
-            <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
-              {t("misc.chain")}
-            </label>
-            <ChainFilter chains={chains} label={false}/>
-          </div>}/>
+        <div className="col-auto ps-0 pe-md-0">
+          <ResponsiveEle 
+            mobileView={
+              <IssueMobileFilters chainOptions={chains} onlyProfileFilters={true} hideSort />
+            }
+            tabletView={null}
+          />
 
+          <ResponsiveEle 
+            tabletView={
+              <div className="d-flex align-items-center me-3">
+                <label className="caption-small font-weight-medium text-gray-100 text-nowrap mr-1">
+                  {t("misc.chain")}
+                </label>
+
+                <ChainFilter chains={chains} label={false}/>
+              </div>
+            }
+          />
         </div>
       </div>
 
@@ -99,15 +109,28 @@ export default function WalletBalanceView({
           {t("profile:tokens")}
         </span>
       </FlexRow>
+
       <FlexRow className="d-flex flex-wrap justify-content-between align-items-center mb-2">
-        <span className="text-white mt-2">{t("profile:balances-transactional-tokens")}</span>
-        <div className="d-flex mt-2 caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium">
+        <span className="text-white mt-2">
+          {t("profile:balances-transactional-tokens")}
+        </span>
+
+        <div
+          className="d-flex mt-2 caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium w-100"
+        >
           {formatStringToCurrency(totalAmount)}
+
           <span className="text-white-30 ml-1 mr-2">
             {!hasNoConvertedToken ? defaultFiat : t("misc.token_other")}
           </span>
-          <ResponsiveEle className="d-flex align-items-center"
-                         tabletView={<InfoTooltip description={t("profile:tips.total-balance")} secondaryIcon/>} />
+
+          <ResponsiveEle 
+            tabletView={
+              <div className="d-flex align-items-center">
+                <InfoTooltip description={t("profile:tips.total-balance")} secondaryIcon/>
+              </div>
+            }
+          />
         </div>
       </FlexRow>
       <If

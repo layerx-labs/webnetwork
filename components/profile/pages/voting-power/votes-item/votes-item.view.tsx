@@ -1,5 +1,6 @@
 import {useTranslation} from "next-i18next";
 
+import { Address } from "components/common/address/address.view";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import MarketplaceWithNetworkLogo
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
@@ -35,7 +36,7 @@ export default function VotesItem({
 
   const isLockedType = type === "locked";
   const mainLabel = isLockedType ? networkName : `${formatStringToCurrency(amount)} $${tokenSymbol}`;
-  const secondaryLabel = isLockedType ? chainName : transactionHash;
+  const secondaryLabel = isLockedType ? chainName : <Address address={transactionHash} truncate />;
 
   return (
     <div

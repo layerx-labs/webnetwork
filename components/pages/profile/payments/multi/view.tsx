@@ -63,42 +63,85 @@ export default function PaymentsMultiView({
 
   return (
     <>
-      <ResponsiveEle className="align-items-center justify-content-between mb-2 border-bottom border-gray-850 border-xl-0 pb-3 px-3 mt-2"
-                     tabletView={null}
-                     mobileView={<>
-                       <FlexColumn>
-                         <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
-                       </FlexColumn>
+      <ResponsiveEle 
+        desktopView={null}
+        mobileView={
+          <div className={`row align-items-center justify-content-between mb-2 border-bottom border-gray-850 
+            border-xl-0 pb-3 px-3 mt-2`}>
+            <div className="col">
+              <h4 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h4>
+            </div>
 
-                       <ResponsiveEle mobileView={<PaymentsListMobileFilters defaultInterval={defaultInterval}
-                                                                             intervals={intervals}
-                                                                             chains={chains}/>}
-                                      desktopView={<FlexRow className="align-items-center"><TotalReceived /></FlexRow>} />
-                     </>} />
+            <div className="col-auto pe-0">
+              <ResponsiveEle 
+                mobileView={
+                  <PaymentsListMobileFilters 
+                    defaultInterval={defaultInterval}
+                    intervals={intervals}
+                    chains={chains}
+                  />
+                }
+                desktopView={
+                  <FlexRow className="align-items-center">
+                    <TotalReceived />
+                  </FlexRow>
+                }
+              />
+            </div>
+          </div>
+        }
+      />
+
+      <ResponsiveEle mobileView={<PaymentsListMobileFilters defaultInterval={defaultInterval}
+                                                            intervals={intervals}
+                                                            chains={chains}/>}
+                    desktopView={<FlexRow className="align-items-center"><TotalReceived /></FlexRow>} />
+                    
       <DashboardLayout>
         <div className="col-12">
+          <ResponsiveEle
+            desktopView={
+              <div className={`row align-items-center justify-content-between mb-2 border-bottom border-gray-850 
+                border-xl-0 pb-3`}>
+                <div className="col">
+                  <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
+                </div>
 
-          <ResponsiveEle className="align-items-center justify-content-between mb-2 border-bottom border-gray-850 border-xl-0 pb-3"
-                         desktopView={null}
-                         mobileView={<>
-                           <FlexColumn>
-                             <h3 className="text-white font-weight-medium">{t("main-nav.nav-avatar.payments")}</h3>
-                           </FlexColumn>
+                <ResponsiveEle
+                  tabletView={
+                    <div className="col-auto">
+                      <div className="d-flex align-items-center">
+                        <TotalReceived />
+                      </div>
+                    </div>
+                  } 
+                />
+              </div>
+            }
+          />
 
-                           <ResponsiveEle mobileView={<FlexRow className="align-items-center justify-content-between w-100 mb-3"><TotalReceived /></FlexRow>}
-                                          tabletView={<FlexRow className="align-items-center"><TotalReceived /></FlexRow>} />
-                         </>} />
+          <ResponsiveEle
+            desktopView={null}
+            mobileView={
+              <FlexRow className="align-items-center justify-content-between w-100 mb-3">
+                <TotalReceived />
+              </FlexRow>
+            }
+          />
 
-          <ResponsiveEle className="row align-items-center mb-4"
-                         desktopView={<>
-                           <div className="col">
-                             <IntervalFilters defaultInterval={defaultInterval} intervals={intervals}/>
-                           </div>
+          <ResponsiveEle
+            desktopView={
+              <div className="row align-items-center mb-4">
+                <div className="col">
+                  <IntervalFilters defaultInterval={defaultInterval} intervals={intervals}/>
+                </div>
 
-                           <div className="col-3">
-                             <ChainFilter chains={chains}/>
-                           </div>
-                         </>}/>
+                <div className="col-3">
+                  <ChainFilter chains={chains}/>
+                </div>
+              </div>
+            }
+          />
 
           <FlexRow className="justify-content-center">
             <FlexColumn className="col-12">
