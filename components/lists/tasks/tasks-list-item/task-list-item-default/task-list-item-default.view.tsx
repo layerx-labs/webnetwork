@@ -69,43 +69,49 @@ export default function TaskListItemDefault ({
             <div className="col-12">
               <div className="row">
                 <ResponsiveEle
-                  col={12}
                   tabletView={
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="row align-items-center justify-content-md-start">
-                          <BountyItemLabel label="ID" className="mw-25 col-auto">
-                            <TaskIdTag
-                              taskId={task?.id}
-                              marketplaceName={task?.network?.name}
-                            />
-                          </BountyItemLabel>
-
-                          <ResponsiveEle
-                            col={"auto"}
-                            desktopView={
-                              <TaskMainInfo task={task}/>
-                            }
+                    <div className="col-12">
+                      <div className="row align-items-center justify-content-md-start">
+                        <BountyItemLabel label="ID" className="mw-25 col-auto">
+                          <TaskIdTag
+                            taskId={task?.id}
+                            marketplaceName={task?.network?.name}
                           />
+                        </BountyItemLabel>
 
-                          <BountyItemLabel
-                            label={t("info.opened-on")}
-                            className="col-auto"
-                          >
-                      <span className="text-gray text-truncate">
-                        {task?.createdAt?.toLocaleDateString("PT")}
-                      </span>
-                          </BountyItemLabel>
+                        <BountyItemLabel label="Type" className="col-auto">
+                          <span className="text-gray text-truncate text-capitalize">
+                            {task?.type}
+                          </span>
+                        </BountyItemLabel>
 
-                          <div className="col d-flex justify-content-end px-0">
-                            <TaskTypeBadge
-                              type={task?.type}
-                            />
-                          </div>
+                        <ResponsiveEle
+                          desktopView={
+                            <div className="col-auto">
+                              <TaskMainInfo task={task}/>
+                            </div>
+                          }
+                        />
 
-                          <div className="col-auto d-flex justify-content-end">
-                            <BountyAmount bounty={task} size={"lg"}/>
-                          </div>
+                        <BountyItemLabel
+                          label={t("info.opened-on")}
+                          className="col-auto"
+                        >
+
+                        <span className="text-gray text-truncate">
+                          {task?.createdAt?.toLocaleDateString("PT")}
+                        </span>
+
+                        </BountyItemLabel>
+
+                        <div className="col d-flex justify-content-end px-0">
+                          <TaskTypeBadge
+                            type={task?.type}
+                          />
+                        </div>
+
+                        <div className="col-auto d-flex justify-content-end">
+                          <BountyAmount bounty={task} size={"lg"}/>
                         </div>
                       </div>
                     </div>

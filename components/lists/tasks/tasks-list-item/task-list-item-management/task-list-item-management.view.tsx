@@ -70,61 +70,61 @@ export default function TaskListItemManagementView ({
           </div>
 
           <ResponsiveEle
-            col={2}
-            className={"d-flex justify-content-center"}
             tabletView={
-              <FlexColumn className="justify-content-center">
-                <div
-                  className="cursor-pointer"
-                  onClick={onClick}
-                >
-                  <ArrowUpRightGray />
-                </div>
-              </FlexColumn>
-            }
-          />
-
-          <ResponsiveEle
-            col={2}
-            className={"d-flex justify-content-center"}
-            tabletView={
-              <FlexColumn className="justify-content-center">
-                <div className="cursor-pointer" onClick={onVisiblityClick}>
-                  {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
-                </div>
-              </FlexColumn>
-            }
-          />
-
-          <ResponsiveEle
-            col={2}
-            className={"d-flex justify-content-center"}
-            tabletView={
-              <FlexColumn className="justify-content-center">
-                <If
-                  condition={isCancelButtonVisible}
-                  otherwise={"-"}
-                >
-                  <div className="cursor-pointer m-0 p-0" onClick={onCancelClick}>
-                    <TrashIcon/>
+              <div className="col-2">
+                <FlexColumn className="justify-content-center">
+                  <div
+                    className="cursor-pointer"
+                    onClick={onClick}
+                  >
+                    <ArrowUpRightGray />
                   </div>
-                </If>
-              </FlexColumn>
+                </FlexColumn>
+              </div>
             }
           />
 
           <ResponsiveEle
-            col={"auto"}
-            className={"d-flex justify-content-center"}
+            tabletView={
+              <div className="col-2">
+                <FlexColumn className="justify-content-center">
+                  <div className="cursor-pointer" onClick={onVisiblityClick}>
+                    {isVisible ? <EyeIcon /> : <EyeSlashIcon />}
+                  </div>
+                </FlexColumn>
+              </div>
+            }
+          />
+
+          <ResponsiveEle
+            tabletView={
+              <div className="col-2">
+                <FlexColumn className="justify-content-center">
+                  <If
+                    condition={isCancelButtonVisible}
+                    otherwise={"-"}
+                  >
+                    <div className="cursor-pointer m-0 p-0" onClick={onCancelClick}>
+                      <TrashIcon/>
+                    </div>
+                  </If>
+                </FlexColumn>
+              </div>
+            }
+          />
+
+          <ResponsiveEle
             tabletView={null}
             mobileView={
-              <MoreActionsDropdown
-                actions={[
-                  { content: "Task Link", onClick: onClick},
-                  { content: isVisible ? "Hide Task" : "Show Task", onClick: onVisiblityClick},
-                  { content: "Cancel", onClick: onCancelClick},
-                ]}
-              />
+              <div className="col-auto">
+                <MoreActionsDropdown
+                  actions={[
+                    { content: "Task Link", onClick: onClick},
+                    { content: isVisible ? "Hide Task" : "Show Task", onClick: onVisiblityClick},
+                    { content: "Cancel", onClick: onCancelClick},
+                  ]}
+                />
+              </div>
             }
           />
         </div>

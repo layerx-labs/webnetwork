@@ -88,9 +88,10 @@ export function ProposalsListItemView ({
         </div>
 
         <ResponsiveEle
-          col={"auto"}
           tabletView={
-            <DisputeLabel percentage={disputePercentage}/>
+            <div className="col-auto">
+              <DisputeLabel percentage={disputePercentage}/>
+            </div>
           }
         />
       </div>

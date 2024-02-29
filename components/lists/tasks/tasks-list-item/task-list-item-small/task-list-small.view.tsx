@@ -34,9 +34,8 @@ export default function TaskListItemSmall ({
     <CardItem onClick={onClick} key="sm-card">
       <>
         <ResponsiveEle
-          className="d-flex gap-2 align-items-center justify-content-between"
           tabletView={
-            <>
+            <div className="d-flex gap-2 align-items-center justify-content-between">
               <div className="mw-50-auto network-name">
                 <NetworkBadge
                   logoUrl={task?.network?.logoIcon && `${settings?.urls?.ipfs}/${task?.network?.logoIcon}`}
@@ -56,25 +55,23 @@ export default function TaskListItemSmall ({
                   </>
                 </Badge>
               </div>
-            </>
+            </div>
           }
         />
 
         <ResponsiveEle
-          className="align-items-center gap-2 mb-3"
           tabletView={null}
           mobileView={
-            <>
+            <div className="align-items-center gap-2 mb-3">
               <TaskStatusInfo task={task}/>
               <span className="text-truncate text-capitalize">{task?.title}</span>
-            </>
+            </div>
           }
         />
 
         <ResponsiveEle
-          className="mt-3 flex-column"
           tabletView={
-            <>
+            <div className="mt-3 flex-column">
               <span className="text-white text-truncate text-capitalize">
                 {task?.title}
               </span>
@@ -82,32 +79,31 @@ export default function TaskListItemSmall ({
               <span className="text-gray-600 text-truncate text-capitalize">
                 {task?.body}
               </span>
-            </>
+            </div>
           }
         />
 
         <div className="row align-items-center justify-content-md-end justify-content-between mt-2">
           <If condition={isSeekingFund}>
             <ResponsiveEle
-              col={6}
-              className="caption-medium font-weight-normal text-capitalize"
               tabletView={
-                <>
+                <div className="col-6 caption-medium font-weight-normal text-capitalize">
                   <span className="mr-1">{t("info.funded")}</span>
                   <span className="text-yellow-500">{formatNumberToCurrency(task?.fundedPercent)}%</span>
-                </>
+                </div>
               }
             />
           </If>
 
           <ResponsiveEle
             tabletView={null}
-            className="mw-50-auto network-name caption-medium font-weight-normal text-capitalize"
             mobileView={
-              <NetworkBadge
-                logoUrl={task?.network?.logoIcon && `${settings?.urls?.ipfs}/${task?.network?.logoIcon}`}
-                name={task?.network?.name}
-              />
+              <div className="mw-50-auto network-name caption-medium font-weight-normal text-capitalize">
+                <NetworkBadge
+                  logoUrl={task?.network?.logoIcon && `${settings?.urls?.ipfs}/${task?.network?.logoIcon}`}
+                  name={task?.network?.name}
+                />
+              </div>
             }
           />
 
