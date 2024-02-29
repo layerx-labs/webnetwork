@@ -36,10 +36,13 @@ export default function CuratorsPageLayoutView({
         infos={heroInfos}
       />
 
-      <CustomContainer className="pt-3 pb-5" col = "col-xs-12 col-xl-10">
-        <ResponsiveEle className="justify-content-center align-items-center"
-                       mobileView={<MiniTabs items={tabsItems} />}
-                       tabletView={<ScrollableTabs tabs={tabsItems} />} />
+      <CustomContainer className="pt-3 pb-5" col="col-xs-12 col-xl-10">
+        <div className="row justify-content-center align-items-center">
+          <ResponsiveEle 
+            mobileView={<ScrollableTabs tabs={tabsItems} />}
+            desktopView={<MiniTabs items={tabsItems} />}
+          />
+        </div>
 
         <div className="row justify-content-center mt-3">
           <div className="mb-3">
