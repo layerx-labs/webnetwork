@@ -58,31 +58,35 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
         {t("custom-network:steps.network-information.you-can-change")}
       </span>
 
-      <div className="d-flex gap-20 mb-5 align-items-center">
-        <div className="d-flex flex-column">
-          <div className="d-flex gap-20">
-            <ImageUploader
-              name="logoIcon"
-              value={details.iconLogo.value}
-              error={details.iconLogo.validated === false}
-              onChange={handleIconChange}
-              description={
-                <>
-                  {t("misc.upload")} <br />{" "}
-                  {t("custom-network:steps.network-information.fields.logo-icon.label")}
-                </>
-              }
-            />
+      <div className="row mb-4 align-items-start">
+        <div className="col col-md-auto">
+          <div className="row gy-3 gy-sm-0">
+            <div className="col-auto">
+              <ImageUploader
+                name="logoIcon"
+                value={details.iconLogo.value}
+                error={details.iconLogo.validated === false}
+                onChange={handleIconChange}
+                description={
+                  <>
+                    {t("misc.upload")} <br />{" "}
+                    {t("custom-network:steps.network-information.fields.logo-icon.label")}
+                  </>
+                }
+              />
+            </div>
 
-            <ImageUploader
-              name="fullLogo"
-              value={details.fullLogo.value}
-              error={details.fullLogo.validated === false}
-              onChange={handleFullChange}
-              description=
-                {`${t("misc.upload")} ${t("custom-network:steps.network-information.fields.full-logo.label")}`}
-              lg
-            />
+            <div className="col-auto">
+              <ImageUploader
+                name="fullLogo"
+                value={details.fullLogo.value}
+                error={details.fullLogo.validated === false}
+                onChange={handleFullChange}
+                description=
+                  {`${t("misc.upload")} ${t("custom-network:steps.network-information.fields.full-logo.label")}`}
+                lg
+              />
+            </div>
           </div>
 
           <p className="p-small text-gray mb-0 mt-2">
@@ -90,7 +94,7 @@ export default function NetworkInformationStep({ activeStep, index, validated, h
           </p>
         </div>
 
-        <div className="col ml-2">
+        <div className="col mt-3 mt-md-0">
           <p className="h3 text-white mb-3">
             {showTextOrDefault(nameInput, t("custom-network:steps.network-information.fields.name.default"))}
           </p>
