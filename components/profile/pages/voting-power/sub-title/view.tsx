@@ -61,8 +61,11 @@ export default function VotingPowerSubTitleView({
                      tabletView={<span className={getTitleSpanClass("h4")}>{label}</span>}/>
 
       <If condition={!!total}
-          children={<ResponsiveEle className={`${isMobileView && isTabletView && "fs-smallest" || "caption-medium"}`}
-                                   mobileView={<span className="fs-smallest">{renderAmount({icon: !(isMobileView && isTabletView)})}</span>}/>}
+          children={
+            <ResponsiveEle 
+              className={`${isMobileView && isTabletView && "fs-smallest" || "caption-medium"}`}
+              mobileView={<span className="fs-smallest">{renderAmount({icon: !(isMobileView && isTabletView)})}</span>}
+              />}
       />
     </>
   );

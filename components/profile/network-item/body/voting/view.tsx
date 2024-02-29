@@ -57,12 +57,30 @@ export default function BodyVotingView({
           <RenderAmount />
           <If condition={!!handleNetworkLink}
               children={<>
-                <ResponsiveEle tabletView={<Button className="button-gray-850 ms-3 cursor-pointer" onClick={handleNetworkLink}><span>{t("go-to-network")}&nbsp;</span><ArrowUpRight className="w-9-p h-9-p" /></Button>} />
-              </>} />
+                <ResponsiveEle 
+                  tabletView={
+                    <Button 
+                      className="button-gray-850 ms-3 cursor-pointer" 
+                      onClick={handleNetworkLink}
+                    >
+                      <span>{t("go-to-network")}&nbsp;</span>
+                      <ArrowUpRight className="w-9-p h-9-p" />
+                    </Button>
+                  }
+                />
+              </>
+            } />
         </FlexRow>
       </FlexColumn>
       <If condition={!!handleNetworkLink}
-          children={<ResponsiveEle mobileView={<FlexRow className="justify-content-center"><div><NetworkLinkIconButton className="px-2" /></div></FlexRow>}/>} />
+          children={
+            <ResponsiveEle 
+              mobileView={
+                <FlexRow className="justify-content-center">
+                    <div><NetworkLinkIconButton className="px-2" /></div>
+                </FlexRow>}
+            />
+          } />
     </>
   );
 }

@@ -75,7 +75,11 @@ export default function ProposalPageView({
               issue={issue}
             />
 
-            <ResponsiveEle desktopView={<div className="mt-4 w-100"><DistributionBar distributedAmounts={distributedAmounts}/></div>} />
+            <ResponsiveEle 
+              desktopView={
+                <div className="mt-4 w-100"><DistributionBar distributedAmounts={distributedAmounts}/></div>
+              } 
+            />
 
           </div>
         </div>

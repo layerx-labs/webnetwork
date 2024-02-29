@@ -132,8 +132,13 @@ export default function RewardInformationSectionView({
               </p>
             </div>
             {
-              rewardChecked && <ResponsiveEle className="mt-1"
-                                              tabletView={<RewardInformationBalanceView amount={rewardBalance.toFixed()} symbol={rewardToken?.symbol}/>} />
+              rewardChecked && 
+                <ResponsiveEle 
+                  className="mt-1"
+                  tabletView={
+                    <RewardInformationBalanceView amount={rewardBalance.toFixed()} symbol={rewardToken?.symbol}/>
+                  } 
+                />
             }
           </div>
         </>

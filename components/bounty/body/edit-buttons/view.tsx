@@ -59,29 +59,35 @@ export default function BodyEditButtons({
   }
 
   function renderDesktopButtons() {
-    return <>
-      <Button color="danger" onClick={handleCancelEdit} disabled={false}>
-        {t("bounty:cancel-changes")}
-      </Button>
-      <div className="d-flex">
-        <Button
-          outline={true}
-          className="d-flex flex-shrink-0 w-40 btn-block"
-          onClick={handleIsPreview}
-          disabled={isUploading}
-        >
-          {!isPreview ? t("bounty:preview") : t("bounty:edit")}
-        </Button>
-        <Button
-          className="d-flex flex-shrink-0 w-40 btn-block"
-          onClick={handleUpdateBounty}
-          disabled={isDisableUpdateIssue}
-          isLoading={isUploading}
-        >
-          {t("bounty:save-changes")}
-        </Button>
+    return(
+      <div className="row align-items-center">
+        <div className="col-auto">
+          <Button color="danger" onClick={handleCancelEdit} disabled={false}>
+            {t("bounty:cancel-changes")}
+          </Button>
+        </div>
+        <div className="col-auto">
+          <Button
+            outline={true}
+            className="d-flex flex-shrink-0 w-40 btn-block"
+            onClick={handleIsPreview}
+            disabled={isUploading}
+          >
+            {!isPreview ? t("bounty:preview") : t("bounty:edit")}
+          </Button>
+        </div>
+        <div className="col-auto">
+          <Button
+            className="d-flex flex-shrink-0 w-40 btn-block"
+            onClick={handleUpdateBounty}
+            disabled={isDisableUpdateIssue}
+            isLoading={isUploading}
+          >
+            {t("bounty:save-changes")}
+          </Button>
+        </div>
       </div>
-    </>
+    );
   }
 
   return (

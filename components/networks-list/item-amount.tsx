@@ -44,8 +44,12 @@ export default function ItemAmount({
       </If>
 
       <If condition={!!label}
-          children={<ResponsiveEle desktopView={null} mobileView={<span className="caption-small font-weight-medium text-gray-500">{label}</span>}/>} />
-
+          children={
+          <ResponsiveEle 
+            desktopView={null} 
+            mobileView={<span className="caption-small font-weight-medium text-gray-500">{label}</span>}/>
+          }
+      />
     </div>
   );
 }
