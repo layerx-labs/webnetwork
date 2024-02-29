@@ -25,26 +25,26 @@ export default function CuratorListItemView({
     {
       label: t("council:council-table.closed-proposals"),
       secondaryLabel: `${curator?.acceptedProposals || 0}`,
-      breakpoints: { xs: false, lg: true },
+      visibility: { mobile: false, desktop: true },
       justify: "center"
     },
     {
       label: t("council:council-table.disputed-proposals"),
       secondaryLabel: `${curator?.disputedProposals || 0}`,
-      breakpoints: { xs: false, xl: true },
+      visibility: { mobile: false, desktop: true },
       justify: "center"
     },
     {
       label: t("council:council-table.disputes"),
       secondaryLabel: `${curator?.disputes || 0}`,
-      breakpoints: { xs: false, xl: true },
+      visibility: { mobile: false, desktop: true },
       justify: "center"
     },
     {
       label: t("council:council-table.total-votes"),
       secondaryLabel: 
         formatNumberToNScale(BigNumber(curator?.totalVotes).toFixed()),
-      breakpoints: { xs: false, md: true },
+      visibility: { mobile: false, tablet: true },
       justify: "center"
     },
     {
@@ -54,7 +54,7 @@ export default function CuratorListItemView({
           <ChainIcon src={marketplace?.chain?.icon} size="22" />
         ))}
       />,
-      breakpoints: { xs: false, md: true },
+      visibility: { mobile: false, tablet: true },
       justify: "center"
     }
   ];

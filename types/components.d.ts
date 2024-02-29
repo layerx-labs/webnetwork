@@ -12,7 +12,7 @@ import { Token } from "interfaces/token";
 import { ProfilePages } from "interfaces/utils";
 
 import { SearchBountiesPaginated } from "types/api";
-import { BreakpointOptions, Direction, SelectOption } from "types/utils";
+import { VisibilityOptions, Direction, SelectOption } from "types/utils";
 
 export interface SearchBountiesPaginatedBigNumber extends Omit<SearchBountiesPaginated, "rows"> {
   rows: IssueBigNumberData[];
@@ -21,7 +21,7 @@ export interface SearchBountiesPaginatedBigNumber extends Omit<SearchBountiesPag
 export interface ResponsiveListItemColumnProps {
   label?: string;
   secondaryLabel?: ReactNode;
-  breakpoints?: BreakpointOptions;
+  visibility?: VisibilityOptions;
   currency?: string;
   justify?: string;
 }

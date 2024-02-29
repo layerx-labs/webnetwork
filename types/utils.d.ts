@@ -12,6 +12,12 @@ export interface BreakpointOptions {
   xxl?: boolean;
 }
 
+export interface VisibilityOptions {
+  mobile?: boolean;
+  tablet?: boolean;
+  desktop?: boolean;
+}
+
 export interface GroupedSelectOption {
   label: string;
   options: SelectOption[];

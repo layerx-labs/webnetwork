@@ -75,7 +75,7 @@ export default function ResponsiveListItem({
                     key={`col-${col?.label}`}
                     {...col}
                     justify="start"
-                    breakpoints={{ xs: true, md: false }}
+                    visibility={{ mobile: true, tablet: false }}
                   />)}
               </div>
             </If>

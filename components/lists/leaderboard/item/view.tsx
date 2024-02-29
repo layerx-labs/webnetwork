@@ -17,13 +17,13 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
   const columns = [
     {
       secondaryLabel: truncateString(leaderboard?.user?.handle, 15) || "-",
-      breakpoints: { xs: false, xl: true },
+      visibility: { mobile: false, desktop: true },
       justify: "center",
     },
     {
       label: t("nfts"),
       secondaryLabel: `${leaderboard?.numberNfts || 0}`,
-      breakpoints: { xs: false, md: true },
+      visibility: { mobile: false, tablet: true },
       justify: "center"
     },
     {
@@ -33,7 +33,7 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
           <ChainIcon src={icon} size="22" />
         ))}
       />,
-      breakpoints: { xs: false, md: true },
+      visibility: { mobile: false, tablet: true },
       justify: "center"
     },
     {
@@ -43,7 +43,7 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
           <ChainIcon src={icon} size="22" />
         ))}
       />,
-      breakpoints: { xs: false, md: true },
+      visibility: { mobile: false, tablet: true },
       justify: "center"
     }
   ];
