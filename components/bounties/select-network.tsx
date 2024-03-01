@@ -106,6 +106,8 @@ export default function SelectNetwork({
       handleSelectedWithNetworkName(options, query?.networkName);
     if(query?.network && !query?.networkName)
       handleSelectedWithNetworkName(options, query?.network);
+    if (!query?.network && !query?.networkName)
+      setSelected(null);
   }, [networks, query]);
 
   useEffect(() => {
