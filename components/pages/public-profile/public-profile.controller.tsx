@@ -15,9 +15,6 @@ import {
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";
-import { TasksListItemVariant } from "types/components";
-
-import useBreakPoint from "x-hooks/use-breakpoint";
 
 interface PublicProfilePageProps {
   user: User;
