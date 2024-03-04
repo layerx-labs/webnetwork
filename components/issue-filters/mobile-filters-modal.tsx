@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
+import SelectNetwork from "components/bounties/select-network";
 import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 
+import { Network } from "interfaces/network";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { SortOption } from "types/components";
@@ -106,6 +108,17 @@ export default function MobileFiltersModal({
             <ChainFilter chains={chainOptions} label={false} />
         </ContainerFilterView>
       </If>
+
+      <If condition={onlyProfileFilters}>
+        <ContainerFilterView label={t("misc.network")}>
+          <SelectNetwork 
+            fontRegular 
+            hideLabel 
+            onlyProfileFilters
+          />
+        </ContainerFilterView>
+      </If>
+
       <If condition={onlyProfileFilters}>
         <If condition={!hideSort}>
           <ListSort options={defaultSortOptions} labelLineBreak={onlyProfileFilters} />

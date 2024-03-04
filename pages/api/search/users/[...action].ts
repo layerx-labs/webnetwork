@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
-import {Op} from "sequelize";
+import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 
@@ -33,7 +33,9 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         ]
       },
       login: { handle: { [Op.in]: req.body || [] } },
-      address: { address: { [Op.in]: (req.body || []).map((s) => s?.toLowerCase()) } }
+      address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")), 
+                                Op.in, 
+                                Sequelize.literal(`('${(req.body || []).map((s) => s?.toLowerCase()).join("','")}')`))
     };
   
     const queryOptions = {
