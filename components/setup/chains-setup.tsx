@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Col, FormControl, InputGroup, Row} from "react-bootstrap";
 
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import {useTranslation} from "next-i18next";
 
@@ -25,6 +26,7 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function ChainsSetup() {
   const { t } = useTranslation(["common"]);
+  const queryClient = useQueryClient();
   
   const [search, setSearch] = useState('');
   const [chains, setChains] = useState<MiniChainInfo[]>([]);
@@ -46,6 +48,7 @@ export default function ChainsSetup() {
       setShowCustomAdd(false);
       loadChainsDatabase();
       refresh();
+      queryClient.invalidateQueries({ queryKey: QueryKeys.wagmiConfigChains() });
     }
   });
 

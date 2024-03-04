@@ -16,7 +16,10 @@ export default CreateDeliverablePage;
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const queryClient = getReactQueryClient();
 
-  await queryClient.prefetchQuery(QueryKeys.bounty(query.id?.toString()), () => getBountyData(query));
+  await queryClient.prefetchQuery({
+    queryKey: QueryKeys.bounty(query.id?.toString()),
+    queryFn: () => getBountyData(query),
+  });
 
   return {
     props: {

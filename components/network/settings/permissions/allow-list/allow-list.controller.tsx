@@ -58,7 +58,7 @@ export default function AllowList ({
   } = useReactQuery<string[]>(queryKey, () => useGetAllowList(networkId, type), {
     staleTime: MINUTE_IN_MS
   });
-  const { mutate: onAddClick, isLoading: isAdding } = useReactQueryMutation({
+  const { mutate: onAddClick, isPending: isAdding } = useReactQueryMutation({
     queryKey,
     mutationFn: (props: AddAddressMutationProps) =>
       useAddAllowListEntry(props.networkId, props.address, props.networkAddress, props.type),
@@ -70,7 +70,7 @@ export default function AllowList ({
     },
     onError: console.debug
   });
-  const { mutate: onTrashClick, isLoading: isRemoving } = useReactQueryMutation({
+  const { mutate: onTrashClick, isPending: isRemoving } = useReactQueryMutation({
     queryKey,
     mutationFn: (props: RemoveAddressMutationProps) =>
       useDeleteAllowListEntry(props.networkId, props.address, props.type),

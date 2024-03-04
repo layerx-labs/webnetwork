@@ -35,7 +35,7 @@ export default function Notifications() {
         enabled: !!currentUser?.walletAddress && !!page,
         retry: false,
                   });
-  const { mutate: updateReadNotification, isLoading: isLoadingReadNotification } = useReactQueryMutation({
+  const { mutate: updateReadNotification, isPending: isLoadingReadNotification } = useReactQueryMutation({
     mutationFn: useUpdateReadNotification,
     onSuccess: () => {
       updateNotifications();

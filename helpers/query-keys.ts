@@ -20,4 +20,5 @@ export const QueryKeys = {
   totalNetworkToken: (chain: string, network: string) => ["totalNetworkToken", chain, network],
   notifications: (address: string, page: string, read: string) => ["notifications", address, page, read],
   allowListByType: (type: string, networkId: number) => ["allow-list", type, networkId],
+  wagmiConfigChains: () => ["wagmi-config-chains"],
 };

@@ -75,7 +75,6 @@ export interface CreateNetworkParams {
     allowedRewards: Token[];
   };
   networkAddress: string;
-  signedMessage: string;
 }
 
 export interface UpdateNetworkParams {

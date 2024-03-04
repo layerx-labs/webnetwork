@@ -18,7 +18,7 @@ export default function LanguageForm () {
 
   const {currentUser} = useUserStore();
   const { addSuccess } = useToastStore();
-  const {mutate, isLoading} = useReactQueryMutation({
+  const {mutate, isPending} = useReactQueryMutation({
     mutationFn: (languageOption: SelectOption) =>
       useUpdateUserSettings({language: languageOption?.value?.toString()}),
     onSuccess: () => {
@@ -36,7 +36,7 @@ export default function LanguageForm () {
     <LanguageFormView
       currentLanguage={languages.find(l => l.value === currentUser?.language)}
       languages={languages}
-      isLoading={isLoading}
+      isLoading={isPending}
       onLanguageChange={mutate}
     />
   );

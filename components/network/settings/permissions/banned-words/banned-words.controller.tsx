@@ -30,7 +30,7 @@ export default function BannedWords({
 
   const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, network?.chain_id?.toString());
 
-  const { mutate: addBannedWord, isLoading: isAdding } = useReactQueryMutation({
+  const { mutate: addBannedWord, isPending: isAdding } = useReactQueryMutation({
     queryKey: networkQueryKey,
     mutationFn: CreateBannedWord,
     toastSuccess: t("steps.permissions.domains.created-message"),
@@ -45,7 +45,7 @@ export default function BannedWords({
     }
   });
 
-  const { mutate: removeBannedWord, isLoading: isRemoving } = useReactQueryMutation({
+  const { mutate: removeBannedWord, isPending: isRemoving } = useReactQueryMutation({
     queryKey: networkQueryKey,
     mutationFn: (domain: string) => RemoveBannedWord({
       networkId: network.id,

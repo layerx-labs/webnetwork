@@ -113,7 +113,7 @@ describe("AllowList", () => {
       .mockImplementation(() => ({
         ...jest.requireActual("x-hooks/use-react-query-mutation"),
         mutate: jest.fn(),
-        isLoading: true
+        isPending: true
       }));
     const input = result.getByTestId(`allow-list-${type}-input`);
     fireEvent.change(input, { target: { value: address } });

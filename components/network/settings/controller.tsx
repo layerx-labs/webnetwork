@@ -61,7 +61,7 @@ export default function MyNetworkSettings ({
 
   const isGovernorRegistry = currentUser?.isAdmin;
   const chainId = connectedChain?.id;
-  const {mutate: updateNetwork, isLoading: isUpdating} = useReactQueryMutation({
+  const {mutate: updateNetwork, isPending: isUpdating} = useReactQueryMutation({
     queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId),
     mutationFn: useUpdateNetwork,
     toastSuccess: t("custom-network:messages.refresh-the-page"),
