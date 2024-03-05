@@ -144,7 +144,6 @@ export default function NetworkLogoAndColorsSettingsView({
           >
             <ThemeColors
               colors={networkTheme?.colors}
-              similar={networkTheme?.similar}
               setColor={onColorChange}
             />
           </If>

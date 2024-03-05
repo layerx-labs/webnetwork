@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 
-import { useDappkit } from "@taikai/dappkit-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 import NetworkThemeInjector from "components/custom-network/network-theme-injector";
 
@@ -17,7 +17,7 @@ import useSupportedChain from "x-hooks/use-supported-chain";
 const RootProviders = ({ children }) => {
   const router = useRouter();
   const session = useSession();
-  const { chainId } = useDappkit();
+  const { chainId } = useAccount();
 
   const { updateChain } = useDao();
   const { loadSettings } = useSettings();
@@ -29,7 +29,7 @@ const RootProviders = ({ children }) => {
   const { service: daoService } = useDaoStore();
 
   useEffect(() => {
-    if (router?.pathname?.includes("[network]") || router?.asPath?.includes("profile/my-marketplace")) return;
+    if (router?.pathname?.includes("[network]") || router?.asPath?.includes("dashboard/my-marketplace")) return;
     clear();
     refresh();
   }, [router?.pathname]);

@@ -23,7 +23,7 @@ export async function get(req: NextApiRequest): Promise<SupportedChainData[]> {
     include: [
       {
         association: "networks",
-        attributes: ["name", "networkAddress", "colors", "logoIcon", "fullLogo", "chain_id"],
+        attributes: ["name", "networkAddress", "colors", "logoIcon", "fullLogo", "chain_id", "isClosed"],
         include: [
           { association: "networkToken" },
           { association: "chain" },

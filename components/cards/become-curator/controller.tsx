@@ -34,8 +34,8 @@ export default function BecomeCuratorCard({
       onHide={onHide}
       councilAmount={councilAmount}
       networkTokenSymbol={networkTokenSymbol}
-      votingPowerHref="/profile/[[...profilePage]]"
-      votingPowerAlias="/profile/voting-power"
+      votingPowerHref="/dashboard/[[...dashboardPage]]"
+      votingPowerAlias="/dashboard/voting-power"
     />
   );
 }

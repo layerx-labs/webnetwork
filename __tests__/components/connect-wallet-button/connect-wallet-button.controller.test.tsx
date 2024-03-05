@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
+import { openConnectModalMock } from '__mocks__/@rainbow-me/rainbowkit';
 import ethereum from "__mocks__/ethereum";
 
 import { render } from "__tests__/utils/custom-render";
@@ -61,22 +62,11 @@ describe("ConnectWalletButton", () => {
     expect(result.getByTestId("address").textContent).toBe(defaultAddress);
   });
 
-  it("Should change WalletSelectorModal visibility if ethereum is available", async () => {
+  it("Should call openConnectModal when clicked", async () => {
     const result = render(<ConnectWalletButton></ConnectWalletButton>);
 
     await userEvent.click(result.getByRole("button"));
 
-    expect(useLoadersStore.updateWalletSelectorModal).toHaveBeenCalledWith(true);
-  });
-
-  it("Should change NoWalletModal visibility if ethereum is not available", async () => {
-    window.ethereum = null;
-    
-    const result = render(<ConnectWalletButton></ConnectWalletButton>);
-
-    await userEvent.click(result.getByRole("button"));
-
-    expect(useLoadersStore.updateWeb3Dialog).toHaveBeenCalledWith(true);
-    expect(useLoadersStore.updateWalletSelectorModal).not.toHaveBeenCalled();
+    expect(openConnectModalMock).toHaveBeenCalled();
   });
 });

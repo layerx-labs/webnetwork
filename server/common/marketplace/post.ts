@@ -4,11 +4,12 @@ import { Op } from "sequelize";
 import Database from "db/models";
 
 import { chainFromHeader } from "helpers/chain-from-header";
-import { STATIC_URL_PATHS, WANT_TO_CREATE_NETWORK } from "helpers/constants";
+import { STATIC_URL_PATHS } from "helpers/constants";
 import { handleCreateSettlerToken, handlefindOrCreateTokens } from "helpers/handleNetworkTokens";
+import { verifySiweSignature } from "helpers/siwe";
+import { lowerCaseCompare } from "helpers/string";
 
 import DAO from "services/dao-service";
-import { ethereumMessageService } from "services/ethereum/message";
 import IpfsStorage from "services/ipfs-service";
 import { Logger } from "services/logging";
 
@@ -23,8 +24,7 @@ export async function post(req: NextApiRequest) {
     logoIcon,
     description,
     tokens,
-    networkAddress,
-    signedMessage
+    networkAddress
   } = req.body;
 
   if (!_name)
@@ -34,13 +34,11 @@ export async function post(req: NextApiRequest) {
   
   const chain = await chainFromHeader(req);
 
-  const typedMessage = ethereumMessageService.getMessage({
-    chainId: chain.chainId?.toString(),
-    message: WANT_TO_CREATE_NETWORK
-  });
+  const signedAddress = await verifySiweSignature( req?.body?.context?.siweMessage,
+                                                   req.body?.context?.token?.signature,
+                                                   req.body?.context?.token?.nonce);
 
-  const validateSignature = assumedOwner => 
-    ethereumMessageService.decodeMessage(typedMessage, signedMessage, assumedOwner);
+  const validateSignature = assumedOwner =>  lowerCaseCompare(signedAddress, assumedOwner);
 
   // Reserved names
   const invalidName = value => /bepro|taikai/gi.test(value) || STATIC_URL_PATHS.includes(value?.toLowerCase())
@@ -80,7 +78,7 @@ export async function post(req: NextApiRequest) {
   // Contract Validations
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
-    web3Host: chain.chainRpc,
+    web3Host: chain.privateChainRpc,
     registryAddress: chain.registryAddress,
   });
 
@@ -96,7 +94,7 @@ export async function post(req: NextApiRequest) {
   if (tokens?.settler && tokens?.settlerTokenMinAmount) {
     await handleCreateSettlerToken( tokens?.settler,
                                     tokens?.settlerTokenMinAmount,
-                                    chain.chainRpc,
+                                    chain.privateChainRpc,
                                     +chain?.chainId);
   }
 

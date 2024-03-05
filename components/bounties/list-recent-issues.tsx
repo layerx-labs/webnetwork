@@ -95,7 +95,7 @@ export default function ListRecentIssues({
         <HorizontalScroll>
           {recentBounties?.map((bounty) => (
               <div className="col-12 col-sm-6 col-md-5 col-lg-4" key={bounty.id}>
-                <TasksListItem issue={issueParser(bounty)} key={bounty.id} size="sm" />
+                <TasksListItem issue={issueParser(bounty)} key={bounty.id} variant="small" />
               </div>
           ))}
             

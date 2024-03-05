@@ -159,7 +159,7 @@ async function main(option = 0) {
     console.debug(`Changing network options`);
 
     const network = new Network_v2(connection, networkAddress);
-    await network.loadContract();
+    await network.start();
 
     const changeFunctions = [
       [`changeDraftTime`, DEPLOY_DRAFT_TIME],
@@ -188,7 +188,7 @@ async function main(option = 0) {
 
     const nameSymbol = async (_class, address) => {
       const token = new _class(connection, address);
-      await token.loadContract();
+      await token.start();
       return ({name: await token.name(), symbol: await token.symbol()});
     }
 
@@ -215,7 +215,7 @@ async function main(option = 0) {
     console.debug("Saving settings to DB");
 
     const {chainTokenName, chainId, chainName, explorers, eventsUrl, chainScan} = chainData;
-    const {NEXT_PUBLIC_DEFAULT_NETWORK_NAME, NEXT_GH_OWNER, NEXT_GH_REPO} = env;
+    const {NEXT_PUBLIC_DEFAULT_NETWORK_NAME} = env;
 
     try {
       const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, DBConfig);
@@ -237,6 +237,7 @@ async function main(option = 0) {
         defaults: {
           chainId: chainId,
           chainRpc: web3Host,
+          privateChainRpc: web3Host,
           chainName: chainData?.name || chainName,
           chainShortName: chainData?.shortName || chainName,
           chainCurrencyName: chainData?.nativeCurrency?.name || chainTokenName,
@@ -350,7 +351,7 @@ async function main(option = 0) {
 
     const mapper = async (address) => {
       const _token = new ERC20(connection, address);
-      await _token.loadContract();
+      await _token.start();
       return _token;
     }
 

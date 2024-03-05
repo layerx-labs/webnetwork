@@ -100,5 +100,6 @@
         "success": "Marked deliverable as ready.",
         "error": "Failed to mark deliverable as ready."
       }
-    }
+    },
+  "search-for-a-deliverable": "Search for a deliverable by its title or task title"
   }

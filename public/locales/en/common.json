@@ -73,8 +73,9 @@
     "bounties": "Tasks",
     "tasks": "Tasks",
     "nav-avatar": {
-      "my-profile": "My profile",
-      "profile": "Profile",
+      "my-profile": "Settings",
+      "profile": "Settings",
+      "dashboard": "Dashboard",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
       "payments": "Payments",
@@ -152,7 +153,8 @@
     "accept": "Accept",
     "reload": "Reload",
     "warning": "Warning",
-    "info": "Info"
+    "info": "Info",
+    "view-on-explorer": "View on chain explorer"
   },
   "misc": {
     "by": "by",
@@ -215,7 +217,9 @@
     "origin": "Origin",
     "type": "Type",
     "all-chains": "All Networks",
-    "available-on": "Available on"
+    "available-on": "Available on",
+    "opened": "Opened",
+    "proposal": "Proposal"
   },
   "modals": {
     "help-modal": {
@@ -318,7 +322,7 @@
     "wallet-mismatch": {
       "title": "Wallet Mismatch",
       "description-pre": "You are logged in with the wallet",
-      "description-pos": "but your {{extension}} is connected to another wallet.",
+      "description-pos": "but {{extension}} is connected to another wallet.",
       "recommendation": "Please, change the wallet on {{extension}} or sign in with the current wallet."
     },
     "no-network-token": {
@@ -542,7 +546,20 @@
   },
   "wallets": {
     "metamask": "MetaMask",
-    "coinbasewallet": "CoinBase"
+    "coinbase-wallet": "CoinBase",
+    "rainbow": "Rainbow",
+    "walletconnect": "Wallet Connect"
   },
-  "closing-task-list-warning": "Your address is not on the closing tasks allowed list."
+  "closing-task-list-warning": "Your address is not on the closing tasks allowed list.",
+  "statuses": {
+    "review": "In review",
+    "draft": "Draft",
+    "not-accepted": "Not accepted",
+    "canceled": "Canceled",
+    "accepted": "Accepted",
+    "refused": "Refused",
+    "disputed": "Disputed"
+  },
+  "solution-by": "Solution by",
+  "search-for-proposal": "Search for a proposal by tastk title or description"
 }

@@ -83,7 +83,7 @@ export default function NetworkTxButton({
 
   function makeTx() {
     const service = getDao().service;
-    if (!service?.network || !currentUser) return;
+    if (!service?.network || !currentUser || disabled) return;
 
     const tmpTransaction = addTx({
       type: txType,
@@ -145,7 +145,7 @@ export default function NetworkTxButton({
   }
 
   const modalFooter = (
-    <Button color="dark-gray" onClick={() => setShowModal(false)}>
+    <Button color="dark-gray" onClick={() => setShowModal(false)}> 
       {t("actions.close")}
     </Button>
   );

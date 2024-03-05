@@ -1,7 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
-import {Op} from "sequelize";
+import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 
@@ -33,7 +33,9 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         ]
       },
       login: { handle: { [Op.in]: req.body || [] } },
-      address: { address: { [Op.in]: (req.body || []).map((s) => s?.toLowerCase()) } }
+      address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")), 
+                                Op.in, 
+                                Sequelize.literal(`('${(req.body || []).map((s) => s?.toLowerCase()).join("','")}')`))
     };
   
     const queryOptions = {
@@ -50,7 +52,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
     const isAdmin = UserRoleUtils.hasAdminRole(token);
     const isGovernor = UserRoleUtils.hasGovernorRole(token);
-    const isSameUser = lowerCaseCompare(token?.address, req?.body[0]) || lowerCaseCompare(token?.login, req?.body[1]);
+    const isSameUser = !!token?.address && lowerCaseCompare(token?.address, req?.body[0]) ||
+      !!token?.login && lowerCaseCompare(token?.login, req?.body[1]);
 
     if (isAdmin)
       scope = UserTableScopes.admin;

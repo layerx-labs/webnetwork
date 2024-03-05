@@ -29,6 +29,7 @@ const publicRuntimeConfig = {
   kyc:{
     isEnabled: process.env.NEXT_PUBLIC_ENABLE_KYC || false
   },
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
 }
 
 // Will only be available on the server-side
@@ -92,7 +93,7 @@ module.exports = () => {
     // webpack5: true,
     compiler: {
       removeConsole: process.env.NODE_ENV === "production",
-      reactRemoveProperties: process.env.NODE_ENV === "production"
+      reactRemoveProperties: process.env.APP_ENV === "production"
     },
     async headers() {
       return [
@@ -135,7 +136,7 @@ module.exports = () => {
         },
         {
           source: '/:network/:chain/profile/my-network',
-          destination: '/profile/my-marketplace',
+          destination: '/dashboard/my-marketplace',
           permanent: true,
         },
         {

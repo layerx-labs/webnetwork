@@ -13,6 +13,7 @@ export default function CreateDeliverableButton({
     <PageActionsButton
       onClick={onClick}
       className={"read-only-button bounty-outline-button"}
+      dataTestId="deliverable-btn"
       disabled={disabled}
     >
       <span>

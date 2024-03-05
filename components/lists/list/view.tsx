@@ -43,6 +43,7 @@ interface ListViewProps {
   onSearchInputChange: (event) => void;
   onSearchClick: () => void;
   onEnterPressed: (event) => void;
+  itemsContainerClassName?: string;
 }
 
 export default function ListView(props: ListViewProps) {
@@ -65,6 +66,7 @@ export default function ListView(props: ListViewProps) {
     hasMorePages,
     chainFilters,
     chains,
+    itemsContainerClassName,
     onNextPage,
     onSearchClick,
     onClearSearch,
@@ -112,12 +114,12 @@ export default function ListView(props: ListViewProps) {
                 <ListSort options={sortOptions} asSelect />
               </If>
 
-              <If condition={!!chainFilters}>
-                <ChainFilter chains={chains} direction="vertical" />
-              </If>
-
               <If condition={networkFilter}>
                 <SelectNetwork isCurrentDefault={isOnNetwork} onlyProfileFilters fontRegular/>
+              </If>
+
+              <If condition={!!chainFilters}>
+                <ChainFilter chains={chains} direction="vertical" />
               </If>
             </MobileFiltersButton>
           </div>
@@ -140,15 +142,17 @@ export default function ListView(props: ListViewProps) {
           </div>
         }
       >
-        <ResponsiveWrapper xs={false} xl={true} className="row">
-          <ListHeader columns={header} />
-        </ResponsiveWrapper>
+        <If condition={!!header}>
+          <ResponsiveWrapper xs={false} xl={true} className="row">
+            <ListHeader columns={header} />
+          </ResponsiveWrapper>
+        </If>
 
         <If condition={infinite} otherwise={<div className="d-flex flex-column gap-3">{children}</div>}>
           <InfiniteScroll
             handleNewPage={onNextPage}
             hasMore={hasMorePages}
-            className="d-flex flex-column gap-3"
+            className={itemsContainerClassName || "d-flex flex-column gap-2"}
           >
             {children}
           </InfiniteScroll>

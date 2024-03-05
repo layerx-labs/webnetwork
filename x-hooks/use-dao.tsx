@@ -1,16 +1,13 @@
-import { useDappkit } from "@taikai/dappkit-react";
-import { coinbaseWallet } from "@taikai/dappkit-react/dist/connectors/wallets/coinbase-wallet";
-import { metamaskWallet } from "@taikai/dappkit-react/dist/connectors/wallets/metamask-wallet";
 import { isZeroAddress } from "ethereumjs-util";
 import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import { useAccount, useConnect, useConnectors, useDisconnect } from "wagmi";
+import { provider as Provider } from "web3-core";
 import { isAddress } from "web3-utils";
 
-import {SUPPORT_LINK, UNSUPPORTED_CHAIN} from "helpers/constants";
+import { SUPPORT_LINK, UNSUPPORTED_CHAIN } from "helpers/constants";
 import { lowerCaseCompare } from "helpers/string";
-import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
-import { StorageKeys } from "interfaces/enums/storage-keys";
-import { WalletProviders } from "interfaces/enums/wallet-providers";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import DAO from "services/dao-service";
@@ -20,12 +17,16 @@ import { useUserStore } from "x-hooks/stores/user/user.store";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export function useDao() {
-  const dappkitReact = useDappkit();
+  const account = useAccount();
+  const cookies = parseCookies();
+  const connectors = useConnectors();
+  const { connectAsync } = useConnect();
   const { replace, asPath } = useRouter();
+  const { disconnectAsync } = useDisconnect();
 
   const { supportedChains, updateConnectedChain, get } = useSupportedChain();
 
-  const { currentUser } = useUserStore();
+  const { currentUser, updateCurrentUser } = useUserStore();
   const {
     service: daoService,
     updateService,
@@ -37,29 +38,35 @@ export function useDao() {
     return isAddress(chain?.registryAddress) && !isZeroAddress(chain?.registryAddress);
   }
 
-  async function disconnect () {
-    const isMetamask = getProviderNameFromConnection(dappkitReact.connection) === WalletProviders.MetaMask;
-    const walletConnector = isMetamask ? metamaskWallet : coinbaseWallet;
-    if (walletConnector?.deactivate)
-      walletConnector?.deactivate();
-    else
-      walletConnector?.resetState();
-    dappkitReact.disconnect();
+  function getLastConnector () {
+    const ids = {
+      "coinbase": "coinbaseWalletSDK",
+      "metamask": "metaMask"
+    };
+    const recentConnectorId = cookies ? cookies["wagmi.recentConnectorId"]?.toLowerCase()?.replace("\"", "") : null;
+    if (!recentConnectorId)
+      return null;
+    if (recentConnectorId === "walletConnect")
+      return connectors?.find(c => (c as any)?.rkDetails?.isWalletConnectModalConnector);
+    return connectors?.find(c => lowerCaseCompare(c?.id, ids[recentConnectorId] || recentConnectorId));
   }
 
-  async function connect () {
-    const lastProvider = window.localStorage.getItem(StorageKeys.lastProviderConnected);
-    const hasProviderMap = !!(window?.ethereum as any)?.providerMap;
-    const selectedProvider =
-      hasProviderMap ? (window?.ethereum as any)?.providerMap?.get(lastProvider) : window.ethereum;
-    if (selectedProvider) {
-      if ((window?.ethereum as any)?.setSelectedProvider)
-        (window.ethereum as any).setSelectedProvider(selectedProvider);
+  async function connect (): Promise<string | null> {
+    const lastConnector = getLastConnector();
+    if (!lastConnector)
+      return null;
+    const connected = await connectAsync({
+      connector: lastConnector
+    })
+      .then(result => result.accounts[0])
+      .catch(() => null);
+    updateCurrentUser({ connected: !!connected });
+    return connected;
+  }
 
-      dappkitReact
-        .setProvider(selectedProvider)
-        .catch(console.debug);
-    }
+  async function disconnect () {
+    await disconnectAsync();
+    await account?.connector?.disconnect();
   }
 
   async function start({
@@ -73,8 +80,6 @@ export function useDao() {
   }): Promise<void> {
     try {
       updateServiceStarting(true);
-      if (!dappkitReact?.connection)
-        throw new Error("Missing connection");
       if (!supportedChains?.length)
         throw new Error("No supported chains found");
       const chainToConnect = supportedChains.find(c => +c.chainId === +chainId);
@@ -94,9 +99,10 @@ export function useDao() {
       const needsToUpdateConnection = !!daoService?.web3Host;
       if (!!daoService && isSameChain && isSameNetworkAddress && isSameRegistryAddress && !needsToUpdateConnection)
         return;
-      const isChainEqualToConnected = +dappkitReact?.chainId === +chainToConnect?.chainId;
+      const isChainEqualToConnected = +account?.chainId === +chainToConnect?.chainId;
+      const connectorProvider = await account?.connector?.getProvider() as Provider;
       const daoProps = isChainEqualToConnected ?
-        { web3Connection: dappkitReact?.connection } :
+        { provider: connectorProvider } :
         { web3Host: chainToConnect?.chainRpc };
       const dao = !daoService || !isSameChain || needsToUpdateConnection || !isSameRegistryAddress ?
         new DAO({
@@ -105,6 +111,10 @@ export function useDao() {
         }) : daoService;
       if (!isChainEqualToConnected)
         await dao.start();
+      else {
+        dao.web3Connection.web3.givenProvider = connectorProvider;
+        dao.web3Connection.web3.eth.givenProvider = connectorProvider;
+      }
       if (!isSameRegistryAddress || needsToUpdateConnection)
         await dao.loadRegistry();
       if (!!networkAddress && !isSameNetworkAddress || needsToUpdateConnection)
@@ -139,9 +149,9 @@ export function useDao() {
   }
 
   return {
+    start,
     connect,
     disconnect,
-    start,
-    updateChain
+    updateChain,
   };
 }

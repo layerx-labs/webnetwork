@@ -121,6 +121,7 @@ export default function RewardInformationSectionView({
                   className="form-control-md mb-1"
                   type="switch"
                   id="custom-switch"
+                  data-testid="form-check-reward-funders"
                   onChange={handleRewardChecked}
                   checked={rewardChecked}
                 />

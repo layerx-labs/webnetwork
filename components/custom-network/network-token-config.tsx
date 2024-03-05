@@ -31,7 +31,8 @@ export function NetworkTokenConfig({
       title: t("steps.token-configuration.tabs.use-registry-token", { symbol: registryToken?.symbol }),
       component: ( 
         <ERC20Details
-          key="beproToken"
+          key="customToken"
+          title="beproToken"
           address={registryToken?.address}
           readOnly
         />
@@ -43,6 +44,7 @@ export function NetworkTokenConfig({
       component: ( 
         <ERC20Details
           key="customToken"
+          title="customToken"
           onChange={handleCustomTokenAddressChange}
           adressPlaceholder={t("custom-network:steps.token-configuration.fields.address.placeholder")}
           address={customTokenAddress}
@@ -55,6 +57,7 @@ export function NetworkTokenConfig({
       component: ( 
         <ERC20Details
           key="deployedToken"
+          title="deployedToken"
           onChange={handleDeployedTokenAddressChange}
           address={deployedTokenAddress}
           deployer

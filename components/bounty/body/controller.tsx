@@ -39,7 +39,7 @@ export default function BountyBody({
   const { settings } = useSettings();
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
-  const { mutate: editBounty, isLoading: isEditing } = useReactQueryMutation({
+  const { mutate: editBounty, isPending: isEditing } = useReactQueryMutation({
     queryKey: QueryKeys.bounty(currentBounty?.id?.toString()),
     mutationFn: useEditBounty,
     toastSuccess: t("bounty:actions.edit-bounty"),
@@ -62,12 +62,14 @@ export default function BountyBody({
   function handleCancelEdit() {
     setIsPreview(false);
     cancelEditIssue();
+    setSelectedTags(currentBounty.tags);
   }
 
   function isDisableUpdateIssue() {
     return (
       isEditing ||
       isUploading ||
+      selectedTags?.length === 0 ||
       addFilesInDescription(body)?.length > BODY_CHARACTERES_LIMIT ||
       body?.length === 0
     );

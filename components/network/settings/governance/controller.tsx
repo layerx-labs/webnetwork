@@ -44,7 +44,7 @@ export default function NetworkGovernanceSettings({
   
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { updateWalletBalance, signMessage } = useAuthentication();
+  const { updateWalletBalance } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
   const {
     settings,
@@ -100,11 +100,11 @@ export default function NetworkGovernanceSettings({
 
     handleCloseNetwork()
       .then(() => {
-        return signMessage(IM_AM_CREATOR_NETWORK).then(async () => useUpdateNetwork({
+        return useUpdateNetwork({
           isClosed: true,
           creator: currentUser.walletAddress,
           networkAddress: network?.networkAddress
-        }))
+        });
       })
       .then(() => {
         updateWalletBalance(true);
@@ -246,18 +246,14 @@ export default function NetworkGovernanceSettings({
       console.log(error);
     }
 
-    signMessage(IM_AM_CREATOR_NETWORK)
+    await useUpdateNetwork(json)
       .then(async () => {
-        await useUpdateNetwork(json)
-          .then(async () => {
-            if (isCurrentNetwork) marketplace.refresh();
+        if (isCurrentNetwork) marketplace.refresh();
 
-            return updateEditingNetwork();
-          })
-          .then(() => {
-            addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
-          })
-          .catch(handleError);
+        return updateEditingNetwork();
+      })
+      .then(() => {
+        addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
       })
       .catch(handleError)
       .finally(() => setIsUpdating(false));

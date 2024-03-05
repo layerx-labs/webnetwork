@@ -6,7 +6,7 @@ import { SizeOptions } from "interfaces/utils";
 interface AvatarOrIdenticonProps {
   user?: string;
   address?: string;
-  size?: SizeOptions;
+  size?: SizeOptions | number;
   withBorder?: boolean;
   active?: boolean;
 }
@@ -22,7 +22,8 @@ export default function AvatarOrIdenticon({
   if (!user && !address) return <></>;
 
   return(
-    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}>
+    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
+    data-testid="avatar-or-identicon">
       { 
          //disabled until image integration
         /* user ?

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
@@ -44,6 +44,11 @@ export default function ChainFilter({
     
     setChain(findChain(option?.value));
   }
+
+  useEffect(() => {
+    if (!onChange)
+      setChain(findChain(query?.networkChain?.toString()));
+  }, [query?.networkChain]);
 
   return(
     <ChainFilterView

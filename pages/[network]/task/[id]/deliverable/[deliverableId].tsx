@@ -105,7 +105,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const queryClient = getReactQueryClient();
   const { deliverableId } = query;
   const deliverableKey = QueryKeys.deliverable(deliverableId?.toString());
-  await queryClient.prefetchQuery(deliverableKey, () => getDeliverable(+deliverableId));
+  await queryClient.prefetchQuery({
+    queryKey: deliverableKey,
+    queryFn: () => getDeliverable(+deliverableId),
+  });
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

@@ -58,13 +58,21 @@ export async function post(req: NextApiRequest) {
       id: +issueId
     },
     include: [
-      { association: "network" },
-      { association: "chain" }
+      { association: "network" }
     ]
   });
 
   if (!issue)
     throw new HttpNotFoundError("Bounty not found");
+
+  const chain = await models.chain.scope("internal").findOne({
+    where: {
+      chainId: issue.chain_id
+    }
+  });
+
+  if (!chain)
+    throw new HttpServerError("Invalid chain");
 
   const proposal = await models.mergeProposal.findOne({
     where: {
@@ -76,20 +84,19 @@ export async function post(req: NextApiRequest) {
   if (!proposal)
     throw new HttpNotFoundError("Proposal not found");
 
-  const chain = issue.chain;
-
   const DAOService = new DAO({ 
     skipWindowAssignment: true,
-    web3Host: chain?.chainRpc,
+    web3Host: chain?.privateChainRpc,
   });
 
   if (!await DAOService.start())
-    throw new HttpServerError(`Failed to connect to chainRpc ${chain?.chainRpc} for id ${chain?.chainId}`);
+    throw new HttpServerError(`Failed to connect to chainRpc ${chain?.privateChainRpc} for id ${chain?.chainId}`);
 
   const { networkAddress } = issue.network;
 
   if(!await DAOService.loadNetwork(networkAddress))
-    throw new HttpServerError(`Failed to load networks on chainRpc ${chain?.chainRpc} for address ${networkAddress}`);
+    throw new HttpServerError(`Failed to load networks on chainRpc ${chain?.privateChainRpc} for 
+      address ${networkAddress}`);
 
   const network = DAOService.network;
   await network.start();

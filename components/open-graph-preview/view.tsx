@@ -53,12 +53,12 @@ export default function OpenGraphPreviewView({
           <If
             condition={isImage}
             otherwise={
-              <video src={preview} controls>
+              <video src={preview} controls data-testid="video-preview">
                 {t("open-graph-preview.video-not-supported")}
               </video>
             }
           >
-            <img src={preview} className="border-radius-8" />
+            <img src={preview} className="border-radius-8" data-testid="image-preview"/>
           </If>
         </If>
 
@@ -69,6 +69,7 @@ export default function OpenGraphPreviewView({
               target="_blank"
               rel="noopener noreferer" 
               className="sm-regular text-decoration-none text-blue-200"
+              data-testid="url-preview"
             >
               <span className="mr-1">
                 { openLinkText || t("open-graph-preview.open-link") }

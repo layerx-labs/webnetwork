@@ -62,6 +62,7 @@ export default function NavAvatar() {
       className={`mb-1 p family-Regular p-0 text-capitalize font-weight-normal mx-0 ${className}`}
       align="left"
       key={label}
+      data-testid={label}
       onClick={() => handleInternalLinkClick(href)}
       transparent
     >
@@ -75,6 +76,7 @@ export default function NavAvatar() {
       <a
         href={href}
         className={`text-decoration-none p family-Regular ${ className || "text-gray"}`}
+        data-testid={label}
         target="_blank"
       >
           {label}
@@ -121,7 +123,7 @@ export default function NavAvatar() {
 
               <div className="d-flex flex-row justify-content-left">
                 <ProfileInternalLink
-                  href="profile"
+                  href="dashboard"
                   label={t("main-nav.nav-avatar.my-profile")}
                   className="text-gray p family-Regular"
                 />

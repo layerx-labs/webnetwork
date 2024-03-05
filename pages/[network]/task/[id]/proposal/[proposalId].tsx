@@ -22,8 +22,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   const queryClient = getReactQueryClient();
   const proposalId = query.proposalId?.toString();
 
-  await queryClient.prefetchQuery(QueryKeys.proposal(proposalId), () => getProposalData(query));
-  await queryClient.prefetchQuery(QueryKeys.proposalComments(proposalId), () => getCommentsData({ proposalId }));
+  await queryClient.prefetchQuery({
+    queryKey: QueryKeys.proposal(proposalId),
+    queryFn: () => getProposalData(query),
+  });
+  await queryClient.prefetchQuery({
+    queryKey: QueryKeys.proposalComments(proposalId),
+    queryFn: () => getCommentsData({ proposalId }),
+  });
 
   return {
     props: {

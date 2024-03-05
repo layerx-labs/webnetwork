@@ -10,6 +10,7 @@ import useReactQuery from "x-hooks/use-react-query";
 
 interface OpenGgraphPreviewProps {
   url: string;
+  link?: string;
   showOpenLink?: boolean;
   previewPlaceholder?: string;
   errorPlaceholder?: string;
@@ -19,6 +20,7 @@ interface OpenGgraphPreviewProps {
 
 export default function OpenGraphPreview({
   url,
+  link,
   showOpenLink,
   previewPlaceholder,
   errorPlaceholder,
@@ -38,7 +40,7 @@ export default function OpenGraphPreview({
   });
 
   const preview = data?.ogImage || data?.ogVideo;
-  const isImage = data?.ogImage ? true : false;
+  const isImage = !!data?.ogImage;
   const noPreviewAvailable = isFetched && !data?.title;
 
   function getStatus() {
@@ -60,7 +62,7 @@ export default function OpenGraphPreview({
       errorPlaceholder={errorPlaceholder}
       preview={preview}
       showOpenLink={showOpenLink}
-      url={url}
+      url={link || url}
       openLinkText={openLinkText}
       noPreviewAvailable={noPreviewAvailable}
       isError={isError}

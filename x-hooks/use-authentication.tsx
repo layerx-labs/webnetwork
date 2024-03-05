@@ -1,106 +1,113 @@
 import { useState } from "react";
 
-import { Web3Connection } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
+import { addDays } from "date-fns";
 import { getCsrfToken, signIn as nextSignIn, signOut as nextSignOut, useSession } from "next-auth/react";
-import getConfig from "next/config";
 import { useRouter } from "next/router";
-import type { provider as Provider } from "web3-core";
+import { useAccount, useChains, useSignMessage, useSwitchChain } from "wagmi";
 
-import { IM_AN_ADMIN, NOT_AN_ADMIN, UNSUPPORTED_CHAIN } from "helpers/constants";
-import decodeMessage from "helpers/decode-message";
+import { getSiweMessage } from "helpers/siwe";
 import { AddressValidator } from "helpers/validators/address";
-import { getProviderNameFromConnection } from "helpers/wallet-providers";
 
 import { EventName } from "interfaces/analytics";
 import { CustomSession } from "interfaces/custom-session";
 import { UserRole } from "interfaces/enums/roles";
-import { StorageKeys } from "interfaces/enums/storage-keys";
 
 import { WinStorage } from "services/win-storage";
 
-import { SESSION_TTL } from "server/auth/config";
+import { SESSION_TTL_IN_DAYS } from "server/auth/config";
 
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import { useSettings } from "x-hooks/use-settings";
-import useSignature from "x-hooks/use-signature";
 import { useStorageTransactions } from "x-hooks/use-storage-transactions";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 export const SESSION_EXPIRATION_KEY =  "next-auth.expiration";
 
-const { publicRuntimeConfig } = getConfig();
-
 export function useAuthentication() {
+  const chains = useChains();
   const session = useSession();
+  const account = useAccount();
   const { asPath } = useRouter();
+  const { switchChainAsync } = useSwitchChain();
+  const { signMessageAsync } = useSignMessage();
 
-  const [isLoadingSigningMessage, setIsLoadingSigningMessage] = useState(false);
-
+  const { disconnect } = useDao();
   const { settings } = useSettings();
   const marketplace = useMarketplace();
-  const { connect, disconnect } = useDao();
   const { pushAnalytic } = useAnalyticEvents();
   const transactions = useStorageTransactions();
-  const { connectedChain } = useSupportedChain();
-  const { signMessage: _signMessage, signInWithEthereum } = useSignature();
 
-  const { addWarning } = useToastStore();
+  const { service: daoService } = useDaoStore();
   const { currentUser, updateCurrentUser} = useUserStore();
-  const { service: daoService, serviceStarting } = useDaoStore();
-  const { updateWalletSelectorModal } = useLoadersStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
   const URL_BASE = typeof window !== "undefined" ? `${window.location.protocol}//${ window.location.host}` : "";
 
-  function signOut(redirect?: string) {
+  async function signOut(redirect?: string) {
     const expirationStorage = new WinStorage(SESSION_EXPIRATION_KEY, 0);
 
     expirationStorage.removeItem();
     transactions.deleteFromStorage();
 
-    disconnect();
+    await disconnect();
+
+    if (account?.connector?.name === "Coinbase Wallet") {
+      const provider = await account?.connector?.getProvider();
+      (provider as any)?.close();
+    }
 
     nextSignOut({
       callbackUrl: `${URL_BASE}/${redirect || ""}`
     });
   }
 
-  async function signInWallet(connection: Web3Connection) {
-    updateWalletSelectorModal(false);
+  async function signInWallet() {
+    try {
+      const address = account?.address;
 
-    const address = await connection.getAddress();
+      if (!address)
+        throw new Error("Missing address");
 
-    if (!address) return;
+      if (!chains.find(c => +c.id === +account?.chainId)) {
+        await switchChainAsync({
+          chainId: chains[0]?.id
+        });
+      }
 
-    const providerName = getProviderNameFromConnection(connection);
-    window.localStorage.setItem(StorageKeys.lastProviderConnected, providerName);
+      const csrfToken = await getCsrfToken();
+      const issuedAt = new Date();
+      const expiresAt = addDays(issuedAt, SESSION_TTL_IN_DAYS);
 
-    const csrfToken = await getCsrfToken();
+      const siweMessage = getSiweMessage({
+        nonce: csrfToken,
+        address,
+        issuedAt,
+        expiresAt
+      });
 
-    const issuedAt = new Date();
-    const expiresAt = new Date(+issuedAt + SESSION_TTL);
+      const signature = await signMessageAsync({
+        account: address,
+        message: siweMessage.prepareMessage(),
+      });
 
-    const signature = await signInWithEthereum(csrfToken, address, issuedAt, expiresAt, connection);
-
-    if (!signature) return;
-
-    nextSignIn("credentials", {
-      redirect: false,
-      signature,
-      issuedAt: +issuedAt,
-      expiresAt: +expiresAt,
-      callbackUrl: `${URL_BASE}${asPath}`
-    });
+      nextSignIn("credentials", {
+        redirect: false,
+        signature,
+        address,
+        issuedAt: +issuedAt,
+        expiresAt: +expiresAt,
+        callbackUrl: `${URL_BASE}${asPath}`
+      });
+    } catch (e) {
+      disconnect();
+    }
   }
 
   function updateWalletBalance(force = false) {
@@ -176,71 +183,7 @@ export function useAuthentication() {
       sessionStorage.setItem("currentWallet", user.address);
     }
 
-    await connect();
-
-    updateCurrentUser({connected: true});
-
     pushAnalytic(EventName.USER_LOGGED_IN, { login: user.login });
-  }
-
-  function signMessage(message?: string) {
-    return new Promise<string>(async (resolve, reject) => {
-      if (!currentUser?.walletAddress ||
-          !connectedChain?.id ||
-          serviceStarting ||
-          isLoadingSigningMessage) {
-        reject("Wallet not connected, service not started or already signing a message");
-        return;
-      }
-
-      const currentWallet = currentUser?.walletAddress?.toLowerCase();
-      const isAdminUser = currentWallet === publicRuntimeConfig?.adminWallet?.toLowerCase();
-
-      if (!isAdminUser && connectedChain?.name === UNSUPPORTED_CHAIN) {
-        addWarning("Unsupported chain", "To sign a message, connect to a supported chain");
-
-        reject("Unsupported chain");
-        return;
-      }
-
-      const messageToSign = message || (isAdminUser ? IM_AN_ADMIN : NOT_AN_ADMIN);
-
-      const storedSignature = sessionStorage.getItem("currentSignature");
-
-      if (decodeMessage(connectedChain?.id,
-                        messageToSign,
-                        storedSignature || currentUser?.signature,
-                        currentWallet)) {
-        if (storedSignature)
-          updateCurrentUser({signature: storedSignature})
-        else
-          sessionStorage.setItem("currentSignature", currentUser?.signature);
-
-        resolve(storedSignature || currentUser?.signature);
-        return;
-      }
-
-      setIsLoadingSigningMessage(true)
-
-      await _signMessage(messageToSign)
-        .then(signature => {
-          setIsLoadingSigningMessage(false)
-
-          if (signature) {
-            updateCurrentUser({signature})
-            sessionStorage.setItem("currentSignature", signature);
-
-            resolve(signature);
-            return;
-          }
-
-          updateCurrentUser({signature: undefined})
-          sessionStorage.removeItem("currentSignature");
-
-          reject("Message not signed");
-          return;
-        });
-    });
   }
 
   function updateKycSession(){
@@ -259,7 +202,6 @@ export function useAuthentication() {
     signOut,
     signInWallet,
     updateWalletBalance,
-    signMessage,
     updateKycSession,
     syncUserDataWithSession,
   }

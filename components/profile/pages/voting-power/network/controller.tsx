@@ -94,6 +94,7 @@ export default function VotingPowerNetwork({
       userIsGovernor={currentUser?.isGovernor}
       isBalanceLoading={isBalanceLoading}
       handleUpdateWalletBalance={updateBalance}
+      isMarketplaceClosed={marketplace?.active?.isClosed}
     />
   );
 }

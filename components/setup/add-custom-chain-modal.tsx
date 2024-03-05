@@ -19,6 +19,7 @@ export default function AddCustomChainModal({show, add}: AddCustomChainModalProp
 
   const [chainId, setChainId] = useState('');
   const [activeRPC, setActiveRPC] = useState('');
+  const [privateRpc, setPrivateRpc] = useState('');
   const [explorer, setExplorer] = useState('');
   const [name, setName] = useState('')
   const [shortName, setShortName] = useState('');
@@ -38,6 +39,7 @@ export default function AddCustomChainModal({show, add}: AddCustomChainModalProp
       shortName,
       chainId: +chainId,
       activeRPC,
+      privateRpc,
       explorer,
       eventsApi,
       color,
@@ -64,7 +66,8 @@ export default function AddCustomChainModal({show, add}: AddCustomChainModalProp
     ['chain currency name', 'Ether', currencyName, setCurrencyName],
     ['chain currency symbol', 'ETH', currencySymbol, setCurrencySymbol],
     ['chain currency decimals', '18', currencyDecimals, setCurrencyDecimals],
-    ['chain rpc', 'https://', activeRPC, setActiveRPC],
+    ['chain public rpc', 'https://', activeRPC, setActiveRPC],
+    ['chain private rpc', 'https://', privateRpc, setPrivateRpc],
     ['chain explorer', 'https://', explorer, setExplorer],
     ['chain events api', 'https://', eventsApi, setEventsApi],
   ]

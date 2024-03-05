@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-import { useDappkit } from "@taikai/dappkit-react";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useTranslation } from "next-i18next";
+import { parseCookies } from "nookies";
+import { useAccount, useConnectors } from "wagmi";
 
 import { ButtonProps } from "components/button";
 import ContractButtonView from "components/common/buttons/contract-button/contract-button.view";
 
 import { UNSUPPORTED_CHAIN } from "helpers/constants";
+import { lowerCaseCompare } from "helpers/string";
 import { AddressValidator } from "helpers/validators/address";
 
 import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
@@ -27,30 +30,27 @@ export default function ContractButton({
   ...rest
 }: ContractButtonProps) {
   const { t } = useTranslation(["common"]);
-  const { address: connectedAddress } = useDappkit();
+  const cookies = parseCookies();
+  const connectors = useConnectors();
+  const { openConnectModal } = useConnectModal();
+  const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
-  const { start } = useDao();
   const marketplace = useMarketplace();
   const { connectedChain } = useSupportedChain();
+  const { start, connect, disconnect } = useDao();
 
   const { addError } = useToastStore();
   const { currentUser } = useUserStore();
-  const { updateWeb3Dialog, updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
+  const { updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
   const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
     +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
   const isUnsupportedChain = connectedChain?.name === UNSUPPORTED_CHAIN;
-
-  async function validateEthereum() {
-    if(window.ethereum) return true;
-
-    updateWeb3Dialog(true)
-
-    return false;
-  }
+  const recentConnectorId = cookies ? cookies["wagmi.recentConnectorId"]?.toLowerCase()?.replace("\"", "")  : null;
+  const isLastProviderInjected = connectors?.find(c => lowerCaseCompare(c.id, recentConnectorId))?.type === "injected";
 
   async function validateChain() {
     if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
@@ -64,9 +64,22 @@ export default function ContractButton({
   async function validateWallet() {
     const sessionWallet = currentUser?.walletAddress;
 
-    if (!connectedAddress || !sessionWallet) return false;
+    if (!sessionWallet) return false;
 
-    const isSameWallet = AddressValidator.compare(sessionWallet, connectedAddress);
+    let address = connectedAddress?.toString();
+    if (!address) {
+      if (isLastProviderInjected) {
+        address = await connect();
+        if (!address)
+          return false;
+      } else {
+        await disconnect();
+        openConnectModal();
+        return false;
+      }
+    }
+
+    const isSameWallet = AddressValidator.compare(sessionWallet, address);
 
     if (isSameWallet) return true;
 
@@ -96,10 +109,9 @@ export default function ContractButton({
       setIsValidating(true);
 
       const validations: (() => Promise<boolean>)[] = [
-        validateEthereum,
-        validateChain,
         validateWallet,
-        validateService
+        validateChain,
+        validateService,
       ];
 
       for (const validation of validations) {

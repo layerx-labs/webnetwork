@@ -48,7 +48,7 @@ export default function ResponsiveListItem({
           <div className="col text-truncate px-0">
             <div className="row align-items-center">
               <div className="col-auto text-truncate">
-                <span className="caption-small font-weight-medium text-white">
+                <span className="caption-small font-weight-medium text-white" data-testid={label}>
                   {label}
                 </span>
               </div>
@@ -72,6 +72,7 @@ export default function ResponsiveListItem({
               <div className="d-flex flex-column">
                 {mobileColumns.map(col =>
                   <ResponsiveListItemColumn
+                    key={`col-${col?.label}`}
                     {...col}
                     justify="start"
                     breakpoints={{ xs: true, md: false }}

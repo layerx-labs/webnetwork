@@ -27,6 +27,7 @@ interface ListProps {
   searchPlaceholder?: string;
   chainFilters?: boolean;
   networkFilter?: boolean;
+  itemsContainerClassName?: string;
 }
 
 export default function List({

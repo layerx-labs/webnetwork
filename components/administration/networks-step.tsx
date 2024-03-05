@@ -11,7 +11,6 @@ import Step from "components/step";
 
 import {useNetworkSettings} from "contexts/network-settings";
 
-import { IM_AM_CREATOR_NETWORK } from "helpers/constants";
 import {psReadAsText} from "helpers/file-reader";
 import {formatNumberToCurrency} from "helpers/formatNumber";
 import {getQueryableText, urlWithoutProtocol} from "helpers/string";
@@ -20,7 +19,6 @@ import { useUpdateNetwork, useSearchNetworks } from "x-hooks/api/marketplace";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import { useAuthentication } from "x-hooks/use-authentication";
 import useBepro from "x-hooks/use-bepro";
 import { useSettings } from "x-hooks/use-settings";
 
@@ -48,7 +46,6 @@ export default function NetworksStep({
     setNetworkParameter,
     treasuryInfo
   } = useBepro();
-  const { signMessage } = useAuthentication();
   const { addError, addSuccess } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { currentUser } = useUserStore();
@@ -224,16 +221,14 @@ export default function NetworksStep({
       console.log(error);
     }
 
-    await signMessage(IM_AM_CREATOR_NETWORK).then(async () => {
-      await useUpdateNetwork(json)
+    await useUpdateNetwork(json)
       .then(() => {
         addSuccess(t("actions.success"), t("custom-network:messages.refresh-the-page"));
         setIsUpdatingNetwork(false);
       })
       .catch(handleError)
-    })
-    .catch(handleError)
-    .finally(() => setIsUpdatingNetwork(false))
+      .finally(() => setIsUpdatingNetwork(false))
+
 
 
     if (forcedNetwork.draftTime !== parameters.draftTime.value)

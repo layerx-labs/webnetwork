@@ -81,8 +81,25 @@ class Chain extends Model {
       cancelFeePercentage: {
         type: DataTypes.FLOAT
       },
-
-    }, {sequelize: sqlz, modelName: 'chain', tableName: 'chains'})
+      privateChainRpc: {
+        type: DataTypes.STRING,
+      },
+      startBlock: {
+        type: DataTypes.INTEGER
+      },
+    }, {
+      sequelize: sqlz,
+      modelName: 'chain',
+      tableName: 'chains',
+      defaultScope: {
+        attributes: {
+          exclude: ["privateChainRpc"]
+        }
+      },
+      scopes: {
+        internal: {}
+      }
+    })
   };
 
   static associate(models) {

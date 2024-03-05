@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+
 import ConnectWalletButtonView from "components/connections/connect-wallet-button/connect-wallet-button.view";
 
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
@@ -11,20 +13,13 @@ export default function ConnectWalletButton({
   asModal = false,
   btnColor = "white",
 }) {
+  const { openConnectModal } = useConnectModal();
+
   const [showModal, setShowModal] = useState(false);
 
+  const { loading } = useLoadersStore();
   const { currentUser } = useUserStore();
   const { serviceStarting } = useDaoStore();
-  const { updateWeb3Dialog, updateWalletSelectorModal, loading } = useLoadersStore();
-
-  async function onConnectClick()  {
-    if(!window?.ethereum) {
-      updateWeb3Dialog(true);
-      return;
-    }
-
-    updateWalletSelectorModal(true);
-  }
 
   function onWalletChange() {
     setShowModal(!currentUser?.walletAddress);
@@ -40,7 +35,7 @@ export default function ConnectWalletButton({
       isModalVisible={showModal}
       isConnected={!!currentUser?.walletAddress}
       buttonColor={btnColor}
-      onConnectClick={onConnectClick}
+      onConnectClick={openConnectModal}
     />
   );
 }

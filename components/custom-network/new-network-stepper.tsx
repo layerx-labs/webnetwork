@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 
-import { useDappkit } from "@taikai/dappkit-react";
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import {isZeroAddress} from "ethereumjs-util";
 import { useSession } from "next-auth/react";
 import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
+import { useAccount } from "wagmi";
 
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {ContextualSpan} from "components/contextual-span";
@@ -28,8 +28,7 @@ import {
   DEFAULT_ORACLE_EXCHANGE_RATE,
   DEFAULT_PERCENTAGE_FOR_DISPUTE,
   DEFAULT_PROPOSER_FEE,
-  UNSUPPORTED_CHAIN,
-  WANT_TO_CREATE_NETWORK
+  UNSUPPORTED_CHAIN
 } from "helpers/constants";
 import {psReadAsText} from "helpers/file-reader";
 
@@ -46,13 +45,13 @@ import {useDao} from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-import useSignature from "x-hooks/use-signature";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import NetworkStep from "./network-step";
 
 function NewNetwork() {
   const router = useRouter();
+  const account = useAccount();
   const { update: updateSession } = useSession();
   const { t } = useTranslation(["common", "custom-network"]);
 
@@ -60,13 +59,11 @@ function NewNetwork() {
   const [creatingNetwork, setCreatingNetwork] = useState<number>(-1);
 
   const { addError } = useToastStore();
-  const { signMessage } = useSignature();
   const { updateLoading } = useLoadersStore();
   const { start: startService } = useDao();
   const { colorsToCSS } = useNetworkTheme();
   const { getURLWithNetwork } = useMarketplace();
   const { processEvent } = useProcessEvent();
-  const { connection } = useDappkit();
   const { service: daoService, ...daoStore } = useDaoStore();
   const { currentUser } = useUserStore();
   const {
@@ -101,11 +98,6 @@ function NewNetwork() {
   async function handleCreateNetwork() {
     if (!currentUser?.walletAddress || !daoService) return;
 
-    const signedMessage = await signMessage(WANT_TO_CREATE_NETWORK);
-
-    if (!signedMessage)
-      return;
-
     setCreatingNetwork(0);
 
     const deployNetworkTX = await handleDeployNetworkV2(tokens.settler).catch(error => {
@@ -125,8 +117,7 @@ function NewNetwork() {
       fullLogo: (await psReadAsText(details.fullLogo.value.raw)).toString(),
       creator: currentUser.walletAddress,
       tokens,
-      networkAddress: deployedNetworkAddress,
-      signedMessage
+      networkAddress: deployedNetworkAddress
     };
 
     const networkCreated = await useCreateNetwork(payload)
@@ -268,13 +259,13 @@ function NewNetwork() {
     if (!connectedChain?.id ||
         +connectedChain?.id === daoStore?.chainId ||
         daoStore?.serviceStarting ||
-        !connection)
+        !account?.connector)
       return;
     startService({
       chainId: +connectedChain?.id
     })
       .catch(() => {});
-  }, [connectedChain?.id, connection]);
+  }, [connectedChain?.id, account?.connector]);
 
   return (
     <div>

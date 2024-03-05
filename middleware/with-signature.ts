@@ -1,8 +1,8 @@
 import { NextApiHandler } from "next";
 
 import { INVALID_SIGNATURE } from "helpers/error-messages";
+import { getSiweMessage, verifySiweSignature } from "helpers/siwe";
 
-import { siweMessageService } from "services/ethereum/siwe";
 import { Logger } from "services/logging";
 
 import { isMethodAllowed } from "server/utils/http";
@@ -18,24 +18,23 @@ export const withSignature = (handler: NextApiHandler, allowedMethods = ['GET'])
 
     const { issuedAt, expiresAt, signature, address, nonce } = token;
 
-    const typedMessage = await siweMessageService.getMessage({
+    const siweMessage = getSiweMessage({
       nonce,
+      address,
       issuedAt: +issuedAt,
       expiresAt: +expiresAt
     });
 
-    if (!(await siweMessageService.decodeMessage(typedMessage, signature?.toString(), address?.toString())))
+    if (!(await verifySiweSignature(siweMessage, signature?.toString(), nonce)))
       return res.status(401).json({ message: INVALID_SIGNATURE });
 
-    const bodyWithContext = {
+    req.body = {
       ...req.body,
       context: {
         ...req.body?.context,
-        typedMessage
+        siweMessage
       }
     };
-
-    req.body = bodyWithContext;
   
     return handler(req, res);
   };

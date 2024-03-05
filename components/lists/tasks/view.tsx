@@ -4,7 +4,6 @@ import Button from "components/button";
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
-import ListSort from "components/lists/sort/controller";
 import TasksListFilteredCategories
   from "components/lists/tasks/tasks-list-filtered-categories/tasks-list-filtered-categories.controller";
 import TasksListItem from "components/lists/tasks/tasks-list-item/tasks-list-item.controller";
@@ -17,7 +16,7 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import { SearchBountiesPaginatedBigNumber } from "types/components";
+import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
 
 interface TasksListViewProps {
   bounties?: SearchBountiesPaginatedBigNumber;
@@ -25,11 +24,13 @@ interface TasksListViewProps {
   buttonMessage?: string;
   variant: "bounty-hall" | "profile" | "network" | "management";
   type: "bounties" | "deliverables" | "proposals";
+  itemVariant?: TasksListItemVariant;
   searchString: string;
   isOnNetwork?: boolean;
   isConnected?: boolean;
   hideFilter?: boolean;
   hasFilter?: boolean;
+  hideTitle?: boolean;
   currentChain?: SupportedChainData;
   chains?: SupportedChainData[];
   filterType?: "category" | "search";
@@ -47,6 +48,7 @@ export default function TasksListView({
   variant,
   bounties,
   type,
+  itemVariant,
   searchString,
   isOnNetwork,
   isConnected,
@@ -60,7 +62,8 @@ export default function TasksListView({
   onEnterPressed,
   currentChain,
   chains,
-  filterType
+  filterType,
+  hideTitle
 }: TasksListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
@@ -71,7 +74,8 @@ export default function TasksListView({
   const hasMorePages = hasIssues && bounties?.currentPage < bounties?.pages;
   const showClearButton = !!searchString && searchString?.trim() !== "";
   const showSearchFilter = hasIssues || !hasIssues && hasFilter;
-  const variantIssueItem = isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network";
+  const variantIssueItem = itemVariant ||
+    (isManagement ? variant : (isProfile || isBountyHall) ? "multi-network" : "network");
   const isCategoryFilter = filterType === "category";
 
   const columns = [
@@ -132,24 +136,26 @@ export default function TasksListView({
 
           <If condition={isBountyHall || isProfile || isManagement}>
             <div className={`d-flex flex-wrap justify-content-between ${isCategoryFilter ? "mb-3" : ""}`}>
-              <div className="d-flex flex-row flex-wrap align-items-center gap-2">
-                <div className="d-flex gap-2 align-items-center">
-                  <h4 className="text-capitalize font-weight-medium">
-                    {listTitleByType[type]}
-                  </h4>
-                  {["deliverables", "proposals"].includes(type) ? (
-                    <>
-                      <CountComponent count={bounties?.totalBounties} />
-                      <span className="caption-small text-gray font-weight-medium mt-1">
+              <If condition={!hideTitle}>
+                <div className="d-flex flex-row flex-wrap align-items-center gap-2">
+                  <div className="d-flex gap-2 align-items-center">
+                    <h4 className="text-capitalize font-weight-medium">
+                      {listTitleByType[type]}
+                    </h4>
+                    {["deliverables", "proposals"].includes(type) ? (
+                      <>
+                        <CountComponent count={bounties?.totalBounties}/>
+                        <span className="caption-small text-gray font-weight-medium mt-1">
                       {t("bounty:label", { count: bounties?.count })}{" "}
-                        {bounties?.count}
+                          {bounties?.count}
                     </span>
-                    </>
-                  ) : (
-                    <CountComponent count={bounties?.totalBounties} />
-                  )}
+                      </>
+                    ) : (
+                      <CountComponent count={bounties?.totalBounties}/>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </If>
 
               <If condition={isProfile && isOnNetwork}>
                 <ResponsiveWrapper md={false} xs={true} sm={true}>
@@ -223,7 +229,7 @@ export default function TasksListView({
                 <NothingFound description={emptyMessage || t("filters.bounties.not-found")}>
                   {(isConnected && !isBountyHall && !isManagement) && (
                     <ReadOnlyButtonWrapper>
-                      <Button onClick={onNotFoundClick}>
+                      <Button onClick={onNotFoundClick} data-testid="create-one-btn">
                         {buttonMessage || String(t("actions.create-one"))}
                       </Button>
                     </ReadOnlyButtonWrapper>
@@ -237,13 +243,15 @@ export default function TasksListView({
               hasMore={hasMorePages}
               className="row gy-3 gx-3"
             >
-              {bounties?.rows?.map(issue =>
-                <div className={isBountyHall ? "col-12 col-lg-6" : "col-12"} key={`issue-list-item-${issue.id}`}>
-                  <TasksListItem
-                    issue={issue}
-                    variant={variantIssueItem}
-                  />
-                </div>)}
+              {bounties?.rows?.map((issue) => (
+                <div
+                  className={isBountyHall ? "col-12 col-lg-6" : "col-12"}
+                  key={`issue-list-item-${issue.id}`}
+                  data-testid={`issue-list-item-${issue.id}`}
+                >
+                  <TasksListItem issue={issue} variant={variantIssueItem} />
+                </div>
+              ))}
             </InfiniteScroll>
           </If>
         </div>

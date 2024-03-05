@@ -41,7 +41,7 @@ export default function DragAndDrop({
   const [errors, setErrors] = useState<{file: File, error: FileError}[]>([]);
   const [files, setFiles] = useState<IFilesProps[]>(externalFiles ? externalFiles : [] as IFilesProps[]);
 
-  const { mutate: uploadFiles, isLoading: isUploading } = useReactQueryMutation({
+  const { mutate: uploadFiles, isPending: isUploading } = useReactQueryMutation({
     mutationFn: useUploadFile,
     onSuccess: (data) => {
       setFiles((oldFiles)=> {

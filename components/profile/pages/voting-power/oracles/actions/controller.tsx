@@ -44,10 +44,13 @@ export default function OraclesActions({
   const { service: daoService } = useDaoStore();
   const {list: transactions} = transactionStore();
 
+  const isMarketplaceClosed = marketplace?.active?.isClosed;
+  const isLockAction = action === t("my-oracles:actions.lock.label");
+  const isLockDisabled = isLockAction && isMarketplaceClosed;
   const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.$token");
   const networkTokenDecimals = networkTokenERC20.decimals || 18;
   const oracleExchangeRate = marketplace?.active?.oracleExchangeRate || 1;
-  const oracleAmount = action === t("my-oracles:actions.lock.label") ?
+  const oracleAmount = isLockAction ?
     BigNumber(tokenAmount || 0).multipliedBy(oracleExchangeRate).toFixed() :
     BigNumber(tokenAmount || 0).dividedBy(oracleExchangeRate).toFixed();
 
@@ -129,7 +132,8 @@ export default function OraclesActions({
 
   const isButtonDisabled = (): boolean =>
     [
-      action === t("my-oracles:actions.lock.label") && needsApproval(),
+      isLockAction && needsApproval(),
+      isLockDisabled,
       !wallet?.address,
       BigNumber(tokenAmount).isZero(),
       BigNumber(tokenAmount).isNaN(),
@@ -238,7 +242,7 @@ export default function OraclesActions({
 
   return (
       <OraclesActionsView
-        disabled={disabled}
+        disabled={disabled || isLockDisabled}
         isBalanceLoading={isBalanceLoading}
         wallet={wallet}
         actions={actions} 
