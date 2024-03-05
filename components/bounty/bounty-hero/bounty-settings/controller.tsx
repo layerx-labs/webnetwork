@@ -2,6 +2,8 @@ import { useTranslation } from "next-i18next";
 
 import BountySettingsView from "components/bounty/bounty-hero/bounty-settings/view";
 
+import { lowerCaseCompare } from "helpers/string";
+
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
@@ -38,8 +40,7 @@ export default function BountySettings({
     isBountyOwner:
       !!currentUser?.walletAddress &&
       currentBounty?.user?.address &&
-      currentBounty?.user?.address ===
-        currentUser?.walletAddress,
+      lowerCaseCompare(currentBounty?.user?.address, currentUser?.walletAddress),
 
     isFundingRequest: !!currentBounty?.isFundingRequest,
     isBountyFunded: currentBounty?.fundedAmount?.isEqualTo(currentBounty?.fundingAmount),

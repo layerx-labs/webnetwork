@@ -6,6 +6,7 @@ import PageActionsView from "components/bounty/page-actions/view";
 
 import { getIssueState } from "helpers/handleTypeIssue";
 import { QueryKeys } from "helpers/query-keys";
+import { lowerCaseCompare } from "helpers/string";
 
 import { useStartWorking } from "x-hooks/api/task";
 import { useUserStore } from "x-hooks/stores/user/user.store";
@@ -52,7 +53,7 @@ export default function PageActions({
   const isBountyOpen = currentBounty?.isClosed === false && currentBounty?.isCanceled === false;
   const isBountyInDraft = !!currentBounty?.isDraft;
   const isWorkingOnBounty = !!currentBounty?.working?.find(id => +id === +currentUser?.id);
-  const isBountyOwner = isWalletConnected && currentBounty?.user?.address === currentUser?.walletAddress;
+  const isBountyOwner = isWalletConnected && lowerCaseCompare(currentBounty?.user?.address, currentUser?.walletAddress);
   const isFundingRequest = !!currentBounty?.isFundingRequest
   const isStateToWorking = ["proposal", "open", "ready"].some((value) => value === bountyState)
   const isUpdateAmountButton =
@@ -62,6 +63,7 @@ export default function PageActions({
     isBountyInDraft &&
     !isFundingRequest &&
     !isEditIssue;
+
   const isStartWorkingButton =
     isWalletConnected &&
     !isBountyInDraft &&
