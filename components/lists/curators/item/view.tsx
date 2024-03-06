@@ -5,10 +5,10 @@ import ChainIcon from "components/chain-icon";
 import CopyButton from "components/common/buttons/copy/controller";
 import {OverlappingIcons} from "components/common/overlapping-icons/overlapping-icons.view";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import Identicon from "components/identicon";
 
 import { formatNumberToNScale } from "helpers/formatNumber";
-import { truncateAddress } from "helpers/truncate-address";
 
 import {CuratorOverview} from "types/api";
 
@@ -67,13 +67,14 @@ export default function CuratorListItemView({
           address={curator?.address}
         />
       }
-      label={truncateAddress(curator?.address, 4)}
+      label={<UserProfileLink address={curator?.address} />}
       columns={columns}
       mobileColumnIndex={[3, 4]}
       action={
         <CopyButton
           value={curator?.address}
           popOverLabel={t("misc.address-copied")}
+          title={t("misc.copy-address")}
         />
       }
     />

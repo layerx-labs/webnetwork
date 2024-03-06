@@ -5,19 +5,17 @@ import Link from "next/link";
 import {UrlObject} from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
+import ItemRowIdView from "components/bounty/tabs-sections/item-row/id.view";
+import ItemRowLabelsView from "components/bounty/tabs-sections/item-row/labels.view";
+import ProposalOrDeliverableView from "components/bounty/tabs-sections/item-row/proposal-or-deliverable.view";
+import ReviewsNumberView from "components/bounty/tabs-sections/reviews-number.view";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import {IPRLabel} from "components/deliverable/labels/controller";
 import If from "components/If";
 import Translation from "components/translation";
 
-import {truncateAddress} from "helpers/truncate-address";
-
 import {Deliverable} from "interfaces/issue-data";
 import {Proposal} from "interfaces/proposal";
-
-import ReviewsNumberView from "../reviews-number.view";
-import ItemRowIdView from "./id.view";
-import ItemRowLabelsView from "./labels.view";
-import ProposalOrDeliverableView from "./proposal-or-deliverable.view";
 
 interface ItemRowProps {
   id: string | number;
@@ -85,13 +83,13 @@ export default function ItemRowView({
               size="sm"
             />
 
-            <span
+            <UserProfileLink
               className={`${
                 isProposal ? "d-none d-sm-block" : ""
               } text-uppercase text-white caption text-truncate mt-1`}
-            >
-              {userhandle ? userhandle : truncateAddress(userAddress)}
-            </span>
+              address={userAddress}
+              handle={userhandle}
+            />
           </div>
 
           <If condition={isProposal}>

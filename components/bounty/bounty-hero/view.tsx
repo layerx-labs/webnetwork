@@ -1,24 +1,22 @@
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
+import BountySettings from "components/bounty/bounty-hero/bounty-settings/controller";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
+import BountyTagsView from "components/bounty/bounty-tags/view";
+import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.view";
 import Button from "components/button";
 import ChainIcon from "components/chain-icon";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
 import TaskStatusInfo from "components/task-status-info";
 
-import {truncateAddress} from "helpers/truncate-address";
-
-import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
-
-import BountyTagsView from "../bounty-tags/view";
-import TaskTypeBadge from "../task-type-badge/task-type-badge.view";
-import BountySettings from "./bounty-settings/controller";
+import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
 
 interface BountyHeroProps {
   handleEditIssue?: () => void;
@@ -137,7 +135,7 @@ export default function BountyHeroView({
             </h5>
 
             <div className="d-flex flex-wrap gap-1 align-items-center mt-3 border-bottom border-gray-850 pb-4">
-              <TaskTypeBadge 
+              <TaskTypeBadge
                 type={bounty?.type}
                 responsiveLabel={false}
               />
@@ -193,9 +191,11 @@ export default function BountyHeroView({
                       />{" "}
                     </div>
 
-                    <span className="text-truncate">
-                      {bounty?.user?.handle || truncateAddress(bounty?.user?.address)}
-                    </span>
+                    <UserProfileLink
+                      className="text-truncate"
+                      address={bounty?.user?.address}
+                      handle={bounty?.user?.handle}
+                    />
                   </>
                 </BountyItemLabel>
               </div>
