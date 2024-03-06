@@ -1,6 +1,7 @@
 import React from "react";
 
 import BigNumber from "bignumber.js";
+import { useTranslation } from "next-i18next";
 
 import ReviewsNumberView from "components/bounty/tabs-sections/reviews-number.view";
 import Button from "components/button";
@@ -12,7 +13,6 @@ import Translation from "components/translation";
 
 import { Deliverable } from "interfaces/issue-data";
 import { Proposal } from "interfaces/proposal";
-import { useTranslation } from "next-i18next";
 
 interface ItemRowProps {
   isProposal: boolean;
