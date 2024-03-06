@@ -69,7 +69,6 @@ export default function ContractButton({
     let address = connectedAddress?.toString();
     if (!address) {
       if (isLastProviderInjected) {
-        console.log("contract-button connect");
         address = await connect();
         if (!address)
           return false;
