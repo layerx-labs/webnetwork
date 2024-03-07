@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { OverlayDelay } from "react-bootstrap/esm/OverlayTrigger";
 
 type Tooltip = {
-  children: ReactNode,
+  children: ReactElement,
   tip: string,
   delay?: OverlayDelay,
 };
@@ -26,9 +26,7 @@ export function Tooltip({
 
   return(
     <OverlayTrigger placement="bottom" overlay={popover} delay={delay}>
-      <div>
-        {children}
-      </div>
+      {children}
     </OverlayTrigger>
   );
 }
