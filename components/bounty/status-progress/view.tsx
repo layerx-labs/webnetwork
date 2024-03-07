@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { add, addSeconds, compareAsc, intervalToDuration } from "date-fns";
 import { useTranslation } from "next-i18next";
 
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import { formatDate, getTimeDifferenceInWords } from "helpers/formatDate";
@@ -52,16 +53,14 @@ export default function BountyStatusProgressView({
         text: t("bounty:status.until-open", {
           distance: isHigher
             ? "0 seconds"
-            : getTimeDifferenceInWords(addSeconds(date, toAdd),
-                                       new Date(chainTime)),
+            : getTimeDifferenceInWords(addSeconds(date, toAdd), new Date(chainTime)),
         }),
         color: "warning",
         bgColor: "warning-opac-25",
       },
       Started: {
         text: t("bounty:status.started-time", {
-          distance: getTimeDifferenceInWords(new Date(date),
-                                             new Date(chainTime)),
+          distance: getTimeDifferenceInWords(new Date(date), new Date(chainTime)),
         }),
         color: "light-gray",
       },
@@ -147,6 +146,8 @@ export default function BountyStatusProgressView({
     const labelStyle = { left: "25px" };
     const currentItem = currentStep === index;
     const isLastItem = currentStep === steps.length - 1;
+    const LabelWrapper = ({ children }) => currentItem ? 
+      <Tooltip tip={t(`bounty:tips.roadmap:${stepLabel}`)}>{children}</Tooltip> : <>{children}</>;
 
     return (
       <Fragment key={index}>
@@ -163,16 +164,19 @@ export default function BountyStatusProgressView({
             ></div>
           </div>
           <div
-            className="position-absolute d-flex align-items-start flex-column w-100"
+            className={`position-absolute d-flex align-items-start flex-column w-100 
+              ${currentItem ? "mt-n2" : "mt-n1"}`} 
             style={labelStyle}
           >
-            <label
-              className={`white-space text-uppercase caption text-${
-                isCanceled ? "danger" : `${currentItem ? stepColor : "gray"}`
-              }`}
-            >
-              {stepLabel}
-            </label>
+            <LabelWrapper>
+              <label
+                className={`white-space text-uppercase caption text-${
+                  isCanceled ? "danger" : `${currentItem ? stepColor : "gray"}`
+                }`}
+              >
+                {t(`bounty:steps.${stepLabel}`)}
+              </label>
+            </LabelWrapper>
             {currentItem && renderSecondaryText(index)}
           </div>
         </div>

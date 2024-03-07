@@ -1,24 +1,20 @@
 import { useEffect, useState } from "react";
 
-import { useTranslation } from "next-i18next";
+import BountyStatusProgressView from "components/bounty/status-progress/view";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
 import useMarketplace from "x-hooks/use-marketplace";
 
-import BountyStatusProgressView from "./view";
-
 export default function BountyStatusProgress({ currentBounty }: { currentBounty: IssueBigNumberData}) {
-  const { t } = useTranslation(["common", "bounty"]);
-
   const [stepColor, setStepColor] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<number>();
   const [steps, setSteps] = useState<string[]>([
-    t("bounty:steps.draft"),
-    t("bounty:steps.funding"),
-    t("bounty:steps.development"),
-    t("bounty:steps.validation"),
-    t("bounty:steps.closed"),
+    "draft",
+    "funding",
+    "development",
+    "validation",
+    "closed",
   ]);
 
   const marketplace = useMarketplace();
@@ -51,17 +47,17 @@ export default function BountyStatusProgress({ currentBounty }: { currentBounty:
   }
 
   useEffect(() => {
-    const isFundingStep = !!steps.find((name) => name === t("bounty:steps.funding"));
+    const isFundingStep = !!steps.find((name) => name === "funding");
 
     if (isFundingRequest && !isFundingStep)
       setSteps((currentState) => {
-        currentState.splice(1, 0, t("bounty:steps.funding"));
+        currentState.splice(1, 0, "funding");
         return currentState;
       });
 
     if (!isFundingRequest && isFundingStep)
       setSteps((currentState) => {
-        return currentState.filter((state) => state !== t("bounty:steps.funding"));
+        return currentState.filter((state) => state !== "funding");
       });
   }, [isFundingRequest]);
 

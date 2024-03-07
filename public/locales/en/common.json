@@ -54,7 +54,12 @@
     "delegated-by-others": "Delegated by Other",
     "open-tasks": "Open tasks",
     "to-grab": "To grab",
-    "users": "Users"
+    "users": "Users",
+    "tips": {
+      "open-tasks": "Tasks that are open for work",
+      "to-grab": "The total of money to be distributed on the open tasks",
+      "users": "Total number of protocol users"
+    }
   },
   "main-nav": {
     "curators": "Curators",
@@ -89,6 +94,16 @@
       "follow-on-twitter": "Follow @bepronet on Twitter",
       "web-network-1": "Web Marketplace Version 1.0",
       "disconnect-wallet": "Disconnect"
+    },
+    "tips": {
+      "marketplaces": "List of all marketplaces on Bepro",
+      "leaderboard": "Ranking of most active users of all marketplaces",
+      "explore": "Overview of the most active marketplaces",
+      "tasks": "List of all tasks on this marketplace",
+      "curators": "List of all tasks available that need actions by curators",
+      "help": "Help",
+      "transactions-list": "Transactions list",
+      "notifications-list": "Notifications list"
     }
   },
   "select-a-network": "Select marketplace",

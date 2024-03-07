@@ -50,62 +50,61 @@ export default function BountyBodyView({
 }: BountyBodyProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
-  if (walletAddress)
-    return (
-      <div className="mb-1">
-        <div className="row justify-content-center">
-          <div className="col-md-8">
-            <div className="border-radius-8 p-3 bg-gray-850 mb-3">
-              <If condition={isEditIssue}>
-                <div className="d-flex justify-content-center">
-                  <span className="p family-Regular font-weight-medium mt-1 text-info">
-                    {t("bounty:edit-text")}
-                  </span>
-                </div>
-              </If>
-              <BountyEditTag
+  return (
+    <div className="mb-1">
+      <div className="row justify-content-center">
+        <div className="col-md-8">
+          <div className="border-radius-8 p-3 bg-gray-850 mb-3">
+            <If condition={isEditIssue}>
+              <div className="d-flex justify-content-center">
+                <span className="p family-Regular font-weight-medium mt-1 text-info">
+                  {t("bounty:edit-text")}
+                </span>
+              </div>
+            </If>
+            <BountyEditTag
+              isEdit={isEditIssue}
+              selectedTags={selectedTags}
+              setSelectedTags={handleSelectedTags}
+              preview={isPreview}
+            />
+            <>
+              <BountyDescription
+                body={isPreview ? addFilesInDescription(body) : body}
+                setBody={handleBody}
                 isEdit={isEditIssue}
-                selectedTags={selectedTags}
-                setSelectedTags={handleSelectedTags}
+                onUpdateFiles={handleFiles}
+                onUploading={handleIsUploading}
+                files={files}
                 preview={isPreview}
               />
-              <>
-                <BountyDescription
-                  body={isPreview ? addFilesInDescription(body) : body}
-                  setBody={handleBody}
-                  isEdit={isEditIssue}
-                  onUpdateFiles={handleFiles}
-                  onUploading={handleIsUploading}
-                  files={files}
-                  preview={isPreview}
+            </>
+            <If condition={!!walletAddress}>
+              <If condition={isEditIssue}>
+                <BodyEditButtons
+                  handleUpdateBounty={handleUpdateBounty}
+                  handleCancelEdit={handleCancelEdit}
+                  handleIsPreview={() => {
+                    handleIsPreview(!isPreview);
+                    !isPreview === true &&
+                      window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: "smooth",
+                      });
+                  }}
+                  isPreview={isPreview}
+                  isDisableUpdateIssue={isDisableUpdateIssue()}
+                  isUploading={isUploading}
                 />
-              </>
-              <If condition={!!walletAddress}>
-                <If condition={isEditIssue}>
-                  <BodyEditButtons
-                    handleUpdateBounty={handleUpdateBounty}
-                    handleCancelEdit={handleCancelEdit}
-                    handleIsPreview={() => {
-                      handleIsPreview(!isPreview);
-                      !isPreview === true &&
-                        window.scrollTo({
-                          top: 0,
-                          left: 0,
-                          behavior: "smooth",
-                        });
-                    }}
-                    isPreview={isPreview}
-                    isDisableUpdateIssue={isDisableUpdateIssue()}
-                    isUploading={isUploading}
-                  />
-                </If>
               </If>
-            </div>
-          </div>
-          <div className="col-12 col-md-4">
-            <BountyStatusProgress currentBounty={bounty} />
+            </If>
           </div>
         </div>
+        <div className="col-12 col-md-4">
+          <BountyStatusProgress currentBounty={bounty} />
+        </div>
       </div>
-    );
+    </div>
+  );
 }
