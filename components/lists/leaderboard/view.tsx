@@ -33,12 +33,15 @@ export default function LeaderBoardListView({
   ];
   
   const header = [
-    t("leaderboard:table.address"),
-    t("leaderboard:table.github-handle"),
-    t("leaderboard:table.nfts"),
-    t("council:council-table.networks"),
-    t("misc.networks"),
-    t("leaderboard:table.actions"),
+    { label: t("leaderboard:table.address") },
+    { label: t("leaderboard:table.github-handle") },
+    {
+      label: t("leaderboard:table.nfts"),
+      tip: t("leaderboard:tips.nfts")
+    },
+    { label: t("council:council-table.networks") },
+    { label: t("misc.networks") },
+    { label: t("leaderboard:table.actions") },
   ];
 
   return (
