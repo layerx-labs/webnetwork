@@ -1,6 +1,7 @@
 import { useTranslation } from "next-i18next";
 
 import Badge from "components/badge";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import TaskStatusInfo from "components/task-status-info";
 
 import { getIssueState } from "helpers/handleTypeIssue";
@@ -20,15 +21,15 @@ export default function TaskStatusBadge ({ task }: TaskStatusBadgeProps) {
   });
   
   return(
-    <Badge
-      color="transparent"
-      className={`d-flex px-2 py-1 align-items-center gap-1 border border-gray-800 caption-medium 
-                  font-weight-normal text-capitalize border-radius-4`}
-    >
-      <>
+    <Tooltip tip={t(`tips.status.${issueState}`)}>
+      <Badge
+        color="transparent"
+        className={`d-flex px-2 py-1 align-items-center gap-1 border border-gray-800 caption-medium 
+                    font-weight-normal text-capitalize border-radius-4`}
+      >
         <TaskStatusInfo task={task} />
         <span>{t(`status.${issueState}`)}</span>
-      </>
-    </Badge>
+      </Badge>
+    </Tooltip>
   );
 }
