@@ -81,12 +81,6 @@ export default function TaskListItemDefault ({
                             />
                           </BountyItemLabel>
 
-                          <BountyItemLabel label="Type" className="col-auto">
-                          <span className="text-gray text-truncate text-capitalize">
-                            {task?.type}
-                          </span>
-                          </BountyItemLabel>
-
                           <ResponsiveEle
                             col={"auto"}
                             desktopView={
