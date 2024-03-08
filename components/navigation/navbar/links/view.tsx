@@ -36,12 +36,14 @@ export default function NavBarLinks() {
         {links.map(({ href, label}) => 
           <li key={`nav-${label}`}>
             <Tooltip tip={t(`main-nav.tips.${label}`)}>
-              <InternalLink
-                href={href}
-                label={label}
-                nav
-                uppercase
-              />
+              <div>
+                <InternalLink
+                  href={href}
+                  label={label}
+                  nav
+                  uppercase
+                />
+              </div>
             </Tooltip>
           </li>)}
       </ul>

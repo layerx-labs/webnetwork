@@ -109,14 +109,14 @@ export default function BountyHeroView({
 
               <div className="col">
                 <div className="row justify-content-end">
-                  <div className="col-auto">
-                    <Tooltip tip={t("tips.chain")}>
+                  <Tooltip tip={t("tips.chain")}>
+                    <div className="col-auto">
                       <ChainIcon
                         src={bounty?.network?.chain?.icon}
                         label={bounty?.network?.chain?.chainName}
                       />
-                    </Tooltip>
-                  </div>
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
 

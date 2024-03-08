@@ -128,12 +128,16 @@ export default function FundingSectionView({
           <RowWithTwoColumns
             col1={
               <Tooltip tip={t("bounty:tips.current-funding")}>
-                <CaptionMedium text={t("funding:current-funding")} color="gray-600" />
+                <div>
+                  <CaptionMedium text={t("funding:current-funding")} color="gray-600" />
+                </div>
               </Tooltip>
             }
             col2={
               <Tooltip tip={t("bounty:tips.gross-total-amount")}>
-                <CaptionMedium text={t("funding:gross-total-amount")} color="gray-600" />
+                <div>
+                  <CaptionMedium text={t("funding:gross-total-amount")} color="gray-600" />
+                </div>
               </Tooltip>
             }
           />

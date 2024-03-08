@@ -24,7 +24,9 @@ export default function NavBarActions() {
             <CreateNetworkBountyButton />
 
             <Tooltip tip={t("main-nav.tips.help")}>
-              <HelpButton />
+              <div>
+                <HelpButton />
+              </div>
             </Tooltip>
           </div>
         </ResponsiveWrapper>
@@ -36,11 +38,15 @@ export default function NavBarActions() {
           >
             <div className="d-flex gap-3 align-items-center">
               <Tooltip tip={t("main-nav.tips.transactions-list")}>
-                <TransactionsStateIndicator />
+                <div>
+                  <TransactionsStateIndicator />
+                </div>
               </Tooltip>
 
               <Tooltip tip={t("main-nav.tips.notifications-list")}>
-                <Notifications />
+                <div>
+                  <Notifications />
+                </div>
               </Tooltip>
 
               <NavAvatar />

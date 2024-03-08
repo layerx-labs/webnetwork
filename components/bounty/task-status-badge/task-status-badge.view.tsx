@@ -22,14 +22,16 @@ export default function TaskStatusBadge ({ task }: TaskStatusBadgeProps) {
   
   return(
     <Tooltip tip={t(`tips.status.${issueState}`)}>
-      <Badge
-        color="transparent"
-        className={`d-flex px-2 py-1 align-items-center gap-1 border border-gray-800 caption-medium 
-                    font-weight-normal text-capitalize border-radius-4`}
-      >
-        <TaskStatusInfo task={task} />
-        <span>{t(`status.${issueState}`)}</span>
-      </Badge>
+      <div>
+        <Badge
+          color="transparent"
+          className={`d-flex px-2 py-1 align-items-center gap-1 border border-gray-800 caption-medium 
+                      font-weight-normal text-capitalize border-radius-4`}
+        >
+          <TaskStatusInfo task={task} />
+          <span>{t(`status.${issueState}`)}</span>
+        </Badge>
+      </div>
     </Tooltip>
   );
 }

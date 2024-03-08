@@ -60,19 +60,23 @@ export default function PageActionsView({
               <div className="d-flex align-items-center gap-20">
                 <If condition={isStartWorkingButton}>
                   <Tooltip tip={t("bounty:actions.tips.start-working")}>
-                    <StartWorkingButton 
-                      onClick={handleActionWorking}
-                      isExecuting={isExecuting}
-                    />
+                    <div>
+                      <StartWorkingButton 
+                        onClick={handleActionWorking}
+                        isExecuting={isExecuting}
+                      />
+                    </div>
                   </Tooltip>
                 </If>
 
                 <If condition={isCreatePr}>
                   <Tooltip tip={t("bounty:actions.tips.create-deliverable")}>
-                    <CreateDeliverableButton 
-                      onClick={onCreateDeliverableClick}
-                      disabled={!isWalletConnected}
-                    />
+                    <div>
+                      <CreateDeliverableButton 
+                        onClick={onCreateDeliverableClick}
+                        disabled={!isWalletConnected}
+                      />
+                    </div>
                   </Tooltip>
                 </If>
 
@@ -82,10 +86,12 @@ export default function PageActionsView({
 
                 <If condition={isCreateProposal}>
                   <Tooltip tip={t("bounty:actions.tips.create-proposal")}>
-                    <CreateProposalButton 
-                      onClick={() => setShowPRProposal(true)}
-                      disabled={!isWalletConnected}
-                    />
+                    <div>
+                      <CreateProposalButton 
+                        onClick={() => setShowPRProposal(true)}
+                        disabled={!isWalletConnected}
+                      />
+                    </div>
                   </Tooltip>
                 </If>
 
