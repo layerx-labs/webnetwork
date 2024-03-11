@@ -63,6 +63,29 @@
     "funding": "Seeking funding",
     "proposal": "proposal"
   },
+  "tips": {
+    "status": {
+      "draft": "Task is in draft state and can change or be canceled",
+      "open": "Task is available to be worked upon",
+      "ready": "Task has solutions submitted",
+      "canceled": "Task cannot be worked on as its no longer available",
+      "closed": "Task was completed and the reward was distrbuted",
+      "funding": "Task needs to be funded to be available for work",
+      "proposal": "Task has solutions proposed that are able to be accepted or disputed"
+    },
+    "chain": "Chain in which the payment and interaction for this ask will happen",
+    "roadmap": {
+      "draft": "Task is in draft state and can change or be canceled",
+      "funding": "Funding",
+      "development": "Task is valid for working",
+      "finalized": "Finished",
+      "validation": "Task is ready for validation on part of the curators but can still be worked by other users",
+      "closed": "Task has been closed, accepted, and prize has been distributed"
+    },
+    "funds-given": "Funds provided by you",
+    "current-funding": "Funds provided by the community",
+    "gross-total-amount": "Required funds"
+  },
   "actions": {
     "redeem": "Redeem",
     "update-amount": "Update Amount",
@@ -85,6 +108,11 @@
     },
     "kyc": {
       "identify-to-start": "Start KYC"
+    },
+    "tips": {
+      "start-working": "As a worker, click here to show the community you're working on this task",
+      "create-deliverable": "As a worker, show your deliverable to the task owner and community",
+      "create-proposal": "As curator, propose a deliverable as acceptable for the task"
     }
   },
   "management": {

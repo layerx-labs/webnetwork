@@ -171,3 +171,8 @@ export interface TaskListItemVariantProps {
 }
 
 export type Status = "review" | "not-accepted" | "canceled" | "accepted" | "draft" | "refused" | "disputed";
+
+export type HeaderColumn = {
+  label: string,
+  tip?: string,
+}

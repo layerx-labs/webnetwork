@@ -27,5 +27,10 @@
   },
   "errors": {
     "not-found": "Curators not found"
+  },
+  "tips": {
+    "accepted-proposals": "Proposals created by the curator that were accepted for task closing",
+    "disputed-proposals": "Proposal created by the curator that were disputed by the community",
+    "disputes": "Proposals disputed by the curator"
   }
 }

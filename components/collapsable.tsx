@@ -7,9 +7,11 @@ import ArrowDown from "assets/icons/arrow-down";
 import ArrowUp from "assets/icons/arrow-up";
 
 import Button from "components/button";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 
 interface CollapsableProps {
   headerTitle?: string;
+  headerTip?: string;
   labelShow?: string | ReactNode;
   labelHide?: string | ReactNode;
   labelColor?: string;
@@ -22,6 +24,7 @@ interface CollapsableProps {
 
 export default function Collapsable({
   headerTitle = "",
+  headerTip,
   labelShow = undefined,
   labelHide = undefined,
   labelColor = "primary",
@@ -41,13 +44,21 @@ export default function Collapsable({
 
   const switchOpen = () => setIsOpen(previous => !previous);
 
+  const TitleWrapper = ({ children }) => headerTip ? <Tooltip tip={headerTip}>{children}</Tooltip> : <>{children}</>;
+
   return(
     <div className={containerClassName}>
       <Row className="align-items-center justify-content-between p-0 mx-0">
         <Col className="p-0">
-          <span className="caption-medium font-weight-medium text-white">
-            {headerTitle}
-          </span>
+          <Row>
+            <Col xs="auto">
+              <TitleWrapper>
+                <span className="caption-medium font-weight-medium text-white">
+                    {headerTitle}
+                </span>
+              </TitleWrapper>
+            </Col>
+          </Row>
         </Col>
         
         <Col xs="auto" className="p-0">

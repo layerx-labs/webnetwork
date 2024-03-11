@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
 
 import { getIssueState } from "helpers/handleTypeIssue";
+import { lowerCaseCompare } from "helpers/string";
 
 import { IssueBigNumberData, fundingBenefactor } from "interfaces/issue-data";
 
@@ -43,7 +44,7 @@ export default function FundingSection({ currentBounty, updateBountyData }: Fund
     if (!currentUser?.walletAddress || !currentBounty) return;
 
     const funds = 
-      currentBounty?.benefactors?.filter((fund) => fund.address === currentUser.walletAddress);
+      currentBounty?.benefactors?.filter((fund) => lowerCaseCompare(fund.address, currentUser.walletAddress));
 
     setWalletFunds(funds);
   }, [currentUser, currentBounty]);
