@@ -28,6 +28,7 @@ export interface ResponsiveListItemColumnProps {
 
 export interface CopyButtonProps {
   value: string;
+  title?: string;
   popOverLabel?: string;
 }
 

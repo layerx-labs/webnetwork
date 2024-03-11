@@ -2,10 +2,9 @@ import {useTranslation} from "next-i18next";
 import {UrlObject} from "url";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import DateLabel from "components/date-label";
 import InternalLink from "components/internal-link";
-
-import {truncateAddress} from "helpers/truncate-address";
 
 import {User} from "interfaces/api";
 
@@ -62,7 +61,10 @@ export default function DeliverableDetailsView({
               <AvatarOrIdenticon user={user?.handle} address={user?.address} />
             </div>
             <div className="col-auto p-0">
-              {user?.handle ? `@${user?.handle}` : user?.address ? truncateAddress(user?.address) : null}
+              <UserProfileLink
+                address={user?.address}
+                handle={user?.handle}
+              />
             </div>
           </div>
         </div>

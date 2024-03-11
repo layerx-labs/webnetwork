@@ -154,7 +154,8 @@
     "reload": "Reload",
     "warning": "Warning",
     "info": "Info",
-    "view-on-explorer": "View on chain explorer"
+    "view-on-explorer": "View on chain explorer",
+    "go-to-user-profile": "Go to user profile"
   },
   "misc": {
     "by": "by",
@@ -211,6 +212,7 @@
     "choose-one": "Choose one",
     "networks": "Marketplaces",
     "copied": "Copied",
+    "copy-address": "Copy address",
     "address-copied": "Address Copied",
     "empty-list": "Empty List",
     "learn-more": "Learn More",

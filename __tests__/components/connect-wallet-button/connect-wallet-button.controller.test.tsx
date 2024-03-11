@@ -15,15 +15,6 @@ const currentUser = {
   walletAddress: null
 };
 
-const useLoadersStore = {
-  updateWeb3Dialog: jest.fn(),
-  updateWalletSelectorModal: jest.fn(),
-};
-
-jest.mock("x-hooks/stores/loaders/loaders.store", () => ({
-  useLoadersStore: () => useLoadersStore
-}));
-
 jest.mock("x-hooks/stores/dao/dao.store", () => ({
   useDaoStore: () => ({
     service: jest.fn()

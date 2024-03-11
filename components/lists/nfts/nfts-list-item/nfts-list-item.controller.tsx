@@ -15,11 +15,13 @@ export default function NftsListItem ({
 
   const imageUrl = payment?.issue?.nftImage ? `${settings?.urls?.ipfs}/${payment?.issue?.nftImage}` : null;
   const transactionUrl = `${payment?.issue?.chain?.blockScanner}/${payment?.transactionHash}`;
+  const taskUrl = `/${payment?.issue?.network?.name?.toLowerCase()}/task/${payment?.issue?.id}`;
 
   return (
     <NftsListItemView
       imageUrl={imageUrl}
       transactionUrl={transactionUrl}
+      taskUrl={taskUrl}
     />
   );
 }
