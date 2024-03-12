@@ -1,10 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import { withProtected } from "middleware";
+import {withProtected} from "middleware";
 
-import { Logger, error as LogError } from "services/logging";
+import {error as LogError, Logger} from "services/logging";
 
-import { post } from "server/common/file/post";
+import {post} from "server/common/file/post";
 
 export const config = {
   api: {
@@ -31,4 +31,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 Logger.changeActionName(`Files`);
-export default withProtected(handler);
+export default withProtected(handler, 4*1024*1024 /* 4Mb */);

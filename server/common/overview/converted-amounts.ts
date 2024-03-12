@@ -1,22 +1,29 @@
 import cache from "memory-cache";
-import { NextApiRequest } from "next";
-import { ParsedUrlQuery } from "querystring";
-import { IncludeOptions } from "sequelize";
+import {NextApiRequest} from "next";
+import {ParsedUrlQuery} from "querystring";
+import {IncludeOptions} from "sequelize";
 
 import models from "db/models";
 
-import { FIVE_MINUTES_IN_MS } from "helpers/constants";
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { loadSettingsFromDb } from "helpers/load-settings-db";
+import {FIVE_MINUTES_IN_MS, SPAM_TERMS} from "helpers/constants";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
+import {loadSettingsFromDb} from "helpers/load-settings-db";
 
 import getTokensPrices from "server/common/check-prices/post";
+
+import {BadRequestErrors} from "../../../interfaces/enums/Errors";
+import {HttpBadRequestError} from "../../errors/http-errors";
+
 export default async function get(query: ParsedUrlQuery) {
   const {
     network,
     chain
   } = query;
 
-  const cacheKey = `/overview/converted-amounts/${network}/${chain}`;
+  if ((chain && isNaN(+chain)) || !network || SPAM_TERMS.some(r => r.test(network.toString())))
+    throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
+
+  const cacheKey = `/overview/converted-amounts/${network}${chain ? `/${chain}` : ""}`;
 
   const cachedData = cache.get(cacheKey);
 
