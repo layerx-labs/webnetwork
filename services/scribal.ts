@@ -1,5 +1,7 @@
 import Scribal from "@taikai/scribal";
 
+import { elasticLoggerMaker } from "services/elastic-logger";
+
 const ScribalConfig = {
   logService: {
     console: {
@@ -24,11 +26,12 @@ const ScribalConfig = {
 }
 
 export default (() => {
-  const appName = process.env.LOG_APP_NAME || `bepro-events`;
+  const appName = process.env.LOG_APP_NAME || `webnetwork-logs`;
   const hostname = process.env.LOG_HOST_NAME || `localhost`;
 
   const scribal = new Scribal([]);
   scribal.init({appName, hostname, version: '*', ...ScribalConfig.logService});
+  scribal.addLogger(elasticLoggerMaker, ScribalConfig.logService.elastic);
 
   return scribal;
 })()
