@@ -26,7 +26,7 @@ const ScribalConfig = {
 }
 
 export default (() => {
-  const appName = process.env.LOG_APP_NAME || `bepro-events`;
+  const appName = process.env.LOG_APP_NAME || `webnetwork-logs`;
   const hostname = process.env.LOG_HOST_NAME || `localhost`;
 
   const scribal = new Scribal([]);
