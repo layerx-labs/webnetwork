@@ -20,7 +20,7 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
         index,
         document: {
           level,
-          message: `${contents?.message} ${contents?.[Symbol.for('message')]}`,
+          message: contents?.[Symbol.for('message')],
           createdAt: new Date().toISOString(),
         }
       })
