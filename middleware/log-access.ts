@@ -18,7 +18,7 @@ export const LogAccess = (handler: NextApiHandler) => {
 
     const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : '';
 
-    log(`access`, {pathname, method, connection: {xForwarded, remoteAddress, cfConnectingIp}});
+    log(`access`, {pathname, method, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}});
     if (payload)
       debug(`access-payload`, {pathname, payload, method});
 
