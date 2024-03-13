@@ -31,4 +31,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 Logger.changeActionName(`Files`);
-export default withProtected(handler, 4*1024*1024 /* 4Mb */);
+export default withProtected(handler, 4*1024 /* 4Mb */);
