@@ -64,7 +64,7 @@ const serverRuntimeConfig = {
   e2eEnabled: process.env.NEXT_E2E_TESTNET || false,
   scheduleInterval: process.env.NEXT_E2E_TESTNET || 60,
   logLevel: process.env.LOG_LEVEL,
-  logStackTrace: process.env.ELASTIC_INDEX_STACK_TRACE === "true",
+  logStackTrace: process.env.NEXT_ELASTIC_INDEX_STACK_TRACE === "true",
   email: {
     apiKey: process.env.NEXT_SENDGRID_MAIL_API_KEY,
     from: process.env.NEXT_SENDGRID_MAIL_FROM,
@@ -72,10 +72,10 @@ const serverRuntimeConfig = {
   },
   elastic:{
     rum: {
-      serviceName: process.env.ELASTIC_APM_SERVICE_NAME,
-      serverUrl: process.env.ELASTIC_APM_SERVER_URL
+      serviceName: process.env.NEXT_ELASTIC_APM_SERVICE_NAME,
+      serverUrl: process.env.NEXT_ELASTIC_APM_SERVER_URL
     },
-    active: process.env.ELASTIC_APM_ACTIVE === "true"
+    active: process.env.NEXT_ELASTIC_APM_ACTIVE === "true"
   }
 }
 
