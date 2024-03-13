@@ -15,12 +15,16 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
       return;
     }
 
+
+    console.log(`PARAMS WILL BE SENT AS`, contents)
+
     new Client({node, auth: {username, password}})
       .index({
         index: `bepro-app-logs-${index}`,
         document: {
           level,
-          contents,
+          message: contents.message,
+          params: contents,
           createdAt: new Date().toISOString(),
         }
       })
