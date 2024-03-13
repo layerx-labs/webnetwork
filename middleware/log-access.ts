@@ -16,7 +16,7 @@ export const LogAccess = (handler: NextApiHandler) => {
 
     const pathname = url.split('/api')[1].replace(/\?.+/g, '');
 
-    const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : '';
+    const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : {};
 
     log(`access`, {
       pathname,
