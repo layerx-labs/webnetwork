@@ -18,9 +18,13 @@ export const LogAccess = (handler: NextApiHandler) => {
 
     const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : '';
 
-    log(`access`, {pathname, method, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}});
-    if (payload)
-      debug(`access-payload`, {pathname, payload, method});
+    log(`access`, {
+      pathname,
+      method,
+      headers: req?.headers,
+      connection: {xForwarded, remoteAddress, cfConnectingIp},
+      payload,
+    });
 
     try {
       await handler(req, res);
@@ -28,7 +32,8 @@ export const LogAccess = (handler: NextApiHandler) => {
       if (res.statusCode >= 400)
         Logger.warn(`Answered with ${res.statusCode}`, res.statusMessage)
 
-      debug(`${method} access-end`, pathname)
+      debug(`access-end`, {method, pathname});
+
     } catch (e) {
       Logger.error(e, `access-error`, {method, pathname, payload});
       res.status(e?.status || 500).end();
