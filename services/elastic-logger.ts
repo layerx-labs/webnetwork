@@ -5,7 +5,7 @@ const {
   NEXT_ELASTIC_SEARCH_URL: node,
   NEXT_ELASTIC_SEARCH_USERNAME: username,
   NEXT_ELASTIC_SEARCH_PASSWORD: password,
-  LOG_APP_NAME: index = "webnetwork-logs"
+  NEXT_LOG_APP_NAME: index = "webnetwork-logs"
 } = process.env;
 
 export const elasticLoggerMaker = (): LoggerPlugin => ({
@@ -15,16 +15,22 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
       return;
     }
 
-
-    console.log(`PARAMS WILL BE SENT AS`, contents)
+    /* this is needed because Scribal makes magic */
+    const _params = contents?.[1]?.[0];
+    const params =
+      (typeof _params === "string" || typeof _params === "number")
+        ? {value: _params}
+        : Array.isArray(_params)
+          ? {value_array: _params}
+          : _params;
 
     new Client({node, auth: {username, password}})
       .index({
         index: `bepro-app-logs-${index}`,
         document: {
           level,
-          message: contents.message,
-          params: contents,
+          message: contents[0],
+          params,
           createdAt: new Date().toISOString(),
         }
       })
