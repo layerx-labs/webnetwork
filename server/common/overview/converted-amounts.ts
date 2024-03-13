@@ -20,10 +20,10 @@ export default async function get(query: ParsedUrlQuery) {
     chain
   } = query;
 
-  if ((chain && isNaN(+chain)) || network && SPAM_TERMS.some(r => r.test(network?.toString())))
+  if (network && SPAM_TERMS.some(r => r.test(network?.toString())))
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
-  const cacheKey = `/overview/converted-amounts/${network}${chain ? `/${chain}` : ""}`;
+  const cacheKey = `/overview/converted-amounts/${network ? network : ""}${chain ? `/${chain}` : ""}`;
 
   const cachedData = cache.get(cacheKey);
 

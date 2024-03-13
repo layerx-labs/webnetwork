@@ -1,6 +1,6 @@
 import cache from "memory-cache";
 
-import { FIVE_MINUTES_IN_MS } from "helpers/constants";
+import {FIVE_MINUTES_IN_MS} from "helpers/constants";
 
 import get from "server/common/overview/converted-amounts";
 
@@ -68,7 +68,7 @@ describe("ConvertedAmountsOverview", () => {
   it("Should save cache", async () => {
     const cacheSpy = jest.spyOn(cache, "put");
     await get({});
-    expect(cacheSpy).toHaveBeenCalledWith("/overview/converted-amounts/undefined/undefined", {
+    expect(cacheSpy).toHaveBeenCalledWith("/overview/converted-amounts/", {
       totalOnTasks: 150
     }, FIVE_MINUTES_IN_MS);
   });
