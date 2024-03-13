@@ -17,7 +17,7 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
 
     new Client({node, auth: {username, password}})
       .index({
-        index,
+        index: `bepro-app-logs-${index}`,
         document: {
           level,
           message: contents?.[Symbol.for('message')],
