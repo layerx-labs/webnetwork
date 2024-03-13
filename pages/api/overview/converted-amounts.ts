@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { withCORS } from "middleware";
-import { WithValidChainId } from "middleware/with-valid-chain-id";
+import {withCORS} from "middleware";
+import {WithValidChainId} from "middleware/with-valid-chain-id";
 
-import { error as LogError } from "services/logging";
+import {error as LogError} from "services/logging";
 
 import get from "server/common/overview/converted-amounts";
 
@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
   } catch (error) {
     LogError(error);
-    res.status(error.cause || 500).json(error.message || error);
+    res.status(error.status || 500).json(error.message || error);
   }
 
   res.end();

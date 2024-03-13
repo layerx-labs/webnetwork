@@ -5,7 +5,7 @@ import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { getDeveloperAmount } from "helpers/calculateDistributedAmounts";
+import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
 import {caseInsensitiveEqual} from "helpers/db/conditionals";
 import {getAssociation} from "helpers/db/models";
 import paginate, {calculateTotalPages} from "helpers/paginate";
@@ -233,7 +233,9 @@ export default async function get(query: ParsedUrlQuery) {
                                                               issue.network.mergeCreatorFeeShare,
                                                               issue.network.proposerFeeShare,
                                                               BigNumber(issue?.amount));
-        return issue;
+
+        // nextjs is simply dumb
+        return JSON.parse(JSON.stringify(issue.toJSON()));
       });
 
       return {

@@ -2,9 +2,9 @@ import {ParsedUrlQuery} from "querystring";
 
 import {ExplorePageProps} from "types/pages";
 
-import useGetOverviewConvertedAmounts from "x-hooks/api/overview/use-get-overview-converted-amounts";
-import {getBountiesListData} from "x-hooks/api/task";
-import {useGetTotalUsers} from "x-hooks/api/user";
+import getConvertedAmounts from "../../server/common/overview/converted-amounts";
+import getBounties from "../../server/common/search/tasks";
+import getTotalUsers from "../../server/common/search/total";
 
 /**
  * Get explore page data from api based on the current url query
@@ -12,13 +12,14 @@ import {useGetTotalUsers} from "x-hooks/api/user";
  * @returns object with retrieved data
  */
 export default async function getExplorePageData(query: ParsedUrlQuery): Promise<ExplorePageProps> {
+
   const [ convertedAmounts, bounties, protocolMembers ] =
     await Promise.all([
-      useGetOverviewConvertedAmounts(query),
-      getBountiesListData(query)
-        .then(({ data }) => data)
+      getConvertedAmounts(query),
+      getBounties(query)
+        .then((data) => data as any)
         .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),
-      useGetTotalUsers()
+      getTotalUsers()
     ]);
 
   return {
