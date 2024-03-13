@@ -20,7 +20,7 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
         index: `bepro-app-logs-${index}`,
         document: {
           level,
-          message: contents?.[Symbol.for('message')],
+          contents,
           createdAt: new Date().toISOString(),
         }
       })
