@@ -20,6 +20,7 @@ import { SESSION_TTL_IN_DAYS } from "server/auth/config";
 import { useSearchCurators } from "x-hooks/api/curator";
 import { useGetKycSession, useValidateKycSession } from "x-hooks/api/kyc";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
+import { useLoadersStore } from "x-hooks/stores/loaders/loaders.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import { useDao } from "x-hooks/use-dao";
@@ -45,6 +46,7 @@ export function useAuthentication() {
 
   const { service: daoService } = useDaoStore();
   const { currentUser, updateCurrentUser} = useUserStore();
+  const { updateWaitingForMessageSign } = useLoadersStore();
 
   const [balance] = useState(new WinStorage('currentWalletBalance', 1000, 'sessionStorage'));
 
@@ -97,7 +99,7 @@ export function useAuthentication() {
         message: siweMessage.prepareMessage(),
       });
 
-      nextSignIn("credentials", {
+      await nextSignIn("credentials", {
         redirect: false,
         signature,
         address,
@@ -107,6 +109,8 @@ export function useAuthentication() {
       });
     } catch (e) {
       disconnect();
+    } finally {
+      updateWaitingForMessageSign(false);
     }
   }
 

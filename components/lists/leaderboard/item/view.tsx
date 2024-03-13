@@ -4,9 +4,9 @@ import ChainIcon from "components/chain-icon";
 import CopyButton from "components/common/buttons/copy/controller";
 import { OverlappingIcons } from "components/common/overlapping-icons/overlapping-icons.view";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import Identicon from "components/identicon";
 
-import { truncateAddress } from "helpers/truncate-address";
 import { truncateString } from "helpers/truncate-string";
 
 import {LeaderBoard} from "interfaces/leaderboard";
@@ -56,13 +56,14 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
           address={leaderboard?.address}
         />
       }
-      label={truncateAddress(leaderboard?.address)}
+      label={<UserProfileLink address={leaderboard?.address} handle={leaderboard?.user?.handle} />}
       columns={columns}
       mobileColumnIndex={[1, 2, 3]}
       action={
         <CopyButton
           value={leaderboard?.address}
           popOverLabel={t("leaderboard:address-copied")}
+          title={t("common:misc.copy-address")}
         />
       }
     />

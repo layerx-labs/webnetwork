@@ -7,7 +7,7 @@ import ListView from "components/lists/list/view";
 
 import { isOnNetworkPath } from "helpers/network";
 
-import { SortOption } from "types/components";
+import { HeaderColumn, SortOption } from "types/components";
 import { Action } from "types/utils";
 
 import usePage from "x-hooks/use-page";
@@ -20,7 +20,7 @@ interface ListProps {
   emptyAction?: Action;
   sortOptions?: SortOption[];
   children?: ReactNode;
-  header?: string[];
+  header?: HeaderColumn[];
   withSearchAndFilters?: boolean;
   infinite?: boolean;
   hasMorePages?: boolean;

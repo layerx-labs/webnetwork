@@ -31,7 +31,6 @@ const currentUser = {
 };
 
 const useLoadersStore = {
-  updateWeb3Dialog: jest.fn(),
   updateWrongNetworkModal: jest.fn(),
   updateWalletMismatchModal: jest.fn(),
 };

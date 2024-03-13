@@ -19,6 +19,7 @@ export default function CopyButtonView({
   popOverLabel,
   onClick,
   showPopOver,
+  title,
 }: CopyButtonViewProps) {
   const { t } = useTranslation("common");
 
@@ -32,6 +33,7 @@ export default function CopyButtonView({
         textClass="text-gray-50"
         className="border-radius-4 p-1 border-gray-700 not-svg"
         data-testid="copy-button"
+        title={title}
       >
         <CopyIcon />
       </Button>

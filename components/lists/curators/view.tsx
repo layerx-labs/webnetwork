@@ -15,13 +15,30 @@ export default function CuratorsListView({ curators }: CuratorsListViewProps) {
   const isListEmpty = !curators?.count;
   const hasMore = !isListEmpty && curators?.currentPage < curators?.pages;
   const header = [
-    t("council:council-table.address"),
-    t("council:council-table.closed-proposals"),
-    t("council:council-table.disputed-proposals"),
-    t("council:council-table.disputes"),
-    t("council:council-table.total-votes"),
-    "Networks",
-    t("council:council-table.actions"),
+    {
+      label: t("council:council-table.address"),
+    },
+    {
+      label: t("council:council-table.closed-proposals"),
+      tip: t("council:tips.accepted-proposals")
+    },
+    {
+      label: t("council:council-table.disputed-proposals"),
+      tip: t("council:tips.disputed-proposals")
+    },
+    {
+      label: t("council:council-table.disputes"),
+      tip: t("council:tips.disputes")
+    },
+    {
+      label: t("council:council-table.total-votes")
+    },
+    {
+      label: t("council:council-table.networks")
+    },
+    {
+      label: t("council:council-table.actions")
+    },
   ];
   const sortOptions = [
     {

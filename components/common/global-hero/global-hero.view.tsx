@@ -2,12 +2,15 @@ import { ReactNode } from "react";
 
 import clsx from "clsx";
 
+import { Tooltip } from "components/common/tooltip/tooltip.view";
+
 import useBreakPoint from "x-hooks/use-breakpoint";
 
 
 interface Info {
   value: ReactNode;
   label: ReactNode;
+  tip: string;
 }
 interface GlobalHeroProps {
   infos: Info[];
@@ -29,14 +32,17 @@ export default function GlobalHero ({
           >
             {i?.value}
           </span>
-          <span
-            className={clsx([
-              "font-weight-normal text-white",
-              isMobileView ? "sm-regular" : "lg-medium"
-            ])}
-          >
-            {i?.label}
-          </span>
+
+          <Tooltip tip={i?.tip}>
+            <span
+              className={clsx([
+                "font-weight-normal text-white",
+                isMobileView ? "sm-regular" : "lg-medium"
+              ])}
+            >
+              {i?.label}
+            </span>
+          </Tooltip>
         </div>
       </div>)}
     </div>

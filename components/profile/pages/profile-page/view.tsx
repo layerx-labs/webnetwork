@@ -71,11 +71,17 @@ export default function ProfilePageView({
               )}
             </div>
 
-            <InternalLink
-              label={"Go to public profile"}
-              href={`/profile/${walletAddress}`}
-              className="mt-3"
-            />
+            <div className="row">
+              <div className="col col-lg-auto">
+                <div className="row mx-0">
+                  <InternalLink
+                    label={"Go to public profile"}
+                    href={`/profile/${walletAddress}`}
+                    className="mt-3"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <NotificationForm />

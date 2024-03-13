@@ -1,6 +1,7 @@
 import { useTranslation } from "next-i18next";
 
 import HelpButton from "components/common/buttons/help/view";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import NavAvatar from "components/nav-avatar";
@@ -22,7 +23,11 @@ export default function NavBarActions() {
           <div className="d-flex gap-3 align-items-center">
             <CreateNetworkBountyButton />
 
-            <HelpButton />
+            <Tooltip tip={t("main-nav.tips.help")}>
+              <div>
+                <HelpButton />
+              </div>
+            </Tooltip>
           </div>
         </ResponsiveWrapper>
 
@@ -32,8 +37,18 @@ export default function NavBarActions() {
             md={true}
           >
             <div className="d-flex gap-3 align-items-center">
-              <TransactionsStateIndicator />
-              <Notifications />
+              <Tooltip tip={t("main-nav.tips.transactions-list")}>
+                <div>
+                  <TransactionsStateIndicator />
+                </div>
+              </Tooltip>
+
+              <Tooltip tip={t("main-nav.tips.notifications-list")}>
+                <div>
+                  <Notifications />
+                </div>
+              </Tooltip>
+
               <NavAvatar />
             </div>
           </ResponsiveWrapper>

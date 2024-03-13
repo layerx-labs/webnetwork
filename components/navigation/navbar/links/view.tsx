@@ -1,5 +1,7 @@
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import InternalLink from "components/internal-link";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -12,6 +14,7 @@ import useMarketplace from "x-hooks/use-marketplace";
 
 export default function NavBarLinks() {
   const { pathname } = useRouter();
+  const { t } = useTranslation("common");
 
   const { getURLWithNetwork } = useMarketplace();
 
@@ -32,12 +35,16 @@ export default function NavBarLinks() {
       <ul className="nav-links nav-gap">
         {links.map(({ href, label}) => 
           <li key={`nav-${label}`}>
-            <InternalLink
-              href={href}
-              label={label}
-              nav
-              uppercase
-            />
+            <Tooltip tip={t(`main-nav.tips.${label}`)}>
+              <div>
+                <InternalLink
+                  href={href}
+                  label={label}
+                  nav
+                  uppercase
+                />
+              </div>
+            </Tooltip>
           </li>)}
       </ul>
     </ResponsiveWrapper>

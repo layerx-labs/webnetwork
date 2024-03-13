@@ -9,6 +9,7 @@ import getExplorePageData from "x-hooks/api/get-explore-page-data";
 export default ExplorePage;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
+
   return {
     props: {
       ...(await getExplorePageData(query)),

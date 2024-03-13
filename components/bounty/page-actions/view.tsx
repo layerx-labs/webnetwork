@@ -10,6 +10,7 @@ import TabletAndMobileButton from "components/bounty/page-actions/actions/tablet
 import UpdateAmountButton from "components/bounty/page-actions/actions/update-amount.view";
 import { PageActionsViewProps } from "components/bounty/page-actions/page-actions";
 import UpdateBountyAmountModal from "components/bounty/update-bounty-amount-modal/controller";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import If from "components/If";
 import ProposalModal from "components/proposal/new-proposal-modal/controller";
 
@@ -58,17 +59,25 @@ export default function PageActionsView({
             <div className="d-none d-lg-block">
               <div className="d-flex align-items-center gap-20">
                 <If condition={isStartWorkingButton}>
-                  <StartWorkingButton 
-                    onClick={handleActionWorking}
-                    isExecuting={isExecuting}
-                  />
+                  <Tooltip tip={t("bounty:actions.tips.start-working")}>
+                    <div>
+                      <StartWorkingButton 
+                        onClick={handleActionWorking}
+                        isExecuting={isExecuting}
+                      />
+                    </div>
+                  </Tooltip>
                 </If>
 
                 <If condition={isCreatePr}>
-                  <CreateDeliverableButton 
-                    onClick={onCreateDeliverableClick}
-                    disabled={!isWalletConnected}
-                  />
+                  <Tooltip tip={t("bounty:actions.tips.create-deliverable")}>
+                    <div>
+                      <CreateDeliverableButton 
+                        onClick={onCreateDeliverableClick}
+                        disabled={!isWalletConnected}
+                      />
+                    </div>
+                  </Tooltip>
                 </If>
 
                 <If condition={isUpdateAmountButton}>
@@ -76,10 +85,14 @@ export default function PageActionsView({
                 </If>
 
                 <If condition={isCreateProposal}>
-                  <CreateProposalButton 
-                    onClick={() => setShowPRProposal(true)}
-                    disabled={!isWalletConnected}
-                  />
+                  <Tooltip tip={t("bounty:actions.tips.create-proposal")}>
+                    <div>
+                      <CreateProposalButton 
+                        onClick={() => setShowPRProposal(true)}
+                        disabled={!isWalletConnected}
+                      />
+                    </div>
+                  </Tooltip>
                 </If>
 
                 <If condition={isEditButton}>

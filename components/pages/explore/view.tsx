@@ -22,15 +22,18 @@ export default function ExplorePageView({
   const infos = [
     {
       value: bounties?.totalBounties || 0,
-      label: t("heroes.open-tasks")
+      label: t("heroes.open-tasks"),
+      tip: t("heroes.tips.open-tasks")
     },
     {
       value: `$${formatNumberToNScale(totalOnTasks || 0, 0)}`,
-      label: t("heroes.to-grab")
+      label: t("heroes.to-grab"),
+      tip: t("heroes.tips.to-grab"),
     },
     {
       value: protocolMembers || 0,
-      label: t("heroes.users")
+      label: t("heroes.users"),
+      tip: t("heroes.tips.users"),
     }
   ];
 

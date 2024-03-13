@@ -4,14 +4,12 @@ import ArrowLeft from "assets/icons/arrow-left";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
-
-import {truncateAddress} from "helpers/truncate-address";
+import PullRequestLabels from "components/deliverable/labels/controller";
 
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
-
-import PullRequestLabels from "../labels/controller";
 
 interface DeliverableHeroViewProps {
   currentDeliverable: Deliverable;
@@ -95,14 +93,12 @@ export default function DeliverableHeroView({
                     user={currentDeliverable?.user?.handle}
                   />
                 </div>{" "}
-                <div
-                  className={`text-uppercase text-white border border-gray-700 p-1 
-                              border-radius-4 caption text-truncate`}
-                >
-                  {currentDeliverable.user?.handle
-                    ? currentDeliverable.user?.handle
-                    : truncateAddress(currentDeliverable.user?.address)}
-                </div>
+
+                <UserProfileLink
+                  className={`text-uppercase text-white caption text-truncate`}
+                  address={currentDeliverable.user?.address}
+                  handle={currentDeliverable.user?.handle}
+                />
               </div>
 
               {currentDeliverable?.createdAt && (

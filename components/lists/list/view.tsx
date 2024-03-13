@@ -7,6 +7,8 @@ import ContractButton from "components/common/buttons/contract-button/contract-b
 import GoTopButton from "components/go-top-button/controller";
 import If from "components/If";
 import InfiniteScroll from "components/infinite-scroll";
+import ChainFilter from "components/lists/filters/chain/controller";
+import MobileFiltersButton from "components/lists/filters/mobile-button/controller";
 import ListHeader from "components/lists/list/header/view";
 import ListSearchBar from "components/lists/list/search-bar/view";
 import ListSort from "components/lists/sort/controller";
@@ -14,12 +16,10 @@ import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { SortOption } from "types/components";
-import { Action } from "types/utils";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import {SupportedChainData} from "../../../interfaces/supported-chain-data";
-import ChainFilter from "../filters/chain/controller";
-import MobileFiltersButton from "../filters/mobile-button/controller";
+import { HeaderColumn, SortOption } from "types/components";
+import { Action } from "types/utils";
 
 interface ListViewProps {
   searchString: string;
@@ -33,7 +33,7 @@ interface ListViewProps {
   children?: ReactNode;
   networkFilter?: boolean;
   withSearchAndFilters?: boolean;
-  header?: string[];
+  header?: HeaderColumn[];
   infinite?: boolean;
   chainFilters?: boolean;
   hasMorePages?: boolean;

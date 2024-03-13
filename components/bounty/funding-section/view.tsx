@@ -16,6 +16,7 @@ import {
 import RetractOrWithdrawModal from "components/bounty/funding-section/retract-or-withdraw-modal/controller";
 import Collapsable from "components/collapsable";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import If from "components/If";
 
@@ -54,7 +55,7 @@ export default function FundingSectionView({
     rewardTokenSymbol,
     updateBountyData
 }: FundingSectionViewProps) {
-  const { t } = useTranslation(["common", "funding"]);
+  const { t } = useTranslation(["common", "funding", "bounty"]);
 
   const [showFundModal, setShowFundModal] = useState(false);
   const [fundingToRetractOrWithdraw, setFundingToRetractOrWithdraw] = useState<fundingBenefactor>();
@@ -119,16 +120,25 @@ export default function FundingSectionView({
         labelColor="gray-200"
         activeColor="white"
         className="gap-2 bg-gray-900"
-        headerTitle="Funds given"
+        headerTitle={t("funding:funds-given")}
+        headerTip={t("bounty:tips.funds-given")}
         containerClassName="bg-gray-900 mt-3 p-3 border-radius-8 border border-gray-800"
       >
         <Col className="mt-4 d-grid gap-2">
           <RowWithTwoColumns
             col1={
-              <CaptionMedium text={t("funding:current-funding")} color="gray-600" />
+              <Tooltip tip={t("bounty:tips.current-funding")}>
+                <div>
+                  <CaptionMedium text={t("funding:current-funding")} color="gray-600" />
+                </div>
+              </Tooltip>
             }
             col2={
-              <CaptionMedium text={t("funding:gross-total-amount")} color="gray-600" />
+              <Tooltip tip={t("bounty:tips.gross-total-amount")}>
+                <div>
+                  <CaptionMedium text={t("funding:gross-total-amount")} color="gray-600" />
+                </div>
+              </Tooltip>
             }
           />
 

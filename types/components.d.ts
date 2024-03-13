@@ -28,6 +28,7 @@ export interface ResponsiveListItemColumnProps {
 
 export interface CopyButtonProps {
   value: string;
+  title?: string;
   popOverLabel?: string;
 }
 
@@ -170,3 +171,8 @@ export interface TaskListItemVariantProps {
 }
 
 export type Status = "review" | "not-accepted" | "canceled" | "accepted" | "draft" | "refused" | "disputed";
+
+export type HeaderColumn = {
+  label: string,
+  tip?: string,
+}

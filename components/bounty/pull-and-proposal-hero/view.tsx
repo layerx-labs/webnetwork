@@ -6,11 +6,9 @@ import ArrowLeft from "assets/icons/arrow-left";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
 import Button from "components/button";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import CustomContainer from "components/custom-container";
 import DateLabel from "components/date-label";
-import GithubInfo from "components/github-info";
-
-import {truncateAddress} from "helpers/truncate-address";
 
 import {Token} from "interfaces/token";
 
@@ -101,14 +99,9 @@ export default function PullAndProposalHeroView({
               </div>
 
               <div className="col-auto px-0">
-                <GithubInfo
-                  parent="hero"
-                  variant="user"
-                  label={
-                    handle
-                      ? `@${handle}`
-                      : truncateAddress(creatorAddress)
-                  }
+                <UserProfileLink
+                  address={creatorAddress}
+                  handle={handle}
                 />
               </div>
             </div>

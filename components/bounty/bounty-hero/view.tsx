@@ -1,24 +1,21 @@
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
-
 import {useTranslation} from "next-i18next";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import BountyItemLabel from "components/bounty-item-label";
+import BountySettings from "components/bounty/bounty-hero/bounty-settings/controller";
 import PriceConversor from "components/bounty/bounty-hero/price-conversor/controller";
+import BountyTagsView from "components/bounty/bounty-tags/view";
+import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.view";
 import Button from "components/button";
 import ChainIcon from "components/chain-icon";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
 import TaskStatusInfo from "components/task-status-info";
 
-import {truncateAddress} from "helpers/truncate-address";
-
-import {IssueBigNumberData, IssueState} from "interfaces/issue-data";
-
-import BountyTagsView from "../bounty-tags/view";
-import TaskTypeBadge from "../task-type-badge/task-type-badge.view";
-import BountySettings from "./bounty-settings/controller";
+import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
 
 interface BountyHeroProps {
   handleEditIssue?: () => void;
@@ -84,46 +81,42 @@ export default function BountyHeroView({
             >
               <div className="col-auto">
                 <div className="row py-1 mx-0 bg-transparent border border-gray-700 text-gray-300 border-radius-4">
-                  <div className="d-flex align-items-center">
-                    <TaskStatusInfo
-                      task={bounty}
-                    />
-                    <span className="ms-1 text-white text-capitalize" data-testid="task-status">
-                      {currentState}
-                    </span>
-                  </div>
+                  <Tooltip tip={t(`tips.status.${currentState}`)}>
+                    <div className="d-flex align-items-center">
+                      <TaskStatusInfo
+                        task={bounty}
+                      />
+                      <span className="ms-1 text-white text-capitalize" data-testid="task-status">
+                        {currentState}
+                      </span>
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
 
               <If condition={bounty?.isKyc}>
                 <div className="col-auto">
-                  <OverlayTrigger
-                    key="bottom-githubPath"
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id={"tooltip-bottom"}>
-                        {t("bounty:kyc.bounty-tool-tip")}
-                      </Tooltip>
-                    }
-                  >
+                  <Tooltip tip={t("bounty:kyc.bounty-tool-tip")}>
                     <div
                       className={`ms-3 d-flex py-1 px-2 bg-transparent border 
                                   border-gray-700 text-white border-radius-4`}
                     >
                       {t("bounty:kyc.label")}
                     </div>
-                  </OverlayTrigger>
+                  </Tooltip>
                 </div>
               </If>
 
               <div className="col">
                 <div className="row justify-content-end">
-                  <div className="col-auto">
-                    <ChainIcon
-                      src={bounty?.network?.chain?.icon}
-                      label={bounty?.network?.chain?.chainName}
-                    />
-                  </div>
+                  <Tooltip tip={t("tips.chain")}>
+                    <div className="col-auto">
+                      <ChainIcon
+                        src={bounty?.network?.chain?.icon}
+                        label={bounty?.network?.chain?.chainName}
+                      />
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
 
@@ -137,7 +130,7 @@ export default function BountyHeroView({
             </h5>
 
             <div className="d-flex flex-wrap gap-1 align-items-center mt-3 border-bottom border-gray-850 pb-4">
-              <TaskTypeBadge 
+              <TaskTypeBadge
                 type={bounty?.type}
                 responsiveLabel={false}
               />
@@ -193,9 +186,11 @@ export default function BountyHeroView({
                       />{" "}
                     </div>
 
-                    <span className="text-truncate">
-                      {bounty?.user?.handle || truncateAddress(bounty?.user?.address)}
-                    </span>
+                    <UserProfileLink
+                      className="text-truncate"
+                      address={bounty?.user?.address}
+                      handle={bounty?.user?.handle}
+                    />
                   </>
                 </BountyItemLabel>
               </div>

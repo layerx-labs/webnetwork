@@ -176,3 +176,7 @@ export const walletExtensionsLinks = {
     deepLink: COINBASE_DEEPLINK_LINK
   },
 };
+
+export const SPAM_TERMS = [
+  /^\./, /\.\w{0,3}$/, /robots/
+]

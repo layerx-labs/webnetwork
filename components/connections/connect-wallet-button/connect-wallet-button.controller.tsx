@@ -17,12 +17,17 @@ export default function ConnectWalletButton({
 
   const [showModal, setShowModal] = useState(false);
 
-  const { loading } = useLoadersStore();
+  const { loading, updateWaitingForMessageSign } = useLoadersStore();
   const { currentUser } = useUserStore();
   const { serviceStarting } = useDaoStore();
 
   function onWalletChange() {
     setShowModal(!currentUser?.walletAddress);
+  }
+
+  function onConnectClick() {
+    updateWaitingForMessageSign(true);
+    openConnectModal();
   }
 
   useEffect(onWalletChange, [currentUser?.walletAddress]);
@@ -35,7 +40,7 @@ export default function ConnectWalletButton({
       isModalVisible={showModal}
       isConnected={!!currentUser?.walletAddress}
       buttonColor={btnColor}
-      onConnectClick={openConnectModal}
+      onConnectClick={onConnectClick}
     />
   );
 }

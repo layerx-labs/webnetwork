@@ -7,13 +7,31 @@ import If from "components/If";
 interface NftsListItemViewProps {
   imageUrl: string;
   transactionUrl: string;
+  taskUrl: string;
 }
 
 export default function NftsListItemView ({
   imageUrl,
   transactionUrl,
+  taskUrl,
 }: NftsListItemViewProps) {
   const { t } = useTranslation("common");
+
+  const LinkComponent = ({ label, url }: { label: string, url: string }) => (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferer"
+      className="sm-regular text-decoration-none text-blue-200"
+      data-testid="url-preview"
+    >
+      <span className="mr-1">
+        {label}
+      </span>
+
+      <ArrowUpRight />
+    </a>
+  );
   
   return(
     <div className="d-flex p-3 flex-column align-items-center border border-radius-4 border-gray-800 comment">
@@ -28,20 +46,16 @@ export default function NftsListItemView ({
         <img src={imageUrl} className="border-radius-8" data-testid="image-preview"/>
       </If>
 
-      <div className="w-100 text-left mt-3 text-truncate text-blue-200">
-        <a
-          href={transactionUrl}
-          target="_blank"
-          rel="noopener noreferer"
-          className="sm-regular text-decoration-none text-blue-200"
-          data-testid="url-preview"
-        >
-          <span className="mr-1">
-            {t("actions.view-on-explorer")}
-          </span>
+      <div className="d-flex justify-content-between w-100 mt-3 text-truncate text-blue-200">
+        <LinkComponent
+          label={"Go to task page"}
+          url={taskUrl}
+        />
 
-          <ArrowUpRight/>
-        </a>
+        <LinkComponent
+          label={t("actions.view-on-explorer")}
+          url={transactionUrl}
+        />
       </div>
     </div>
   );

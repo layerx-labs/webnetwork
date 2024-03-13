@@ -1,15 +1,14 @@
 import {useTranslation} from "next-i18next";
 
+import AvatarOrIdenticon from "components/avatar-or-identicon";
+import CommentSettings from "components/bounty/comments/comment/settings/controller";
 import {FlexColumn} from "components/common/flex-box/view";
+import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
+import MarkedRender from "components/MarkedRender";
 
 import {getTimeDifferenceInWords,} from "helpers/formatDate";
-import {truncateAddress} from "helpers/truncate-address";
 
 import {IssueDataComment} from "interfaces/issue-data";
-
-import AvatarOrIdenticon from "../../../avatar-or-identicon";
-import MarkedRender from "../../../MarkedRender";
-import CommentSettings from "./settings/controller";
 
 export default function Comment({
   comment,
@@ -34,11 +33,11 @@ export default function Comment({
             />
           </FlexColumn>
           <FlexColumn className="justify-content-center">
-            <span className="xs-medium ms-2">
-              {user?.handle
-                ? `@${user?.handle}`
-                : truncateAddress(userAddress)}{" "}
-            </span>
+            <UserProfileLink
+              className="xs-medium ms-2"
+              address={userAddress}
+              handle={user?.handle}
+            />
           </FlexColumn>
           <FlexColumn className="align-items-baseline">
             <span className="p-small text-gray-500 ms-2">
@@ -46,7 +45,7 @@ export default function Comment({
             </span>
           </FlexColumn>
         </div>
-        <CommentSettings 
+        <CommentSettings
           handleHide={() => console.log}
           isGovernor={false}
           hidden={false} 
