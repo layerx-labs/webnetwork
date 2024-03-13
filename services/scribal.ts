@@ -5,21 +5,21 @@ import {elasticLoggerMaker} from "services/elastic-logger";
 const ScribalConfig = {
   logService: {
     console: {
-      silent: process.env.LOG_TO_CONSOLE === 'false',
-      logLevel: (process.env.LOG_LEVEL || 'debug') as any,
+      silent: process.env.NEXT_LOG_TO_CONSOLE === 'false',
+      logLevel: (process.env.NEXT_LOG_LEVEL || 'debug') as any,
     },
     elastic: {
-      silent: process.env.LOG_TO_ELASTIC === 'false',
-      level: (process.env.LOG_LEVEL || 'debug') as any,
+      silent: process.env.NEXT_LOG_TO_ELASTIC === 'false',
+      level: (process.env.NEXT_LOG_LEVEL || 'debug') as any,
     },
     file: {
-      silent: process.env.LOG_TO_FILE === 'false',
-      logLevel: (process.env.LOG_LEVEL || 'debug') as any,
-      logFileDir: process.env.LOG_FILE_DIR || 'logs',
-      logDailyRotation: process.env.DAILY_ROTATION_FILE === 'true',
+      silent: process.env.NEXT_LOG_TO_FILE === 'false',
+      logLevel: (process.env.NEXT_LOG_LEVEL || 'debug') as any,
+      logFileDir: process.env.NEXT_LOG_FILE_DIR || 'logs',
+      logDailyRotation: process.env.NEXT_DAILY_ROTATION_FILE === 'true',
       logDailyRotationOptions: {
-        maxSize: process.env.DAILY_ROTATION_FILE_MAX_SIZE || '20m',
-        datePattern: process.env.DAILY_ROTATION_FILE_DATE_PATTERN || 'YYYY-MM-DD',
+        maxSize: process.env.NEXT_DAILY_ROTATION_FILE_MAX_SIZE || '20m',
+        datePattern: process.env.NEXT_DAILY_ROTATION_FILE_DATE_PATTERN || 'YYYY-MM-DD',
       },
     },
   }
