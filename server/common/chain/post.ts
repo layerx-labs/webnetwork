@@ -1,13 +1,13 @@
-import { NextApiRequest } from "next";
-import { Op } from "sequelize";
+import {NextApiRequest} from "next";
+import {Op} from "sequelize";
 
 import models from "db/models";
 
-import { MiniChainInfo } from "interfaces/mini-chain";
+import {MiniChainInfo} from "interfaces/mini-chain";
 
 import DAO from "services/dao-service";
 
-import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
+import {HttpBadRequestError, HttpConflictError} from "server/errors/http-errors";
 
 export async function post(req: NextApiRequest) {
   const body = req.body as MiniChainInfo & { isDefault: boolean; };
@@ -30,12 +30,18 @@ export async function post(req: NextApiRequest) {
   if (missingValues.length)
     throw new HttpBadRequestError(`Missing parameters: ${missingValues.join(", ")}`);
 
-  const dao = new DAO({
-    skipWindowAssignment: true,
-    web3Host: body.activeRPC,
-  });
+  let dao: DAO;
 
-  await dao.start();
+  try {
+    dao = new DAO({
+      skipWindowAssignment: true,
+      web3Host: body.activeRPC,
+    });
+
+    await dao.start();
+  } catch (e) {
+    throw new HttpBadRequestError(`Failed to connect with ${body.activeRPC}`)
+  }
 
   const model = {
     chainId: body.chainId,
