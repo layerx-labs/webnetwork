@@ -4,9 +4,7 @@ import models from "db/models";
 
 import {Settings} from "helpers/settings";
 
-import { withCORS } from "middleware";
-
-import {Logger} from "services/logging";
+import {withCORS} from "middleware";
 
 async function get(_req: NextApiRequest, res: NextApiResponse) {
   const settings = await models.settings.findAll({
@@ -16,15 +14,15 @@ async function get(_req: NextApiRequest, res: NextApiResponse) {
 
   const settingsList = new Settings(settings);
 
-  return res.status(200).json(settingsList.raw());
+  return settingsList.raw();
 }
 
-Logger.changeActionName(`Settings`);
+
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
   case "GET":
-    await get(req, res);
+    res.status(200).json(await get(req, res));
     break;
 
   default:

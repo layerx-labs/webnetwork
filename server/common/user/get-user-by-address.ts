@@ -9,12 +9,12 @@ export async function getUserByAddress(req: NextApiRequest) {
   const {address} = req.query as {address: string};
 
   if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address))
-    throw new HttpBadRequestError("");
+    throw new HttpBadRequestError("invalid address or not provided");
 
   const user = await models.user.findOne({where: {address: {[Op.iLike]: address}}})
 
   if (!user)
-    throw new HttpNotFoundError("")
+    throw new HttpNotFoundError("user not found")
 
   return user;
 }

@@ -1,8 +1,11 @@
 import axios from "axios";
 import * as cheerio from 'cheerio';
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { Logger } from "services/logging";
+import {Logger} from "services/logging";
+
+import {BadRequestErrors} from "../../../interfaces/enums/Errors";
+import {HttpBadRequestError} from "../../errors/http-errors";
 
 interface Metadata {
   title: string;
@@ -12,43 +15,39 @@ interface Metadata {
 }
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const { url } = req.query;
+  const {url} = req.query;
 
-    if (!url || typeof url !== "string") {
-      return res.status(400).json({ message: "Invalid URL" });
-    }
+  if (!url || typeof url !== "string")
+    throw new HttpBadRequestError("url is not a string")
 
-    const html = await axios.get(url).then(({data}) => data).catch(() => undefined)
 
-    if(!html) return res.status(400).json({ message: "Invalid URL" })
+  const html = await axios.get(url).then(({data}) => data).catch(() => undefined)
 
-    const loadHtml = cheerio.load(html)
+  if (!html)
+    throw new HttpBadRequestError("invalid url or empty data")
 
-    const metadata: Metadata = {
-      title: "",
-      description: "",
-    };
+  const loadHtml = cheerio.load(html)
 
-    loadHtml("meta").map((_, element) => {
-      const name =
-        loadHtml(element).attr("name") || loadHtml(element).attr("property");
-      const content = loadHtml(element).attr("content");
+  const metadata: Metadata = {
+    title: "",
+    description: "",
+  };
 
-      if (name && content) {
-        if (name === "description") {
-          metadata.description = content;
-        } else if (name === "og:image") {
-          metadata.ogImage = content;
-        } else if (name === "og:video") {
-          metadata.ogVideo = content;
-        }
+  loadHtml("meta").map((_, element) => {
+    const name =
+      loadHtml(element).attr("name") || loadHtml(element).attr("property");
+    const content = loadHtml(element).attr("content");
+
+    if (name && content) {
+      if (name === "description") {
+        metadata.description = content;
+      } else if (name === "og:image") {
+        metadata.ogImage = content;
+      } else if (name === "og:video") {
+        metadata.ogVideo = content;
       }
-    });
+    }
+  });
 
-    return res.status(200).json(metadata);
-  } catch (error) {
-    Logger.error(error, "metadata endpoint error", req);
-    res.status(error?.status || 500).json(error?.message || error?.toString());
-  }
+  return metadata;
 }

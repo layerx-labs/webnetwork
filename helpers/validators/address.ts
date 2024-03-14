@@ -1,6 +1,7 @@
 import getConfig from "next/config";
 
 import {lowerCaseCompare} from "helpers/string";
+
 import {isAddress} from "../is-address";
 
 const { publicRuntimeConfig } = getConfig();

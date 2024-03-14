@@ -1,6 +1,6 @@
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
 
-import {debug, log, Logger} from "services/logging";
+import {debug, error, log, warn} from "services/logging";
 
 export const LogAccess = (handler: NextApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
@@ -30,15 +30,14 @@ export const LogAccess = (handler: NextApiHandler) => {
       await handler(req, res);
 
       if (res.statusCode >= 400)
-        Logger.warn(`Answered with ${res.statusCode}`, res.statusMessage)
+        warn(`Answered with ${res.statusCode}`, res.statusMessage)
 
       debug(`access-end`, {method, pathname});
 
     } catch (e) {
-      Logger.error(e, `access-error`, {method, pathname, payload});
-      res.status(e?.status || 500).end();
-    } finally {
-      Logger.changeActionName(``); // clean action just in case;
+      error(e, `access-error`, {method, pathname, payload, errorMessage: e?.message});
+      res.status(e?.status || e?.code || 500).json({message: e?.message});
+      res.end();
     }
   }
 }

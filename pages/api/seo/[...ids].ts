@@ -8,23 +8,27 @@ import {Settings} from "helpers/settings";
 
 import {LogAccess} from "middleware/log-access";
 
+import {BadRequestErrors} from "../../../interfaces/enums/Errors";
+import {HttpBadRequestError, HttpNotFoundError} from "../../../server/errors/http-errors";
+
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const {ids: [issueId]} = req.query;
 
   if (isNaN(+issueId))
-    return res.status(400).json("wrong parameter values");
+    throw new HttpBadRequestError(BadRequestErrors.WrongParameters)
 
   const issue = await models.issue.findOne({
     where: {
       id: issueId,
-      seoImage: { [Op.not]: null }
+      seoImage: {[Op.not]: null}
     }
   });
 
-  if (!issue) return res.status(404).json(null);
+  if (!issue)
+    throw new HttpNotFoundError("issue not found");
 
   const settings = await models.settings.findAll({
-    where: { 
+    where: {
       visibility: "public",
       group: "urls"
     },
@@ -32,13 +36,13 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   });
 
   const defaultConfig = (new Settings(settings)).raw();
-  
+
   if (!defaultConfig?.urls?.ipfs)
     return res.status(500).json("Missing ipfs url on settings");
 
   const url = `${defaultConfig.urls.ipfs}/${issue.seoImage}`;
 
-  const { data } = await axios.get(url, {
+  const {data} = await axios.get(url, {
     responseType: "arraybuffer"
   });
 
@@ -49,6 +53,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   return res.status(200).end(data);
 }
+
 async function Seo(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
@@ -61,4 +66,5 @@ async function Seo(req: NextApiRequest, res: NextApiResponse) {
 
   res.end();
 }
+
 export default LogAccess(Seo);

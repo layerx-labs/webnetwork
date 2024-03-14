@@ -1,8 +1,8 @@
-import { Web3Connection } from "@taikai/dappkit";
-import { ERC20 } from "@taikai/dappkit";
+import {ERC20, Web3Connection} from "@taikai/dappkit";
 
 import Database from "db/models";
-import { getCoinIconByChainAndContractAddress } from "services/coingecko";
+
+import {getCoinIconByChainAndContractAddress} from "services/coingecko";
 
 //checks if it exists in the base, creates it if necessary and if it exists, adds the boolean for the correct value
 const handlefindOrCreateTokens = async (tokenId: number,

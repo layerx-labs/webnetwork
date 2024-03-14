@@ -6,6 +6,8 @@ import { resJsonMessage } from "helpers/res-json-message";
 
 import { UserRoleUtils } from "server/utils/jwt";
 
+import {HttpConflictError} from "../../errors/http-errors";
+
 export default async function del(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
@@ -20,14 +22,13 @@ export default async function del(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  if (!deliverable) return resJsonMessage("Invalid", res, 409);
+  if (!deliverable)
+    throw new HttpConflictError("Invalid")
 
   if (deliverable.prContractId)
-    return resJsonMessage("This deliverable already exists in the contract",
-                          res,
-                          409);
+    throw new HttpConflictError("This deliverable already exists in the contract")
 
   await deliverable.destroy();
 
-  return res.status(200).json("Deliverable Canceled");
+  return {message: "Deliverable Canceled"};
 }
