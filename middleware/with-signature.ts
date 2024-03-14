@@ -1,13 +1,10 @@
-import { NextApiHandler } from "next";
+import {NextApiHandler} from "next";
 
-import { INVALID_SIGNATURE } from "helpers/error-messages";
-import { getSiweMessage, verifySiweSignature } from "helpers/siwe";
+import {INVALID_SIGNATURE} from "helpers/error-messages";
+import {getSiweMessage, verifySiweSignature} from "helpers/siwe";
 
-import { Logger } from "services/logging";
+import {isMethodAllowed} from "server/utils/http";
 
-import { isMethodAllowed } from "server/utils/http";
-
-Logger.changeActionName(`withSignature()`);
 
 export const withSignature = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {

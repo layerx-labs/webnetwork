@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { withGovernor, withProtected } from "middleware";
-import { WithValidChainId } from "middleware/with-valid-chain-id";
+import {withGovernor, withProtected} from "middleware";
+import {WithValidChainId} from "middleware/with-valid-chain-id";
 
 import get from "server/common/marketplace/management/banned-words/get";
 import patch from "server/common/marketplace/management/banned-words/patch";
@@ -10,13 +10,13 @@ import post from "server/common/marketplace/management/banned-words/post";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
   case "GET":
-    await get(req, res);
+    res.status(200).json(await get(req, res));
     break;
   case "POST":
-    await post(req, res);
+    res.status(200).json(await post(req, res));
     break;
   case "PATCH":
-    await patch(req, res);
+    res.status(200).json(await patch(req, res));
     break;
 
   default:

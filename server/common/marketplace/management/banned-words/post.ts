@@ -1,32 +1,37 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
 import models from "db/models";
 
-import { error as LogError } from "services/logging";
+import {BadRequestErrors} from "../../../../../interfaces/enums/Errors";
+import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../../../errors/http-errors";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const { id } = req.query;
-    const { banned_domain } = req.body;
 
-    const network = await models.network.findOne({
-      where: {
-        id: +id,
-      },
-    });
+  const {id} = req.query;
+  const {banned_domain} = req.body;
 
-    if(!banned_domain) 
-      return res.status(404).json({ message: "banned_domain not found" });
+  if (!id || isNaN(+id))
+    throw new HttpBadRequestError(BadRequestErrors.WrongParameters)
 
-    if (network.banned_domains.find((domain) => domain === banned_domain))
-      return res.status(409).json({ message: "domain already exists" });
+  if (!banned_domain)
+    throw new HttpBadRequestError(BadRequestErrors.WrongParameters)
 
-    network.banned_domains = [...network.banned_domains, banned_domain];
-    await network.save();
+  const network = await models.network.findOne({
+    where: {
+      id: +id,
+    },
+  });
 
-    return res.status(200).json(network.banned_domains);
-  } catch (error) {
-    res.status(500).json(error);
-    LogError(error);
-  }
+  if (!banned_domain)
+    throw new HttpNotFoundError("banned_domain not found")
+
+  if (network.banned_domains.find((domain) => domain === banned_domain))
+    throw new HttpConflictError("domain already exists")
+
+
+  network.banned_domains = [...network.banned_domains, banned_domain];
+  await network.save();
+
+  return network.banned_domains;
+
 }

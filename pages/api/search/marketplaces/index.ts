@@ -1,14 +1,12 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Op, Sequelize, WhereOptions, IncludeOptions} from "sequelize";
+import {IncludeOptions, Op, Sequelize, WhereOptions} from "sequelize";
 import {Fn, Literal} from "sequelize/types/utils";
 
 import models from "db/models";
 
 import {paginateArray} from "helpers/paginate";
 
-import { withCORS } from "middleware";
-
-import { Logger } from "services/logging";
+import {withCORS} from "middleware";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const whereCondition: WhereOptions = {};
@@ -125,18 +123,18 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const paginatedData = paginateArray(networks, 10, +page || 1)
 
-  return res.status(200).json({
+  return {
     count: networks.length,
     rows: paginatedData.data,
     pages: paginatedData.pages,
     currentPage: +paginatedData.page
-  });
+  };
 }
 
 async function SearchNetworks(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    await get(req, res);
+    res.status(200).json(await get(req, res));
     break;
 
   default:
@@ -146,6 +144,6 @@ async function SearchNetworks(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-Logger.changeActionName(`SearchNetworks`);
+
 export default withCORS(SearchNetworks);
 

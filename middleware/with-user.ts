@@ -1,14 +1,11 @@
-import { NextApiHandler } from "next";
+import {NextApiHandler} from "next";
 
 import models from "db/models";
 
-import { USER_NOT_FOUND } from "helpers/error-messages";
+import {USER_NOT_FOUND} from "helpers/error-messages";
 
-import { Logger } from "services/logging";
+import {isMethodAllowed} from "server/utils/http";
 
-import { isMethodAllowed } from "server/utils/http";
-
-Logger.changeActionName(`withUser()`);
 
 export const withUser = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {

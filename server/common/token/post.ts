@@ -35,7 +35,5 @@ export async function post(req: NextApiRequest) {
   if (existentToken)
     throw new HttpConflictError("Token already saved");
 
-  const createdToken = await handleCreateSettlerToken(address, minAmount, chain.privateChainRpc, chain.chainId);
-
-  return createdToken;
+  return handleCreateSettlerToken(address, minAmount, chain.privateChainRpc, chain.chainId);
 }
