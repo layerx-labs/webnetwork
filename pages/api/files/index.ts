@@ -6,6 +6,16 @@ import {error as LogError, Logger} from "services/logging";
 
 import {uploadFiles} from "server/common/file/post";
 
+const UPLOAD_LIMIT_MB = 4;
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: `${UPLOAD_LIMIT_MB}mb`,
+    }
+  }
+}
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method.toLowerCase()) {
@@ -25,4 +35,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 Logger.changeActionName(`Files`);
-export default withProtected(handler, 4*1024 /* 4Mb */);
+export default withProtected(handler, UPLOAD_LIMIT_MB * 1024 /* 4Mb */);
