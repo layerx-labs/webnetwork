@@ -21,8 +21,6 @@ export async function useUploadFile(_files: File | File[]): Promise<FileUploadRe
     files.push(...await Promise.all(_files.map(readFileData)));
   else files.push(await readFileData(_files));
 
-  console.log(`FILES`, files);
-
   return api
     .post("/files", {files})
     .then(({ data }) => data);
