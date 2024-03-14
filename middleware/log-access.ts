@@ -35,7 +35,7 @@ export const LogAccess = (handler: NextApiHandler) => {
       debug(`access-end`, {method, pathname});
 
     } catch (e) {
-      error(e, `access-error`, {method, pathname, payload, errorMessage: e?.message});
+      error(`access-error`, {method, pathname, payload, errorMessage: e?.message});
       res.status(e?.status || e?.code || 500).json({message: e?.message});
       res.end();
     }
