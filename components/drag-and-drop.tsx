@@ -46,7 +46,7 @@ export default function DragAndDrop({
     onSuccess: (data) => {
       setFiles((oldFiles)=> {
         return oldFiles.map((file)=>{
-          const find = data?.find((el) => el.fileName === file.name);
+          const find = data?.find((el) => el.fileName.toLowerCase().includes(file.name.toLowerCase()));
           if(find)
             return{
               ...file,
