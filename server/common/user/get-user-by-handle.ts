@@ -10,8 +10,8 @@ import {HttpBadRequestError} from "server/errors/http-errors";
 export async function getUserByHandle(req: Pick<NextApiRequest, "query">) {
   const {handle} = req.query as {handle: string};
 
-  if (!handleValidator(handle))
-    throw new HttpBadRequestError("");
+  if (!handle || !handleValidator(handle))
+    throw new HttpBadRequestError("invalid handle");
 
   return models.user.findOne({where: {handle: {[Op.iLike]: handle.toLowerCase()}}})
 }

@@ -1,82 +1,80 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { WhereOptions } from "sequelize";
+import {NextApiRequest, NextApiResponse} from "next";
+import {WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import { error as LogError } from "services/logging";
+import {error as LogError} from "services/logging";
+
+import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../errors/http-errors";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const {
-      comment,
-      issueId,
-      deliverableId,
-      proposalId,
-      type: originalType,
-      replyId,
-      context
-    } = req.body;
 
-    const type = originalType.toLowerCase();
+  const {
+    comment,
+    issueId,
+    deliverableId,
+    proposalId,
+    type: originalType,
+    replyId,
+    context
+  } = req.body;
 
-    const isValidNumber = (v) => /^\d+$/.test(v);
+  const type = originalType.toLowerCase();
 
-    const foundOrValid = (v) => v ? 'found' : 'valid';
+  const isValidNumber = (v) => /^\d+$/.test(v);
 
-    if (!["issue", "deliverable", "proposal", "review"].includes(type)) {
-      return res.status(404).json({ message: "type does not exist" });
-    }
+  const foundOrValid = (v) => v ? 'found' : 'valid';
 
-    if (!issueId || !isValidNumber(issueId))
-      return res
-        .status(404)
-        .json({ message: `issueId not ${foundOrValid(!issueId)}` });
+  if (!["issue", "deliverable", "proposal", "review"].includes(type))
+    throw new HttpBadRequestError("type does not exist")
 
-    if ((["deliverable", "review"].includes(type)) && (!deliverableId || !isValidNumber(deliverableId)))
-      return res.status(404).json({ message: `deliverableId not ${foundOrValid(!deliverableId)}` });
 
-    if (type === "proposal" && (!proposalId || !isValidNumber(proposalId)))
-      return res.status(404).json({ message: `proposalId not ${foundOrValid(!proposalId)}` });
+  if (!issueId || !isValidNumber(issueId))
+    throw new HttpNotFoundError(`issueId not ${foundOrValid(!issueId)}`);
 
-    const user = context.user;
+  if ((["deliverable", "review"].includes(type)) && (!deliverableId || !isValidNumber(deliverableId)))
+    throw new HttpNotFoundError(`deliverableId not ${foundOrValid(!deliverableId)}`)
 
-    if (!user) return res.status(404).json({ message: "user not found" });
+  if (type === "proposal" && (!proposalId || !isValidNumber(proposalId)))
+    throw new HttpNotFoundError(`proposalId not ${foundOrValid(!proposalId)}`)
 
-    const bounty = await models.issue.findOne({where:{id: issueId}})
 
-    if(!bounty) return res.status(404).json({ message: "bounty not found" });
+  const user = context.user;
 
-    if (bounty.isClosed && ["deliverable", "review", "proposal"].includes(type))
-      return res
-      .status(409)
-      .json({ message: "bounty has already been closed" });
+  if (!user)
+    throw new HttpNotFoundError("user not found");
 
-    const whereCondition: WhereOptions = {};
+  const bounty = await models.issue.findOne({where: {id: issueId}})
 
-    if (deliverableId && ["deliverable", "review"].includes(type)){
-      const curator = await models.curator.findByAddressAndNetworkId(user.address, bounty.network_id);
+  if (!bounty)
+    throw new HttpNotFoundError("task not found");
 
-      if(!curator || !curator?.isCurrentlyCurator) return res.status(403).json({ message: `user is not a curator` });
-      whereCondition.deliverableId = +deliverableId;
-    }
-      
-    if (proposalId && type === "proposal")
-      whereCondition.proposalId = +proposalId;
+  if (bounty.isClosed && ["deliverable", "review", "proposal"].includes(type))
+    throw new HttpConflictError("task is already closed")
 
-    const comments = await models.comments.create({
-      issueId: +issueId,
-      comment,
-      type,
-      userAddress: user.address,
-      userId: user.id,
-      hidden: false,
-      ...(deliverableId || proposalId ? whereCondition : null),
-      ...(replyId ? { replyId: +replyId } : null),
-    });
+  const whereCondition: WhereOptions = {};
 
-    return res.status(200).json(comments);
-  } catch (error) {
-    res.status(500).json(error);
-    LogError(error)
+  if (deliverableId && ["deliverable", "review"].includes(type)) {
+    const curator = await models.curator.findByAddressAndNetworkId(user.address, bounty.network_id);
+
+    if (!curator || !curator?.isCurrentlyCurator) return res.status(403).json({message: `user is not a curator`});
+    whereCondition.deliverableId = +deliverableId;
   }
+
+  if (proposalId && type === "proposal")
+    whereCondition.proposalId = +proposalId;
+
+  const comments = await models.comments.create({
+    issueId: +issueId,
+    comment,
+    type,
+    userAddress: user.address,
+    userId: user.id,
+    hidden: false,
+    ...(deliverableId || proposalId ? whereCondition : null),
+    ...(replyId ? {replyId: +replyId} : null),
+  });
+
+  return comments
+
 }

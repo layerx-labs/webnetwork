@@ -1,13 +1,13 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { withCORS, GovernorRoute } from "middleware";
+import {GovernorRoute, withCORS} from "middleware";
 
 import patch from "server/common/comments/patch";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
   case "PATCH":
-    await patch(req, res);
+    res.status(200).json(await patch(req, res));
     break;
 
   default:

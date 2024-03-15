@@ -1,30 +1,39 @@
-import formidable from "formidable";
-import fs from "fs";
-import { NextApiRequest } from "next";
+import {NextApiRequest} from "next";
 
 import IpfsStorage from "services/ipfs-service";
 
-import { HttpBadRequestError } from "server/errors/http-errors";
+import {HttpBadRequestError} from "server/errors/http-errors";
 
-export async function post(req: NextApiRequest) {
-  const formData = await new Promise<{ fields; files: object }>((resolve, reject) => {
-    new formidable.IncomingForm().parse(req, (err, fields, files) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve({ fields, files });
-    });
-  });
+import {debug} from "../../../services/logging";
 
-  const values = Object.values(formData.files);
+export async function uploadFiles(req: NextApiRequest) {
 
-  if (values.length < 1)
+  if (!req.body || !req.body.files)
     throw new HttpBadRequestError("Missing files");
 
-  const uploadFiles = values.map(async (file) => 
-    IpfsStorage.add(fs.readFileSync(file.filepath), false, file.originalFilename));
+  const {files} = req.body;
 
-  const files = await Promise.all(uploadFiles);
+  // prepare before starting the Promise.all, so we can escape earlier
+  const preparedPayloads = files.map(({fileName, fileData}) => {
+    const name = `${new Date().toISOString()}-${fileName}`;
+    const [, ext] = name.split(/\.(?=[^.]*$)/g);
+    const [mime, data] = fileData.split(",");
 
-  return files;
+    const acceptedMimes = [/image\/(jpeg|png|gif|svg\+xml)/, /application\/pdf/];
+
+    const validMime = acceptedMimes.some(pattern => pattern.test(mime));
+
+    if (!validMime)
+      throw new HttpBadRequestError("invalid mime");
+
+    return {name, ext, data}
+  });
+
+  try {
+    return Promise.all(preparedPayloads.map(({name, ext, data}) =>
+      IpfsStorage.add(Buffer.from(data, "base64url"), true, name, ext)));
+  } catch (e) {
+    debug(`Error uploading file to IPFS`, e.message);
+    throw new HttpBadRequestError("Something went wrong.");
+  }
 }
