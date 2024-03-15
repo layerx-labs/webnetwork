@@ -42,9 +42,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const url = `${defaultConfig.urls.ipfs}/${issue.seoImage}`;
 
-  const {data} = await axios.get(url, {
-    responseType: "arraybuffer"
-  });
+  const {data} = await axios.get(url, {responseType: "arraybuffer"});
 
   res.writeHead(200, {
     "Content-Type": "image/png",
