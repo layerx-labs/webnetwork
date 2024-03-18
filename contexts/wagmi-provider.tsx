@@ -46,7 +46,10 @@ const cookieStorage = {
   },
 }
 
-const config = getDefaultConfig({
+export default function Wagmi ({
+  children
+}: WagmiProps) {
+  const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
@@ -54,14 +57,11 @@ const config = getDefaultConfig({
     storage: createStorage({
       storage: cookieStorage,
     })
-});
+  });
 
-const cookies = parseCookies();
-const initialState = cookieToInitialState(config, JSON.stringify(cookies));
+  const cookies = parseCookies();
+  const initialState = cookieToInitialState(config, JSON.stringify(cookies));
 
-export default function Wagmi ({
-  children
-}: WagmiProps) {
   return (
     <WagmiProvider config={config} initialState={initialState}>
       {children}
