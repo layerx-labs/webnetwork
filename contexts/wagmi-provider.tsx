@@ -39,15 +39,15 @@ const config = getDefaultConfig({
     ssr: true,
     storage: createStorage({
       storage: cookieStorage,
-    }),
+    })
 });
+
+const cookies = parseCookies();
+const initialState = cookieToInitialState(config, JSON.stringify(cookies));
 
 export default function Wagmi ({
   children
 }: WagmiProps) {
-  const cookies = parseCookies();
-  const initialState = cookieToInitialState(config, JSON.stringify(cookies));
-
   return (
     <WagmiProvider config={config} initialState={initialState}>
       {children}
