@@ -58,7 +58,6 @@ export default function Wagmi ({
       storage: cookieStorage,
     })
   });
-
   const cookies = parseCookies();
   const initialState = cookieToInitialState(config, JSON.stringify(cookies));
 
