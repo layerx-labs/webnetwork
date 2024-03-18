@@ -5,14 +5,15 @@ import models from "db/models";
 
 import {getDeveloperAmount} from "helpers/calculateDistributedAmounts";
 
-import {BadRequestErrors} from "../../../interfaces/enums/Errors";
-import {HttpBadRequestError, HttpNotFoundError} from "../../errors/http-errors";
+import {BadRequestErrors} from "interfaces/enums/Errors";
+
+import {HttpBadRequestError, HttpNotFoundError} from "server/errors/http-errors";
 
 export default async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const {id} = req.query;
 
-  if (!id || !isNaN(+id))
+  if (!id || isNaN(+id))
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters)
 
   const include = [
