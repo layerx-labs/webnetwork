@@ -46,18 +46,19 @@ const cookieStorage = {
   },
 }
 
+const config = getDefaultConfig({
+  appName: "BEPRO",
+  projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
+  chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  })
+});
+
 export default function Wagmi ({
   children
 }: WagmiProps) {
-  const config = getDefaultConfig({
-    appName: "BEPRO",
-    projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
-    chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
-    ssr: true,
-    storage: createStorage({
-      storage: cookieStorage,
-    })
-  });
   const cookies = parseCookies();
   const initialState = cookieToInitialState(config, JSON.stringify(cookies));
 
