@@ -33,7 +33,7 @@ export default function ContractButton({
   const cookies = parseCookies();
   const connectors = useConnectors();
   const { openConnectModal } = useConnectModal();
-  const { address: connectedAddress, chainId } = useAccount();
+  const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
@@ -45,7 +45,8 @@ export default function ContractButton({
   const { currentUser } = useUserStore();
   const { updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
 
-  const isSameChain = !!chainId && !!marketplace?.active?.chain_id && +chainId === +marketplace?.active?.chain_id;
+  const isSameChain = !!connectedChain?.id && !!marketplace?.active?.chain_id &&
+    +connectedChain?.id === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
   const isUnsupportedChain = connectedChain?.name === UNSUPPORTED_CHAIN;
   const recentConnectorId = cookies ? cookies["wagmi.recentConnectorId"]?.toLowerCase()?.replace("\"", "")  : null;
@@ -90,7 +91,7 @@ export default function ContractButton({
   async function validateService() {
     try {
       await start({
-        chainId: +(isNetworkVariant ? marketplace?.active?.chain_id : chainId),
+        chainId: +(isNetworkVariant ? marketplace?.active?.chain_id : connectedChain?.id),
         networkAddress: isNetworkVariant ? marketplace?.active?.networkAddress : null,
       });
       return true;
