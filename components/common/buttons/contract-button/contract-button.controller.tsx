@@ -44,7 +44,8 @@ export default function ContractButton({
   const { addError } = useToastStore();
   const { currentUser } = useUserStore();
   const { updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
-
+  console.log("chainId", chainId)
+  console.log("connectedChain", connectedChain)
   const isSameChain = !!chainId && !!marketplace?.active?.chain_id &&
     +chainId === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
