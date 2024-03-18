@@ -44,8 +44,7 @@ export default function ContractButton({
   const { addError } = useToastStore();
   const { currentUser } = useUserStore();
   const { updateWrongNetworkModal, updateWalletMismatchModal } = useLoadersStore();
-  console.log("chainId", chainId)
-  console.log("connectedChain", connectedChain)
+
   const isSameChain = !!chainId && !!marketplace?.active?.chain_id &&
     +chainId === +marketplace?.active?.chain_id;
   const isNetworkVariant = variant === "network";
@@ -54,6 +53,9 @@ export default function ContractButton({
   const isLastProviderInjected = connectors?.find(c => lowerCaseCompare(c.id, recentConnectorId))?.type === "injected";
 
   async function validateChain() {
+    console.log("result", (isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
+    console.log("values", 
+    {isNetworkVariant, isSameChain, isUnsupportedChain, chainId, connectedChain, active: marketplace?.active})
     if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
       return true;
 
