@@ -5,7 +5,7 @@ import getConfig from "next/config";
 import { parseCookies } from "nookies";
 import { defineChain } from "viem";
 import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonMumbai } from "viem/chains";
-import { WagmiProvider, createStorage, cookieToInitialState, parseCookie } from "wagmi";
+import { WagmiProvider, cookieStorage, createStorage, cookieToInitialState } from "wagmi";
 
 interface WagmiProps {
   children?: ReactNode;
@@ -30,30 +30,14 @@ const coinEx = defineChain({
   }
 });
 
-const cookieStorage = {
-  getItem(key) {
-    if (typeof window === 'undefined') return null
-    const value = parseCookie(document.cookie, key)
-    return value ?? null
-  },
-  setItem(key, value) {
-    if (typeof window === 'undefined') return
-    document.cookie = `${key}=${value};Path=/`
-  },
-  removeItem(key) {
-    if (typeof window === 'undefined') return
-    document.cookie = `${key}=;max-age=-1`
-  },
-}
-
 const config = getDefaultConfig({
-  appName: "BEPRO",
-  projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
-  chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
-  ssr: true,
-  storage: createStorage({
-    storage: cookieStorage,
-  })
+    appName: "BEPRO",
+    projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
+    chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
+    ssr: true,
+    storage: createStorage({
+      storage: cookieStorage,
+    }),
 });
 
 export default function Wagmi ({
