@@ -13,7 +13,7 @@ interface AuthenticationProviderProps {
 export function AuthenticationProvider ({ children }: AuthenticationProviderProps) {
   const session = useSession();
   const account = useAccount();
-  console.log("account", account)
+
   const [isSigning, setIsSigning] = useState(false);
 
   const { disconnect } = useDao();
