@@ -1,6 +1,6 @@
-import { TokenPrice } from "interfaces/token";
+import {TokenPrice} from "interfaces/token";
 
-import { api } from "services/api";
+import {api} from "services/api";
 
 interface tokens {
   address: string;
@@ -12,5 +12,5 @@ interface tokens {
  * @returns prices
  */
 export async function useGetPrices(tokens: tokens[]): Promise<TokenPrice[]> {
-  return api.post("/check-prices", { tokens }).then(({ data }) => data);
+  return api.post("/check-prices", { tokens }).then(({ data }) => data?.map(t => t["prices"] = t.last_price_used));
 }

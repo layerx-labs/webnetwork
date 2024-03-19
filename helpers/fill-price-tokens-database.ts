@@ -87,5 +87,5 @@ export default async function FillPriceTokensDatabase(_tokens?: any) {
     }
   }
 
-  return tokens
+  return tokens.map(token => token.toJSON())
 }

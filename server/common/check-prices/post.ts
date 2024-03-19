@@ -1,10 +1,9 @@
 import {addMinutes} from "date-fns";
 import {NextApiRequest} from "next";
-import {Op} from "sequelize";
+import {Op, Sequelize} from "sequelize";
 
 import models from "db/models";
 
-import {caseInsensitiveEqual} from "helpers/db/conditionals";
 import FillPriceTokensDatabase from "helpers/fill-price-tokens-database";
 import {findTokenWithOldestUpdatedAt, handleResultTokens} from "helpers/handle-check-prices";
 
@@ -28,14 +27,21 @@ export default async function post(req: NextApiRequest) {
   for (const {chainId, address} of tokens)
     _chainTokens[chainId.toString()] =
       [... (_chainTokens[chainId.toString()] || []), address];
-  
+
+  console.log(`\n\n\n`,_chainTokens,`\n\n\n`)
+
   for (const [chain, addresses] of Object.entries(_chainTokens))
     dbTokens.push(... (await models.tokens.findAll({
+        // raw: true,
         where: {
-          chain_id: chain,
-          address: {[Op.in]: addresses.map(a => caseInsensitiveEqual('address', a))}
-        }
+          [Op.or]: [
+            Sequelize.where(Sequelize.fn('lower', Sequelize.col('address')), { [Op.in]: addresses.map(address => address.toLowerCase()) }),
+            { address: { [Op.in]: addresses } }
+          ]
+        },
     })) || [])
+
+  console.log(dbTokens)
 
   if(!dbTokens.length)
     throw new HttpNotFoundError(`tokens not found`);
@@ -50,5 +56,7 @@ export default async function post(req: NextApiRequest) {
     return handleResultTokens(tokens, priceDbTokens);
   }
 
-  return handleResultTokens(tokens, dbTokens);
+
+
+  return handleResultTokens(tokens, dbTokens.map(token => token.toJSON()));
 }

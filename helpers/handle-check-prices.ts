@@ -1,9 +1,10 @@
 import {lowerCaseCompare} from "./string";
 
 export function handleResultTokens(queryTokens, priceDbTokens) {
+  console.log(`\n\n`, queryTokens, priceDbTokens, `\n\n`)
   return queryTokens
     .map(({address, chainId}) =>
-      priceDbTokens.find(({chainId: cid, address: a}) =>
+      priceDbTokens.find(({chain_id: cid, address: a}) =>
         lowerCaseCompare(address, a) && +chainId === cid))
     .filter(v => !!v)
 }
