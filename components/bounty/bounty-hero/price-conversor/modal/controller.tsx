@@ -61,9 +61,6 @@ export default function PriceConversorModal({
   }
 
   useEffect(()=>{
-
-    console.log(`PRICES CHANGED`, prices)
-
     if (!settings?.currency?.conversionList || !prices) return;
 
     const { conversionList } = settings.currency
