@@ -41,8 +41,8 @@ export default function NavBarView({
           <div className="d-flex align-items-center nav-gap">
             <div className="d-flex gap-32">
               <ResponsiveEle 
-                mobileView={<BrandLogo href={brandHref} logoUrl={logos.fullLogo} showDefaultBepro={!isOnNetwork}/>}
-                tabletView={<BrandLogo href={brandHref} logoUrl={logos.logoIcon} showDefaultBepro={!isOnNetwork}/>}
+                mobileView={<BrandLogo href={brandHref} logoUrl={logos.logoIcon} showDefaultBepro={!isOnNetwork}/>}
+                tabletView={<BrandLogo href={brandHref} logoUrl={logos.fullLogo} showDefaultBepro={!isOnNetwork}/>}
               />
             </div>
 
