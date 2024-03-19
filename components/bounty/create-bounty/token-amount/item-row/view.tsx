@@ -46,7 +46,7 @@ export default function RenderItemRow({
             <InfoTooltip description={tooltip} />
           </If>
         </label>
-        {handleLink && <ResponsiveEle mobileView={Link()} />}
+        {handleLink && <ResponsiveEle mobileView={Link()} tabletView={null} />}
       </div>
 
       <div className="row justify-content-between">
