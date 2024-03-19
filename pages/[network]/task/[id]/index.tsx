@@ -146,7 +146,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     title: bountyData?.title,
     body: bountyData?.body,
     id: bountyData?.id,
-    nftImage: bountyData.nftImage,
+    nftImage: bountyData.seoImage,
   };
 
   return {

@@ -22,7 +22,7 @@ const Seo: React.FC<ISeoProps> = ({ issueMeta }) => {
     const homeUrl = publicRuntimeConfig?.urls?.home;
     // eslint-disable-next-line no-unsafe-optional-chaining
     const issueId = issueMeta?.id;
-    const hash = issueMeta?.nftImage;
+    const hash = issueMeta?.seoImage;
 
     const imageUrl = hash ? `https://ipfs.io/ipfs/${hash}` : `${homeUrl}/images/meta-thumbnail.jpeg`;
 
