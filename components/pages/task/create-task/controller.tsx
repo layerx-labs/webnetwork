@@ -491,7 +491,6 @@ export default function CreateTaskPage ({
     setNetworksOfConnectedChain(networksOfChain);
     const queryMarketplace = allNetworks.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
     if (!queryMarketplace) {
-      console.log("should have set current network", networksOfChain[0])
       setCurrentNetwork(networksOfChain[0]);
       updateParamsOfActive(networksOfChain[0]);
       return;
