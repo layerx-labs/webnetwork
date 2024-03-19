@@ -1,14 +1,11 @@
-export function handleResultTokens(queryTokens, priceDbTokens) {
-  const resultTokens = []
-  for (const token of queryTokens) {
-    const result = priceDbTokens.find((t) =>
-          t.address.toLowerCase() === token.address.toLowerCase() &&
-          +token.chainId === t.chain_id);
-    if (result) resultTokens.push(result?.last_price_used);
-    else resultTokens.push('token not found')
-  }
+import {lowerCaseCompare} from "./string";
 
-  return resultTokens
+export function handleResultTokens(queryTokens, priceDbTokens) {
+  return queryTokens
+    .map(({address, chainId}) =>
+      priceDbTokens.find(({chainId: cid, address: a}) =>
+        lowerCaseCompare(address, a) && +chainId === cid))
+    .filter(v => !!v)
 }
 
 export function findTokenWithOldestUpdatedAt(tokens) {
