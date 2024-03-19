@@ -2,7 +2,6 @@ import {ParsedUrlQuery} from "querystring";
 
 import {ExplorePageProps} from "types/pages";
 
-import {SPAM_TERMS} from "../../helpers/constants";
 import getConvertedAmounts from "../../server/common/overview/converted-amounts";
 import getBounties from "../../server/common/search/tasks";
 import getTotalUsers from "../../server/common/search/total";
@@ -13,15 +12,6 @@ import getTotalUsers from "../../server/common/search/total";
  * @returns object with retrieved data
  */
 export default async function getExplorePageData(query: ParsedUrlQuery): Promise<ExplorePageProps> {
-
-  if (query?.network && SPAM_TERMS.some(r => r.test(query?.netowrk.toString())))
-    return {
-      redirect: {
-        destination: "/404",
-        permanent: false
-      }
-    } as any;
-
 
   const [ convertedAmounts, bounties, protocolMembers ] =
     await Promise.all([

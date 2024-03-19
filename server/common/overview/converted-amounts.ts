@@ -5,12 +5,13 @@ import {IncludeOptions} from "sequelize";
 
 import models from "db/models";
 
-import {FIVE_MINUTES_IN_MS, SPAM_TERMS} from "helpers/constants";
+import {FIVE_MINUTES_IN_MS} from "helpers/constants";
 import {caseInsensitiveEqual} from "helpers/db/conditionals";
 import {loadSettingsFromDb} from "helpers/load-settings-db";
 
 import getTokensPrices from "server/common/check-prices/post";
 
+import isSpamValue from "../../../helpers/is-spam-value";
 import {BadRequestErrors} from "../../../interfaces/enums/Errors";
 import {HttpBadRequestError, HttpNotFoundError} from "../../errors/http-errors";
 
@@ -20,7 +21,7 @@ export default async function get(query: ParsedUrlQuery) {
     chain
   } = query;
 
-  if (network && SPAM_TERMS.some(r => r.test(network?.toString())))
+  if (network && isSpamValue(network))
     throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
   const cacheKey = `/overview/converted-amounts/${network ? network : ""}${chain ? `/${chain}` : ""}`;
