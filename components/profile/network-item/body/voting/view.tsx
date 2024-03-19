@@ -75,6 +75,7 @@ export default function BodyVotingView({
       <If condition={!!handleNetworkLink}
           children={
             <ResponsiveEle 
+            tabletView={null}
               mobileView={
                 <FlexRow className="justify-content-center">
                     <div><NetworkLinkIconButton className="px-2" /></div>
