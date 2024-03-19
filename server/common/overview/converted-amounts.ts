@@ -12,7 +12,7 @@ import {loadSettingsFromDb} from "helpers/load-settings-db";
 import getTokensPrices from "server/common/check-prices/post";
 
 import {BadRequestErrors} from "../../../interfaces/enums/Errors";
-import {HttpBadRequestError} from "../../errors/http-errors";
+import {HttpBadRequestError, HttpNotFoundError} from "../../errors/http-errors";
 
 export default async function get(query: ParsedUrlQuery) {
   const {
@@ -67,6 +67,9 @@ export default async function get(query: ParsedUrlQuery) {
   const issues = await models.issue.scope("open").findAll({
     include
   });
+
+  if (!issues.length)
+    throw new HttpNotFoundError("not found");
 
   const settings = await loadSettingsFromDb();
   const currency = settings?.currency?.defaultFiat || "usd";
