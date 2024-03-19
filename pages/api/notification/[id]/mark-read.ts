@@ -2,7 +2,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import {withUser} from "middleware/with-user";
 
-import {withProtected, WithValidChainId} from "../../../../middleware";
+import {withProtected} from "../../../../middleware";
 import {markNotificationRead} from "../../../../server/common/notifications/mark-notification-read";
 
 async function markNotificationAsRead(req: NextApiRequest, res: NextApiResponse) {
@@ -20,4 +20,4 @@ async function markNotificationAsRead(req: NextApiRequest, res: NextApiResponse)
 }
 
 
-export default withProtected(withUser(WithValidChainId(markNotificationAsRead), []));
+export default withProtected(withUser(markNotificationAsRead, []));

@@ -15,7 +15,7 @@ export default async function getExplorePageData(query: ParsedUrlQuery): Promise
 
   const [ convertedAmounts, bounties, protocolMembers ] =
     await Promise.all([
-      getConvertedAmounts(query).catch(_ => 0),
+      getConvertedAmounts(query).catch(_ => ({totalOnTasks: 0})),
       getBounties(query)
         .then((data) => data as any)
         .catch(() => ({ count: 0, rows: [], currentPage: 1, pages: 1, totalBounties: 0 })),

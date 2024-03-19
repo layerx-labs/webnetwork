@@ -1,8 +1,8 @@
-import { Col, Row } from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 
 import BigNumber from "bignumber.js";
 
-import { formatNumberToCurrency, formatStringToCurrency } from "helpers/formatNumber";
+import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber";
 
 export const RowCenterBetween = ({ children, className = "" }) => 
     <Row className={`align-items-center justify-content-between ${className}`}>
@@ -31,7 +31,7 @@ export const Amount = ({
   type?: "currency" | "percent";
 }) => 
   <span className={`d-flex align-items-center family-Regular ${className || "h4 text-white"}`}>
-    {type === "currency" && formatStringToCurrency(BigNumber(amount).toFixed())}
+    {type === "currency" && formatNumberToNScale(BigNumber(amount).toFixed())}
     
     {type === "percent" && `${formatNumberToCurrency(amount, { maximumFractionDigits: 4 })}%`}
 
