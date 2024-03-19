@@ -30,7 +30,7 @@ export default async function post(req: NextApiRequest) {
 
   console.log(`\n\n\n`,_chainTokens,`\n\n\n`)
 
-  for (const [chain, addresses] of Object.entries(_chainTokens))
+  for (const [, addresses] of Object.entries(_chainTokens))
     dbTokens.push(... (await models.tokens.findAll({
         // raw: true,
         where: {
@@ -40,8 +40,6 @@ export default async function post(req: NextApiRequest) {
           ]
         },
     })) || [])
-
-  console.log(dbTokens)
 
   if(!dbTokens.length)
     throw new HttpNotFoundError(`tokens not found`);
