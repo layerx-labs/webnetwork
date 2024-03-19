@@ -33,7 +33,7 @@ export default function ContractButton({
   const cookies = parseCookies();
   const connectors = useConnectors();
   const { openConnectModal } = useConnectModal();
-  const { address: connectedAddress, chainId } = useAccount();
+  const { address: connectedAddress } = useAccount();
 
   const [isValidating, setIsValidating] = useState(false);
 
@@ -53,9 +53,6 @@ export default function ContractButton({
   const isLastProviderInjected = connectors?.find(c => lowerCaseCompare(c.id, recentConnectorId))?.type === "injected";
 
   async function validateChain() {
-    console.log("result", (isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
-    console.log("values", 
-    {isNetworkVariant, isSameChain, isUnsupportedChain, chainId, connectedChain, active: marketplace?.active})
     if ((isNetworkVariant && isSameChain || !isNetworkVariant) && !isUnsupportedChain)
       return true;
 
