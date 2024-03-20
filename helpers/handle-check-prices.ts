@@ -1,7 +1,6 @@
 import {lowerCaseCompare} from "./string";
 
 export function handleResultTokens(queryTokens, priceDbTokens) {
-  console.log(`\n\n`, queryTokens, priceDbTokens, `\n\n`)
   return queryTokens
     .map(({address, chainId}) =>
       priceDbTokens.find(({chain_id: cid, address: a}) =>
