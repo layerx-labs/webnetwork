@@ -92,7 +92,10 @@ export default function OraclesActionsView({
               <If
                 condition={!isBalanceLoading}
                 otherwise={
-                  <span className="spinner-border spinner-border-xs ml-1" />
+                  <span 
+                    className="spinner-border spinner-border-xs ml-1" 
+                    data-testid="oracle-actions-loading-balance"
+                  />
                 }
               >
                 <If condition={!disabled}>
