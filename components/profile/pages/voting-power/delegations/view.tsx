@@ -46,6 +46,7 @@ export default function DelegationsView({
                 key={
                 `delegation-${delegation?.networkId}-${delegation?.from}-${delegation?.to}-${delegation?.contractId}`
                 }
+                dataTestid={`delegation-${delegation?.to}-${delegation?.amount}`}
                 disabled={disabled}
                 networkLogo={curator?.network?.logoIcon}
                 networkName={curator?.network?.name}
