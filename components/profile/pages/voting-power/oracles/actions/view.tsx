@@ -75,9 +75,7 @@ export default function OraclesActionsView({
                 ? "text-purple"
                 : "text-primary"
             }`}
-            data-testid={t("my-oracles:fields.amount.label", {
-              currency: currentLabel
-            })}
+            data-testid="oracle-actions-input"
             max={wallet?.balance?.bepro?.toFixed()}
             error={!!error}
             value={tokenAmount}
@@ -94,18 +92,25 @@ export default function OraclesActionsView({
               <If
                 condition={!isBalanceLoading}
                 otherwise={
-                  <span className="spinner-border spinner-border-xs ml-1" />
+                  <span 
+                    className="spinner-border spinner-border-xs ml-1" 
+                    data-testid="oracle-actions-loading-balance"
+                  />
                 }
               >
                 <If condition={!disabled}>
                   {formatStringToCurrency(getMaxAmount())}{" "}
                   {currentLabel} {t("misc.available")}
-                  <span onClick={handleMaxAmount}
-                        className={`caption-small ml-1 cursor-pointer text-uppercase ${(
-                          currentLabel === t("$oracles", { token: networkTokenSymbol })
-                            ? "text-purple"
-                            : "text-primary"
-                        )}`}>
+                  <span 
+                    onClick={handleMaxAmount}
+                    role="button"
+                    data-testid="oracles-actions-max-button"
+                    className={`caption-small ml-1 cursor-pointer text-uppercase ${(
+                      currentLabel === t("$oracles", { token: networkTokenSymbol })
+                        ? "text-purple"
+                        : "text-primary"
+                    )}`}
+                  >
                     {t("misc.max")}
                   </span>
                   {error && <p className="p-small my-2">{error}</p>}
