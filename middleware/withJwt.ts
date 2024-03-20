@@ -1,16 +1,14 @@
-import { NextApiHandler } from "next";
-import { getToken } from "next-auth/jwt";
+import {NextApiHandler} from "next";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 
-import { MISSING_JWT_TOKEN } from "helpers/error-messages";
+import {MISSING_JWT_TOKEN} from "helpers/error-messages";
 
-import { Logger } from "services/logging";
-
-import { isMethodAllowed } from "server/utils/http";
+import {isMethodAllowed} from "server/utils/http";
 
 const { serverRuntimeConfig } = getConfig();
 
-Logger.changeActionName(`withJWT()`);
+
 
 export const withJWT = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {

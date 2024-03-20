@@ -109,18 +109,18 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   const paginatedData = paginateArray(networksResult.sort(compare), quantity, page);
 
-  return res.status(200).json({
-          count: networksResult.length,
-          rows: paginatedData.data,
-          pages: paginatedData.pages,
-          currentPage: +paginatedData.page
-  });
+  return {
+    count: networksResult.length,
+    rows: paginatedData.data,
+    pages: paginatedData.pages,
+    currentPage: +paginatedData.page
+  };
 }
 
 async function SearchNetworks(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    await get(req, res);
+    res.status(200).json(await get(req, res));
     break;
 
   default:

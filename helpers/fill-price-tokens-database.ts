@@ -1,8 +1,8 @@
 import models from "db/models";
 
-import { COINGECKO_API } from "services/coingecko";
+import {COINGECKO_API} from "services/coingecko";
 
-import { HttpConflictError, HttpServerError } from "server/errors/http-errors";
+import {HttpConflictError, HttpServerError} from "server/errors/http-errors";
 
 async function updateToken (token, prices, updatedAt: Date) {
   token.last_price_used = {
@@ -12,12 +12,12 @@ async function updateToken (token, prices, updatedAt: Date) {
   await token.save();
 }
 
-export default async function FillPriceTokensDatabase() {
+export default async function FillPriceTokensDatabase(_tokens?: any) {
   const currencys = ['usd', 'btc', 'eth', 'eur']
 
   const coins = await COINGECKO_API.get(`/coins/list?include_platform=true`).then((value) => value.data);
 
-  const tokens = await models.tokens.findAll({});
+  const tokens = (_tokens || await models.tokens.findAll({}));
 
   const dbSymbols = [...new Set(tokens.map(({ symbol }) => symbol?.toLowerCase()))]
   const coinsBySymbolOnDb = coins.filter((token) => dbSymbols.includes(token.symbol?.toLowerCase()));
@@ -87,5 +87,5 @@ export default async function FillPriceTokensDatabase() {
     }
   }
 
-  return tokens
+  return tokens.map(token => token.toJSON())
 }

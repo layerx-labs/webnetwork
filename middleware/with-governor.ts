@@ -1,13 +1,10 @@
-import { NextApiHandler } from "next";
+import {NextApiHandler} from "next";
 
-import { NOT_AN_CREATOR_NETWORK } from "helpers/constants";
+import {NOT_AN_CREATOR_NETWORK} from "helpers/constants";
 
-import { Logger } from "services/logging";
+import {isMethodAllowed} from "server/utils/http";
+import {UserRoleUtils} from "server/utils/jwt";
 
-import { isMethodAllowed } from "server/utils/http";
-import { UserRoleUtils } from "server/utils/jwt";
-
-Logger.changeActionName(`withGovernor()`);
 
 export const withGovernor = (handler: NextApiHandler, allowedMethods = ["GET"]): NextApiHandler => {
   return async (req, res) => {

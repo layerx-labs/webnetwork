@@ -2,33 +2,31 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import {withProtected} from "middleware";
 
-import {error as LogError, Logger} from "services/logging";
+import {uploadFiles} from "server/common/file/post";
 
-import {post} from "server/common/file/post";
+const UPLOAD_LIMIT_MB = 4;
 
 export const config = {
   api: {
-    bodyParser: false
+    bodyParser: {
+      sizeLimit: `${UPLOAD_LIMIT_MB}mb`,
+    }
   }
-};
+}
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    switch (req.method.toLowerCase()) {
-    case "post":
-      res.status(200).json(await post(req));
-      break;
 
-    default:
-      res.status(405);
-    }
-  } catch (error) {
-    LogError(error);
-    res.status(error?.status || 500).json(error?.message || error?.toString());
+  switch (req.method.toLowerCase()) {
+  case "post":
+    res.status(200).json(await uploadFiles(req));
+    break;
+
+  default:
+    res.status(405);
   }
+
 
   res.end();
 }
 
-Logger.changeActionName(`Files`);
-export default withProtected(handler, 4*1024 /* 4Mb */);
+export default withProtected(handler, UPLOAD_LIMIT_MB * 1024 /* 4Mb */);

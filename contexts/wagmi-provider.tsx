@@ -30,8 +30,6 @@ const coinEx = defineChain({
   }
 });
 
-
-
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",

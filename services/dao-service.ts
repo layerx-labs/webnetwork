@@ -620,8 +620,8 @@ export default class DAO {
     return this.network.closeBounty(bountyId, proposalId, tokenUri);
   }
 
-  async updateBountyAmount(bountyId: number, amount: string): Promise<TransactionReceipt> {
-    return this.network.updateBountyAmount(bountyId, amount);
+  async updateBountyAmount(bountyId: number, amount: string, decimals = 18): Promise<TransactionReceipt> {
+    return this.network.updateBountyAmount(bountyId, amount, decimals);
   }
 
   async cancelBounty(bountyId: number, funding: boolean): Promise<TransactionReceipt> {
@@ -663,7 +663,6 @@ export default class DAO {
 
   async approveToken(tokenAddress: string = undefined, amount: string) {
     const erc20 = await this.loadERC20(tokenAddress);
-
     return erc20.approve(this.network.contractAddress, amount);
   }
 

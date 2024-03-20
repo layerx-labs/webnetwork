@@ -2,10 +2,10 @@ import {useEffect, useState} from "react";
 
 import BigNumber from "bignumber.js";
 
-import { Token } from "interfaces/token";
+import {Token} from "interfaces/token";
 
 import useCoingeckoPrice from "x-hooks/use-coingecko-price";
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
 
 import PriceConversorModalView from "./view";
 
@@ -52,12 +52,12 @@ export default function PriceConversorModal({
     const currency = selected?.value?.toLowerCase()
     if (!token || !prices) return;
 
-    if (!prices[0][currency] || isError) setErrorCoinInfo(true);
+    if (!prices[0]?.[currency] || isError) setErrorCoinInfo(true);
 
     if(prices[currency] > 0) setErrorCoinInfo(false)
     setCurrentCurrency({value: selected?.value, label: selected?.label});
     setCurrentToken(selected?.value?.toUpperCase())
-    setCurrentPrice(prices[0][currency] || 0);
+    setCurrentPrice(prices[0]?.[currency] || 0);
   }
 
   useEffect(()=>{

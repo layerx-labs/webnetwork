@@ -1,14 +1,10 @@
-import { NextApiHandler } from "next";
+import {NextApiHandler} from "next";
 
-import { NOT_ADMIN_WALLET } from "helpers/constants";
+import {NOT_ADMIN_WALLET} from "helpers/constants";
 
-import { UserRole } from "interfaces/enums/roles";
+import {UserRole} from "interfaces/enums/roles";
 
-import { Logger } from "services/logging";
-
-import { isMethodAllowed } from "server/utils/http";
-
-Logger.changeActionName(`withAdmin()`);
+import {isMethodAllowed} from "server/utils/http";
 
 export const withAdmin = (handler: NextApiHandler, allowedMethods = ["GET"]): NextApiHandler => {
   return async (req, res) => {

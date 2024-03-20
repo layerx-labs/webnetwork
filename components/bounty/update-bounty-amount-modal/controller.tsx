@@ -90,7 +90,10 @@ export default function UpdateBountyAmountModal({
     setIsExecuting(true);
 
     handleApproveToken( transactionalAddress,
-                        BigNumber(issueAmount.formattedValue).minus(bounty?.amount).toFixed(),
+                        BigNumber(issueAmount.formattedValue)
+                          .minus(bounty?.amount)
+                          .decimalPlaces(Math.min(10, transactionalERC20?.decimals), 0)
+                          .toFixed(),
                         undefined,
                         transactionalERC20?.symbol)
       .then(() => {
@@ -109,7 +112,8 @@ export default function UpdateBountyAmountModal({
 
     handleUpdateBountyAmount( bountyId,
                               issueAmount.formattedValue,
-                              transactionalERC20?.symbol)
+                              transactionalERC20?.symbol,
+                              transactionalERC20?.decimals)
       .then((txInfo) => {
         return processEvent(NetworkEvents.BountyUpdated, undefined, {
           fromBlock: (txInfo as { blockNumber: number }).blockNumber,
@@ -129,7 +133,7 @@ export default function UpdateBountyAmountModal({
   const handleNumberFormat = (v: BigNumber) => ({
     value: v.decimalPlaces(5, 0).toFixed(),
     floatValue: v.toNumber(),
-    formattedValue: v.decimalPlaces(10, 0).toFixed()
+    formattedValue: v.decimalPlaces(Math.min(10, transactionalERC20?.decimals), 0).toFixed()
   });
 
 

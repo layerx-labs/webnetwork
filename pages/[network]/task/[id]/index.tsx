@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 
-import { dehydrate } from "@tanstack/react-query";
-import { useRouter } from "next/router";
-import { GetServerSideProps } from "next/types";
+import {dehydrate} from "@tanstack/react-query";
+import {useRouter} from "next/router";
+import {GetServerSideProps} from "next/types";
 
 import BountyBody from "components/bounty/body/controller";
 import BountyHero from "components/bounty/bounty-hero/controller";
@@ -13,19 +13,19 @@ import TabSections from "components/bounty/tabs-sections/controller";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 
-import { BountyEffectsProvider } from "contexts/bounty-effects";
+import {BountyEffectsProvider} from "contexts/bounty-effects";
 
-import { commentsParser, issueParser } from "helpers/issue";
-import { QueryKeys } from "helpers/query-keys";
+import {commentsParser, issueParser} from "helpers/issue";
+import {QueryKeys} from "helpers/query-keys";
 
-import { IssueData } from "interfaces/issue-data";
+import {IssueData} from "interfaces/issue-data";
 
-import { getReactQueryClient } from "services/react-query";
+import {getReactQueryClient} from "services/react-query";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { getCommentsData } from "x-hooks/api/comments";
-import { getBountyData } from "x-hooks/api/task";
+import {getCommentsData} from "x-hooks/api/comments";
+import {getBountyData} from "x-hooks/api/task";
 import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
@@ -145,7 +145,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const seoData: Partial<IssueData> = {
     title: bountyData?.title,
     body: bountyData?.body,
-    id: bountyData?.id
+    id: bountyData?.id,
+    seoImage: bountyData.seoImage,
   };
 
   return {

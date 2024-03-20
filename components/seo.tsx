@@ -4,7 +4,7 @@ import removeMarkdown from "markdown-to-text";
 import {DefaultSeo, NextSeo} from "next-seo";
 import SEO_CONFIG from "next-seo-config";
 import getConfig from "next/config";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import {IssueData} from "interfaces/issue-data";
 
@@ -22,6 +22,10 @@ const Seo: React.FC<ISeoProps> = ({ issueMeta }) => {
     const homeUrl = publicRuntimeConfig?.urls?.home;
     // eslint-disable-next-line no-unsafe-optional-chaining
     const issueId = issueMeta?.id;
+    const hash = issueMeta?.seoImage;
+
+    const imageUrl = hash ? `${publicRuntimeConfig.urls.ipfs}/${hash}` : `${homeUrl}/images/meta-thumbnail.jpeg`;
+
     const description = removeMarkdown(issueMeta?.body?.substring(0, 160).trimEnd());
 
     if(homeUrl)
@@ -34,7 +38,7 @@ const Seo: React.FC<ISeoProps> = ({ issueMeta }) => {
             description: `${description}...` || "",
             images: [
               {
-                url: `${homeUrl}/api/seo/${issueId}`,
+                url: imageUrl,
                 width: 1200,
                 height: 670,
                 alt: "Task Info",
