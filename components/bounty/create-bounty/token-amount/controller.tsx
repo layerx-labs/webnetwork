@@ -103,7 +103,7 @@ export default function CreateBountyTokenAmount({
   const handleNumberFormat = (v: BigNumber) => ({
     value: v.decimalPlaces(5, 0).toFixed(),
     floatValue: v.toNumber(),
-    formattedValue: v.decimalPlaces(10, 0).toFixed()
+    formattedValue: v.decimalPlaces(Math.min(10, decimals), 0).toFixed()
   });
 
   function handleDistributions(value, type) {
