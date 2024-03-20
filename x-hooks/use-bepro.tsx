@@ -142,7 +142,8 @@ export default function useBepro() {
 
   async function handleUpdateBountyAmount(bountyId: number,
                                           amount: string,
-                                          currency: string): Promise<TransactionReceipt | Error> {
+                                          currency: string,
+                                          decimals: number): Promise<TransactionReceipt | Error> {
     return new Promise(async (resolve, reject) => {
       const transaction = addTx({
         type: TransactionTypes.updateBountyAmount,
@@ -151,7 +152,7 @@ export default function useBepro() {
         currency: currency
       });
 
-      await getService().updateBountyAmount(bountyId, amount)
+      await getService().updateBountyAmount(bountyId, amount, decimals)
       .then((txInfo: Error | TransactionReceipt | PromiseLike<Error | TransactionReceipt>) => {
         updateTx(parseTransaction(txInfo, transaction as SimpleBlockTransactionPayload))
         resolve(txInfo);
