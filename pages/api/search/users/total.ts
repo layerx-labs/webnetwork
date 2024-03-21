@@ -2,9 +2,9 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import models from "db/models";
 
-import { withCORS } from "middleware";
+import {withCORS} from "middleware";
 
-async function getTotal() {
+export async function getTotal() {
   return models.user.count();
 }
 
