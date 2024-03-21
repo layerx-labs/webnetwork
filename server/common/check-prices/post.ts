@@ -28,8 +28,6 @@ export default async function post(req: NextApiRequest) {
     _chainTokens[chainId.toString()] =
       [... (_chainTokens[chainId.toString()] || []), address];
 
-  console.log(`\n\n\n`,_chainTokens,`\n\n\n`)
-
   for (const [, addresses] of Object.entries(_chainTokens))
     dbTokens.push(... (await models.tokens.findAll({
         // raw: true,
