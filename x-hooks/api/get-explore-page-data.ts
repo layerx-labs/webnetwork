@@ -2,9 +2,9 @@ import {ParsedUrlQuery} from "querystring";
 
 import {ExplorePageProps} from "types/pages";
 
+import {getTotal as getTotalUsers} from "../../pages/api/search/users/total";
 import getConvertedAmounts from "../../server/common/overview/converted-amounts";
 import getBounties from "../../server/common/search/tasks";
-import getTotalUsers from "../../server/common/search/total";
 
 /**
  * Get explore page data from api based on the current url query
