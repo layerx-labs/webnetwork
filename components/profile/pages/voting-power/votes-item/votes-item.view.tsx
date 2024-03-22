@@ -16,6 +16,7 @@ interface VotesItemProps {
   disabled?: boolean;
   type?: "locked" | "delegated"
   transactionHash?: string;
+  dataTestid?: string;
   onTakeBackClick?: () => void;
 }
 
@@ -29,6 +30,7 @@ export default function VotesItem({
   disabled,
   type = "locked",
   transactionHash,
+  dataTestid,
   onTakeBackClick
 }: VotesItemProps) {
   const { t } = useTranslation("common");
@@ -40,6 +42,7 @@ export default function VotesItem({
   return (
     <div
       className={`row align-items-center gap-2 border-radius-4 border border-gray-800 bg-gray-900 px-3 pt-3 pb-4 mb-3`}
+      data-testid={dataTestid}
     >
       <div className="col-auto px-0">
         <MarketplaceWithNetworkLogo

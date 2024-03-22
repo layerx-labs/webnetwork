@@ -72,6 +72,7 @@ export default function ItemRowView({
         className={`row d-flex flex-row py-3 px-2 border-radius-8 bg-gray-900 align-items-center ${
           href ? "cursor-pointer" : ""
         }`}
+        data-testid={isProposal ? "proposal-item-row" : "deliverable-item-row"}
       >
         <div className="col-10 col-md-8 d-flex flex-row align-items-center gap-3">
           <ItemRowIdView id={id} className="col-1 d-none d-xl-block" />
