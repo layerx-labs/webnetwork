@@ -124,7 +124,7 @@ export default function ProposalProgressBar({
     <>
       <div className="row mb-2 proposal-progress-bar align-items-center">
         <div className="col-12 col-xl-6 mb-3">
-          <h4 className={`caption-large text-uppercase text-${issueColor}`}>
+          <h4 className={`caption-large text-uppercase text-${issueColor}`} data-testid="proposal-state">
             {issueState}
           </h4>
         </div>
