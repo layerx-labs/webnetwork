@@ -21,7 +21,7 @@ export const LogAccess = (handler: NextApiHandler) => {
     const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : {};
 
     elasticLoggerMaker(`bepro-access-logs`)
-      .log(`debug`, ["Access", [{_type: "access", method, pathname, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}}]])
+      .log(`debug`, ["Access", [{_type: "access", payload, method, pathname, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}}]])
 
     try {
       await handler(req, res);
