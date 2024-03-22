@@ -2,9 +2,6 @@ import axios from "axios";
 import * as cheerio from 'cheerio';
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {Logger} from "services/logging";
-
-import {BadRequestErrors} from "../../../interfaces/enums/Errors";
 import {HttpBadRequestError} from "../../errors/http-errors";
 
 interface Metadata {
@@ -18,10 +15,10 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   const {url} = req.query;
 
   if (!url || typeof url !== "string")
-    throw new HttpBadRequestError("url is not a string")
+    throw new HttpBadRequestError("url is not a string");
 
 
-  const html = await axios.get(url).then(({data}) => data).catch(() => undefined)
+  const html = await axios.get(url, {timeout: 2000}).then(({data}) => data).catch(() => undefined)
 
   if (!html)
     throw new HttpBadRequestError("invalid url or empty data")
