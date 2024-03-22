@@ -8,7 +8,7 @@ const {
   NEXT_LOG_APP_NAME: index = "webnetwork-logs"
 } = process.env;
 
-export const elasticLoggerMaker = (): LoggerPlugin => ({
+export const elasticLoggerMaker = (index_name: any = `bepro-app-logs`): LoggerPlugin => ({
   log(level, contents) {
     if (!node || !username || !password) {
       console.debug(`\n\tTrying to use elastic-search indexer but missing env-vars\n`);
@@ -26,7 +26,7 @@ export const elasticLoggerMaker = (): LoggerPlugin => ({
 
     new Client({node, auth: {username, password}})
       .index({
-        index: `bepro-app-logs-${index}`,
+        index: `${index_name}-${index}`,
         document: {
           level,
           message: contents[0],

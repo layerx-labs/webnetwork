@@ -1,6 +1,8 @@
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
 
-import {debug, error, log, warn} from "services/logging";
+import {error, warn} from "services/logging";
+
+import {elasticLoggerMaker} from "../services/elastic-logger";
 
 export const LogAccess = (handler: NextApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
@@ -18,21 +20,14 @@ export const LogAccess = (handler: NextApiHandler) => {
 
     const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : {};
 
-    log(`access`, {
-      pathname,
-      method,
-      headers: req?.headers,
-      connection: {xForwarded, remoteAddress, cfConnectingIp},
-      payload,
-    });
+    elasticLoggerMaker(`bepro-access-logs`)
+      .log(`debug`, ["Access", [{_type: "access", method, pathname, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}}]])
 
     try {
       await handler(req, res);
 
       if (res.statusCode >= 400)
         warn(`Answered with ${res.statusCode}`, res.statusMessage)
-
-      debug(`access-end`, {method, pathname});
 
     } catch (e) {
       error(`access-error`, {method, pathname, payload, errorMessage: e?.message});
