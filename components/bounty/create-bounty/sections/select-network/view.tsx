@@ -31,8 +31,6 @@ export default function SelectNetworkSection({
 
   const { supportedChains } = useSupportedChain();
 
-  const notFoundNetworks = !networksOfCurrentChain?.length;
-
   function handleChainChange(selectedChainName) {
     onChainChange(supportedChains?.find(c => lowerCaseCompare(c?.chainShortName, selectedChainName)));
   }
@@ -68,14 +66,9 @@ export default function SelectNetworkSection({
           value={currentNetwork}
           networks={networksOfCurrentChain}
           className="select-network-dropdown w-max-none"
+          placeHolder={t("common:placeholders.select-marketplace")}
           onSelect={onNetworkChange}
         />
-
-        <If condition={notFoundNetworks}>
-          <ContextualSpan context="danger" className="my-3">
-            {t("bounty:errors.no-networks-chain")}
-          </ContextualSpan>
-        </If>
       </div>  
     </div>
   );
