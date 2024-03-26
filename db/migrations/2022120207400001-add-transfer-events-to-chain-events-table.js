@@ -34,7 +34,7 @@ module.exports = {
 
       await web3Connection.start();
 
-      const lastBlock = await web3Connection.eth.getBlockNumber();
+      const lastBlock = await web3Connection.eth.getBlockNumber().catch(console.log);
 
       await queryInterface.insert(ChainEvents, "chain_events", {
         name: "getTransferEvents",
