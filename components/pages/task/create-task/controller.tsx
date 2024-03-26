@@ -543,8 +543,8 @@ export default function CreateTaskPage ({
       setIsFundingType(true);
   }, []);
 
-  async function handleNetworkSelected (chain: SupportedChainData, network?: Network) {
-    setCurrentNetwork(network ?? null);
+  async function handleNetworkSelected (chain: SupportedChainData, network: Network = null) {
+    setCurrentNetwork(network);
     setCurrentChain(chain);
     setTransactionalToken(null);
     setRewardToken(null);
