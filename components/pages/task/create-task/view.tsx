@@ -76,6 +76,7 @@ export default function CreateTaskPageView({
       return (
         <SelectNetworkSection
           currentNetwork={rest.currentNetwork}
+          currentChain={rest.currentChain}
           networksOfCurrentChain={rest.networksOfCurrentChain}
           onChainChange={rest.onChainChange}
           onNetworkChange={rest.onNetworkChange}
