@@ -4,6 +4,8 @@ import {GetServerSideProps} from "next";
 import {useTranslation} from "next-i18next";
 
 import PageHero from "components/common/page-hero/view";
+import CustomContainer from "components/custom-container";
+import { MarketplacesList } from "components/lists/marketplaces/marketplaces-list.controller";
 import NetworksList from "components/networks-list";
 import NotListedTokens from "components/not-listed-tokens";
 
@@ -65,9 +67,9 @@ export default function NetworksPage({
           infos={infos}
         />
 
-        <div className="my-4">
-          <NetworksList networks={networks} />
-        </div>
+        <CustomContainer className="my-4">
+          <MarketplacesList marketplaces={networks} />
+        </CustomContainer>
       </div>
 
       <NotListedTokens 

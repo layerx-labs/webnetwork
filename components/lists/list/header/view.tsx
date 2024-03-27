@@ -19,7 +19,7 @@ export default function ListHeader({
       className={`d-flex flex-row col justify-content-center align-items-center text-gray`}
       >
         <LabelWrapper>
-          <span className="xs-medium text-uppercase text-center gray-150">{column?.label}</span>
+          <span className="xs-small text-uppercase text-center text-gray-150">{column?.label}</span>
         </LabelWrapper>
       </div>
     );
