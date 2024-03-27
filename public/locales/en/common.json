@@ -236,7 +236,8 @@
     "all-chains": "All Networks",
     "available-on": "Available on",
     "opened": "Opened",
-    "proposal": "Proposal"
+    "proposal": "Proposal",
+    "closed": "Closed"
   },
   "modals": {
     "help-modal": {

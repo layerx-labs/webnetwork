@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 
 import ChainIcon from "components/chain-icon";
@@ -17,12 +18,14 @@ type MarketplaceListItemProps = {
 export function MarketplaceListItem({
   marketplace
 }: MarketplaceListItemProps) {
+  const { t } = useTranslation(["common", "custom-network"]);
+  
   const { settings } = useSettings();
 
   const chainsIcons = marketplace?.isClosed ? 
     <span className={`xs-small font-weight-normal text-white border border-gray-800 border-radius-4 py-1 px-2 
       text-uppercase`}>
-      Closed
+      {t("misc.closed")}
     </span> : 
     <OverlappingIcons
       icons={marketplace?.chains?.map(chain => (
@@ -32,25 +35,25 @@ export function MarketplaceListItem({
 
   const columns = [
     {
-      label: "Networks",
+      label: t("custom-network:networks"),
       secondaryLabel: chainsIcons,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
-      label: "Open Tasks",
+      label: t("custom-network:open-bounties"),
       secondaryLabel: marketplace?.totalOpenIssues,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
-      label: "Total Tasks",
+      label: t("custom-network:total-bounties"),
       secondaryLabel: marketplace?.totalIssues,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
-      label: "Token Locked",
+      label: t("custom-network:tokens-locked"),
       secondaryLabel: <div>
         {formatNumberToNScale(marketplace?.tokensLocked, 0, "")}{" "}
         <span className="text-purple">{marketplace?.networkToken?.symbol}</span>

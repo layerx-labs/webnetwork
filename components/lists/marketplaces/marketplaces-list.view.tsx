@@ -1,3 +1,5 @@
+import { useTranslation } from "next-i18next";
+
 import List from "components/lists/list/controller";
 import { MarketplaceListItem } from "components/lists/marketplaces/marketplace-list-item/marketplace-list-item.view";
 
@@ -14,12 +16,14 @@ type MarketplacesListViewProps = {
 }
 
 export function MarketplacesListView ({ groupedMarketplaces }: MarketplacesListViewProps) {
+  const { t } = useTranslation("custom-network");
+  
   const header = [
-    { label: "Marketplace" },
-    { label: "Networks" },
-    { label: "Open Tasks" },
-    { label: "Total Tasks" },
-    { label: "Token Locked" },
+    { label: t("marketplace") },
+    { label: t("networks") },
+    { label: t("open-bounties") },
+    { label: t("total-bounties") },
+    { label: t("tokens-locked") },
   ];
 
   return(
