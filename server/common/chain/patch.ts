@@ -6,7 +6,10 @@ import models from "db/models";
 
 import { isHttps, isValidUrl } from "helpers/validateUrl";
 
+import { warn } from "services/logging";
+
 import { HttpBadRequestError, HttpNotFoundError } from "server/errors/http-errors";
+import { addToChainCast } from "server/helpers/add-to-chain-cast";
 
 export async function patch(req: NextApiRequest) {
   const { id } = req.query;
@@ -18,6 +21,7 @@ export async function patch(req: NextApiRequest) {
     networkCreationFeePercentage,
     closeFeePercentage,
     cancelFeePercentage,
+    startBlock,
   } = req.body;
 
   if (!id)
@@ -59,7 +63,18 @@ export async function patch(req: NextApiRequest) {
   if (closeFeePercentage) chain.closeFeePercentage = closeFeePercentage;
   if (cancelFeePercentage) chain.cancelFeePercentage = cancelFeePercentage;
 
+  if (registryAddress) {
+    const chainCastId = await addToChainCast("registry", registryAddress, +id, +startBlock)
+      .then(({ id }) => id)
+      .catch(error => {
+        warn("Failed to add registry to chain cast", error);
+        return null;
+      });
+    if (chainCastId)
+      chain.chainCastId = chainCastId;
+  }
+
   await chain.save();
 
-  return "Chain updated"
+  return "Chain updated";
 }

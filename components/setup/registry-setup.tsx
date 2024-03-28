@@ -153,7 +153,7 @@ export function RegistrySetup({
 
       setisDeployingRegistry(true);
 
-      const deployedAddress =
+      const [deployedAddress, block] =
         await handleDeployRegistry( erc20.value,
                                     lockAmountForNetworkCreation,
                                     treasury,
@@ -161,14 +161,14 @@ export function RegistrySetup({
                                     closeFeePercentage,
                                     cancelFeePercentage,
                                     bountyToken.value )
-          .then(tx => tx?.contractAddress)
+          .then(tx => [tx?.contractAddress, tx?.blockNumber])
           .catch(() => null);
 
       if (!deployedAddress)
         throw new Error("Registry not deployed");
 
       setRegistry(previous => ({ ...previous, value: deployedAddress}));
-      await setChainRegistry(deployedAddress);
+      await setChainRegistry(deployedAddress, block);
 
       useAddToken({address: erc20.value, minAmount: erc20MinAmount || "1", chainId: +connectedChain?.id})
         .catch(error => console.debug("useAddToken: ", error));
@@ -267,7 +267,7 @@ export function RegistrySetup({
     allowToken(false);
   }
 
-  function setChainRegistry(address = registryAddress) {
+  function setChainRegistry(address = registryAddress, block: number = null) {
     const chain = supportedChains?.find(({chainId}) => +chainId === +connectedChain?.id);
     if (!chain || !address)
       return;
@@ -284,6 +284,7 @@ export function RegistrySetup({
       networkCreationFeePercentage,
       closeFeePercentage,
       cancelFeePercentage,
+      startBlock: block
     });
   }
 
