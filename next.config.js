@@ -76,6 +76,9 @@ const serverRuntimeConfig = {
       serverUrl: process.env.NEXT_ELASTIC_APM_SERVER_URL
     },
     active: process.env.NEXT_ELASTIC_APM_ACTIVE === "true"
+  },
+  chainCast: {
+    url: process.env.NEXT_CHAIN_CAST_URL
   }
 }
 
