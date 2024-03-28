@@ -87,13 +87,16 @@ class Chain extends Model {
       startBlock: {
         type: DataTypes.INTEGER
       },
+      chainCastId: {
+        type: DataTypes.STRING,
+      },
     }, {
       sequelize: sqlz,
       modelName: 'chain',
       tableName: 'chains',
       defaultScope: {
         attributes: {
-          exclude: ["privateChainRpc"]
+          exclude: ["privateChainRpc", "chainCastId"]
         }
       },
       scopes: {
