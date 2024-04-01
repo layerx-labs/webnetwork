@@ -79,8 +79,8 @@ const serverRuntimeConfig = {
   },
   chainCast: {
     url: process.env.NEXT_CHAIN_CAST_URL || "http://127.0.0.1:4400/api/graphql",
-    redisHost: process.env.NEXT_CHAIN_CAST_REDIS_HOST || "localhost",
-    redisPort: +process.env.NEXT_CHAIN_CAST_REDIS_PORT || 6379,
+    redisHost: process.env.NEXT_REDIS_HOST || "localhost",
+    redisPort: +process.env.NEXT_REDIS_PORT || 6379,
   },
   environmentName: process.env.NEXT_ENV_NAME || "bepro-localhost"
 }
@@ -99,7 +99,7 @@ module.exports = () => {
     // webpack5: true,
     compiler: {
       removeConsole: process.env.NODE_ENV === "production",
-      reactRemoveProperties: process.env.APP_ENV === "production"
+      reactRemoveProperties: process.env.NODE_ENV === "production"
     },
     async headers() {
       return [
