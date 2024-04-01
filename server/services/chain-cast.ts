@@ -19,7 +19,7 @@ type AddContractCastVariables = {
 }
 
 async function addContractCast(variables: AddContractCastVariables): Promise<{ id: string }> {
-  const { data } = await chainCastApi({
+  const { data: { data, errors } } = await chainCastApi({
     url: serverRuntimeConfig?.chainCast?.url,
     method: "post",
     data: {
@@ -28,10 +28,10 @@ async function addContractCast(variables: AddContractCastVariables): Promise<{ i
     }
   });
 
-  if (data.errors?.length)
-    throw new Error(data.errors.map(({ message }) => message).join(", "));
+  if (errors?.length)
+    throw new Error(errors.map(({ message }) => message).join(", "));
 
-  return data.data.createContractCast;
+  return data.createContractCast;
 }
 
 export const ChainCastService = {

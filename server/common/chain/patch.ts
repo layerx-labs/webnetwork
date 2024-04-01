@@ -76,5 +76,5 @@ export async function patch(req: NextApiRequest) {
 
   await chain.save();
 
-  return "Chain updated";
+  return true;
 }
