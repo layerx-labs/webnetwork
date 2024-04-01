@@ -78,8 +78,11 @@ const serverRuntimeConfig = {
     active: process.env.NEXT_ELASTIC_APM_ACTIVE === "true"
   },
   chainCast: {
-    url: process.env.NEXT_CHAIN_CAST_URL
-  }
+    url: process.env.NEXT_CHAIN_CAST_URL || "http://127.0.0.1:4400/api/graphql",
+    redisHost: process.env.NEXT_CHAIN_CAST_REDIS_HOST || "localhost",
+    redisPort: +process.env.NEXT_CHAIN_CAST_REDIS_PORT || 6379,
+  },
+  environmentName: process.env.NEXT_ENV_NAME || "bepro-localhost"
 }
 
 module.exports = () => {
