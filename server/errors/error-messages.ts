@@ -12,3 +12,9 @@ export enum UserEmailErrors {
   EmailAlreadyInUse = "email-already-in-use",
   NothingToChange = "nothing-to-change",
 }
+
+export enum ChainCastErrors { 
+  InvalidOperation = "invalid operation",
+  MissingParameters = "missing parameters",
+  InvalidAddress = "invalid address",
+}
