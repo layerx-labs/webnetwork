@@ -5,6 +5,7 @@ interface UseUpdateChainParams {
   registryAddress?: string;
   eventsApi?: string;
   explorer?: string;
+  startBlock?: number;
   lockAmountForNetworkCreation?: string | number;
   networkCreationFeePercentage?: string | number;
   closeFeePercentage?: string | number;

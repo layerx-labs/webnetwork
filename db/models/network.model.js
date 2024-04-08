@@ -102,7 +102,10 @@ class Network extends Model {
         close_task_allow_list: {
           type: DataTypes.ARRAY(DataTypes.STRING),
           defaultValue: [],
-        }
+        },
+        chainCastId: {
+          type: DataTypes.STRING,
+        },
       },
       {
         sequelize,
