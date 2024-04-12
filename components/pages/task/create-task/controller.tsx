@@ -6,12 +6,11 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import router, { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
-import { useSwitchChain } from "wagmi";
 
 import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import { BODY_CHARACTERES_LIMIT, UNSUPPORTED_CHAIN } from "helpers/constants";
+import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
@@ -48,7 +47,6 @@ import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import { useSettings } from "x-hooks/use-settings";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -65,7 +63,6 @@ export default function CreateTaskPage ({
 }: CreateTaskPageProps) {
   const session = useSession();
   const { query } = useRouter();
-  const { switchChainAsync } = useSwitchChain();
   const { t } = useTranslation(["common", "bounty"]);
 
   const [files, setFiles] = useState<IFilesProps[]>([]);
@@ -95,6 +92,7 @@ export default function CreateTaskPage ({
   const [showCannotCreateBountyModal, setShowCannotCreateBountyModal] = useState<boolean>(true);
   const [previewAmount, setPreviewAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [distributions, setDistributions] = useState<DistributionsProps>();
+  const [currentChain, setCurrentChain] = useState<SupportedChainData>();
 
 
   const rewardERC20 = useERC20();
@@ -105,7 +103,6 @@ export default function CreateTaskPage ({
   const { addError, addWarning } = useToastStore();
   const { service: daoService } = useDaoStore();
   const { pushAnalytic } = useAnalyticEvents();
-  const { connectedChain } = useSupportedChain();
 
   const { settings } = useSettings();
   const { currentUser } = useUserStore();
@@ -478,28 +475,8 @@ export default function CreateTaskPage ({
     const marketplace = allNetworks?.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
     if (!marketplace)
       return;
-    handleNetworkSelected(marketplace.chain);
+    handleNetworkSelected(marketplace.chain, marketplace);
   }, []);
-
-  useEffect(() => {
-    if (!connectedChain || currentSection !== 0) return;
-    if (connectedChain.name === UNSUPPORTED_CHAIN) {
-      setCurrentNetwork(undefined);
-      return;
-    }
-    const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +connectedChain.id);
-    setNetworksOfConnectedChain(networksOfChain);
-    const queryMarketplace = allNetworks.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
-    if (!queryMarketplace) {
-      setCurrentNetwork(networksOfChain[0]);
-      updateParamsOfActive(networksOfChain[0]);
-      return;
-    }
-    if (+connectedChain?.id === +queryMarketplace?.chain_id) {
-      setCurrentNetwork(queryMarketplace);
-      updateParamsOfActive(queryMarketplace);
-    }
-  }, [connectedChain]);
 
   useEffect(() => {
     let approved = true;
@@ -566,17 +543,16 @@ export default function CreateTaskPage ({
       setIsFundingType(true);
   }, []);
 
-  async function handleNetworkSelected (chain: SupportedChainData) {
-    setCurrentNetwork(null);
+  async function handleNetworkSelected (chain: SupportedChainData, network: Network = null) {
+    setCurrentNetwork(network);
+    setCurrentChain(chain);
     setTransactionalToken(null);
     setRewardToken(null);
     setCustomTokens([]);
     transactionalERC20.setAddress(undefined);
     rewardERC20.setAddress(undefined);
-    return switchChainAsync({
-      chainId: chain?.chainId
-    })
-      .catch((err) => console.log('handle Add Network error', err));
+    const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +chain?.chainId);
+    setNetworksOfConnectedChain(networksOfChain);
   }
 
   function handleBackButton () {
@@ -612,6 +588,7 @@ export default function CreateTaskPage ({
       onNextOrCreateButtonClick={handleNextStep}
       onSectionHeaderClick={handleSectionHeaderClick}
       currentNetwork={currentNetwork}
+      currentChain={currentChain}
       networksOfCurrentChain={networksOfConnectedChain}
       onChainChange={handleNetworkSelected}
       onNetworkChange={onNetworkSelected}
