@@ -30,7 +30,7 @@ export default function NetworkLogo({
   };
   const roundedClass = {
     circle: "rounded-circle",
-    square: "border-radius-8",
+    square: "border-radius-4",
   };
   const bgClass = `bg-${bgColor || "dark"}`;
 

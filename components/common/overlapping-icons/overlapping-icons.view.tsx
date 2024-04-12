@@ -21,7 +21,7 @@ export function OverlappingIcons({
   return(
     <div className="d-flex align-items-center">
       {icons?.slice(0, limit)?.map((icon, index) => 
-        <div className="mx-n1" key={`icons-${index}`}>
+        <div className={index > 0 ? "mx-n1" : ""} key={`icons-${index}`}>
           {React.cloneElement(icon, { className: "bg-gray-850 border border-gray-700 circle-2" })}
         </div>)
       }
