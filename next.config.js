@@ -29,7 +29,16 @@ const publicRuntimeConfig = {
   kyc:{
     isEnabled: process.env.NEXT_PUBLIC_ENABLE_KYC || false
   },
-  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  defaultChain: {
+    id: process.env.NEXT_PUBLIC_NEEDS_CHAIN_ID,
+    name: process.env.NEXT_PUBLIC_NEEDS_CHAIN_NAME,
+    nativeToken: process.env.NEXT_PUBLIC_NATIVE_TOKEN_NAME,
+    blockscan: process.env.NEXT_PUBLIC_BLOCKSCAN_LINK,
+    rpc: process.env.NEXT_PUBLIC_WEB3_CONNECTION,
+    decimals: process.env.NEXT_PUBLIC_CHAIN_DECIMALS,
+  },
+  isProduction: process.env.NODE_ENV === "production"
 }
 
 // Will only be available on the server-side

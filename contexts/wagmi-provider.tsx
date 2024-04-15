@@ -30,10 +30,42 @@ const coinEx = defineChain({
   }
 });
 
+const statingChain = defineChain({
+  id: publicRuntimeConfig?.defaultChain?.id,
+  name: publicRuntimeConfig?.defaultChain?.name,
+  nativeCurrency: { 
+    name: publicRuntimeConfig?.defaultChain?.nativeToken, 
+    symbol: publicRuntimeConfig?.defaultChain?.nativeToken, 
+    decimals: publicRuntimeConfig?.defaultChain?.decimals
+  },
+  rpcUrls: {
+    default: {
+      http: [publicRuntimeConfig?.defaultChain?.rpc],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Explorer',
+      url: publicRuntimeConfig?.defaultChain?.blockscan,
+    },
+  }
+});
+
+const isProduction = publicRuntimeConfig?.isProduction;
+const testnets = [auroraTestnet, statingChain];
+
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
-    chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
+    chains: [
+      polygon,
+      polygonMumbai,
+      aurora,
+      moonbeam,
+      coinEx,
+      mainnet,
+      ...(isProduction ? [] : testnets)
+    ],
     ssr: true,
     storage: createStorage({
       storage: cookieStorage,
