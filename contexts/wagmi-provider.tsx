@@ -4,7 +4,7 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import getConfig from "next/config";
 import { parseCookies } from "nookies";
 import { defineChain } from "viem";
-import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonMumbai } from "viem/chains";
+import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai } from "viem/chains";
 import { WagmiProvider, cookieStorage, createStorage, cookieToInitialState } from "wagmi";
 
 interface WagmiProps {
@@ -30,29 +30,8 @@ const coinEx = defineChain({
   }
 });
 
-const statingChain = defineChain({
-  id: publicRuntimeConfig?.defaultChain?.id,
-  name: publicRuntimeConfig?.defaultChain?.name,
-  nativeCurrency: { 
-    name: publicRuntimeConfig?.defaultChain?.nativeToken, 
-    symbol: publicRuntimeConfig?.defaultChain?.nativeToken, 
-    decimals: publicRuntimeConfig?.defaultChain?.decimals
-  },
-  rpcUrls: {
-    default: {
-      http: [publicRuntimeConfig?.defaultChain?.rpc],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: 'Explorer',
-      url: publicRuntimeConfig?.defaultChain?.blockscan,
-    },
-  }
-});
-
 const isProduction = publicRuntimeConfig?.isProduction;
-const testnets = [auroraTestnet, statingChain];
+const testnets = [auroraTestnet, polygonAmoy];
 
 const config = getDefaultConfig({
     appName: "BEPRO",
