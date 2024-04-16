@@ -30,14 +30,13 @@ const coinEx = defineChain({
   }
 });
 
-const isProduction = publicRuntimeConfig?.isProduction;
-
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [
-      isProduction ? polygon : polygonAmoy,
+      polygon,
       polygonMumbai,
+      polygonAmoy,
       aurora,
       auroraTestnet,
       moonbeam,
