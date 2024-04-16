@@ -38,7 +38,7 @@ const publicRuntimeConfig = {
     rpc: process.env.NEXT_PUBLIC_WEB3_CONNECTION,
     decimals: process.env.NEXT_PUBLIC_CHAIN_DECIMALS,
   },
-  isProduction: process.env.NODE_ENV === "production"
+  isProduction: process.env.APP_ENV === "production"
 }
 
 // Will only be available on the server-side
@@ -101,7 +101,7 @@ module.exports = () => {
     serverRuntimeConfig,
     // webpack5: true,
     compiler: {
-      removeConsole: process.env.NODE_ENV === "production",
+      removeConsole: process.env.APP_ENV === "production",
       reactRemoveProperties: process.env.APP_ENV === "production"
     },
     async headers() {
