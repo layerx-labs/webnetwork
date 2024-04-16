@@ -31,19 +31,18 @@ const coinEx = defineChain({
 });
 
 const isProduction = publicRuntimeConfig?.isProduction;
-const testnets = [auroraTestnet, polygonAmoy];
 
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [
-      polygon,
+      isProduction ? polygon : polygonAmoy,
       polygonMumbai,
       aurora,
+      auroraTestnet,
       moonbeam,
       coinEx,
       mainnet,
-      ...(isProduction ? [] : testnets)
     ],
     ssr: true,
     storage: createStorage({
