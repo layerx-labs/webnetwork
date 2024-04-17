@@ -20,6 +20,10 @@ class ChainEvents extends Model {
       chain_id: {
         type: DataTypes.INTEGER
       },
+      contract_address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
