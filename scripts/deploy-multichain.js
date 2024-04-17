@@ -184,10 +184,7 @@ async function main(option = 0) {
     await network.registry.token.approve(network.registry.contractAddress, DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION);
     await network.registry.lock(DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION);
     await network.registry.registerNetwork(networkAddress);
-    console.log("network.registry.bountyToken.contractAddress", network.registry.bountyToken.contractAddress)
-    console.log("network.registry.contractAddress", network.registry.contractAddress)
     await network.registry.bountyToken.setDispatcher(network.registry.contractAddress);
-    console.log("should have set dispatcher")
 
     const nameSymbol = async (_class, address) => {
       const token = new _class(connection, address);
@@ -250,7 +247,11 @@ async function main(option = 0) {
           eventsApi: eventsApi,
           blockScanner: blockScanner,
           isDefault: false,
-          color: "#29b6af"
+          color: "#29b6af",
+          lockAmountForNetworkCreation: DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
+          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE,
+          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE,
+          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE,
         }
       });
 
