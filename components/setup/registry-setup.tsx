@@ -33,6 +33,8 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+import { lowerCaseCompare } from "../../helpers/string";
+
 interface RegistrySetupProps {
   isVisible?: boolean;
   registryAddress: string;
@@ -101,7 +103,8 @@ export function RegistrySetup({
   }
   
   const hasRegistryAddress = !!registryAddress && isAddress(registryAddress) && !isZeroAddress(registryAddress);
-  const needToSetDispatcher = hasRegistryAddress && bountyTokenDispatcher && registryAddress !== bountyTokenDispatcher;
+  const needToSetDispatcher = hasRegistryAddress && bountyTokenDispatcher && 
+    !lowerCaseCompare(registryAddress, bountyTokenDispatcher);
 
   const isDeployRegistryBtnDisabled = [
     treasury.trim() === "",
