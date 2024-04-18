@@ -75,6 +75,8 @@ async function main(option = 0) {
     DEPLOY_DRAFT_TIME = 60 * 5, // 5 minutes
     DEPLOY_DISPUTABLE_TIME = 60 * 10, // 10 minutes
     DEPLOY_COUNCIL_AMOUNT = 105000,
+    DEPLOY_MERGER_FEE = 2,
+    DEPLOY_PROPOSER_FEE = 2,
     NEXT_PUBLIC_HOME_URL
   } = env;
 
@@ -164,7 +166,9 @@ async function main(option = 0) {
     const changeFunctions = [
       [`changeDraftTime`, DEPLOY_DRAFT_TIME],
       [`changeDisputableTime`, DEPLOY_DISPUTABLE_TIME],
-      [`changeCouncilAmount`, DEPLOY_COUNCIL_AMOUNT]
+      [`changeCouncilAmount`, DEPLOY_COUNCIL_AMOUNT],
+      [`changeMergeCreatorFeeShare`, DEPLOY_MERGER_FEE],
+      [`changeProposerFeeShare`, DEPLOY_PROPOSER_FEE],
     ];
 
     for (const [fn, value] of changeFunctions) {
