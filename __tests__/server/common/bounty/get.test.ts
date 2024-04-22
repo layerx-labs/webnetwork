@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next";
 
-import { get } from "server/common/task";
+import { get } from "server/common/task/get";
 import { HttpBadRequestError } from "server/errors/http-errors";
 
 jest.mock("services/ipfs-service");
