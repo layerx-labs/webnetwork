@@ -1,4 +1,4 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import {NextApiRequest} from "next";
 import getConfig from "next/config";
 
 import models from "db/models";
@@ -12,7 +12,7 @@ import {HttpBadRequestError, HttpNotFoundError, HttpServerError} from "server/er
 
 const {publicRuntimeConfig} = getConfig();
 
-export default async function post(req: NextApiRequest, res: NextApiResponse) {
+export default async function post(req: NextApiRequest) {
 
   const {deliverableUrl, title, description, issueId, context} = req.body;
 
@@ -68,10 +68,10 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     description,
   });
 
-  return res.status(200).json({
+  return {
     bountyId: issue.contractId,
     originCID: result.hash,
     cid: deliverable.id,
-  });
+  }
 
 }

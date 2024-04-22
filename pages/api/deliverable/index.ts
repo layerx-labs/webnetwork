@@ -7,7 +7,7 @@ import post from "server/common/deliverable/post";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
   case "POST":
-    res.status(200).json(await post(req, res));
+    res.status(200).json(await post(req));
     break;
 
   default:
