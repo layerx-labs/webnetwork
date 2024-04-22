@@ -14,16 +14,19 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 import useQueryFilter from "x-hooks/use-query-filter";
 
 export default function ChainFilter({
+  chain,
   chains,
   direction = "horizontal",
   onChange,
-  label = true
+  label = true,
+  isClearable,
 }: ChainFilterProps) {
   const { query } = useRouter();
   
   const findChain = chainShortName => chains?.find(c => c.chainShortName === chainShortName);
 
-  const [chain, setChain] = useState<SupportedChainData>(findChain(query?.networkChain?.toString()));
+  const [selectedChain, setSelectedChain] = 
+    useState<SupportedChainData>(chain || findChain(query?.networkChain?.toString()));
 
   const { isMobileView, isTabletView } = useBreakPoint();
   const { setValue } = useQueryFilter({ networkChain: query?.networkChain?.toString() });
@@ -42,22 +45,27 @@ export default function ChainFilter({
         networkChain: option?.value,
       }, true);
     
-    setChain(findChain(option?.value));
+    setSelectedChain(findChain(option?.value));
   }
 
   useEffect(() => {
     if (!onChange)
-      setChain(findChain(query?.networkChain?.toString()));
+      setSelectedChain(findChain(query?.networkChain?.toString()));
   }, [query?.networkChain]);
+
+  useEffect(() => {
+    setSelectedChain(chain);
+  }, [chain]);
 
   return(
     <ChainFilterView
       options={chains?.map(chainToOption)}
-      option={chainToOption(chain)}
+      option={chainToOption(selectedChain)}
       onChange={onChainChange}
       direction={direction}
       isMobile={isMobileView || isTabletView}
       label={label}
+      isClearable={isClearable}
     />
   );
 }

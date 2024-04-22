@@ -67,10 +67,13 @@ export interface IntervalFiltersProps {
 }
 
 export interface ChainFilterProps {
+  chain?: SupportedChainData;
   chains: SupportedChainData[];
   direction?: Direction;
+  className?: string;
   onChange?: (value: string | number) => void;
   label?: boolean;
+  isClearable?: boolean;
 }
 
 export interface MarketplaceFilterProps {

@@ -1,5 +1,7 @@
 import {useEffect} from "react";
 
+import { useAccount } from "wagmi";
+
 import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 
 import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
@@ -27,9 +29,11 @@ interface MyMarketplaceProps {
 export function MyMarketplace({
   bounties
 }: MyMarketplaceProps) {
+  const account = useAccount();
+
   const { start } = useDao();
-  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
   const { connectedChain } = useSupportedChain();
   const { setForcedNetwork } = useNetworkSettings();
   const { update: updateMarketplaceStore } = useMarketplaceStore();
@@ -78,7 +82,7 @@ export function MyMarketplace({
                     });
 
   useEffect(() => {
-    if (myNetwork && !isFetching && isSuccess) {
+    if (myNetwork && !isFetching && isSuccess && account?.status === "connected") {
       setForcedNetwork(convertTimes(myNetwork));
       updateMarketplaceStore({
         active: convertTimes(myNetwork)
@@ -86,9 +90,9 @@ export function MyMarketplace({
       start({
         chainId: +myNetwork.chain_id,
         networkAddress: myNetwork.networkAddress
-      }).catch(() => {});
+      }).catch(error => console.debug("start error", error));
     }
-  }, [myNetwork, isFetching, isSuccess]);
+  }, [myNetwork, isFetching, isSuccess, account?.status]);
 
   return(
     <MyNetworkPageView

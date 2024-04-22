@@ -8,6 +8,7 @@
   "oracles-staked-description": "The amount of tokens locked by users to curate the marketplace",
   "tvl": "TVL",
   "tvl-description": "Total Value Locked",
+  "tokens-locked": "Tokens Locked",
   "open-bounties": "Open tasks",
   "open-bounties-description": "Number of tasks available to work",
   "total-bounties": "Total tasks",
@@ -17,6 +18,8 @@
   "network-amount-to-create": "{{amount}} {{symbol}} will be taken from this {{totalAmount}} {{symbol}} locked when you create the marketplace",
   "dispute-time": "Dispute time",
   "percentage-for-dispute": "Percentage for dispute",
+  "networks": "Networks",
+  "marketplace": "Marketplace",
   "redeem-time": "Draft time",
   "council-amount": "Curator Amount",
   "network-bounty-hall": {

@@ -8,6 +8,7 @@ import {appWithTranslation} from "next-i18next";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 import {GoogleAnalytics} from "nextjs-google-analytics";
+import { polygon, polygonAmoy } from "viem/chains";
 
 import ConsentCookie from "components/consent-cokie";
 import Loading from "components/loading";
@@ -35,6 +36,8 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: any) 
 
   const [queryClient] = useState(() => getReactQueryClient());
 
+  const isProduction = publicRuntimeConfig?.isProduction;
+
   if (asPath.includes('api-doc'))
     return <Component {...pageProps}></Component>
 
@@ -43,7 +46,7 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }: any) 
       <QueryClientProvider client={queryClient}>
         <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
         <SessionProvider session={session}>
-            <RainbowKitProvider>
+            <RainbowKitProvider initialChain={isProduction ? polygon : polygonAmoy}>
               <AuthenticationProvider>
                 <RootProviders>
                   <HydrationBoundary state={pageProps.dehydratedState}>

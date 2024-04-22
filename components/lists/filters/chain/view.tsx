@@ -15,6 +15,7 @@ interface ChainFilterViewProps {
   isMobile: boolean;
   onChange: (value: SelectOption) => void;
   label: boolean;
+  isClearable?: boolean;
 }
 
 export default function ChainFilterView({
@@ -23,7 +24,8 @@ export default function ChainFilterView({
   direction,
   isMobile,
   onChange,
-  label
+  label,
+  isClearable
 }: ChainFilterViewProps) {
   const { t } = useTranslation("common");
 
@@ -45,7 +47,7 @@ export default function ChainFilterView({
           options={options}
           onChange={onChange}
           selectedIndex={options?.findIndex(opt => opt?.value === option?.value)}
-          isClearable
+          isClearable={isClearable}
         >
           <ReactSelect
             options={options}
@@ -54,7 +56,7 @@ export default function ChainFilterView({
             isSearchable={false}
             inputProps={{ 'data-testid': 'chain-select' }}
             placeholder={t("placeholders.select-chain")}
-            isClearable={!isMobile}
+            isClearable={isClearable ?? !isMobile}
             components={{
               Option: IconOption,
               SingleValue: IconSingleValue,

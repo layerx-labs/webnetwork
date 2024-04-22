@@ -4,7 +4,7 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import getConfig from "next/config";
 import { parseCookies } from "nookies";
 import { defineChain } from "viem";
-import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonMumbai } from "viem/chains";
+import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai } from "viem/chains";
 import { WagmiProvider, cookieStorage, createStorage, cookieToInitialState } from "wagmi";
 
 interface WagmiProps {
@@ -30,10 +30,20 @@ const coinEx = defineChain({
   }
 });
 
+const isProduction = publicRuntimeConfig?.isProduction;
+
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
-    chains: [polygon, polygonMumbai, aurora, auroraTestnet, moonbeam, coinEx, mainnet],
+    chains: [
+      isProduction ? polygon : polygonAmoy,
+      polygonMumbai,
+      aurora,
+      auroraTestnet,
+      moonbeam,
+      coinEx,
+      mainnet,
+    ],
     ssr: true,
     storage: createStorage({
       storage: cookieStorage,
