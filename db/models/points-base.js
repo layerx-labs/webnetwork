@@ -12,7 +12,8 @@ class PointsBase extends Model {
       },
       actionName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       pointsPerAction: {
         type: DataTypes.FLOAT,
@@ -37,6 +38,11 @@ class PointsBase extends Model {
   }
 
   static associate(models) {
+    this.hasMany(models.pointsEvents, {
+      foreignKey: "actionName",
+      targetKey: "actionName",
+      as: "pointsEvents"
+    });
   }
 }
 
