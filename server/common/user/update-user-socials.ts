@@ -27,7 +27,7 @@ export async function updateUserSocials(req: NextApiRequest) {
 
   const update = {
     ... github ? {githubLink: github} : {},
-    ... linkedin ? {linkedinLink: linkedin} : {},
+    ... linkedin ? {linkedInLink: linkedin} : {},
   }
 
   await user.update(update);

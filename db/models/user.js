@@ -42,7 +42,7 @@ class User extends Model {
       githubLink: {
         type: DataTypes.STRING,
       },
-      linkedinLink: {
+      linkedInLink: {
         type: DataTypes.STRING,
       }
     },
