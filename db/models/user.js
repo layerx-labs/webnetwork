@@ -38,6 +38,12 @@ class User extends Model {
       },
       emailVerificationSentAt: {
         type: DataTypes.DATE
+      },
+      github_link: {
+        type: DataTypes.STRING,
+      },
+      linkedin_link: {
+        type: DataTypes.STRING,
       }
     },
     {
