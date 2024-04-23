@@ -8,10 +8,10 @@ class PointsEvents extends Model {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: "users",
@@ -19,7 +19,7 @@ class PointsEvents extends Model {
         },
       },
       actionName: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: "pointsBase",
@@ -27,11 +27,11 @@ class PointsEvents extends Model {
         }
       },
       pointsWon: {
-        type: Sequelize.FLOAT,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       pointsCounted: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: false,
       }
