@@ -27,16 +27,31 @@ module.exports = {
       counter: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     });
 
+    const common = {
+      pointsPerAction: 1, 
+      counter: "1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
     const initialRules = [
-      { actionName: "locked", pointsPerAction: 1, counter: "1" },
-      { actionName: "delegated", pointsPerAction: 1, counter: "1" },
-      { actionName: "created_marketplace", pointsPerAction: 1, counter: "1" },
-      { actionName: "created_task", pointsPerAction: 1, counter: "1" },
-      { actionName: "created_deliverable", pointsPerAction: 1, counter: "1" },
-      { actionName: "created_proposal", pointsPerAction: 1, counter: "1" },
+      { actionName: "locked", ...common },
+      { actionName: "delegated", ...common },
+      { actionName: "created_marketplace", ...common },
+      { actionName: "created_task", ...common },
+      { actionName: "created_deliverable", ...common },
+      { actionName: "created_proposal", ...common },
     ];
 
     await queryInterface.bulkInsert("points_base", initialRules);
