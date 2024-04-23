@@ -108,6 +108,12 @@ class User extends Model {
       sourceKey: "address",
       as: "payments"
     });
+
+    this.hasMany(models.pointsEvents, {
+      foreignKey: "userId",
+      sourceKey: "id",
+      as: "pointsEvents"
+    });
   }
 
   static findByAddress(address) {

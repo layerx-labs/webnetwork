@@ -50,6 +50,12 @@ class PointsEvents extends Model {
       targetKey: "actionName",
       as: "pointsBase"
     });
+
+    this.belongsTo(models.user, {
+      foreignKey: "userId",
+      targetKey: "id",
+      as: "users"
+    });
   }
 }
 
