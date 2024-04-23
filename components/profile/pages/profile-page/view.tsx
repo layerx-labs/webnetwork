@@ -5,7 +5,7 @@ import {useTranslation} from "next-i18next";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
-import { Divider } from "components/divider";
+import {Divider} from "components/divider";
 import InternalLink from "components/internal-link";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import DashboardLayout from "components/profile/dashboard-layout";
@@ -15,6 +15,8 @@ import UserNameForm from "components/profile/user-name-form/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+
+import {SocialForm} from "../../socials-form/social-form-controller";
 
 interface ProfilePageViewProps { 
   walletAddress: string;
@@ -84,6 +86,7 @@ export default function ProfilePageView({
             </div>
           </div>
         </div>
+        <SocialForm />
         <NotificationForm />
         <LanguageForm />
         <Divider bg="gray-850" />

@@ -8,7 +8,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn("users", "github_link");
-    await queryInterface.removeColumn("users", "linkedin_link");
+    await queryInterface.removeColumn("users", "githubLink");
+    await queryInterface.removeColumn("users", "linkedinLink");
   }
 };

@@ -1,5 +1,6 @@
 import {NextApiRequest} from "next";
 
+import {lowerCaseCompare} from "../../../helpers/string";
 import {BadRequestErrors, ForbiddenErrors} from "../../../interfaces/enums/Errors";
 import {HttpBadRequestError, HttpForbiddenError} from "../../errors/http-errors";
 import {getUserByAddress} from "./get-user-by-address";
@@ -21,12 +22,12 @@ export async function updateUserSocials(req: NextApiRequest) {
 
   const user = await getUserByAddress(req);
 
-  if (req.query?.address !== req.body.context.user.address)
+  if (!lowerCaseCompare(req.query?.address as string, req.body.context.user.address))
     throw new HttpForbiddenError(ForbiddenErrors.NotTheOwner);
 
   const update = {
-    ... github ? {github} : {},
-    ... linkedin ? {linkedin} : {},
+    ... github ? {githubLink: github} : {},
+    ... linkedin ? {linkedinLink: linkedin} : {},
   }
 
   await user.update(update);

@@ -7,9 +7,9 @@ import models from "db/models";
 
 import {Logger} from "services/logging";
 
-import { SESSION_TTL } from "server/auth/config";
-import { EthereumProvider } from "server/auth/providers";
-import { AccountValidator } from "server/auth/validators/account";
+import {SESSION_TTL} from "server/auth/config";
+import {EthereumProvider} from "server/auth/providers";
+import {AccountValidator} from "server/auth/validators/account";
 
 const {
   serverRuntimeConfig: {
@@ -94,6 +94,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             emailVerificationSentAt: user.emailVerificationSentAt,
             language: user.settings?.language,
             notifications: user?.settings?.notifications || false,
+            github: user?.githubLink,
+            linkedIn: user?.linkedInLink
           },
         };
       },

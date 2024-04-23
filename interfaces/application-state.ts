@@ -3,7 +3,7 @@ import {MatchAccountsStatus} from "interfaces/enums/api";
 import {IssueBigNumberData, IssueDataComment} from "interfaces/issue-data";
 import {kycSession} from "interfaces/kyc-session";
 
-import { Tier} from "types/settings";
+import {Tier} from "types/settings";
 
 export interface ConnectedChain {
   id: string;
@@ -36,6 +36,8 @@ export interface CurrentUserState {
   notifications?: boolean;
   isGovernor?: boolean;
   language?: string;
+  github?: string;
+  linkedIn?: string;
 }
 
 export interface CurrentBounty {
