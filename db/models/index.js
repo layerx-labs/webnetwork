@@ -25,6 +25,8 @@ import Deliverables from './deliverable.model'
 import UserLockedRegistry from './user-locked-registry'
 import Notification from './notification.model'
 import UserSetting from './user-settings.model'
+import PointsBase from './points-base'
+import PointsEvents from './points-events'
 
 const Database = { sequelize: null };
 
@@ -57,6 +59,8 @@ Database.deliverable = Deliverables;
 Database.userLockedRegistry = UserLockedRegistry;
 Database.notification = Notification;
 Database.userSetting = UserSetting;
+Database.pointsBase = PointsBase;
+Database.pointsEvents = PointsEvents;
 
 
 Object.values(Database).forEach((model) => {

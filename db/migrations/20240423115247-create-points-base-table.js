@@ -12,7 +12,8 @@ module.exports = {
       },
       actionName: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       pointsPerAction: {
         type: Sequelize.FLOAT,
