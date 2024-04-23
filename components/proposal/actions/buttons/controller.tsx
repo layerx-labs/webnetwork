@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { AxiosError } from "axios";
 import BigNumber from "bignumber.js";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -12,12 +13,12 @@ import { DistributedAmounts, Proposal } from "interfaces/proposal";
 import { UserRoleUtils } from "server/utils/jwt";
 
 import { useCreateNft } from "x-hooks/api/nft";
+import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import useRefresh from "x-hooks/use-refresh";
 
 import ProposalActionsButtonsView from "./view";
-
 
 interface ProposalActionsButtonsProps {
   issue: IssueData | IssueBigNumberData;
@@ -46,6 +47,7 @@ export default function ProposalActionsButtons ({
   const [canCloseTask, setCanCloseTask] = useState(true);
 
   const { refresh } = useRefresh();
+  const { addError } = useToastStore();
   const { handlerDisputeProposal, handleCloseIssue, handleRefuseByOwner } = useBepro();
 
   const [isMerging, onMerge, setIsMerging] = useContractTransaction(NetworkEvents.BountyClosed,
@@ -94,6 +96,8 @@ export default function ProposalActionsButtons ({
 
       refresh();
     } catch (error) {
+      const message = error instanceof AxiosError ? error?.response?.data?.message : error?.message;
+      addError(t("actions.failed"), message);
       console.debug("Failed to close bounty", error);
     } finally {
       setIsMerging(false);
