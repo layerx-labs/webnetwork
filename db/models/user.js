@@ -38,6 +38,11 @@ class User extends Model {
       },
       emailVerificationSentAt: {
         type: DataTypes.DATE
+      },
+      totalPoints: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        defaultValue: 0
       }
     },
     {
