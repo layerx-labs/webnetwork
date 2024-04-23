@@ -4,7 +4,6 @@ import {getUserByAddress} from "../../../../server/common/user/get-user-by-addre
 import {updateUserSocials} from "../../../../server/common/user/update-user-socials";
 import {HttpBadRequestError, HttpForbiddenError} from "../../../../server/errors/http-errors";
 
-jest.mock('server/common/user/get-user-by-handle', () => ({getUserByHandle: jest.fn()}));
 jest.mock('server/common/user/get-user-by-address', () => ({getUserByAddress: jest.fn()}));
 
 jest.mock('server/utils/jwt', () => ({
