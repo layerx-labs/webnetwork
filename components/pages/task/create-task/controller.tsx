@@ -473,8 +473,6 @@ export default function CreateTaskPage ({
     if (!query?.marketplace)
       return;
     const marketplace = allNetworks?.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
-    console.log("allNetworks", allNetworks)
-    console.log("marketplace", marketplace)
     if (!marketplace)
       return;
     handleNetworkSelected(marketplace.chain, marketplace);
@@ -555,6 +553,8 @@ export default function CreateTaskPage ({
     rewardERC20.setAddress(undefined);
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +chain?.chainId);
     setNetworksOfConnectedChain(networksOfChain);
+    if (network)
+      updateParamsOfActive(network);
   }
 
   function handleBackButton () {
@@ -563,7 +563,6 @@ export default function CreateTaskPage ({
   }
 
   async function onNetworkSelected (opt) {
-    console.log("onNetworkSelectted", opt)
     setCurrentNetwork(opt);
     updateParamsOfActive(opt);
   }
