@@ -41,6 +41,6 @@ export function SocialForm() {
 
   return <SocialFormView githubLink={socials.github || ""}
                          linkedInLink={socials.linkedIn || ""}
-                         onSubmit={(a: string, b: string) => saveSocials({github: a, linkedin: b}) }
+                         onSubmit={(github: string, linkedin: string) => saveSocials({github, linkedin}) }
                          isSaving={isPending} />
 }
