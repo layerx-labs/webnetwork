@@ -473,6 +473,8 @@ export default function CreateTaskPage ({
     if (!query?.marketplace)
       return;
     const marketplace = allNetworks?.find(m => lowerCaseCompare(m?.name, query?.marketplace?.toString()));
+    console.log("allNetworks", allNetworks)
+    console.log("marketplace", marketplace)
     if (!marketplace)
       return;
     handleNetworkSelected(marketplace.chain, marketplace);
