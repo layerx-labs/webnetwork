@@ -563,6 +563,7 @@ export default function CreateTaskPage ({
   }
 
   async function onNetworkSelected (opt) {
+    console.log("onNetworkSelectted", opt)
     setCurrentNetwork(opt);
     updateParamsOfActive(opt);
   }
