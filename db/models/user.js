@@ -38,6 +38,11 @@ class User extends Model {
       },
       emailVerificationSentAt: {
         type: DataTypes.DATE
+      },
+      totalPoints: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        defaultValue: 0
       }
     },
     {
@@ -102,6 +107,12 @@ class User extends Model {
       foreignKey: "address",
       sourceKey: "address",
       as: "payments"
+    });
+
+    this.hasMany(models.pointsEvents, {
+      foreignKey: "userId",
+      sourceKey: "id",
+      as: "pointsEvents"
     });
   }
 
