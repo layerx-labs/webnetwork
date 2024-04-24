@@ -74,6 +74,7 @@ export interface IssueData {
   origin?: string;
   userId: number;
   user?: User;
+  privateDeliverables?: boolean;
 }
 
 export interface Disputes {
