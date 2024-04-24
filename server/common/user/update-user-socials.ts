@@ -11,7 +11,7 @@ export async function updateUserSocials(req: NextApiRequest) {
   const repoSocialRegex = /https:\/\/(gitlab|github)\.com\/\w+/;
   const linkedInRegex = /https:\/\/linkedin\.com\/in\/\w+/;
 
-  if (!github && !linkedin)
+  if (github === undefined && linkedin === undefined)
     throw new HttpBadRequestError(BadRequestErrors.MissingParameters);
 
   if (github && !repoSocialRegex.test(github))
@@ -26,8 +26,8 @@ export async function updateUserSocials(req: NextApiRequest) {
     throw new HttpForbiddenError(ForbiddenErrors.NotTheOwner);
 
   const update = {
-    ... github ? {githubLink: github} : {},
-    ... linkedin ? {linkedInLink: linkedin} : {},
+    ... github !== undefined ? {githubLink: github} : {},
+    ... linkedin !== undefined ? {linkedInLink: linkedin} : {},
   }
 
   await user.update(update);
