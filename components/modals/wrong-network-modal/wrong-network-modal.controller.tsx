@@ -55,14 +55,8 @@ export default function WrongNetworkModal() {
   }
 
   function updateNetworkChain() {
-    console.log("should update network chain", {
-      supportedChains,
-      marketplace
-    })
     if (supportedChains?.length && marketplace?.active?.chain_id) {
       const chain = supportedChains.find(({ chainId }) => +marketplace?.active?.chain_id === +chainId );
-
-      console.log("chain to update", chain)
 
       setNetworkChain(chain);
       setChosenSupportedChain(chain);
