@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import {getDefaultConfig} from "@rainbow-me/rainbowkit";
 import getConfig from "next/config";
-import { parseCookies } from "nookies";
-import { defineChain } from "viem";
-import { aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai } from "viem/chains";
-import { WagmiProvider, cookieStorage, createStorage, cookieToInitialState } from "wagmi";
+import {parseCookies} from "nookies";
+import {defineChain} from "viem";
+import {aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai} from "viem/chains";
+import {cookieStorage, cookieToInitialState, createStorage, WagmiProvider} from "wagmi";
 
 interface WagmiProps {
   children?: ReactNode;
@@ -30,13 +30,12 @@ const coinEx = defineChain({
   }
 });
 
-const isProduction = publicRuntimeConfig?.isProduction;
-
 const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [
-      isProduction ? polygon : polygonAmoy,
+      polygon,
+      polygonAmoy,
       polygonMumbai,
       aurora,
       auroraTestnet,
