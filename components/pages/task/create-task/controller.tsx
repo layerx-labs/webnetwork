@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import { BODY_CHARACTERES_LIMIT, DAY_IN_SECONDS } from "helpers/constants";
+import { BODY_CHARACTERES_LIMIT, DAY_IN_MILISECONDS } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
@@ -67,9 +67,8 @@ export default function CreateTaskPage ({
   const { query } = useRouter();
   const { t } = useTranslation(["common", "bounty"]);
 
-  const taskStorage = new WinStorage("task-creation", DAY_IN_SECONDS, "localStorage");
+  const taskStorage = new WinStorage("task-creation", DAY_IN_MILISECONDS, "localStorage");
   const cachedTask = taskStorage.getItem();
-  console.log("cachedTask", cachedTask)
 
   const [files, setFiles] = useState<IFilesProps[]>(cachedTask?.files || []);
   const [rewardToken, setRewardToken] = useState<Token>();
@@ -175,7 +174,6 @@ export default function CreateTaskPage ({
   }
 
   function handleModalActionClick() {
-    console.log("should have set taskStorage")
     taskStorage.setItem({
       bountyTitle, bountyDescription, selectedTags, deliverableType, privateDeliverable, originLink, files
     });
@@ -562,7 +560,8 @@ export default function CreateTaskPage ({
   }, [userCanCreateBounties]);
 
   useEffect(() => {
-    cleanFields();
+    if (!cachedTask)
+      cleanFields();
 
     if (query?.type === "funding")
       setIsFundingType(true);
