@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { IFilesProps } from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import { BODY_CHARACTERES_LIMIT } from "helpers/constants";
+import { BODY_CHARACTERES_LIMIT, DAY_IN_SECONDS } from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
 import { addFilesToMarkdown } from "helpers/markdown";
 import { lowerCaseCompare } from "helpers/string";
@@ -31,6 +31,8 @@ import {DistributionsProps} from "interfaces/proposal";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 import { Token } from "interfaces/token";
 import { SimpleBlockTransactionPayload } from "interfaces/transaction";
+
+import { WinStorage } from "services/win-storage";
 
 import { UserRoleUtils } from "server/utils/jwt";
 
@@ -65,9 +67,13 @@ export default function CreateTaskPage ({
   const { query } = useRouter();
   const { t } = useTranslation(["common", "bounty"]);
 
-  const [files, setFiles] = useState<IFilesProps[]>([]);
+  const taskStorage = new WinStorage("task-creation", DAY_IN_SECONDS, "localStorage");
+  const cachedTask = taskStorage.getItem();
+  console.log("cachedTask", cachedTask)
+
+  const [files, setFiles] = useState<IFilesProps[]>(cachedTask?.files || []);
   const [rewardToken, setRewardToken] = useState<Token>();
-  const [bountyTitle, setBountyTitle] = useState<string>("");
+  const [bountyTitle, setBountyTitle] = useState<string>(cachedTask?.bountyTitle || "");
   const [customTokens, setCustomTokens] = useState<Token[]>([]);
   const [isTokenApproved, setIsTokenApproved] = useState(false);
   const [currentSection, setCurrentSection] = useState<number>(0);
@@ -76,41 +82,41 @@ export default function CreateTaskPage ({
   const [isKyc, setIsKyc] = useState<boolean>(false);
   const [tierList, setTierList] = useState<number[]>([]);
   const [transactionalToken, setTransactionalToken] = useState<Token>();
-  const [bountyDescription, setBountyDescription] = useState<string>("");
+  const [bountyDescription, setBountyDescription] = useState<string>(cachedTask?.bountyDescription || "");
   const [isLoadingApprove, setIsLoadingApprove] = useState<boolean>(false);
   const [isLoadingCreateBounty, setIsLoadingCreateBounty] = useState<boolean>(false);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [issueAmount, setIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>(cachedTask?.selectedTags || []);
   const [currentNetwork, setCurrentNetwork] = useState<Network>();
   const [networksOfConnectedChain, setNetworksOfConnectedChain] = useState<Network[]>([]);
-  const [deliverableType, setDeliverableType] = useState<string>();
-  const [originLink, setOriginLink] = useState<string>("");
+  const [deliverableType, setDeliverableType] = useState<string>(cachedTask?.deliverableType);
+  const [originLink, setOriginLink] = useState<string>(cachedTask?.originLink || "");
   const [originLinkError, setOriginLinkError] = useState<OriginLinkErrors>();
   const [userCanCreateBounties, setUserCanCreateBounties] = useState<boolean>(true);
   const [showCannotCreateBountyModal, setShowCannotCreateBountyModal] = useState<boolean>(true);
   const [previewAmount, setPreviewAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [distributions, setDistributions] = useState<DistributionsProps>();
   const [currentChain, setCurrentChain] = useState<SupportedChainData>();
-
+  const [privateDeliverable, setPrivateDeliverable] = useState(cachedTask?.privateDeliverable || false);
+  const [isBecomeCuratorModalVisible, setIsBecomeCuratorModalVisible] = useState(false);
 
   const rewardERC20 = useERC20();
-  const transactionalERC20 = useERC20();
-  const { handleApproveToken } = useBepro();
-  const { updateParamsOfActive, getURLWithNetwork } = useMarketplace();
-  const { processEvent } = useProcessEvent();
-  const { addError, addWarning } = useToastStore();
-  const { service: daoService } = useDaoStore();
-  const { pushAnalytic } = useAnalyticEvents();
-
   const { settings } = useSettings();
+  const transactionalERC20 = useERC20();
   const { currentUser } = useUserStore();
+  const { handleApproveToken } = useBepro();
+  const { processEvent } = useProcessEvent();
+  const { pushAnalytic } = useAnalyticEvents();
+  const { service: daoService } = useDaoStore();
+  const { addError, addWarning } = useToastStore();
+  const { updateParamsOfActive, getURLWithNetwork } = useMarketplace();
+  const { add: addTx, update: updateTx, list: transactions } = transactionStore();
+
   const { mutateAsync: createPreBounty } = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });
-
-  const { add: addTx, update: updateTx, list: transactions } = transactionStore()
 
   const steps = [
     t("bounty:steps.select-network"),
@@ -155,6 +161,24 @@ export default function CreateTaskPage ({
 
   function onUpdateFiles (files: IFilesProps[]) {
     return setFiles(files);
+  }
+
+  function handlePrivateDeliverableChecked(checked: boolean) {
+    setPrivateDeliverable(checked);
+    if (!currentUser?.isCouncil)
+      setIsBecomeCuratorModalVisible(true);
+  }
+
+  function handleCloseBecomeCuratorModal() {
+    setPrivateDeliverable(false);
+    setIsBecomeCuratorModalVisible(false);
+  }
+
+  function handleModalActionClick() {
+    console.log("should have set taskStorage")
+    taskStorage.setItem({
+      bountyTitle, bountyDescription, selectedTags, deliverableType, privateDeliverable, originLink, files
+    });
   }
 
   function handleRewardChecked (e) {
@@ -417,6 +441,7 @@ export default function CreateTaskPage ({
       }
     } finally {
       setIsLoadingCreateBounty(false);
+      taskStorage.delete();
     }
   }
 
@@ -553,6 +578,8 @@ export default function CreateTaskPage ({
     rewardERC20.setAddress(undefined);
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +chain?.chainId);
     setNetworksOfConnectedChain(networksOfChain);
+    if (network)
+      updateParamsOfActive(network);
   }
 
   function handleBackButton () {
@@ -567,7 +594,7 @@ export default function CreateTaskPage ({
 
   function handleSectionHeaderClick (i: number) {
     if (!verifyNextStepAndCreate(i === 0 ? i : i - 1) || currentSection > i) {
-      setCurrentSection(i)
+      setCurrentSection(i);
     }
   }
 
@@ -646,6 +673,11 @@ export default function CreateTaskPage ({
       setPreviewAmount={setPreviewAmount}
       distributions={distributions}
       setDistributions={setDistributions}
+      privateDeliverable={privateDeliverable}
+      handlePrivateDeliverableChecked={handlePrivateDeliverableChecked}
+      isBecomeCuratorModalVisible={isBecomeCuratorModalVisible}
+      handleCloseBecomeCuratorModal={handleCloseBecomeCuratorModal}
+      onActionButtonClick={handleModalActionClick}
     />
   );
 }

@@ -34,6 +34,7 @@
     "closed": "closed & distributed",
     "select-network": "Select Marketplace",
     "details": "Task details",
+    "deliverable-options": "Deliverable options",
     "reward": "Reward Information",
     "review": "Review",
     "github": "Github Information"
@@ -173,13 +174,17 @@
       "not-found": "Error when trying to search Coingecko"
     },
     "deliverable-types": {
-      "label": "Deliverable Types",
+      "label": "Type",
       "description": "Specify the type of work for this task.",
       "types": {
         "code": "Code",
         "design": "Design",
         "other": "Other"
       }
+    },
+    "private-deliverable": {
+      "label": "Private",
+      "description": "Private deliverables are visible only to the task creator, which means that only the task creator can create and accept proposals."
     },
     "origin-link": {
       "label": "Origin Link",
@@ -267,6 +272,12 @@
     "allow-list": {
       "title": "Not allowed",
       "content": "Creation of tasks is restricted on this marketplace to a curated list of addresses. Please, select another marketplace or contact the marketplace governor."
+    },
+    "become-curator": {
+      "title": "Become a curator",
+      "ok-label": "Manage voting power",
+      "description-pre": "To create tasks with private deliverables, you need to be a curator on the",
+      "description-pos": "marketplace."
     }
   },
   "allow-list": {
