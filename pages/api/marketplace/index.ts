@@ -2,8 +2,6 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import {UserRoute, NetworkRoute, WithValidChainId} from "middleware";
 
-import {Logger} from "services/logging";
-
 import {get, post, put} from "server/common/marketplace";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,10 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {withCORS, withJWT} from "../../../../middleware";
-import {withSignature} from "../../../../middleware/with-signature";
-import {withUser} from "../../../../middleware/with-user";
-import {getNotifications} from "../../../../server/common/notifications/get-notifications";
-import {Logger} from "../../../../services/logging";
+import {withCORS, withJWT} from "middleware";
+import {withSignature} from "middleware/with-signature";
+import {withUser} from "middleware/with-user";
+
+import {getNotifications} from "server/common/notifications/get-notifications";
 
 async function allNotificationsHandler(req: NextApiRequest, res: NextApiResponse) {
 

@@ -7,17 +7,16 @@ import models from "db/models";
 
 import {LogAccess} from "middleware/log-access";
 
+import {HttpBadRequestError} from "server/errors/http-errors";
 import {GeneralTemplates} from "server/templates";
 import {TemplateProcessor} from "server/utils/template";
-
-import {HttpBadRequestError} from "../../../server/errors/http-errors";
 
 const {publicRuntimeConfig} = getConfig();
 
 const convertMinutesToMs = minutes => +minutes * 60 * 1000;
 const getCacheKey = (type, limit) => `RSS:${type}:${limit}`;
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest) {
   const {type = "all", limit = 50} = req.query;
 
   if (!["open", "closed", "all"].includes(type.toString()))
@@ -94,7 +93,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 export default LogAccess(async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get(req));
     break;
 
   default:

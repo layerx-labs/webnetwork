@@ -15,7 +15,7 @@ import {HttpBadRequestError} from "server/errors/http-errors";
 
 const { publicRuntimeConfig } = getConfig();
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest) {
   const whereCondition: WhereOptions = {};
 
   const {
@@ -120,7 +120,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function SearchNetworks(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get(req));
     break;
 
   default:

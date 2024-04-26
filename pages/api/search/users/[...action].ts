@@ -17,7 +17,7 @@ import {UserRoleUtils} from "server/utils/jwt";
 
 const {serverRuntimeConfig} = getConfig();
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
+async function post(req: NextApiRequest) {
 
   const {
     action: [action]
@@ -66,7 +66,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 async function SearchUsers(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "post":
-    res.status(200).json(await post(req, res));
+    res.status(200).json(await post(req));
     break;
 
   default:

@@ -6,7 +6,6 @@ import {useTranslation} from "next-i18next";
 import PageHero from "components/common/page-hero/view";
 import CustomContainer from "components/custom-container";
 import { MarketplacesList } from "components/lists/marketplaces/marketplaces-list.controller";
-import NetworksList from "components/networks-list";
 import NotListedTokens from "components/not-listed-tokens";
 
 import { Network } from "interfaces/network";

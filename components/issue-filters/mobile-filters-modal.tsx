@@ -9,7 +9,6 @@ import ChainFilter from "components/lists/filters/chain/controller";
 import ListSort from "components/lists/sort/controller";
 import Modal from "components/modal";
 
-import { Network } from "interfaces/network";
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
 import { SortOption } from "types/components";
