@@ -51,7 +51,7 @@ export default function TaskPage() {
 
   const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
-  const showPrivateDeliverableWarning = true;
+  const showPrivateDeliverableWarning = !!parsedBounty?.privateDeliverables;
 
   async function updateBountyData() {
     await invalidateBounty();
