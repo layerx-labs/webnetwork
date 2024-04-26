@@ -164,8 +164,6 @@ export default function CreateTaskPage ({
 
   function handlePrivateDeliverableChecked(checked: boolean) {
     setPrivateDeliverable(checked);
-    if (!currentUser?.isCouncil)
-      setIsBecomeCuratorModalVisible(true);
   }
 
   function handleCloseBecomeCuratorModal() {
@@ -500,6 +498,10 @@ export default function CreateTaskPage ({
       return;
     handleNetworkSelected(marketplace.chain, marketplace);
   }, []);
+
+  useEffect(() => {
+    setIsBecomeCuratorModalVisible(!currentUser?.isCouncil && privateDeliverable && currentSection === 1);
+  }, [currentUser?.isCouncil, privateDeliverable, currentSection]);
 
   useEffect(() => {
     let approved = true;
