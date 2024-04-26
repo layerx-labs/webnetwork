@@ -36,8 +36,8 @@ export default function ItemRow({
   const deliverableCreatorAddress = (isProposal ? currentDeliverable : item)?.user?.address;
   const isTaskCreator = lowerCaseCompare(currentBounty?.user?.address, currentUser?.walletAddress);
   const isDeliverableCreator = lowerCaseCompare(deliverableCreatorAddress, currentUser?.walletAddress);
-  const isPrivate = !!currentBounty?.privateDeliverables && isProposal ? 
-    !isTaskCreator : !isTaskCreator && !isDeliverableCreator;
+  const isPrivate = !!currentBounty?.privateDeliverables && 
+    (isProposal ? !isTaskCreator : !isTaskCreator && !isDeliverableCreator);
   const pathRedirect = isProposal ? "task/[id]/proposal/[proposalId]" : "task/[id]/deliverable/[deliverableId]";
   const valueRedirect: {
     id: number | string;
