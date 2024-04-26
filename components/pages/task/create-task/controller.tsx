@@ -341,7 +341,8 @@ export default function CreateTaskPage ({
         isKyc: isKyc,
         tierList: tierList?.length ? tierList : null,
         amount: issueAmount.value,
-        networkName: currentNetwork?.name
+        networkName: currentNetwork?.name,
+        privateDeliverables: privateDeliverable
       });
 
       if (!savedIssue) {
@@ -663,6 +664,7 @@ export default function CreateTaskPage ({
         originLink: originLink,
         deliverableType: deliverableType,
         totalAmount: `${formatStringToCurrency(issueAmount.value)} ${transactionalToken?.symbol}`,
+        privateDeliverables: privateDeliverable ? t("misc.yes") : t("misc.no"),
         fundersReward:
           (rewardAmount.value && isFundingType) &&
           `${formatStringToCurrency(rewardAmount.value)} ${rewardToken?.symbol}`,

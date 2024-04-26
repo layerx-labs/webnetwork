@@ -25,7 +25,8 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     tierList,
     isKyc,
     amount,
-    context
+    privateDeliverables,
+    context,
   } = req.body;
 
   const chain = await chainFromHeader(req);
@@ -77,7 +78,8 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     chain_id: +chain.chainId,
     isKyc: !!isKyc,
     kycTierList: tierList?.map(Number).filter(id=> !Number.isNaN(id)) || [],
-    userId: user.id
+    userId: user.id,
+    privateDeliverables
   };
 
   const bountyJson = {
