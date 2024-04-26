@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 
 import {dehydrate} from "@tanstack/react-query";
+import { useTranslation } from "next-i18next";
 import {useRouter} from "next/router";
 import {GetServerSideProps} from "next/types";
 
@@ -10,6 +11,7 @@ import Comments from "components/bounty/comments/controller";
 import FundingSection from "components/bounty/funding-section/controller";
 import PageActions from "components/bounty/page-actions/controller";
 import TabSections from "components/bounty/tabs-sections/controller";
+import { ContextualSpan } from "components/contextual-span";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 
@@ -32,6 +34,9 @@ import useReactQuery from "x-hooks/use-react-query";
 
 export default function TaskPage() {
   const { query } = useRouter();
+  const { t } = useTranslation("bounty");
+
+  const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
 
   const { currentUser } = useUserStore();
   const { updateParamsOfActive } = useMarketplace();
@@ -46,8 +51,7 @@ export default function TaskPage() {
 
   const parsedBounty = issueParser(bounty);
   const parsedComments = commentsParser(comments);
-
-  const [isEditIssue, setIsEditIssue] = useState<boolean>(false);
+  const showPrivateDeliverableWarning = true;
 
   async function updateBountyData() {
     await invalidateBounty();
@@ -90,6 +94,17 @@ export default function TaskPage() {
           currentBounty={parsedBounty}
           updateBountyData={updateBountyData}
         />
+
+        <If condition={showPrivateDeliverableWarning}>
+          <ContextualSpan 
+            context="warning"
+            className="mb-4"
+            isAlert
+            isDismissable
+          >
+            {t("private-deliverable-warning")}
+          </ContextualSpan>
+        </If>
 
         <TabSections currentBounty={parsedBounty} />
 

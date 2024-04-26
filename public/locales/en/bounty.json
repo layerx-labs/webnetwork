@@ -312,5 +312,6 @@
     "design": "Creative",
     "marketing": "Marketing",
     "writing": "Writing"
-  }
+  },
+  "private-deliverable-warning": "This task has private deliverables, which means that only the task creator can see all proposals and deliverables, and deliverable creators can only  see their own deliverables."
 }
