@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useRouter } from "next/router";
 import {useDebouncedCallback} from "use-debounce";
 
 import VotingPowerPageView from "components/profile/pages/voting-power/view";
@@ -16,6 +17,8 @@ import useMarketplace from "x-hooks/use-marketplace";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function VotingPowerPage() {
+  const { query } = useRouter();
+
   const [selectedNetwork, setSelectedNetwork] = useState<Network>();
   const [selectedChain, setSelectedChain] = useState<SupportedChainData>();
 
@@ -34,6 +37,10 @@ export default function VotingPowerPage() {
       !selectedNetwork);
   const isNoNetworkTokenModalVisible = !!marketplace?.active && !marketplace?.active?.network_token_id &&
     lowerCaseCompare(currentUser?.walletAddress, marketplace?.active?.creatorAddress);
+
+  const findNetwork = (name: string) => networks?.find(n => lowerCaseCompare(n.name, name));
+  const findChain = (chainShortName: string) => 
+    supportedChains?.find(c => lowerCaseCompare(c.chainShortName, chainShortName));
 
   function handleService (network: Network, chain: SupportedChainData) {
     if (!network || !chain)
@@ -61,7 +68,7 @@ export default function VotingPowerPage() {
       setSelectedNetwork(null);
       return;
     }
-    const selected = networks?.find(n => lowerCaseCompare(n.name, network?.toString()));
+    const selected = findNetwork(network?.toString());
     setSelectedNetwork(selected);
     debouncedHandleService(selected, selectedChain);
   }
@@ -72,14 +79,30 @@ export default function VotingPowerPage() {
       setSelectedChain(null);
       return;
     }
-    const selected = supportedChains?.find(c => lowerCaseCompare(c.chainShortName, chain?.toString()))
+    const selected = findChain(chain?.toString());
     setSelectedChain(selected);
     debouncedHandleService(selectedNetwork, selected);
+  }
+
+  function loadFromQuery(networkName: string, networkChain: string) {
+    const network = findNetwork(networkName?.toString());
+    const chain = findChain(networkChain?.toString());
+    if (!network || !chain)
+      return;
+    setSelectedChain(chain);
+    setSelectedNetwork(network);
+    debouncedHandleService(network, chain);
   }
 
   useEffect(() => {
     loadChainsDatabase();
   }, []);
+
+  useEffect(() => {
+    if (!query?.networkName || !query?.networkChain || !!selectedChain || !!selectedNetwork)
+      return;
+    loadFromQuery(query?.networkName.toString(), query?.networkChain.toString());
+  }, [query]);
 
   return (
     <VotingPowerPageView

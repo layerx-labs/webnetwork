@@ -23,8 +23,8 @@ export default function PrivateDeliverableBecomeCuratorModal({
   function onOkClick() {
     onActionButtonClick();
     goToProfilePage("voting-power", { 
-      selectedMarketplace: marketplace?.name, 
-      selectedNetwork: marketplace?.chain?.chainShortName
+      networkName: marketplace?.name, 
+      networkChain: marketplace?.chain?.chainShortName
     });
   }
 

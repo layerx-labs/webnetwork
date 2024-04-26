@@ -53,6 +53,7 @@ export default function VotingPowerPageView({
 
             <Col xs="12" md="auto">
               <ChainFilter
+                chain={selectedChain}
                 chains={chains}
                 onChange={onChainSelected}
                 label={false}
