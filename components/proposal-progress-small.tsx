@@ -22,7 +22,7 @@ export default function ProposalProgressSmall({
       <div className="mb-1">
         <span className="label-m text-gray-100">
           <strong className={`text-${color}`}>{formatNumberToNScale(+value)} </strong>
-           OF {formatNumberToNScale(total.toFixed(0, 1))}
+          OF {formatNumberToNScale(+total.toFixed(0, 1))}
         </span>
       </div>
       <div className={"progress w-100 mb-1"}>
