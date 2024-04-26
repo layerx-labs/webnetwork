@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 
 import { dehydrate } from "@tanstack/react-query";
+import { getToken } from "next-auth/jwt";
 import { useTranslation } from "next-i18next";
+import getConfig from "next/config";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
 
@@ -11,6 +13,7 @@ import DeliverableHero from "components/deliverable/hero/controller";
 
 import { deliverableParser, issueParser } from "helpers/issue";
 import { QueryKeys } from "helpers/query-keys";
+import { lowerCaseCompare } from "helpers/string";
 
 import { getReactQueryClient } from "services/react-query";
 
@@ -22,6 +25,8 @@ import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import {useUserStore} from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
+
+const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
 export default function DeliverablePage() {
   const router = useRouter();
@@ -102,13 +107,30 @@ export default function DeliverablePage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
+  const token = await getToken({ req, secret: secret });
   const queryClient = getReactQueryClient();
   const { deliverableId } = query;
-  const deliverableKey = QueryKeys.deliverable(deliverableId?.toString());
-  await queryClient.prefetchQuery({
-    queryKey: deliverableKey,
-    queryFn: () => getDeliverable(+deliverableId),
-  });
+  const deliverableData = await getDeliverable(+deliverableId);
+
+  const redirectToTask = {
+    redirect: {
+      permanent: false,
+      destination: `/${deliverableData?.issue?.network?.name}/task/${deliverableData?.issue?.id}`,
+    },
+    props: {},
+  };
+  
+  if (deliverableData?.issue?.privateDeliverables) {
+    const currentUser = token?.address as string;
+    const isTaskCreator = lowerCaseCompare(currentUser, deliverableData?.issue?.user?.address);
+    const isDeliverableCreator = lowerCaseCompare(currentUser, deliverableData?.user?.address);
+
+    if (!currentUser || !isTaskCreator && !isDeliverableCreator)
+      return redirectToTask;
+  }
+
+  await queryClient.setQueryData(QueryKeys.deliverable(deliverableId?.toString()), deliverableData);
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
