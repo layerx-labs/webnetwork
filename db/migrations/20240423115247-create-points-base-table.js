@@ -52,6 +52,7 @@ module.exports = {
       { actionName: "created_task", ...common },
       { actionName: "created_deliverable", ...common },
       { actionName: "created_proposal", ...common },
+      { actionName: "accepted_proposal", ...common },
     ];
 
     await queryInterface.bulkInsert("points_base", initialRules);
