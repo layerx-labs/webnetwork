@@ -67,6 +67,7 @@ export async function patch(req: NextApiRequest) {
     const chainCastId = await addToChainCast("registry", registryAddress, +id, +startBlock)
       .then(({ id }) => id)
       .catch(error => {
+        console.log("Failed to add registry to chain cast", error);
         warn("Failed to add registry to chain cast", error);
         return null;
       });
