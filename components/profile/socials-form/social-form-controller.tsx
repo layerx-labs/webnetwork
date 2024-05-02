@@ -22,8 +22,8 @@ export function SocialForm() {
 
   const {mutateAsync: saveSocials, isPending} = useReactQueryMutation({
     mutationFn: _saveSocials,
-    toastError: t("social.success"),
-    toastSuccess: t("social.error"),
+    toastError: t("social.error"),
+    toastSuccess: t("social.success"),
     onSuccess: () => {
       updateSession();
     },
