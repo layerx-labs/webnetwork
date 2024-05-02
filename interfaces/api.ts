@@ -12,6 +12,8 @@ export interface User {
   isEmailConfirmed?: string;
   emailVerificationCode?: string;
   emailVerificationSentAt?: string | Date;
+  githubLink: string;
+  linkedInLink: string;
 }
 
 export interface PastEventsParams {

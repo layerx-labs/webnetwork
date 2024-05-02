@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -14,7 +16,7 @@ import {
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";
-import { MiniTabsItem, TasksListItemVariant } from "types/components";
+import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -32,6 +34,10 @@ interface PublicProfileViewProps {
   proposals?: ProposalPaginatedData;
   payments?: PaymentPaginatedData;
   type?: string;
+  socials?: {
+    github: string;
+    linkedIn: string;
+  };
 }
 
 export default function PublicProfileView ({
@@ -47,7 +53,8 @@ export default function PublicProfileView ({
   deliverables,
   proposals,
   payments,
-  type = "won"
+  type = "won",
+  socials = null,
 }: PublicProfileViewProps) {
   const { isMobileView, isTabletView } = useBreakPoint();
 
@@ -88,6 +95,13 @@ export default function PublicProfileView ({
               </h2>
             </div>
           </If>
+
+          <div className="row">
+            <div className="col" style={{gap: "8px"}}>
+              <Link href={socials?.github}>{socials?.github}</Link>
+              <Link href={socials?.linkedIn}>{socials?.linkedIn}</Link>
+            </div>
+          </div>
         </div>
       </div>
 

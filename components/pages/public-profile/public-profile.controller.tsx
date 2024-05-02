@@ -1,20 +1,20 @@
 import React from "react";
 
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+import {useTranslation} from "next-i18next";
+import {useRouter} from "next/router";
 
 import PublicProfileView from "components/pages/public-profile/public-profile.view";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { User } from "interfaces/api";
+import {User} from "interfaces/api";
 
 
-import { 
+import {
   DeliverablePaginatedData,
   PaymentPaginatedData,
   ProposalPaginatedData,
-  SearchBountiesPaginated 
+  SearchBountiesPaginated
 } from "types/api";
 
 interface PublicProfilePageProps {
@@ -77,6 +77,10 @@ export default function PublicProfilePage ({
       proposals={proposals}
       payments={payments}
       type={type}
+      socials={{
+        github: user?.githubLink,
+        linkedIn: user?.linkedInLink
+      }}
     />
   );
 }
