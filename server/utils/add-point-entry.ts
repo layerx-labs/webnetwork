@@ -9,7 +9,9 @@ type ActionName =
   "created_task" |
   "created_deliverable" |
   "created_proposal" |
-  "accepted_proposal";
+  "accepted_proposal" |
+  "add_github" |
+  "add_linkedin";
 
 export async function addPointEntry(userId: number, actionName: ActionName,) {
 
@@ -30,7 +32,7 @@ export async function addPointEntry(userId: number, actionName: ActionName,) {
       .findAll({where: { ...whereActionName, userId: {[Op.eq]: userId} }})
 
   if (event.counter !== "N" && pastEvents.length >= +event.counter)
-    throw new Error(`PointsBase ${actionName} limit (${+event.counter}) has been reached`);
+    throw new Error(`PointsBase ${actionName} limit (${+event.counter}) for ${userId} has been reached`);
 
   return Database.pointsEvents.create({userId, actionName, pointsWon: event.pointsPerAction * event.scalingFactor,})
 }

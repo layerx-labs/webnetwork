@@ -6,13 +6,13 @@ module.exports = {
 
     await queryInterface.bulkInsert("points_base",[
       {
-        actionName: "linkedin",
+        actionName: "add_linkedin",
         pointsPerAction: 1,
         scalingFactor: 1,
         counter: "1",
       },
       {
-        actionName: "github",
+        actionName: "add_github",
         pointsPerAction: 1,
         scalingFactor: 1,
         counter: "1",
