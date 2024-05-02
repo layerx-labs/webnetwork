@@ -91,6 +91,7 @@
     "github": "https://github.com/",
     "linkedin": "https://linkedin.com/in/",
     "success": "Updated social links",
-    "error": "Failed to update social links"
+    "error": "Failed to update social links,",
+    "invalid-input": "Value is not valid."
   }
 }

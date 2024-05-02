@@ -46,6 +46,11 @@ describe('updateUserSocials', () => {
     await expect(updateUserSocials(mockRequest)).rejects.toThrow(HttpBadRequestError)
   });
 
+  it("fails because it should only have a-zA-Z0-9 after allowed links", async () => {
+    mockRequest.body.linkedin = "https://github.com/https//github.com/moshmage";
+    await expect(updateUserSocials(mockRequest)).rejects.toThrow(HttpBadRequestError)
+  });
+
   it("fails because query address does not match context address", async () => {
     mockRequest.body.github = "https://github.com/some_user";
     mockRequest.body.context.user.address = "0x1";

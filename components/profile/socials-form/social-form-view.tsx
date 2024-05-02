@@ -14,7 +14,13 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
   const [liLink, setLinkedInLink] =
     useState<string>(linkedInLink);
 
-  const isFormValid = () => (githubLink !== ghLink || linkedInLink !== liLink) && !isSaving;
+  const isInputValid = (txt: string) => /^[a-zA-Z0-9_]*$/.test(txt);
+
+  const isFormValid = () =>
+    (githubLink !== ghLink || linkedInLink !== liLink) &&
+    (ghLink && isInputValid(ghLink) || true) &&
+    (liLink && isInputValid(liLink) || true) &&
+    !isSaving;
 
   const rows = [
     {text: t("profile:social.github"), onChange: setGhLink, value: ghLink},
@@ -35,15 +41,16 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
             <div className="col col-lg-4">
               <InputGroup className="border-radius-4">
                 <InputGroup.Text>{row.text}</InputGroup.Text>
-                <FormControl value={row.value} onChange={e => row.onChange(e.target.value)} />
+                <FormControl value={row.value} onChange={e => row.onChange(e.target.value)}/>
               </InputGroup>
+              <p style={{display: (!!row.value && !isInputValid(row.value)) ? "block" : "" }} className="invalid-feedback p-small mt-2 mb-0">{t("profile:social.invalid-input")}</p>
             </div>
           </div>
         ))
       }
-      <div className="row mt-3">
-        <div className="col">
-          <Button onClick={() => onSubmit(ghLink, liLink)} disabled={!isFormValid()}>
+    <div className="row mt-3">
+      <div className="col">
+        <Button onClick={() => onSubmit(ghLink, liLink)} disabled={!isFormValid()}>
             <span>{t("common:save")}</span>
             {isSaving ? (<span className="spinner-border spinner-border-xs ml-1" />) : ("")}
           </Button>
