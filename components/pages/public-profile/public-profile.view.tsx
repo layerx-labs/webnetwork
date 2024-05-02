@@ -98,8 +98,8 @@ export default function PublicProfileView ({
 
           <div className="row">
             <div className="col sm-regular font-weight-normal text-gray-300">
-              <Link href={socials?.github} style={{marginRight: "8px"}} target="_blank">{socials?.github}</Link>
-              <Link href={socials?.linkedIn} target="_blank">{socials?.linkedIn}</Link>
+              <span style={{marginRight: "8px"}}><Link href={socials?.github} target="_blank">{socials?.github}</Link></span>
+              <span><Link href={socials?.linkedIn} target="_blank">{socials?.linkedIn}</Link></span>
             </div>
           </div>
         </div>
