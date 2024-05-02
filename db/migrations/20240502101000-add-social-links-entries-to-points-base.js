@@ -1,7 +1,5 @@
 'use strict';
 
-const PointsBase = require("../models/points-base");
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
