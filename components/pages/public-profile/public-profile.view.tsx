@@ -97,8 +97,8 @@ export default function PublicProfileView ({
           </If>
 
           <div className="row">
-            <div className="col" style={{gap: "8px"}}>
-              <Link href={socials?.github}>{socials?.github}</Link>
+            <div className="col sm-regular font-weight-normal text-gray-300">
+              <Link href={socials?.github} style={{marginRight: "8px"}}>{socials?.github}</Link>
               <Link href={socials?.linkedIn}>{socials?.linkedIn}</Link>
             </div>
           </div>
