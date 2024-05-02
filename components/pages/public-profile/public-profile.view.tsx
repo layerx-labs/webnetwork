@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -98,8 +96,8 @@ export default function PublicProfileView ({
 
           <div className="row">
             <div className="col sm-regular font-weight-normal text-gray-300">
-              <span style={{marginRight: "8px"}}><Link href={socials?.github} target="_blank">{socials?.github}</Link></span>
-              <span><Link href={socials?.linkedIn} target="_blank">{socials?.linkedIn}</Link></span>
+              <span style={{marginRight: "8px"}}><a href={socials?.github} className="text-decoration-none text-primary" target="_blank">{socials?.github}</a></span>
+              <span><a href={socials?.linkedIn} className="text-decoration-none text-primary" target="_blank">{socials?.linkedIn}</a></span>
             </div>
           </div>
         </div>
