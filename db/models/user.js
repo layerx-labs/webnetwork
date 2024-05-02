@@ -39,11 +39,17 @@ class User extends Model {
       emailVerificationSentAt: {
         type: DataTypes.DATE
       },
+      githubLink: {
+        type: DataTypes.STRING,
+      },
+      linkedInLink: {
+        type: DataTypes.STRING,
+      },
       totalPoints: {
         type: DataTypes.FLOAT,
         allowNull: true,
         defaultValue: 0
-      }
+      },
     },
     {
       sequelize,
