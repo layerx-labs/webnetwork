@@ -553,6 +553,8 @@ export default function CreateTaskPage ({
     rewardERC20.setAddress(undefined);
     const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +chain?.chainId);
     setNetworksOfConnectedChain(networksOfChain);
+    if (network)
+      updateParamsOfActive(network);
   }
 
   function handleBackButton () {
