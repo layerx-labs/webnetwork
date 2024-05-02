@@ -2,6 +2,8 @@ import {Op} from "sequelize";
 
 import Database from "db/models";
 
+import {Logger} from "../../services/logging";
+
 type ActionName =
   "locked" |
   "delegated" |
@@ -34,5 +36,9 @@ export async function addPointEntry(userId: number, actionName: ActionName,) {
   if (event.counter !== "N" && pastEvents.length >= +event.counter)
     throw new Error(`PointsBase ${actionName} limit (${+event.counter}) for ${userId} has been reached`);
 
-  return Database.pointsEvents.create({userId, actionName, pointsWon: event.pointsPerAction * event.scalingFactor,})
+  const pointsWon = event.pointsPerAction * event.scalingFactor;
+
+  await Database.pointsEvents.create({userId, actionName, pointsWon,});
+
+  Logger.info(`PointsBase ${actionName} entry created for ${userId} with ${pointsWon} points`);
 }
