@@ -68,7 +68,7 @@ export async function put(req: NextApiRequest) {
   const { email, context } = req.body;
   const { user } = context;
 
-  const connectEmailPointEvent = await models.pointEvents.findOne({
+  const connectEmailPointEvent = await models.pointsEvents.findOne({
     where: {
       userId: user.id,
       actionName: "connect_email"
