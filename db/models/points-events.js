@@ -34,7 +34,8 @@ class PointsEvents extends Model {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: false,
-      }
+      },
+      info: DataTypes.JSON
     },
     {
       sequelize,
