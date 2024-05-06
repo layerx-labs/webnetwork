@@ -7,7 +7,7 @@ module.exports = {
     await queryInterface.bulkInsert("points_base",[
       {
         actionName: "add_linkedin",
-        pointsPerAction: 1,
+        pointsPerAction: 10,
         scalingFactor: 1,
         counter: "1",
         createdAt: new Date(),
@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         actionName: "add_github",
-        pointsPerAction: 1,
+        pointsPerAction: 10,
         scalingFactor: 1,
         counter: "1",
         createdAt: new Date(),

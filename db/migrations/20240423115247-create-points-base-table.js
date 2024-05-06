@@ -38,21 +38,24 @@ module.exports = {
       }
     });
 
-    const common = {
-      pointsPerAction: 1, 
-      counter: "1",
+    const PointsBase = (actionName, pointsPerAction, counter, scalingFactor) => ({
+      actionName,
+      pointsPerAction,
+      counter,
+      scalingFactor,
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
+    });
 
     const initialRules = [
-      { actionName: "locked", ...common },
-      { actionName: "delegated", ...common },
-      { actionName: "created_marketplace", ...common },
-      { actionName: "created_task", ...common },
-      { actionName: "created_deliverable", ...common },
-      { actionName: "created_proposal", ...common },
-      { actionName: "accepted_proposal", ...common },
+      PointsBase("locked", 1, "N", 1),
+      PointsBase("delegated", 1, "N", 1),
+      PointsBase("created_marketplace", 1, "1", 1),
+      PointsBase("created_task", 1, "N", 1),
+      PointsBase("created_deliverable", 1, "1", 1),
+      PointsBase("created_proposal", 1, "1", 1),
+      PointsBase("accepted_proposal", 1, "1", 1),
+      PointsBase("connect_email", 1, "1", 1),
     ];
 
     await queryInterface.bulkInsert("points_base", initialRules);
