@@ -127,8 +127,10 @@ export async function put(req: NextApiRequest) {
 
   await user.save();
 
-  if (!connectEmailPointEvent)
+  try {
     await addPointEntry(user.id, "connect_email", { value: email });
-  else
-    await updatePointEntryInfo(connectEmailPointEvent.id, { value: email });
+  } catch(error) {
+    if (connectEmailPointEvent)
+      await updatePointEntryInfo(connectEmailPointEvent.id, { value: email });
+  }
 }
