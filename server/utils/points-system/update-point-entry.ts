@@ -1,5 +1,7 @@
 import models from "db/models";
 
+import { Logger } from "services/logging";
+
 export async function updatePointEntryInfo(pointEntryId: number, info: object) {
   const pointEntry = await models.pointsEvents.findOne({
     where: {
@@ -12,4 +14,6 @@ export async function updatePointEntryInfo(pointEntryId: number, info: object) {
 
   pointEntry.info = info;
   await pointEntry.save();
+
+  Logger.info(`PointsEvents ${pointEntryId} updated with ${info}`);
 }
