@@ -15,7 +15,7 @@ type ActionName =
   "add_github" |
   "add_linkedin";
 
-export async function addPointEntry(userId: number, actionName: ActionName,) {
+export async function addPointEntry(userId: number, actionName: ActionName, info = {}) {
 
   const whereActionName =
     {actionName: {[Op.eq]: actionName}}
@@ -38,7 +38,7 @@ export async function addPointEntry(userId: number, actionName: ActionName,) {
 
   const pointsWon = event.pointsPerAction * event.scalingFactor;
 
-  await Database.pointsEvents.create({userId, actionName, pointsWon,});
+  await Database.pointsEvents.create({userId, actionName, pointsWon, info});
 
   Logger.info(`PointsBase ${actionName} entry created for ${userId} with ${pointsWon} points`);
 }

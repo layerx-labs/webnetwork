@@ -33,10 +33,10 @@ export async function updateUserSocials(req: NextApiRequest) {
   }
 
   if (update.githubLink)
-    await addPointEntry(user.id, "add_github").catch(e => Logger.info(e?.message));
+    await addPointEntry(user.id, "add_github", { value: update.githubLink }).catch(e => Logger.info(e?.message));
 
   if (update.linkedInLink)
-    await addPointEntry(user.id, "add_linkedin").catch(e => Logger.info(e?.message));
+    await addPointEntry(user.id, "add_linkedin", { value: update.linkedInLink }).catch(e => Logger.info(e?.message));
 
   await user.update(update);
   await user.save();
