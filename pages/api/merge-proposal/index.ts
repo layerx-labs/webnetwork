@@ -2,8 +2,6 @@ import {NextApiRequest, NextApiResponse} from "next";
 
 import {RouteMiddleware} from "middleware";
 
-import {error as LogError} from "services/logging";
-
 import get from "server/common/proposal";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

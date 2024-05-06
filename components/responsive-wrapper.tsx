@@ -2,8 +2,6 @@ import { ReactNode } from "react";
 
 import clsx from "clsx";
 
-import { BOOTSTRAP_BREAKPOINTS } from "helpers/constants";
-
 import { BreakpointOptions } from "types/utils";
 
 import useBreakPoint from "x-hooks/use-breakpoint";

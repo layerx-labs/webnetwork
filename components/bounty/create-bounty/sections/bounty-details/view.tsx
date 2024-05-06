@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { FormCheck } from "react-bootstrap";
+import { Form, FormCheck } from "react-bootstrap";
 
 import clsx from "clsx";
 import { useTranslation } from "next-i18next";
@@ -28,6 +28,7 @@ interface BountyDetailsSectionViewProps {
   tagsOptions: GroupedSelectOption[];
   titleExceedsLimit: boolean;
   isKycEnabled: boolean;
+  privateDeliverable: boolean;
   kycCheck: boolean;
   kycOptions: DropdownOption[];
   deliverableTypeOptions: SelectOption[];
@@ -42,6 +43,7 @@ interface BountyDetailsSectionViewProps {
   onTagsChange: (tags: SelectOption[]) => void;
   isTagsSelectDisabled: () => boolean;
   onKycCheckChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onPrivateDeliverableChecked: (e: ChangeEvent<HTMLInputElement>) => void;
   onKycTierChange: (value: DropdownOption | DropdownOption[]) => void;
   onDeliverableTypeClick: (tags: SelectOption | SelectOption[]) => void;
   onOriginLinkchange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -63,6 +65,7 @@ export default function BountyDetailsSectionView({
   originLinkPlaceHolder,
   deliverableType,
   originLinkError,
+  privateDeliverable,
   onTitlechange,
   onDescriptionchange,
   onFilesChange,
@@ -73,6 +76,7 @@ export default function BountyDetailsSectionView({
   onKycTierChange,
   onDeliverableTypeClick,
   onOriginLinkchange,
+  onPrivateDeliverableChecked,
 }: BountyDetailsSectionViewProps) {
   const { t } = useTranslation("bounty");
 
@@ -186,8 +190,10 @@ export default function BountyDetailsSectionView({
 
       <div className="row">
         <div className="col">
+          <h5>{t("steps.deliverable-options")}</h5>
+
           <div className="row">
-            <BountyLabel className="lg-medium text-gray-50" required>
+            <BountyLabel required>
               {t("fields.deliverable-types.label")}
             </BountyLabel>
           </div>
@@ -206,7 +212,30 @@ export default function BountyDetailsSectionView({
             />
           </div>
 
-          <div className="row mt-4 mb-2">
+          <div className="row mt-4">
+            <BountyLabel>
+              {t("fields.private-deliverable.label")}
+            </BountyLabel>
+          </div>
+
+          <div className="row mt-2">
+            <div className="d-flex align-items-center gap-2">
+              <Form.Check
+                className="form-control-md mb-1"
+                type="switch"
+                id="private-deliverable-switch"
+                data-testid="private-deliverable-switch"
+                onChange={onPrivateDeliverableChecked}
+                checked={privateDeliverable}
+              />
+
+              <span className="sm-regular text-gray-200">
+                {t("fields.private-deliverable.description")}
+              </span>
+            </div>
+          </div>
+
+          <div className="row mt-3 mb-2">
             <span className="sm-regular text-gray-200 mt-2 mb-1">
               {t("fields.origin-link.description")}
             </span>
@@ -214,7 +243,7 @@ export default function BountyDetailsSectionView({
 
           <div className="row">
             <div className="col-12 col-lg-7">
-              <label htmlFor="origin-link" className="sm-regular text-gray-300 mb-2">
+              <label htmlFor="origin-link" className="mb-2">
                 {t("fields.origin-link.label")}
               </label>
 

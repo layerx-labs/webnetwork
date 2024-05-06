@@ -30,6 +30,8 @@ export default function BountyDetailsSection({
   originLink,
   originLinkError,
   deliverableType,
+  privateDeliverable,
+  handlePrivateDeliverableChecked,
   onOriginLinkChange,
   updateIsKyc,
   updateTierList,
@@ -76,6 +78,10 @@ export default function BountyDetailsSection({
 
   function handleIsKYCChecked(e: ChangeEvent<HTMLInputElement>) {
     updateIsKyc(e.target.checked);
+  }
+
+  function onPrivateDeliverableChecked(e: ChangeEvent<HTMLInputElement>) {
+    handlePrivateDeliverableChecked(e.target.checked);
   }
   
   function handleDeliverableTypeClick(selected: SelectOption | SelectOption[]) {
@@ -142,6 +148,8 @@ export default function BountyDetailsSection({
       onKycTierChange={onKycTierChange}
       onDeliverableTypeClick={handleDeliverableTypeClick}
       onOriginLinkchange={handleOriginLinkChange}
+      privateDeliverable={privateDeliverable}
+      onPrivateDeliverableChecked={onPrivateDeliverableChecked}
     />
   );
 }

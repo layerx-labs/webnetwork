@@ -4,17 +4,15 @@ import {Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import {resJsonMessage} from "helpers/res-json-message";
-
 import {withCORS} from "middleware";
 import {WithValidChainId} from "middleware/with-valid-chain-id";
 
-import {HttpNotFoundError} from "../../../../server/errors/http-errors";
+import {HttpNotFoundError} from "server/errors/http-errors";
 
 const castToDecimal = (col: string) => Sequelize.cast(Sequelize.col(col), "decimal");
 const sqlzLower = (col, value) => Sequelize.where(Sequelize.fn("lower", Sequelize.col(col)), value.toLowerCase());
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest) {
 
   const {networkName, chainShortName} = req.query || {};
 
@@ -64,13 +62,12 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     ...curators,
     totalValue: BigNumber(curators.totalLocked || 0).plus(curators.totalDelegated || 0).toFixed()
   };
-
 }
 
 async function TotalCurators(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get(req));
     break;
 
   default:

@@ -13,6 +13,7 @@ interface CreatePreBounty {
   tierList?: number[];
   amount: string;
   networkName: string;
+  privateDeliverables?: boolean;
 }
 
 export function useCreatePreBounty(payload: CreatePreBounty): Promise<IssueData> {

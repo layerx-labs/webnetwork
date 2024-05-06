@@ -7,7 +7,7 @@ import NetworkGovernanceSettingsView from "components/network/settings/governanc
 
 import { useNetworkSettings } from "contexts/network-settings";
 
-import {IM_AM_CREATOR_NETWORK, LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
+import {LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
 
 import { StandAloneEvents } from "interfaces/enums/events";
 import { Network } from "interfaces/network";

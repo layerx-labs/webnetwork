@@ -30,6 +30,7 @@ interface ItemRowProps {
   isMerged: boolean;
   totalToBeDisputed: BigNumber;
   isRefused?: boolean;
+  isPrivate?: boolean;
 }
 
 export default function ItemRowView({
@@ -44,10 +45,13 @@ export default function ItemRowView({
   isDisputed,
   isMerged,
   totalToBeDisputed,
-  isRefused
+  isRefused,
+  isPrivate,
 }: ItemRowProps) {
   const userhandle = (item as Deliverable)?.user?.handle;
   const userAddress = (item as Deliverable)?.user?.address || (item as Proposal)?.creator;
+  const Wrapper = ({ children, href, ...props }) => isPrivate ? 
+    <div {...props}>{children}</div> : <Link href={href} {...props}>{children}</Link>
 
   function RenderProposalOrDeliverable() {
     return (
@@ -62,15 +66,21 @@ export default function ItemRowView({
         isProposal={isProposal} 
         item={item}      
         status={status}
+        isPrivate={isPrivate}
         />
     );
   }
 
   return (
-    <Link passHref key={`${id}`} data-testid={`item-${id}`} href={href || "#"}>
+    <Wrapper 
+      passHref 
+      key={`${id}`} 
+      data-testid={`item-${id}`} 
+      href={href || "#"}
+    >
       <div
         className={`row d-flex flex-row py-3 px-2 border-radius-8 bg-gray-900 align-items-center ${
-          href ? "cursor-pointer" : ""
+          href && !isPrivate ? "cursor-pointer" : ""
         }`}
         data-testid={isProposal ? "proposal-item-row" : "deliverable-item-row"}
       >
@@ -151,6 +161,6 @@ export default function ItemRowView({
           </div>
         </div>
       </div>
-    </Link>
+    </Wrapper>
   );
 }

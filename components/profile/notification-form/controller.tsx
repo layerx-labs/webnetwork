@@ -44,7 +44,7 @@ export default function NotificationForm() {
     },
     onError: error => addError(t("profile:email-errors.failed-to-update"), t(`profile:email-errors.${error}`)),
   });
-  const { mutate: updateUserSettings, isPending: isExecutingSettings } = useReactQueryMutation({
+  const { mutate: updateUserSettings } = useReactQueryMutation({
     mutationFn: useUpdateUserSettings,
     toastError: t("profile:notifications-form.errors.update-settings"),
     toastSuccess: t("profile:notifications-form.success-toast.settings"),

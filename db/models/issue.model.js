@@ -98,6 +98,11 @@ class Issue extends Model {
           model: "users",
           key: "id"
         }
+      },
+      privateDeliverables: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
       }
     },
     {

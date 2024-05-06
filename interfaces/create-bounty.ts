@@ -12,11 +12,13 @@ export interface BountyDetailsSectionProps {
   selectedTags: string[];
   updateSelectedTags: (e: string[]) => void;
   isKyc: boolean;
+  privateDeliverable: boolean;
   originLink: string;
   deliverableType: string;
   originLinkError?: OriginLinkErrors;
   onOriginLinkChange: (link: string) => void;
   updateIsKyc: (e: boolean) => void;
+  handlePrivateDeliverableChecked: (e: boolean) => void;
   updateTierList: (e: number[]) => void;
   updateUploading: (e: boolean) => void;
   setDeliverableType: (type: string) => void;

@@ -8,7 +8,7 @@ import {paginateArray} from "helpers/paginate";
 
 import {withCORS} from "middleware";
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest) {
   const whereCondition: WhereOptions = {};
 
   const { 
@@ -134,7 +134,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function SearchNetworks(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get(req));
     break;
 
   default:
