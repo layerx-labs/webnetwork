@@ -10,12 +10,16 @@ module.exports = {
         pointsPerAction: 1,
         scalingFactor: 1,
         counter: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         actionName: "add_github",
         pointsPerAction: 1,
         scalingFactor: 1,
         counter: "1",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ])
   },
