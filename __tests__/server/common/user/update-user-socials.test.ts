@@ -4,6 +4,7 @@ import {getUserByAddress} from "../../../../server/common/user/get-user-by-addre
 import {updateUserSocials} from "../../../../server/common/user/update-user-socials";
 import {HttpBadRequestError, HttpForbiddenError} from "../../../../server/errors/http-errors";
 
+jest.mock('services/logging', () => ({Logger: jest.fn()}));
 jest.mock('server/common/user/get-user-by-address', () => ({getUserByAddress: jest.fn()}));
 
 jest.mock('server/utils/jwt', () => ({
@@ -11,6 +12,9 @@ jest.mock('server/utils/jwt', () => ({
     hasAdminRole: jest.fn(),
   },
 }));
+
+jest.mock('server/utils/add-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
+
 
 describe('updateUserSocials', () => {
   let mockRequest: NextApiRequest;
