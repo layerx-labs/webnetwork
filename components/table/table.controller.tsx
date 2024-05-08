@@ -9,12 +9,14 @@ interface TableProps<T> extends ReactTableProps {
   }[];
   rows: T[];
   editableColumns?: (keyof T)[];
+  onRowChange?: (changedRow: T) => void;
 }
 
 export function Table<T>({
   headers,
   rows,
   editableColumns,
+  onRowChange,
   ...rest
 }: TableProps<T>) {
   const columns = headers.map(({ property }) => property);
@@ -35,7 +37,8 @@ export function Table<T>({
             key={`table-row-${index}`}
             data={row} 
             columns={columns} 
-            isEditableColumn={isEditableColumn} 
+            isEditableColumn={isEditableColumn}
+            onRowChange={onRowChange}
           />)}
       </tbody>
     </ReactBootstrapTable>
