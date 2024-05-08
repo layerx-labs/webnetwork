@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { AxiosError } from "axios";
+import { useTranslation } from "next-i18next";
 
 import { PointsSystemAdministrationView } 
   from "components/administration/points-system-administration/points-system-administration.view";
@@ -20,6 +21,8 @@ export type Header = {
 }
 
 export function PointsSystemAdministration() {
+  const { t } = useTranslation("administration");
+
   const [list, setList] = useState<PointsBase[]>([]);
   const [scalingFactor, setScalingFactor] = useState();
   const [changedRows, setChangedRows] = useState<PointsBase[]>([]);
@@ -48,7 +51,7 @@ export function PointsSystemAdministration() {
     mutationFn: getUpdateMethod("bulk"),
     onSettled: (data, error) => {
       if (error) {
-        addError("Failed", "Scaling factor must be greater than 0");
+        addError(t("failed"), t("points-system.scaling-factor-greater-than-0"));
         return;
       }
       setScalingFactor(null);
@@ -60,7 +63,7 @@ export function PointsSystemAdministration() {
     mutationFn: getUpdateMethod("changed"),
     onSettled: (data, error: AxiosError<{ message: string }>) => {
       if (error) {
-        addError("Failed", `${error?.response?.data?.message}`);
+        addError(t("failed"), `${error?.response?.data?.message}`);
         return;
       }
       setChangedRows([]);
@@ -68,10 +71,10 @@ export function PointsSystemAdministration() {
   });
 
   const headers: Header[] = [
-    { label: "Action Name", property: "actionName" },
-    { label: "Scaling Factor", property: "scalingFactor" },
-    { label: "Points per Action", property: "pointsPerAction" },
-    { label: "Counter", property: "counter" },
+    { label: t("points-system.action-name"), property: "actionName" },
+    { label: t("points-system.scaling-factor"), property: "scalingFactor" },
+    { label: t("points-system.points-per-action"), property: "pointsPerAction" },
+    { label: t("points-system.counter"), property: "counter" },
   ];
 
   const onScalingFactorChange = values => setScalingFactor(values.value);

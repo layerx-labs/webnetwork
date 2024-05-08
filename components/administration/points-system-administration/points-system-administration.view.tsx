@@ -2,6 +2,7 @@ import { NumberFormatValues } from "react-number-format";
 
 import { UseMutateFunction } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "next-i18next";
 
 import { Header } from "components/administration/points-system-administration/points-system-administration.controller";
 import Button from "components/button";
@@ -38,9 +39,11 @@ export function PointsSystemAdministrationView({
   onSaveChangedClick,
   onRowChange,
 }: PointsSystemAdministrationViewProps) {
+  const { t } = useTranslation("administration");
+
   return(
     <div className="pt-3">
-      <span>Change Scaling Factor</span>
+      <span>{t("points-system.change-scaling-factor")}</span>
       <div className="row align-items-center mb-4">
         <div className="col">
           <InputNumber
@@ -57,7 +60,7 @@ export function PointsSystemAdministrationView({
             isLoading={isBulkUpdating}
             onClick={onBulkUpdateClick}
           >
-            Update All
+            {t("points-system.update-all")}
           </Button>
         </div>
       </div>
@@ -73,7 +76,7 @@ export function PointsSystemAdministrationView({
               onClick={onSaveChangedClick}
               className="mb-3"
             >
-              Save changes
+              {t("points-system.save-changes")}
             </Button>
           </div>
         </div>

@@ -1,0 +1,13 @@
+{
+  "points-system": {
+    "action-name": "Action Name",
+    "scaling-factor": "Scaling Factor",
+    "points-per-action": "Points per Action",
+    "counter": "Counter",
+    "change-scaling-factor": "Change Scaling Factor",
+    "update-all": "Update all",
+    "save-changes": "Save changes",
+    "scaling-factor-greater-than-0": "Scaling factor must be greater than 0"
+  },
+  "failed": "Failed"
+}
