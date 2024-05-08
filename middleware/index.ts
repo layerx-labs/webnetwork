@@ -13,10 +13,13 @@ import {withJWT} from "middleware/withJwt";
 
 import {MaxRequestSize} from "./request-size";
 
-const withCORS = (handler: NextApiHandler, requestSize?: number) => MaxRequestSize(LogAccess(withCors(handler)), requestSize);
-const withProtected = (handler: NextApiHandler, requestSize?: number) => withCORS(withJWT(withSignature(handler)), requestSize);
+const withCORS = (handler: NextApiHandler, requestSize?: number) => 
+  MaxRequestSize(LogAccess(withCors(handler)), requestSize);
+const withProtected = (handler: NextApiHandler, requestSize?: number, allowedMethods?: string[]) => 
+  withCORS(withJWT(withSignature(handler), allowedMethods), requestSize);
 const RouteMiddleware = (handler: NextApiHandler) => withCORS(withJWT(handler));
-const AdminRoute = (handler: NextApiHandler) => withProtected(withAdmin(handler));
+const AdminRoute = (handler: NextApiHandler, allowedMethods = ['GET']) => 
+  withProtected(withAdmin(handler, allowedMethods), undefined, allowedMethods);
 const IssueRoute = (handler: NextApiHandler) => withProtected(withIssue(handler));
 const UserRoute = (handler: NextApiHandler) => withProtected(withUser(handler));
 const GovernorRoute = (handler: NextApiHandler) => withProtected(WithValidChainId(withGovernor(handler)));
