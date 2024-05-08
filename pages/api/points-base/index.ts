@@ -9,9 +9,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   case "get":
     res.status(200).json(await get());
     break;
-  // case "post":
-  //   res.status(200).json(await post(req));
-  //   break;
   default:
     res.status(405);
   }
