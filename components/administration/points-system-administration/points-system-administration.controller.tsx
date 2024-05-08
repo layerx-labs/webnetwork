@@ -27,7 +27,7 @@ export function PointsSystemAdministration() {
   const [scalingFactor, setScalingFactor] = useState();
   const [changedRows, setChangedRows] = useState<PointsBase[]>([]);
 
-  const { addError } = useToastStore();
+  const { addError, addSuccess } = useToastStore();
   
   useReactQuery(QueryKeys.pointsBase(), async () => {
     const data = await useGetPointsBase();
@@ -54,6 +54,7 @@ export function PointsSystemAdministration() {
         addError(t("failed"), t("points-system.scaling-factor-greater-than-0"));
         return;
       }
+      addSuccess(t("success"), t("points-system.scaling-factor-updated"));
       setScalingFactor(null);
     },
   });
@@ -66,6 +67,7 @@ export function PointsSystemAdministration() {
         addError(t("failed"), `${error?.response?.data?.message}`);
         return;
       }
+      addSuccess(t("success"), t("points-system.changed-rules-updated"));
       setChangedRows([]);
     }
   });
