@@ -18,7 +18,6 @@ module.exports = {
       PointsBase("created_deliverable", 1, "1", 1),
       PointsBase("created_proposal", 1, "1", 1),
       PointsBase("accepted_proposal", 1, "1", 1),
-      PointsBase("connect_email", 1, "1", 1),
       PointsBase("add_linkedin", 10, "1", 1),
       PointsBase("add_github", 10, "1", 1),
     ];
