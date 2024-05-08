@@ -1,5 +1,4 @@
 import { NextApiRequest } from "next";
-import { Op } from "sequelize";
 
 import models from "db/models";
 
@@ -11,14 +10,14 @@ const isValidCounter = param => param === "N" || +param >= 0 && !isNaN(+param);
 export async function put(req: NextApiRequest) {
   const { rows } = req.body;
 
-  rows.forEach(({ id , scalingFactor, pointsPerAction, counter }) => {
+  rows.forEach(({ id, actionName, scalingFactor, pointsPerAction, counter }) => {
     if (!id || (!scalingFactor && !pointsPerAction && !counter))
-      throw new HttpBadRequestError(`Missing paramaters for ${id}`);
-  
+      throw new HttpBadRequestError(`Missing paramaters for ${actionName || id}`);
+
     if (!!scalingFactor && !isValidNumberParam(+scalingFactor) || 
         !!pointsPerAction && !isValidNumberParam(+pointsPerAction) ||
-        !!counter && isValidCounter(counter))
-      throw new HttpBadRequestError(`Invalid paramaters for ${id}`);
+        !!counter && !isValidCounter(counter))
+      throw new HttpBadRequestError(`Invalid paramaters for ${actionName || id}`);
   });
 
   for (const row of rows) {
