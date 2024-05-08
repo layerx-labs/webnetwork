@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { GetServerSideProps } from "next";
 import { getToken } from "next-auth/jwt";
+import { useTranslation } from "next-i18next";
 import getConfig from "next/config";
 
 import { PointsSystemAdministration } 
@@ -21,6 +22,8 @@ import { useGetPointsBase } from "x-hooks/api/points";
 const { publicRuntimeConfig, serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
 export default function AdministrationPage() {
+  const { t } = useTranslation("administration");
+
   const [activeTab, setActiveTab] = useState("points-system");
 
   const tabs = {
@@ -32,7 +35,7 @@ export default function AdministrationPage() {
       <ScrollableTabs
         tabs={[
           {
-            label: "Points System",
+            label: t("points-system.title"),
             active: activeTab === "points-system",
             onClick: () => setActiveTab("points-system"),
           }
