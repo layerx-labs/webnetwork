@@ -6,7 +6,7 @@ import {Settings} from "helpers/settings";
 
 import {withCORS} from "middleware";
 
-async function get(_req: NextApiRequest, res: NextApiResponse) {
+async function get() {
   const settings = await models.settings.findAll({
     where: { visibility: "public" },
     raw: true,
@@ -22,7 +22,7 @@ async function get(_req: NextApiRequest, res: NextApiResponse) {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
   case "GET":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get());
     break;
 
   default:

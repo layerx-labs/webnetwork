@@ -88,7 +88,8 @@ export function ContextualSpan({
           <Button
             transparent
             onClick={hide}
-            className={`svg-${contextColor} p-0 not-svg`}
+            textClass={`text-${contextColor}`}
+            className={`svg-${contextColor} p-0`}
           >
             <CloseIcon width={10} height={10} />
           </Button>

@@ -4,6 +4,8 @@ import BigNumber from "bignumber.js";
 import {useRouter} from "next/router";
 import {v4 as uuidv4} from "uuid";
 
+import { lowerCaseCompare } from "helpers/string";
+
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 import {Proposal} from "interfaces/proposal";
 
@@ -23,12 +25,19 @@ export default function ItemRow({
   isProposal,
   currentBounty
 }: ItemRowProps) {
-  const { currentUser } = useUserStore();
-
   const router = useRouter();
+
+  const { currentUser } = useUserStore();
   const { active: activeMarketplace, getURLWithNetwork, getTotalNetworkToken } = useMarketplace();
   const { data: totalNetworkToken } = getTotalNetworkToken();
 
+  const currentDeliverable = isProposal ? 
+    currentBounty?.deliverables?.find(d => d.id === (item as Proposal)?.deliverableId) : item;
+  const deliverableCreatorAddress = (isProposal ? currentDeliverable : item)?.user?.address;
+  const isTaskCreator = lowerCaseCompare(currentBounty?.user?.address, currentUser?.walletAddress);
+  const isDeliverableCreator = lowerCaseCompare(deliverableCreatorAddress, currentUser?.walletAddress);
+  const isPrivate = !!currentBounty?.privateDeliverables && 
+    (isProposal ? !isTaskCreator : !isTaskCreator && !isDeliverableCreator);
   const pathRedirect = isProposal ? "task/[id]/proposal/[proposalId]" : "task/[id]/deliverable/[deliverableId]";
   const valueRedirect: {
     id: number | string;
@@ -87,6 +96,7 @@ export default function ItemRow({
 
   function handleBtn(ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     ev.preventDefault();
+    if (isPrivate) return;
     router.push(getURLWithNetwork(pathRedirect, {
       ...valueRedirect,
       ... !isProposal && isReviewAction ? { review: true } : {}
@@ -108,6 +118,7 @@ export default function ItemRow({
       isMerged={isMerged}
       totalToBeDisputed={totalToBeDisputed}
       isRefused={isRefused}
+      isPrivate={isPrivate}
     />
   );
 }

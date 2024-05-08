@@ -84,5 +84,14 @@
   "deliverables": "Deliverables",
   "proposals": "Proposals",
   "tasks-opened": "Tasks opened",
-  "nfts": "NFTs"
+  "nfts": "NFTs",
+  "social": {
+    "title": "Social links",
+    "subtitle": "Provide your social links",
+    "github": "https://github.com/",
+    "linkedin": "https://linkedin.com/in/",
+    "success": "Updated social links",
+    "error": "Failed to update social links,",
+    "invalid-input": "Value is not valid."
+  }
 }

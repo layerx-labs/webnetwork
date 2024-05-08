@@ -19,6 +19,8 @@ import ConnectWalletButton from "components/connections/connect-wallet-button/co
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import Modal from "components/modal";
+import PrivateDeliverableBecomeCuratorModal 
+  from "components/modals/private-deliverable-become-curator/private-deliverable-become-curator.controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import {WarningSpan} from "components/warning-span";
 
@@ -41,6 +43,7 @@ interface CreateTaskPageViewProps
   isApproving: boolean;
   isNextOrCreateButtonDisabled: boolean;
   isCreating: boolean;
+  isBecomeCuratorModalVisible: boolean;
   creationSteps: string[];
   onBackClick: (e?: MouseEvent<HTMLButtonElement>) => void;
   onApproveClick: () => Promise<void>;
@@ -48,7 +51,10 @@ interface CreateTaskPageViewProps
   onSectionHeaderClick: (i: number) => void;
   allowCreateBounty?: boolean;
   showCannotCreateBountyModal?: boolean;
+  privateDeliverable: boolean;
   closeCannotCreateBountyModal?(): void;
+  handleCloseBecomeCuratorModal?(): void;
+  onActionButtonClick(): void;
 }
 
 export default function CreateTaskPageView({
@@ -61,10 +67,13 @@ export default function CreateTaskPageView({
   isNextOrCreateButtonDisabled,
   isCreating,
   creationSteps,
+  isBecomeCuratorModalVisible,
   onBackClick,
   onApproveClick,
   onNextOrCreateButtonClick,
   onSectionHeaderClick,
+  handleCloseBecomeCuratorModal,
+  onActionButtonClick,
   ...rest
 }: CreateTaskPageViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
@@ -103,6 +112,8 @@ export default function CreateTaskPageView({
           deliverableType={rest.deliverableType}
           onOriginLinkChange={rest.onOriginLinkChange}
           setDeliverableType={rest.setDeliverableType}
+          privateDeliverable={rest.privateDeliverable}
+          handlePrivateDeliverableChecked={rest.handlePrivateDeliverableChecked}
         />
       );
 
@@ -240,6 +251,13 @@ export default function CreateTaskPageView({
           </div>
         </div>
       </If>
+
+      <PrivateDeliverableBecomeCuratorModal
+        show={isBecomeCuratorModalVisible}
+        marketplace={rest.currentNetwork}
+        onClose={handleCloseBecomeCuratorModal}
+        onActionButtonClick={onActionButtonClick}
+      />
 
       <CustomContainer className='d-flex flex-column justify-content-end'>
         <ResponsiveWrapper className="row my-4" xs={false} md={true}>

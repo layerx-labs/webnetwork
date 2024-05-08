@@ -237,7 +237,9 @@
     "available-on": "Available on",
     "opened": "Opened",
     "proposal": "Proposal",
-    "closed": "Closed"
+    "closed": "Closed",
+    "yes": "Yes",
+    "no": "No"
   },
   "modals": {
     "help-modal": {

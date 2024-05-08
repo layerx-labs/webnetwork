@@ -11,6 +11,7 @@ import {formatNumberToNScale} from "helpers/formatNumber";
 
 import DAO from "services/dao-service";
 import ipfsService from "services/ipfs-service";
+import { Logger } from "services/logging";
 
 import {
   HttpBadRequestError,
@@ -162,12 +163,16 @@ export async function post(req: NextApiRequest) {
     }
   }
 
-  const { hash } = await ipfsService.add(nft, true);
+  const result = await ipfsService.add(nft, true)
+    .catch(error => {
+      Logger.error(error, "Failed to uppload to ipfs");
+      return null;
+    });
 
-  if (!hash)
+  if (!result?.hash)
     throw new HttpServerError("Failed to send to ipfs");
 
-  const url = `${ipfsUrl}/${hash}`;
+  const url = `${ipfsUrl}/${result.hash}`;
 
   return url;
 }

@@ -1,6 +1,6 @@
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
 
-import {error, warn} from "services/logging";
+import {error, info, warn} from "services/logging";
 
 import {elasticLoggerMaker} from "../services/elastic-logger";
 
@@ -24,6 +24,7 @@ export const LogAccess = (handler: NextApiHandler) => {
       .log(`debug`, ["Access", [{_type: "access", payload, method, pathname, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}}]])
 
     try {
+      info(`access`, {pathname, payload, method,});
       await handler(req, res);
 
       if (res.statusCode >= 400)

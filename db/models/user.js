@@ -38,7 +38,18 @@ class User extends Model {
       },
       emailVerificationSentAt: {
         type: DataTypes.DATE
-      }
+      },
+      githubLink: {
+        type: DataTypes.STRING,
+      },
+      linkedInLink: {
+        type: DataTypes.STRING,
+      },
+      totalPoints: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        defaultValue: 0
+      },
     },
     {
       sequelize,
@@ -102,6 +113,12 @@ class User extends Model {
       foreignKey: "address",
       sourceKey: "address",
       as: "payments"
+    });
+
+    this.hasMany(models.pointsEvents, {
+      foreignKey: "userId",
+      sourceKey: "id",
+      as: "pointsEvents"
     });
   }
 

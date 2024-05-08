@@ -25,6 +25,7 @@ interface ItemRowProps {
   totalToBeDisputed: BigNumber;
   status?: IPRLabel[];
   isRefused?: boolean;
+  isPrivate?: boolean;
 }
 
 export default function ProposalOrDeliverableView({
@@ -36,7 +37,8 @@ export default function ProposalOrDeliverableView({
   isDisputed,
   isMerged,
   totalToBeDisputed,
-  isRefused
+  isRefused,
+  isPrivate
 }: ItemRowProps) {
   const { t } = useTranslation(["proposal", "deliverable", "common"]);
   return (
@@ -59,7 +61,8 @@ export default function ProposalOrDeliverableView({
         </div>
       </If>
 
-      <ReadOnlyButtonWrapper>
+      <If condition={!isPrivate}>
+        <ReadOnlyButtonWrapper>
           <div className="row align-items-center d-none d-xl-block">
             <div className="d-flex">
               <Button
@@ -74,6 +77,7 @@ export default function ProposalOrDeliverableView({
             </div>
           </div>
         </ReadOnlyButtonWrapper>
+      </If>
     </>
   );
 }

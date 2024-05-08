@@ -9,6 +9,7 @@ import {lowerCaseIncludes} from "helpers/string";
 import {isValidUrl} from "helpers/validateUrl";
 
 import {add} from "services/ipfs-service";
+import { Logger } from "services/logging";
 
 import {ErrorMessages} from "server/errors/error-messages";
 import {HttpBadRequestError, HttpUnauthorizedError} from "server/errors/http-errors";
@@ -24,7 +25,8 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     tierList,
     isKyc,
     amount,
-    context
+    privateDeliverables,
+    context,
   } = req.body;
 
   const chain = await chainFromHeader(req);
@@ -76,7 +78,8 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     chain_id: +chain.chainId,
     isKyc: !!isKyc,
     kycTierList: tierList?.map(Number).filter(id=> !Number.isNaN(id)) || [],
-    userId: user.id
+    userId: user.id,
+    privateDeliverables
   };
 
   const bountyJson = {
@@ -95,11 +98,18 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     }
   };
 
-  const { hash } = await add(bountyJson, true);
+  const result = await add(bountyJson, true)
+    .catch(error => {
+      Logger.error(error, "Failed to uppload to ipfs");
+      return null;
+    });
+
+  if (!result?.hash)
+    throw new HttpBadRequestError("Failed to uppload to ipfs");
 
   const savedIssue = await models.issue.create({
     ...issue,
-    ipfsUrl: hash
+    ipfsUrl: result.hash
   });
 
   return savedIssue;

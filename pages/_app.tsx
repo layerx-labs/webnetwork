@@ -31,7 +31,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 const { publicRuntimeConfig } = getConfig();
 
-function App({ Component, pageProps: { session, seoData, ...pageProps } }: any) {
+function App({ Component, pageProps: { session, seoData, ...pageProps } }) {
   const {asPath} = useRouter();
 
   const [queryClient] = useState(() => getReactQueryClient());

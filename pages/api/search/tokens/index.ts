@@ -7,7 +7,7 @@ import {withCORS} from "middleware";
 
 const colToLower = (colName: string) => Sequelize.fn("LOWER", Sequelize.col(colName));
 
-async function get(req: NextApiRequest, res: NextApiResponse) {
+async function get(req: NextApiRequest) {
   const {networkName, chainId, chainShortName, type} = req.query;
 
 
@@ -52,7 +52,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get(req, res));
+    res.status(200).json(await get(req));
     break;
 
   default:

@@ -1,8 +1,6 @@
 import { useTranslation } from "next-i18next";
 
 import CreateBountyNetworkDropdown from "components/bounty/create-bounty/create-bounty-network-dropdown";
-import { ContextualSpan } from "components/contextual-span";
-import If from "components/If";
 import ChainFilter from "components/lists/filters/chain/controller";
 
 import { lowerCaseCompare } from "helpers/string";

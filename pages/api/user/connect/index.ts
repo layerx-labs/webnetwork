@@ -8,14 +8,14 @@ import {caseInsensitiveEqual} from "helpers/db/conditionals";
 
 import {withProtected} from "middleware";
 
-import {HttpBadRequestError, HttpConflictError} from "../../../../server/errors/http-errors";
+import {HttpBadRequestError, HttpConflictError} from "server/errors/http-errors";
 
 enum Actions {
   REGISTER = "register",
   CONNECT_GITHUB = "github"
 }
 
-async function patch(req: NextApiRequest, res: NextApiResponse) {
+async function patch(req: NextApiRequest) {
   let action;
 
   const token = await getToken({req});
@@ -63,7 +63,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "patch":
-    await patch(req, res);
+    await patch(req);
     break;
 
   default:

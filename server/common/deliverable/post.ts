@@ -1,4 +1,4 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import {NextApiRequest} from "next";
 import getConfig from "next/config";
 
 import models from "db/models";
@@ -6,12 +6,13 @@ import models from "db/models";
 import {Settings} from "helpers/settings";
 
 import ipfsService from "services/ipfs-service";
+import { Logger } from "services/logging";
 
-import {HttpBadRequestError, HttpNotFoundError, HttpServerError} from "../../errors/http-errors";
+import {HttpBadRequestError, HttpNotFoundError, HttpServerError} from "server/errors/http-errors";
 
 const {publicRuntimeConfig} = getConfig();
 
-export default async function post(req: NextApiRequest, res: NextApiResponse) {
+export default async function post(req: NextApiRequest) {
 
   const {deliverableUrl, title, description, issueId, context} = req.body;
 
@@ -46,12 +47,16 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     },
   };
 
-  const {hash} = await ipfsService.add(deliverableIpfs, true);
+  const result = await ipfsService.add(deliverableIpfs, true)
+  .catch(error => {
+    Logger.error(error, "Failed to uppload to ipfs");
+    return null;
+  });
 
-  if (!hash)
+  if (!result?.hash)
     throw new HttpBadRequestError("could not create deliverable on ipfs")
 
-  const ipfsLink = `${defaultConfig.urls.ipfs}/${hash}`;
+  const ipfsLink = `${defaultConfig.urls.ipfs}/${result.hash}`;
 
   const deliverable = await models.deliverable.create({
     issueId: issue.id,
@@ -63,10 +68,10 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     description,
   });
 
-  return res.status(200).json({
+  return {
     bountyId: issue.contractId,
-    originCID: hash,
+    originCID: result.hash,
     cid: deliverable.id,
-  });
+  }
 
 }

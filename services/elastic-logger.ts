@@ -41,4 +41,4 @@ export const elasticLoggerMaker = (index_name: any = `bepro-app-logs`): LoggerPl
   }
 })
 
-export const _scribbalLogger = () => elasticLoggerMaker()
+export const elasticAppLogs = () => elasticLoggerMaker();

@@ -1,6 +1,6 @@
 import Scribal from "@taikai/scribal";
 
-import {_scribbalLogger,} from "services/elastic-logger";
+import {elasticAppLogs} from "services/elastic-logger";
 
 const ScribalConfig = {
   logService: {
@@ -31,7 +31,7 @@ export default (() => {
 
   const scribal = new Scribal([]);
   scribal.init({appName, hostname, version: '*', ...ScribalConfig.logService});
-  scribal.addLogger(_scribbalLogger, ScribalConfig.logService.elastic);
+  scribal.addLogger(elasticAppLogs, ScribalConfig.logService.elastic);
 
   return scribal;
 })()
