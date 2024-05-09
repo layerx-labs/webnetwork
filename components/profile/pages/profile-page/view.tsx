@@ -16,6 +16,7 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import {AboutForm} from "../../about-form/about-form-controller";
 import {SocialForm} from "../../socials-form/social-form-controller";
 
 interface ProfilePageViewProps { 
@@ -87,6 +88,7 @@ export default function ProfilePageView({
           </div>
         </div>
         <SocialForm />
+        <AboutForm />
         <NotificationForm />
         <LanguageForm />
         <Divider bg="gray-850" />

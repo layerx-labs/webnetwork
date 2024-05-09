@@ -92,6 +92,16 @@
     "linkedin": "https://linkedin.com/in/",
     "success": "Updated social links",
     "error": "Failed to update social links,",
-    "invalid-input": "Value is not valid."
+    "invalid-input": "Value is not valid.",
+    "about": {
+      "placeholder": "Introduce yourself to the BEPRO community",
+      "title": "About you",
+      "subtitle": "Tell us a bit about yourself",
+      "body-length-limit": "Limit reached: {{value}} of 512",
+      "saving": {
+        "error": "Error updating about section",
+        "success": "Successfully updated about section"
+      }
+    }
   }
 }
