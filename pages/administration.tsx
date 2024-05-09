@@ -10,14 +10,9 @@ import { PointsSystemAdministration }
 import CustomContainer from "components/custom-container";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
-import { QueryKeys } from "helpers/query-keys";
 import { lowerCaseCompare } from "helpers/string";
 
-import { getReactQueryClient } from "services/react-query";
-
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
-
-import { useGetPointsBase } from "x-hooks/api/points";
 
 const { publicRuntimeConfig, serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
@@ -58,12 +53,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       },
       props: {},
     };
-
-  const queryClient = getReactQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: QueryKeys.pointsBase(),
-    queryFn: () => useGetPointsBase(),
-  });
 
   return {
     props: {
