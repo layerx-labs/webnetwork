@@ -6,17 +6,21 @@ import { HttpBadRequestError } from "server/errors/http-errors";
 
 const isValidNumberParam = param => param > 0 && !isNaN(param);
 const isValidCounter = param => param === "N" || +param >= 0 && !isNaN(+param);
+const isEmpty = value => value === null || value === undefined;
 
 export async function put(req: NextApiRequest) {
   const { rows } = req.body;
 
+  if (!rows?.length)
+    throw new HttpBadRequestError("Missing rows to update");
+
   rows.forEach(({ id, actionName, scalingFactor, pointsPerAction, counter }) => {
-    if (!id || (!scalingFactor && !pointsPerAction && !counter))
+    if (!id || (isEmpty(scalingFactor) && isEmpty(pointsPerAction) && isEmpty(counter)))
       throw new HttpBadRequestError(`Missing paramaters for ${actionName || id}`);
 
-    if (!!scalingFactor && !isValidNumberParam(+scalingFactor) || 
-        !!pointsPerAction && !isValidNumberParam(+pointsPerAction) ||
-        !!counter && !isValidCounter(counter))
+    if (!isEmpty(scalingFactor) && !isValidNumberParam(+scalingFactor) || 
+        !isEmpty(pointsPerAction) && !isValidNumberParam(+pointsPerAction) ||
+        !isEmpty(counter) && !isValidCounter(counter))
       throw new HttpBadRequestError(`Invalid paramaters for ${actionName || id}`);
   });
 
