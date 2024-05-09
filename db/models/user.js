@@ -50,6 +50,11 @@ class User extends Model {
         allowNull: true,
         defaultValue: 0
       },
+      about: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: ""
+      }
     },
     {
       sequelize,
