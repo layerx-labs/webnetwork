@@ -36,6 +36,7 @@ interface PublicProfileViewProps {
     github: string;
     linkedIn: string;
   };
+  about?: string;
 }
 
 export default function PublicProfileView ({
@@ -53,6 +54,7 @@ export default function PublicProfileView ({
   payments,
   type = "won",
   socials = null,
+  about = null,
 }: PublicProfileViewProps) {
   const { isMobileView, isTabletView } = useBreakPoint();
 
@@ -98,6 +100,12 @@ export default function PublicProfileView ({
             <div className="col sm-regular font-weight-normal text-gray-300">
               <span style={{marginRight: "8px"}}><a href={socials?.github} className="text-decoration-none text-primary" target="_blank">{socials?.github}</a></span>
               <span><a href={socials?.linkedIn} className="text-decoration-none text-primary" target="_blank">{socials?.linkedIn}</a></span>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col sm-regular font-weight-normal text-gray-300">
+              {about}
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ export interface User {
   emailVerificationSentAt?: string | Date;
   githubLink: string;
   linkedInLink: string;
+  about?: string;
 }
 
 export interface PastEventsParams {
