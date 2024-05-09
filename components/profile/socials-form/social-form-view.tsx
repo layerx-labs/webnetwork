@@ -22,9 +22,14 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
     (liLink && isInputValid(liLink) || true) &&
     !isSaving;
 
+  const selectInput = (id: string) => {
+    console.log(document.querySelector(`#${id}`));
+    (document.querySelector(`#${id}`) as HTMLInputElement)?.select();
+  }
+
   const rows = [
-    {text: t("profile:social.github"), onChange: setGhLink, value: ghLink},
-    {text: t("profile:social.linkedin"), onChange: setLinkedInLink, value: liLink},
+    {text: t("profile:social.github"), onChange: setGhLink, value: ghLink, id: "github-link"},
+    {text: t("profile:social.linkedin"), onChange: setLinkedInLink, value: liLink, id: "linkedin-link"},
   ]
 
   useEffect(() => {
@@ -40,8 +45,8 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
           <div className="row pb-3" key={i}>
             <div className="col col-lg-4">
               <InputGroup className="border-radius-4">
-                <InputGroup.Text>{row.text}</InputGroup.Text>
-                <FormControl value={row.value} onChange={e => row.onChange(e.target.value)}/>
+                <InputGroup.Text onClick={() => selectInput(row.id)}>{row.text}</InputGroup.Text>
+                <FormControl id={row.id} value={row.value} onChange={e => row.onChange(e.target.value)}/>
               </InputGroup>
               <p style={{display: (!!row.value && !isInputValid(row.value)) ? "block" : "" }} className="invalid-feedback p-small mt-2 mb-0">{t("profile:social.invalid-input")}</p>
             </div>

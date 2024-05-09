@@ -641,10 +641,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .input-group-text {
     border: none;
     color: $gray-600;
+    cursor: pointer;
 
     &.group-disabled {
       color: $gray-700;
       background-color: $gray-900;
+    }
+
+    + .form-control {
+      border-left: 1px solid $gray-800!important;
     }
   }
 

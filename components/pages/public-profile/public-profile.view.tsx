@@ -18,6 +18,9 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import {Github} from "../../../assets/icons/github";
+import {Linkedin} from "../../../assets/icons/linkedin";
+
 interface PublicProfileViewProps {
   userAddress: string;
   primaryText: string;
@@ -39,24 +42,24 @@ interface PublicProfileViewProps {
   about?: string;
 }
 
-export default function PublicProfileView ({
-  userAddress,
-  primaryText,
-  secondaryText,
-  tabs,
-  isTaskList,
-  isDeliverableList,
-  isProposalsList,
-  isNftsList,
-  tasks,
-  deliverables,
-  proposals,
-  payments,
-  type = "won",
-  socials = null,
-  about = null,
-}: PublicProfileViewProps) {
-  const { isMobileView, isTabletView } = useBreakPoint();
+export default function PublicProfileView({
+                                            userAddress,
+                                            primaryText,
+                                            secondaryText,
+                                            tabs,
+                                            isTaskList,
+                                            isDeliverableList,
+                                            isProposalsList,
+                                            isNftsList,
+                                            tasks,
+                                            deliverables,
+                                            proposals,
+                                            payments,
+                                            type = "won",
+                                            socials = null,
+                                            about = null,
+                                          }: PublicProfileViewProps) {
+  const {isMobileView, isTabletView} = useBreakPoint();
 
   const isTabletOrMobile = isMobileView || isTabletView;
   const listItemVariant = ({
@@ -82,24 +85,30 @@ export default function PublicProfileView ({
         </div>
 
         <div className="col">
-          <div className="row">
+          <div className="row mb-1">
             <h1 className="xl-semibold font-weight-medium text-white">
               {primaryText}
             </h1>
           </div>
 
           <If condition={!!secondaryText}>
-            <div className="row">
+            <div className="row mb-2">
               <h2 className="sm-regular font-weight-normal text-gray-300">
                 {secondaryText}
               </h2>
             </div>
           </If>
 
-          <div className="row">
+          <div className="row mb-2">
             <div className="col sm-regular font-weight-normal text-gray-300">
-              <span style={{marginRight: "8px"}}><a href={socials?.github} className="text-decoration-none text-primary" target="_blank">{socials?.github}</a></span>
-              <span><a href={socials?.linkedIn} className="text-decoration-none text-primary" target="_blank">{socials?.linkedIn}</a></span>
+              <a href={socials?.github} className="mr-2 text-decoration-none text-gray text-white-hover" target="_blank">
+                <span className="mr-1"><Github/></span>
+                {socials?.github?.replace("https://github.com", "")}
+              </a>
+              <a href={socials?.linkedIn} className="text-decoration-none text-gray text-white-hover" target="_blank">
+                <span className="mr-1"><Linkedin /></span>
+                {socials?.linkedIn?.replace("https://linkedin.com", "")}
+              </a>
             </div>
           </div>
 
