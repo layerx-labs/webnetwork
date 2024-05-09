@@ -101,14 +101,18 @@ export default function PublicProfileView({
 
           <div className="row mb-2">
             <div className="col sm-regular font-weight-normal text-gray-300">
-              <a href={socials?.github} className="mr-2 text-decoration-none text-gray text-white-hover" target="_blank">
-                <span className="mr-1"><Github/></span>
-                {socials?.github?.replace("https://github.com", "")}
-              </a>
-              <a href={socials?.linkedIn} className="text-decoration-none text-gray text-white-hover" target="_blank">
-                <span className="mr-1"><Linkedin /></span>
-                {socials?.linkedIn?.replace("https://linkedin.com", "")}
-              </a>
+              {socials?.github &&
+                <a href={socials?.github} className="mr-2 text-decoration-none text-gray text-white-hover"
+                   target="_blank">
+                  <span className="mr-1"><Github/></span>
+                  {socials?.github?.replace("https://github.com", "")}
+                </a> || ""}
+
+              {socials?.linkedIn &&
+                <a href={socials?.linkedIn} className="text-decoration-none text-gray text-white-hover" target="_blank">
+                  <span className="mr-1"><Linkedin/></span>
+                  {socials?.linkedIn?.replace("https://linkedin.com", "")}
+                </a> || ""}
             </div>
           </div>
 
