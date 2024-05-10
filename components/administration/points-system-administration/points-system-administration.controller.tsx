@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AxiosError } from "axios";
 import { useTranslation } from "next-i18next";
@@ -29,11 +29,7 @@ export function PointsSystemAdministration() {
 
   const { addError, addSuccess } = useToastStore();
   
-  useReactQuery(QueryKeys.pointsBase(), async () => {
-    const data = await useGetPointsBase();
-    setList(data);
-    return data;
-  });
+  const { data } = useReactQuery(QueryKeys.pointsBase(), useGetPointsBase);
 
   function getUpdateMethod(type: "bulk" | "changed") {
     const rows = {
@@ -100,6 +96,10 @@ export function PointsSystemAdministration() {
       return tmp;
     });
   }
+
+  useEffect(() => {
+    setList(data);
+  }, [data]);
 
   return(
     <PointsSystemAdministrationView
