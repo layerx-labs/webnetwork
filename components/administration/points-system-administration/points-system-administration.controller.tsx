@@ -98,7 +98,7 @@ export function PointsSystemAdministration() {
   }
 
   useEffect(() => {
-    setList(data);
+    setList(data || []);
   }, [data]);
 
   return(
