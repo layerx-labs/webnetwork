@@ -51,6 +51,7 @@ export function PointsSystemAdministrationView({
             onValueChange={onScalingFactorChange}
             min={1}
             decimalScale={2}
+            data-testid="scaling-factor-input"
           />
         </div>
 
@@ -59,6 +60,7 @@ export function PointsSystemAdministrationView({
             disabled={isUpdateButtonDisabled}
             isLoading={isBulkUpdating}
             onClick={onBulkUpdateClick}
+            data-testid="update-all-button"
           >
             {t("points-system.update-all")}
           </Button>
@@ -75,6 +77,7 @@ export function PointsSystemAdministrationView({
               isLoading={isUpdatingChanged}
               onClick={onSaveChangedClick}
               className="mb-3"
+              data-testid="save-changes-button"
             >
               {t("points-system.save-changes")}
             </Button>

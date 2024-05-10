@@ -35,7 +35,8 @@ export function Table<T>({
         {rows?.map((row, index) => 
           <TableRow 
             key={`table-row-${index}`}
-            data={row} 
+            data={row}
+            index={index}
             columns={columns} 
             isEditableColumn={isEditableColumn}
             onRowChange={onRowChange}

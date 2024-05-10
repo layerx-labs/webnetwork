@@ -1,5 +1,6 @@
 interface TableRowProps<T> {
   data: T;
+  index: number;
   columns: (keyof T)[];
   isEditableColumn: (column: keyof T) => boolean;
   onRowChange?: (changedRow: T) => void;
@@ -7,6 +8,7 @@ interface TableRowProps<T> {
 
 export function TableRow<T>({
   data,
+  index,
   columns,
   isEditableColumn,
   onRowChange,
@@ -29,6 +31,7 @@ export function TableRow<T>({
               className="form-control" 
               value={data[column.toString()]}
               onChange={onChange(column)}
+              data-testid={`table-row-${index}-${column.toString()}-input`}
             /> : data[column.toString()]}
         </td>
       ))}
