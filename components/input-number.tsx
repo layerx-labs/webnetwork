@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 import clsx from "clsx";
 import { kebabCase } from "lodash";
 import { useTranslation } from "next-i18next";
+import { useDebouncedCallback } from "use-debounce";
 
 import InfoTooltip from "components/info-tooltip";
 
@@ -34,7 +35,9 @@ export default function InputNumber({
 }: InputNumberProps) {
   const { t } = useTranslation(["common"]);
   const [inputValue, setInputValue] = useState<number | string | null>()
-  const debounce = useRef(null)
+
+  const onValueChangeDebounced = 
+    useDebouncedCallback((values, sourceInfo) => onValueChange?.(values, sourceInfo), 500);
 
   const id = kebabCase(typeof label === 'string' ? label : "");
   const errorStyle = { "text-danger bg-opacity-100": error };
@@ -44,13 +47,8 @@ export default function InputNumber({
   const Component = shouldBeWrapped ? "div" : Fragment;
 
   function handleInputChange(e, sourceInfo) {
-    setInputValue(e?.target?.value || null)
-
-    clearTimeout(debounce.current)
-
-    debounce.current = setTimeout(() => {
-      onValueChange?.(e, sourceInfo);
-    }, 500)
+    setInputValue(e?.target?.value || null);
+    onValueChangeDebounced(e, sourceInfo);
   }
 
   useEffect(()=>{if(value !== inputValue) setInputValue(value)},[value])
