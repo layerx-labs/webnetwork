@@ -1,6 +1,6 @@
 import models from "db/models";
 
-import { put } from "server/common/points-base/bulk-update/put";
+import { bulkUpdatePointsBase } from "server/common/points-base/bulk-update/bulk-update-points-base";
 import { HttpBadRequestError } from "server/errors/http-errors";
 
 jest.mock("db/models", () => ({
@@ -30,7 +30,7 @@ describe("BulkUpdatePointsBase", () => {
   });
 
   it("Should update sucessfully", async () => {
-    await put(request);
+    await bulkUpdatePointsBase(request);
     expect(models.pointsBase.update)
       .toHaveBeenCalledWith({
         scalingFactor: 1,
@@ -45,7 +45,8 @@ describe("BulkUpdatePointsBase", () => {
 
   it("Should throws because no rows was sent", async () => {
     request.body = {};
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Missing rows to update"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Missing rows to update"));
   });
 
   it("Should throws because id was not provided", async () => {
@@ -59,7 +60,8 @@ describe("BulkUpdatePointsBase", () => {
         }
       ]
     };
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Missing paramaters for action1"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Missing paramaters for action1"));
   });
 
   it("Should throws because no changed column was provided", async () => {
@@ -71,7 +73,8 @@ describe("BulkUpdatePointsBase", () => {
         }
       ]
     };
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Missing paramaters for action1"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Missing paramaters for action1"));
   });
 
   it("Should throws because scalingFactor is invalid", async () => {
@@ -84,7 +87,8 @@ describe("BulkUpdatePointsBase", () => {
         }
       ]
     };
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
   });
 
   it("Should throws because pointsPerAction is invalid", async () => {
@@ -97,7 +101,8 @@ describe("BulkUpdatePointsBase", () => {
         }
       ]
     };
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
   });
 
   it("Should throws because counter is invalid", async () => {
@@ -110,6 +115,7 @@ describe("BulkUpdatePointsBase", () => {
         }
       ]
     };
-    await expect(() => put(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
+    await expect(() => 
+      bulkUpdatePointsBase(request)).rejects.toThrow(new HttpBadRequestError("Invalid paramaters for action1"));
   });
 });

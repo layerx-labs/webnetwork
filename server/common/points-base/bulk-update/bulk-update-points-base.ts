@@ -8,7 +8,7 @@ const isValidNumberParam = param => param > 0 && !isNaN(param);
 const isValidCounter = param => param === "N" || +param >= 0 && !isNaN(+param);
 const isEmpty = value => value === null || value === undefined;
 
-export async function put(req: NextApiRequest) {
+export async function bulkUpdatePointsBase(req: NextApiRequest) {
   const { rows } = req.body;
 
   if (!rows?.length)

@@ -2,12 +2,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { AdminRoute } from "middleware";
 
-import { put } from "server/common/points-base/bulk-update/put";
+import { bulkUpdatePointsBase } from "server/common/points-base/bulk-update/bulk-update-points-base";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "put":
-    res.status(200).json(await put(req));
+    res.status(200).json(await bulkUpdatePointsBase(req));
     break;
   default:
     res.status(405);

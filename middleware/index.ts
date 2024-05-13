@@ -18,7 +18,7 @@ const withCORS = (handler: NextApiHandler, requestSize?: number) =>
 const withProtected = (handler: NextApiHandler, requestSize?: number, allowedMethods?: string[]) => 
   withCORS(withJWT(withSignature(handler), allowedMethods), requestSize);
 const RouteMiddleware = (handler: NextApiHandler) => withCORS(withJWT(handler));
-const AdminRoute = (handler: NextApiHandler, allowedMethods = ['GET']) => 
+const AdminRoute = (handler: NextApiHandler, allowedMethods = []) => 
   withProtected(withAdmin(handler, allowedMethods), undefined, allowedMethods);
 const IssueRoute = (handler: NextApiHandler) => withProtected(withIssue(handler));
 const UserRoute = (handler: NextApiHandler) => withProtected(withUser(handler));
