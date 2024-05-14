@@ -9,6 +9,7 @@ import ExternalLinkIcon from "assets/icons/external-link-icon";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
+import { PointsBadge } from "components/common/points/points-badge.view";
 
 import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
 import { getProfileLinks } from "helpers/navigation-links";
@@ -19,6 +20,7 @@ import { ProfilePages } from "interfaces/utils";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
+import { userPointsOfUser } from "x-hooks/use-points-of-user";
 
 export default function NavAvatar() {
   const { asPath } = useRouter();
@@ -26,9 +28,10 @@ export default function NavAvatar() {
 
   const [visible, setVisible] = useState(false);
 
-  const { signOut } = useAuthentication();
-  const { goToProfilePage } = useMarketplace();
   const { currentUser } = useUserStore();
+  const { signOut } = useAuthentication();
+  const { totalPoints } = userPointsOfUser();
+  const { goToProfilePage } = useMarketplace();
 
   const username =
     currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
@@ -86,8 +89,8 @@ export default function NavAvatar() {
   );
 
   const LinksSession = ({ children }) => (
-    <div className="row align-items-center border-bottom border-light-gray">
-      <div className="d-flex flex-column gap-3 pt-3 pb-3 px-0">
+    <div className="row align-items-center border-bottom border-light-gray py-2">
+      <div className="d-flex flex-column gap-3 py-1 px-0">
         {children}
       </div>
     </div>
@@ -128,6 +131,20 @@ export default function NavAvatar() {
                   className="text-gray p family-Regular"
                 />
               </div>
+          </div>
+        </div>
+
+        <div className="row align-items-center border-bottom border-light-gray py-2">
+          <div className="col px-0">
+            <span className="text-white sm-regular">
+              {t("main-nav.nav-avatar.your-points")}
+            </span>
+          </div>
+
+          <div className="col-auto px-0">
+            <PointsBadge 
+              points={totalPoints}
+            />
           </div>
         </div>
 
