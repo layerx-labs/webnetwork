@@ -30,6 +30,7 @@ $gray-900: #17171C;
 $gray-950: #0B0C0E;
 $blue-200: #B3B9F4;
 $blue-400: #6873E9;
+$yellow-400: #FFDE6B;
 $yellow-500: #FFD646;
 $light-gray: #434758;
 $blue: #4250e4;
@@ -129,6 +130,7 @@ $more-bg: (
   "light-warning": $light-warning,
   "blue-dark": $blue-dark,
   "blue-shadow": $bg-blue-shadow,
+  "yellow-400": $yellow-400,
   "yellow-500": $yellow-500,
   "green-500": $green-500,
   "green-500-90": #104334E5,
@@ -160,6 +162,7 @@ $more-colors: (
   "light-gray": $light-gray,
   "black": $black,
   "white": #fff,
+  "yellow-400": $yellow-400,
   "yellow-500": $yellow-500,
   "green-500": $green-500,
   "green-500-90": #104334E5,
