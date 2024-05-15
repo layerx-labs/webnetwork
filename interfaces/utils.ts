@@ -7,4 +7,5 @@ export type ProfilePages =
   "tasks" |
   "deliverables" |
   "proposals" | 
-  "my-marketplace";
+  "my-marketplace" |
+  "my-points";

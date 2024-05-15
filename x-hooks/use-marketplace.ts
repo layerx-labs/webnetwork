@@ -50,15 +50,22 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     };
   }
 
-  function goToProfilePage(profilePage: ProfilePages, params = undefined) {
-    const path = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
-    return push({
+  function getDashboardPageUrl(profilePage: ProfilePages, params = undefined) {
+    const asPath = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
+    const href = {
       pathname: "/dashboard/[[...dashboardPage]]",
       query: {
         ...query,
         ...params
       }
-    }, `/${path}`);
+    };
+
+    return { href, asPath: `/${asPath}` };
+  }
+
+  function goToProfilePage(profilePage: ProfilePages, params = undefined) {
+    const { href, asPath} = getDashboardPageUrl(profilePage, params);
+    return push(href, asPath);
   }
 
   function getTotalNetworkToken(networkName?: string, chainShortName?: string) {
@@ -144,6 +151,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     clear,
     updateParamsOfActive: _updateParamsOfActive,
     getURLWithNetwork,
+    getDashboardPageUrl,
     goToProfilePage,
     getTotalNetworkToken,
   };

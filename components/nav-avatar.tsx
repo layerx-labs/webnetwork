@@ -2,6 +2,7 @@ import {useState} from "react";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
@@ -31,7 +32,7 @@ export default function NavAvatar() {
   const { currentUser } = useUserStore();
   const { signOut } = useAuthentication();
   const { totalPoints } = userPointsOfUser();
-  const { goToProfilePage } = useMarketplace();
+  const { goToProfilePage, getDashboardPageUrl } = useMarketplace();
 
   const username =
     currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
@@ -105,6 +106,8 @@ export default function NavAvatar() {
     Link(t("main-nav.nav-avatar.follow-on-twitter"), TWITTER_LINK),
   ];
 
+  const myPointsUrl = getDashboardPageUrl("my-points");
+
   const overlay = (
     <Popover id="profile-popover">
       <Popover.Body className="bg-shadow pt-3 px-4">
@@ -133,20 +136,23 @@ export default function NavAvatar() {
               </div>
           </div>
         </div>
+        <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath} onClick={() => setVisible(false)}>
+          <div 
+            className="row align-items-center border-bottom border-light-gray py-2 cursor-pointer"
+          >
+            <div className="col px-0">
+              <span className="text-white text-gray-hover sm-regular">
+                {t("main-nav.nav-avatar.your-points")}
+              </span>
+            </div>
 
-        <div className="row align-items-center border-bottom border-light-gray py-2">
-          <div className="col px-0">
-            <span className="text-white sm-regular">
-              {t("main-nav.nav-avatar.your-points")}
-            </span>
+            <div className="col-auto px-0">
+              <PointsBadge 
+                points={totalPoints}
+              />
+            </div>
           </div>
-
-          <div className="col-auto px-0">
-            <PointsBadge 
-              points={totalPoints}
-            />
-          </div>
-        </div>
+        </NextLink>
 
         <LinksSession>
           {getProfileLinks(t).map(ProfileInternalLink)}
