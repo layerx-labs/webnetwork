@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import MyMarketplacePage from "components/pages/profile/my-marketplace/controller";
 import PaymentsPage from "components/pages/profile/payments/controller";
 import DeliverablesPage from "components/profile/pages/deliverables";
+import { MyPointsPage } from "components/profile/pages/my-points/my-points.controller";
 import DashboardPage from "components/profile/pages/profile-page/controller";
 import ProposalsPage from "components/profile/pages/proposals";
 import TasksPage from "components/profile/pages/tasks";
@@ -27,6 +28,7 @@ export default function DashboardRouter(props: DashboardPageProps) {
     Route("/dashboard/deliverables", DeliverablesPage),
     Route("/dashboard/proposals", ProposalsPage),
     Route("/dashboard/my-marketplace", MyMarketplacePage),
+    Route("/dashboard/my-points", MyPointsPage),
   ];
   const currentRoute = routes.find(({ path }) => asPath.split("?")[0].endsWith(path));
 

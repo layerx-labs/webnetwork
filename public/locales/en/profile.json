@@ -60,17 +60,17 @@
       "errors": {
         "update-settings": "Failed to update settings"
       }
-   },
-   "email-errors": {
-     "invalid-link": "Invalid confirmation link",
-     "already-confirmed": "Email already confirmed",
-     "expired-link": "This confirmation link is expired. Try re-sending another email.",
-     "failed-to-update": "Failed to update email",
-     "try-again-later": "Something went wrong, try again later",
-     "email-already-in-use": "Email already in use",
-     "invalid-email": "Invalid email",
-     "nothing-to-change": "Nothing to change"
-   },
+  },
+  "email-errors": {
+    "invalid-link": "Invalid confirmation link",
+    "already-confirmed": "Email already confirmed",
+    "expired-link": "This confirmation link is expired. Try re-sending another email.",
+    "failed-to-update": "Failed to update email",
+    "try-again-later": "Something went wrong, try again later",
+    "email-already-in-use": "Email already in use",
+    "invalid-email": "Invalid email",
+    "nothing-to-change": "Nothing to change"
+  },
   "take-back-success": "Take back",
   "take-back-fail": "Failed to take back",
   "select-marketplace-and-network": "Please select a marketplace and a network to manage your votes.",
@@ -103,5 +103,8 @@
         "success": "Successfully updated about section"
       }
     }
-  }
+  },
+  "my-points": "My Points",
+  "collected-points": "Collected Points",
+  "history": "History"
 }
