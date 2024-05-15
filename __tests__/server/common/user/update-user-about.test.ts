@@ -18,7 +18,7 @@ jest.mock('db/models', () => ({
 jest.mock('server/common/user/get-user-by-address', () => ({getUserByAddress: jest.fn()}));
 jest.mock('services/logging', () => ({Logger: jest.fn()}));
 jest.mock('server/utils/points-system/add-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
-jest.mock('server/utils/points-system/remove-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
+jest.mock('server/utils/points-system/remove-point-entry', () => ({removePointEntry: jest.fn().mockResolvedValue("")}));
 
 describe('updateUserAbout', () => {
   let mockRequest: NextApiRequest;
