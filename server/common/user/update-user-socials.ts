@@ -1,4 +1,5 @@
 import {NextApiRequest} from "next";
+import {Op} from "sequelize";
 
 import models from "../../../db/models";
 import {lowerCaseCompare} from "../../../helpers/string";
@@ -38,7 +39,7 @@ export async function updateUserSocials(req: NextApiRequest) {
     const pointEvent = await models.pointsEvents.findOne({
       where: {
         userId: user.id,
-        actionName: "add_github"
+        actionName: {[Op.eq]: actionName}
       }
     });
 
