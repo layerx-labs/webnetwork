@@ -105,6 +105,8 @@
     }
   },
   "my-points": "My Points",
+  "your-points": "Your Points",
   "collected-points": "Collected Points",
-  "history": "History"
+  "history": "History",
+  "total-points-earned": "Total Points Earned"
 }

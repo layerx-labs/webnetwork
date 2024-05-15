@@ -4,11 +4,15 @@ import { useTranslation } from "next-i18next";
 
 import { MyPointsPageView } from "components/profile/pages/my-points/my-points.view";
 
+import { userPointsOfUser } from "x-hooks/use-points-of-user";
+
 
 export function MyPointsPage() {
   const { t } = useTranslation("profile");
 
   const [activeTab, setActiveTab] = useState("collected-points");
+
+  const { totalPoints } = userPointsOfUser();
 
   const tabs = [
     {
@@ -27,6 +31,7 @@ export function MyPointsPage() {
     <MyPointsPageView 
       tabs={tabs}
       activeTab={activeTab}
+      userTotalPoints={totalPoints}
     />
   );
 }
