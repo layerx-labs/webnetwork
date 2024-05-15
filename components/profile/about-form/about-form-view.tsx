@@ -27,9 +27,9 @@ export function AboutFormView({onChange, onSave, isBodyOverLimit, defaultValue =
     </div>
     <div className="row mt-3">
       <div className="col">
-        <Button onClick={() => onSave()} disabled={isBodyOverLimit || defaultValue.trim() === body.trim()}>
+        <Button onClick={() => onSave()} isLoading={isSaving}
+                disabled={isBodyOverLimit || defaultValue.trim() === body.trim()}>
           <span>{t("common:save")}</span>
-          {isSaving ? (<span className="spinner-border spinner-border-xs ml-1"/>) : ("")}
         </Button>
       </div>
     </div>
