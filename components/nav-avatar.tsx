@@ -154,20 +154,6 @@ export default function NavAvatar() {
           </div>
         </NextLink>
 
-        <div className="row align-items-center border-bottom border-light-gray py-2">
-          <div className="col px-0">
-            <span className="text-white sm-regular">
-              {t("main-nav.nav-avatar.your-points")}
-            </span>
-          </div>
-
-          <div className="col-auto px-0">
-            <PointsBadge 
-              points={totalPoints}
-            />
-          </div>
-        </div>
-
         <LinksSession>
           {getProfileLinks(t).map(ProfileInternalLink)}
         </LinksSession>
