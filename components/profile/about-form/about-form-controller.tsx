@@ -1,42 +1,45 @@
-import {useState} from "react";
-
-import {useSession} from "next-auth/react";
+import {useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
-
-import {QueryKeys} from "../../../helpers/query-keys";
 import {api} from "../../../services/api";
 import {useUserStore} from "../../../x-hooks/stores/user/user.store";
-import useReactQuery from "../../../x-hooks/use-react-query";
 import useReactQueryMutation from "../../../x-hooks/use-react-query-mutation";
 import {AboutFormView} from "./about-form-view";
 
 export function AboutForm() {
   const { t } = useTranslation(["profile"]);
-  const { data: sessionData,} = useSession();
   const {currentUser} = useUserStore()
 
   const [about, setAbout] = useState<string>("");
+  const [defaultAbout, setDefaultAbout] = useState<string>("");
 
   const onSaveSetAbout = () =>
     api.put(`/user/${currentUser?.walletAddress}/about`, {about: about})
 
   const getUserAbout = () =>
     api.get(`/user/${currentUser?.walletAddress}/about`)
-      .then(({data}) => {
-        return data;
+      .then(({data}) => data || "")
+      .catch(e => {
+        console.log(`Failed to fetch about information`, e);
+        return "";
       });
 
-  const {data: defaultAbout, invalidate: invalidateAbout} =
-    useReactQuery(QueryKeys.about(), getUserAbout)
+  const updateAboutForm = () => {
+    if (!currentUser?.walletAddress)
+      return;
+
+    getUserAbout().then(setDefaultAbout);
+  }
 
   const {mutateAsync: saveAbout, isPending} = useReactQueryMutation({
     mutationFn: onSaveSetAbout,
     toastError: t("social.about.saving.error"),
     toastSuccess: t("social.about.saving.success"),
     onSuccess: () => {
-      invalidateAbout()
+      updateAboutForm();
     },
   })
+
+  useEffect(updateAboutForm, [currentUser]);
 
   return <AboutFormView isBodyOverLimit={about.length > 512}
                         body={about}
