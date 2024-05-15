@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 import { useTranslation } from "next-i18next";
 
 import Badge from "components/badge";
@@ -33,9 +35,14 @@ export function MyPointsPageView({
   };
 
   const imageHeight = {
-    xs: 150,
+    xs: 170,
     sm: 170,
   }[currentBreakPoint] || 183;
+  const imagePosition: CSSProperties = {
+    position: "absolute",
+    top: -imageHeight * 0.35,
+    right: -imageHeight * 0.1,
+  };
 
   return(
     <div>
@@ -49,7 +56,7 @@ export function MyPointsPageView({
 
       <DashboardLayout>
         <div className="row mb-5">
-          <div className="col col-sm-8 col-md-6 col-lg-5 col-xl-3">
+          <div className="col col-sm-8 col-md-6 col-lg-5 col-xl-4">
             <Badge
               color="yellow-850"
               className="p-4 border border-yellow-500 border-radius-8 w-100 position-relative"
@@ -74,12 +81,12 @@ export function MyPointsPageView({
                 </div>
 
                 <div className="col position-relative px-0">
-                  <div className="position-absolute mt-n5 ml-md-3 ml-xl-5">
+                  <div style={imagePosition}>
                     <img 
                       src="/images/trophy.png" 
                       alt="Trophies" 
                       height={imageHeight}
-                      className="mt-md-n2"
+                      className=""
                     />
                   </div>
                 </div>
