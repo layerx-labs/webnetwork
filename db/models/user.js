@@ -51,7 +51,7 @@ class User extends Model {
         defaultValue: 0
       },
       about: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(512),
         allowNull: true,
         defaultValue: ""
       }

@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn("users", "about", {
-      type: Sequelize.STRING
+      type: Sequelize.STRING(512)
     });
   },
 
