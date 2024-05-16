@@ -1216,7 +1216,7 @@ a.row-button svg {
   height: 24px;
 }
 
-.text-white:hover:not(.btn), .text-gray-150:hover {
+.text-white:hover:not(.btn):not(.not-hover), .text-gray-150:hover {
   svg path {
     fill: white;
   }
