@@ -9,10 +9,12 @@ import { LinkProps } from "types/components";
 
 interface DashboardLinksProps {
   onClick?: () => void;
+  extraLinks?: LinkProps[];
 }
 
 export default function DashboardLinks({
-  onClick
+  onClick,
+  extraLinks
 }: DashboardLinksProps) {
   const { query, asPath } = useRouter();
   const { t } = useTranslation("common");
@@ -35,7 +37,7 @@ export default function DashboardLinks({
           data-testid={label}
           onClick={onClick}
         >
-          <Icon data-testid={label} />
+          <span className="text-gray-500"><Icon data-testid={label} width="16" height="12" /></span>
           <span>{label}</span>
         </a>
       </Link>
@@ -45,6 +47,7 @@ export default function DashboardLinks({
   return(
     <ul>
       {getProfileLinks(t).map(ProfileLink)}
+      {extraLinks?.map(ProfileLink)}
     </ul>
   );
 }

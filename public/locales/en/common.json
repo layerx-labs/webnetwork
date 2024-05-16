@@ -93,7 +93,9 @@
       "join-discord": "Join the Discord",
       "follow-on-twitter": "Follow @bepronet on Twitter",
       "web-network-1": "Web Marketplace Version 1.0",
-      "disconnect-wallet": "Disconnect"
+      "disconnect-wallet": "Disconnect",
+      "your-points": "Your points",
+      "points-system": "Points System"
     },
     "tips": {
       "marketplaces": "List of all marketplaces on Bepro",
