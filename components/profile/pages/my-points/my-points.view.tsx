@@ -1,6 +1,6 @@
-import { CSSProperties } from "react";
+import {CSSProperties} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
@@ -9,21 +9,26 @@ import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import DashboardLayout from "components/profile/dashboard-layout";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { MiniTabsItem } from "types/components";
+import {MiniTabsItem} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+
+import {PointEventAction} from "../../../../types/point-event-action";
+import {MyPointsHistory} from "./history/my-points-history.controller";
 
 
 type MyPointsPageView = {
   tabs: MiniTabsItem[],
   activeTab: "collected-points" | "history",
   userTotalPoints: number,
+  history: {actionName: PointEventAction, pointsWon: number, pointsCounted: boolean, info: any}[]
 }
 
 export function MyPointsPageView({
   tabs,
   activeTab,
-  userTotalPoints
+  userTotalPoints,
+  history
 }) {
   const { t } = useTranslation("profile");
 
@@ -31,7 +36,7 @@ export function MyPointsPageView({
 
   const tabsComponents = {
     "collected-points": <h1>Collected Points tab</h1>,
-    "history": <h1>History tab</h1>,
+    "history": <MyPointsHistory history={history} />,
   };
 
   const imageHeight = {
