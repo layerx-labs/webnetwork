@@ -53,8 +53,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
 
   const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};
 
-  console.log(`PAGEDATA.result`, pageData);
-
   return {
     props: {
       ...pageData,
