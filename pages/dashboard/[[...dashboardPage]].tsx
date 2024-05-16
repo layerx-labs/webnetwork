@@ -66,7 +66,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
         "custom-network",
         "setup",
         "change-token-modal",
-        "proposal"
+        "proposal",
+        "points",
       ]))
     }
   };
