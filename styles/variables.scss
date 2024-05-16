@@ -39,6 +39,7 @@ $blue-dark: #283089;
 // Fix-ME: Remove disabled color
 $disabled: #423b51;
 $green-500: #35E0AD;
+$green-600: #2AB38A;
 $blue-50: #ECEDFC;
 $blue-600: #3540B6;
 $blue-150: #C6CAF7;
@@ -136,6 +137,7 @@ $more-bg: (
   "yellow-850": $yellow-850,
   "green-500": $green-500,
   "green-500-90": #104334E5,
+  "green-600": $green-600,
   "blue-50": $blue-50,
   "blue-600": $blue-600,
 );
@@ -169,6 +171,7 @@ $more-colors: (
   "yellow-850": $yellow-850,
   "green-500": $green-500,
   "green-500-90": #104334E5,
+  "green-600": $green-600,
   "blue-50": $blue-50,
   "blue-150": $blue-150,
   "blue-600": $blue-600,
