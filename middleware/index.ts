@@ -21,7 +21,8 @@ const RouteMiddleware = (handler: NextApiHandler) => withCORS(withJWT(handler));
 const AdminRoute = (handler: NextApiHandler, allowedMethods = []) => 
   withProtected(withAdmin(handler, allowedMethods), undefined, allowedMethods);
 const IssueRoute = (handler: NextApiHandler) => withProtected(withIssue(handler));
-const UserRoute = (handler: NextApiHandler) => withProtected(withUser(handler));
+const UserRoute = 
+  (handler: NextApiHandler, allowedMethods = ["GET"]) => withProtected(withUser(handler, allowedMethods));
 const GovernorRoute = (handler: NextApiHandler) => withProtected(WithValidChainId(withGovernor(handler)));
 
 export {
