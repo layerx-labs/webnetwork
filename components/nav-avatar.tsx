@@ -136,9 +136,10 @@ export default function NavAvatar() {
               </div>
           </div>
         </div>
-        <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath} onClick={() => setVisible(false)}>
+        <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath}>
           <div 
             className="row align-items-center border-bottom border-light-gray py-2 cursor-pointer"
+            onClick={() => setVisible(false)}
           >
             <div className="col px-0">
               <span className="text-white text-gray-hover sm-regular">
