@@ -23,4 +23,5 @@ export const QueryKeys = {
   wagmiConfigChains: () => ["wagmi-config-chains"],
   about: () => ["about"],
   totalPointsOfUser: (address: string) => ["points", "total", address],
+  pointsBase: () => ["points-base"]
 };
