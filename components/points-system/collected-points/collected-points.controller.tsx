@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import Card from "components/card";
 import { GenericCard } from "components/points-system/collected-points/generic-card/generic-card.view";
@@ -9,11 +10,15 @@ import { SocialCard } from "components/points-system/collected-points/social-car
 
 import { PointsEvents } from "interfaces/points";
 
+import useMarketplace from "x-hooks/use-marketplace";
 import { userPointsOfUser } from "x-hooks/use-points-of-user";
 
 export function CollectedPoints() {
   const { t } = useTranslation("points");
+  
+  const { push } = useRouter();
 
+  const { goToProfilePage } = useMarketplace();
   const { collectedPoints, pointsBase, refresh } = userPointsOfUser();
 
   const getCollected = (actionName: string) => collectedPoints?.find(c => c.actionName === actionName);
@@ -46,11 +51,17 @@ export function CollectedPoints() {
     if (["linkedin", "github", "x"].some(social => curr.actionName.includes(social)))
       acc.socials.push(currUpdated);
     else if (["email", "add_about"].some(e => curr.actionName.includes(e)))
-      acc.profile.push(currUpdated);
+      acc.profile.push({
+        ...currUpdated,
+        onActionClick: () => goToProfilePage("dashboard")
+      });
     else if (curr.counter === "N")
       acc.onGoing.push(curr);
     else
-      acc.other.push(currUpdated);
+      acc.other.push({
+        ...currUpdated,
+        onActionClick: () => push("/explore")
+      });
 
     return acc;
   }, { onGoing: [], socials: [], profile: [], other: [] });
@@ -123,7 +134,7 @@ export function CollectedPoints() {
               description={t(`rules.${pointBase.actionName}.description`)}
               points={t(`rules.${pointBase.actionName}.pointsLabel`, { count: pointBase.pointsPerAction })}
               status={pointBase.status}
-              onActionClick={() => {}}
+              onActionClick={pointBase.onActionClick}
             />
           </div>
         ))}
@@ -142,7 +153,7 @@ export function CollectedPoints() {
               points={pointBase.pointsPerAction}
               status={pointBase.status}
               direction="vertical"
-              onActionClick={() => {}}
+              onActionClick={pointBase.onActionClick}
             />
           </div>
         ))}
