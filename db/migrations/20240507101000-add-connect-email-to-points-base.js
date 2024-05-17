@@ -6,15 +6,7 @@ module.exports = {
 
     await queryInterface.bulkInsert("points_base",[
       {
-        actionName: "add_linkedin",
-        pointsPerAction: 1,
-        scalingFactor: 1,
-        counter: "1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        actionName: "add_github",
+        actionName: "connect_email",
         pointsPerAction: 1,
         scalingFactor: 1,
         counter: "1",
@@ -25,6 +17,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("points_base", {actionName: ["linkedin", "github"]});
+    await queryInterface.bulkDelete("points_base", {actionName: ["connect_email"]});
   }
 };

@@ -2,7 +2,8 @@ import {Op} from "sequelize";
 
 import Database from "db/models";
 
-import {Logger} from "../../../services/logging";
+import {Logger} from "services/logging";
+
 import {PointEventAction} from "../../../types/point-event-action";
 
 export async function addPointEntry(userId: number, actionName: PointEventAction, info = {}) {

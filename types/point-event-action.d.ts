@@ -8,4 +8,5 @@ export type PointEventAction =
   "accepted_proposal" |
   "add_github" |
   "add_linkedin" |
-  "add_about";
+  "add_about" | 
+  "connect_email";
