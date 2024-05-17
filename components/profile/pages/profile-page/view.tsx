@@ -21,11 +21,13 @@ import {SocialForm} from "../../socials-form/social-form-controller";
 
 interface ProfilePageViewProps { 
   walletAddress: string;
+  handle?: string;
   isCouncil: boolean;
 }
 
 export default function ProfilePageView({
   walletAddress,
+  handle,
   isCouncil,
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
@@ -79,7 +81,7 @@ export default function ProfilePageView({
                 <div className="row mx-0">
                   <InternalLink
                     label={"Go to public profile"}
-                    href={`/profile/${walletAddress}`}
+                    href={`/profile/${handle || walletAddress}`}
                     className="mt-3"
                   />
                 </div>

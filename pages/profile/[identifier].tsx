@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next";
 import PublicProfilePage from "components/pages/public-profile/public-profile.controller";
 
 import { emptyPaginatedData } from "helpers/api";
+import { isAddress } from "helpers/is-address";
 
 import { User } from "interfaces/api";
 
@@ -19,7 +20,7 @@ import { useSearchDeliverables } from "x-hooks/api/deliverable/use-search-delive
 import { useSearchPayments } from "x-hooks/api/payment/use-search-payments";
 import { useSearchProposals } from "x-hooks/api/proposal/use-search-proposals";
 import { getBountiesListData } from "x-hooks/api/task";
-import { useGetUserByAddress } from "x-hooks/api/user";
+import { useGetUserByAddress, useGetUserByLogin } from "x-hooks/api/user";
 
 export interface PublicProfileProps {
   user: User;
@@ -35,8 +36,24 @@ export default function PublicProfile(props: PublicProfileProps) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
   const type = query?.type?.toString() || "won";
-  const address = query?.address?.toString();
-  const user = address ? await useGetUserByAddress(address) : null;
+  const identifier = query?.identifier?.toString();
+
+  const redirect404 = {
+    redirect: {
+      destination: `/404`,
+      permanent: false,
+    },
+  };
+
+  if (!identifier)
+    return redirect404;
+
+  const finderMethod = isAddress(identifier) ? useGetUserByAddress : useGetUserByLogin;
+
+  const user = await finderMethod(identifier);
+  if (!user)
+    return redirect404;
+
   const pageData = {
     tasks: emptyPaginatedData,
     deliverables: emptyPaginatedData,
@@ -45,8 +62,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   };
 
   const getTasks = async (filter: "receiver" | "creator") => getBountiesListData({
-    [filter]: address,
-    ...query,
+    [filter]: user.address,
+    ...query
   })
     .then(({ data }) => data)
     .catch(() => emptyPaginatedData as SearchBountiesPaginated);
@@ -59,13 +76,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     pageData.tasks = await getTasks("creator");
     break;
   case "submissions":
-    pageData.deliverables = await useSearchDeliverables({ creator: address, ...query });
+    pageData.deliverables = await useSearchDeliverables({ creator: user.address, ...query });
     break;
   case "proposals":
-    pageData.proposals = await useSearchProposals({ creator: address, ...query });
+    pageData.proposals = await useSearchProposals({ creator: user.address, ...query });
     break;
   case "nfts":
-    pageData.payments = await useSearchPayments({ wallet: address, ... query });
+    pageData.payments = await useSearchPayments({ wallet: user.address, ...query });
   }
 
   return {

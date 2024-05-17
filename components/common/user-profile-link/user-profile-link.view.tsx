@@ -22,7 +22,7 @@ export function UserProfileLink ({
   const renderHandle = handle ? `@${handle}` : handle;
 
   return (
-    <Link href={`/profile/${address}`}>
+    <Link href={`/profile/${handle || address}`}>
       <span 
         className={`cursor-pointer text-decoration-underline-hover ${className}`}
         title={t("actions.go-to-user-profile")}
