@@ -7,6 +7,8 @@ import { GenericCard } from "components/points-system/collected-points/generic-c
 import { OnGoingCard } from "components/points-system/collected-points/on-going-card/on-going-card.view";
 import { SocialCard } from "components/points-system/collected-points/social-card/social-card.controller";
 
+import { PointsEvents } from "interfaces/points";
+
 import { userPointsOfUser } from "x-hooks/use-points-of-user";
 
 export function CollectedPoints() {
@@ -14,11 +16,11 @@ export function CollectedPoints() {
 
   const { collectedPoints, pointsBase, refresh } = userPointsOfUser();
 
-  const getPointStatus = (actionName: string) => {
-    const collected = collectedPoints?.find(c => c.actionName === actionName);
-    if (!collected)
+  const getCollected = (actionName: string) => collectedPoints?.find(c => c.actionName === actionName);
+  const getPointStatus = (event: PointsEvents) => {
+    if (!event)
       return "available";
-    if (!collected.pointsCounted)
+    if (!event.pointsCounted)
       return "pending";
     return "claimed";
   };
@@ -32,19 +34,23 @@ export function CollectedPoints() {
   };
 
   const { onGoing, socials, profile, other } = pointsBase.reduce((acc, curr) => {
-    const addStatus = (element) => ({
-      ...element,
-      status: getPointStatus(element.actionName)
-    });
+    const collected = getCollected(curr.actionName);
+    const status = getPointStatus(collected);
+    const pointsPerAction = status === "available" ? curr.pointsPerAction * curr.scalingFactor : collected.pointsWon;
+    const currUpdated = {
+      ...curr,
+      status,
+      pointsPerAction
+    };
 
     if (["linkedin", "github", "x"].some(social => curr.actionName.includes(social)))
-      acc.socials.push(addStatus(curr));
+      acc.socials.push(currUpdated);
     else if (["email", "add_about"].some(e => curr.actionName.includes(e)))
-      acc.profile.push(addStatus(curr));
+      acc.profile.push(currUpdated);
     else if (curr.counter === "N")
       acc.onGoing.push(curr);
     else
-      acc.other.push(addStatus(curr));
+      acc.other.push(currUpdated);
 
     return acc;
   }, { onGoing: [], socials: [], profile: [], other: [] });
@@ -99,7 +105,7 @@ export function CollectedPoints() {
               title={t(`rules.${pointBase.actionName}.title`)}
               social={getSocialName(pointBase.actionName)}
               points={t(`rules.${pointBase.actionName}.pointsLabel`, { count: pointBase.pointsPerAction })}
-              status={getPointStatus(pointBase.actionName)}
+              status={pointBase.status}
             />
           </div>
         ))}
@@ -116,7 +122,7 @@ export function CollectedPoints() {
               title={t(`rules.${pointBase.actionName}.title`)}
               description={t(`rules.${pointBase.actionName}.description`)}
               points={t(`rules.${pointBase.actionName}.pointsLabel`, { count: pointBase.pointsPerAction })}
-              status={getPointStatus(pointBase.actionName)}
+              status={pointBase.status}
               onActionClick={() => {}}
             />
           </div>
@@ -134,7 +140,7 @@ export function CollectedPoints() {
               title={t(`rules.${pointBase.actionName}.title`)}
               description={t(`rules.${pointBase.actionName}.description`)}
               points={pointBase.pointsPerAction}
-              status={getPointStatus(pointBase.actionName)}
+              status={pointBase.status}
               direction="vertical"
               onActionClick={() => {}}
             />
