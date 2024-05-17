@@ -37,6 +37,16 @@ export function CollectedPoints() {
     if (actionName?.includes("x"))
       return "x";
   };
+  const actions = {
+    "created_marketplace": () => push("/new-marketplace"),
+    "created_deliverable": () => push("/explore"),
+    "created_proposal": () => push("/explore"),
+    "accepted_proposal": () => goToProfilePage("proposals"),
+    "add_linkedin": () => push("/dashboard"),
+    "add_github": () => push("/dashboard"),
+    "connect_email": () => push("/dashboard"),
+    "add_about": () => push("/dashboard"),
+  };
 
   const { onGoing, socials, profile, other } = pointsBase.reduce((acc, curr) => {
     const collected = getCollected(curr.actionName);
@@ -45,23 +55,18 @@ export function CollectedPoints() {
     const currUpdated = {
       ...curr,
       status,
-      pointsPerAction
+      pointsPerAction,
+      onActionClick: actions[curr.actionName],
     };
 
     if (["linkedin", "github", "x"].some(social => curr.actionName.includes(social)))
       acc.socials.push(currUpdated);
     else if (["email", "add_about"].some(e => curr.actionName.includes(e)))
-      acc.profile.push({
-        ...currUpdated,
-        onActionClick: () => goToProfilePage("dashboard")
-      });
+      acc.profile.push(currUpdated);
     else if (curr.counter === "N")
       acc.onGoing.push(curr);
     else
-      acc.other.push({
-        ...currUpdated,
-        onActionClick: () => push("/explore")
-      });
+      acc.other.push(currUpdated);
 
     return acc;
   }, { onGoing: [], socials: [], profile: [], other: [] });
