@@ -1,13 +1,13 @@
-import { useState } from "react";
+import {useState} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
-import { MyPointsPageView } from "components/profile/pages/my-points/my-points.view";
+import {MyPointsPageView} from "components/profile/pages/my-points/my-points.view";
 
-import { userPointsOfUser } from "x-hooks/use-points-of-user";
+import {userPointsOfUser} from "x-hooks/use-points-of-user";
 
 
-export function MyPointsPage() {
+export function MyPointsPage({history,}) {
   const { t } = useTranslation("profile");
 
   const [activeTab, setActiveTab] = useState("collected-points");
@@ -32,6 +32,7 @@ export function MyPointsPage() {
       tabs={tabs}
       activeTab={activeTab}
       userTotalPoints={totalPoints}
+      history={history}
     />
   );
 }
