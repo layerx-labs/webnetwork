@@ -12,6 +12,8 @@ import {lowerCaseCompare} from "helpers/string";
 import {Network} from "interfaces/network";
 import {ProfilePages} from "interfaces/utils";
 
+import { URL } from "types/components";
+
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import {useSearchNetworks} from "x-hooks/api/marketplace";
 import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
@@ -50,7 +52,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     };
   }
 
-  function getDashboardPageUrl(profilePage: ProfilePages, params = undefined) {
+  function getDashboardPageUrl(profilePage: ProfilePages, params = undefined): URL {
     const asPath = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
     const href = {
       pathname: "/dashboard/[[...dashboardPage]]",

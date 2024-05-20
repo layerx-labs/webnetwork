@@ -179,3 +179,13 @@ export type HeaderColumn = {
   label: string,
   tip?: string,
 }
+
+export interface URL {
+  href: {
+    pathname: string;
+    query: {
+      [key: string]: string;
+    }
+  };
+  asPath: string;
+}

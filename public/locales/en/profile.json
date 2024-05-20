@@ -108,7 +108,6 @@
   "your-points": "Your Points",
   "collected-points": "Collected Points",
   "history": "History",
-  "total-points-earned": "Total Points Earned",
   "points-history": {
     "action": "Action",
     "points": "Points",
@@ -130,5 +129,6 @@
       "counted": "Counted",
       "pending": "Pending"
     }
-  }
+  },
+  "total-points-earned": "Total Points Earned"
 }

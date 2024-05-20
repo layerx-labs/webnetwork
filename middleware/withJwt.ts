@@ -8,17 +8,9 @@ import {isMethodAllowed} from "server/utils/http";
 
 const { serverRuntimeConfig } = getConfig();
 
-
-
 export const withJWT = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {
-    if (isMethodAllowed(req.method, allowedMethods))
-      return handler(req, res);
-
     const token = await getToken({ req, secret: serverRuntimeConfig?.auth?.secret });
-    
-    if (!token)
-      return res.status(401).json({ message: MISSING_JWT_TOKEN });
 
     const bodyWithContext = {
       ...req.body,
@@ -29,6 +21,9 @@ export const withJWT = (handler: NextApiHandler, allowedMethods = ['GET']): Next
     };
 
     req.body = bodyWithContext;
+
+    if (!isMethodAllowed(req.method, allowedMethods) && !token)
+      return res.status(401).json({ message: MISSING_JWT_TOKEN });
 
     return handler(req, res);
   };

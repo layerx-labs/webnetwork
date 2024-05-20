@@ -6,6 +6,7 @@ import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
 import InfoTooltip from "components/info-tooltip";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
+import { CollectedPoints } from "components/points-system/collected-points/collected-points.controller";
 import DashboardLayout from "components/profile/dashboard-layout";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
@@ -35,8 +36,8 @@ export function MyPointsPageView({
   const { currentBreakPoint } = useBreakPoint();
 
   const tabsComponents = {
-    "collected-points": <h1>Collected Points tab</h1>,
     "history": <MyPointsHistory history={history} />,
+    "collected-points": <CollectedPoints />,
   };
 
   const imageHeight = {
