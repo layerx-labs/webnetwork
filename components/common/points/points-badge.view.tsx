@@ -1,13 +1,15 @@
 import StarFilledIcon from "assets/icons/star-filled-icon";
 import StarIcon from "assets/icons/star-icon"
 
+import { formatNumberToString } from "helpers/formatNumber";
+
 type PointsBadgeProps = {
   points: number | string,
   variant?: "default" | "available" | "claimed",
 }
 
 export function PointsBadge({
-  points,
+  points = "0",
   variant = "default",
 }: PointsBadgeProps) {
   const { bg, text, icon } = {
@@ -19,7 +21,7 @@ export function PointsBadge({
   return(
     <div className={`d-flex align-items-center gap-1 bg-${bg} text-${text} not-hover px-2 py-1 border-radius-4`}>
       {icon}
-      <span className={`xs-small font-weight-normal text-${text}`}>{points}</span>
+      <span className={`xs-small font-weight-normal text-${text}`}>{formatNumberToString(points, 0)}</span>
     </div>
   );
 }

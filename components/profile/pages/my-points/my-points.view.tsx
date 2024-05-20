@@ -10,6 +10,8 @@ import { CollectedPoints } from "components/points-system/collected-points/colle
 import DashboardLayout from "components/profile/dashboard-layout";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import { formatNumberToString } from "helpers/formatNumber";
+
 import {MiniTabsItem} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
@@ -82,7 +84,7 @@ export function MyPointsPageView({
                       />
                     </div>
 
-                    <span className="normal-3xl-medium text-white">{userTotalPoints}</span>
+                    <span className="normal-3xl-medium text-white">{formatNumberToString(userTotalPoints, 0)}</span>
                   </div>
                 </div>
 
