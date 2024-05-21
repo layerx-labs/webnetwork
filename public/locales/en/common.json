@@ -241,7 +241,8 @@
     "proposal": "Proposal",
     "closed": "Closed",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "up-to": "Up to"
   },
   "modals": {
     "help-modal": {
@@ -414,7 +415,8 @@
     "not-available-chain": "Marketplace not present on this network",
     "something-went-wrong": "Something went wrong",
     "failed-load-dao": "failed to load Dao Service",
-    "failed-load-network": "failed to load marketplace"
+    "failed-load-network": "failed to load marketplace",
+    "file-size-exceeded": "Maximum file size exceeded"
   },
   "warnings": {
     "await-load-network": "await for a loading marketplace"

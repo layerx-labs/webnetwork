@@ -189,3 +189,8 @@ export interface URL {
   };
   asPath: string;
 }
+
+export interface ImageObject {
+  preview: string;
+  raw: File;
+}
