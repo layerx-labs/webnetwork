@@ -1,3 +1,5 @@
+import {useEffect} from "react";
+
 import {useSession} from "next-auth/react";
 import {useTranslation} from "next-i18next";
 
@@ -34,6 +36,12 @@ export function SocialForm() {
       refetchSocials();
     },
   })
+
+  useEffect(() => {
+    if (!sessionData)
+      return;
+    refetchSocials()
+  }, [sessionData]);
 
 
   return <SocialFormView githubLink={socials?.githubLink?.replace("https://github.com/", "") || ""}

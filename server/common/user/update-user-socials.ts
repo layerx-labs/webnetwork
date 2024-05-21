@@ -55,6 +55,8 @@ export async function updateUserSocials(req: NextApiRequest) {
     [update.twitterLink, "add_twitter"],
   ];
 
+  console.log(`UPDATING`, update);
+
   for (const [value, action] of socials) {
     if (value)
       await addPointEntry(user.id, action, {value}).catch(e => Logger.info(e?.message));

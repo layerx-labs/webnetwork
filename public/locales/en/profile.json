@@ -124,7 +124,8 @@
       "accepted_proposal": "Accepted proposal",
       "add_github": "Fill github link",
       "add_linkedin": "Fill linkedIn link",
-      "add_about": "Add about section"
+      "add_about": "Add about section",
+      "add_twitter": "Add X link"
     },
     "state": {
       "counted": "Counted",

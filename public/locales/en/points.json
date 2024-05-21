@@ -71,6 +71,12 @@
       "description": "Create a proposal and have it accepted",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
+    },
+    "add_twitter": {
+      "title": "Add X link",
+      "description": "Link your X profile",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
     }
   }
 }
