@@ -67,30 +67,22 @@ describe('updateUserSocials', () => {
     await expect(updateUserSocials(mockRequest)).rejects.toThrow(HttpForbiddenError)
   });
 
-  it("succeeds to update github", async () => {
-    const update = jest.fn();
-    const save = jest.fn();
+  [
+    ["github", "https://github.com/some_user"],
+    ["linkedin", "https://linkedin.com/in/some_user"],
+    ["twitter", "https://x.com/some_user"],
+  ].forEach(([social, value]) => {
+    it(`succeeds to update ${social}`, async () => {
+      const update = jest.fn();
+      const save = jest.fn();
 
-    (getUserByAddress as jest.Mock).mockResolvedValue({id: 1, update, save});
+      (getUserByAddress as jest.Mock).mockResolvedValue({id: 1, update, save});
 
-    mockRequest.body.github = "https://github.com/some_user";
-    await updateUserSocials(mockRequest);
+      mockRequest.body[social] = value;
+      await updateUserSocials(mockRequest);
 
-    expect(update).toHaveBeenCalled();
-    expect(save).toHaveBeenCalled();
-  });
-
-  it("succeeds to update linkedin", async () => {
-    const update = jest.fn();
-    const save = jest.fn();
-
-    (getUserByAddress as jest.Mock).mockResolvedValue({id: 1, update, save});
-
-    mockRequest.body.linkedin = "https://linkedin.com/in/some_user";
-    await updateUserSocials(mockRequest);
-
-    expect(update).toHaveBeenCalled();
-    expect(save).toHaveBeenCalled();
-  });
-
+      expect(update).toHaveBeenCalled();
+      expect(save).toHaveBeenCalled();
+    })
+  })
 })

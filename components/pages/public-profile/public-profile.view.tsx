@@ -20,6 +20,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 
 import {Github} from "../../../assets/icons/github";
 import {Linkedin} from "../../../assets/icons/linkedin";
+import {XCom} from "../../../assets/icons/x-com";
 
 interface PublicProfileViewProps {
   userAddress: string;
@@ -38,6 +39,7 @@ interface PublicProfileViewProps {
   socials?: {
     github: string;
     linkedIn: string;
+    twitter: string;
   };
   about?: string;
 }
@@ -70,6 +72,12 @@ export default function PublicProfileView({
     nfts: "nfts",
   }[type] || "network") as TasksListItemVariant;
 
+  const socialEle = [
+    [socials?.github?.replace("https://github.com",""), socials?.github, <Github/>],
+    [socials?.linkedIn?.replace("https://linkedin.com", ""), socials?.linkedIn, <Linkedin/>],
+    [socials?.twitter?.replace("https://x.com", ""), socials?.twitter, <XCom/>],
+  ]
+
   return (
     <CustomContainer
       col="col-xs-12 col-xl-12"
@@ -101,18 +109,15 @@ export default function PublicProfileView({
 
           <div className="row mb-2">
             <div className="col sm-regular font-weight-normal text-gray-300">
-              {socials?.github &&
-                <a href={socials?.github} className="mr-2 text-decoration-none text-gray text-white-hover"
-                   target="_blank">
-                  <span className="mr-1"><Github/></span>
-                  {socials?.github?.replace("https://github.com", "")}
-                </a> || ""}
-
-              {socials?.linkedIn &&
-                <a href={socials?.linkedIn} className="text-decoration-none text-gray text-white-hover" target="_blank">
-                  <span className="mr-1"><Linkedin/></span>
-                  {socials?.linkedIn?.replace("https://linkedin.com", "")}
-                </a> || ""}
+              {
+                socialEle.map(([value, link, icon], i) =>
+                  link && <a href={link as string} key={i}
+                             className="mr-2 text-decoration-none text-gray text-white-hover"
+                             target="_blank">
+                    <span className="mr-1">{icon}</span>
+                    {value}
+                  </a> || "")
+              }
             </div>
           </div>
 
