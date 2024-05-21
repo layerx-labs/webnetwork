@@ -38,8 +38,8 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, twitterLink,
   useEffect(() => {
     setGhLink(githubLink);
     setLinkedInLink(linkedInLink);
-    setTwitterLink(twitter);
-  }, [githubLink, linkedInLink, twitter]);
+    setTwitterLink(twitterLink);
+  }, [githubLink, linkedInLink, twitterLink]);
 
   return <div className="row py-3">
     <div className="base-medium text-white mb-1">{t("profile:social.title")}</div>
