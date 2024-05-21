@@ -36,7 +36,7 @@ export function CollectedPointsView({
         className="p-3 mt-4 mb-4" 
         bodyClassName="p-0"
       >
-        <div className="row align-items-center gy-3 gap-md-0">
+        <div className="row gy-3">
           <div className="col-auto">
             <span className="d-block xl-semibold text-white">
               {t("on-going")}
@@ -55,7 +55,7 @@ export function CollectedPointsView({
           </div>
 
           {onGoing.map(pointBase => (
-            <div className="col-12 col-lg" key={`on-going-${pointBase.actionName}`}>
+            <div className="col-12 col-lg d-grid" key={`on-going-${pointBase.actionName}`}>
               <OnGoingCard
                 title={t(`rules.${pointBase.actionName}.title`)}
                 description={t(`rules.${pointBase.actionName}.description`)}
@@ -72,7 +72,7 @@ export function CollectedPointsView({
 
       <div className="row mb-4 gy-3">
         {socials?.map(pointBase => (
-          <div className="col-12 col-md-6 col-xl-4" key={`social-${pointBase.actionName}`}>
+          <div className="col-12 col-md-6 col-xl-4 d-grid" key={`social-${pointBase.actionName}`}>
             <SocialCard
               title={t(`rules.${pointBase.actionName}.title`)}
               social={getSocialName(pointBase.actionName)}
@@ -89,7 +89,7 @@ export function CollectedPointsView({
 
       <div className="row mb-4 gy-3">
         {profile?.map(pointBase => (
-          <div className="col-12 col-sm-6 col-xl-4" key={`social-${pointBase.actionName}`}>
+          <div className="col-12 col-sm-6 col-xl-4 d-grid" key={`social-${pointBase.actionName}`}>
             <GenericCard
               title={t(`rules.${pointBase.actionName}.title`)}
               description={t(`rules.${pointBase.actionName}.description`)}
@@ -107,7 +107,7 @@ export function CollectedPointsView({
 
       <div className="row mb-4 gy-3">
         {other?.map(pointBase => (
-          <div className="col-12 col-sm-6 col-xl" key={`social-${pointBase.actionName}`}>
+          <div className="col-12 col-sm-6 col-xl d-grid" key={`social-${pointBase.actionName}`}>
             <GenericCard
               title={t(`rules.${pointBase.actionName}.title`)}
               description={t(`rules.${pointBase.actionName}.description`)}
