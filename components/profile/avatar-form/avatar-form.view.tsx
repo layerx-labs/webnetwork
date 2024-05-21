@@ -50,8 +50,10 @@ export function AvatarFormView({
     <div className="d-flex align-items-end gap-2">
       <If condition={!isEditing}>
         <AvatarOrIdenticon
-          avatarHash={avatarHash}
-          address={userAddress}
+          user={{
+            address: userAddress,
+            avatar: avatarHash
+          }}
           size={isTabletOrMobile ? "md" : "lg"}
           withBorder
         />

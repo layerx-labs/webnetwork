@@ -5,7 +5,7 @@ import {useTranslation} from "next-i18next";
 import ArrowLeft from "assets/icons/arrow-left";
 import ArrowRight from "assets/icons/arrow-right";
 
-import AvatarOrIdenticon from "components/avatar-or-identicon";
+import { AvatarCurrentUser } from "components/avatar-current-user/avatar-current-user.controller";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
 import HelpButton from "components/common/buttons/help/view";
@@ -114,10 +114,7 @@ export default function HamburgerMenuView({
               <If condition={isConnected}>
                 <div className="row border-bottom border-gray-800 pb-3 mx-0">
                   <div className="col-auto">
-                    <AvatarOrIdenticon
-                      user={userLogin}
-                      address={userAddress}
-                    />
+                    <AvatarCurrentUser />
                   </div>
 
                   <div className="col">

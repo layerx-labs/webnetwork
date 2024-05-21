@@ -9,7 +9,6 @@ import {truncateAddress} from "helpers/truncate-address";
 
 import {User} from "interfaces/api";
 
-
 import {
   DeliverablePaginatedData,
   PaymentPaginatedData,
@@ -65,6 +64,7 @@ export default function PublicProfilePage ({
   return (
     <PublicProfileView
       userAddress={user?.address}
+      avatar={user?.avatar}
       primaryText={primaryText}
       secondaryText={secondaryText}
       tabs={tabs}

@@ -38,7 +38,11 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
     { 
       association: "mergeProposals", 
       where: { contractId: { [Op.not]: null } },
-      include: [{ association: "distributions" }, { association: "disputes" }],
+      include: [
+        { association: "distributions" }, 
+        { association: "disputes" },
+        { association: "user" },
+      ],
       required: false
     },
     { association: "transactionalToken" },

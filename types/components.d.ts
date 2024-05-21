@@ -158,6 +158,7 @@ export interface LinkProps {
 export interface PaymentInfoProps {
   address: string;
   login: string;
+  avatar: string;
   amount: string;
   symbol: string;
   percentage: string;

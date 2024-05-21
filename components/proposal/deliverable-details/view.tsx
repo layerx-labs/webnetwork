@@ -55,7 +55,7 @@ export default function DeliverableDetailsView({
         <div className="col-xs-12 col-xl-auto">
           <div className="row align-items-center">
             <div className="col-auto">
-              <AvatarOrIdenticon user={user?.handle} address={user?.address} />
+              <AvatarOrIdenticon user={user} />
             </div>
             <div className="col-auto p-0">
               <UserProfileLink

@@ -7,6 +7,7 @@ import { PaymentInfoProps } from "types/components";
 
 export default function PaymentInfo({
   address,
+  avatar,
   login,
   amount,
   symbol,
@@ -20,8 +21,11 @@ export default function PaymentInfo({
       <div className="d-flex justify-content-between w-100">
         <div className="d-flex align-items-center mb-1 gap-2">
           <AvatarOrIdenticon
-            user={login}
-            address={address}
+            user={{
+              avatar,
+              handle: login,
+              address
+            }}
             size="xsm"
           />
 

@@ -26,9 +26,10 @@ export default async function get(query: ParsedUrlQuery) {
     },
     include: [
       getAssociation("disputes"),
+      getAssociation("user"),
       getAssociation("distributions", ["recipient", "percentage"], true, undefined, [
         getAssociation( "user",
-                        ["handle"],
+                        ["handle", "avatar"],
                         false,
                         undefined,
                         undefined, 

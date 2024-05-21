@@ -2,13 +2,15 @@ import getConfig from "next/config";
 
 import Avatar from "components/avatar"
 import Identicon from "components/identicon"
+import If from "components/If";
 
+import { truncateAddress } from "helpers/truncate-address";
+
+import { User } from "interfaces/api";
 import { SizeOptions } from "interfaces/utils";
 
-interface AvatarOrIdenticonProps {
-  avatarHash?: string;
-  address?: string;
-  userHandle?: string;
+export interface AvatarOrIdenticonProps {
+  user: User | { address: string; handle?: string; avatar?: string; };
   size?: SizeOptions | number;
   withBorder?: boolean;
   active?: boolean;
@@ -17,32 +19,39 @@ interface AvatarOrIdenticonProps {
 const { publicRuntimeConfig } = getConfig();
 
 export default function AvatarOrIdenticon({
-  avatarHash,
-  address,
-  userHandle,
+  user,
   size = "md",
   withBorder,
   active = false
 } : AvatarOrIdenticonProps ) {
+  if (!user) 
+    return <></>;
 
-  if (!avatarHash && !address) return <></>;
+  const avatar = user.avatar;
+  const address = user.address;
+  const handle = user.handle ?? truncateAddress(address);
 
   return(
-    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
-    data-testid="avatar-or-identicon">
-      { 
-        avatarHash ? 
+    <div 
+      className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
+      data-testid="avatar-or-identicon"
+    >
+      <If 
+        condition={!!avatar}
+        otherwise={
+          <Identicon 
+            address={address}
+            size={size}
+          />
+        }
+      >
         <Avatar 
-          userLogin={userHandle} 
+          userLogin={handle} 
           size={size} 
-          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatarHash}`}
+          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatar}`}
           className="border-primary" 
-        /> :
-        <Identicon 
-          address={address}
-          size={size}
         />
-      }
+      </If>
     </div>
   );
 }

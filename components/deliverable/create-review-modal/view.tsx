@@ -86,7 +86,7 @@ export default function CreateReviewModalView({
             <div className="d-flex align-items-center flex-wrap-reverse justify-content-start ">
               <div className="d-flex align-items-center justify-content-center me-2 mt-2">
                 <div className="me-2">
-                  <AvatarOrIdenticon user={deliverable?.user?.handle} address={deliverable?.user?.address} />
+                  <AvatarOrIdenticon user={deliverable?.user}/>
                 </div>
                 {deliverable?.user?.handle && (
                   <GithubInfo

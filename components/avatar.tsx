@@ -18,9 +18,10 @@ export default function Avatar({
 }) {
   const SIZES = {
     xsm: 1,
-    sm: 3,
-    md: 4,
-    lg: 5
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5
   };
 
   if (src)

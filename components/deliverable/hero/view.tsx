@@ -89,8 +89,7 @@ export default function DeliverableHeroView({
             <div className="d-flex align-items-center my-2 me-2">
                 <div className="me-2">
                   <AvatarOrIdenticon
-                    address={currentDeliverable?.user?.address}
-                    user={currentDeliverable?.user?.handle}
+                    user={currentDeliverable?.user}
                   />
                 </div>{" "}
 

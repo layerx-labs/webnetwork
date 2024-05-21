@@ -77,7 +77,7 @@ export function ProposalsListItemView ({
             </span>
 
             <AvatarOrIdenticon
-              address={proposal?.deliverable?.user?.address}
+              user={proposal?.deliverable?.user}
               size="xsm"
             />
 

@@ -47,6 +47,7 @@ export default function PullAndProposalHero({
       issueId={issue?.id}
       isProposal={isProposal}
       token={issue?.transactionalToken}
+      avatarHash={proposal?.user?.avatar}
       issueAmount={BigNumber(issue?.developerAmount)}
       onBackClick={onBackClick}
     />
