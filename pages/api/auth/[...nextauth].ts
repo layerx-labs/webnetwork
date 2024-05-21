@@ -95,7 +95,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             language: user.settings?.language,
             notifications: user?.settings?.notifications || false,
             github: user?.githubLink,
-            linkedIn: user?.linkedInLink
+            linkedIn: user?.linkedInLink,
+            avatar: user?.avatar,
           },
         };
       },
