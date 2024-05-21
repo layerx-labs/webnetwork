@@ -4,31 +4,40 @@ import Identicon from "components/identicon"
 import { SizeOptions } from "interfaces/utils";
 
 interface AvatarOrIdenticonProps {
-  user?: string;
+  avatarUrl?: string;
   address?: string;
+  userHandle?: string;
   size?: SizeOptions | number;
   withBorder?: boolean;
   active?: boolean;
 }
 
 export default function AvatarOrIdenticon({
-  user,
+  avatarUrl,
   address,
+  userHandle,
   size = "md",
   withBorder,
   active = false
 } : AvatarOrIdenticonProps ) {
 
-  if (!user && !address) return <></>;
+  if (!avatarUrl && !address) return <></>;
 
   return(
     <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
     data-testid="avatar-or-identicon">
       { 
-         //disabled until image integration
-        /* user ?
-        <Avatar userLogin={user} className="border-primary" size={size} /> :*/
-        <Identicon address={address} size={size} />
+        avatarUrl ? 
+        <Avatar 
+          userLogin={userHandle} 
+          size={size} 
+          src={avatarUrl}
+          className="border-primary" 
+        /> :
+        <Identicon 
+          address={address}
+          size={size}
+        />
       }
     </div>
   );
