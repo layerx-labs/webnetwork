@@ -14,7 +14,7 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 type AvatarFormView = {
   isEditing: boolean;
   userAddress: string;
-  avatarUrl: string;
+  avatarHash: string;
   avatarImage: ImageObject;
   acceptedImageTypes: string;
   isSaving: boolean;
@@ -29,7 +29,7 @@ type AvatarFormView = {
 export function AvatarFormView({
   isEditing,
   userAddress,
-  avatarUrl,
+  avatarHash,
   avatarImage,
   acceptedImageTypes,
   isSaving,
@@ -50,7 +50,7 @@ export function AvatarFormView({
     <div className="d-flex align-items-end gap-2">
       <If condition={!isEditing}>
         <AvatarOrIdenticon
-          avatarUrl={avatarUrl}
+          avatarHash={avatarHash}
           address={userAddress}
           size={isTabletOrMobile ? "md" : "lg"}
           withBorder

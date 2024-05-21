@@ -1,10 +1,12 @@
+import getConfig from "next/config";
+
 import Avatar from "components/avatar"
 import Identicon from "components/identicon"
 
 import { SizeOptions } from "interfaces/utils";
 
 interface AvatarOrIdenticonProps {
-  avatarUrl?: string;
+  avatarHash?: string;
   address?: string;
   userHandle?: string;
   size?: SizeOptions | number;
@@ -12,8 +14,10 @@ interface AvatarOrIdenticonProps {
   active?: boolean;
 }
 
+const { publicRuntimeConfig } = getConfig();
+
 export default function AvatarOrIdenticon({
-  avatarUrl,
+  avatarHash,
   address,
   userHandle,
   size = "md",
@@ -21,17 +25,17 @@ export default function AvatarOrIdenticon({
   active = false
 } : AvatarOrIdenticonProps ) {
 
-  if (!avatarUrl && !address) return <></>;
+  if (!avatarHash && !address) return <></>;
 
   return(
     <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
     data-testid="avatar-or-identicon">
       { 
-        avatarUrl ? 
+        avatarHash ? 
         <Avatar 
           userLogin={userHandle} 
           size={size} 
-          src={avatarUrl}
+          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatarHash}`}
           className="border-primary" 
         /> :
         <Identicon 

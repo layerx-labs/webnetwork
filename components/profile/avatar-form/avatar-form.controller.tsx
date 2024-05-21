@@ -3,7 +3,6 @@ import { useState } from "react";
 import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
-import getConfig from "next/config";
 
 import { AvatarFormView } from "components/profile/avatar-form/avatar-form.view";
 
@@ -13,8 +12,6 @@ import { useUpdateUserAvatar } from "x-hooks/api/user/use-update-user-avatar";
 import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-
-const { publicRuntimeConfig } = getConfig();
 
 export function AvatarForm() {
   const { t } = useTranslation("common");
@@ -59,7 +56,7 @@ export function AvatarForm() {
     <AvatarFormView
       isEditing={isEditing}
       userAddress={currentUser?.walletAddress}
-      avatarUrl={`${publicRuntimeConfig?.urls?.ipfs}/${currentUser?.avatar}`}
+      avatarHash={currentUser?.avatar}
       avatarImage={avatarImage}
       acceptedImageTypes={acceptedImageTypes}
       isSaving={isSaving}
