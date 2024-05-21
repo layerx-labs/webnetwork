@@ -20,8 +20,6 @@ export default function ProposalDeliverableDetails({
     deliverableId: deliverable?.id,
     fromProposal: true
   });
-  const asPath = `/task/${issue?.id}/deliverable/${deliverable?.id}`;
-
   return(
     <DeliverableDetailsView
       id={deliverable?.id}
@@ -29,7 +27,6 @@ export default function ProposalDeliverableDetails({
       deliverableHref={deliverableHref}
       deliverableTitle={deliverable?.title}
       user={deliverable?.user}
-      asPath={asPath}
     />
   );
 }
