@@ -13,7 +13,8 @@ export default function ImageUploader({
   error = false,
   className = "",
   isLoading = false,
-  accept = ".svg"
+  accept = ".svg",
+  circle = false,
 }) {
   const { t } = useTranslation("custom-network");
 
@@ -40,7 +41,7 @@ export default function ImageUploader({
   return (
     <div className="d-flex flex-column align-items-center justify-content-center">
       <label
-        className={`bg-black image-uploader border border-white-50 rounded-10 ${
+        className={`bg-black image-uploader border border-white-50 ${circle ? "rounded-circle" : "rounded-10"} ${
           (lg && "lg") || ""
         } d-flex flex-column text-center align-items-center justify-content-center ${
           (error && "error") || ""
@@ -49,12 +50,13 @@ export default function ImageUploader({
       >
         {isLoading ? (
           <span className="spinner-border spinner-border-xs ml-1" />
-        ) : image.preview || typeof image === "string" ? (
+        ) : image?.preview || typeof image === "string" ? (
           <img
-            src={image.preview || image}
+            src={image?.preview || image}
             alt="dummy"
             width={dimensions.width}
             height={dimensions.height}
+            className={circle ? "rounded-circle" : "rounded-10"}
           />
         ) : (
           <>
