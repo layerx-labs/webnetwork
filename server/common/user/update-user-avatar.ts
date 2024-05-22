@@ -7,8 +7,6 @@ import { HttpBadRequestError } from "server/errors/http-errors";
 export async function updateUserAvatar(req: NextApiRequest) {
   const { files, context: { user } } = req.body;
 
-  console.log("entered endpoint")
-
   const avatarFile = files?.at(0);
 
   if (!avatarFile)
