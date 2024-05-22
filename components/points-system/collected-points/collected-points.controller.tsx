@@ -1,7 +1,6 @@
 import {useEffect} from "react";
 
-import {useTranslation} from "next-i18next";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 import {CollectedPointsView} from "components/points-system/collected-points/collected-points.view";
 
@@ -11,8 +10,6 @@ import useMarketplace from "x-hooks/use-marketplace";
 import {userPointsOfUser} from "x-hooks/use-points-of-user";
 
 export function CollectedPoints() {
-  const { t } = useTranslation("points");
-  
   const { push } = useRouter();
 
   const { goToProfilePage } = useMarketplace();
