@@ -90,6 +90,7 @@
     "subtitle": "Provide your social links",
     "github": "https://github.com/",
     "linkedin": "https://linkedin.com/in/",
+    "twitter": "https://x.com/",
     "success": "Updated social links",
     "error": "Failed to update social links,",
     "invalid-input": "Value is not valid.",
@@ -123,7 +124,8 @@
       "accepted_proposal": "Accepted proposal",
       "add_github": "Fill github link",
       "add_linkedin": "Fill linkedIn link",
-      "add_about": "Add about section"
+      "add_about": "Add about section",
+      "add_twitter": "Add X link"
     },
     "state": {
       "counted": "Counted",
