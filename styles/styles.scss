@@ -641,10 +641,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   .input-group-text {
     border: none;
     color: $gray-600;
+    cursor: pointer;
 
     &.group-disabled {
       color: $gray-700;
       background-color: $gray-900;
+    }
+
+    + .form-control {
+      border-left: 1px solid $gray-800!important;
     }
   }
 
@@ -715,8 +720,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   margin-top: 6px;
 }
 
-.bg-gray-800 {
-  background-color: $gray-800;
+.bg-gray {
+  &-800 {background-color: $gray-800;}
+  &-900 {background-color: $gray-900;}
 }
 
 .description-button {
@@ -880,20 +886,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-radius: 50%;
 }
 
-.font-weight-normal {
-  font-weight: normal !important;
-}
-
-.font-weight-500 {
-  font-weight: 500 !important;
-}
-
-.font-weight-400 {
-  font-weight: 400 !important;
-}
-
-.font-weight-medium {
-  font-weight: 500 !important;
+.font-weight {
+  &-400 { font-weight: 400!important; }
+  &-500,&-medium { font-weight: 500!important; }
+  &-600 { font-weight: 600!important; }
+  &-normal { font-weight: normal!important; }
 }
 
 .min-w-fit {
@@ -1219,7 +1216,7 @@ a.row-button svg {
   height: 24px;
 }
 
-.text-white:hover:not(.btn), .text-gray-150:hover {
+.text-white:hover:not(.btn):not(.not-hover), .text-gray-150:hover {
   svg path {
     fill: white;
   }
@@ -1827,10 +1824,6 @@ input[type="color"] {
   &-right {
     border-right: 1px solid $gray-850;
   }
-}
-
-.border-active {
-  
 }
 
 .svg {

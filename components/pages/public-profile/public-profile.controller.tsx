@@ -81,6 +81,7 @@ export default function PublicProfilePage ({
         github: user?.githubLink,
         linkedIn: user?.linkedInLink
       }}
+      about={user?.about}
     />
   );
 }

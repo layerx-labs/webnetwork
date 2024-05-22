@@ -16,15 +16,18 @@ import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import {AboutForm} from "../../about-form/about-form-controller";
 import {SocialForm} from "../../socials-form/social-form-controller";
 
 interface ProfilePageViewProps { 
   walletAddress: string;
+  handle?: string;
   isCouncil: boolean;
 }
 
 export default function ProfilePageView({
   walletAddress,
+  handle,
   isCouncil,
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
@@ -78,7 +81,7 @@ export default function ProfilePageView({
                 <div className="row mx-0">
                   <InternalLink
                     label={"Go to public profile"}
-                    href={`/profile/${walletAddress}`}
+                    href={`/profile/${handle || walletAddress}`}
                     className="mt-3"
                   />
                 </div>
@@ -87,6 +90,7 @@ export default function ProfilePageView({
           </div>
         </div>
         <SocialForm />
+        <AboutForm />
         <NotificationForm />
         <LanguageForm />
         <Divider bg="gray-850" />

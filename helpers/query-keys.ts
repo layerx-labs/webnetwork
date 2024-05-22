@@ -21,4 +21,8 @@ export const QueryKeys = {
   notifications: (address: string, page: string, read: string) => ["notifications", address, page, read],
   allowListByType: (type: string, networkId: number) => ["allow-list", type, networkId],
   wagmiConfigChains: () => ["wagmi-config-chains"],
+  about: () => ["about"],
+  totalPointsOfUser: (address: string) => ["points", "total", address],
+  pointsEventsOfUser: (address: string) => ["points", "events", address],
+  pointsBase: () => ["points", "base"],
 };

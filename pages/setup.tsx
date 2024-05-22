@@ -2,9 +2,13 @@ import {useEffect, useState} from "react";
 import {Container, Row} from "react-bootstrap";
 
 import {GetServerSideProps} from "next";
+import { getToken } from "next-auth/jwt";
 import {useTranslation} from "next-i18next";
+import getConfig from "next/config";
 import {useRouter} from "next/router";
 
+import { PointsSystemAdministration } 
+  from "components/administration/points-system-administration/points-system-administration.controller";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import {CallToAction} from "components/setup/call-to-action";
 import ChainsSetup from "components/setup/chains-setup";
@@ -13,6 +17,7 @@ import {RegistrySetup} from "components/setup/registry-setup";
 import TabbedNavigation from "components/tabbed-navigation";
 
 import { QueryKeys } from "helpers/query-keys";
+import { lowerCaseCompare } from "helpers/string";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
@@ -21,9 +26,11 @@ import { useUserStore } from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
+const { publicRuntimeConfig, serverRuntimeConfig: { auth: { secret } } } = getConfig();
+
 export default function SetupPage(){
   const { replace } = useRouter();
-  const { t } = useTranslation(["setup", "common"]);
+  const { t } = useTranslation(["setup", "common", "administration"]);
 
   const [activeTab, setActiveTab] = useState("supportedChains");
 
@@ -110,6 +117,11 @@ export default function SetupPage(){
                 defaultNetwork={defaultNetwork}
               />
       )
+    },
+    {
+      eventKey: "points-system",
+      title: t("administration:points-system.title"),
+      component: <PointsSystemAdministration />
     }
   ];
 
@@ -136,6 +148,17 @@ export default function SetupPage(){
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const token = await getToken({ req, secret: secret });
+
+  if (!token?.address || !lowerCaseCompare(token?.address?.toString(), publicRuntimeConfig?.adminWallet))
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/`,
+      },
+      props: {},
+    };
+
   return {
     props: {
       ...(await customServerSideTranslations(req, locale, [
@@ -145,7 +168,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
         "connect-wallet-button",
         "change-token-modal",
         "setup",
-        "profile"
+        "profile",
+        "administration"
       ])),
     },
   };

@@ -6,6 +6,7 @@ import InfoIconEmpty from "assets/icons/info-icon-empty";
 export default function InfoTooltip({
   description = "",
   secondaryIcon = false,
+  iconColor = "gray-500"
 }) {
   const popover = (
     <Popover id="popover-tabbed-description" className="p-2 bg-white">
@@ -25,14 +26,14 @@ export default function InfoTooltip({
           <InfoIcon
             width={14}
             height={14}
-            color="gray-500"
+            color={iconColor}
             className="info"
           />
         ) : (
           <InfoIconEmpty
             width={14}
             height={14}
-            color="gray-500"
+            color={iconColor}
             className="empty-info"
           />
         )}

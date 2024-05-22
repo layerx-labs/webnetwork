@@ -8,6 +8,7 @@ export default function DashboardPage() {
   return (
     <ProfilePageView
       walletAddress={currentUser?.walletAddress}
+      handle={currentUser?.login}
       isCouncil={currentUser?.isCouncil}
     />
   );

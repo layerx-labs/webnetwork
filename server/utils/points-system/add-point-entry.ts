@@ -2,20 +2,11 @@ import {Op} from "sequelize";
 
 import Database from "db/models";
 
-import {Logger} from "../../services/logging";
+import {Logger} from "services/logging";
 
-type ActionName =
-  "locked" |
-  "delegated" |
-  "created_marketplace" |
-  "created_task" |
-  "created_deliverable" |
-  "created_proposal" |
-  "accepted_proposal" |
-  "add_github" |
-  "add_linkedin";
+import {PointEventAction} from "../../../types/point-event-action";
 
-export async function addPointEntry(userId: number, actionName: ActionName, info = {}) {
+export async function addPointEntry(userId: number, actionName: PointEventAction, info = {}) {
 
   const whereActionName =
     {actionName: {[Op.eq]: actionName}}

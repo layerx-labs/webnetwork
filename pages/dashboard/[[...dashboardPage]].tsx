@@ -1,16 +1,18 @@
-import { GetServerSideProps } from "next";
-import { getToken } from "next-auth/jwt";
+import {GetServerSideProps} from "next";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 
 import DashboardRouter from "components/profile/dashboard-router";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { DashboardPageProps } from "types/pages";
+import {DashboardPageProps} from "types/pages";
 
-import { useGetChains } from "x-hooks/api/chain";
-import { useGetProfileBounties, useGetProfilePayments } from "x-hooks/api/pages/profile";
-import { useGetTokens } from "x-hooks/api/token";
+import {useGetChains} from "x-hooks/api/chain";
+import {useGetProfileBounties, useGetProfilePayments} from "x-hooks/api/pages/profile";
+import {useGetTokens} from "x-hooks/api/token";
+
+import {useGetPointsHistory} from "../../x-hooks/api/pages/profile/use-get-points-history";
 
 const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
@@ -44,6 +46,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     proposals: () => useGetProfileBounties(queryWithWallet, "proposer").then(bountiesResult),
     "deliverables": () => useGetProfileBounties(queryWithWallet, "deliverabler").then(bountiesResult),
     "my-marketplace": () => useGetProfileBounties(query, "governor").then(bountiesResult),
+    "my-points": async () => ({
+      history: await useGetPointsHistory(token?.address as string),
+    }),
   };
 
   const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};
@@ -61,7 +66,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
         "custom-network",
         "setup",
         "change-token-modal",
-        "proposal"
+        "proposal",
+        "points",
       ]))
     }
   };

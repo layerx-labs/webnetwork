@@ -6,7 +6,6 @@ import {USER_NOT_FOUND} from "helpers/error-messages";
 
 import {isMethodAllowed} from "server/utils/http";
 
-
 export const withUser = (handler: NextApiHandler, allowedMethods = ['GET']): NextApiHandler => {
   return async (req, res) => {
     if (isMethodAllowed(req.method, allowedMethods))
@@ -14,7 +13,7 @@ export const withUser = (handler: NextApiHandler, allowedMethods = ['GET']): Nex
 
     const token = req.body?.context?.token;
 
-    const user = await models.user.scope("ownerOrGovernor").findByAddress(token.address);
+    const user = await models.user.scope("ownerOrGovernor").findByAddress(token?.address);
 
     if (!user)
       return res.status(401).json({ message: USER_NOT_FOUND });

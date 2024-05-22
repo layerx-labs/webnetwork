@@ -1,0 +1,76 @@
+{
+  "on-going": "On-going",
+  "quests": "quests",
+  "add-your-socials": "Add your socials",
+  "complete-your-profile": "Complete your profile",
+  "other": "Other...",
+  "peding": "Pending",
+  "get": "Get",
+  "add": "Add",
+  "rules": {
+    "add_linkedin": {
+      "title": "Fill LinkedIn link",
+      "pointsLabel": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "add_github": {
+      "title": "Fill Github link",
+      "pointsLabel": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "add_about": {
+      "title": "Fill about",
+      "description": "Let people know more about you and your skills",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "connect_email": {
+      "title": "Confirm email",
+      "description": "You'll be able to receive tasks updates",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "created_task": {
+      "title": "Create task",
+      "description": "Create a task on any marketplace",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
+    },
+    "locked": {
+      "title": "Lock tokens",
+      "description": "Lock tokens on any marketplace and earn points daily",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
+    },
+    "delegated": {
+      "title": "Delegate tokens",
+      "description": "Delegate locked tokens to someone and earn points daily",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
+    },
+    "created_marketplace": {
+      "title": "Create a marketplace",
+      "description": "Launch your own marketplace",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "created_deliverable": {
+      "title": "Create a deliverable",
+      "description": "Create a deliverable on any task",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "created_proposal": {
+      "title": "Create a proposal",
+      "description": "Create a deliverable on any task",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    },
+    "accepted_proposal": {
+      "title": "Have a proposal accepted",
+      "description": "Create a proposal and have it accepted",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
+    }
+  }
+}

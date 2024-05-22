@@ -1,16 +1,17 @@
 import {Curator} from "interfaces/curators";
-import { IssueData } from "interfaces/issue-data";
-import { Proposal } from "interfaces/proposal";
-import { SupportedChainData } from "interfaces/supported-chain-data";
-import { Token } from "interfaces/token";
+import {Proposal} from "interfaces/proposal";
+import {SupportedChainData} from "interfaces/supported-chain-data";
+import {Token} from "interfaces/token";
 
 import {
-  SearchBountiesPaginated,
   LeaderBoardPaginated,
   NetworkPaymentsData,
   PaginatedCuratorOverview,
-  PaginatedData
+  PaginatedData,
+  SearchBountiesPaginated
 } from "types/api";
+
+import {PointEventAction} from "./point-event-action";
 
 export interface ExplorePageProps {
   totalOnTasks: number;
@@ -38,11 +39,22 @@ interface MyMarketplacePageProps {
   bounties: SearchBountiesPaginated;
 }
 
+export type PointsHistory = {
+  actionName: PointEventAction,
+  pointsWon: number,
+  pointsCounted: boolean,
+  info: any,
+  updatedAt: Date,
+}[]
+
 interface DashboardPageProps {
   bounties?: SearchBountiesPaginated;
   payments?: NetworkPaymentsData[];
   chains?: SupportedChainData[];
   curators?: PaginatedData<Curator>;
+  "my-points": {
+    history: PointsHistory
+  }
 }
 
 export interface MyNetworkPageProps {

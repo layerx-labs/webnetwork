@@ -13,8 +13,14 @@ jest.mock('server/utils/jwt', () => ({
   },
 }));
 
-jest.mock('server/utils/add-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
+jest.mock('db/models', () => ({
+  pointsEvents: {
+    findOne: jest.fn(),
+  },
+}));
 
+jest.mock('server/utils/points-system/add-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
+jest.mock('server/utils/points-system/remove-point-entry', () => ({addPointEntry: jest.fn().mockResolvedValue("")}));
 
 describe('updateUserSocials', () => {
   let mockRequest: NextApiRequest;

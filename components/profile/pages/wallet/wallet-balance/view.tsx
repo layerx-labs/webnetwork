@@ -1,22 +1,22 @@
-import { FormControl, InputGroup } from "react-bootstrap";
+import {FormControl, InputGroup} from "react-bootstrap";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import CloseIcon from "assets/icons/close-icon";
 import SearchIcon from "assets/icons/search-icon";
 
-import { FlexColumn, FlexRow } from "components/common/flex-box/view";
+import {FlexColumn, FlexRow} from "components/common/flex-box/view";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
 import IssueMobileFilters from "components/issue-filters/mobile-filters";
 import ChainFilter from "components/lists/filters/chain/controller";
 import NothingFound from "components/nothing-found";
-import { TokenBalanceType } from "components/profile/token-balance";
+import {TokenBalanceType} from "components/profile/token-balance";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import {formatNumberToCurrency} from "helpers/formatNumber";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
 import NetworkItem from "../../../network-item/controller";
 
@@ -108,7 +108,7 @@ export default function WalletBalanceView({
       <FlexRow className="d-flex flex-wrap justify-content-between align-items-center mb-2">
         <span className="text-white mt-2">{t("profile:balances-transactional-tokens")}</span>
         <div className="d-flex mt-2 caption-medium text-white bg-dark-gray py-2 px-3 rounded-3 font-weight-medium">
-          {formatStringToCurrency(totalAmount)}
+          {formatNumberToCurrency(totalAmount, {maximumFractionDigits: 4})}
           <span className="text-white-30 ml-1 mr-2">
             {!hasNoConvertedToken ? defaultFiat : t("misc.token_other")}
           </span>

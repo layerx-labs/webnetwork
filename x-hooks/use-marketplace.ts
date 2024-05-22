@@ -12,6 +12,8 @@ import {lowerCaseCompare} from "helpers/string";
 import {Network} from "interfaces/network";
 import {ProfilePages} from "interfaces/utils";
 
+import { URL } from "types/components";
+
 import getNetworkOverviewData from "x-hooks/api/get-overview-data";
 import {useSearchNetworks} from "x-hooks/api/marketplace";
 import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
@@ -50,15 +52,22 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     };
   }
 
-  function goToProfilePage(profilePage: ProfilePages, params = undefined) {
-    const path = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
-    return push({
+  function getDashboardPageUrl(profilePage: ProfilePages, params = undefined): URL {
+    const asPath = profilePage === "dashboard" ? "dashboard" : `dashboard/${profilePage}`;
+    const href = {
       pathname: "/dashboard/[[...dashboardPage]]",
       query: {
         ...query,
         ...params
       }
-    }, `/${path}`);
+    };
+
+    return { href, asPath: `/${asPath}` };
+  }
+
+  function goToProfilePage(profilePage: ProfilePages, params = undefined) {
+    const { href, asPath} = getDashboardPageUrl(profilePage, params);
+    return push(href, asPath);
   }
 
   function getTotalNetworkToken(networkName?: string, chainShortName?: string) {
@@ -144,6 +153,7 @@ export default function useMarketplace(marketplaceName?: string, chainName?: str
     clear,
     updateParamsOfActive: _updateParamsOfActive,
     getURLWithNetwork,
+    getDashboardPageUrl,
     goToProfilePage,
     getTotalNetworkToken,
   };

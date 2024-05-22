@@ -16,6 +16,9 @@ import { UserEmailErrors } from "server/errors/error-messages";
 import { HttpBadRequestError, HttpConflictError } from "server/errors/http-errors";
 import { emailService } from "server/services/email";
 import { EmailTemplates } from "server/templates";
+import { addPointEntry } from "server/utils/points-system/add-point-entry";
+import { removePointEntry } from "server/utils/points-system/remove-point-entry";
+import { updatePointEntryInfo } from "server/utils/points-system/update-point-entry";
 import { TemplateProcessor } from "server/utils/template";
 
 const { 
@@ -65,6 +68,13 @@ export async function put(req: NextApiRequest) {
   const { email, context } = req.body;
   const { user } = context;
 
+  const connectEmailPointEvent = await models.pointsEvents.findOne({
+    where: {
+      userId: user.id,
+      actionName: "connect_email"
+    }
+  });
+
   if (!email) {
     user.email = null;
     user.isEmailConfirmed = false;
@@ -72,6 +82,9 @@ export async function put(req: NextApiRequest) {
     user.emailVerificationSentAt = null;
 
     await user.save();
+
+    if (connectEmailPointEvent)
+      await removePointEntry(connectEmailPointEvent.id);
 
     return;
   }
@@ -113,4 +126,11 @@ export async function put(req: NextApiRequest) {
   user.emailVerificationSentAt = new Date();
 
   await user.save();
+
+  try {
+    await addPointEntry(user.id, "connect_email", { value: email });
+  } catch(error) {
+    if (connectEmailPointEvent)
+      await updatePointEntryInfo(connectEmailPointEvent.id, { value: email });
+  }
 }

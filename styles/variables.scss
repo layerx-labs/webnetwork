@@ -30,13 +30,16 @@ $gray-900: #17171C;
 $gray-950: #0B0C0E;
 $blue-200: #B3B9F4;
 $blue-400: #6873E9;
+$yellow-400: #FFDE6B;
 $yellow-500: #FFD646;
+$yellow-850: #4D4015;
 $light-gray: #434758;
 $blue: #4250e4;
 $blue-dark: #283089;
 // Fix-ME: Remove disabled color
 $disabled: #423b51;
 $green-500: #35E0AD;
+$green-600: #2AB38A;
 $blue-50: #ECEDFC;
 $blue-600: #3540B6;
 $blue-150: #C6CAF7;
@@ -129,9 +132,12 @@ $more-bg: (
   "light-warning": $light-warning,
   "blue-dark": $blue-dark,
   "blue-shadow": $bg-blue-shadow,
+  "yellow-400": $yellow-400,
   "yellow-500": $yellow-500,
+  "yellow-850": $yellow-850,
   "green-500": $green-500,
   "green-500-90": #104334E5,
+  "green-600": $green-600,
   "blue-50": $blue-50,
   "blue-600": $blue-600,
 );
@@ -160,9 +166,12 @@ $more-colors: (
   "light-gray": $light-gray,
   "black": $black,
   "white": #fff,
+  "yellow-400": $yellow-400,
   "yellow-500": $yellow-500,
+  "yellow-850": $yellow-850,
   "green-500": $green-500,
   "green-500-90": #104334E5,
+  "green-600": $green-600,
   "blue-50": $blue-50,
   "blue-150": $blue-150,
   "blue-600": $blue-600,

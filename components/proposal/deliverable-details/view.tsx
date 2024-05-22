@@ -12,7 +12,6 @@ interface DeliverableDetailsViewProps {
   id: number;
   user: User;
   deliverableTitle?: string;
-  asPath?: string;
   createdAt: Date;
   deliverableHref: UrlObject;
 }
@@ -21,7 +20,6 @@ export default function DeliverableDetailsView({
   id,
   user,
   deliverableTitle,
-  asPath,
   createdAt,
   deliverableHref,
 }: DeliverableDetailsViewProps) {
@@ -42,7 +40,6 @@ export default function DeliverableDetailsView({
             title={t("actions.go-to-deliverable")}
             className="caption-large text-gray-500 p-0 hover-primary text-decoration-underline"
             label={`#${id || ""}`}
-            asPath={asPath}
             transparent
           />
         </div>

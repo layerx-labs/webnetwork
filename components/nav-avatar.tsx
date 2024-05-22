@@ -2,6 +2,7 @@ import {useState} from "react";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
@@ -9,6 +10,7 @@ import ExternalLinkIcon from "assets/icons/external-link-icon";
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
+import { PointsBadge } from "components/common/points/points-badge.view";
 
 import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
 import { getProfileLinks } from "helpers/navigation-links";
@@ -19,6 +21,7 @@ import { ProfilePages } from "interfaces/utils";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
+import { userPointsOfUser } from "x-hooks/use-points-of-user";
 
 export default function NavAvatar() {
   const { asPath } = useRouter();
@@ -26,9 +29,10 @@ export default function NavAvatar() {
 
   const [visible, setVisible] = useState(false);
 
-  const { signOut } = useAuthentication();
-  const { goToProfilePage } = useMarketplace();
   const { currentUser } = useUserStore();
+  const { signOut } = useAuthentication();
+  const { totalPoints } = userPointsOfUser();
+  const { goToProfilePage, getDashboardPageUrl } = useMarketplace();
 
   const username =
     currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
@@ -86,8 +90,8 @@ export default function NavAvatar() {
   );
 
   const LinksSession = ({ children }) => (
-    <div className="row align-items-center border-bottom border-light-gray">
-      <div className="d-flex flex-column gap-3 pt-3 pb-3 px-0">
+    <div className="row align-items-center border-bottom border-light-gray py-2">
+      <div className="d-flex flex-column gap-3 py-1 px-0">
         {children}
       </div>
     </div>
@@ -101,6 +105,8 @@ export default function NavAvatar() {
     Link(t("main-nav.nav-avatar.join-discord"), DISCORD_LINK),
     Link(t("main-nav.nav-avatar.follow-on-twitter"), TWITTER_LINK),
   ];
+
+  const myPointsUrl = getDashboardPageUrl("my-points");
 
   const overlay = (
     <Popover id="profile-popover">
@@ -130,6 +136,24 @@ export default function NavAvatar() {
               </div>
           </div>
         </div>
+        <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath}>
+          <div 
+            className="row align-items-center border-bottom border-light-gray py-2 cursor-pointer"
+            onClick={() => setVisible(false)}
+          >
+            <div className="col px-0">
+              <span className="text-white text-gray-hover sm-regular">
+                {t("main-nav.nav-avatar.your-points")}
+              </span>
+            </div>
+
+            <div className="col-auto px-0">
+              <PointsBadge 
+                points={totalPoints}
+              />
+            </div>
+          </div>
+        </NextLink>
 
         <LinksSession>
           {getProfileLinks(t).map(ProfileInternalLink)}
