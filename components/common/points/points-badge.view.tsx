@@ -17,11 +17,12 @@ export function PointsBadge({
     available: { bg: "gray-700", text: "white", icon: <StarFilledIcon /> },
     claimed: { bg: "green-600", text: "black", icon: <StarIcon /> },
   }[variant];
+  const pointsLabel = typeof points === "number" ? formatNumberToString(points, 0) : points;
 
   return(
     <div className={`d-flex align-items-center gap-1 bg-${bg} text-${text} not-hover px-2 py-1 border-radius-4`}>
       {icon}
-      <span className={`xs-small font-weight-normal text-${text}`}>{formatNumberToString(points, 0)}</span>
+      <span className={`xs-small font-weight-normal text-${text}`}>{pointsLabel}</span>
     </div>
   );
 }
