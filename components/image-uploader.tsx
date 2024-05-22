@@ -27,7 +27,7 @@ export default function ImageUploader({
 
   function handleChange(event) {
     if (!event.target.files.length) return;
-    
+
     onChange({
       preview: URL.createObjectURL(event.target.files[0]),
       raw: event.target.files[0]
