@@ -58,7 +58,7 @@ describe('changeUserHandle', () => {
     (UserRoleUtils.hasAdminRole as jest.Mock).mockReturnValue(false);
 
     mockRequest.query = {handle: 'newHandle'};
-    console.log(mockRequest)
+
     await expect(changeUserHandle(mockRequest as NextApiRequest)).rejects.toThrow(HttpForbiddenError);
   });
 
