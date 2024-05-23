@@ -1,14 +1,14 @@
-import { useEffect } from "react";
+import {useEffect} from "react";
 
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+import {useTranslation} from "next-i18next";
+import {useRouter} from "next/router";
 
-import { CollectedPointsView } from "components/points-system/collected-points/collected-points.view";
+import {CollectedPointsView} from "components/points-system/collected-points/collected-points.view";
 
-import { PointsEvents } from "interfaces/points";
+import {PointsEvents} from "interfaces/points";
 
 import useMarketplace from "x-hooks/use-marketplace";
-import { userPointsOfUser } from "x-hooks/use-points-of-user";
+import {userPointsOfUser} from "x-hooks/use-points-of-user";
 
 export function CollectedPoints() {
   const { t } = useTranslation("points");
@@ -31,7 +31,7 @@ export function CollectedPoints() {
       return "linkedin";
     if (actionName?.includes("github"))
       return "github";
-    if (actionName?.includes("x"))
+    if (actionName?.includes("twitter"))
       return "x";
   };
   const actions = {
@@ -43,6 +43,7 @@ export function CollectedPoints() {
     "add_github": () => push("/dashboard"),
     "connect_email": () => push("/dashboard"),
     "add_about": () => push("/dashboard"),
+    "add_twitter": () => push("/dashboard"),
   };
 
   const { onGoing, socials, profile, other } = pointsBase.reduce((acc, curr) => {
@@ -56,7 +57,7 @@ export function CollectedPoints() {
       onActionClick: actions[curr.actionName],
     };
 
-    if (["linkedin", "github", "x"].some(social => curr.actionName.includes(social)))
+    if (["linkedin", "github", "twitter"].some(social => curr.actionName.includes(social)))
       acc.socials.push(currUpdated);
     else if (["email", "add_about"].some(e => curr.actionName.includes(e)))
       acc.profile.push(currUpdated);
