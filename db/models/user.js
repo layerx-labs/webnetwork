@@ -45,6 +45,9 @@ class User extends Model {
       linkedInLink: {
         type: DataTypes.STRING,
       },
+      twitterLink: {
+          type: DataTypes.STRING,
+      },
       totalPoints: {
         type: DataTypes.FLOAT,
         allowNull: true,

@@ -12,18 +12,18 @@ import {getUserByAddress} from "./get-user-by-address";
 
 export async function updateUserSocials(req: NextApiRequest) {
 
-  const {github, linkedin} = req.body;
+  const {github, linkedin, twitter} = req.body;
   const repoSocialRegex = /^https:\/\/(gitlab|github)\.com\/[a-zA-Z0-9_]*$/;
   const linkedInRegex = /^https:\/\/linkedin\.com\/in\/[a-zA-Z0-9_]*$/;
+  const xComRegex = /^https:\/\/(twitter|x)\.com\/[a-zA-Z0-9_]*$/;
 
-  if (github === undefined && linkedin === undefined)
+  if (github === undefined && linkedin === undefined && twitter === undefined)
     throw new HttpBadRequestError(BadRequestErrors.MissingParameters);
 
-  if (github && !repoSocialRegex.test(github))
-    throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
-
-  if (linkedin && !linkedInRegex.test(linkedin))
-    throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
+  const regexTest = [[github, repoSocialRegex], [linkedin, linkedInRegex], [twitter, xComRegex],]
+  for (const [value, regex] of regexTest)
+    if (value && !regex.test(value))
+      throw new HttpBadRequestError(BadRequestErrors.WrongParameters);
 
   const user = await getUserByAddress(req);
 
@@ -33,6 +33,7 @@ export async function updateUserSocials(req: NextApiRequest) {
   const update = {
     ...github !== undefined ? {githubLink: github} : {},
     ...linkedin !== undefined ? {linkedInLink: linkedin} : {},
+    ...twitter !== undefined ? {twitterLink: twitter} : {},
   }
 
   const removePoints = async (actionName: string) => {
@@ -48,17 +49,19 @@ export async function updateUserSocials(req: NextApiRequest) {
         .catch(e => Logger.info(e?.message))
   }
 
-  if (update.githubLink)
-    await addPointEntry(user.id, "add_github", { value: update.githubLink }).catch(e => Logger.info(e?.message));
-  else
-    await removePoints("add_github");
+  const socials = [
+    [update.githubLink, "add_github"],
+    [update.linkedInLink, "add_linkedin"],
+    [update.twitterLink, "add_twitter"],
+  ];
 
+  console.log(`UPDATING`, update);
 
-  if (update.linkedInLink)
-    await addPointEntry(user.id, "add_linkedin", { value: update.linkedInLink }).catch(e => Logger.info(e?.message));
-  else
-    await removePoints("add_linkedin");
-
+  for (const [value, action] of socials) {
+    if (value)
+      await addPointEntry(user.id, action, {value}).catch(e => Logger.info(e?.message));
+    else await removePoints(action)
+  }
 
   await user.update(update);
   await user.save();

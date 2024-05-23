@@ -6,36 +6,40 @@ import {useTranslation} from "next-i18next";
 import Button from "../../button";
 
 
-export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
+export function SocialFormView({onSubmit, githubLink, linkedInLink, twitterLink, isSaving}) {
   const { t } = useTranslation(["common", "profile"]);
 
   const [ghLink, setGhLink] =
     useState<string>(githubLink);
   const [liLink, setLinkedInLink] =
     useState<string>(linkedInLink);
+  const [twitter, setTwitterLink] =
+    useState<string>(twitterLink);
 
   const isInputValid = (txt: string) => /^[a-zA-Z0-9_]*$/.test(txt);
 
   const isFormValid = () =>
-    (githubLink !== ghLink || linkedInLink !== liLink) &&
+    (githubLink !== ghLink || linkedInLink !== liLink || twitter !== twitterLink) &&
     (ghLink && isInputValid(ghLink) || true) &&
     (liLink && isInputValid(liLink) || true) &&
+    (twitter && isInputValid(twitter) || true) &&
     !isSaving;
 
-  const selectInput = (id: string) => {
-    console.log(document.querySelector(`#${id}`));
+  const selectInput = (id: string) =>
     (document.querySelector(`#${id}`) as HTMLInputElement)?.select();
-  }
+
 
   const rows = [
     {text: t("profile:social.github"), onChange: setGhLink, value: ghLink, id: "github-link"},
     {text: t("profile:social.linkedin"), onChange: setLinkedInLink, value: liLink, id: "linkedin-link"},
+    {text: t("profile:social.twitter"), onChange: setTwitterLink, value: twitter, id: "twitter-link"},
   ]
 
   useEffect(() => {
     setGhLink(githubLink);
     setLinkedInLink(linkedInLink);
-  }, [githubLink, linkedInLink]);
+    setTwitterLink(twitterLink);
+  }, [githubLink, linkedInLink, twitterLink]);
 
   return <div className="row py-3">
     <div className="base-medium text-white mb-1">{t("profile:social.title")}</div>
@@ -55,7 +59,7 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, isSaving}) {
       }
     <div className="row mt-3">
       <div className="col">
-        <Button onClick={() => onSubmit(ghLink, liLink)} disabled={!isFormValid()}>
+        <Button onClick={() => onSubmit(ghLink, liLink, twitter)} disabled={!isFormValid()}>
             <span>{t("common:save")}</span>
             {isSaving ? (<span className="spinner-border spinner-border-xs ml-1" />) : ("")}
           </Button>

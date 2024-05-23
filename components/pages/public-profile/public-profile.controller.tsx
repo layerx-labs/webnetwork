@@ -86,7 +86,8 @@ export default function PublicProfilePage ({
       type={type}
       socials={{
         github: user?.githubLink,
-        linkedIn: user?.linkedInLink
+        linkedIn: user?.linkedInLink,
+        twitter: user?.twitterLink,
       }}
       about={user?.about}
       taikaiPops={pops}
