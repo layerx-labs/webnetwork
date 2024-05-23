@@ -10,12 +10,14 @@ import {truncateAddress} from "helpers/truncate-address";
 export default function InputCommentView({
   handle,
   userAddress,
+  avatarHash,
   comment,
   onCommentSubmit,
   onCommentChange ,
 }: {
   handle?: string;
   userAddress: string;
+  avatarHash: string;
   comment: string;
   onCommentSubmit: (...props) => void;
   onCommentChange : (e: ChangeEvent<HTMLTextAreaElement>) => void
@@ -27,8 +29,11 @@ export default function InputCommentView({
       <div className="d-flex align-items-center mb-2">
         <div className="d-flex align-items-center text-truncate">
           <AvatarOrIdenticon
-            user={handle}
-            address={userAddress}
+            user={{
+              avatar: avatarHash,
+              handle,
+              address: userAddress,
+            }}
             size="xsm"
           />
           <span className="xs-medium ms-2 text-truncate">

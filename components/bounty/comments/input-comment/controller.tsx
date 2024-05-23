@@ -14,10 +14,12 @@ import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 export default function InputComment({
   handle,
   userAddress,
+  avatar,
   type,
   ids
 }: {
   handle?: string;
+  avatar?: string;
   userAddress: string;
   type: TypeComment;
   ids: IdsComment;
@@ -54,6 +56,7 @@ export default function InputComment({
     <InputCommentView
       handle={handle}
       userAddress={userAddress}
+      avatarHash={avatar}
       comment={comment}
       onCommentChange={onCommentChange}
       onCommentSubmit={addComment}

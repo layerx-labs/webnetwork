@@ -20,6 +20,7 @@ export default async function get(query: ParsedUrlQuery) {
       count(*) OVER() AS "count",
       address, 
       handle,
+      avatar,
       COUNT(issue) AS numberNfts,
       array_to_string(array_agg(DISTINCT "logoIcon"), ', ') AS networksLogos,
       array_to_string(array_agg(DISTINCT icon), ', ') AS chainsLogos
@@ -27,6 +28,7 @@ export default async function get(query: ParsedUrlQuery) {
       SELECT 
         up.address,
         u."handle" AS handle,
+        u."avatar" AS avatar,
         i.id AS issue, 
         n."logoIcon", 
         c.icon
@@ -48,7 +50,7 @@ export default async function get(query: ParsedUrlQuery) {
       ${networkName === 'all' ? '' : networkName ? `AND n.name = LOWER('${networkName}')` : ""}
       ${address  ? `AND u.address = LOWER('${address}')` : ""}
     ) tbl
-    GROUP BY address, handle
+    GROUP BY address, handle, avatar
     ORDER BY COUNT(issue) ${order ? order : "DESC"}
     OFFSET ${OFFSET} LIMIT ${DEFAULT_ITEMS_PER_PAGE};
 `;
@@ -62,7 +64,7 @@ export default async function get(query: ParsedUrlQuery) {
         count: leaderboards?.length ? leaderboards[0]?.count : 0,
         rows: leaderboards.map((l) => ({
           ...l,
-          ... l?.handle ? {user: { handle: l?.handle }} : null,
+          ... l?.handle ? {user: { handle: l?.handle, avatar: l?.avatar }} : null,
           numberNfts: l?.numbernfts,
           networkslogos: l?.chainslogos?.split(", "),
           marketplacelogos: l?.networkslogos?.split(", "),

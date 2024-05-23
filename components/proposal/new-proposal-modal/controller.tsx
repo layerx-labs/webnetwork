@@ -62,7 +62,8 @@ export default function ProposalModal({
   const paymentInfos: PaymentInfoProps[] = [
     {
       address: deliverableUserAddress,
-      login: deliverableUserLogin,
+      login: deliverableUserLogin, 
+      avatar: currentDeliverable?.user?.avatar,
       amount: distributedAmounts?.proposals?.at(0)?.value,
       symbol: currentBounty?.transactionalToken?.symbol,
       percentage: distributedAmounts?.proposals?.at(0)?.percentage,
@@ -71,6 +72,7 @@ export default function ProposalModal({
     {
       address: currentUser?.walletAddress,
       login: currentUser?.login,
+      avatar: currentUser?.avatar,
       amount: distributedAmounts?.proposerAmount?.value,
       symbol: currentBounty?.transactionalToken?.symbol,
       percentage: distributedAmounts?.proposerAmount?.percentage,
@@ -114,8 +116,7 @@ export default function ProposalModal({
                 </span>
                 <div className="d-flex align-items-center mt-1 gap-2">
                   <AvatarOrIdenticon
-                    address={deliverable?.user?.address}
-                    user={deliverable?.user?.handle}
+                    user={deliverable?.user}
                     size="xsm"
                   />
                   <span className="xs-small text-gray-500 font-weight-normal text-capitalize">

@@ -57,6 +57,10 @@ class User extends Model {
         type: DataTypes.STRING(512),
         allowNull: true,
         defaultValue: ""
+      },
+      avatar: {
+        type: DataTypes.STRING,
+        allowNull: true
       }
     },
     {

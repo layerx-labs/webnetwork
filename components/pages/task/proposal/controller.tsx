@@ -110,11 +110,15 @@ export default function ProposalPage() {
                                                       amountTotal,
                                                       parsedProposal?.distributions);
 
-    const proposals = distributions.proposals.map(({ recipient, ...rest }) => ({
-      ...rest,
-      recipient,
-      handle: parsedProposal?.distributions?.find(p => p.recipient === recipient)?.user?.handle
-    }));
+    const proposals = distributions.proposals.map(({ recipient, ...rest }) => {
+      const user = parsedProposal?.distributions?.find(p => p.recipient === recipient)?.user;
+      return {
+        ...rest,
+        recipient,
+        handle: user?.handle,
+        avatar: user?.avatar,
+      }
+    });
 
     setDistributedAmounts({
       ...distributions,

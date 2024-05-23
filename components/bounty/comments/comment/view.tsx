@@ -27,8 +27,7 @@ export default function Comment({
         <div className="d-flex align-items-baseline flex-wrap">
           <FlexColumn className="justify-content-center">
             <AvatarOrIdenticon
-              user={user?.handle}
-              address={userAddress}
+              user={user}
               size="xsm"
             />
           </FlexColumn>

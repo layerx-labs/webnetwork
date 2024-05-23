@@ -11,6 +11,7 @@ export default function DistributionBarItem({
   label = "",
   description = "",
   progressColor = "primary",
+  avatar = null,
 }) {
   return (
     <div
@@ -25,7 +26,14 @@ export default function DistributionBarItem({
           </span>
         }
       >
-        <AvatarOrIdenticon user={handle} address={recipient} size="sm"/>
+        <AvatarOrIdenticon
+          user={{
+            address: recipient,
+            handle,
+            avatar,
+          }} 
+          size="sm"
+        />
       </If>
 
       <div className="d-flex gap-1">
