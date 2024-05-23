@@ -1,11 +1,11 @@
-import { GetServerSideProps } from "next";
+import {GetServerSideProps} from "next";
 
 import PublicProfilePage from "components/pages/public-profile/public-profile.controller";
 
-import { emptyPaginatedData } from "helpers/api";
-import { isAddress } from "helpers/is-address";
+import {emptyPaginatedData} from "helpers/api";
+import {isAddress} from "helpers/is-address";
 
-import { User } from "interfaces/api";
+import {User} from "interfaces/api";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
@@ -16,11 +16,14 @@ import {
   SearchBountiesPaginated
 } from "types/api";
 
-import { useSearchDeliverables } from "x-hooks/api/deliverable/use-search-deliverables";
-import { useSearchPayments } from "x-hooks/api/payment/use-search-payments";
-import { useSearchProposals } from "x-hooks/api/proposal/use-search-proposals";
-import { getBountiesListData } from "x-hooks/api/task";
-import { useGetUserByAddress, useGetUserByLogin } from "x-hooks/api/user";
+import {useSearchDeliverables} from "x-hooks/api/deliverable/use-search-deliverables";
+import {useSearchPayments} from "x-hooks/api/payment/use-search-payments";
+import {useSearchProposals} from "x-hooks/api/proposal/use-search-proposals";
+import {getBountiesListData} from "x-hooks/api/task";
+import {useGetUserByAddress, useGetUserByLogin} from "x-hooks/api/user";
+
+import {AnkrNftAsset} from "../../types/ankr-nft-asset";
+import {getTaikaiPops} from "../../x-hooks/api/user/get-taikai-pops";
 
 export interface PublicProfileProps {
   user: User;
@@ -28,13 +31,14 @@ export interface PublicProfileProps {
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
   payments?: PaymentPaginatedData;
+  pops?: AnkrNftAsset[];
 }
 
 export default function PublicProfile(props: PublicProfileProps) {
   return <PublicProfilePage {...props} />;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, query, locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({req, query, locale}) => {
   const type = query?.type?.toString() || "won";
   const identifier = query?.identifier?.toString();
 
@@ -59,14 +63,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     deliverables: emptyPaginatedData,
     proposals: emptyPaginatedData,
     payments: emptyPaginatedData,
+    pops: [],
   };
 
-  const getTasks = async (filter: "receiver" | "creator") => getBountiesListData({
-    [filter]: user.address,
-    ...query
-  })
-    .then(({ data }) => data)
-    .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+  const getTasks = async (filter: "receiver" | "creator") =>
+    getBountiesListData({[filter]: user.address, ...query})
+      .then(({data}) => data)
+      .catch(() => emptyPaginatedData as SearchBountiesPaginated);
 
   switch (type) {
   case "won":
@@ -76,13 +79,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     pageData.tasks = await getTasks("creator");
     break;
   case "submissions":
-    pageData.deliverables = await useSearchDeliverables({ creator: user.address, ...query });
+    pageData.deliverables = await useSearchDeliverables({creator: user.address, ...query});
     break;
   case "proposals":
-    pageData.proposals = await useSearchProposals({ creator: user.address, ...query });
+    pageData.proposals = await useSearchProposals({creator: user.address, ...query});
     break;
   case "nfts":
-    pageData.payments = await useSearchPayments({ wallet: user.address, ...query });
+    pageData.payments = await useSearchPayments({wallet: user.address, ...query});
+    break;
+  case "taikai-pop":
+    pageData.pops = await getTaikaiPops(user.address);
+    break;
   }
 
   return {

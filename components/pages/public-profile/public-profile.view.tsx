@@ -20,6 +20,8 @@ import useBreakPoint from "x-hooks/use-breakpoint";
 
 import {Github} from "../../../assets/icons/github";
 import {Linkedin} from "../../../assets/icons/linkedin";
+import {AnkrNftAsset} from "../../../types/ankr-nft-asset";
+import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
   userAddress: string;
@@ -40,6 +42,8 @@ interface PublicProfileViewProps {
     linkedIn: string;
   };
   about?: string;
+  taikaiPops: AnkrNftAsset[],
+  isTaikaiPoP: boolean,
 }
 
 export default function PublicProfileView({
@@ -58,6 +62,8 @@ export default function PublicProfileView({
                                             type = "won",
                                             socials = null,
                                             about = null,
+                                            isTaikaiPoP,
+                                            taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
 
@@ -68,6 +74,7 @@ export default function PublicProfileView({
     submissions: "submissions",
     proposals: "proposals",
     nfts: "nfts",
+    pops: "pops"
   }[type] || "network") as TasksListItemVariant;
 
   return (
@@ -160,6 +167,11 @@ export default function PublicProfileView({
               payments={payments}
             />
           </If>
+
+          <If condition={isTaikaiPoP}>
+            <TaikaiPopView assets={taikaiPops} />
+          </If>
+
         </div>
       </div>
     </CustomContainer>
