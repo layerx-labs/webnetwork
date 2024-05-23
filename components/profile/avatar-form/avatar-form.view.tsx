@@ -54,7 +54,7 @@ export function AvatarFormView({
             address: userAddress,
             avatar: avatarHash
           }}
-          size={isTabletOrMobile ? "md" : "lg"}
+          size={isTabletOrMobile ? "md" : "xl"}
           withBorder
         />
 
