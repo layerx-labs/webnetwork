@@ -9,4 +9,5 @@ export type PointEventAction =
   "add_github" |
   "add_linkedin" |
   "add_about" | 
-  "connect_email";
+  "connect_email" |
+  "add_avatar";
