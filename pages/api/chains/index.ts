@@ -19,4 +19,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-export default AdminRoute(handler);
+export default AdminRoute(handler, ["GET"]);
