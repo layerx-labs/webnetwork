@@ -32,7 +32,7 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, twitterLink,
   const rows = [
     {text: t("profile:social.github"), onChange: setGhLink, value: ghLink, id: "github-link"},
     {text: t("profile:social.linkedin"), onChange: setLinkedInLink, value: liLink, id: "linkedin-link"},
-    {text: t("profile:social.twitter"), onChange: setTwitterLink, value: twitter, id: "twitter-link"},
+    {text: t("profile:social.twitter"), onChange: setTwitterLink, value: twitter, id: "xcom-link"},
   ]
 
   useEffect(() => {
