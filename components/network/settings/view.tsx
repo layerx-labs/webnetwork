@@ -15,12 +15,9 @@ interface MyNetworkSettingsViewProps {
   tabs: MiniTabsItem[];
   tabsProps: TabsProps[];
   activeTab: string;
-  isAbleToSave?: boolean;
-  isUpdating?: boolean;
   isWalletConnected?: boolean;
   networkAddress: string;
   isNetworkUnregistered?: boolean;
-  handleSubmit: () => Promise<void>;
   updateNetworkData: () => Promise<void>;
 }
 
@@ -29,12 +26,9 @@ export default function MyNetworkSettingsView({
   tabs,
   tabsProps,
   activeTab,
-  isAbleToSave,
-  isUpdating,
   isWalletConnected,
   networkAddress,
   isNetworkUnregistered,
-  handleSubmit,
   updateNetworkData,
 }: MyNetworkSettingsViewProps) {
   const { t } = useTranslation(["common", "custom-network", "bounty"]);
@@ -56,23 +50,6 @@ export default function MyNetworkSettingsView({
       />
 
       {tabsProps.find(({ eventKey }) => activeTab === eventKey)?.component}
-
-      <If condition={isAbleToSave}>
-        <Row className="mt-3 mb-4">
-          <Col xs="12" xl="auto">
-            <Row className="mx-0">
-              <ContractButton
-                onClick={handleSubmit}
-                disabled={isUpdating}
-                isLoading={isUpdating}
-                data-testid="save-changes-btn"
-              >
-                <span>{t("misc.save-changes")}</span>
-              </ContractButton>
-            </Row>
-          </Col>
-        </Row>
-      </If>
     </>
   );
 }

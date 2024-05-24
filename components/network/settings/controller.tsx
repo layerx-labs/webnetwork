@@ -13,26 +13,18 @@ import MyNetworkSettingsView from "components/network/settings/view";
 
 import { useNetworkSettings } from "contexts/network-settings";
 
-import { psReadAsText } from "helpers/file-reader";
-import { QueryKeys } from "helpers/query-keys";
-
 import { AllowListTypes } from "interfaces/enums/marketplace";
 import { Network } from "interfaces/network";
 
 import { SearchBountiesPaginated } from "types/api";
 
-import { useUpdateNetwork } from "x-hooks/api/marketplace";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
-import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface MyNetworkSettingsProps {
   network: Network;
   bounties: SearchBountiesPaginated;
-  updateEditingNetwork: () => Promise<void>;
 }
 
 export interface TabsProps {
@@ -44,29 +36,18 @@ export interface TabsProps {
 export default function MyNetworkSettings ({
   network,
   bounties,
-  updateEditingNetwork,
 }: MyNetworkSettingsProps) {
-  const {t} = useTranslation(["common", "custom-network", "bounty"]);
+  const { t } = useTranslation(["common", "custom-network", "bounty"]);
 
   const [tabs, setTabs] = useState<TabsProps[]>([]);
-  const [errorBigImages, setErrorBigImages] = useState(false);
   const [activeTab, setActiveTab] = useState("logo-and-colours");
 
-  const {currentUser} = useUserStore();
   const marketplace = useMarketplace();
-  const {colorsToCSS} = useNetworkTheme();
-  const {service: daoService} = useDaoStore();
-  const {connectedChain} = useSupportedChain();
-  const {details, settings, forcedNetwork, clearState} = useNetworkSettings();
+  const { currentUser } = useUserStore();
+  const { colorsToCSS } = useNetworkTheme();
+  const { settings } = useNetworkSettings();
 
   const isGovernorRegistry = currentUser?.isAdmin;
-  const chainId = connectedChain?.id;
-  const {mutate: updateNetwork, isPending: isUpdating} = useReactQueryMutation({
-    queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId),
-    mutationFn: useUpdateNetwork,
-    toastSuccess: t("custom-network:messages.refresh-the-page"),
-    toastError: t("custom-network:errors.failed-to-update-network")
-  });
 
   const isCurrentNetwork =
     !!network &&
@@ -75,37 +56,8 @@ export default function MyNetworkSettings ({
 
   const networkNeedRegistration = network?.isRegistered === false;
 
-  async function handleSubmit () {
-    if (
-      !currentUser?.walletAddress ||
-      !daoService ||
-      !forcedNetwork ||
-      forcedNetwork?.isClosed ||
-      errorBigImages
-    )
-      return;
-
-    const json = {
-      description: details?.description || "",
-      colors: settings.theme.colors,
-      logoIcon: details.iconLogo.value.raw
-        ? (await psReadAsText(details.iconLogo.value.raw)).toString()
-        : undefined,
-      fullLogo: details.fullLogo.value.raw
-        ? (await psReadAsText(details.fullLogo.value.raw)).toString()
-        : undefined,
-      creator: currentUser.walletAddress,
-      networkAddress: network.networkAddress
-    };
-
-    await updateNetwork(json);
-    clearState();
-  }
-
   async function updateNetworkData () {
     if (isCurrentNetwork) await marketplace.refresh();
-
-    await updateEditingNetwork();
   }
 
   function getTabs (_tabs) {
@@ -117,17 +69,6 @@ export default function MyNetworkSettings ({
   }
 
   useEffect(() => {
-    const logoSize = (details?.fullLogo?.value?.raw?.size || 0) / 1024 / 1024;
-    const iconSize = (details?.iconLogo?.value?.raw?.size || 0) / 1024 / 1024;
-
-    if (logoSize + iconSize >= 1) {
-      setErrorBigImages(true);
-    } else {
-      setErrorBigImages(false);
-    }
-  }, [details?.fullLogo, details?.iconLogo]);
-
-  useEffect(() => {
     if (!network) return;
 
     setTabs([
@@ -137,7 +78,6 @@ export default function MyNetworkSettings ({
         component: (
           <NetworkLogoAndColorsSettings
             network={network}
-            errorBigImages={errorBigImages}
           />
         ),
       },
@@ -149,7 +89,7 @@ export default function MyNetworkSettings ({
             address={network?.networkAddress}
             tokens={network?.tokens}
             network={network}
-            updateEditingNetwork={updateEditingNetwork}
+            updateEditingNetwork={() => {}}
           />
         ),
       },
@@ -189,7 +129,6 @@ export default function MyNetworkSettings ({
     bounties,
     isGovernorRegistry,
     networkNeedRegistration,
-    errorBigImages
   ]);
 
   return (
@@ -202,14 +141,6 @@ export default function MyNetworkSettings ({
       tabs={getTabs(tabs)}
       tabsProps={tabs}
       activeTab={activeTab}
-      isAbleToSave={
-        settings?.validated &&
-        !network?.isClosed &&
-        !networkNeedRegistration &&
-        !["registry", "governance", "management", "permissions"].includes(activeTab)
-      }
-      isUpdating={isUpdating}
-      handleSubmit={handleSubmit}
     />
   );
 }

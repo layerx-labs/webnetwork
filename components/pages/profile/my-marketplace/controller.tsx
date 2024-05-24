@@ -1,62 +1,57 @@
-import {useEffect} from "react";
+import { useState } from "react";
 
-import { useAccount } from "wagmi";
+import { useDebouncedCallback } from "use-debounce";
 
 import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
 
-import {NetworkSettingsProvider, useNetworkSettings} from "contexts/network-settings";
+import { NetworkSettingsProvider, useNetworkSettings } from "contexts/network-settings";
 
-import {MINUTE_IN_MS} from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
+import { lowerCaseCompare } from "helpers/string";
 
 import { Network } from "interfaces/network";
+import { SupportedChainData } from "interfaces/supported-chain-data";
 
-import {SearchBountiesPaginated} from "types/api";
-import {MyMarketplacePageProps} from "types/pages";
+import { SearchBountiesPaginated } from "types/api";
+import { MyMarketplacePageProps } from "types/pages";
 
-import {useSearchNetworks} from "x-hooks/api/marketplace";
-import {useMarketplaceStore} from "x-hooks/stores/marketplace/use-marketplace.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
-import {useDao} from "x-hooks/use-dao";
+import { useMarketplaceStore } from "x-hooks/stores/marketplace/use-marketplace.store";
+import { useDao } from "x-hooks/use-dao";
 import useMarketplace from "x-hooks/use-marketplace";
-import useReactQuery from "x-hooks/use-react-query";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 interface MyMarketplaceProps {
   bounties: SearchBountiesPaginated;
+  marketplaces: Network[];
 }
 
 export function MyMarketplace({
-  bounties
+  bounties,
+  marketplaces,
 }: MyMarketplaceProps) {
-  const account = useAccount();
+  const [currentMarketplace, setCurrentMarketplace] = useState<Network>();
+  const [selectedChain, setSelectedChain] = useState<SupportedChainData>();
+  const [selectedMarketplace, setSelectedMarketplace] = useState<Network>();
 
   const { start } = useDao();
   const marketplace = useMarketplace();
-  const { currentUser } = useUserStore();
-  const { connectedChain } = useSupportedChain();
   const { setForcedNetwork } = useNetworkSettings();
   const { update: updateMarketplaceStore } = useMarketplaceStore();
 
-  const chainId = connectedChain?.id?.toString();
+  const { networksObj, chainsObj } = marketplaces.reduce((acc, curr) => {
+    const tmp = { ...acc };
+    const selectedChainId = +selectedChain?.chainId;
+    const selectedMarketplaceName = selectedMarketplace?.name;
 
-  async function getNetwork() {
-    return useSearchNetworks({
-      creatorAddress: currentUser.walletAddress,
-      isClosed: false,
-      chainId: chainId,
-      name: marketplace?.active?.name,
-      isNeedCountsAndTokensLocked: true
-    })
-      .then(({ count , rows }) => {
-        const savedNetwork = count > 0 ? rows[0] : undefined;
+    if (!selectedChainId || (!!selectedChainId && +curr.chain_id === selectedChainId))
+      tmp.networksObj[curr.name] = curr;
 
-        if (savedNetwork)
-          sessionStorage.setItem( `bepro.network:${savedNetwork.name.toLowerCase()}:${chainId}`,
-                                  JSON.stringify(savedNetwork));
-        return savedNetwork;
-      });
-  }
+    if (!selectedMarketplace || (!!selectedMarketplace && lowerCaseCompare(selectedMarketplaceName, curr.name)))
+      tmp.chainsObj[curr.chain.chainShortName] = curr.chain;
+
+    return tmp;
+  }, { networksObj: {}, chainsObj: {} });
+
+  const networks = Object.values(networksObj) as Network[];
+  const chains = Object.values(chainsObj) as SupportedChainData[];
 
   function convertTimes (network: Network) {
     return {
@@ -67,49 +62,74 @@ export function MyMarketplace({
     }
   }
   
-  const networkQueryKey = QueryKeys.networksByGovernor(currentUser?.walletAddress, chainId);
-  const {
-    data: myNetwork,
-    isFetching,
-    isSuccess,
-    invalidate,
-    isLoading
-  } = useReactQuery(networkQueryKey,
-                    getNetwork,
-                    {
-                      enabled: !!currentUser?.walletAddress && !!chainId,
-                      staleTime: 10 * MINUTE_IN_MS
-                    });
+  function updateCurrentMarketplace(marketplace: Network, chain: SupportedChainData) {
+    if (!marketplace || !chain)
+      return;
 
-  useEffect(() => {
-    if (myNetwork && !isFetching && isSuccess && account?.status === "connected") {
-      setForcedNetwork(convertTimes(myNetwork));
-      updateMarketplaceStore({
-        active: convertTimes(myNetwork)
-      });
-      start({
-        chainId: +myNetwork.chain_id,
-        networkAddress: myNetwork.networkAddress
-      }).catch(error => console.debug("start error", error));
+    const marketplaceFound = 
+      marketplaces.find(m => lowerCaseCompare(m.name, marketplace.name) && +m.chain_id === +chain.chainId);
+    const marketplaceWithConvertedTimes = convertTimes(marketplaceFound);
+
+    setCurrentMarketplace(marketplaceWithConvertedTimes);
+    setForcedNetwork(marketplaceWithConvertedTimes);
+    updateMarketplaceStore({
+      active: marketplaceWithConvertedTimes
+    });
+    start({
+      chainId: +marketplaceFound.chain_id,
+      networkAddress: marketplaceFound.networkAddress
+    }).catch(error => console.debug("start error", error));
+  }
+
+  const debouncedUpdateCurrentMarketplace= useDebouncedCallback((network: Network, chain: SupportedChainData) => {
+    updateCurrentMarketplace(network, chain);
+  }, 500);
+
+  function onMarketplaceSelected (network: string | number) {
+    marketplace.clear();
+    setCurrentMarketplace(null);
+    if (!network) {
+      setSelectedMarketplace(null);
+      return;
     }
-  }, [myNetwork, isFetching, isSuccess, account?.status]);
+    const selected = networks.find(n => lowerCaseCompare(n.name, network?.toString()));
+    setSelectedMarketplace(selected);
+    debouncedUpdateCurrentMarketplace(selected, selectedChain);
+  }
+
+  function onChainSelected (chain: string | number) {
+    marketplace.clear();
+    setCurrentMarketplace(null);
+    if (!chain) {
+      setSelectedChain(null);
+      return;
+    }
+    const selected = chains.find(c => lowerCaseCompare(c.chainShortName, chain?.toString()));
+    setSelectedChain(selected);
+    debouncedUpdateCurrentMarketplace(selectedMarketplace, selected);
+  }
 
   return(
     <MyNetworkPageView
-      isLoading={isLoading}
-      myNetwork={myNetwork}
+      currentMarketplace={currentMarketplace}
+      selectedNetwork={selectedMarketplace}
+      selectedChain={selectedChain}
+      chains={chains}
+      networks={networks}
       bounties={bounties}
-      updateEditingNetwork={invalidate}
+      onChainSelected={onChainSelected}
+      onNetworkSelected={onMarketplaceSelected}
     />
   );
 }
 
 export default function MyMarketplacePage({
-  bounties
+  bounties,
+  marketplaces,
 }: MyMarketplacePageProps) {
   return(
     <NetworkSettingsProvider>
-      <MyMarketplace bounties={bounties} />
+      <MyMarketplace bounties={bounties} marketplaces={marketplaces} />
     </NetworkSettingsProvider>
   );
 }
