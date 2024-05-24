@@ -9,6 +9,7 @@ import customServerSideTranslations from "server/utils/custom-server-side-transl
 import {DashboardPageProps} from "types/pages";
 
 import {useGetChains} from "x-hooks/api/chain";
+import { useSearchNetworks } from "x-hooks/api/marketplace";
 import {useGetProfileBounties, useGetProfilePayments} from "x-hooks/api/pages/profile";
 import {useGetTokens} from "x-hooks/api/token";
 
@@ -24,9 +25,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const token = await getToken({ req, secret: secret });
   const { dashboardPage } = query || {};
   const [pageName] = (dashboardPage || ["dashboard"]);
+  const wallet = token?.wallet?.toString();
   const queryWithWallet = {
     ...query,
-    wallet: token?.address as string
+    wallet: wallet
   };
   const chainWalletFilter = {
     type: "transactional",
@@ -45,9 +47,19 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
     tasks: () => useGetProfileBounties(queryWithWallet, "creator").then(bountiesResult),
     proposals: () => useGetProfileBounties(queryWithWallet, "proposer").then(bountiesResult),
     "deliverables": () => useGetProfileBounties(queryWithWallet, "deliverabler").then(bountiesResult),
-    "my-marketplace": () => useGetProfileBounties(query, "governor").then(bountiesResult),
+    "my-marketplace": () => Promise.all([
+      useGetProfileBounties(query, "governor"),
+      useSearchNetworks({
+        creatorAddress: wallet,
+        isClosed: false,
+        isNeedCountsAndTokensLocked: true
+      })
+        .then(({ rows }) => rows)
+        .catch(({ rows }) => rows),
+    ])
+      .then(([bounties, marketplaces]) => ({ bounties, marketplaces })),
     "my-points": async () => ({
-      history: await useGetPointsHistory(token?.address as string),
+      history: await useGetPointsHistory(wallet),
     }),
   };
 
