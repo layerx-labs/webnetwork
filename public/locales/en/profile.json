@@ -5,7 +5,9 @@
   "not-found": {
     "voting-power": "Voting power not found",
     "tokens": "Tokens not found",
-    "any-voting-power": "you do not have any voting power on any marketplace"
+    "any-voting-power": "you do not have any voting power on any marketplace",
+    "taikai-pops": "No TAIKAI PoPs to list",
+    "bepro-pops": "No BEPRO PoPs to list"
   },
   "tokens": "Tokens",
   "balances-transactional-tokens": "Balances for transactional tokens",

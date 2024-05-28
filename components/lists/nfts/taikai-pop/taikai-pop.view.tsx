@@ -1,14 +1,21 @@
-import {AnkrNftAsset} from "types/ankr-nft-asset";
+import {useTranslation} from "next-i18next";
 
+import {AnkrNftAsset} from "types/ankr-nft-asset";
+import If from "../../../If";
 import {AnchorLink} from "../../../link/link";
+import NothingFound from "../../../nothing-found";
 
 export function TaikaiPopView({assets}: {assets: AnkrNftAsset[]}) {
+  const { t } = useTranslation("common");
 
   const url = (contractAddress: string, tokenId: string) =>
     `https://polygonscan.com/nft/${contractAddress}/${tokenId}`;
 
   return <>
     <div className="row gy-4 gx-4 mb-4">
+      <If condition={!assets.length}>
+        <NothingFound description={t("not-found.taikai-pops")} />
+      </If>
       {
         assets.map(({tokenId, contractAddress, imageUrl, tokenUrl}, i) => (
           <div className="col-12 col-sm-6 col-md-4">
