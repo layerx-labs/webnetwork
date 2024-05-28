@@ -11,6 +11,7 @@ import ProposalsList from "components/lists/proposals/proposals-list.controller"
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
+import {AnkrNftAsset} from "types/ankr-nft-asset";
 import {
   DeliverablePaginatedData,
   PaymentPaginatedData,
@@ -21,10 +22,6 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import {Github} from "../../../assets/icons/github";
-import {Linkedin} from "../../../assets/icons/linkedin";
-import {XCom} from "../../../assets/icons/x-com";
-import {AnkrNftAsset} from "../../../types/ankr-nft-asset";
 import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
