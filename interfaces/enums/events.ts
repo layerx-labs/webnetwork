@@ -20,7 +20,8 @@ export enum NetworkEvents {
   ProposalDisputed = "BountyProposalDisputed",
   ProposalRefused = "BountyProposalRefused",
   OraclesChanged = "OraclesChanged",
-  OraclesTransfer = "OraclesTransfer"
+  OraclesTransfer = "OraclesTransfer",
+  NetworkParamChanged = "NetworkParamChanged",
 }
 
 export enum StandAloneEvents {
