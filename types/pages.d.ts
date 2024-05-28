@@ -45,6 +45,7 @@ export type PointsHistory = {
   pointsCounted: boolean,
   info: any,
   updatedAt: Date,
+  createdAt: Date,
 }[]
 
 interface DashboardPageProps {

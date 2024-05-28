@@ -22,7 +22,7 @@ export function MyPointsHistoryView({history}: {history: PointsHistory}) {
           <div className="col col-4 font-weight-600"><strong>{ph(`actionName.${entry.actionName}`)}</strong></div>
           <div className="col col-3 d-flex"><PointsBadge points={entry.pointsWon}/></div>
           <div className="col col-2">{ph(`state.${entry.pointsCounted?"counted":"pending"}`)}</div>
-          <div className="col col-2 d-flex justify-content-end">{format(new Date(entry.updatedAt), "dd/MM/yyyy")}</div>
+          <div className="col col-2 d-flex justify-content-end">{format(new Date(entry.createdAt), "dd/MM/yyyy")}</div>
           <div className="col col-1"></div>
         </div>)
     }
