@@ -52,7 +52,9 @@ export function SocialFormView({onSubmit, githubLink, linkedInLink, twitterLink,
                 <InputGroup.Text onClick={() => selectInput(row.id)}>{row.text}</InputGroup.Text>
                 <FormControl id={row.id} value={row.value} onChange={e => row.onChange(e.target.value)}/>
               </InputGroup>
-              <p style={{display: (!!row.value && !isInputValid(row.value)) ? "block" : "" }} className="invalid-feedback p-small mt-2 mb-0">{t("profile:social.invalid-input")}</p>
+              <p 
+                style={{display: (!!row.value && !isInputValid(row.value)) ? "block" : "" }} 
+                className="invalid-feedback p-small mt-2 mb-0">{t("profile:social.invalid-input")}</p>
             </div>
           </div>
         ))

@@ -165,6 +165,9 @@ export function useAuthentication() {
     if (user.language !== currentUser?.language)
       updateCurrentUser({language: user.language})
 
+    if (user.avatar !== currentUser?.avatar)
+      updateCurrentUser({avatar: user.avatar})
+
     if (user.accountsMatch !== currentUser?.match)
       updateCurrentUser({match: user.accountsMatch})
 
@@ -181,7 +184,7 @@ export function useAuthentication() {
         id: user.id,
         walletAddress: user.address,
         isAdmin: isAdmin,
-        notifications: user.notifications
+        notifications: user.notifications,
       })
 
       sessionStorage.setItem("currentWallet", user.address);

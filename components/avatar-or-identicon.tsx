@@ -1,35 +1,57 @@
+import getConfig from "next/config";
+
 import Avatar from "components/avatar"
 import Identicon from "components/identicon"
+import If from "components/If";
 
+import { truncateAddress } from "helpers/truncate-address";
+
+import { User } from "interfaces/api";
 import { SizeOptions } from "interfaces/utils";
 
-interface AvatarOrIdenticonProps {
-  user?: string;
-  address?: string;
+export interface AvatarOrIdenticonProps {
+  user: User | { address: string; handle?: string; avatar?: string; };
   size?: SizeOptions | number;
   withBorder?: boolean;
   active?: boolean;
 }
 
+const { publicRuntimeConfig } = getConfig();
+
 export default function AvatarOrIdenticon({
   user,
-  address,
   size = "md",
   withBorder,
   active = false
 } : AvatarOrIdenticonProps ) {
+  if (!user) 
+    return <></>;
 
-  if (!user && !address) return <></>;
+  const avatar = user.avatar;
+  const address = user.address;
+  const handle = user.handle ?? truncateAddress(address);
 
   return(
-    <div className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
-    data-testid="avatar-or-identicon">
-      { 
-         //disabled until image integration
-        /* user ?
-        <Avatar userLogin={user} className="border-primary" size={size} /> :*/
-        <Identicon address={address} size={size} />
-      }
+    <div 
+      className={`${withBorder ? "border-avatar p-1" : ""} ${withBorder && active ? "active" : ""}`}
+      data-testid="avatar-or-identicon"
+    >
+      <If 
+        condition={!!avatar}
+        otherwise={
+          <Identicon 
+            address={address}
+            size={size}
+          />
+        }
+      >
+        <Avatar 
+          userLogin={handle} 
+          size={size} 
+          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatar}`}
+          className="border-primary" 
+        />
+      </If>
     </div>
   );
 }

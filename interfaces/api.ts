@@ -17,6 +17,7 @@ export interface User {
   about?: string;
   totalPoints?: number;
   twitterLink: string;
+  avatar?: string;
 }
 
 export interface PastEventsParams {

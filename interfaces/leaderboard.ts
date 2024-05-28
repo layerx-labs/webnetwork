@@ -11,6 +11,7 @@ export interface LeaderBoard {
   address: string;
   user?: {
     handle?: string;
+    avatar?: string;
   };
   networkslogos?: string[];
   marketplacelogos?: string[];

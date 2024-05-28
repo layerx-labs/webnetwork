@@ -181,8 +181,7 @@ export default function BountyHeroView({
                     <div className="d-flex flex-column justify-content-center me-1">
                       <AvatarOrIdenticon
                         size="xsm"
-                        user={bounty?.user?.handle}
-                        address={bounty?.user?.address}
+                        user={bounty?.user}
                       />{" "}
                     </div>
 

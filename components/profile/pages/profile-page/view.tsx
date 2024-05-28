@@ -2,12 +2,12 @@ import React from "react";
 
 import {useTranslation} from "next-i18next";
 
-import AvatarOrIdenticon from "components/avatar-or-identicon";
 import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
 import {Divider} from "components/divider";
 import InternalLink from "components/internal-link";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
+import { AvatarForm } from "components/profile/avatar-form/avatar-form.controller";
 import DashboardLayout from "components/profile/dashboard-layout";
 import LanguageForm from "components/profile/language-form/language-form.controller";
 import NotificationForm from "components/profile/notification-form/controller";
@@ -49,17 +49,10 @@ export default function ProfilePageView({
       <DashboardLayout>
         <div className="row mb-4">
           <div className="col">
-            <div
-              className={`${
-                isTabletOrMobile ? "d-flex" : null
-              } mt-3 align-items-center`}
-            >
-              <AvatarOrIdenticon
-                address={walletAddress}
-                size={isTabletOrMobile ? "md" : "lg"}
-                withBorder
-              />
+            <div className="row mt-3">
+              <AvatarForm />
             </div>
+
             <UserNameForm />
             <div className={`${isTabletOrMobile ? "ms-2" : "mt-2" } text-truncate`}>
               <AddressWithCopy

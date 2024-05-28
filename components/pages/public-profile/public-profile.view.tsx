@@ -1,3 +1,7 @@
+import {Github} from "assets/icons/github";
+import {Linkedin} from "assets/icons/linkedin";
+import {XCom} from "assets/icons/x-com";
+
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -6,7 +10,6 @@ import NftsList from "components/lists/nfts/nfts-list.controller";
 import ProposalsList from "components/lists/proposals/proposals-list.controller";
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
-
 
 import {
   DeliverablePaginatedData,
@@ -26,6 +29,7 @@ import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
   userAddress: string;
+  avatar?: string;
   primaryText: string;
   secondaryText?: string;
   tabs: MiniTabsItem[];
@@ -50,6 +54,7 @@ interface PublicProfileViewProps {
 
 export default function PublicProfileView({
                                             userAddress,
+                                            avatar,
                                             primaryText,
                                             secondaryText,
                                             tabs,
@@ -93,8 +98,8 @@ export default function PublicProfileView({
       <div className="row align-items-center mb-5">
         <div className="col-auto">
           <AvatarOrIdenticon
-            address={userAddress}
-            size={isTabletOrMobile ? 56 : "lg"}
+            user={{ address: userAddress, avatar }}
+            size={isTabletOrMobile ? "lg" : "xl"}
             withBorder
           />
         </div>
