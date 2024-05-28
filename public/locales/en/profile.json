@@ -135,5 +135,8 @@
       "pending": "Pending"
     }
   },
-  "total-points-earned": "Total Points Earned"
+  "total-points-earned": "Total Points Earned",
+  "goto": {
+    "polygonscan": "Go to polygonscan"
+  }
 }

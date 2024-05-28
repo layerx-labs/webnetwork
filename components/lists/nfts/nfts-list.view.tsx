@@ -16,11 +16,12 @@ export default function NftsListView ({
   payments,
   hasMorePages
 }: NftsListViewProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("profile");
 
   return (
     <div className="mb-4">
-      <If condition={!payments.length}>
+      <If condition={!payments?.length}>
+        <div className="mt-5"> </div>
         <NothingFound description={t("not-found.bepro-pops")} />
       </If>
       <List

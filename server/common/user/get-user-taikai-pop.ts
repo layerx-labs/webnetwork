@@ -34,9 +34,6 @@ export async function getUserTaikaiPop(req: NextApiRequest) {
 
     const value = await fetch(url, {method: 'POST', headers: headers, body: JSON.stringify(body)}).then(r => r.json());
 
-    console.log(`VALUE.result.nextPageToken`, value.result.nextPageToken)
-    console.log(`VALUE.result.assets`, value.result.assets)
-
     if (value.result.nextPageToken)
       return crawl(value.result.nextPageToken, [...assets, ...(value.result.assets||[])])
 

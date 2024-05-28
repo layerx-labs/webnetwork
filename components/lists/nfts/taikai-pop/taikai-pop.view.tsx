@@ -1,12 +1,13 @@
 import {useTranslation} from "next-i18next";
 
 import {AnkrNftAsset} from "types/ankr-nft-asset";
+
 import If from "../../../If";
 import {AnchorLink} from "../../../link/link";
 import NothingFound from "../../../nothing-found";
 
 export function TaikaiPopView({assets}: {assets: AnkrNftAsset[]}) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("profile");
 
   const url = (contractAddress: string, tokenId: string) =>
     `https://polygonscan.com/nft/${contractAddress}/${tokenId}`;
@@ -14,7 +15,8 @@ export function TaikaiPopView({assets}: {assets: AnkrNftAsset[]}) {
   return <>
     <div className="row gy-4 gx-4 mb-4">
       <If condition={!assets.length}>
-        <NothingFound description={t("not-found.taikai-pops")} />
+        <div className="mt-5"> </div>
+        <NothingFound description={t("not-found.taikai-pops")}/>
       </If>
       {
         assets.map(({tokenId, contractAddress, imageUrl, tokenUrl}, i) => (
@@ -22,7 +24,7 @@ export function TaikaiPopView({assets}: {assets: AnkrNftAsset[]}) {
             <div className="d-flex p-3 flex-column align-items-center border border-radius-4 border-gray-800 comment">
               <img src={imageUrl} className="border-radius-8" data-testid="image-preview"/>
               <div className="d-flex justify-content-between w-100 mt-3 text-truncate text-blue-200">
-                <AnchorLink url={url(contractAddress, tokenId)} label="Go to polygon scan"
+                <AnchorLink url={url(contractAddress, tokenId)} label={t("goto.polygonscan")}
                             dataTestId={`taikai-pop-${i}`}/>
                 <AnchorLink url={tokenUrl} label="Go to tokenUrl" dataTestId={`taikai-pop-token-url-${i}`}/>
               </div>
