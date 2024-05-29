@@ -6,6 +6,7 @@ import {useTranslation} from "next-i18next";
 import {useRouter} from "next/router";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
+import { getChainTime } from "helpers/get-chain-time";
 import {commentsParser, deliverableParser, issueParser, mergeProposalParser} from "helpers/issue";
 import {isProposalDisputable} from "helpers/proposal";
 import {QueryKeys} from "helpers/query-keys";
@@ -16,9 +17,7 @@ import {DistributedAmounts} from "interfaces/proposal";
 
 import { getCommentsData } from "x-hooks/api/comments";
 import { getProposalData } from "x-hooks/api/proposal";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import { useUserStore } from "x-hooks/stores/user/user.store";
-import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
 
@@ -33,7 +32,7 @@ export default function ProposalPage() {
   const { query } = useRouter();
   const { t } = useTranslation("common");
 
-  const [chaintime, setChainTime] = useState<number>();
+  const [chaintime, setChainTime] = useState<Date>();
   const [isDisputableOnChain, setIsDisputableOnChain] = useState<boolean>(false);
   const [missingDisputableTime, setMissingDisputableTime] = useState<string>("");
   const [distributedAmounts, setDistributedAmounts] =
@@ -44,10 +43,8 @@ export default function ProposalPage() {
       proposals: [],
     });
 
-  const { getTimeChain } = useBepro();
-  const { service: daoService } = useDaoStore();
-  const { currentUser } = useUserStore();
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
 
   const proposalId = query?.proposalId?.toString();
   const proposalQueryKey = QueryKeys.proposal(proposalId);
@@ -72,7 +69,7 @@ export default function ProposalPage() {
     isWalletConnected,
     isProposalDisputable( parsedProposal?.contractCreationDate,
                           BigNumber(marketplace?.active?.disputableTime).toNumber(),
-                          chaintime),
+                          +chaintime),
     !parsedProposal?.isDisputed,
     !parsedProposal?.refusedByBountyOwner,
     !issue?.isClosed,
@@ -151,9 +148,10 @@ export default function ProposalPage() {
   ]);
 
   useEffect(() => {
-    if (daoService)
-      getTimeChain().then(setChainTime);
-  }, [daoService]);
+    if (marketplace?.active?.chain?.chainRpc)
+      getChainTime(marketplace?.active?.chain?.chainRpc)
+        .then(setChainTime);
+  }, [marketplace?.active?.chain?.chainRpc]);
 
   useEffect(() => {
     getDistributedAmounts();
