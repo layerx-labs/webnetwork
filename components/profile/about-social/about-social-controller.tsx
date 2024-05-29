@@ -121,10 +121,6 @@ export function AboutSocial() {
     setAbout(defaultAbout)
   }, [defaultAbout]);
 
-  useEffect(() => {
-    console.log(`About changed`, `is disabled:`, !isFormValid(), about, defaultAbout)
-  }, [about]);
-
   return <>
     <AboutFormView isBodyOverLimit={about.length > 512}
                    body={about}
