@@ -1,8 +1,10 @@
 import { NextApiRequest } from "next";
 
 import IpfsStorage from "services/ipfs-service";
+import { Logger } from "services/logging";
 
 import { HttpBadRequestError } from "server/errors/http-errors";
+import { addPointEntry } from "server/utils/points-system/add-point-entry";
 
 export async function updateUserAvatar(req: NextApiRequest) {
   const { files, context: { user } } = req.body;
@@ -25,4 +27,9 @@ export async function updateUserAvatar(req: NextApiRequest) {
 
   user.avatar = updloaded.hash;
   await user.save();
+
+  await addPointEntry(user.id, "add_avatar", { hash: updloaded.hash })
+    .catch(error => {
+      Logger.error(error, `Failed to save avatar points`);
+    });
 }

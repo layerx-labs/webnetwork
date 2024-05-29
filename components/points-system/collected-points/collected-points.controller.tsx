@@ -56,7 +56,7 @@ export function CollectedPoints() {
 
     if (["linkedin", "github", "twitter"].some(social => curr.actionName.includes(social)))
       acc.socials.push(currUpdated);
-    else if (["email", "add_about"].some(e => curr.actionName.includes(e)))
+    else if (["email", "add_about", "add_avatar"].some(e => curr.actionName.includes(e)))
       acc.profile.push(currUpdated);
     else if (curr.counter === "N")
       acc.onGoing.push(curr);
