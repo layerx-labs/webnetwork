@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { AdminRoute } from "middleware";
+import { withProtected } from "middleware";
 
 import { get} from "server/common/points-base";
 
@@ -16,4 +16,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.end();
 }
 
-export default AdminRoute(handler, []);
+export default withProtected(handler);
