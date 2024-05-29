@@ -32,7 +32,7 @@ import {
 } from "helpers/constants";
 import {psReadAsText} from "helpers/file-reader";
 
-import {NetworkEvents, RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
+import {RegistryEvents, StandAloneEvents} from "interfaces/enums/events";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useCreateNetwork } from "x-hooks/api/marketplace/use-create-network";
@@ -208,7 +208,7 @@ function NewNetwork() {
     setCreatingNetwork(10);
     cleanStorage?.();
     await Promise.all([
-      processEvent(NetworkEvents.NetworkParamChanged, deployedNetworkAddress, {
+      processEvent(StandAloneEvents.UpdateNetworkParams, deployedNetworkAddress, {
         chainId: connectedChain?.id,
         fromBlock: Math.min(...txBlocks, 0)
       })
