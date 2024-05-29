@@ -1,8 +1,3 @@
-import { Col, Row } from "react-bootstrap";
-
-import { useTranslation } from "next-i18next";
-
-import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import If from "components/If";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import { TabsProps } from "components/network/settings/controller";
@@ -31,8 +26,6 @@ export default function MyNetworkSettingsView({
   isNetworkUnregistered,
   updateNetworkData,
 }: MyNetworkSettingsViewProps) {
-  const { t } = useTranslation(["common", "custom-network", "bounty"]);
-
   return (
     <>
       <style>{themePreview}</style>
