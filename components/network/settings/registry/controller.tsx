@@ -17,7 +17,6 @@ import { useAddToken } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 type Executing = "bountyFees" | "creationFee" | "creationAmount" | "transactional" | "reward";
 
@@ -43,7 +42,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
   const [lockAmountForNetworkCreation, setLockAmountForNetworkCreation] = useState<Field>(defaultField);
 
   const { processEvent } = useProcessEvent();
-  const { service: daoService } = useDaoStore();
+  const { service: daoService, ...daoStore } = useDaoStore();
   const marketplace = useMarketplace();
   const { 
     handleFeeSettings,
@@ -51,7 +50,6 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
     handleFeeNetworkCreation,
     handleChangeAllowedTokens
   } = useBepro();
-  const { connectedChain } = useSupportedChain();
 
   function isSameAdresses(adressesA: string[], adressesB: string[]) {
     return [...adressesA as string[]].sort().join() === [...adressesB as string[]].sort().join();
@@ -173,7 +171,7 @@ export default function NetworkRegistrySettings({ isGovernorRegistry = false }) 
       await Promise.all(toAdd.map(async (address) => {
         const currentToken = findMinAmount(isTransactional ? transactionalTokens : rewardTokens, address)
         if(currentToken?.minimum !== '0'){
-          return useAddToken({address, minAmount: currentToken?.minimum, chainId: +connectedChain.id})
+          return useAddToken({address, minAmount: currentToken?.minimum, chainId: +daoStore.chainId})
             .catch(console.debug);
         }
       }))

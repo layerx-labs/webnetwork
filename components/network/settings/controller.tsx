@@ -86,8 +86,6 @@ export default function MyNetworkSettings ({
         title: t("custom-network:tabs.governance"),
         component: (
           <NetworkGovernanceSettings
-            address={network?.networkAddress}
-            tokens={network?.tokens}
             network={network}
             updateEditingNetwork={() => {}}
           />

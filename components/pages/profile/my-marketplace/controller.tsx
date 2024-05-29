@@ -52,15 +52,6 @@ export function MyMarketplace({
 
   const networks = Object.values(networksObj) as Network[];
   const chains = Object.values(chainsObj) as SupportedChainData[];
-
-  function convertTimes (network: Network) {
-    return {
-      ...network,
-      draftTime: +(network?.draftTime || 0) / 1000,
-      disputableTime: +(network?.disputableTime || 0) / 1000,
-      cancelableTime: +(network?.cancelableTime || 0) / 1000,
-    }
-  }
   
   function updateCurrentMarketplace(marketplace: Network, chain: SupportedChainData) {
     if (!marketplace || !chain)
@@ -68,16 +59,16 @@ export function MyMarketplace({
 
     const marketplaceFound = 
       marketplaces.find(m => lowerCaseCompare(m.name, marketplace.name) && +m.chain_id === +chain.chainId);
-    const marketplaceWithConvertedTimes = convertTimes(marketplaceFound);
 
-    setCurrentMarketplace(marketplaceWithConvertedTimes);
-    setForcedNetwork(marketplaceWithConvertedTimes);
+    setCurrentMarketplace(marketplaceFound);
+    setForcedNetwork(marketplaceFound);
     updateMarketplaceStore({
-      active: marketplaceWithConvertedTimes
+      active: marketplaceFound
     });
     start({
       chainId: +marketplaceFound.chain_id,
-      networkAddress: marketplaceFound.networkAddress
+      networkAddress: marketplaceFound.networkAddress,
+      registryAddress: marketplaceFound.chain.registryAddress,
     }).catch(error => console.debug("start error", error));
   }
 
