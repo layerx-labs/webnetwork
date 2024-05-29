@@ -77,6 +77,12 @@
       "description": "Link your X profile",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
+    },
+    "add_avatar": {
+      "title": "Change your avatar",
+      "description": "Upload your custom avatar",
+      "pointsLabel_one": "{{count}}",
+      "pointsLabel_other": "{{count}}"
     }
   }
 }

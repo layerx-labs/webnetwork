@@ -10,6 +10,18 @@ jest
     add: jest.fn().mockResolvedValue({ hash: "hash" }),
   }));
 
+jest
+  .mock("services/logging", () => ({ 
+    Logger: {
+      error: jest.fn()
+    }
+  }));
+
+jest
+  .mock('server/utils/points-system/add-point-entry', () => ({
+    addPointEntry: jest.fn().mockResolvedValue("")
+  }));
+
 describe("UpdateUserAvatar", () => {
   let mockRequest: NextApiRequest;
 

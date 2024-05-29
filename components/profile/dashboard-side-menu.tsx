@@ -11,7 +11,7 @@ export default function DashboardSideMenu() {
   const { t } = useTranslation("profile");
 
   const extraLinks: LinkProps[] = [
-    { label: t("my-points"), href: "my-points", icon: StarIcon }
+    // { label: t("my-points"), href: "my-points", icon: StarIcon }
   ];
 
   return (
