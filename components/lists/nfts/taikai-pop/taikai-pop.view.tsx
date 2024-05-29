@@ -26,7 +26,7 @@ export function TaikaiPopView({assets}: {assets: AnkrNftAsset[]}) {
               <div className="d-flex justify-content-between w-100 mt-3 text-truncate text-blue-200">
                 <AnchorLink url={url(contractAddress, tokenId)} label={t("goto.polygonscan")}
                             dataTestId={`taikai-pop-${i}`}/>
-                <AnchorLink url={tokenUrl} label="Go to tokenUrl" dataTestId={`taikai-pop-token-url-${i}`}/>
+                <AnchorLink url={tokenUrl} label={t("goto.tokenUrl")} dataTestId={`taikai-pop-token-url-${i}`}/>
               </div>
             </div>
           </div>

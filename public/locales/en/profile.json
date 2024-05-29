@@ -137,6 +137,7 @@
   },
   "total-points-earned": "Total Points Earned",
   "goto": {
-    "polygonscan": "Go to polygonscan"
+    "polygonscan": "Go to polygonscan",
+    "tokenUrl": "Go to tokenURL"
   }
 }
