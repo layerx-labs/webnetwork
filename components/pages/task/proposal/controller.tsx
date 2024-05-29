@@ -150,7 +150,8 @@ export default function ProposalPage() {
   useEffect(() => {
     if (marketplace?.active?.chain?.chainRpc)
       getChainTime(marketplace?.active?.chain?.chainRpc)
-        .then(setChainTime);
+        .then(setChainTime)
+        .catch(error => console.debug("Failed to get chain time", error));
   }, [marketplace?.active?.chain?.chainRpc]);
 
   useEffect(() => {
