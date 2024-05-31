@@ -74,9 +74,9 @@ export default function PublicProfileView({
   }[type] || "network") as TasksListItemVariant;
 
   const socialEle = [
-    [socials?.github?.replace("https://github.com",""), socials?.github, <Github/>],
-    [socials?.linkedIn?.replace("https://linkedin.com", ""), socials?.linkedIn, <Linkedin/>],
-    [socials?.twitter?.replace("https://x.com", ""), socials?.twitter, <XCom/>],
+    [socials?.github?.replace("https://github.com/",""), socials?.github, <Github/>],
+    [socials?.linkedIn?.replace("https://linkedin.com/in/", ""), socials?.linkedIn, <Linkedin/>],
+    [socials?.twitter?.replace("https://x.com/", ""), socials?.twitter, <XCom/>],
   ]
 
   return (

@@ -2,9 +2,7 @@ import {FormControl, InputGroup} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 
-import Button from "../../button";
-
-export function AboutFormView({onChange, onSave, isBodyOverLimit, defaultValue = "", body = "", isSaving}) {
+export function AboutFormView({onChange, isBodyOverLimit, defaultValue = "", body = "", isSaving}) {
   const {t} = useTranslation(["profile"]);
 
   return <div className="row py-3">
@@ -23,14 +21,6 @@ export function AboutFormView({onChange, onSave, isBodyOverLimit, defaultValue =
         <p style={{display: (!!body && isBodyOverLimit) ? "block" : ""}} className="invalid-feedback p-small mt-2 mb-0">
           {t("profile:social.about.body-length-limit", {value: body.length,})}
         </p>
-      </div>
-    </div>
-    <div className="row mt-3">
-      <div className="col">
-        <Button onClick={() => onSave()} isLoading={isSaving}
-                disabled={isBodyOverLimit || defaultValue.trim() === body.trim()}>
-          <span>{t("common:save")}</span>
-        </Button>
       </div>
     </div>
   </div>

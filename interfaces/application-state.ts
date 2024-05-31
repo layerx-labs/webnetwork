@@ -38,7 +38,11 @@ export interface CurrentUserState {
   language?: string;
   github?: string;
   linkedIn?: string;
+  githubLink?: string;
+  linkedinLink?: string;
+  twitterLink?: string;
   avatar?: string;
+  about?: string;
 }
 
 export interface CurrentBounty {
