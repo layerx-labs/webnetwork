@@ -26,7 +26,7 @@ export async function getUserTaikaiPop(req: NextApiRequest) {
         blockchain: "polygon",
         walletAddress,
         pageToken,
-        pageSize: 2,
+        pageSize: 50,
         filter: [{'0x115cc61A1980295e43f813AdEc68769c50057088': []},]
       },
       id: 1
