@@ -1,54 +1,54 @@
-import { useEffect, useState } from "react";
-import { NumberFormatValues } from "react-number-format";
+import {useEffect, useState} from "react";
+import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import { useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
-import router, { useRouter } from "next/router";
-import { useDebouncedCallback } from "use-debounce";
+import {useSession} from "next-auth/react";
+import {useTranslation} from "next-i18next";
+import router, {useRouter} from "next/router";
+import {useDebouncedCallback} from "use-debounce";
 
-import { IFilesProps } from "components/drag-and-drop";
+import {IFilesProps} from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import { BODY_CHARACTERES_LIMIT, DAY_IN_MILISECONDS } from "helpers/constants";
+import {BODY_CHARACTERES_LIMIT, DAY_IN_MILISECONDS} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
-import { addFilesToMarkdown } from "helpers/markdown";
-import { lowerCaseCompare } from "helpers/string";
-import { parseTransaction } from "helpers/transactions";
-import { isValidUrl } from "helpers/validateUrl";
+import {addFilesToMarkdown} from "helpers/markdown";
+import {lowerCaseCompare} from "helpers/string";
+import {parseTransaction} from "helpers/transactions";
+import {isValidUrl} from "helpers/validateUrl";
 
-import { EventName } from "interfaces/analytics";
-import { BountyPayload } from "interfaces/create-bounty";
-import { CustomSession } from "interfaces/custom-session";
-import { CreateTaskSections } from "interfaces/enums/create-task-sections";
-import { MetamaskErrors, OriginLinkErrors } from "interfaces/enums/Errors";
-import { NetworkEvents } from "interfaces/enums/events";
-import { AllowListTypes } from "interfaces/enums/marketplace";
-import { TransactionStatus } from "interfaces/enums/transaction-status";
-import { TransactionTypes } from "interfaces/enums/transaction-types";
-import { Network } from "interfaces/network";
+import {EventName} from "interfaces/analytics";
+import {BountyPayload} from "interfaces/create-bounty";
+import {CustomSession} from "interfaces/custom-session";
+import {CreateTaskSections} from "interfaces/enums/create-task-sections";
+import {MetamaskErrors, OriginLinkErrors} from "interfaces/enums/Errors";
+import {NetworkEvents} from "interfaces/enums/events";
+import {AllowListTypes} from "interfaces/enums/marketplace";
+import {TransactionStatus} from "interfaces/enums/transaction-status";
+import {TransactionTypes} from "interfaces/enums/transaction-types";
+import {Network} from "interfaces/network";
 import {DistributionsProps} from "interfaces/proposal";
-import { SupportedChainData } from "interfaces/supported-chain-data";
-import { Token } from "interfaces/token";
-import { SimpleBlockTransactionPayload } from "interfaces/transaction";
+import {SupportedChainData} from "interfaces/supported-chain-data";
+import {Token} from "interfaces/token";
+import {SimpleBlockTransactionPayload} from "interfaces/transaction";
 
-import { WinStorage } from "services/win-storage";
+import {WinStorage} from "services/win-storage";
 
-import { UserRoleUtils } from "server/utils/jwt";
+import {UserRoleUtils} from "server/utils/jwt";
 
-import { useProcessEvent } from "x-hooks/api/events/use-process-event";
+import {useProcessEvent} from "x-hooks/api/events/use-process-event";
 import useGetIsAllowed from "x-hooks/api/marketplace/management/allow-list/use-get-is-allowed";
-import { useCreatePreBounty } from "x-hooks/api/task";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import { transactionStore } from "x-hooks/stores/transaction-list/transaction.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useCreatePreBounty} from "x-hooks/api/task";
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
+import {transactionStore} from "x-hooks/stores/transaction-list/transaction.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useAnalyticEvents from "x-hooks/use-analytic-events";
 import useBepro from "x-hooks/use-bepro";
 import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -60,12 +60,12 @@ interface CreateTaskPageProps {
   networks: Network[];
 }
 
-export default function CreateTaskPage ({
-  networks: allNetworks
-}: CreateTaskPageProps) {
+export default function CreateTaskPage({
+                                         networks: allNetworks
+                                       }: CreateTaskPageProps) {
   const session = useSession();
-  const { query } = useRouter();
-  const { t } = useTranslation(["common", "bounty"]);
+  const {query} = useRouter();
+  const {t} = useTranslation(["common", "bounty"]);
 
   const taskStorage = new WinStorage("task-creation", DAY_IN_MILISECONDS, "localStorage");
   const cachedTask = taskStorage.getItem();
@@ -102,18 +102,18 @@ export default function CreateTaskPage ({
   const [isBecomeCuratorModalVisible, setIsBecomeCuratorModalVisible] = useState(false);
 
   const rewardERC20 = useERC20();
-  const { settings } = useSettings();
+  const {settings} = useSettings();
   const transactionalERC20 = useERC20();
-  const { currentUser } = useUserStore();
-  const { handleApproveToken } = useBepro();
-  const { processEvent } = useProcessEvent();
-  const { pushAnalytic } = useAnalyticEvents();
-  const { service: daoService } = useDaoStore();
-  const { addError, addWarning } = useToastStore();
-  const { updateParamsOfActive, getURLWithNetwork } = useMarketplace();
-  const { add: addTx, update: updateTx, list: transactions } = transactionStore();
+  const {currentUser} = useUserStore();
+  const {handleApproveToken} = useBepro();
+  const {processEvent} = useProcessEvent();
+  const {pushAnalytic} = useAnalyticEvents();
+  const {service: daoService} = useDaoStore();
+  const {addError, addWarning} = useToastStore();
+  const {updateParamsOfActive, getURLWithNetwork} = useMarketplace();
+  const {add: addTx, update: updateTx, list: transactions} = transactionStore();
 
-  const { mutateAsync: createPreBounty } = useReactQueryMutation({
+  const {mutateAsync: createPreBounty} = useReactQueryMutation({
     mutationFn: useCreatePreBounty,
   });
 
@@ -130,11 +130,11 @@ export default function CreateTaskPage ({
   const handleIsLessThan = (v: number, min: string) =>
     BigNumber(v).isLessThan(BigNumber(min));
 
-  async function addToken (newToken: Token) {
+  async function addToken(newToken: Token) {
     setCustomTokens([...customTokens, newToken]);
   }
 
-  function validateBannedDomain (link: string) {
+  function validateBannedDomain(link: string) {
     return !!currentNetwork?.banned_domains?.some(banned => link.toLowerCase().includes(banned.toLowerCase()));
   }
 
@@ -153,12 +153,12 @@ export default function CreateTaskPage ({
       setOriginLinkError(undefined);
   }, 500);
 
-  function handleOriginLinkChange (newLink: string) {
+  function handleOriginLinkChange(newLink: string) {
     setOriginLink(newLink);
     validateDomainDebounced(newLink);
   }
 
-  function onUpdateFiles (files: IFilesProps[]) {
+  function onUpdateFiles(files: IFilesProps[]) {
     return setFiles(files);
   }
 
@@ -177,7 +177,7 @@ export default function CreateTaskPage ({
     });
   }
 
-  function handleRewardChecked (e) {
+  function handleRewardChecked(e) {
     setRewardChecked(e.target.checked);
     if (!e.target.checked) {
       setRewardAmount(ZeroNumberFormatValues);
@@ -185,7 +185,7 @@ export default function CreateTaskPage ({
     }
   }
 
-  function verifyNextStepAndCreate (newSection?: number) {
+  function verifyNextStepAndCreate(newSection?: number) {
     if (!userCanCreateBounties)
       return true;
 
@@ -251,11 +251,11 @@ export default function CreateTaskPage ({
     return section === 3 && isLoadingCreateBounty;
   }
 
-  function addFilesInDescription (str) {
+  function addFilesInDescription(str) {
     return addFilesToMarkdown(str, files, settings?.urls?.ipfs);
   }
 
-  async function allowCreateIssue () {
+  async function allowCreateIssue() {
     if (!daoService || !transactionalToken || issueAmount.floatValue <= 0 || !userCanCreateBounties)
       return;
 
@@ -279,7 +279,7 @@ export default function CreateTaskPage ({
     handleApproveToken(tokenAddress, bountyValue, undefined, transactionalToken?.symbol)
       .then(() =>
         tokenERC20.updateAllowanceAndBalance()
-          .then(({ allowance }) => {
+          .then(({allowance}) => {
             pushAnalytic(EventName.CREATE_TASK_APPROVE_AMOUNT, {
               neededAmount: bountyValue,
               currentAllowance: allowance.toFixed(),
@@ -309,7 +309,7 @@ export default function CreateTaskPage ({
       !verifyTransactionState(TransactionTypes.approveTransactionalERC20Token),
     ].some((value) => value === false);
 
-  async function createBounty () {
+  async function createBounty() {
     if (!deliverableType || !transactionalToken || !daoService || !currentUser)
       return;
 
@@ -329,7 +329,7 @@ export default function CreateTaskPage ({
         originLink
       };
 
-      pushAnalytic(EventName.CREATE_PRE_TASK, { start: true })
+      pushAnalytic(EventName.CREATE_PRE_TASK, {start: true})
 
       const savedIssue = await useCreatePreBounty({
         title: payload.title,
@@ -346,7 +346,7 @@ export default function CreateTaskPage ({
       });
 
       if (!savedIssue) {
-        pushAnalytic(EventName.CREATE_PRE_TASK, { error: true })
+        pushAnalytic(EventName.CREATE_PRE_TASK, {error: true})
         addError(t("actions.failed"), t("bounty:errors.creating-bounty"));
         return;
       }
@@ -403,7 +403,7 @@ export default function CreateTaskPage ({
 
           console.debug(e);
 
-          return { ...e, error: true };
+          return {...e, error: true};
         });
 
       const returnValues = networkBounty?.events?.BountyCreated?.returnValues;
@@ -430,8 +430,8 @@ export default function CreateTaskPage ({
 
         if (createdBounty?.[savedIssue.id]) {
           router.push(getURLWithNetwork("/task/[id]", {
-            network: currentNetwork?.name,
-            id: savedIssue.id
+              network: currentNetwork?.name,
+              id: savedIssue.id
           }))
             .then(() => cleanFields());
         }
@@ -442,7 +442,7 @@ export default function CreateTaskPage ({
     }
   }
 
-  function cleanFields () {
+  function cleanFields() {
     setFiles([]);
     setSelectedTags([]);
     setBountyTitle("");
@@ -458,7 +458,7 @@ export default function CreateTaskPage ({
     transactionalERC20.setAddress(undefined);
   }
 
-  function handleMinAmount (type: "reward" | "transactional") {
+  function handleMinAmount(type: "reward" | "transactional") {
     if (currentSection === 3) {
       const amount = type === "reward" ? rewardAmount : issueAmount
       const isAmount =
@@ -471,14 +471,14 @@ export default function CreateTaskPage ({
   }
 
 
-  function handleUpdateToken (e: Token, type: 'transactional' | 'reward') {
+  function handleUpdateToken(e: Token, type: 'transactional' | 'reward') {
     const ERC20 = type === 'transactional' ? transactionalERC20 : rewardERC20
     const setToken = type === 'transactional' ? setTransactionalToken : setRewardToken
     setToken(e)
     ERC20.setAddress(e.address)
   }
 
-  async function handleNextStep () {
+  async function handleNextStep() {
     if (!userCanCreateBounties)
       return;
 
@@ -546,7 +546,7 @@ export default function CreateTaskPage ({
   }, [currentNetwork?.tokens, currentSection]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
     pushAnalytic(`${EventName.TASK_SECTION_CHANGE}_${CreateTaskSections[currentSection]}` as unknown as EventName)
   }, [currentSection])
 
@@ -570,7 +570,31 @@ export default function CreateTaskPage ({
       setIsFundingType(true);
   }, []);
 
-  async function handleNetworkSelected (chain: SupportedChainData, network: Network = null) {
+  useEffect(() => {
+    if (distributions || !currentNetwork)
+      return;
+
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
+    
+    setDistributions({
+      treasuryAmount: {
+        value: '0',
+        percentage: chain.closeFeePercentage.toFixed(),
+      },
+      mergerAmount: {
+        value: '0',
+        percentage: mergeCreatorFeeShare.toString(),
+      },
+      proposerAmount: {
+        value: '0',
+        percentage: proposerFeeShare.toString(),
+      },
+      proposals: [],
+      totalServiceFees: BigNumber(0)
+    });
+  }, [currentSection, distributions, currentNetwork])
+
+  async function handleNetworkSelected(chain: SupportedChainData, network: Network = null) {
     setCurrentNetwork(network);
     setCurrentChain(chain);
     setTransactionalToken(null);
@@ -578,23 +602,23 @@ export default function CreateTaskPage ({
     setCustomTokens([]);
     transactionalERC20.setAddress(undefined);
     rewardERC20.setAddress(undefined);
-    const networksOfChain = allNetworks.filter(({ chain_id }) => +chain_id === +chain?.chainId);
+    const networksOfChain = allNetworks.filter(({chain_id}) => +chain_id === +chain?.chainId);
     setNetworksOfConnectedChain(networksOfChain);
     if (network)
       updateParamsOfActive(network);
   }
 
-  function handleBackButton () {
+  function handleBackButton() {
     if (currentSection !== 0)
       setCurrentSection((prevState) => prevState - 1);
   }
 
-  async function onNetworkSelected (opt) {
+  async function onNetworkSelected(opt) {
     setCurrentNetwork(opt);
     updateParamsOfActive(opt);
   }
 
-  function handleSectionHeaderClick (i: number) {
+  function handleSectionHeaderClick(i: number) {
     if (!verifyNextStepAndCreate(i === 0 ? i : i - 1) || currentSection > i) {
       setCurrentSection(i);
     }

@@ -7,11 +7,11 @@ import {useDebouncedCallback} from "use-debounce";
 
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
 
-import { Network } from "interfaces/network";
+import {Network} from "interfaces/network";
 import {DistributionsProps} from "interfaces/proposal";
 import {Token} from "interfaces/token";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 
 import CreateBountyTokenAmountView from "./view";
 
@@ -108,16 +108,33 @@ export default function CreateBountyTokenAmount({
 
   function handleDistributions(value, type) {
     if (!currentNetwork || !isFunders) return;
-    if (!value) {
-      setDistributions(undefined);
+
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
+
+    if (!value || !(+value)) {
+      setDistributions({
+        treasuryAmount: {
+          value: '0',
+          percentage: chain.closeFeePercentage.toFixed(),
+        },
+        mergerAmount: {
+          value: '0',
+          percentage: mergeCreatorFeeShare.toString(),
+        },
+        proposerAmount: {
+          value: '0',
+          percentage: proposerFeeShare.toString(),
+        },
+        proposals: [],
+        totalServiceFees: BigNumber(0)
+      });
+
       if (type === "reward")
         updateIssueAmount(ZeroNumberFormatValues);
       else
         setPreviewAmount(ZeroNumberFormatValues);
       return;
     }
-
-    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
 
     const amountOfType =
       BigNumber(type === "reward"
@@ -143,7 +160,7 @@ export default function CreateBountyTokenAmount({
 
     const totalServiceFees = mergerAmountValue.plus(proposerAmountValue).plus(treasuryAmountValue) || BigNumber(0)
 
-    const distributions = { totalServiceFees, ...initialDistributions}
+    const _distributions = { totalServiceFees, ...initialDistributions}
 
     if(type === 'reward'){
       const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
@@ -157,7 +174,7 @@ export default function CreateBountyTokenAmount({
       setPreviewAmount(handleNumberFormat(rewardValue));
     }
 
-    setDistributions(distributions)
+    setDistributions(_distributions)
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
