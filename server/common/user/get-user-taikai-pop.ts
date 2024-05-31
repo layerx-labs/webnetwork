@@ -42,7 +42,8 @@ export async function getUserTaikaiPop(req: NextApiRequest) {
 
   const value = await crawl();
 
-  cache.put(cacheKey, value, FIVE_MINUTES_IN_MS);
+  if (value.length)
+    cache.put(cacheKey, value, FIVE_MINUTES_IN_MS);
 
   return value;
 
