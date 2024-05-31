@@ -16,12 +16,15 @@ import {
   SearchBountiesPaginated
 } from "types/api";
 
+import {AnkrNftAsset} from "../../../types/ankr-nft-asset";
+
 interface PublicProfilePageProps {
   user: User;
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
   payments?: PaymentPaginatedData;
+  pops?: AnkrNftAsset[]
 }
 export default function PublicProfilePage ({
   user,
@@ -29,6 +32,7 @@ export default function PublicProfilePage ({
   deliverables,
   proposals,
   payments,
+  pops,
 }: PublicProfilePageProps) {
   const { t } = useTranslation("profile");
   const { query, pathname, asPath, push } = useRouter();
@@ -38,6 +42,7 @@ export default function PublicProfilePage ({
   const isDeliverableList = type === "submissions";
   const isProposalsList = type === "proposals";
   const isNftsList = type === "nfts";
+  const isTaikaiPops = type === "taikai-pop";
   const hasHandle = !!user?.handle;
   const truncatedAddress = truncateAddress(user?.address || "");
   const [primaryText, secondaryText] = hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle];
@@ -59,6 +64,7 @@ export default function PublicProfilePage ({
     getTab(t("proposals"), "proposals"),
     getTab(t("tasks-opened"), "opened"),
     getTab(t("nfts"), "nfts"),
+    getTab(t("taikai-pop"), "taikai-pop"),
   ];
 
   return (
@@ -72,6 +78,7 @@ export default function PublicProfilePage ({
       isDeliverableList={isDeliverableList}
       isProposalsList={isProposalsList}
       isNftsList={isNftsList}
+      isTaikaiPoP={isTaikaiPops}
       tasks={tasks}
       deliverables={deliverables}
       proposals={proposals}
@@ -83,6 +90,7 @@ export default function PublicProfilePage ({
         twitter: user?.twitterLink,
       }}
       about={user?.about}
+      taikaiPops={pops}
     />
   );
 }

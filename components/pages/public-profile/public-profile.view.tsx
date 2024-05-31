@@ -11,6 +11,7 @@ import ProposalsList from "components/lists/proposals/proposals-list.controller"
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
+import {AnkrNftAsset} from "types/ankr-nft-asset";
 import {
   DeliverablePaginatedData,
   PaymentPaginatedData,
@@ -20,6 +21,8 @@ import {
 import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
+
+import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
   userAddress: string;
@@ -42,6 +45,8 @@ interface PublicProfileViewProps {
     twitter: string;
   };
   about?: string;
+  taikaiPops: AnkrNftAsset[],
+  isTaikaiPoP: boolean,
 }
 
 export default function PublicProfileView({
@@ -61,6 +66,8 @@ export default function PublicProfileView({
                                             type = "won",
                                             socials = null,
                                             about = null,
+                                            isTaikaiPoP,
+                                            taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
 
@@ -71,6 +78,7 @@ export default function PublicProfileView({
     submissions: "submissions",
     proposals: "proposals",
     nfts: "nfts",
+    pops: "pops"
   }[type] || "network") as TasksListItemVariant;
 
   const socialEle = [
@@ -166,6 +174,11 @@ export default function PublicProfileView({
               payments={payments}
             />
           </If>
+
+          <If condition={isTaikaiPoP}>
+            <TaikaiPopView assets={taikaiPops} />
+          </If>
+
         </div>
       </div>
     </CustomContainer>
