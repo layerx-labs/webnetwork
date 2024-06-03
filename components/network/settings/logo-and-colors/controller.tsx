@@ -51,11 +51,12 @@ export default function NetworkLogoAndColorsSettings({
   const [fullLogo, setFullLogo] = useState<Field<Icon>>(getDefaultIconValue(network?.fullLogo));
 
   const { currentUser } = useUserStore();
-  const { mutateAsync: updateNetwork, isPending: isSavingChanges } = useReactQueryMutation({
+  const { mutate: updateNetwork, isPending: isSavingChanges } = useReactQueryMutation({
     queryKey: QueryKeys.networksByGovernor(currentUser?.walletAddress),
     mutationFn: useUpdateNetwork,
+    onSuccess: () => setHasChanges(false),
     toastSuccess: t("custom-network:messages.refresh-the-page"),
-    toastError: t("custom-network:errors.failed-to-update-network")
+    toastError: t("custom-network:errors.failed-to-update-network", { error: "" })
   });
 
   const isSaveChangesButtonDisabled = 
@@ -77,8 +78,7 @@ export default function NetworkLogoAndColorsSettings({
       networkAddress: network.networkAddress
     };
 
-    await updateNetwork(json);
-    setHasChanges(false);
+    updateNetwork(json);
   }
 
   function validateSizeLimit(iconValue, logoValue) {
