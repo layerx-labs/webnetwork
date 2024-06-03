@@ -60,6 +60,7 @@ export function MyMarketplace({
     const marketplaceFound = 
       marketplaces.find(m => lowerCaseCompare(m.name, marketplace.name) && +m.chain_id === +chain.chainId);
 
+    sessionStorage.setItem("currentChainId", marketplaceFound.chain.chainId.toString());
     setCurrentMarketplace(marketplaceFound);
     setForcedNetwork(marketplaceFound);
     updateMarketplaceStore({
