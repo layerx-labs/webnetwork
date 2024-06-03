@@ -27,7 +27,7 @@ export default function ConnectWalletButton({
 
   function onConnectClick() {
     updateWaitingForMessageSign(true);
-    openConnectModal();
+    openConnectModal?.();
   }
 
   useEffect(onWalletChange, [currentUser?.walletAddress]);
