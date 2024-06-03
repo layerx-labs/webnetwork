@@ -59,7 +59,7 @@ export default function NetworkLogoAndColorsSettings({
   });
 
   const isSaveChangesButtonDisabled = 
-    hasExceededSizeLimit || iconLogo?.validated === false || !fullLogo?.validated === false || isSavingChanges;
+    hasExceededSizeLimit || iconLogo?.validated === false || fullLogo?.validated === false || isSavingChanges;
 
   async function handleSubmit () {
     if (
