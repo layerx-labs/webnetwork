@@ -311,5 +311,6 @@
     "logo-and-colours": "Logo & Colors",
     "governance": "Governance",
     "registry": "Registry"
-  }
+  },
+  "select-marketplace-and-network": "Please select a marketplace and a network."
 }

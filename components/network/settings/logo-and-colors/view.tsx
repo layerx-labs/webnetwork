@@ -2,48 +2,66 @@ import { Col, Row } from "react-bootstrap";
 
 import { useTranslation } from "next-i18next";
 
+import Button from "components/button";
 import ThemeColors from "components/custom-network/theme-colors";
 import If from "components/If";
 import ImageUploader from "components/image-uploader";
 import NetworkTabContainer from "components/network/settings/tab-container/view";
+import { ResponsiveEle } from "components/responsive-wrapper";
 
 import { formatDate } from "helpers/formatDate";
 
-import { Field, Icon, Network, Theme } from "interfaces/network";
+import { Color, Field, Icon, Network, Theme } from "interfaces/network";
 
 interface NetworkLogoAndColorsSettingsViewProps {
   baseUrl: string;
   network: Network;
   networkTheme: Theme;
-  isEmptyTheme?: boolean;
   iconLogoField: Field<Icon>;
   fullLogoField: Field<Icon>;
   isLogosSizeTooLarge?: boolean;
+  isSaveChangesButtonDisabled?: boolean;
+  isSavingChanges?: boolean;
   queryableNetworkName: string;
-  onColorChange: (value: string) => void;
+  hasChanges: boolean;
+  onColorChange: (value: Color) => void;
   onIconLogoChange: (value: Icon) => void;
   onFullLogoChange: (value: Icon) => void;
+  onSaveChangesClick: () => void;
 }
 
 export default function NetworkLogoAndColorsSettingsView({
   baseUrl,
   network,
   networkTheme,
-  isEmptyTheme,
   iconLogoField,
   fullLogoField,
   isLogosSizeTooLarge,
+  isSaveChangesButtonDisabled,
+  isSavingChanges,
   queryableNetworkName,
+  hasChanges,
   onColorChange,
   onIconLogoChange,
   onFullLogoChange,
+  onSaveChangesClick,
 }: NetworkLogoAndColorsSettingsViewProps) {
   const { t } = useTranslation(["common", "custom-network"]);
 
+  const SaveButton = (
+    <Button
+      isLoading={isSavingChanges}
+      disabled={isSaveChangesButtonDisabled}
+      onClick={onSaveChangesClick}
+    >
+      Save Changes
+    </Button>
+  );
+
   return (
     <NetworkTabContainer>
-      <Row className="align-items-end mt-4 gap-5 gap-xl-0">
-        <Col xs={12} lg={6} xl={5}>
+      <Row className="align-items-start mt-4 gy-3 gap-xl-0">
+        <Col xs={12} md={4} lg={4}>
           <Row>
             <h3 className="text-capitalize family-Regular text-white overflow-wrap-anywhere">
               {network?.name}
@@ -81,8 +99,8 @@ export default function NetworkLogoAndColorsSettingsView({
           </Row>
         </Col>
 
-        <Col xs="12" md="auto">
-          <Row>
+        <Col xs={12} md={6}>
+          <Row className="gy-3">
             <Col xs="auto">
               <ImageUploader
                 name="logoIcon"
@@ -116,6 +134,13 @@ export default function NetworkLogoAndColorsSettingsView({
               </Col>
           </Row>
         </Col>
+
+        <If condition={hasChanges}>
+          <ResponsiveEle
+            className="col"
+            tabletView={SaveButton}
+          />
+        </If>
       </Row>
 
       <If condition={isLogosSizeTooLarge}>
@@ -134,21 +159,23 @@ export default function NetworkLogoAndColorsSettingsView({
             {t("custom-network:steps.network-settings.fields.colors.label")}
           </span>
 
-          <If 
-            condition={!isEmptyTheme}
-            otherwise={
-              <div className="row justify-content-center">
-                <span className="spinner-border spinner-border-md ml-1" />
-              </div>
-            }
-          >
-            <ThemeColors
-              colors={networkTheme?.colors}
-              setColor={onColorChange}
-            />
-          </If>
+          <ThemeColors
+            colors={networkTheme?.colors}
+            setColor={onColorChange}
+          />
         </Col>
       </Row>
+
+      <If condition={hasChanges}>
+        <ResponsiveEle
+          mobileView={
+            <Row className="mx-0">
+              {SaveButton}
+            </Row>
+          }
+          tabletView={null}
+        />
+      </If>
     </NetworkTabContainer>
   );
 }

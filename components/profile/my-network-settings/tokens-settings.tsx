@@ -16,7 +16,6 @@ import {Token, TokenType} from "interfaces/token";
 import { useGetTokens } from "x-hooks/api/token";
 import { useDaoStore } from "x-hooks/stores/dao/dao.store";
 import useReactQuery from "x-hooks/use-react-query";
-import useSupportedChain from "x-hooks/use-supported-chain";
 
 export default function TokensSettings({
   isGovernorRegistry = false,
@@ -37,15 +36,14 @@ export default function TokensSettings({
   const [selectedTransactionalTokens, setSelectedTransactionalTokens] = useState<Token[]>();
   const [allowedTransactionalTokensList, setAllowedTransactionalTokensList] = useState<Token[]>();
   
-  const { service: daoService } = useDaoStore();
   const { fields } = useNetworkSettings();
-  const { connectedChain } = useSupportedChain();
+  const { service: daoService, ...daoStore } = useDaoStore();
   
-  const connectedChainId = connectedChain?.id;
-  const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(connectedChainId),
-                                            () => useGetTokens({ chainId: connectedChainId }),
+  const chainId = daoStore?.chainId?.toString();
+  const { data: dbTokens } = useReactQuery( QueryKeys.tokensByChain(chainId),
+                                            () => useGetTokens({ chainId: chainId }),
                                             {
-                                              enabled: !!connectedChainId
+                                              enabled: !!chainId
                                             });
 
   const tokenNotInSelected = ({ address }: Token,
@@ -118,9 +116,9 @@ export default function TokensSettings({
   }
 
   useEffect(() => {
-    if (!daoService || !connectedChain?.id || !dbTokens) return;
+    if (!daoService || !chainId || !dbTokens) return;
     getAllowedTokensContract();
-  }, [daoService, connectedChain?.id, isGovernorRegistry, dbTokens]);
+  }, [daoService, chainId, isGovernorRegistry, dbTokens]);
 
   useEffect(() => {
     if (defaultSelectedTokens?.length > 0) {

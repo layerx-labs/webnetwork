@@ -1,4 +1,5 @@
 import {Curator} from "interfaces/curators";
+import { Network } from "interfaces/network";
 import {Proposal} from "interfaces/proposal";
 import {SupportedChainData} from "interfaces/supported-chain-data";
 import {Token} from "interfaces/token";
@@ -37,6 +38,7 @@ export interface ProposalPageProps {
 
 interface MyMarketplacePageProps {
   bounties: SearchBountiesPaginated;
+  marketplaces: Network[];
 }
 
 export type PointsHistory = {

@@ -6,7 +6,8 @@ import Card from "components/card";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
 import CopyButton from "components/common/buttons/copy/controller";
 import AmountCard from "components/custom-network/amount-card";
-import NetworkContractSettings from "components/custom-network/network-contract-settings";
+import NetworkContractSettings, { NetworkContractSettingsProps } 
+  from "components/custom-network/network-contract-settings";
 import SubmitButton from "components/network/settings/submit-button/view";
 import NetworkTabContainer from "components/network/settings/tab-container/view";
 import TokensSettings from "components/profile/my-network-settings/tokens-settings";
@@ -15,7 +16,7 @@ import { Token } from "interfaces/token";
 
 import { AmountCardProps } from "types/components";
 
-interface NetworkGovernanceSettingsViewProps {
+interface NetworkGovernanceSettingsViewProps extends NetworkContractSettingsProps {
   networkAmounts: AmountCardProps[];
   networkAddress: string;
   isAbleToClosed?: boolean;
@@ -25,6 +26,7 @@ interface NetworkGovernanceSettingsViewProps {
   isSubmitButtonDisabled?: boolean;
   onCloseNetworkClick: () => void;
   onSaveChangesClick: () => void;
+  onTokenChange?: (transactional: Token[], reward: Token[]) => void
 }
 
 export default function NetworkGovernanceSettingsView({
@@ -35,8 +37,11 @@ export default function NetworkGovernanceSettingsView({
   networkTokens,
   isSubmitButtonVisible,
   isSubmitButtonDisabled,
+  parameters,
+  onParameterChange,
   onCloseNetworkClick,
   onSaveChangesClick,
+  onTokenChange,
 }: NetworkGovernanceSettingsViewProps) {
   const { t } = useTranslation(["common", "custom-network"]);
 
@@ -108,7 +113,10 @@ export default function NetworkGovernanceSettingsView({
       </Row>
       
       <Row className="mt-4 gy-3">
-        <TokensSettings defaultSelectedTokens={networkTokens} />
+        <TokensSettings 
+          defaultSelectedTokens={networkTokens}
+          onChangeCb={onTokenChange}
+        />
       </Row>
 
       <div className="mt-4">
@@ -116,7 +124,10 @@ export default function NetworkGovernanceSettingsView({
           {t("custom-network:steps.network-settings.fields.other-settings.title")}
         </span>
 
-        <NetworkContractSettings />
+        <NetworkContractSettings
+          parameters={parameters}
+          onParameterChange={onParameterChange}
+        />
       </div>
 
       <Row className="mt-3">

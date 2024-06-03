@@ -1,27 +1,51 @@
-import {useTranslation} from "next-i18next";
+import { useTranslation } from "next-i18next";
 
 import NetworkParameterInput from "components/custom-network/network-parameter-input";
 
-import {useNetworkSettings} from "contexts/network-settings";
-
 import { SMALL_TOKEN_SYMBOL_LENGTH } from "helpers/constants";
-import {formatNumberToCurrency, formatNumberToNScale} from "helpers/formatNumber";
-import { NETWORK_LIMITS } from "helpers/network";
+import { formatNumberToCurrency, formatNumberToNScale } from "helpers/formatNumber";
+import { NETWORK_LIMITS, NetworkValidator } from "helpers/network";
+
+import { Field } from "interfaces/network";
+
+import { NetworkParameters } from "types/dappkit";
 
 import useMarketplace from "x-hooks/use-marketplace";
 
-export default function NetworkContractSettings() {
+export interface NetworkContractSettingsProps {
+  parameters: {
+    disputableTime: Field<number>,
+    percentageNeededForDispute: Field<number>,
+    draftTime: Field<number>,
+    councilAmount: Field<number>,
+    cancelableTime: Field<number>,
+    oracleExchangeRate: Field<number>,
+    mergeCreatorFeeShare: Field<number>,
+    proposerFeeShare: Field<number>,
+  },
+  onParameterChange: (param: NetworkParameters) => (value: number, validated?: boolean) => void;
+}
+
+export default function NetworkContractSettings({
+  parameters,
+  onParameterChange,
+}: NetworkContractSettingsProps) {
   const { t } = useTranslation(["common", "custom-network"]);
 
   const marketplace = useMarketplace();
   const { data: totalNetworkToken } = marketplace.getTotalNetworkToken();
-  const { fields, settings } = useNetworkSettings();
-
-  const onChange = (label) => (value) => fields.parameter.setter({label, value});
 
   const networkTokenSymbol = marketplace?.active?.networkToken?.symbol || t("misc.$token");
 
   const formatOptions = { maximumFractionDigits: 0 };
+
+  function onChange(param: NetworkParameters) {
+    const changeFn = onParameterChange?.(param);
+    return (value) => {
+      const validated = NetworkValidator(param, value);
+      changeFn?.(value, validated);
+    }
+  }
 
   const parameterInputs = [
     { 
@@ -31,8 +55,8 @@ export default function NetworkContractSettings() {
         max: formatNumberToCurrency(NETWORK_LIMITS.disputableTime.max, formatOptions)
       }),
       symbol: t("misc.seconds"), 
-      value: settings?.parameters?.disputableTime?.value,
-      error: settings?.parameters?.disputableTime?.validated === false,
+      value: parameters?.disputableTime?.value,
+      error: parameters?.disputableTime?.validated === false,
       decimals: 0,
       onChange: onChange("disputableTime")
     },
@@ -40,8 +64,8 @@ export default function NetworkContractSettings() {
       label: t("custom-network:percentage-for-dispute"), 
       description: t("custom-network:errors.percentage-for-dispute", NETWORK_LIMITS.percentageNeededForDispute),
       symbol: "%", 
-      value: settings?.parameters?.percentageNeededForDispute?.value,
-      error: settings?.parameters?.percentageNeededForDispute?.validated === false,
+      value: parameters?.percentageNeededForDispute?.value,
+      error: parameters?.percentageNeededForDispute?.validated === false,
       onChange: onChange("percentageNeededForDispute")
     },
     { 
@@ -51,8 +75,8 @@ export default function NetworkContractSettings() {
         max: formatNumberToCurrency(NETWORK_LIMITS.draftTime.max, formatOptions)
       }),
       symbol: t("misc.seconds"), 
-      value: settings?.parameters?.draftTime?.value,
-      error: settings?.parameters?.draftTime?.validated === false,
+      value: parameters?.draftTime?.value,
+      error: parameters?.draftTime?.validated === false,
       decimals: 0,
       onChange: onChange("draftTime")
     },
@@ -64,8 +88,8 @@ export default function NetworkContractSettings() {
         max: formatNumberToCurrency(NETWORK_LIMITS.councilAmount.max, formatOptions)
       }),
       symbol: networkTokenSymbol || "Token", 
-      value: settings?.parameters?.councilAmount?.value,
-      error: settings?.parameters?.councilAmount?.validated === false,
+      value: parameters?.councilAmount?.value,
+      error: parameters?.councilAmount?.validated === false,
       onChange: onChange("councilAmount")
     },
     { 
@@ -74,8 +98,8 @@ export default function NetworkContractSettings() {
         min: formatNumberToCurrency(NETWORK_LIMITS.cancelableTime.min, formatOptions)
       }),
       symbol: t("misc.seconds"), 
-      value: settings?.parameters?.cancelableTime?.value,
-      error: settings?.parameters?.cancelableTime?.validated === false,
+      value: parameters?.cancelableTime?.value,
+      error: parameters?.cancelableTime?.validated === false,
       decimals: 0,
       onChange: onChange("cancelableTime")
     },
@@ -83,8 +107,8 @@ export default function NetworkContractSettings() {
       label: t("custom-network:oracle-exchange-rate.label"), 
       description: t("custom-network:oracle-exchange-rate.description", NETWORK_LIMITS.oracleExchangeRate),
       symbol: "", 
-      value: settings?.parameters?.oracleExchangeRate?.value,
-      error: settings?.parameters?.oracleExchangeRate?.validated === false,
+      value: parameters?.oracleExchangeRate?.value,
+      error: parameters?.oracleExchangeRate?.validated === false,
       decimals: 0,
       onChange: onChange("oracleExchangeRate"),
       disabled: totalNetworkToken?.gt(0),
@@ -100,8 +124,8 @@ export default function NetworkContractSettings() {
       label: t("custom-network:merger-fee.label"), 
       description: t("custom-network:merger-fee.description", NETWORK_LIMITS.mergeCreatorFeeShare),
       symbol: "%", 
-      value: settings?.parameters?.mergeCreatorFeeShare?.value,
-      error: settings?.parameters?.mergeCreatorFeeShare?.validated === false,
+      value: parameters?.mergeCreatorFeeShare?.value,
+      error: parameters?.mergeCreatorFeeShare?.validated === false,
       decimals: 4,
       onChange: onChange("mergeCreatorFeeShare")
     },
@@ -109,8 +133,8 @@ export default function NetworkContractSettings() {
       label: t("custom-network:proposer-fee.label"), 
       description: t("custom-network:proposer-fee.description", NETWORK_LIMITS.proposerFeeShare),
       symbol: "%", 
-      value: settings?.parameters?.proposerFeeShare?.value,
-      error: settings?.parameters?.proposerFeeShare?.validated === false,
+      value: parameters?.proposerFeeShare?.value,
+      error: parameters?.proposerFeeShare?.validated === false,
       decimals: 4,
       onChange: onChange("proposerFeeShare")
     }
