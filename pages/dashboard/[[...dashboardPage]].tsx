@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
   const token = await getToken({ req, secret: secret });
   const { dashboardPage } = query || {};
   const [pageName] = (dashboardPage || ["dashboard"]);
-  const wallet = token?.wallet?.toString();
+  const wallet = token?.address?.toString();
   const queryWithWallet = {
     ...query,
     wallet: wallet
