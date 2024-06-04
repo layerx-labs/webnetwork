@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useRouter } from "next/router";
 import { useDebouncedCallback } from "use-debounce";
 
 import MyNetworkPageView from "components/pages/profile/my-marketplace/view";
@@ -27,6 +28,8 @@ export function MyMarketplace({
   bounties,
   marketplaces,
 }: MyMarketplaceProps) {
+  const router = useRouter();
+
   const [currentMarketplace, setCurrentMarketplace] = useState<Network>();
   const [selectedChain, setSelectedChain] = useState<SupportedChainData>();
   const [selectedMarketplace, setSelectedMarketplace] = useState<Network>();
@@ -61,6 +64,14 @@ export function MyMarketplace({
       marketplaces.find(m => lowerCaseCompare(m.name, marketplace.name) && +m.chain_id === +chain.chainId);
 
     sessionStorage.setItem("currentChainId", marketplaceFound.chain.chainId.toString());
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        networkName: marketplaceFound?.name,
+        networkChain: marketplaceFound?.chain?.chainShortName,
+      }
+    }, router.asPath);
     setCurrentMarketplace(marketplaceFound);
     setForcedNetwork(marketplaceFound);
     updateMarketplaceStore({
