@@ -1,6 +1,6 @@
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 
-import { formatStringToCurrency } from "helpers/formatNumber";
+import { formatNumberToCurrency } from "helpers/formatNumber";
 import { truncateAddress } from "helpers/truncate-address";
 
 import { PaymentInfoProps } from "types/components";
@@ -36,7 +36,7 @@ export default function PaymentInfo({
 
         <div className="d-flex align-items-center gap-3">
           <span className="sm-regular text-gray-50">
-            {formatStringToCurrency(amount)}
+            {formatNumberToCurrency(amount)}
           </span>
 
           <span className="sm-regular text-gray-500">
