@@ -245,45 +245,57 @@ export default async function get(query: ParsedUrlQuery) {
     }); 
   
   const actions = {
-      deliverabler: async () => {
-        return models.deliverable.count({
-          subQuery: false,
-          where: { prContractId: { [Op.not]: null } },
-          include: [
-            getAssociation("user", undefined, !!deliverabler, deliverabler ? {
-              address: caseInsensitiveEqual("address", deliverabler.toString())
-            }: {}),
-            getAssociation("issue", undefined, true, {}, [
-              getAssociation("network", undefined, true, networkName || network ?
-              { 
-                name: caseInsensitiveEqual("name", (networkName || network).toString())
-              } : {}, [])])
-          ]
-        });
-      },
-      proposer: async () => {
-        return models.mergeProposal.count({
-          where: {
-            ...proposer ? { creator: caseInsensitiveEqual("creator", proposer.toString()) } : {}
-          },
-          include: [
+    creator: async () => {
+      return models.deliverable.count({
+        subQuery: false,
+        where: { prContractId: { [Op.not]: null } },
+        include: [
+          getAssociation("user", undefined, !!creator, creator ? {
+            address: caseInsensitiveEqual("address", creator.toString())
+          }: {}),
+          getAssociation("issue", undefined, true, {}, [
             networkAssociation
-          ]
-        });
-      },
-      default: async () => {
-        return models.issue.count({
-          where: {
-            state: {
-              [Op.notIn]: ["pending", "canceled", "closed"],
-            },
-            visible: true,
-          }
-        });
-      },
+          ]),
+        ]
+      });
+    },
+    deliverabler: async () => {
+      return models.deliverable.count({
+        subQuery: false,
+        where: { prContractId: { [Op.not]: null } },
+        include: [
+          getAssociation("user", undefined, !!deliverabler, deliverabler ? {
+            address: caseInsensitiveEqual("address", deliverabler.toString())
+          }: {}),
+          getAssociation("issue", undefined, true, {}, [
+            networkAssociation
+          ])
+        ]
+      });
+    },
+    proposer: async () => {
+      return models.mergeProposal.count({
+        where: {
+          ...proposer ? { creator: caseInsensitiveEqual("creator", proposer.toString()) } : {}
+        },
+        include: [
+          networkAssociation
+        ]
+      });
+    },
+    default: async () => {
+      return models.issue.count({
+        where: {
+          state: {
+            [Op.notIn]: ["pending", "canceled", "closed"],
+          },
+          visible: true,
+        }
+      });
+    },
   };
 
-  const action = actions[deliverabler && 'deliverabler' || proposer && 'proposer' || 'default'];
+  const action = actions[deliverabler && 'deliverabler' || proposer && 'proposer' || creator && 'creator' || 'default'];
   const total = await action();
 
   return {
