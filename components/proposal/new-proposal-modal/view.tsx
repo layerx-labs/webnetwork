@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Collapse } from "react-bootstrap";
 import { components as RSComponents, SingleValueProps } from "react-select";
 
 import { useTranslation } from "next-i18next";
@@ -7,6 +8,7 @@ import ProfileEditIcon from "assets/profile-edit-icon";
 
 import Button from "components/button";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
+import { HideShowButton } from "components/common/buttons/hide-show-button/hide-show-button.view";
 import { Tooltip } from "components/common/tooltip/tooltip.view";
 import { ContextualSpan } from "components/contextual-span";
 import IconOption from "components/icon-option";
@@ -33,7 +35,9 @@ interface NewProposalModalViewProps {
   show: boolean;
   isExecuting: boolean;
   isConnected: boolean;
+  isPreviewVisible: boolean;
   isEditingDistribution: boolean;
+  isExistingDistribution: boolean;
   selectedDeliverable: DeliverableOption;
   deliverablesOptions: DeliverableOption[];
   deliverableUrl: string;
@@ -43,6 +47,8 @@ interface NewProposalModalViewProps {
   distributionParticipants: DistributionParticipant[];
   onClose: () => void;
   onSubmit: () => void;
+  onShowPreview: () => void;
+  onHidePreview: () => void;
   onEditDistributionClick: () => void;
   onCancelDistributionEditClick: () => void;
   onDeliverableChange: (value: DeliverableOption) => void;
@@ -70,16 +76,20 @@ export default function NewProposalModalView({
   show,
   isExecuting,
   isConnected,
+  isPreviewVisible,
   selectedDeliverable,
   deliverablesOptions,
   deliverableUrl,
   paymentInfos,
   isEditingDistribution,
+  isExistingDistribution,
   task,
   currentDeliverable,
   distributionParticipants,
   onClose,
   onSubmit,
+  onShowPreview,
+  onHidePreview,
   onEditDistributionClick,
   onDeliverableChange,
   onCancelDistributionEditClick,
@@ -106,7 +116,7 @@ export default function NewProposalModalView({
 
           <ContractButton
             onClick={onSubmit}
-            disabled={!isConnected || isExecuting || isEditingDistribution}
+            disabled={!isConnected || isExecuting || isEditingDistribution || isExistingDistribution}
             isLoading={isExecuting}
             withLockIcon={!isConnected}
             data-testid="modal-proposal-create-btn"
@@ -136,13 +146,33 @@ export default function NewProposalModalView({
         isSearchable={false}
       />
 
-      <div className="mt-4 pt-2">
-        <OpenGraphPreview
-          url={deliverableUrl}
-          previewPlaceholder={t("create-modal.preview-deliverable")}
-          openLinkText={t("create-modal.view-deliverable")}
-          showOpenLink
-        />
+      <div className="mt-4 pt-1">
+        <div className="d-flex align-items-center justify-content-between mb-2">
+          <span className="xs-medium text-gray-100 text-uppercase">
+            Preview
+          </span>
+
+          <If condition={!!selectedDeliverable}>
+            <HideShowButton
+              isVisible={isPreviewVisible}
+              hideTip={"Hide Preview"}
+              showTip={"Show Preview"}
+              onHideClick={onHidePreview}
+              onShowClick={onShowPreview}
+            />
+          </If>
+        </div>
+
+        <Collapse in={isPreviewVisible}>
+          <div>
+            <OpenGraphPreview
+              url={deliverableUrl}
+              previewPlaceholder={t("create-modal.preview-deliverable")}
+              openLinkText={t("create-modal.view-deliverable")}
+              showOpenLink
+            />
+          </div>
+        </Collapse>
       </div>
 
       <div className="mt-4 pt-1">
@@ -193,14 +223,20 @@ export default function NewProposalModalView({
                 </span>
               }
             >
-              <div className="px-2 line-between-children w-100 bg-gray-850">
+              <div className="px-2 line-between-children w-100 bg-gray-850 proposal-distribution-payment">
                 {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
               </div>
             </If>
           </div>
         </If>
 
-        <If condition={!!deliverableUrl && !!paymentInfos && !isEditingDistribution}>
+        <If condition={!!isExistingDistribution && !isEditingDistribution}>
+          <ContextualSpan context="warning">
+            {t("errors.distribution-already-exists")}
+          </ContextualSpan>
+        </If>
+
+        <If condition={!!deliverableUrl && !!paymentInfos && !isEditingDistribution && !isExistingDistribution}>
           <ContextualSpan context="info" color="blue-200">
             {t("create-modal.fees-info")}
           </ContextualSpan>
