@@ -127,7 +127,6 @@ export function AboutSocial() {
                    defaultValue={defaultAbout}
                    onChange={(e) => setAbout(e.target.value)}
                    isSaving={isAboutPending}/>
-
     <SocialFormView githubLink={replacer(socials?.githubLink) || ""}
                     linkedInLink={replacer(socials?.linkedInLink) || ""}
                     twitterLink={replacer(socials?.twitterLink) || ""}
@@ -141,5 +140,6 @@ export function AboutSocial() {
         </Button>
       </div>
     </div>
+    <hr className="my-5"/>
   </>
 }
