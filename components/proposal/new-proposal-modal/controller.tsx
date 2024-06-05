@@ -10,6 +10,7 @@ import NewProposalModalView from "components/proposal/new-proposal-modal/view";
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
 import { lowerCaseCompare } from "helpers/string";
 import {truncateAddress} from "helpers/truncate-address";
+import { validateDistribution } from "helpers/validate-distribution";
 
 import { User } from "interfaces/api";
 import {NetworkEvents} from "interfaces/enums/events";
@@ -45,6 +46,8 @@ export default function ProposalModal({
 }: ProposalModalProps) {
   const { t } = useTranslation("proposal");
 
+  const [isPreviewVisible, setIsPreviewVisible] = useState(true);
+  const [isExistingDistribution, setIsExistingDistribution] = useState(false);
   const [isEditingDistribution, setIsEditingDistribution] = useState(false);
   const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
   const [distributionParticipants, setDistributionParticipants] = useState<DistributionParticipant[]>([]);
@@ -91,10 +94,17 @@ export default function ProposalModal({
     }
   ];
 
-  const onEditDistributionClick = () => setIsEditingDistribution(true);
+  const onShowPreview = () => setIsPreviewVisible(true);
+  const onHidePreview = () => setIsPreviewVisible(false);
+
+  function onEditDistributionClick() {
+    setIsEditingDistribution(true);
+    onHidePreview();
+  }
   
   function onCancelDistributionEditClick() {
     setIsEditingDistribution(false);
+    onShowPreview();
   }
 
   async function handleClickCreate(): Promise<void> {
@@ -116,12 +126,27 @@ export default function ProposalModal({
     setIsEditingDistribution(false);
     setCurrentDeliverable(undefined);
     setDistributionParticipants([]);
+    setIsExistingDistribution(false);
+  }
+
+  function updateExistingDistribution(deliverable: Deliverable, distribution: DistributionParticipant[]) {
+    const distributionError = validateDistribution( distribution, deliverable.id, currentBounty);
+    setIsExistingDistribution(distributionError === "existing-distribution");
+  }
+
+  function handleChangeDistribution(newDistribution: DistributionParticipant[]) {
+    setDistributionParticipants(newDistribution);
+    updateExistingDistribution(currentDeliverable, newDistribution);
   }
 
   function handleChangeSelect({ value }) {
     const newDeliverable = deliverables.find((el) => el.id === value);
     if (!newDeliverable) return;
+
+    onShowPreview();
     setCurrentDeliverable(newDeliverable);
+    updateExistingDistribution( newDeliverable, 
+                                [{ user: newDeliverable.user, percentage: 100, isDeliverableCreator: true }]);
     setIsEditingDistribution(false);
     setDistributionParticipants([
       {
@@ -172,12 +197,16 @@ export default function ProposalModal({
       distributionParticipants={distributionParticipants}
       paymentInfos={distributedAmounts ? paymentInfos : null}
       isEditingDistribution={isEditingDistribution}
+      isExistingDistribution={isExistingDistribution}
+      isPreviewVisible={isPreviewVisible}
+      onShowPreview={onShowPreview}
+      onHidePreview={onHidePreview}
       onClose={handleClose}
       onSubmit={handleClickCreate}
       onDeliverableChange={handleChangeSelect}
       onEditDistributionClick={onEditDistributionClick}
       onCancelDistributionEditClick={onCancelDistributionEditClick}
-      setDistributionParticipants={setDistributionParticipants}
+      setDistributionParticipants={handleChangeDistribution}
     />
   );
 }

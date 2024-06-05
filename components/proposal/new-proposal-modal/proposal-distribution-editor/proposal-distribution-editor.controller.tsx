@@ -13,6 +13,7 @@ import If from "components/If";
 import { DistributionParticipant } from "components/proposal/new-proposal-modal/controller";
 
 import { lowerCaseCompare } from "helpers/string";
+import { validateDistribution, ValidateDistributionError } from "helpers/validate-distribution";
 
 import { User } from "interfaces/api";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
@@ -38,8 +39,9 @@ export function ProposalDistributionEditor({
   onCancelDistributionEditClick,
   setDistributionParticipants,
 }: ProposalDistributionEditorProps) {
-  const [selectedParticipantsMap, setSelectedParticipantsMap] = useState({});
-  const [editingDistributionError, setEditingDistributionError] = useState<string>();
+  const [selectedParticipantsMap, setSelectedParticipantsMap] = 
+    useState(distributionParticipants?.reduce((acc, curr) => ({ ...acc, [curr?.user?.address]: true }), {}));
+  const [editingDistributionError, setEditingDistributionError] = useState<ValidateDistributionError>();
   const [participants, setParticipants] = useState<DistributionParticipant[]>(distributionParticipants);
 
   const isParticipantAlreadySelected = (user: User) => !!selectedParticipantsMap[user?.address?.toLowerCase()];
@@ -95,43 +97,10 @@ export function ProposalDistributionEditor({
   function validateParticipants() {
     if (!participants?.length) return;
 
-    const { hasEmptyParticipants, totalPercentage } = participants.reduce((acc, curr) => ({ 
-      hasEmptyParticipants: acc.hasEmptyParticipants || curr.percentage === 0, 
-      totalPercentage: acc.totalPercentage + curr.percentage,
-    }), { hasEmptyParticipants: false, totalPercentage: 0 });
-
-    if (hasEmptyParticipants || totalPercentage !== 100) {
-      setEditingDistributionError(hasEmptyParticipants ? "empty-participant" : "wrong-distribution");
-      return;
-    }
-
-    const proposalsForDeliverable = 
-      task?.mergeProposals?.filter(proposal =>  proposal?.deliverableId === deliverable?.id && 
-                                                !proposal?.isDisputed &&
-                                                !proposal?.refusedByBountyOwner);
-
-    if (proposalsForDeliverable.length && participants.length > 1) {
-      const isExistingDistribution = proposalsForDeliverable.some(proposal => {
-        const hasEqualParticipantsQuantity = proposal?.distributions?.length === participants?.length;
-
-        if (!hasEqualParticipantsQuantity) 
-          return false;
-
-        const isSameDistribution = participants
-          .every(participant => !!proposal.distributions.find(distribution => 
-            lowerCaseCompare(distribution.recipient, participant.user.address) && 
-            distribution.percentage === participant.percentage));
-        
-        return isSameDistribution;
-      });
-
-      if(isExistingDistribution) {
-        setEditingDistributionError("existing-distribution");
-        return;    
-      }
-    }
-
-    setEditingDistributionError(null);
+    if (participants.length > 1)
+      setEditingDistributionError(validateDistribution(participants, deliverable?.id, task));
+    else
+      setEditingDistributionError(null);
   }
 
   function onSaveClick() {
@@ -192,23 +161,25 @@ export function ProposalDistributionEditor({
 
       <div className={`d-flex flex-column w-100 px-2 pb-2 line-between-children align-items-center gap-2 
         border border-radius-4 border-gray-800 comment`}>
-        {
-        participants?.map((participant, index) => (
-          <ProposalDistributionEditorParticipant
-            key={`editor-distribution-participant-${participant?.user?.address}`}
-            user={participant?.user}
-            defaultValue={participant?.percentage}
-            label={participant?.isDeliverableCreator ? "Deliverable Creator" : `Participant ${index}`}
-            isDisable={isUniqueParticipant}
-            error={false}
-            success={false}
-            warning={false}
-            isRemovable={!participant?.isDeliverableCreator}
-            onChangeDistribution={updateParticipant}
-            onRemoveParticipant={removeParticipant}
-          />
-        ))
-        }
+        <div className="d-flex flex-column align-items-center proposal-distribution-participants">
+          {
+          participants?.map((participant, index) => (
+            <ProposalDistributionEditorParticipant
+              key={`editor-distribution-participant-${participant?.user?.address}`}
+              user={participant?.user}
+              defaultValue={participant?.percentage}
+              label={participant?.isDeliverableCreator ? "Deliverable Creator" : `Participant ${index}`}
+              isDisable={isUniqueParticipant}
+              error={false}
+              success={false}
+              warning={false}
+              isRemovable={!participant?.isDeliverableCreator}
+              onChangeDistribution={updateParticipant}
+              onRemoveParticipant={removeParticipant}
+            />
+          ))
+          }
+        </div>
 
         <AddDistributionParticipantButton
           users={deliverableCreators}
