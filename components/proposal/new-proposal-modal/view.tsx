@@ -3,15 +3,23 @@ import { components as RSComponents, SingleValueProps } from "react-select";
 
 import { useTranslation } from "next-i18next";
 
+import ProfileEditIcon from "assets/profile-edit-icon";
+
 import Button from "components/button";
 import ContractButton from "components/common/buttons/contract-button/contract-button.controller";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import { ContextualSpan } from "components/contextual-span";
 import IconOption from "components/icon-option";
 import If from "components/If";
 import Modal from "components/modal";
 import OpenGraphPreview from "components/open-graph-preview/controller";
+import { DistributionParticipant } from "components/proposal/new-proposal-modal/controller";
 import PaymentInfo from "components/proposal/new-proposal-modal/payment-info/view";
+import { ProposalDistributionEditor } 
+  from "components/proposal/new-proposal-modal/proposal-distribution-editor/proposal-distribution-editor.controller";
 import ReactSelect from "components/react-select";
+
+import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
 import { PaymentInfoProps } from "types/components";
 
@@ -25,13 +33,20 @@ interface NewProposalModalViewProps {
   show: boolean;
   isExecuting: boolean;
   isConnected: boolean;
+  isEditingDistribution: boolean;
   selectedDeliverable: DeliverableOption;
   deliverablesOptions: DeliverableOption[];
   deliverableUrl: string;
   paymentInfos: PaymentInfoProps[];
+  task: IssueBigNumberData;
+  currentDeliverable?:  Deliverable;
+  distributionParticipants: DistributionParticipant[];
   onClose: () => void;
   onSubmit: () => void;
+  onEditDistributionClick: () => void;
+  onCancelDistributionEditClick: () => void;
   onDeliverableChange: (value: DeliverableOption) => void;
+  setDistributionParticipants: (participants: DistributionParticipant[]) => void;
 }
 
 function SingleValue (props: SingleValueProps<any>) {
@@ -59,9 +74,16 @@ export default function NewProposalModalView({
   deliverablesOptions,
   deliverableUrl,
   paymentInfos,
+  isEditingDistribution,
+  task,
+  currentDeliverable,
+  distributionParticipants,
   onClose,
   onSubmit,
+  onEditDistributionClick,
   onDeliverableChange,
+  onCancelDistributionEditClick,
+  setDistributionParticipants,
 }: NewProposalModalViewProps) {
   const { t } = useTranslation(["proposal", "common"]);
 
@@ -84,7 +106,7 @@ export default function NewProposalModalView({
 
           <ContractButton
             onClick={onSubmit}
-            disabled={!isConnected || isExecuting}
+            disabled={!isConnected || isExecuting || isEditingDistribution}
             isLoading={isExecuting}
             withLockIcon={!isConnected}
             data-testid="modal-proposal-create-btn"
@@ -124,28 +146,61 @@ export default function NewProposalModalView({
       </div>
 
       <div className="mt-4 pt-1">
-        <span className="xs-medium text-gray-100 text-uppercase">
-          {t("create-modal.payment")}
-        </span>
+        <If condition={!isEditingDistribution}>
+          <div className="d-flex justify-content-between align-items-center">
+            <span className="xs-medium text-gray-100 text-uppercase">
+              {t("create-modal.payment")}
+            </span>
 
-        <div 
-          className="mt-1 mb-2 d-flex flex-column align-items-center border border-radius-4 border-gray-800 comment"
+            <If condition={!!selectedDeliverable && !isEditingDistribution}>
+              <Tooltip tip={"Edit distribution"}>
+                <div>
+                  <Button
+                    onClick={onEditDistributionClick}
+                    color="gray-800"
+                    textClass="text-gray-50"
+                    className="border-radius-4 p-1 border-gray-700 not-svg"
+                    data-testid="copy-button"
+                  >
+                    <ProfileEditIcon />
+                  </Button>
+                </div>
+              </Tooltip>
+            </If>
+          </div>
+        </If>
+
+        <If
+          condition={!isEditingDistribution}
+          otherwise={
+            <ProposalDistributionEditor
+              distributionParticipants={distributionParticipants}
+              task={task}
+              deliverable={currentDeliverable}
+              onCancelDistributionEditClick={onCancelDistributionEditClick}
+              setDistributionParticipants={setDistributionParticipants}
+            />
+          }
         >
-          <If
-            condition={!!deliverableUrl && !!paymentInfos}
-            otherwise={
-              <span className="p-5 sm-regular text-gray-600">
-                {t("create-modal.select-a-deliverable")}
-              </span>
-            }
+          <div 
+            className="mt-2 mb-2 d-flex flex-column align-items-center border border-radius-4 border-gray-800 comment"
           >
-            <div className="px-2 line-between-children w-100 bg-gray-850">
-              {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
-            </div>
-          </If>
-        </div>
+            <If
+              condition={!!deliverableUrl && !!paymentInfos}
+              otherwise={
+                <span className="p-5 sm-regular text-gray-600">
+                  {t("create-modal.select-a-deliverable")}
+                </span>
+              }
+            >
+              <div className="px-2 line-between-children w-100 bg-gray-850">
+                {paymentInfos?.map((info, index) => <PaymentInfo key={`payment-info-${index}`} {...info} />)}
+              </div>
+            </If>
+          </div>
+        </If>
 
-        <If condition={!!deliverableUrl && !!paymentInfos}>
+        <If condition={!!deliverableUrl && !!paymentInfos && !isEditingDistribution}>
           <ContextualSpan context="info" color="blue-200">
             {t("create-modal.fees-info")}
           </ContextualSpan>

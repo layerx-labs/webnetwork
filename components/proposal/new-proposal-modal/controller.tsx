@@ -8,8 +8,10 @@ import Badge from "components/badge";
 import NewProposalModalView from "components/proposal/new-proposal-modal/view";
 
 import calculateDistributedAmounts from "helpers/calculateDistributedAmounts";
+import { lowerCaseCompare } from "helpers/string";
 import {truncateAddress} from "helpers/truncate-address";
 
+import { User } from "interfaces/api";
 import {NetworkEvents} from "interfaces/enums/events";
 import {Deliverable, IssueBigNumberData} from "interfaces/issue-data";
 
@@ -28,6 +30,12 @@ interface ProposalModalProps {
   updateBountyData: (updatePrData?: boolean) => void;
 }
 
+export interface DistributionParticipant {
+  user: User;
+  percentage: number;
+  isDeliverableCreator?: boolean;
+}
+
 export default function ProposalModal({
   deliverables = [],
   show,
@@ -36,10 +44,13 @@ export default function ProposalModal({
   updateBountyData
 }: ProposalModalProps) {
   const { t } = useTranslation("proposal");
-  const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
 
-  const { currentUser } = useUserStore();
+  const [isEditingDistribution, setIsEditingDistribution] = useState(false);
+  const [currentDeliverable, setCurrentDeliverable] = useState<Deliverable>();
+  const [distributionParticipants, setDistributionParticipants] = useState<DistributionParticipant[]>([]);
+
   const marketplace = useMarketplace();
+  const { currentUser } = useUserStore();
   const { handleProposeMerge } = useBepro();
   const [isExecuting, onCreateProposal] = useContractTransaction( NetworkEvents.ProposalCreated,
                                                                   handleProposeMerge,
@@ -47,28 +58,28 @@ export default function ProposalModal({
                                                                   t("errors.failed-to-create"));
 
   const { chain, mergeCreatorFeeShare, proposerFeeShare } = marketplace?.active || {};
-  const deliverableUserAddress = currentDeliverable?.user?.address;
-  const deliverableUserLogin = currentDeliverable?.user?.handle;
   const distributedAmounts = chain ? calculateDistributedAmounts( chain.closeFeePercentage,
                                                                   mergeCreatorFeeShare,
                                                                   proposerFeeShare,
                                                                   BigNumber(currentBounty?.amount),
-                                                                  [
-                                                                    {
-                                                                      recipient: deliverableUserAddress, 
-                                                                      percentage: 100
-                                                                    }
-                                                                  ]) : null;
+                                                                  distributionParticipants.map(participant => ({
+                                                                    user: participant?.user,
+                                                                    recipient: participant?.user?.address,
+                                                                    percentage: participant?.percentage,
+                                                                  }))) : null;
+
+  const isDeliverableCreator = address => lowerCaseCompare(currentDeliverable?.user?.address, address);
   const paymentInfos: PaymentInfoProps[] = [
-    {
-      address: deliverableUserAddress,
-      login: deliverableUserLogin, 
-      avatar: currentDeliverable?.user?.avatar,
-      amount: distributedAmounts?.proposals?.at(0)?.value,
+    ...distributedAmounts?.proposals?.map((distributed, index) => ({
+      address: distributed?.recipient,
+      login: distributed?.handle, 
+      avatar: distributed?.avatar,
+      amount: distributed?.value,
       symbol: currentBounty?.transactionalToken?.symbol,
-      percentage: distributedAmounts?.proposals?.at(0)?.percentage,
-      label: t("create-modal.deliverable-creator"),
-    },
+      percentage: distributed?.percentage,
+      label: isDeliverableCreator(distributed?.recipient) ? 
+        t("create-modal.deliverable-creator") : `Participant ${index}`,
+    })) || [],
     {
       address: currentUser?.walletAddress,
       login: currentUser?.login,
@@ -80,12 +91,19 @@ export default function ProposalModal({
     }
   ];
 
+  const onEditDistributionClick = () => setIsEditingDistribution(true);
+  
+  function onCancelDistributionEditClick() {
+    setIsEditingDistribution(false);
+  }
+
   async function handleClickCreate(): Promise<void> {
     if (!currentDeliverable) return;
 
-    const deliverableCreator = currentDeliverable.user?.address;
+    const recipients = distributionParticipants.map(p => p.user.address);
+    const percentages = distributionParticipants.map(p => p.percentage);
 
-    onCreateProposal(+currentBounty.contractId, +currentDeliverable.prContractId, deliverableCreator)
+    onCreateProposal(+currentBounty.contractId, +currentDeliverable.prContractId, recipients, percentages)
       .then(() => {
         handleClose();
         updateBountyData();
@@ -95,13 +113,23 @@ export default function ProposalModal({
 
   function handleClose() {
     onCloseClick();
+    setIsEditingDistribution(false);
     setCurrentDeliverable(undefined);
+    setDistributionParticipants([]);
   }
 
   function handleChangeSelect({ value }) {
     const newDeliverable = deliverables.find((el) => el.id === value);
-    if (newDeliverable)
-      setCurrentDeliverable(newDeliverable);
+    if (!newDeliverable) return;
+    setCurrentDeliverable(newDeliverable);
+    setIsEditingDistribution(false);
+    setDistributionParticipants([
+      {
+        user: newDeliverable?.user,
+        percentage: 100,
+        isDeliverableCreator: true,
+      }
+    ]);
   }
 
   function deliverableToOption(deliverable: Deliverable) {
@@ -135,14 +163,21 @@ export default function ProposalModal({
     <NewProposalModalView
       show={show}
       isExecuting={isExecuting}
+      task={currentBounty}
+      currentDeliverable={currentDeliverable}
       isConnected={!!currentUser?.walletAddress}
       selectedDeliverable={deliverableToOption(currentDeliverable)}
       deliverablesOptions={deliverables?.filter(d => d?.markedReadyForReview && !d?.canceled)?.map(deliverableToOption)}
       deliverableUrl={currentDeliverable?.deliverableUrl}
+      distributionParticipants={distributionParticipants}
       paymentInfos={distributedAmounts ? paymentInfos : null}
+      isEditingDistribution={isEditingDistribution}
       onClose={handleClose}
       onSubmit={handleClickCreate}
       onDeliverableChange={handleChangeSelect}
+      onEditDistributionClick={onEditDistributionClick}
+      onCancelDistributionEditClick={onCancelDistributionEditClick}
+      setDistributionParticipants={setDistributionParticipants}
     />
   );
 }
