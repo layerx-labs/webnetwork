@@ -548,7 +548,8 @@
   "placeholders": {
     "select-chain": "Select Network",
     "select-marketplace": "Select Marketplace",
-    "select-latest": "Select Latest"
+    "select-latest": "Select Latest",
+    "select-a-user": "Select a user"
   },
   "comments": {
     "input": {

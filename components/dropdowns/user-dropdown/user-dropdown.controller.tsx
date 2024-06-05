@@ -1,10 +1,7 @@
 import { ReactNode } from "react";
 
 import AvatarOrIdenticon from "components/avatar-or-identicon";
-import NativeSelectWrapper from "components/common/native-select-wrapper/view";
-import IconOption from "components/icon-option";
-import IconSingleValue from "components/icon-single-value";
-import ReactSelect from "components/react-select";
+import { UserDropdownView } from "components/dropdowns/user-dropdown/user-dropdown.view";
 
 import { getUserLabel } from "helpers/user";
 
@@ -16,7 +13,7 @@ interface UserDropdownProps {
   onChange: (user: User) => void;
 }
 
-interface UserOption {
+export interface UserOption {
   label: string;
   value: User;
   preIcon: ReactNode;
@@ -51,21 +48,12 @@ export function UserDropdown({
   }
 
   return(
-    <NativeSelectWrapper
-      options={getNativeOptions()}
-      onChange={onNativeChange}
-    >
-      <ReactSelect
-        options={users.map(userToOption)}
-        value={selectedUser}
-        onChange={onSelectChange}
-        placeholder={"Select a user"}
-        isSearchable={false}
-        components={{
-          Option: IconOption,
-          SingleValue: IconSingleValue
-        }}
-      />
-    </NativeSelectWrapper>
+    <UserDropdownView
+      selectedUser={selectedUser}
+      options={users.map(userToOption)}
+      nativeOptions={getNativeOptions()}
+      onChange={onSelectChange}
+      onNativeChange={onNativeChange}
+    />
   );
 }

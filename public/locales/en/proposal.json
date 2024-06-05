@@ -8,11 +8,18 @@
   "addresses_other": "{{count}} Addresses",
   "addresses_for_the_distribution": "addresses for the distribution",
   "important": "Important",
+  "preview": "Preview",
   "actions": {
     "new": "New Proposal",
     "create": "Create Proposal",
     "propose-distribution": "Propose Distribution",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "add-participant": "Add Participant",
+    "remove-participant": "Remove Participant",
+    "save": "Save",
+    "hide-preview": "Hide Preview",
+    "show-preview": "Show Preview",
+    "edit-distribution": "Edit Distribution"
   },
   "messages": {
     "no-decimals-supported": "No decimals supported",
@@ -32,7 +39,10 @@
     "pr-cant-merged": "Can't be merged",
     "distribution-already-exists": "This distribution already exists on another proposal",
     "you-dont-have-proposals": "You don't have any proposals. Find a ready task to propose.",
-    "failed-to-create": "Failed to create proposal"
+    "failed-to-create": "Failed to create proposal",
+    "empty-participant": "All participants should have a percentage", 
+    "wrong-distribution": "The distribution should be equal to 100%", 
+    "existing-distribution": "This distribution already exists on another proposal"
   },
   "status": {
     "refused": "Refused by task owner",
@@ -59,12 +69,14 @@
   "create-modal": {
     "title": "New Proposal",
     "deliverable-creator": "Deliverable Creator",
+    "distribution": "Distribution",
     "proposal-creator": "Proposal Creator",
     "select-a-deliverable": "Select a Deliverable",
     "preview-deliverable": "Preview Deliverable",
     "view-deliverable": "View Deliverable",
     "payment": "Payment",
-    "fees-info": "Complete fees information can be seen after creating proposal."
+    "fees-info": "Complete fees information can be seen after creating proposal.",
+    "participant": "Participant {{count}}"
   },
   "disputes": {
     "title": "Addresses disputed"

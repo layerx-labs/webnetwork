@@ -3,14 +3,8 @@ import { useEffect, useState } from "react";
 
 import { useDebouncedCallback } from "use-debounce";
 
-import CloseIcon from "assets/icons/close-icon";
-import DoneIcon from "assets/icons/done-icon";
-
-import Button from "components/button";
-import { Tooltip } from "components/common/tooltip/tooltip.view";
-import { ContextualSpan } from "components/contextual-span";
-import If from "components/If";
 import { DistributionParticipant } from "components/proposal/new-proposal-modal/controller";
+
 
 import { lowerCaseCompare } from "helpers/string";
 import { validateDistribution, ValidateDistributionError } from "helpers/validate-distribution";
@@ -18,11 +12,7 @@ import { validateDistribution, ValidateDistributionError } from "helpers/validat
 import { User } from "interfaces/api";
 import { Deliverable, IssueBigNumberData } from "interfaces/issue-data";
 
-import { AddDistributionParticipantButton } 
-  from "../add-distribution-participant-button/add-distribution-participant-button.controller";
-import ProposalDistributionEditorParticipant
-  from "../proposal-distribution-editor-participant/proposal-distribution-editor-participant.controller";
-
+import { ProposalDistributionEditorView } from "./proposal-distribution-editor.view";
 
 interface ProposalDistributionEditorProps {
   distributionParticipants: DistributionParticipant[];
@@ -54,7 +44,6 @@ export function ProposalDistributionEditor({
       acc[curr?.user?.address?.toLowerCase()] = curr?.user;
     return acc;
   }, {}));
-  const isUniqueParticipant = participants?.length === 1;
 
   function updateParticipantsMap(address: string, selected: boolean) {
     setSelectedParticipantsMap(previous => ({
@@ -121,77 +110,15 @@ export function ProposalDistributionEditor({
   }, [participants]);
 
   return(
-    <div className="mb-2">
-      <div className="d-flex justify-content-between align-items-center gap-2 mr-1 mb-2">
-        <span className="xs-medium text-gray-100 text-uppercase">
-          Distribution
-        </span>
-
-        <div className="d-flex align-items-center gap-2">
-          <Tooltip tip={"Cancel"}>
-            <div>
-              <Button
-                onClick={onCancelClick}
-                color="gray-800"
-                textClass="text-gray-50"
-                className="border-radius-4 p-1 border-gray-700 not-svg"
-                data-testid="copy-button"
-              >
-                <CloseIcon width={16} height={16} />
-              </Button>
-            </div>
-          </Tooltip>
-
-          <Tooltip tip={"Save"}>
-            <div>
-              <Button
-                onClick={onSaveClick}
-                color="gray-800"
-                textClass="text-gray-50"
-                className="border-radius-4 p-1 border-gray-700 not-svg"
-                data-testid="copy-button"
-                disabled={!!editingDistributionError}
-              >
-                <DoneIcon width={16} height={16} />
-              </Button>
-            </div>
-          </Tooltip>
-        </div>
-      </div>
-
-      <div className={`d-flex flex-column w-100 px-2 pb-2 line-between-children align-items-center gap-2 
-        border border-radius-4 border-gray-800 comment`}>
-        <div className="d-flex flex-column align-items-center proposal-distribution-participants">
-          {
-          participants?.map((participant, index) => (
-            <ProposalDistributionEditorParticipant
-              key={`editor-distribution-participant-${participant?.user?.address}`}
-              user={participant?.user}
-              defaultValue={participant?.percentage}
-              label={participant?.isDeliverableCreator ? "Deliverable Creator" : `Participant ${index}`}
-              isDisable={isUniqueParticipant}
-              error={false}
-              success={false}
-              warning={false}
-              isRemovable={!participant?.isDeliverableCreator}
-              onChangeDistribution={updateParticipant}
-              onRemoveParticipant={removeParticipant}
-            />
-          ))
-          }
-        </div>
-
-        <AddDistributionParticipantButton
-          users={deliverableCreators}
-          onAddParticipant={addParticipant}
-        />
-      </div>
-
-      <If condition={!!editingDistributionError}>
-        <ContextualSpan context="warning" className="mt-2" >
-          {editingDistributionError}
-        </ContextualSpan>
-      </If>
-    </div>
+    <ProposalDistributionEditorView
+      availableUsers={deliverableCreators}
+      participants={participants}
+      error={editingDistributionError}
+      onCancelClick={onCancelClick}
+      onSaveClick={onSaveClick}
+      onChangeDistribution={updateParticipant}
+      onAddParticipant={addParticipant}
+      onRemoveParticipant={removeParticipant}
+    />
   );
 }

@@ -149,14 +149,14 @@ export default function NewProposalModalView({
       <div className="mt-4 pt-1">
         <div className="d-flex align-items-center justify-content-between mb-2">
           <span className="xs-medium text-gray-100 text-uppercase">
-            Preview
+            {t("preview")}
           </span>
 
           <If condition={!!selectedDeliverable}>
             <HideShowButton
               isVisible={isPreviewVisible}
-              hideTip={"Hide Preview"}
-              showTip={"Show Preview"}
+              hideTip={t("actions.hide-preview")}
+              showTip={t("actions.show-preview")}
               onHideClick={onHidePreview}
               onShowClick={onShowPreview}
             />
@@ -183,7 +183,7 @@ export default function NewProposalModalView({
             </span>
 
             <If condition={!!selectedDeliverable && !isEditingDistribution}>
-              <Tooltip tip={"Edit distribution"}>
+              <Tooltip tip={t("actions.edit-distribution")}>
                 <div>
                   <Button
                     onClick={onEditDistributionClick}
