@@ -71,7 +71,6 @@ export default function ProfilePageView({
               <div className="col-auto">
                 <PointsBadge
                   points={totalPoints}
-                  variant="filled"
                 />
               </div>
             </div>
