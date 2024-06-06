@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
-import AvatarOrIdenticon from "components/avatar-or-identicon";
+import { AvatarCurrentUser } from "components/avatar-current-user/avatar-current-user.controller";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
 import { PointsBadge } from "components/common/points/points-badge.view";
@@ -113,11 +113,7 @@ export default function NavAvatar() {
       <Popover.Body className="bg-shadow pt-3 px-4">
         <div className="row align-items-center border-bottom border-light-gray pb-2">
           <div className="col-3 px-0">
-            <AvatarOrIdenticon
-              user={currentUser?.login}
-              address={currentUser?.walletAddress}
-              size="md"
-            />
+            <AvatarCurrentUser size="md" />
           </div>
 
           <div className="col-9 p-0">
@@ -190,11 +186,7 @@ export default function NavAvatar() {
         overlay={overlay}
       >
         <div className="d-flex flex-column align-items-center justify-content-center">
-          <AvatarOrIdenticon
-            user={currentUser?.login}
-            address={currentUser?.walletAddress}
-            size="md"
-          />
+          <AvatarCurrentUser size="md" />
         </div>
       </OverlayTrigger>
     </div>

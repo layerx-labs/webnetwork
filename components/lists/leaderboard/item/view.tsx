@@ -1,11 +1,11 @@
 import {useTranslation} from "next-i18next";
 
+import AvatarOrIdenticon from "components/avatar-or-identicon";
 import ChainIcon from "components/chain-icon";
 import CopyButton from "components/common/buttons/copy/controller";
 import { OverlappingIcons } from "components/common/overlapping-icons/overlapping-icons.view";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
-import Identicon from "components/identicon";
 
 import { truncateString } from "helpers/truncate-string";
 
@@ -51,9 +51,12 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
   return (
     <ResponsiveListItem
       icon={
-        <Identicon 
+        <AvatarOrIdenticon
           size="sm"
-          address={leaderboard?.address}
+          user={{
+            address: leaderboard?.address,
+            avatar: leaderboard?.user?.avatar
+          }}
         />
       }
       label={<UserProfileLink address={leaderboard?.address} handle={leaderboard?.user?.handle} />}

@@ -10,7 +10,7 @@ export const QueryKeys = {
   network: (networkAddress: string, chainId: string) => ["network", networkAddress, chainId],
   networksByChain: (chainId: string) => ["networks", chainId],
   networksByName: (networkName: string) => ["networks", networkName],
-  networksByGovernor: (governorAddress: string, chainId: string) => ["network", governorAddress, chainId],
+  networksByGovernor: (governorAddress: string, chainId?: string) => ["network", governorAddress, chainId],
   networkDefault: () => ["network", "default"],
   tokensByChain: (chainId: string) => ["tokens", chainId],
   tokensOf: (wallet: string) => ["tokens", wallet],
@@ -25,5 +25,6 @@ export const QueryKeys = {
   totalPointsOfUser: (address: string) => ["points", "total", address],
   pointsEventsOfUser: (address: string) => ["points", "events", address],
   pointsBase: () => ["points", "base"],
-  userSocials: () => ["user-socials"]
+  userSocials: () => ["user-socials"],
+  taikaiPops:(address: string) => ["taikai-pops", address],
 };

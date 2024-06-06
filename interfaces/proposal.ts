@@ -64,6 +64,7 @@ export interface DistributedAmounts {
     percentage: string;
     recipient: string;
     handle?: string;
+    avatar?: string;
   }[];
 }
 

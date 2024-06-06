@@ -30,7 +30,7 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   const include = [
     {
       association: "user",
-      attributes: ["handle"]
+      attributes: ["handle", "avatar"]
     }
   ]
 

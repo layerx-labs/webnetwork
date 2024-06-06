@@ -25,7 +25,7 @@ export default function TasksListsCategoryFilter () {
     },
     {
       label: t("categories.design"),
-      color: "orange",
+      color: "purple",
       value: "design"
     },
     {
@@ -35,7 +35,7 @@ export default function TasksListsCategoryFilter () {
     },
     {
       label: t("categories.writing"),
-      color: "pink",
+      color: "orange",
       value: "writing"
     }
   ];

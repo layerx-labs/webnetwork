@@ -9,9 +9,11 @@ import { useNetworkSettings } from "contexts/network-settings";
 
 import {LARGE_TOKEN_SYMBOL_LENGTH} from "helpers/constants";
 
-import { StandAloneEvents } from "interfaces/enums/events";
+import { NetworkEvents, StandAloneEvents } from "interfaces/enums/events";
 import { Network } from "interfaces/network";
 import { Token } from "interfaces/token";
+
+import { NetworkParameters } from "types/dappkit";
 
 import { useProcessEvent } from "x-hooks/api/events/use-process-event";
 import { useUpdateNetwork } from "x-hooks/api/marketplace";
@@ -23,16 +25,15 @@ import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 
 interface GovernanceProps {
-  address: string;
-  tokens: Token[];
   network: Network;
   updateEditingNetwork: () => void;
 }
 
+const getValidatedField =
+ value => ({ value, validated: true });
+
 export default function NetworkGovernanceSettings({
   network,
-  tokens,
-  address,
   updateEditingNetwork
 }: GovernanceProps) {
   const { update: updateSession } = useSession();
@@ -41,23 +42,32 @@ export default function NetworkGovernanceSettings({
   const [isClosing, setIsClosing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [networkToken, setNetworkToken] = useState<Token[]>();
-  
+  const [rewardTokens, setRewardTokens] = useState<Token[]>();
+  const [transactionalTokens, setTransactionalTokens] = useState<Token[]>();
+  const [parameters, setParameters] = useState({
+    disputableTime: getValidatedField(network?.disputableTime),
+    percentageNeededForDispute: getValidatedField(network?.percentageNeededForDispute),
+    draftTime: getValidatedField(network?.draftTime),
+    councilAmount: getValidatedField(network?.councilAmount),
+    cancelableTime: getValidatedField(network?.cancelableTime),
+    oracleExchangeRate: getValidatedField(network?.oracleExchangeRate),
+    mergeCreatorFeeShare: getValidatedField(network?.mergeCreatorFeeShare),
+    proposerFeeShare: getValidatedField(network?.proposerFeeShare),
+  });
+
   const marketplace = useMarketplace();
   const { processEvent } = useProcessEvent();
   const { updateWalletBalance } = useAuthentication();
   const { handleCloseNetwork, handleChangeNetworkParameter } = useBepro();
   const {
-    settings,
-    tokens: settingsTokens,
     isAbleToClosed,
-    forcedNetwork,
   } = useNetworkSettings();
 
   const { currentUser } = useUserStore();
   const { service: daoService } = useDaoStore();
   const { addError, addSuccess } = useToastStore();
 
-  const symbol = forcedNetwork?.networkToken?.symbol
+  const symbol = network?.networkToken?.symbol;
   const networkTokenSymbol =
     symbol?.length > LARGE_TOKEN_SYMBOL_LENGTH
       ? `${symbol.slice(0, LARGE_TOKEN_SYMBOL_LENGTH)}...`
@@ -73,7 +83,7 @@ export default function NetworkGovernanceSettings({
   const networkAmounts = [
     NetworkAmount(t("custom-network:oracles-staked", { symbol: networkTokenSymbol, }),
                   t("custom-network:oracles-staked-description"),
-                  forcedNetwork?.tokensLocked || 0),
+                  network?.tokensLocked || 0),
     NetworkAmount(t("custom-network:open-bounties"),
                   t("custom-network:open-bounties-description"),
                   marketplace?.active?.totalOpenIssues || 0,
@@ -86,7 +96,16 @@ export default function NetworkGovernanceSettings({
 
   const isCurrentNetwork = (!!network &&
     !!marketplace?.active &&
-    network?.networkAddress === marketplace?.active?.networkAddress)
+    network?.networkAddress === marketplace?.active?.networkAddress);
+
+  function handleParameterChange(param: NetworkParameters) {
+    return (value: number, validated?: boolean) => {
+      setParameters(previous => ({
+        ...previous,
+        [param]: { value, validated }
+      }));
+    }
+  }
 
   function handleCloseMyNetwork() {
     if (
@@ -122,9 +141,7 @@ export default function NetworkGovernanceSettings({
   function getChangedParameters() {
     const changedParameters = [];
 
-    if (!forcedNetwork) return changedParameters;
-
-    const { parameters } = settings;
+    if (!network) return changedParameters;
 
     const parametersKeys = [
       "draftTime",
@@ -137,7 +154,7 @@ export default function NetworkGovernanceSettings({
       "proposerFeeShare",
     ];
 
-    changedParameters.push(...parametersKeys.filter(param => parameters[param].value !== +forcedNetwork[param]));
+    changedParameters.push(...parametersKeys.filter(param => +parameters[param].value !== +network[param]));
 
     return changedParameters;
   }
@@ -145,15 +162,15 @@ export default function NetworkGovernanceSettings({
   function getChangedTokens() {
     const changedTokens = [];
 
-    if (!settingsTokens?.allowedRewards?.length && !settingsTokens?.allowedTransactions?.length && !networkToken)
+    if (!rewardTokens?.length && !transactionalTokens?.length && !networkToken)
       return changedTokens;
 
     const getAddress = (token: Token) => token?.address;
     const hasEqualLength = (arr1, arr2) => arr1?.length === arr2?.length;
     const hasSameElements = (arr1, arr2) => arr1?.every(el => arr2?.find(el2 => el === el2));
 
-    const allowedRewards = settingsTokens?.allowedRewards?.map(getAddress);
-    const allowedTransactions = settingsTokens?.allowedTransactions?.map(getAddress);
+    const allowedRewards = rewardTokens?.map(getAddress);
+    const allowedTransactions = transactionalTokens?.map(getAddress);
 
     const networkRewards = networkToken?.filter(token => token?.network_tokens?.isReward).map(getAddress);
     const networkTransactions =
@@ -176,8 +193,8 @@ export default function NetworkGovernanceSettings({
     if (
       !currentUser?.walletAddress ||
       !daoService ||
-      !forcedNetwork ||
-      forcedNetwork?.isClosed ||
+      !network ||
+      network?.isClosed ||
       isClosing
     )
       return;
@@ -186,16 +203,20 @@ export default function NetworkGovernanceSettings({
 
     const changedParameters = getChangedParameters().map(param => ({
       param,
-      value: settings?.parameters[param]?.value
+      value: parameters[param]?.value
     }));
 
     const networkAddress = network?.networkAddress;
     const failed = [];
     const success = {};
+    const txBlocks = [];
 
     for (const { param, value } of changedParameters) {
       await handleChangeNetworkParameter(param, value, networkAddress)
-        .then(() => success[param] = param)
+        .then(tx => {
+          txBlocks.push(tx.blockNumber);
+          success[param] = param
+        })
         .catch(error => {
           console.debug("Tx error: ", error);
           failed.push(param);
@@ -218,7 +239,7 @@ export default function NetworkGovernanceSettings({
           processEvent(StandAloneEvents.BountyMovedToOpen)
         ]);
 
-      await processEvent(StandAloneEvents.UpdateNetworkParams)
+      await processEvent(NetworkEvents.NetworkParamChanged, network?.networkAddress, { fromBlock: txBlocks.at(0) })
         .catch(error => console.debug("Failed to update network parameters", error));
 
       addSuccess(t("actions.success"), t("custom-network:messages.updated-parameters", {
@@ -236,8 +257,8 @@ export default function NetworkGovernanceSettings({
       handle: currentUser.login,
       networkAddress: network.networkAddress,
       allowedTokens: {
-        transactional: settingsTokens?.allowedTransactions?.map((token) => token?.id).filter((v) => v),
-        reward: settingsTokens?.allowedRewards?.map((token) => token?.id).filter((v) => v)
+        transactional: transactionalTokens?.map((token) => token?.id).filter((v) => v),
+        reward: rewardTokens?.map((token) => token?.id).filter((v) => v)
       }
     };
 
@@ -259,14 +280,24 @@ export default function NetworkGovernanceSettings({
       .finally(() => setIsUpdating(false));
   }
 
+  function handleTokenChange(transactional: Token[], reward: Token[]) {
+    setTransactionalTokens(transactional);
+    setRewardTokens(reward);
+  }
+
+  const changedParameters = getChangedParameters();
+  const isValidated = changedParameters.every(c => parameters[c]?.validated !== false) && 
+    !!rewardTokens?.length &&
+    !!transactionalTokens?.length;
+
   useEffect(() => {
-    if(tokens.length > 0) 
-      setNetworkToken(tokens.map((token) => ({
+    if(network?.tokens?.length > 0) 
+      setNetworkToken(network?.tokens.map((token) => ({
         ...token,
         isReward: !!token.network_tokens.isReward,
         isTransactional: !!token.network_tokens.isTransactional
       })));
-  }, [tokens]);
+  }, [network?.tokens]);
 
   useEffect(() => {
     marketplace.refresh();
@@ -275,16 +306,17 @@ export default function NetworkGovernanceSettings({
   return(
     <NetworkGovernanceSettingsView
       networkAmounts={networkAmounts}
-      networkAddress={address}
+      networkAddress={network?.networkAddress}
       isAbleToClosed={isAbleToClosed}
       isClosing={isClosing}
       networkTokens={networkToken}
-      isSubmitButtonVisible={
-        !!settings?.validated && (!!getChangedParameters()?.length || !!getChangedTokens()?.length)
-      }
-      isSubmitButtonDisabled={!settings?.validated || isUpdating || forcedNetwork?.isClosed || isClosing}
+      parameters={parameters}
+      onParameterChange={handleParameterChange}
+      isSubmitButtonVisible={isValidated && (!!changedParameters?.length || !!getChangedTokens()?.length)}
+      isSubmitButtonDisabled={!isValidated || isUpdating || network?.isClosed || isClosing}
       onCloseNetworkClick={handleCloseMyNetwork}
       onSaveChangesClick={handleSubmit}
+      onTokenChange={handleTokenChange}
     />
   );
 }

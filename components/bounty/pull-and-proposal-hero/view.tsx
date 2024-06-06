@@ -17,6 +17,7 @@ interface PullAndProposalHeroViewPRops {
   handle: string;
   createdAt: Date;
   creatorAddress: string;
+  avatarHash: string;
   issueTitle: string;
   issueId: string;
   issueAmount: BigNumber;
@@ -30,6 +31,7 @@ export default function PullAndProposalHeroView({
   handle,
   createdAt,
   creatorAddress,
+  avatarHash,
   issueTitle,
   issueId,
   isProposal,
@@ -92,8 +94,11 @@ export default function PullAndProposalHeroView({
             <div className="row align-items-center gap-1">
               <div className="col-auto">
                 <AvatarOrIdenticon
-                  user={handle}
-                  address={creatorAddress}
+                  user={{
+                    avatar: avatarHash,
+                    handle,
+                    address: creatorAddress,
+                  }}
                   size="sm"
                 />
               </div>

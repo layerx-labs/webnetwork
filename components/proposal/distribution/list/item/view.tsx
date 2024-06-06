@@ -19,6 +19,7 @@ interface ProposalDistributionListItemProps {
   line?: boolean
   handle?: string;
   address?: string;
+  avatar?: string;
   className?: string;
   isNetworkToken?: boolean;
 }
@@ -32,6 +33,7 @@ export default function ProposalDistributionListItem({
   description,
   handle,
   address,
+  avatar,
   className,
   isNetworkToken,
 }: ProposalDistributionListItemProps) {
@@ -44,8 +46,11 @@ export default function ProposalDistributionListItem({
         <div className="d-flex align-items-center gap-2">
           <If condition={!!handle}>
             <AvatarOrIdenticon
-              user={handle}
-              address={address}
+              user={{
+                handle,
+                address,
+                avatar
+              }}
               size="xsm"
             />
           </If>

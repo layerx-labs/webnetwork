@@ -8,6 +8,7 @@ module.exports = {
     const pointsEvents = await getAllFromTable(queryInterface, "points_events");
     const events = pointsEvents.filter(e => e.actionName === "delegated" || e.actionName === "locked");
     const grouped = {};
+    let hasDuplicated = false;
     
     for (const event of events) {
       const dateString = `${event.createdAt.getFullYear()}${event.createdAt.getMonth()}${event.createdAt.getDate()}`;
@@ -28,8 +29,12 @@ module.exports = {
           grouped[event.userId]["toDelete"] = [];
 
         grouped[event.userId]["toDelete"].push(event);
+        hasDuplicated = true;
       }
     }
+
+    if (!hasDuplicated)
+      return;
 
     await queryInterface.bulkUpdate("users", {
       totalPoints: 0,
@@ -38,6 +43,9 @@ module.exports = {
     const usersIds = Object.keys(grouped);
 
     for (const userId of usersIds) {
+      if (!grouped[userId].toDelete?.length)
+        continue;
+
       await queryInterface.bulkDelete("points_events", {
         id: grouped[userId].toDelete.map(e => e.id),
       });

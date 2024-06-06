@@ -48,8 +48,6 @@ export default function ItemRowView({
   isRefused,
   isPrivate,
 }: ItemRowProps) {
-  const userhandle = (item as Deliverable)?.user?.handle;
-  const userAddress = (item as Deliverable)?.user?.address || (item as Proposal)?.creator;
   const Wrapper = ({ children, href, ...props }) => isPrivate ? 
     <div {...props}>{children}</div> : <Link href={href} {...props}>{children}</Link>
 
@@ -89,8 +87,7 @@ export default function ItemRowView({
 
           <div className="text-truncate col-md-5 col-xl-3 d-flex align-items-center gap-2">
             <AvatarOrIdenticon
-              user={userhandle}
-              address={userAddress}
+              user={item?.user}
               size="sm"
             />
 
@@ -98,8 +95,8 @@ export default function ItemRowView({
               className={`${
                 isProposal ? "d-none d-sm-block" : ""
               } text-uppercase text-white caption text-truncate mt-1`}
-              address={userAddress}
-              handle={userhandle}
+              address={item?.user?.address}
+              handle={item?.user?.handle}
             />
           </div>
 

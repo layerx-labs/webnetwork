@@ -1,4 +1,4 @@
-export type SizeOptions = "xsm"|"sm" | "md" | "lg";
+export type SizeOptions = "xsm"|"sm" | "md" | "lg" | "xl";
 export type ProfilePages = 
   "dashboard" |
   "wallet" |

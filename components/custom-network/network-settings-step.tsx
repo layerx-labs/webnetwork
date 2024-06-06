@@ -28,6 +28,7 @@ export default function NetworkSettingsStep({ activeStep, index, validated, hand
   const { fields, settings } = useNetworkSettings();
 
   const handleColorChange = value => fields.colors.setter(value);
+  const onParameterChange = (label) => (value) => fields.parameter.setter({label, value});
 
   return (
     <Step
@@ -47,7 +48,10 @@ export default function NetworkSettingsStep({ activeStep, index, validated, hand
       </Section>
 
       <Section title={t("custom-network:steps.network-settings.fields.other-settings.title")}>
-        <NetworkContractSettings/> 
+        <NetworkContractSettings
+          parameters={settings?.parameters}
+          onParameterChange={onParameterChange}
+        /> 
         <WarningSpan
           text={t("custom-network:steps.network-settings.fields.other-settings.parameters-warning")}
         />

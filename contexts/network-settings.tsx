@@ -462,6 +462,8 @@ export const NetworkSettingsProvider = ({ children }) => {
   useEffect(() => {
     if (!network || !daoService || serviceStarting)
       setForcedService(undefined);
+    else if (+network?.chain?.chainId === +daoStore?.chainId)
+      setForcedService(daoService);
     else if (+network?.chain?.chainId === +connectedChain?.id)
       loadForcedService()
         .then(setForcedService);

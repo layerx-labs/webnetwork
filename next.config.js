@@ -85,7 +85,8 @@ const serverRuntimeConfig = {
       serverUrl: process.env.NEXT_ELASTIC_APM_SERVER_URL
     },
     active: process.env.NEXT_ELASTIC_APM_ACTIVE === "true"
-  }
+  },
+  ankrKey: process.env.NEXT_ANKR_KEY,
 }
 
 module.exports = () => {

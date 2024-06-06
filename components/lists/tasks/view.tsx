@@ -142,17 +142,19 @@ export default function TasksListView({
                     <h4 className="text-capitalize font-weight-medium">
                       {listTitleByType[type]}
                     </h4>
-                    {["deliverables", "proposals"].includes(type) ? (
-                      <>
-                        <CountComponent count={bounties?.totalBounties}/>
-                        <span className="caption-small text-gray font-weight-medium mt-1">
-                      {t("bounty:label", { count: bounties?.count })}{" "}
-                          {bounties?.count}
-                    </span>
-                      </>
-                    ) : (
+                    <If
+                      condition={["deliverables", "proposals"].includes(type)}
+                      otherwise={
+                        <CountComponent count={isManagement || isProfile ? bounties?.count : bounties?.totalBounties} />
+                      }
+                    >
                       <CountComponent count={bounties?.totalBounties}/>
-                    )}
+
+                      <span className="caption-small text-gray font-weight-medium mt-1">
+                        {t("bounty:label", { count: bounties?.count })}{" "}
+                        {bounties?.count}
+                      </span>
+                    </If>
                   </div>
                 </div>
               </If>

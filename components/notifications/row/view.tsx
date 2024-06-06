@@ -36,7 +36,7 @@ export default  function NotificationRow({
             <div className="d-flex cursor-pointer"
                  key={item?.id}
                  onClick={() => redirectTo(item, {network, link})}>
-              <AvatarOrIdenticon address={extractAddress} size="md" />
+              <AvatarOrIdenticon user={{ address: extractAddress}} size="md" />
               <div dangerouslySetInnerHTML={{ __html: finalTemplate }} />
             </div>
             <div className="d-flex ms-2">

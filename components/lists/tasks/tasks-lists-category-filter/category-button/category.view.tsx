@@ -1,9 +1,8 @@
-import BracketsCurlyIcon from "assets/icons/brackets-curly-icon";
+import LightningIcon from "assets/icons/lightning-icon";
 import MegaPhoneIcon from "assets/icons/mega-phone-icon";
 import PaletteIcon from "assets/icons/palette-icon";
 import PencilLineIcon from "assets/icons/pencil-line-icon";
 
-import Button from "components/button";
 import If from "components/If";
 
 import { Category } from "../tasks-lists-category-filter.controller";
@@ -20,37 +19,35 @@ export default function CategoryButton({
   const { color, value, label } = category;
 
   function handleIcons(value: "code" | "design" | "marketing" | "writing") {
-    const size = { width: "100%", height: "100%" };
+    const size = { width: 24, height: 24 };
     const icons = {
-      code: <BracketsCurlyIcon style={size} />,
-      design: <PaletteIcon style={size} />,
-      marketing: <MegaPhoneIcon style={size} />,
-      writing: <PencilLineIcon style={size} />,
+      code: <LightningIcon {...size} />,
+      design: <PaletteIcon {...size} />,
+      marketing: <MegaPhoneIcon {...size} />,
+      writing: <PencilLineIcon {...size} />,
     };
 
-    return icons[value] || <BracketsCurlyIcon />;
+    return icons[value] || <LightningIcon />;
   }
 
   return (
-    <Button
-      className={`category-filter-${color} category-size
-           border-none text-capitalize lg-medium border-radius-16
-          ${
-            icon
-              ? "justify-content-between ps-3 pe-0 pb-2 pt-0"
-              : "px-3 pb-3 pt-5"
-          }`}
-      align="left"
+    <button
+      className={`category-filter-wrapper category-filter-wrapper-${color}`}
       onClick={() => onCategoryClick(value)}
       data-testid={`category${icon ? '-': '-mobile-'}button-${value}`}
     >
-      <If condition={icon} otherwise={(label)}>
-        <div className="d-flex flex-column justify-content-end h-100 mb-1">
-          <span>{label}</span>
-        </div>
-      </If>
+      <div className={`category-filter-content category-filter-content-${color} d-flex 
+        flex-column align-items-start h-100 p-3 gap-4`}>
+        <If condition={icon}>
+          {handleIcons(value)}
+        </If>
 
-      <If condition={icon}>{handleIcons(value)}</If>
-    </Button>
+        <If condition={icon} otherwise={(label)}>
+          <div className="text-white font-weight-medium family-Inter">
+            <span>{label}</span>
+          </div>
+        </If>
+      </div>
+    </button>
   );
 }

@@ -1,3 +1,7 @@
+import {Github} from "assets/icons/github";
+import {Linkedin} from "assets/icons/linkedin";
+import {XCom} from "assets/icons/x-com";
+
 import AvatarOrIdenticon from "components/avatar-or-identicon";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
@@ -7,7 +11,7 @@ import ProposalsList from "components/lists/proposals/proposals-list.controller"
 import TasksList from "components/lists/tasks/controller";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 
-
+import {AnkrNftAsset} from "types/ankr-nft-asset";
 import {
   DeliverablePaginatedData,
   PaymentPaginatedData,
@@ -18,12 +22,11 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import {Github} from "../../../assets/icons/github";
-import {Linkedin} from "../../../assets/icons/linkedin";
-import {XCom} from "../../../assets/icons/x-com";
+import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
   userAddress: string;
+  avatar?: string;
   primaryText: string;
   secondaryText?: string;
   tabs: MiniTabsItem[];
@@ -42,10 +45,13 @@ interface PublicProfileViewProps {
     twitter: string;
   };
   about?: string;
+  taikaiPops: AnkrNftAsset[],
+  isTaikaiPoP: boolean,
 }
 
 export default function PublicProfileView({
                                             userAddress,
+                                            avatar,
                                             primaryText,
                                             secondaryText,
                                             tabs,
@@ -60,6 +66,8 @@ export default function PublicProfileView({
                                             type = "won",
                                             socials = null,
                                             about = null,
+                                            isTaikaiPoP,
+                                            taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
 
@@ -70,12 +78,13 @@ export default function PublicProfileView({
     submissions: "submissions",
     proposals: "proposals",
     nfts: "nfts",
+    pops: "pops"
   }[type] || "network") as TasksListItemVariant;
 
   const socialEle = [
-    [socials?.github?.replace("https://github.com",""), socials?.github, <Github/>],
-    [socials?.linkedIn?.replace("https://linkedin.com", ""), socials?.linkedIn, <Linkedin/>],
-    [socials?.twitter?.replace("https://x.com", ""), socials?.twitter, <XCom/>],
+    [socials?.github?.replace("https://github.com/",""), socials?.github, <Github/>],
+    [socials?.linkedIn?.replace("https://linkedin.com/in/", ""), socials?.linkedIn, <Linkedin/>],
+    [socials?.twitter?.replace("https://x.com/", ""), socials?.twitter, <XCom/>],
   ]
 
   return (
@@ -86,8 +95,8 @@ export default function PublicProfileView({
       <div className="row align-items-center mb-5">
         <div className="col-auto">
           <AvatarOrIdenticon
-            address={userAddress}
-            size={isTabletOrMobile ? 56 : "lg"}
+            user={{ address: userAddress, avatar }}
+            size={isTabletOrMobile ? "lg" : "xl"}
             withBorder
           />
         </div>
@@ -165,6 +174,11 @@ export default function PublicProfileView({
               payments={payments}
             />
           </If>
+
+          <If condition={isTaikaiPoP}>
+            <TaikaiPopView assets={taikaiPops} />
+          </If>
+
         </div>
       </div>
     </CustomContainer>

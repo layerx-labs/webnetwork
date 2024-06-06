@@ -38,6 +38,7 @@ export default function BountyCommentsView({
                 <InputComment
                   userAddress={currentUser?.walletAddress}
                   handle={currentUser?.login}
+                  avatar={currentUser?.avatar}
                   type={type}
                   ids={ids}
                 />
