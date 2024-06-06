@@ -41,7 +41,7 @@ export default function NotificationFormView({
   const {t} = useTranslation(["common", " profile"]);
 
   return (
-    <div className="row mb-4 mt-4">
+    <div className="row mb-4">
       <div className="col-12">
         <div className="row align-items-center">
           <div className="d-flex col justify-content-between align-items-center">
