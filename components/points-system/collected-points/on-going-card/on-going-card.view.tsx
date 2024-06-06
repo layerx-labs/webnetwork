@@ -29,7 +29,6 @@ export function OnGoingCard({
       <div className="max-width-content">
         <PointsBadge
           points={pointsLabel}
-          variant="available"
         />
       </div>
     </Card>
