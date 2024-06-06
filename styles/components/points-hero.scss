@@ -1,0 +1,19 @@
+.points-hero {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: -650%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(circle, rgba(14,106,244,1) -30%, rgba(72,155,253,0) 80%);
+  }
+
+  &-boosted {
+    &::before {
+      background: radial-gradient(circle, rgba(173,72,253,1) -30%, rgba(212,14,244,0) 80%);
+    }
+  }
+}
