@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {useSession} from "next-auth/react";
 import {useTranslation} from "next-i18next";
@@ -11,6 +11,7 @@ import {useUserStore} from "../../../x-hooks/stores/user/user.store";
 import useReactQuery from "../../../x-hooks/use-react-query";
 import useReactQueryMutation from "../../../x-hooks/use-react-query-mutation";
 import Button from "../../button";
+import {Divider} from "../../divider";
 import {AboutFormView} from "../about-form/about-form-view";
 import {SocialFormView} from "../socials-form/social-form-view";
 
@@ -140,6 +141,8 @@ export function AboutSocial() {
         </Button>
       </div>
     </div>
-    <hr className="my-5"/>
+    <div className="py-3">
+      <Divider bg="gray-850" />
+    </div>
   </>
 }

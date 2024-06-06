@@ -4,7 +4,6 @@ import {useTranslation} from "next-i18next";
 
 import Badge from "components/badge";
 import CustomContainer from "components/custom-container";
-import {Divider} from "components/divider";
 import InternalLink from "components/internal-link";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import {AvatarForm} from "components/profile/avatar-form/avatar-form.controller";
@@ -84,7 +83,6 @@ export default function ProfilePageView({
         <AboutSocial />
         <NotificationForm />
         <LanguageForm />
-        <Divider bg="gray-850" />
       </DashboardLayout>
     </>
   );
