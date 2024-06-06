@@ -1,0 +1,35 @@
+.points-badge {
+  &-wrapper {
+    padding: 2px;
+    border-radius: 100px;
+    background: conic-gradient(from 270deg at 50% 75%, #4457E8 0deg, #AAF6FC 79.2deg, #B68FFC 185.4deg, #7FD1F9 282.6deg, #7064EC 360deg);
+  }
+
+  &-content {
+    @extend .d-flex; 
+    @extend .align-items-center;
+    @extend .gap-2;
+
+    position: relative;
+    z-index: 1;
+
+    border-radius: 100px;
+    padding: 6px 11px;
+    background-color: $gray-950;
+  }
+
+  &-content-filled::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+
+    content: "";
+    opacity: .3;
+    border-radius: 100px;
+
+    background: conic-gradient(from 270deg at 50% 75%, #4457E8 0deg, #FFFDFF 79.2deg, #B68FFC 185.4deg, #7FD1F9 282.6deg, #7064EC 360deg);
+  }
+}
