@@ -3,6 +3,7 @@ import {
   BountyToken,
   Defaults,
   ERC20,
+  Model,
   Network_v2,
   NetworkRegistry,
   toSmartContractDecimals,
@@ -12,6 +13,7 @@ import {
 import {TransactionReceipt} from "@taikai/dappkit/dist/src/interfaces/web3-core";
 import BigNumber from "bignumber.js";
 import {isZeroAddress} from "ethereumjs-util";
+import getConfig from "next/config";
 import {PromiEvent, provider as Provider, TransactionReceipt as TransactionReceiptWeb3Core} from "web3-core";
 import {Contract} from "web3-eth-contract";
 import {isAddress as web3isAddress} from "web3-utils";
@@ -21,6 +23,8 @@ import {OraclesResumeExtended} from "interfaces/oracles-state";
 import {Token} from "interfaces/token";
 
 import {NetworkParameters, RegistryParameters} from "types/dappkit";
+
+const {publicRuntimeConfig} = getConfig()
 
 interface DAOServiceProps {
   skipWindowAssignment?: boolean;
@@ -68,6 +72,10 @@ export default class DAO {
 
   get registryAddress() { return this._registryAddress; }
 
+  public changeGasFactor(model: Model) {
+    model.contract.options.gasFactor = publicRuntimeConfig.gasFactor;
+  }
+
   async loadNetwork(networkAddress: string, skipAssignment?: boolean): Promise<Network_v2 | boolean> {
     try {
       if (!networkAddress) throw new Error("Missing Network_v2 Contract Address");
@@ -75,6 +83,8 @@ export default class DAO {
       const network = new Network_v2(this.web3Connection, networkAddress);
 
       await network.start();
+
+      this.changeGasFactor(network);
 
       if (!skipAssignment)
         this._network = network;
@@ -96,6 +106,8 @@ export default class DAO {
 
       await registry.loadContract();
 
+      this.changeGasFactor(registry);
+
       if (!skipAssignment) this._registry = registry;
 
       return registry;
@@ -111,6 +123,8 @@ export default class DAO {
 
     await erc20.start();
 
+    this.changeGasFactor(erc20);
+
     return erc20;
   }
 
@@ -118,6 +132,8 @@ export default class DAO {
     const token = new BountyToken(this.web3Connection, tokenAddress);
 
     await token.start();
+
+    this.changeGasFactor(token);
 
     return token;
   }
