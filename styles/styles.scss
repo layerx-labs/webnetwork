@@ -33,8 +33,8 @@
 @import "components/notifications";
 @import "components/wallet-selector";
 @import "components/swagger-ui";
-@import "components/points-badge";
 @import "components/points-hero";
+@import "components/gradient-badge";
 
 @function toRGB($color) {
   @return "" + red($color) + ", " + green($color) + ", " + blue($color);
@@ -2015,4 +2015,14 @@ input[type="color"] {
 .proposal-distribution-participants {
   max-height: 300px;
   overflow: auto;
+}
+
+.text-gradient-purple {
+  background-color: #f3ec78;
+  background-image: $purpleLinearGradient;
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  -moz-text-fill-color: transparent;
 }
