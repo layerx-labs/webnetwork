@@ -39,7 +39,7 @@ const publicRuntimeConfig = {
     decimals: process.env.NEXT_PUBLIC_CHAIN_DECIMALS,
   },
   isProduction: process.env.NODE_ENV === "production",
-  gasFactor: +(process.env.NEXT_PUBLIC_GAS_FEE_MULTIPLIER || 0)
+  gasFactor: +(process.env.NEXT_PUBLIC_GAS_FEE_MULTIPLIER || 2)
 }
 
 // Will only be available on the server-side
