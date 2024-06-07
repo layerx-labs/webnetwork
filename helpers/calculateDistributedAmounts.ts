@@ -33,11 +33,13 @@ export default function calculateDistributedAmounts(closeFee: string | number,
       value: proposerAmount.toFixed(),
       percentage: bigNumberPercentage(proposerAmount, bountyAmount),
     },
-    proposals: proposalPercents.map(({percentage, recipient}) => {
+    proposals: proposalPercents.map(({percentage, recipient, ...rest}) => {
       const value = amount.dividedBy(100).multipliedBy(percentage);
       return {
         value: value.toFixed(),
         recipient,
+        handle: rest?.user?.handle,
+        avatar: rest?.user?.avatar,
         percentage: bigNumberPercentage(value, bountyAmount),
       }
     }),

@@ -2006,3 +2006,12 @@ input[type="color"] {
 .text-decoration-underline-hover:hover {
   text-decoration: underline;
 }
+
+.proposal-distribution-payment {
+  max-height: 250px;
+  overflow: auto;
+}
+.proposal-distribution-participants {
+  max-height: 300px;
+  overflow: auto;
+}
