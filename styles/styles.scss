@@ -33,6 +33,7 @@
 @import "components/notifications";
 @import "components/wallet-selector";
 @import "components/swagger-ui";
+@import "components/points-badge";
 
 @function toRGB($color) {
   @return "" + red($color) + ", " + green($color) + ", " + blue($color);

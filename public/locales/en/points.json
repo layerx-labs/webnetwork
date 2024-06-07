@@ -7,6 +7,10 @@
   "peding": "Pending",
   "get": "Get",
   "add": "Add",
+  "points_one": "{{count}} point",
+  "points_other": "{{count}} points",
+  "pointsWithoutCount_one": "point",
+  "pointsWithoutCount_other": "points",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",

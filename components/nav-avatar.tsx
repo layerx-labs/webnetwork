@@ -13,6 +13,7 @@ import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/
 import { PointsBadge } from "components/common/points/points-badge.view";
 
 import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
+import { formatNumberToNScale } from "helpers/formatNumber";
 import { getProfileLinks } from "helpers/navigation-links";
 import {truncateAddress} from "helpers/truncate-address";
 
@@ -32,7 +33,7 @@ export default function NavAvatar() {
   const { currentUser } = useUserStore();
   const { signOut } = useAuthentication();
   const { totalPoints } = userPointsOfUser();
-  const { goToProfilePage, getDashboardPageUrl } = useMarketplace();
+  const { goToProfilePage } = useMarketplace();
 
   const username =
     currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
@@ -106,8 +107,6 @@ export default function NavAvatar() {
     Link(t("main-nav.nav-avatar.follow-on-twitter"), TWITTER_LINK),
   ];
 
-  const myPointsUrl = getDashboardPageUrl("my-points");
-
   const overlay = (
     <Popover id="profile-popover">
       <Popover.Body className="bg-shadow pt-3 px-4">
@@ -133,7 +132,7 @@ export default function NavAvatar() {
           </div>
         </div>
 
-        {/* <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath}>
+        <NextLink href="/points">
           <div 
             className="row align-items-center border-bottom border-light-gray py-2 cursor-pointer"
             onClick={() => setVisible(false)}
@@ -146,11 +145,13 @@ export default function NavAvatar() {
 
             <div className="col-auto px-0">
               <PointsBadge 
-                points={totalPoints}
+                points={formatNumberToNScale(totalPoints, 0)}
+                size="sm"
+                variant="filled"
               />
             </div>
           </div>
-        </NextLink> */}
+        </NextLink>
 
         <LinksSession>
           {getProfileLinks(t).map(ProfileInternalLink)}

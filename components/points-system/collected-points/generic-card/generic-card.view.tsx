@@ -64,7 +64,6 @@ export function GenericCard({
           <span className="d-block max-width-content mt-1">
             <PointsBadge
               points={points}
-              variant={status === "claimed" ? "claimed": "available"}
             />
           </span>
 

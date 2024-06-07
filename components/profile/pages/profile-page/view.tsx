@@ -3,8 +3,8 @@ import React from "react";
 import {useTranslation} from "next-i18next";
 
 import Badge from "components/badge";
+import { PointsBadge } from "components/common/points/points-badge.view";
 import CustomContainer from "components/custom-container";
-import InternalLink from "components/internal-link";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import {AvatarForm} from "components/profile/avatar-form/avatar-form.controller";
 import DashboardLayout from "components/profile/dashboard-layout";
@@ -19,14 +19,14 @@ import {AboutSocial} from "../../about-social/about-social-controller";
 
 interface ProfilePageViewProps { 
   walletAddress: string;
-  handle?: string;
   isCouncil: boolean;
+  totalPoints: number;
 }
 
 export default function ProfilePageView({
   walletAddress,
-  handle,
   isCouncil,
+  totalPoints,
 }: ProfilePageViewProps) {
   const { t } = useTranslation(["common", " profile"]);
 
@@ -67,15 +67,11 @@ export default function ProfilePageView({
               )}
             </div>
 
-            <div className="row">
-              <div className="col col-lg-auto">
-                <div className="row mx-0">
-                  <InternalLink
-                    label={"Go to public profile"}
-                    href={`/profile/${handle || walletAddress}`}
-                    className="mt-3"
-                  />
-                </div>
+            <div className="row mt-2">
+              <div className="col-auto">
+                <PointsBadge
+                  points={totalPoints}
+                />
               </div>
             </div>
           </div>
