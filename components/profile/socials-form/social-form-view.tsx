@@ -11,10 +11,7 @@ export function SocialFormView({
                                }) {
   const { t } = useTranslation(["common", "profile"]);
 
-
-  const isInputValid = (txt: string) => /^[a-zA-Z0-9_]*$/.test(txt);
-
-
+  const isInputValid = (txt: string) => /^[a-zA-Z0-9_-]*$/.test(txt);
 
   const selectInput = (id: string) =>
     (document.querySelector(`#${id}`) as HTMLInputElement)?.select();
