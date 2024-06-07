@@ -9,13 +9,15 @@ import { formatNumberToString } from "helpers/formatNumber";
 type PointsBadgeProps = {
   points: number | string,
   variant?: "outlined" | "filled",
-  size?: "sm" | "md";
+  size?: "sm" | "md",
+  isBoosted?: boolean,
 }
 
 export function PointsBadge({
   points = "0",
   variant = "outlined",
   size = "md",
+  isBoosted,
 }: PointsBadgeProps) {
   const { t } = useTranslation("points");
 
@@ -32,15 +34,16 @@ export function PointsBadge({
       iconSize: 21.33
     }
   }[size];
+  const color = isBoosted ? "purple" : "blue";
 
   return(
     <GradientBadge
       variant={variant}
-      color="blue"
+      color={color}
     >
       <span className={`${styleBySize.font} text-white`}>
-          {pointsLabel}
-        </span>
+        {pointsLabel}
+      </span>
 
         <PointsIcon 
           width={styleBySize.iconSize} 

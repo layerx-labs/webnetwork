@@ -14,6 +14,8 @@
   "your-points": "Your Points",
   "collect-bepro": "Collect Bepro Points and redeem them for exclusive rewards and special offers.",
   "booster-active": "Booster Active",
+  "on-going-quests": "On-going quests",
+  "recurring-quests": "Recurring quests",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",
@@ -91,5 +93,11 @@
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
     }
+  },
+  "status": {
+    "boosted": "Boosted",
+    "collected": "Collected",
+    "available": "Available",
+    "pending": "Pending"
   }
 }

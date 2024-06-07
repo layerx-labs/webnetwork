@@ -1,5 +1,6 @@
 import CustomContainer from "components/custom-container";
 import { PointsPageHero } from "components/pages/points/hero/points-page-hero.view";
+import { CollectedPoints } from "components/points-system/collected-points/collected-points.controller";
 
 interface PointsPageViewProps {
   totalPoints: number;
@@ -13,12 +14,14 @@ export function PointsPageView({
   boostValue,
 }: PointsPageViewProps) {
   return(
-    <CustomContainer>
+    <CustomContainer className="pb-5">
       <PointsPageHero
         totalPoints={totalPoints}
         hasBoost={hasBoost}
         boostValue={boostValue}
       />
+
+      <CollectedPoints />
     </CustomContainer>
   );
 }

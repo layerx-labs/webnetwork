@@ -2026,3 +2026,63 @@ input[type="color"] {
   -webkit-text-fill-color: transparent; 
   -moz-text-fill-color: transparent;
 }
+
+.gradient-border {
+  border: 2px solid transparent;
+
+  &-blue {
+    @extend .gradient-border;
+    background: linear-gradient($gray-950, $gray-950) padding-box, $blueConicGradient border-box;
+
+    &.bg-gray-900 {
+      background: $gray-900 padding-box, $blueConicGradient border-box;
+    }
+  }
+
+  &-purple {
+    @extend .gradient-border;
+    background: linear-gradient($gray-950, $gray-950) padding-box, $purpleLinearGradient border-box;
+
+    &.bg-gray-900 {
+      background: linear-gradient($gray-900, $gray-900) padding-box, $purpleLinearGradient border-box;
+    }
+  }
+}
+
+.gradient-bg {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  &-black {
+    @extend .gradient-bg;
+
+    &::before {
+      background: linear-gradient(180deg, #17171C 0%, rgba(23, 23, 28, 0) 100%);
+    }
+  }
+}
+
+.z {
+  &-n1 {
+    z-index: -1;
+  }
+  &-0 {
+    z-index: 0;
+  }
+  &-1 {
+    z-index: 1;
+  }
+  &-2 {
+    z-index: 3;
+  }
+}
