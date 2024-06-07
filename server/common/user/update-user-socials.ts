@@ -13,9 +13,9 @@ import {getUserByAddress} from "./get-user-by-address";
 export async function updateUserSocials(req: NextApiRequest) {
 
   const {github, linkedin, twitter} = req.body;
-  const repoSocialRegex = /^https:\/\/(gitlab|github)\.com\/[a-zA-Z0-9_]*$/;
-  const linkedInRegex = /^https:\/\/linkedin\.com\/in\/[a-zA-Z0-9_]*$/;
-  const xComRegex = /^https:\/\/(twitter|x)\.com\/[a-zA-Z0-9_]*$/;
+  const repoSocialRegex = /^https:\/\/(gitlab|github)\.com\/[a-zA-Z0-9_-]*$/;
+  const linkedInRegex = /^https:\/\/linkedin\.com\/in\/[a-zA-Z0-9_-]*$/;
+  const xComRegex = /^https:\/\/(twitter|x)\.com\/[a-zA-Z0-9_-]*$/;
 
   if (github === undefined && linkedin === undefined && twitter === undefined)
     throw new HttpBadRequestError(BadRequestErrors.MissingParameters);
