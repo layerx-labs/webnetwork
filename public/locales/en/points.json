@@ -7,10 +7,15 @@
   "peding": "Pending",
   "get": "Get",
   "add": "Add",
-  "points_one": "{{count}} point",
-  "points_other": "{{count}} points",
-  "pointsWithoutCount_one": "point",
-  "pointsWithoutCount_other": "points",
+  "points_one": "{{count}} Point",
+  "points_other": "{{count}} Points",
+  "pointsWithoutCount_one": "Point",
+  "pointsWithoutCount_other": "Points",
+  "your-points": "Your Points",
+  "collect-bepro": "Collect Bepro Points and redeem them for exclusive rewards and special offers.",
+  "booster-active": "Booster Active",
+  "on-going-quests": "On-going quests",
+  "recurring-quests": "Recurring quests",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",
@@ -88,5 +93,11 @@
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
     }
+  },
+  "status": {
+    "boosted": "Boosted",
+    "collected": "Collected",
+    "available": "Available",
+    "pending": "Pending"
   }
 }

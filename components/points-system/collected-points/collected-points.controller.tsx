@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import {CollectedPointsView} from "components/points-system/collected-points/collected-points.view";
 
-import {PointsEvents} from "interfaces/points";
+import {PointsEvents, PointsBase} from "interfaces/points";
 
 import useMarketplace from "x-hooks/use-marketplace";
 import {userPointsOfUser} from "x-hooks/use-points-of-user";
@@ -16,22 +16,22 @@ export function CollectedPoints() {
   const { collectedPoints, pointsBase, refresh } = userPointsOfUser();
 
   const getCollected = (actionName: string) => collectedPoints?.find(c => c.actionName === actionName);
-  const getPointStatus = (event: PointsEvents) => {
-    if (!event)
-      return "available";
-    if (!event.pointsCounted)
-      return "pending";
-    return "claimed";
+  const getPointStatus = (rule: PointsBase, event: PointsEvents) => {
+    if (rule?.counter !== "N") {
+      if (event?.pointsCounted)
+        return "collected";
+      if (event)
+        return "pending";
+    }
+    if (rule?.scalingFactor > 1)
+      return "boosted";
+    return "available";
   };
-  const getSocialName = (actionName: string) => {
-    if (actionName?.includes("linkedin"))
-      return "linkedin";
-    if (actionName?.includes("github"))
-      return "github";
-    if (actionName?.includes("twitter"))
-      return "x";
-  };
+
   const actions = {
+    "created_task": () => push("/create-task"),
+    "delegated": () => goToProfilePage("voting-power"),
+    "locked": () => goToProfilePage("voting-power"),
     "created_marketplace": () => push("/new-marketplace"),
     "created_deliverable": () => push("/explore"),
     "created_proposal": () => push("/explore"),
@@ -43,10 +43,11 @@ export function CollectedPoints() {
     "add_twitter": () => push("/dashboard"),
   };
 
-  const { onGoing, socials, profile, other } = pointsBase.reduce((acc, curr) => {
+  const { recurring, available, collected } = pointsBase.reduce((acc, curr) => {
     const collected = getCollected(curr.actionName);
-    const status = getPointStatus(collected);
-    const pointsPerAction = status === "available" ? curr.pointsPerAction * curr.scalingFactor : collected.pointsWon;
+    const status = getPointStatus(curr, collected);
+    const pointsPerAction = status === "available" || status === "boosted" 
+      ? curr.pointsPerAction * curr.scalingFactor : collected.pointsWon;
     const currUpdated = {
       ...curr,
       status,
@@ -54,17 +55,15 @@ export function CollectedPoints() {
       onActionClick: actions[curr.actionName],
     };
 
-    if (["linkedin", "github", "twitter"].some(social => curr.actionName.includes(social)))
-      acc.socials.push(currUpdated);
-    else if (["email", "add_about", "add_avatar"].some(e => curr.actionName.includes(e)))
-      acc.profile.push(currUpdated);
-    else if (curr.counter === "N")
-      acc.onGoing.push(curr);
+    if (curr.counter === "N")
+      acc.recurring.push(currUpdated);
+    else if (status === "pending" || status === "collected")
+      acc.collected.push(currUpdated);
     else
-      acc.other.push(currUpdated);
+      acc.available.push(currUpdated);
 
     return acc;
-  }, { onGoing: [], socials: [], profile: [], other: [] });
+  }, { recurring: [], available: [], collected: [] });
 
   useEffect(() => {
     refresh()
@@ -72,11 +71,9 @@ export function CollectedPoints() {
 
   return(
     <CollectedPointsView
-      onGoing={onGoing}
-      socials={socials}
-      profile={profile}
-      other={other}
-      getSocialName={getSocialName}
+      recurring={recurring}
+      available={available}
+      collected={collected}
     />
   );
 }

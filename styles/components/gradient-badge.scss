@@ -1,0 +1,48 @@
+.gradient-badge {
+  &-wrapper {
+    padding: 2px;
+    border-radius: 100px;
+    
+    &-blue {
+      background: $blueConicGradient;
+    }
+
+    &-purple {
+      background: $purpleLinearGradient;
+    }
+  }
+
+  &-content {
+    @extend .d-flex; 
+    @extend .align-items-center;
+    @extend .gap-2;
+
+    position: relative;
+    z-index: 1;
+
+    border-radius: 100px;
+    padding: 6px 11px;
+    background-color: $gray-950;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+  
+      content: "";
+      opacity: .3;
+      border-radius: 100px;
+    }
+
+    &-filled-blue::before {
+      background: $blueConicGradient;
+    }
+
+    &-filled-purple::before {
+      background: $purpleLinearGradient;
+    }
+  }
+}
