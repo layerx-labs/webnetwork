@@ -10,7 +10,7 @@ export async function getPointsLeaderboard(req: NextApiRequest) {
 
   const users = await models.user.findAll({
     attributes: [
-      [Sequelize.literal('ROW_NUMBER() OVER (ORDER BY "totalPoints" DESC)'), "position"],
+      [Sequelize.literal('CAST(ROW_NUMBER() OVER (ORDER BY "totalPoints" DESC) AS INTEGER)'), "position"],
       "address",
       "handle",
       "avatar",
