@@ -16,6 +16,8 @@
   "booster-active": "Booster Active",
   "on-going-quests": "On-going quests",
   "recurring-quests": "Recurring quests",
+  "current-quests": "Current Quests",
+  "history": "History",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",
