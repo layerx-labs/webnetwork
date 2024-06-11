@@ -38,7 +38,8 @@ const publicRuntimeConfig = {
     rpc: process.env.NEXT_PUBLIC_WEB3_CONNECTION,
     decimals: process.env.NEXT_PUBLIC_CHAIN_DECIMALS,
   },
-  isProduction: process.env.NODE_ENV === "production"
+  isProduction: process.env.NODE_ENV === "production",
+  gasFactor: +(process.env.NEXT_PUBLIC_GAS_FEE_MULTIPLIER || 2)
 }
 
 // Will only be available on the server-side
