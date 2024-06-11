@@ -1,6 +1,6 @@
-import { PointsBase } from "interfaces/points-system";
+import {PointsBase} from "interfaces/points-system";
 
-import { api } from "services/api";
+import {api} from "services/api";
 
 type BulkUpdatePayload = {
   rows: {
@@ -12,5 +12,5 @@ type BulkUpdatePayload = {
 }
 
 export async function useBulkUpdatePointsBase(payload: BulkUpdatePayload): Promise<PointsBase[]> {
-  return api.put("/points-base/bulk-update", payload);
+  return api.put("/points/base/bulk-update", payload);
 }

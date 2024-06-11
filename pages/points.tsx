@@ -1,18 +1,20 @@
-import { GetServerSideProps } from "next";
-import { getToken } from "next-auth/jwt";
+import {GetServerSideProps} from "next";
+import {getToken} from "next-auth/jwt";
 import getConfig from "next/config";
 
-import { PointsPage } from "components/pages/points/points-page.controller";
+import {PointsPage} from "components/pages/points/points-page.controller";
 
-import { QueryKeys } from "helpers/query-keys";
+import {QueryKeys} from "helpers/query-keys";
 
-import { getReactQueryClient } from "services/react-query";
+import {getReactQueryClient} from "services/react-query";
 
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
-import { useGetPointsHistory } from "x-hooks/api/pages/profile/use-get-points-history";
-import { useGetPointsBase } from "x-hooks/api/points";
-import { useGetUserByAddress } from "x-hooks/api/user";
+import {useGetPointsHistory} from "x-hooks/api/pages/profile/use-get-points-history";
+import {useGetPointsBase} from "x-hooks/api/points";
+import {useGetUserByAddress} from "x-hooks/api/user";
+
+import {PointsEvents} from "../interfaces/points";
 
 const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
@@ -26,10 +28,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   const pointsBase = await useGetPointsBase();
 
+
   queryClient.setQueryData(QueryKeys.pointsBase(), pointsBase);
 
   let totalPoints = 0;
-  let history = [];
+  let history = [] as PointsEvents[];
 
   if (wallet) {
     totalPoints = await useGetUserByAddress(wallet)
