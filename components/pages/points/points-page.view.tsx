@@ -1,18 +1,30 @@
 import CustomContainer from "components/custom-container";
+import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import { PointsPageHero } from "components/pages/points/hero/points-page-hero.view";
 import { CollectedPoints } from "components/points-system/collected-points/collected-points.controller";
+
+import { MiniTabsItem } from "types/components";
 
 interface PointsPageViewProps {
   totalPoints: number;
   hasBoost?: boolean;
   boostValue?: number;
+  tabs: MiniTabsItem[];
+  activeTab: "collected-points" | "history";
 }
 
 export function PointsPageView({
   totalPoints,
   hasBoost,
   boostValue,
+  tabs,
+  activeTab,
 }: PointsPageViewProps) {
+  const tabsComponents = {
+    "history": <h1>History</h1>,
+    "collected-points": <CollectedPoints />,
+  };
+
   return(
     <CustomContainer className="pb-5">
       <PointsPageHero
@@ -21,7 +33,13 @@ export function PointsPageView({
         boostValue={boostValue}
       />
 
-      <CollectedPoints />
+      <ScrollableTabs
+        tabs={tabs}
+      />
+
+      <div className="mt-4">
+        {tabsComponents[activeTab]}
+      </div>
     </CustomContainer>
   );
 }

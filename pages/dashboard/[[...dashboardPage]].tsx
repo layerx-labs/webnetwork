@@ -13,8 +13,6 @@ import { useSearchNetworks } from "x-hooks/api/marketplace";
 import {useGetProfileBounties, useGetProfilePayments} from "x-hooks/api/pages/profile";
 import {useGetTokens} from "x-hooks/api/token";
 
-import {useGetPointsHistory} from "../../x-hooks/api/pages/profile/use-get-points-history";
-
 const { serverRuntimeConfig: { auth: { secret } } } = getConfig();
 
 export default function Dashboard(props: DashboardPageProps) {
@@ -58,9 +56,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
         .catch(({ rows }) => rows),
     ])
       .then(([bounties, marketplaces]) => ({ bounties, marketplaces })),
-    "my-points": async () => ({
-      history: await useGetPointsHistory(wallet),
-    }),
   };
 
   const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};
