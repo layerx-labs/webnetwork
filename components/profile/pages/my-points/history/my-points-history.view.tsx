@@ -10,7 +10,7 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
   const {t} = useTranslation("points");
   const ph = (path: string) => t(`points-history.${path}`);
 
-  return <div className="row border border-radius-8 border-gray-800 mt-4 ">
+  return <div className="row border border-radius-8 border-gray-800 mt-4 mx-0">
     <div className="col">
       <div className="row px-3 py-2 xs-medium font-weight-600">
         <div className="col col-4">{ph("action")}</div>
