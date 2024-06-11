@@ -6,7 +6,7 @@ interface useGetPointsLeaderboardParams {
   address?: string;
 }
 
-export async function useGetPointsLeaderboard(params: useGetPointsLeaderboardParams): Promise<PointsLeaderboard> {
+export async function useGetPointsLeaderboard(params?: useGetPointsLeaderboardParams): Promise<PointsLeaderboard> {
   return api
     .get("/points/leaderboard", { params })
     .then(({ data }) => data)
