@@ -18,6 +18,11 @@
   "recurring-quests": "Recurring quests",
   "current-quests": "Current Quests",
   "history": "History",
+  "leaderboard": "Leaderboard",
+  "your-ranking": "Your ranking",
+  "top-users": "Top users",
+  "total-points": "Total points",
+  "connect-your-wallet": "Connect your wallet to see your ranking",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",

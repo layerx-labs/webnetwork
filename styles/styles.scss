@@ -871,8 +871,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .circle-4 {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 }
 
@@ -2035,7 +2035,7 @@ input[type="color"] {
     background: linear-gradient($gray-950, $gray-950) padding-box, $blueConicGradient border-box;
 
     &.bg-gray-900 {
-      background: $gray-900 padding-box, $blueConicGradient border-box;
+      background: linear-gradient($gray-900, $gray-900) padding-box, $blueConicGradient border-box;
     }
   }
 

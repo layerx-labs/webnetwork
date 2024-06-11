@@ -25,6 +25,7 @@ export const QueryKeys = {
   totalPointsOfUser: (address: string) => ["points", "total", address],
   pointsEventsOfUser: (address: string) => ["points", "events", address],
   pointsBase: () => ["points", "base"],
+  pointsLeaderboard: (address?: string) => ["points", "leaderboard", address],
   userSocials: () => ["user-socials"],
   taikaiPops:(address: string) => ["taikai-pops", address],
 };
