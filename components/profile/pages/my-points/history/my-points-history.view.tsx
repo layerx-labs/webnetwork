@@ -36,7 +36,7 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
             <div
               className="col col-2 text-center font-weight-500">{ph(`state.${entry.pointsCounted ? "counted" : "pending"}`)}</div>
             <div
-              className="col col-3 d-flex justify-content-end font-weight-400">{format(new Date(entry.updatedAt || entry.createdAt), "dd/MM/yyyy")}</div>
+              className="col col-3 d-flex justify-content-end font-weight-400">{format(new Date(entry.createdAt), "dd/MM/yyyy")}</div>
           </div>)
       }
     </div>
