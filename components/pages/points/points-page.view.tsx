@@ -23,7 +23,7 @@ export function PointsPageView({
   activeTab,
 }: PointsPageViewProps) {
   const tabsComponents = {
-    "history": <h1>History</h1>,
+    "history": <MyPointsHistory />,
     "collected-points": <CollectedPoints />,
   };
 
