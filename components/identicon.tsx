@@ -21,7 +21,7 @@ export default function Identicon({
     xsm: 16,
     sm: 24,
     md: 32,
-    lg: 56,
+    lg: 48,
     xl: 72,
   };
   const sizeValue = typeof size === "number" ? size : SIZES[size];
