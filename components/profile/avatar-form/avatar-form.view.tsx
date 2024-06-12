@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ProfileEditIcon from "assets/profile-edit-icon";
 
@@ -7,7 +7,7 @@ import Button from "components/button";
 import If from "components/If";
 import ImageUploader from "components/image-uploader";
 
-import { ImageObject } from "types/components";
+import {ImageObject} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
@@ -24,6 +24,7 @@ type AvatarFormView = {
   onSaveClick: () => void;
   onCancelClick: () => void;
   onAvatarChange: (avatar: ImageObject) => void;
+  overLimit: boolean;
 }
 
 export function AvatarFormView({
@@ -39,6 +40,7 @@ export function AvatarFormView({
   onSaveClick,
   onCancelClick,
   onAvatarChange,
+  overLimit
 }: AvatarFormView) {
   const { t } = useTranslation("common");
 
@@ -79,7 +81,11 @@ export function AvatarFormView({
             circle
           />
 
-          <span className="xs-small text-warning">{`${t("misc.up-to")} ${maxFileSize}MB`}</span>
+          <span className={`xs-small ${overLimit ? "text-warning" : "text-gray-200"}`}>
+            {
+              overLimit ? t('misc.over-the-limit') : `${t("misc.up-to")} ~${maxFileSize}MB`
+            }
+          </span>
         </div>
 
         <Button
@@ -94,7 +100,7 @@ export function AvatarFormView({
         <Button
           color="gray-850"
           onClick={onCancelClick}
-          disabled={isSaving}
+          disabled={isSaving || overLimit}
           data-testid="cancel-avatar-button"
         >
           {t("actions.cancel")}
