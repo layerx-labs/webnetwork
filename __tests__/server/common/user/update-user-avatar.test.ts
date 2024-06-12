@@ -1,9 +1,9 @@
-import { NextApiRequest } from "next";
+import {NextApiRequest} from "next";
 
 import IpfsStorage from "services/ipfs-service";
 
-import { updateUserAvatar } from "server/common/user/update-user-avatar";
-import { HttpBadRequestError } from "server/errors/http-errors";
+import {updateUserAvatar} from "server/common/user/update-user-avatar";
+import {HttpBadRequestError} from "server/errors/http-errors";
 
 jest
   .mock("services/ipfs-service", () => ({
@@ -28,12 +28,7 @@ describe("UpdateUserAvatar", () => {
   beforeEach(() => {
     mockRequest = {
       body: {
-        files: [
-          {
-            fileName: "avatar.png",
-            fileData: "data:image/png,sadF#2fasdFQfqefasdf",
-          }
-        ],
+        files: "data:image/png,sadF#2fasdFQfqefasdf",
         context: {
           user: {
             avatar: null,
@@ -53,24 +48,19 @@ describe("UpdateUserAvatar", () => {
   });
 
   it("Should throw because no files were provided", async () => {
-    mockRequest.body.files = null;
+    mockRequest.body.file = null;
     await expect(() => updateUserAvatar(mockRequest))
       .rejects
       .toBeInstanceOf(HttpBadRequestError);
     
-    mockRequest.body.files = [];
+    mockRequest.body.file = "";
     await expect(() => updateUserAvatar(mockRequest))
       .rejects
       .toBeInstanceOf(HttpBadRequestError);
   });
 
   it("Should throw because file type is invalid", async () => {
-    mockRequest.body.files = [
-      {
-        fileName: "avatar.svg",
-        fileData: "data:image/svg,sadF#2fasdFQfqefasdf",
-      }
-    ];
+    mockRequest.body.file = "data:image/svg,sadF#2fasdFQfqefasdf";
     await expect(() => updateUserAvatar(mockRequest))
       .rejects
       .toBeInstanceOf(HttpBadRequestError);
