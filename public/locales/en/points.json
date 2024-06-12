@@ -118,7 +118,9 @@
       "add_github": "Fill github link",
       "add_linkedin": "Fill linkedIn link",
       "add_about": "Add about section",
-      "add_twitter": "Add X link"
+      "add_twitter": "Add X link",
+      "add_avatar": "Add avatar",
+      "connect_email": "Connect email"
     },
     "state": {
       "counted": "Counted",
