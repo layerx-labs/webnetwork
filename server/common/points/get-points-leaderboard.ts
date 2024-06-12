@@ -19,17 +19,24 @@ export async function getPointsLeaderboard(req: NextApiRequest) {
       "totalPoints"
     ],
     order: [
-      [Sequelize.literal(`CASE WHEN LOWER("address") = LOWER('${address}') THEN 0 ELSE ${rowNumber} END`)],
+      [Sequelize.literal(`CASE WHEN LOWER("address") = LOWER('${address}') 
+        AND ${rowNumber} > 5 THEN 0 ELSE ${rowNumber} END`)],
       ["totalPoints", "DESC"]
     ],
     limit: 6,
+    raw: true
   });
 
   let user = null
 
-  if (address && lowerCaseCompare(users.at(0).address, address))
-    user = users.shift();
-  else
+  if (address) {
+    if (lowerCaseCompare(users.at(0).address, address) && users.at(0).position > 5)
+      user = users.shift();
+    else {
+      user = users.find(u => lowerCaseCompare(u.address, address));
+      users.pop();
+    }
+  } else
     users.pop();
 
   return {
