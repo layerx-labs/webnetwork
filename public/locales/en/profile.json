@@ -112,29 +112,6 @@
   "your-points": "Your Points",
   "collected-points": "Collected Points",
   "history": "History",
-  "points-history": {
-    "action": "Action",
-    "points": "Points",
-    "status": "Status",
-    "date": "Date",
-    "actionName": {
-      "locked": "Locked",
-      "delegated": "Delegated",
-      "created_marketplace": "Create marketplace",
-      "created_task": "Created task",
-      "created_deliverable": "Created deliverable",
-      "created_proposal": "Created proposal",
-      "accepted_proposal": "Accepted proposal",
-      "add_github": "Fill github link",
-      "add_linkedin": "Fill linkedIn link",
-      "add_about": "Add about section",
-      "add_twitter": "Add X link"
-    },
-    "state": {
-      "counted": "Counted",
-      "pending": "Pending"
-    }
-  },
   "total-points-earned": "Total Points Earned",
   "goto": {
     "polygonscan": "Go to polygonscan",

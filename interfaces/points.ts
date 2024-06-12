@@ -13,4 +13,6 @@ export interface PointsEvents {
   pointsWon: number;
   pointsCounted: boolean;
   info: object;
+  createdAt: number;
+  updatedAt: number;
 }
