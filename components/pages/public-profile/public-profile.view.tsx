@@ -1,3 +1,5 @@
+import {useTranslation} from "next-i18next";
+
 import {Github} from "assets/icons/github";
 import {Linkedin} from "assets/icons/linkedin";
 import {XCom} from "assets/icons/x-com";
@@ -22,6 +24,10 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import CopyIcon from "../../../assets/icons/copy";
+import {CopyValue} from "../../../helpers/copy-value";
+import {useToastStore} from "../../../x-hooks/stores/toasts/toasts.store";
+import Button from "../../button";
 import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
@@ -70,6 +76,8 @@ export default function PublicProfileView({
                                             taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
+  const { addInfo } = useToastStore();
+  const {t} = useTranslation("common");
 
   const isTabletOrMobile = isMobileView || isTabletView;
   const listItemVariant = ({
@@ -86,6 +94,11 @@ export default function PublicProfileView({
     [socials?.linkedIn?.replace("https://linkedin.com/in/", ""), socials?.linkedIn, <Linkedin/>],
     [socials?.twitter?.replace("https://x.com/", ""), socials?.twitter, <XCom/>],
   ]
+
+  const copyValue = (address: string) => {
+    CopyValue(address);
+    addInfo(t('misc.address-copied'), address)
+  }
 
   return (
     <CustomContainer
@@ -110,8 +123,17 @@ export default function PublicProfileView({
 
           <If condition={!!secondaryText}>
             <div className="row mb-2">
-              <h2 className="sm-regular font-weight-normal text-gray-300">
-                {secondaryText}
+              <h2 className="sm-regular font-weight-normal text-gray-300 d-flex">
+                <div>{secondaryText}</div>
+                <Button
+                  onClick={() => copyValue(userAddress)}
+                  className="border-dark-gray ml-1 hover-white"
+                  applyTextColor={false}
+                  transparent
+                  rounded
+                >
+                  <CopyIcon />
+                </Button>
               </h2>
             </div>
           </If>
