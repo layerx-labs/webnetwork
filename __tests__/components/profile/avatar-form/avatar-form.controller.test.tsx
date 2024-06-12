@@ -1,13 +1,13 @@
 import React from "react";
 
-import { fireEvent, waitFor } from "@testing-library/dom";
-import { useSession } from "next-auth/react";
+import {fireEvent, waitFor} from "@testing-library/dom";
+import {useSession} from "next-auth/react";
 
-import { AvatarForm } from "components/profile/avatar-form/avatar-form.controller";
+import {AvatarForm} from "components/profile/avatar-form/avatar-form.controller";
 
-import { useUpdateUserAvatar } from "x-hooks/api/user/use-update-user-avatar";
+import {useUpdateUserAvatar} from "x-hooks/api/user/use-update-user-avatar";
 
-import { render } from "__tests__/utils/custom-render";
+import {render} from "__tests__/utils/custom-render";
 
 jest
   .mock("next-auth/react", () => ({
@@ -32,6 +32,10 @@ jest
 
 describe("AvatarForm", () => {
   const avatarFile = new File(["avatar"], "avatar.png", { type: "image/png" });
+  const formData = new FormData();
+
+  formData.append("file", avatarFile)
+
   window.URL.createObjectURL = jest.fn().mockReturnValue("url");
 
   afterEach(() => {
@@ -59,7 +63,7 @@ describe("AvatarForm", () => {
     expect(useUpdateUserAvatar)
       .toHaveBeenCalledWith({
         address: "0x000000000",
-        avatar: avatarFile
+        form: formData
       });
   });
 });
