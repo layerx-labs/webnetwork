@@ -11,10 +11,7 @@ import {WithValidChainId} from "middleware/with-valid-chain-id";
 import withCors from "middleware/withCors";
 import {withJWT} from "middleware/withJwt";
 
-import {MaxRequestSize} from "./request-size";
-
-const withCORS = (handler: NextApiHandler, requestSize?: number) => 
-  MaxRequestSize(LogAccess(withCors(handler)), requestSize);
+const withCORS = (handler: NextApiHandler, requestSize?: number) => LogAccess(withCors(handler));
 const withProtected = (handler: NextApiHandler, requestSize?: number, allowedMethods?: string[]) => 
   withCORS(withJWT(withSignature(handler), allowedMethods), requestSize);
 const RouteMiddleware = (handler: NextApiHandler) => withCORS(withJWT(handler));

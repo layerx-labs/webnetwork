@@ -1,35 +1,54 @@
-import { NextApiRequest } from "next";
+import {IncomingForm} from "formidable";
+import fs from "fs";
+import {NextApiRequest} from "next";
 
 import IpfsStorage from "services/ipfs-service";
-import { Logger } from "services/logging";
+import {Logger} from "services/logging";
 
-import { HttpBadRequestError } from "server/errors/http-errors";
-import { addPointEntry } from "server/utils/points-system/add-point-entry";
+import {HttpBadRequestError, HttpFileSizeError} from "server/errors/http-errors";
+import {addPointEntry} from "server/utils/points-system/add-point-entry";
 
 export async function updateUserAvatar(req: NextApiRequest) {
-  const { files, context: { user } } = req.body;
+  const { context: { user } } = req.body;
 
-  const avatarFile = files?.at(0);
+  const form = new IncomingForm({
+    maxFileSize: 10 * 1024 * 1024,
+  });
 
-  if (!avatarFile)
-    throw new HttpBadRequestError("Missing file");
+  return new Promise((resolve, reject) => {
 
-  const { fileName, fileData } = avatarFile;
-  const [mime, data] = fileData.split(",");
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error('Error parsing form:', err);
+        return reject(err.httpCode === 413 ? new HttpFileSizeError() : new HttpBadRequestError(err.toString()));
+      }
 
-  if (!/image\/(jpeg|png)/.test(mime))
-    throw new HttpBadRequestError("Invalid file type");
+      const file = files.file;
+      if (!file)
+        return reject(new HttpBadRequestError("Missing file"));
 
-  const name = `${new Date().toISOString()}-${fileName}`;
-  const [, ext] = name.split(/\.(?=[^.]*$)/g);
+      const fileBuffer = fs.readFileSync((file as any).filepath);
 
-  const updloaded = await IpfsStorage.add(Buffer.from(data, "base64url"), true, undefined, ext);
+      const base64String = fileBuffer.toString('base64');
 
-  user.avatar = updloaded.hash;
-  await user.save();
+      const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      if (!validTypes.includes((file as any).mimetype))
+        throw new HttpBadRequestError("Invalid file type");
 
-  await addPointEntry(user.id, "add_avatar", { hash: updloaded.hash })
-    .catch(error => {
-      Logger.error(error, `Failed to save avatar points`);
+      const name = `${new Date().toISOString()}-${user.id}`;
+      const [, ext] = name.split(/\.(?=[^.]*$)/g);
+
+      const uploaded = await IpfsStorage.add(Buffer.from(base64String, "base64url"), true, undefined, ext);
+
+      user.avatar = uploaded.hash;
+      await user.save();
+
+      await addPointEntry(user.id, "add_avatar", { hash: uploaded.hash })
+        .catch(error => {
+          Logger.error(error, `Failed to save avatar points`);
+        });
+
+      resolve({uploaded});
     });
+  })
 }
