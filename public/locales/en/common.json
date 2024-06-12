@@ -242,7 +242,8 @@
     "closed": "Closed",
     "yes": "Yes",
     "no": "No",
-    "up-to": "Up to"
+    "up-to": "Up to",
+    "overTheLimit": "Over the limit!"
   },
   "modals": {
     "help-modal": {
