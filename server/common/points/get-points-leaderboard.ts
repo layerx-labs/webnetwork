@@ -3,26 +3,35 @@ import { Sequelize } from "sequelize";
 
 import models from "db/models";
 
-import { lowerCaseCompare } from "helpers/string";
-
 export async function getPointsLeaderboard(req: NextApiRequest) {
   const address = req.query?.address?.toString();
 
+  const rowNumber = 'CAST(ROW_NUMBER() OVER (ORDER BY "totalPoints" DESC) AS INTEGER)';
+
   const users = await models.user.findAll({
     attributes: [
-      [Sequelize.literal('CAST(ROW_NUMBER() OVER (ORDER BY "totalPoints" DESC) AS INTEGER)'), "position"],
+      [Sequelize.literal(rowNumber), "position"],
       "address",
       "handle",
       "avatar",
       "totalPoints"
     ],
-    order: [["totalPoints", "DESC"]],
+    order: [
+      [Sequelize.literal(`CASE WHEN "address" = '${address}' THEN 0 ELSE ${rowNumber} END`)],
+      ["totalPoints", "DESC"]
+    ],
+    limit: 6,
   });
 
-  const user = address ? users.find(u => lowerCaseCompare(u.address, address)) : null;
+  let user = null
+
+  if (address)
+    user = users.shift();
+  else
+    users.pop();
 
   return {
-    top: users.slice(0, 5),
+    top: users,
     user
   };
 }
