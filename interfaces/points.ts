@@ -16,3 +16,16 @@ export interface PointsEvents {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface PointsLeaderboardItem {
+  position: number;
+  totalPoints: number;
+  address: string;
+  avatar: string;
+  handle: string;
+}
+
+export interface PointsLeaderboard {
+  top: PointsLeaderboardItem[];
+  user?: PointsLeaderboardItem;
+}
