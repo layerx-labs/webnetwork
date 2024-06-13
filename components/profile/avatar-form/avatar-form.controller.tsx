@@ -1,16 +1,16 @@
-import { useState } from "react";
+import {useState} from "react";
 
-import { AxiosError } from "axios";
-import { useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import {AxiosError} from "axios";
+import {useSession} from "next-auth/react";
+import {useTranslation} from "next-i18next";
 
-import { AvatarFormView } from "components/profile/avatar-form/avatar-form.view";
+import {AvatarFormView} from "components/profile/avatar-form/avatar-form.view";
 
-import { ImageObject } from "types/components";
+import {ImageObject} from "types/components";
 
-import { useUpdateUserAvatar } from "x-hooks/api/user/use-update-user-avatar";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUpdateUserAvatar} from "x-hooks/api/user/use-update-user-avatar";
+import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export function AvatarForm() {
@@ -37,11 +37,18 @@ export function AvatarForm() {
       if (error.response.status === 413)
         addError(t("actions.failed"), t("errors.file-size-exceeded"));
       else
-        addError(t("actions.failed"), error.response.data.toString());
+        addError(t("actions.failed"), (error.response.data as any).message);
     },
   });
 
-  const maxFileSize = 5;
+  const saveAvatar = () => {
+    const form = new FormData();
+    form.append("file", avatarImage.raw);
+
+    handleSave({form, address: currentUser?.walletAddress});
+  }
+
+  const maxFileSize = 10;
   const acceptedImageTypes = "image/png, image/jpeg, image/jpg";
   const isSaveButtonDisabled = !avatarImage || isSaving;
 
@@ -62,10 +69,7 @@ export function AvatarForm() {
       isSaving={isSaving}
       isSaveButtonDisabled={isSaveButtonDisabled}
       onEditClick={handleEditClick}
-      onSaveClick={() => handleSave({
-        address: currentUser?.walletAddress,
-        avatar: avatarImage?.raw,
-      })}
+      onSaveClick={saveAvatar}
       maxFileSize={maxFileSize}
       onCancelClick={handleCancel}
       onAvatarChange={setAvatarImage}
