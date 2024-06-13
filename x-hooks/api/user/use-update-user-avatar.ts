@@ -1,18 +1,6 @@
-import { readFileData } from "helpers/file-reader";
+import {api} from "services/api";
 
-import { api } from "services/api";
-
-interface UseUpdateUserAvatarProps  {
-  address: string;
-  avatar: File;
-}
-
-export async function useUpdateUserAvatar({
-  address,
-  avatar
-}: UseUpdateUserAvatarProps) {
-  const avatarFile = await readFileData(avatar);
-  
-  return api.put(`/user/${address}/avatar`, { files: [avatarFile] })
+export async function useUpdateUserAvatar({form, address}: {form: FormData, address: string}) {
+  return api.put(`/user/${address}/avatar`, form)
     .then(({ data }) => data);
 }

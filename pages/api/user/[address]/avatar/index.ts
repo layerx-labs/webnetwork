@@ -1,16 +1,14 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { UserRoute } from "middleware";
+import {UserRoute} from "middleware";
 
-import { updateUserAvatar } from "server/common/user/update-user-avatar";
+import {updateUserAvatar} from "server/common/user/update-user-avatar";
 
 const UPLOAD_LIMIT_MB = 5;
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: `${UPLOAD_LIMIT_MB}mb`,
-    }
+    bodyParser: false,
   }
 };
 

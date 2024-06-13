@@ -38,6 +38,12 @@ export class HttpForbiddenError extends BaseAPIError {
   }
 }
 
+export class HttpFileSizeError extends BaseAPIError {
+  constructor(message: string = BadRequestErrors.BadRequest) {
+    super(message, 413);
+  }
+}
+
 export class HttpServerError extends BaseAPIError {
   constructor(message: string) {
     super(message, 500);
