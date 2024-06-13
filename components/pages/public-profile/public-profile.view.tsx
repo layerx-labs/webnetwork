@@ -24,10 +24,8 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import CopyIcon from "../../../assets/icons/copy";
-import {CopyValue} from "../../../helpers/copy-value";
 import {useToastStore} from "../../../x-hooks/stores/toasts/toasts.store";
-import Button from "../../button";
+import CopyButton from "../../common/buttons/copy/controller";
 import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
@@ -95,11 +93,6 @@ export default function PublicProfileView({
     [socials?.twitter?.replace("https://x.com/", ""), socials?.twitter, <XCom/>],
   ]
 
-  const copyValue = (address: string) => {
-    CopyValue(address);
-    addInfo(t('misc.address-copied'), address)
-  }
-
   return (
     <CustomContainer
       col="col-xs-12 col-xl-12"
@@ -125,15 +118,9 @@ export default function PublicProfileView({
             <div className="row mb-2">
               <h2 className="sm-regular font-weight-normal text-gray-300 d-flex">
                 <div>{secondaryText}</div>
-                <Button
-                  onClick={() => copyValue(userAddress)}
-                  className="border-dark-gray ml-1 hover-white"
-                  applyTextColor={false}
-                  transparent
-                  rounded
-                >
-                  <CopyIcon />
-                </Button>
+                <CopyButton value={userAddress}
+                            title={userAddress}
+                            popOverLabel={t('misc.address-copied')}/>
               </h2>
             </div>
           </If>
