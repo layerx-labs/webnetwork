@@ -5,6 +5,8 @@ import {useTranslation} from "next-i18next";
 
 import {PointsEvents} from "../../../../../interfaces/points";
 import {PointsBadge} from "../../../../common/points/points-badge.view";
+import If from "../../../../If";
+import NothingFound from "../../../../nothing-found";
 
 export function MyPointsHistoryView({history, loading}: { history: PointsEvents[], loading: boolean }) {
   const {t} = useTranslation("points");
@@ -27,6 +29,13 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
           </div>
           : null
       }
+      <If condition={!loading && !history?.length}>
+        <div className="row border-top border-gray-800 pt-3 pb-2">
+          <div className="mtn-3">
+            <NothingFound description={ph("no-points")} />
+          </div>
+        </div>
+      </If>
       {
         history.map((entry, i) =>
           <div className="row border-top p-3 text-gray-400 border-gray-800 align-items-center xs-medium" key={i}>

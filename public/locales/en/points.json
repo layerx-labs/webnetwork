@@ -89,7 +89,7 @@
       "pointsLabel_other": "{{count}}"
     },
     "add_twitter": {
-      "title": "Add X link",
+      "title": "Fill X link",
       "description": "Link your X profile",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
@@ -112,6 +112,7 @@
     "points": "Points",
     "status": "Status",
     "date": "Date",
+    "no-points": "No history to show",
     "actionName": {
       "locked": "Locked",
       "delegated": "Delegated",
@@ -123,7 +124,7 @@
       "add_github": "Fill github link",
       "add_linkedin": "Fill linkedIn link",
       "add_about": "Add about section",
-      "add_twitter": "Add X link",
+      "add_twitter": "Fill X link",
       "add_avatar": "Add avatar",
       "connect_email": "Connect email"
     },
