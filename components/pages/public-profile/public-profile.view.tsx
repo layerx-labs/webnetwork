@@ -1,3 +1,5 @@
+import {useTranslation} from "next-i18next";
+
 import {Github} from "assets/icons/github";
 import {Linkedin} from "assets/icons/linkedin";
 import {XCom} from "assets/icons/x-com";
@@ -22,6 +24,8 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
+import {useToastStore} from "../../../x-hooks/stores/toasts/toasts.store";
+import CopyButton from "../../common/buttons/copy/controller";
 import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
 interface PublicProfileViewProps {
@@ -70,6 +74,8 @@ export default function PublicProfileView({
                                             taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
+  const { addInfo } = useToastStore();
+  const {t} = useTranslation("common");
 
   const isTabletOrMobile = isMobileView || isTabletView;
   const listItemVariant = ({
@@ -110,8 +116,11 @@ export default function PublicProfileView({
 
           <If condition={!!secondaryText}>
             <div className="row mb-2">
-              <h2 className="sm-regular font-weight-normal text-gray-300">
-                {secondaryText}
+              <h2 className="sm-regular font-weight-normal text-gray-300 d-flex">
+                <div>{secondaryText}</div>
+                <CopyButton value={userAddress}
+                            title={userAddress}
+                            popOverLabel={t('misc.address-copied')}/>
               </h2>
             </div>
           </If>

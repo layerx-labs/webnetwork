@@ -1,6 +1,6 @@
-import { ReactElement, SVGProps } from 'react';
+import {ReactElement, SVGProps} from 'react';
 
-import { TFunction } from 'next-i18next';
+import {TFunction} from 'next-i18next';
 
 import BountiesIcon from "assets/icons/bounties-icon";
 import CustomNetworkIcon from "assets/icons/custom-network-icon";
@@ -11,7 +11,7 @@ import ProposalsIcon from "assets/icons/proposals-icon";
 import VotingPowerIcon from "assets/icons/voting-power-icon";
 import WalletIcon from "assets/icons/wallet-icon";
 
-import { ProfilePages } from "interfaces/utils";
+import {ProfilePages} from "interfaces/utils";
 
 export const NAVIGATION_LINKS = {
   network: [
@@ -33,7 +33,7 @@ export function getProfileLinks(translation: TFunction) {
     href?: ProfilePages
     icon?: (props: SVGProps<SVGSVGElement>) => ReactElement;
   }[] = [
-    { label: translation("common:main-nav.nav-avatar.profile") , icon: ProfileIcon },
+    { label: translation("common:main-nav.nav-avatar.profile"), icon: ProfileIcon },
     { label: translation("common:main-nav.nav-avatar.wallet") , href: 'wallet', icon: WalletIcon },
     { label: translation("common:main-nav.nav-avatar.voting-power") , href: 'voting-power', icon: VotingPowerIcon},
     { label: translation("common:main-nav.nav-avatar.payments") , href: 'payments', icon: PaymentsIcon},

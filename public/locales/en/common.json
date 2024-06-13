@@ -80,6 +80,7 @@
     "nav-avatar": {
       "my-profile": "Settings",
       "profile": "Settings",
+      "public-profile": "Public profile",
       "dashboard": "Dashboard",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
