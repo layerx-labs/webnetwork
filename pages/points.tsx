@@ -11,7 +11,7 @@ import {getReactQueryClient} from "services/react-query";
 import customServerSideTranslations from "server/utils/custom-server-side-translations";
 
 import {useGetPointsHistory} from "x-hooks/api/pages/profile/use-get-points-history";
-import {useGetPointsBase} from "x-hooks/api/points";
+import { useGetPointsBase, useGetPointsLeaderboard } from "x-hooks/api/points";
 import {useGetUserByAddress} from "x-hooks/api/user";
 
 import {PointsEvents} from "../interfaces/points";
@@ -27,9 +27,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   const queryClient = getReactQueryClient();
 
   const pointsBase = await useGetPointsBase();
+  const pointsLeaderboard = await useGetPointsLeaderboard({
+    address: wallet
+  });
 
 
   queryClient.setQueryData(QueryKeys.pointsBase(), pointsBase);
+  queryClient.setQueryData(QueryKeys.pointsLeaderboard(wallet), pointsLeaderboard);
 
   let totalPoints = 0;
   let history = [] as PointsEvents[];

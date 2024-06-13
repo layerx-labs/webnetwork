@@ -1,11 +1,12 @@
 import CustomContainer from "components/custom-container";
 import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import {PointsPageHero} from "components/pages/points/hero/points-page-hero.view";
+import { PointsLeaderboard } from "components/pages/points/leaderboard/points-leaderboard.controller";
 import {CollectedPoints} from "components/points-system/collected-points/collected-points.controller";
 
-import {MyPointsHistory} from "../../profile/pages/my-points/history/my-points-history.controller";
-
 import { MiniTabsItem } from "types/components";
+
+import {MyPointsHistory} from "../../profile/pages/my-points/history/my-points-history.controller";
 
 interface PointsPageViewProps {
   totalPoints: number;
@@ -24,7 +25,12 @@ export function PointsPageView({
 }: PointsPageViewProps) {
   const tabsComponents = {
     "history": <MyPointsHistory />,
-    "collected-points": <CollectedPoints />,
+    "collected-points": <>
+      <CollectedPoints />
+      <div className="mt-4 pt-3">
+        <PointsLeaderboard />
+      </div>
+    </>,
   };
 
   return(
