@@ -21,7 +21,7 @@ export function UserProfileLink({
   const { t } = useTranslation("common");
 
   const renderAddress = truncate ? truncateAddress(address, 5) : address;
-  const renderHandle = transformHandle ? `@${handle}` : handle;
+  const renderHandle = transformHandle && handle ? `@${handle}` : handle;
 
   return (
     <Link href={`/profile/${handle || address}`}>
