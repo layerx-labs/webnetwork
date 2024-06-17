@@ -55,6 +55,7 @@ export const MILLISECONDS = 1000;
 export const DAY_IN_MILISECONDS = 24 * 60 * 60 * MILLISECONDS;
 export const MINUTE_IN_MS = 60 * MILLISECONDS;
 export const FIVE_MINUTES_IN_MS = 5 * MINUTE_IN_MS;
+export const TEN_MINUTES_IN_MS = 10 * MINUTE_IN_MS;
 export const STATIC_URL_PATHS = [
   "marketplaces",
   "network",

@@ -3,25 +3,26 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import ExternalLinkIcon from "assets/icons/external-link-icon";
 
-import { AvatarCurrentUser } from "components/avatar-current-user/avatar-current-user.controller";
+import {AvatarCurrentUser} from "components/avatar-current-user/avatar-current-user.controller";
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
-import { PointsBadge } from "components/common/points/points-badge.view";
+import {PointsBadge} from "components/common/points/points-badge.view";
 
-import { DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK } from "helpers/constants";
-import { getProfileLinks } from "helpers/navigation-links";
+import {DISCORD_LINK, DOCS_LINK, SUPPORT_LINK, TWITTER_LINK} from "helpers/constants";
+import {formatNumberToNScale} from "helpers/formatNumber";
+import {getProfileLinks} from "helpers/navigation-links";
 import {truncateAddress} from "helpers/truncate-address";
 
-import { ProfilePages } from "interfaces/utils";
+import {ProfilePages} from "interfaces/utils";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import {useAuthentication} from "x-hooks/use-authentication";
 import useMarketplace from "x-hooks/use-marketplace";
-import { userPointsOfUser } from "x-hooks/use-points-of-user";
+import {userPointsOfUser} from "x-hooks/use-points-of-user";
 
 export default function NavAvatar() {
   const { asPath } = useRouter();
@@ -32,7 +33,7 @@ export default function NavAvatar() {
   const { currentUser } = useUserStore();
   const { signOut } = useAuthentication();
   const { totalPoints } = userPointsOfUser();
-  const { goToProfilePage, getDashboardPageUrl } = useMarketplace();
+  const { goToProfilePage } = useMarketplace();
 
   const username =
     currentUser?.login ? currentUser.login : truncateAddress(currentUser?.walletAddress);
@@ -106,8 +107,6 @@ export default function NavAvatar() {
     Link(t("main-nav.nav-avatar.follow-on-twitter"), TWITTER_LINK),
   ];
 
-  const myPointsUrl = getDashboardPageUrl("my-points");
-
   const overlay = (
     <Popover id="profile-popover">
       <Popover.Body className="bg-shadow pt-3 px-4">
@@ -133,7 +132,7 @@ export default function NavAvatar() {
           </div>
         </div>
 
-        {/* <NextLink href={myPointsUrl.href.pathname} as={myPointsUrl.asPath}>
+        <NextLink href="/points">
           <div 
             className="row align-items-center border-bottom border-light-gray py-2 cursor-pointer"
             onClick={() => setVisible(false)}
@@ -146,13 +145,22 @@ export default function NavAvatar() {
 
             <div className="col-auto px-0">
               <PointsBadge 
-                points={totalPoints}
+                points={formatNumberToNScale(totalPoints, 0)}
+                size="sm"
+                variant="filled"
               />
             </div>
           </div>
-        </NextLink> */}
+        </NextLink>
 
         <LinksSession>
+
+          <NextLink href={`/profile/${currentUser?.login || currentUser.walletAddress}`} className="mb-1 mx-0">
+            <a href={`/profile/${currentUser?.login || currentUser.walletAddress}`}
+               onClick={() => setVisible(false)}
+               className="p family-Regular p-0 text-capitalize font-weight-normal text-decoration-none p family-Regular btn-primary bg-transparent text-white">{t('main-nav.nav-avatar.public-profile')}</a>
+          </NextLink>
+
           {getProfileLinks(t).map(ProfileInternalLink)}
         </LinksSession>
 

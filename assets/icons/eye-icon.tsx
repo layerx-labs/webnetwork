@@ -25,7 +25,6 @@ export default function EyeIcon(props: SVGProps<SVGSVGElement>) {
           strokeLinejoin="round"
         />
       </g>
-      <rect x="1" y="0.5" width="23" height="23" rx="3.5" stroke="#454654" />
       <defs>
         <clipPath id="clip0_1270_16847">
           <rect

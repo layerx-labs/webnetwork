@@ -33,6 +33,8 @@
 @import "components/notifications";
 @import "components/wallet-selector";
 @import "components/swagger-ui";
+@import "components/points-hero";
+@import "components/gradient-badge";
 
 @function toRGB($color) {
   @return "" + red($color) + ", " + green($color) + ", " + blue($color);
@@ -869,8 +871,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .circle-4 {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 }
 
@@ -2004,4 +2006,83 @@ input[type="color"] {
 
 .text-decoration-underline-hover:hover {
   text-decoration: underline;
+}
+
+.proposal-distribution-payment {
+  max-height: 250px;
+  overflow: auto;
+}
+.proposal-distribution-participants {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.text-gradient-purple {
+  background-color: #f3ec78;
+  background-image: $purpleLinearGradient;
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  -moz-text-fill-color: transparent;
+}
+
+.gradient-border {
+  border: 2px solid transparent;
+
+  &-blue {
+    @extend .gradient-border;
+    background: linear-gradient($gray-950, $gray-950) padding-box, $blueConicGradient border-box;
+
+    &.bg-gray-900 {
+      background: linear-gradient($gray-900, $gray-900) padding-box, $blueConicGradient border-box;
+    }
+  }
+
+  &-purple {
+    @extend .gradient-border;
+    background: linear-gradient($gray-950, $gray-950) padding-box, $purpleLinearGradient border-box;
+
+    &.bg-gray-900 {
+      background: linear-gradient($gray-900, $gray-900) padding-box, $purpleLinearGradient border-box;
+    }
+  }
+}
+
+.gradient-bg {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  &-black {
+    @extend .gradient-bg;
+
+    &::before {
+      background: linear-gradient(180deg, #17171C 0%, rgba(23, 23, 28, 0) 100%);
+    }
+  }
+}
+
+.z {
+  &-n1 {
+    z-index: -1;
+  }
+  &-0 {
+    z-index: 0;
+  }
+  &-1 {
+    z-index: 1;
+  }
+  &-2 {
+    z-index: 3;
+  }
 }

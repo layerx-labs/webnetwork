@@ -41,7 +41,12 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
       include: [
         { association: "distributions" }, 
         { association: "disputes" },
-        { association: "user" },
+        { 
+          association: "user",
+          on: Sequelize.where(Sequelize.fn("lower", Sequelize.col("mergeProposals.creator")),
+                              "=",
+                              Sequelize.fn("lower", Sequelize.col("mergeProposals->user.address")))
+        },
       ],
       required: false
     },
@@ -89,6 +94,7 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
   }
 
   const issue = await models.issue.findOne({
+    logging: console.log,
     where: {
       id,
       ... network_id ? { network_id } : {}

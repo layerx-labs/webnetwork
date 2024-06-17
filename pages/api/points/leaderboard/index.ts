@@ -1,19 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { withProtected } from "middleware";
+import { withCORS } from "middleware";
 
-import { get} from "server/common/points-base";
+import { getPointsLeaderboard } from "server/common/points";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
   case "get":
-    res.status(200).json(await get());
+    res.status(200).json(await getPointsLeaderboard(req));
     break;
   default:
     res.status(405);
+    break;
   }
-
-  res.end();
 }
 
-export default withProtected(handler);
+export default withCORS(handler);

@@ -8,18 +8,20 @@ type UserProfileLinkProps = {
   handle?: string,
   className?: string,
   truncate?: boolean,
+  transformHandle?: boolean;
 }
 
-export function UserProfileLink ({
+export function UserProfileLink({
   address,
   handle,
   className,
-  truncate = true
+  truncate = true,
+  transformHandle = true,
 }: UserProfileLinkProps) {
   const { t } = useTranslation("common");
 
   const renderAddress = truncate ? truncateAddress(address, 5) : address;
-  const renderHandle = handle ? `@${handle}` : handle;
+  const renderHandle = transformHandle && handle ? `@${handle}` : handle;
 
   return (
     <Link href={`/profile/${handle || address}`}>

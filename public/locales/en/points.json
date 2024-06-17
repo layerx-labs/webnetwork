@@ -7,6 +7,22 @@
   "peding": "Pending",
   "get": "Get",
   "add": "Add",
+  "points_one": "{{count}} Point",
+  "points_other": "{{count}} Points",
+  "pointsWithoutCount_one": "Point",
+  "pointsWithoutCount_other": "Points",
+  "your-points": "Your Points",
+  "collect-bepro": "Collect Bepro Points and redeem them for exclusive rewards and special offers.",
+  "booster-active": "Booster Active",
+  "on-going-quests": "On-going quests",
+  "recurring-quests": "Recurring quests",
+  "current-quests": "Current Quests",
+  "history": "History",
+  "leaderboard": "Leaderboard",
+  "your-ranking": "Your ranking",
+  "top-users": "Top users",
+  "total-points": "Total points",
+  "connect-your-wallet": "Connect your wallet to see your ranking",
   "rules": {
     "add_linkedin": {
       "title": "Fill LinkedIn link",
@@ -73,7 +89,7 @@
       "pointsLabel_other": "{{count}}"
     },
     "add_twitter": {
-      "title": "Add X link",
+      "title": "Fill X link",
       "description": "Link your X profile",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
@@ -83,6 +99,38 @@
       "description": "Upload your custom avatar",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
+    }
+  },
+  "status": {
+    "boosted": "Boosted",
+    "collected": "Collected",
+    "available": "Available",
+    "pending": "Pending"
+  },
+  "points-history": {
+    "action": "Action",
+    "points": "Points",
+    "status": "Status",
+    "date": "Date",
+    "no-points": "No history to show",
+    "actionName": {
+      "locked": "Locked",
+      "delegated": "Delegated",
+      "created_marketplace": "Create marketplace",
+      "created_task": "Created task",
+      "created_deliverable": "Created deliverable",
+      "created_proposal": "Created proposal",
+      "accepted_proposal": "Accepted proposal",
+      "add_github": "Fill github link",
+      "add_linkedin": "Fill linkedIn link",
+      "add_about": "Add about section",
+      "add_twitter": "Fill X link",
+      "add_avatar": "Add avatar",
+      "connect_email": "Connect email"
+    },
+    "state": {
+      "counted": "Counted",
+      "pending": "Pending"
     }
   }
 }

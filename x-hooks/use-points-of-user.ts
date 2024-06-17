@@ -1,11 +1,13 @@
-import { MINUTE_IN_MS } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
+import {MINUTE_IN_MS} from "helpers/constants";
+import {QueryKeys} from "helpers/query-keys";
 
-import { useGetPointsBase } from "x-hooks/api/points/use-get-points-base";
-import { useGetPointsEventsOfUser } from "x-hooks/api/points/use-get-points-events";
-import { useGetUserByAddress } from "x-hooks/api/user";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useGetPointsBase} from "x-hooks/api/points/use-get-points-base";
+import {useGetPointsEventsOfUser} from "x-hooks/api/points/use-get-points-events";
+import {useGetUserByAddress} from "x-hooks/api/user";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
+
+const TEN_MINUTES = 10 * MINUTE_IN_MS;
 
 export function userPointsOfUser() {
   const { currentUser } = useUserStore();
@@ -14,7 +16,7 @@ export function userPointsOfUser() {
     useReactQuery(QueryKeys.totalPointsOfUser(currentUser?.walletAddress), 
                   () => useGetUserByAddress(currentUser?.walletAddress),
                   {
-                    staleTime: Infinity,
+                    staleTime: TEN_MINUTES,
                     enabled: !!currentUser?.walletAddress
                   });
 
@@ -22,14 +24,14 @@ export function userPointsOfUser() {
     useReactQuery(QueryKeys.pointsBase(), 
                   () => useGetPointsBase(),
                   {
-                    staleTime: 10 * MINUTE_IN_MS,
+                    staleTime: TEN_MINUTES,
                   });
 
-  const { data: collectedPoints, invalidate: refreshCollected } = 
+  const { data: collectedPoints, invalidate: refreshCollected, isFetching: fetchingCollectedPoints } =
     useReactQuery(QueryKeys.pointsEventsOfUser(currentUser?.walletAddress), 
                   () => useGetPointsEventsOfUser(),
                   {
-                    staleTime: 10 * MINUTE_IN_MS,
+                    staleTime: TEN_MINUTES,
                     enabled: !!currentUser?.walletAddress,
                   });
 
@@ -43,6 +45,7 @@ export function userPointsOfUser() {
     totalPoints: user?.totalPoints || 0,
     collectedPoints: collectedPoints || [],
     pointsBase: pointsBase || [],
+    fetchingCollectedPoints,
     refresh,
   };
 }

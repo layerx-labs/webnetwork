@@ -80,6 +80,7 @@
     "nav-avatar": {
       "my-profile": "Settings",
       "profile": "Settings",
+      "public-profile": "Public profile",
       "dashboard": "Dashboard",
       "wallet": "Wallet",
       "voting-power": "Voting Power",
@@ -548,7 +549,8 @@
   "placeholders": {
     "select-chain": "Select Network",
     "select-marketplace": "Select Marketplace",
-    "select-latest": "Select Latest"
+    "select-latest": "Select Latest",
+    "select-a-user": "Select a user"
   },
   "comments": {
     "input": {

@@ -34,11 +34,8 @@ export default function PageActions({
   });
 
   function getDeliverablesAbleToBeProposed() {
-    const isProposalValid = p => !p?.isDisputed && !p?.isMerged && !p?.refusedByBountyOwner;
     const deliverables = currentBounty?.deliverables;
-    const deliverableIdsOfValidProposals = 
-      currentBounty?.mergeProposals?.filter(isProposalValid)?.map(p => p?.deliverableId) || [];
-    return deliverables.filter(d => !deliverableIdsOfValidProposals.includes(d.id) && d.markedReadyForReview);
+    return deliverables.filter(d => !d?.canceled && d?.markedReadyForReview);
   }
 
   const deliverablesAbleToBeProposed = getDeliverablesAbleToBeProposed();

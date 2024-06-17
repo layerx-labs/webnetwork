@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
-import { UserRoute } from "middleware";
+import {getPointsBase} from "server/common/points/get-points-base";
 
-import { getPointsBase } from "server/common/points/get-points-base";
+import WithCors from "../../../../middleware/withCors";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method.toLowerCase()) {
@@ -15,4 +15,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default UserRoute(handler, []);
+export default WithCors(handler);

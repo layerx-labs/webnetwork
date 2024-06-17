@@ -1,6 +1,7 @@
 import {Offcanvas} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
+import NextLink from "next/link";
 
 import ArrowLeft from "assets/icons/arrow-left";
 import ArrowRight from "assets/icons/arrow-right";
@@ -9,6 +10,7 @@ import { AvatarCurrentUser } from "components/avatar-current-user/avatar-current
 import Button from "components/button";
 import DisconnectWalletButton from "components/common/buttons/disconnect-wallet/view";
 import HelpButton from "components/common/buttons/help/view";
+import { PointsBadge } from "components/common/points/points-badge.view";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
 import If from "components/If";
 import InternalLink from "components/internal-link";
@@ -16,9 +18,11 @@ import Notifications from "components/notifications/controller";
 import DashboardLinks from "components/profile/dashboard-links";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
+import { formatNumberToNScale } from "helpers/formatNumber";
 import {truncateAddress} from "helpers/truncate-address";
 
 import {Link} from "types/utils";
+
 
 interface HamburgerMenuViewProps {
   show: boolean;
@@ -27,6 +31,7 @@ interface HamburgerMenuViewProps {
   isConnected: boolean;
   isProfileLinksVisible: boolean;
   links: Link[];
+  totalPoints: number;
   onDisconnect: () => void;
   onShowProfileLinks: () => void;
   onHideProfileLinks: () => void;
@@ -40,6 +45,7 @@ export default function HamburgerMenuView({
   isConnected,
   isProfileLinksVisible,
   links,
+  totalPoints,
   onDisconnect,
   onShowProfileLinks,
   onHideProfileLinks,
@@ -130,6 +136,30 @@ export default function HamburgerMenuView({
                 <CreateNetworkBountyButton
                   actionCallBack={onHideHamburger}
                 />
+
+                <If condition={isConnected}>
+                  <NextLink href="/points">
+                    <div 
+                      className={`row align-items-center border-top border-bottom border-gray-800 mx-0 
+                        py-3 cursor-pointer`}
+                      onClick={onHideHamburger}
+                    >
+                      <div className="col px-0">
+                        <span className="text-white text-gray-hover caption-medium font-weight-medium text-capitalize">
+                          {t("main-nav.nav-avatar.your-points")}
+                        </span>
+                      </div>
+
+                      <div className="col-auto px-0">
+                        <PointsBadge
+                          points={formatNumberToNScale(totalPoints, 0)}
+                          size="sm"
+                          variant="filled"
+                        />
+                      </div>
+                    </div>
+                  </NextLink>
+                </If>
 
                 {links.map(GlobalLink)}
               </div>

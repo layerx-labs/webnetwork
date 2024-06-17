@@ -188,7 +188,7 @@ export default function useBepro() {
         })
         .catch((err: { message: string; }) => {
           failTx(err, redeemTx, reject);
-        });
+        }); 
     })
   }
   
@@ -223,7 +223,8 @@ export default function useBepro() {
 
   async function handleProposeMerge(bountyId: number,
                                     pullRequestId: number,
-                                    recipient: string): Promise<TransactionReceipt> {
+                                    recipients: string[],
+                                    percentages: number[]): Promise<TransactionReceipt> {
 
     return new Promise(async (resolve, reject) => {
 
@@ -233,7 +234,7 @@ export default function useBepro() {
       });
 
       await getService()
-        .createProposal(bountyId, pullRequestId, [recipient], [100])
+        .createProposal(bountyId, pullRequestId, recipients, percentages)
         .then((txInfo: TransactionReceipt) => {
           updateTx(parseTransaction(txInfo, tx as SimpleBlockTransactionPayload))
           resolve(txInfo);
