@@ -118,9 +118,11 @@ export default function PublicProfileView({
             <div className="row mb-2">
               <h2 className="sm-regular font-weight-normal text-gray-300 d-flex">
                 <div>{secondaryText}</div>
-                <CopyButton value={userAddress}
-                            title={userAddress}
-                            popOverLabel={t('misc.address-copied')}/>
+                <div className="ml-1">
+                  <CopyButton value={userAddress}
+                              title={userAddress}
+                              popOverLabel={t('misc.address-copied')}/>
+                </div>
               </h2>
             </div>
           </If>
