@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next";
+import {NextApiRequest} from "next";
 
 import models from "db/models";
 
@@ -11,6 +11,7 @@ export async function getEventsOfUser(req: NextApiRequest) {
     attributes: {
       exclude: ["info", "updatedAt"]
     },
+    order:[["createdAt", "DESC"]],
     where: {
       userId: +userId
     },
