@@ -103,7 +103,7 @@ module.exports = () => {
     serverRuntimeConfig,
     // webpack5: true,
     compiler: {
-      removeConsole: process.env.NODE_ENV === "production",
+      removeConsole: false, //process.env.NODE_ENV === "production",
       reactRemoveProperties: process.env.NODE_ENV === "production"
     },
     async headers() {
