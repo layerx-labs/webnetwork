@@ -76,6 +76,7 @@ module.exports = {
         pointsWon,
         createdAt: new Date(),
         updatedAt: new Date(),
+        pointsCounted: true,
         info: JSON.stringify({
           ...info,
           migration
@@ -99,54 +100,60 @@ module.exports = {
       if (!!row.about) {
         if (!!row.aboutEventId) {
           addEventToUpdate(row.aboutEventId, row.aboutRealPoints, row.aboutInfo, row.aboutPointsWon);
-          updatedTotalPoints += (row.aboutRealPoints - row.aboutPointsWon)
+          updatedTotalPoints += (row.aboutRealPoints - row.aboutPointsWon);
         } else {
           addEventToInsert("add_about", row.userId, row.aboutRealPoints, { value: row.about });
+          updatedTotalPoints += row.aboutRealPoints;
         }
       }
 
       if (!!row.githubLink) {
         if (!!row.githubEventId) {
           addEventToUpdate(row.githubEventId, row.githubRealPoints, row.githubInfo, row.githubPointsWon);
-          updatedTotalPoints += (row.githubRealPoints - row.githubPointsWon)
+          updatedTotalPoints += (row.githubRealPoints - row.githubPointsWon);
         } else {
           addEventToInsert("add_github", row.userId, row.githubRealPoints, { value: row.githubLink });
+          updatedTotalPoints += row.githubRealPoints;
         }
       }
 
       if (!!row.linkedInLink) {
         if (!!row.linkedInEventId) {
           addEventToUpdate(row.linkedInEventId, row.linkedInRealPoints, row.linkedInInfo, row.linkedInPointsWon);
-          updatedTotalPoints += (row.linkedInRealPoints - row.linkedInPointsWon)
+          updatedTotalPoints += (row.linkedInRealPoints - row.linkedInPointsWon);
         } else {
           addEventToInsert("add_linkedin", row.userId, row.linkedInRealPoints, { value: row.linkedInLink });
+          updatedTotalPoints += row.linkedInRealPoints;
         }
       }
 
       if (!!row.twitterLink) {
         if (!!row.twitterEventId) {
           addEventToUpdate(row.twitterEventId, row.twitterRealPoints, row.twitterInfo, row.twitterPointsWon);
-          updatedTotalPoints += (row.twitterRealPoints - row.twitterPointsWon)
+          updatedTotalPoints += (row.twitterRealPoints - row.twitterPointsWon);
         } else {
           addEventToInsert("add_twitter", row.userId, row.twitterRealPoints, { value: row.twitterLink });
+          updatedTotalPoints += row.twitterRealPoints;
         }
       }
 
       if (!!row.email) {
         if (!!row.emailEventId) {
           addEventToUpdate(row.emailEventId, row.emailRealPoints, row.emailInfo, row.emailPointsWon);
-          updatedTotalPoints += (row.emailRealPoints - row.emailPointsWon)
+          updatedTotalPoints += (row.emailRealPoints - row.emailPointsWon);
         } else {
           addEventToInsert("connect_email", row.userId, row.emailRealPoints, { value: row.email });
+          updatedTotalPoints += row.emailRealPoints;
         }
       }
 
       if (!!row.avatar) {
         if (!!row.avatarEventId) {
           addEventToUpdate(row.avatarEventId, row.avatarRealPoints, row.avatarInfo, row.avatarPointsWon);
-          updatedTotalPoints += (row.avatarRealPoints - row.avatarPointsWon)
+          updatedTotalPoints += (row.avatarRealPoints - row.avatarPointsWon);
         } else {
           addEventToInsert("add_avatar", row.userId, row.avatarRealPoints, { value: row.avatar });
+          updatedTotalPoints += row.avatarRealPoints;
         }
       }
 
