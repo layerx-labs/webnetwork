@@ -7,55 +7,151 @@ module.exports = {
     const rows = await queryInterface.sequelize.query(`
       select	users."id" "userId"
           , users."totalPoints"
-          , case when users."about" is not null and users."about" <> '' then true else false end "hasAbout"
+          , users."about"
           , aboutEvent."id" "aboutEventId"
           , aboutEvent."pointsWon" "aboutPointsWon"
-          , aboutBase."pointsPerAction" * aboutBase."scalingFactor" "aboutRealPoints"
-          , case when users."githubLink" is not null and users."githubLink" <> '' then true else false end "hasGithubLink"
+          , aboutEvent.info "aboutInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'add_about') "aboutRealPoints"
+          , users."githubLink"
           , githubEvent."id" "githubEventId"
           , githubEvent."pointsWon" "githubPointsWon"
-          , githubBase."pointsPerAction" * githubBase."scalingFactor" "githubRealPoints"
-          , case when users."linkedInLink" is not null and users."linkedInLink" <> '' then true else false end "hasLinkedInLink"
+          , githubEvent.info "githubInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'add_github') "githubRealPoints"
+          , users."linkedInLink"
           , linkedinEvent."id" "linkedInEventId"
           , linkedinEvent."pointsWon" "linkedInPointsWon"
-          , linkedinBase."pointsPerAction" * linkedinBase."scalingFactor" "linkedInRealPoints"
-          , case when users."twitterLink" is not null and users."twitterLink" <> '' then true else false end "hasTwitterLink"
+          , linkedinEvent.info "linkedInInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'add_linkedin') "linkedInRealPoints"
+          , users."twitterLink"
           , twitterEvent."id" "twitterEventId"
           , twitterEvent."pointsWon" "twitterPointsWon"
-          , twitterBase."pointsPerAction" * twitterBase."scalingFactor" "twitterRealPoints"
-          , case when users."email" is not null and users."email" <> '' then true else false end "hasEmail"
+          , twitterEvent.info "twitterInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'add_twitter') "twitterRealPoints"
+          , users."email"
           , emailEvent."id" "emailEventId"
           , emailEvent."pointsWon" "emailPointsWon"
-          , emailBase."pointsPerAction" * emailBase."scalingFactor" "emailRealPoints"
-          , case when users."avatar" is not null and users."avatar" <> '' then true else false end "hasAvatar"
+          , emailEvent.info "emailInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'connect_email') "emailRealPoints"
+          , users."avatar"
           , avatarEvent."id" "avatarEventId"
           , avatarEvent."pointsWon" "avatarPointsWon"
-          , avatarBase."pointsPerAction" * avatarBase."scalingFactor" "avatarRealPoints"
+          , avatarEvent.info "avatarInfo"
+          , (select "pointsPerAction" * "scalingFactor" from points_base where "actionName" = 'add_avatar') "avatarRealPoints"
+      into 	recount_profile_points_bkp
       from	users
         left join points_events aboutEvent on aboutEvent."userId" = users."id" and aboutEvent."actionName" = 'add_about'
-        left join points_base aboutBase on aboutBase."actionName" = aboutEvent."actionName"
         left join points_events githubEvent on githubEvent."userId" = users."id" and githubEvent."actionName" = 'add_github'
-        left join points_base githubBase on githubBase."actionName" = githubEvent."actionName"
         left join points_events linkedinEvent on linkedinEvent."userId" = users."id" and linkedinEvent."actionName" = 'add_linkedin'
-        left join points_base linkedinBase on linkedinBase."actionName" = linkedinEvent."actionName"
         left join points_events twitterEvent on twitterEvent."userId" = users."id" and twitterEvent."actionName" = 'add_twitter'
-        left join points_base twitterBase on twitterBase."actionName" = twitterEvent."actionName"
         left join points_events emailEvent on emailEvent."userId" = users."id" and emailEvent."actionName" = 'connect_email'
-        left join points_base emailBase on emailBase."actionName" = emailEvent."actionName"
         left join points_events avatarEvent on avatarEvent."userId" = users."id" and avatarEvent."actionName" = 'add_avatar'
-        left join points_base avatarBase on avatarBase."actionName" = avatarEvent."actionName"
-      where	1 = 1
-        and (
-          (users."about" is not null and users."about" <> '')
+      where	(users."about" is not null and users."about" <> '')
           or (users."githubLink" is not null and users."githubLink" <> '')
           or (users."linkedInLink" is not null and users."linkedInLink" <> '')
           or (users."twitterLink" is not null and users."twitterLink" <> '')
           or (users."email" is not null and users."email" <> '')
-          or (users."avatar" is not null and users."avatar" <> '')
-        )
+          or (users."avatar" is not null and users."avatar" <> '');
+      
+      select * from recount_profile_points_bkp;
     `, {
       type: QueryTypes.SELECT,
     });
+
+    const migration = "20240619132935-recount-profile-points.js";
+
+    const eventsToUpdate = [];
+    const eventsToInsert = [];
+    const usersToUpdate = [];
+
+    const addUserToUpdate = (id, totalPoints) => 
+      usersToUpdate.push({
+        id,
+        totalPoints
+      });
+
+    const addEventToInsert = (actionName, userId, pointsWon, info) => 
+      eventsToInsert.push({
+        actionName,
+        userId,
+        pointsWon,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        info: JSON.stringify({
+          ...info,
+          migration
+        }),
+      });
+
+    const addEventToUpdate = (id, pointsWon, info, oldPointsWon) => 
+      eventsToUpdate.push({ 
+      id,
+      pointsWon,
+      info: JSON.stringify({
+        ...info,
+        updatedBy: migration,
+        oldPointsWon
+      })
+    });
+
+    for (const row of rows) {
+      let updatedTotalPoints = row.totalPoints;
+
+      if (!!row.about) {
+        if (!!row.aboutEventId) {
+          addEventToUpdate(row.aboutEventId, row.aboutRealPoints, row.aboutInfo, row.aboutPointsWon);
+          updatedTotalPoints += (row.aboutRealPoints - row.aboutPointsWon)
+        } else {
+          addEventToInsert("add_about", row.userId, row.aboutRealPoints, { value: row.about });
+        }
+      }
+
+      if (!!row.githubLink) {
+        if (!!row.githubEventId) {
+          addEventToUpdate(row.githubEventId, row.githubRealPoints, row.githubInfo, row.githubPointsWon);
+          updatedTotalPoints += (row.githubRealPoints - row.githubPointsWon)
+        } else {
+          addEventToInsert("add_github", row.userId, row.githubRealPoints, { value: row.githubLink });
+        }
+      }
+
+      if (!!row.linkedInLink) {
+        if (!!row.linkedInEventId) {
+          addEventToUpdate(row.linkedInEventId, row.linkedInRealPoints, row.linkedInInfo, row.linkedInPointsWon);
+          updatedTotalPoints += (row.linkedInRealPoints - row.linkedInPointsWon)
+        } else {
+          addEventToInsert("add_linkedin", row.userId, row.linkedInRealPoints, { value: row.linkedInLink });
+        }
+      }
+
+      if (!!row.twitterLink) {
+        if (!!row.twitterEventId) {
+          addEventToUpdate(row.twitterEventId, row.twitterRealPoints, row.twitterInfo, row.twitterPointsWon);
+          updatedTotalPoints += (row.twitterRealPoints - row.twitterPointsWon)
+        } else {
+          addEventToInsert("add_twitter", row.userId, row.twitterRealPoints, { value: row.twitterLink });
+        }
+      }
+
+      if (!!row.email) {
+        if (!!row.emailEventId) {
+          addEventToUpdate(row.emailEventId, row.emailRealPoints, row.emailInfo, row.emailPointsWon);
+          updatedTotalPoints += (row.emailRealPoints - row.emailPointsWon)
+        } else {
+          addEventToInsert("connect_email", row.userId, row.emailRealPoints, { value: row.email });
+        }
+      }
+
+      if (!!row.avatar) {
+        if (!!row.avatarEventId) {
+          addEventToUpdate(row.avatarEventId, row.avatarRealPoints, row.avatarInfo, row.avatarPointsWon);
+          updatedTotalPoints += (row.avatarRealPoints - row.avatarPointsWon)
+        } else {
+          addEventToInsert("add_avatar", row.userId, row.avatarRealPoints, { value: row.avatar });
+        }
+      }
+
+      addUserToUpdate(row.userId, updatedTotalPoints);
+    }
 
     const updateUser = ({ id, totalPoints }) => queryInterface.bulkUpdate("users", {
       totalPoints
@@ -63,54 +159,20 @@ module.exports = {
       id
     });
 
-    const updateEvent = ({ id, pointsWon }) => queryInterface.bulkUpdate("points_events", {
-      pointsWon
+    const updateEvent = ({ id, pointsWon, info }) => queryInterface.bulkUpdate("points_events", {
+      pointsWon,
+      info
     }, {
       id
     });
 
-    for (const row of rows) {
-      let updatedTotalPoints = row.totalPoints;
-      const eventsToUpdate = [];
+    await Promise.all([
+      ...eventsToUpdate.map(updateEvent),
+      ...usersToUpdate.map(updateUser)
+    ]);
 
-      if (row.hasAbout) {
-        eventsToUpdate.push({ id: row.aboutEventId, pointsWon: row.aboutRealPoints });
-        updatedTotalPoints += (row.aboutRealPoints - row.aboutPointsWon)
-      }
-
-      if (row.hasGithubLink) {
-        eventsToUpdate.push({ id: row.githubEventId, pointsWon: row.githubRealPoints });
-        updatedTotalPoints += (row.githubRealPoints - row.githubPointsWon)
-      }
-
-      if (row.hasLinkedInLink) {
-        eventsToUpdate.push({ id: row.linkedInEventId, pointsWon: row.linkedInRealPoints });
-        updatedTotalPoints += (row.linkedInRealPoints - row.linkedInPointsWon)
-      }
-
-      if (row.hasTwitterLink) {
-        eventsToUpdate.push({ id: row.twitterEventId, pointsWon: row.twitterRealPoints });
-        updatedTotalPoints += (row.twitterRealPoints - row.twitterPointsWon)
-      }
-
-      if (row.hasEmail) {
-        eventsToUpdate.push({ id: row.emailEventId, pointsWon: row.emailRealPoints });
-        updatedTotalPoints += (row.emailRealPoints - row.emailPointsWon)
-      }
-
-      if (row.hasAvatar) {
-        eventsToUpdate.push({ id: row.avatarEventId, pointsWon: row.avatarRealPoints });
-        updatedTotalPoints += (row.avatarRealPoints - row.avatarPointsWon)
-      }
-
-      await Promise.all([
-        ...eventsToUpdate.map(updateEvent),
-        updateUser({
-          id: row.userId,
-          totalPoints: updatedTotalPoints
-        })
-      ]);
-    }
+    if (eventsToInsert.length)
+      await queryInterface.bulkInsert("points_events", eventsToInsert);
   },
 
   async down (queryInterface, Sequelize) {
