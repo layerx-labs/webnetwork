@@ -3,7 +3,7 @@ import React from "react";
 import {useTranslation} from "next-i18next";
 
 import Badge from "components/badge";
-import { PointsBadge } from "components/common/points/points-badge.view";
+import {PointsBadge} from "components/common/points/points-badge.view";
 import CustomContainer from "components/custom-container";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
 import {AvatarForm} from "components/profile/avatar-form/avatar-form.controller";
@@ -67,7 +67,7 @@ export default function ProfilePageView({
               )}
             </div>
 
-            <div className="row mt-2">
+            <div className="row mt-3">
               <div className="col-auto">
                 <PointsBadge
                   points={totalPoints}
