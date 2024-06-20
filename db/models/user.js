@@ -61,6 +61,14 @@ class User extends Model {
       avatar: {
         type: DataTypes.STRING,
         allowNull: true
+      },
+      profileImage: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      profileImageUpdatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true
       }
     },
     {
