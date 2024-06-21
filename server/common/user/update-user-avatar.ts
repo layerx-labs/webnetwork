@@ -1,12 +1,16 @@
 import {IncomingForm} from "formidable";
 import fs from "fs";
 import {NextApiRequest} from "next";
+import getConfig from "next/config";
 
 import IpfsStorage from "services/ipfs-service";
 import {Logger} from "services/logging";
 
 import {HttpBadRequestError, HttpFileSizeError} from "server/errors/http-errors";
+import { EventsService } from "server/services/events";
 import {addPointEntry} from "server/utils/points-system/add-point-entry";
+
+const { publicRuntimeConfig } = getConfig();
 
 export async function updateUserAvatar(req: NextApiRequest) {
   const { context: { user } } = req.body;
@@ -16,7 +20,6 @@ export async function updateUserAvatar(req: NextApiRequest) {
   });
 
   return new Promise((resolve, reject) => {
-
     form.parse(req, async (err, fields, files) => {
       if (err) {
         console.error('Error parsing form:', err);
@@ -47,6 +50,18 @@ export async function updateUserAvatar(req: NextApiRequest) {
         .catch(error => {
           Logger.error(error, `Failed to save avatar points`);
         });
+
+      const eventsUrl = publicRuntimeConfig?.urls?.events;
+
+      if (eventsUrl) {
+        EventsService.sendUpdateUserProfileImage({
+          url: eventsUrl,
+          id: user.id
+        })
+          .catch(error => {
+            Logger.error(error, `Failed to update user image`);
+          });
+      }
 
       resolve({uploaded});
     });
