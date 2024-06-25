@@ -46,8 +46,16 @@ export default function PublicProfile(props: PublicProfileProps) {
   const imageUrl = user?.profileImage ? 
     `${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` : 
     `${homeUrl}/images/meta-thumbnail.jpeg`;
-  const title = user?.handle || truncateAddress(user?.address);
   const about = removeMarkdown(user?.about?.substring(0, 160).trimEnd());
+  let title = truncateAddress(user?.address);
+
+  if (user?.fullName) {
+    title = user.fullName.length > 25 ? `${user.fullName.slice(0, 25)}...` : user.fullName;
+
+    if (user?.handle)
+      title += ` (${user?.handle})`;
+  } else if (user?.handle)
+    title = user?.handle;
 
   return (
     <>
