@@ -1,9 +1,13 @@
+import removeMarkdown from "markdown-to-text";
 import {GetServerSideProps} from "next";
+import {NextSeo} from "next-seo";
+import getConfig from "next/config";
 
 import PublicProfilePage from "components/pages/public-profile/public-profile.controller";
 
 import {emptyPaginatedData} from "helpers/api";
 import {isAddress} from "helpers/is-address";
+import { truncateAddress } from "helpers/truncate-address";
 
 import {User} from "interfaces/api";
 
@@ -34,8 +38,40 @@ export interface PublicProfileProps {
   pops?: AnkrNftAsset[];
 }
 
+const { publicRuntimeConfig } = getConfig();
+
 export default function PublicProfile(props: PublicProfileProps) {
-  return <PublicProfilePage {...props} />;
+  const { user } = props;
+  const homeUrl = publicRuntimeConfig?.urls?.home;
+  const imageUrl = user?.profileImage ? 
+    `${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` : 
+    `${homeUrl}/images/meta-thumbnail.jpeg`;
+  const title = user?.handle || truncateAddress(user?.address);
+  const about = removeMarkdown(user?.about?.substring(0, 160).trimEnd());
+
+  return (
+    <>
+      <NextSeo
+        title={title}
+        openGraph={{
+          url: `${homeUrl}/profile/${user?.handle || user?.address}`,
+          title: title,
+          description: `${about}...` || "",
+          images: [
+            {
+              url: imageUrl,
+              width: 1200,
+              height: 670,
+              alt: `${title} profile`,
+              type: "image/jpeg"
+            }
+          ],
+          site_name: "Bepro Network"
+        }}
+      />
+      <PublicProfilePage {...props} />
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({req, query, locale}) => {

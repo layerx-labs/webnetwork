@@ -6,6 +6,7 @@ import {getUserByHandle} from "server/common/user/get-user-by-handle";
 import {HttpBadRequestError, HttpConflictError, HttpForbiddenError} from "server/errors/http-errors";
 import {UserRoleUtils} from "server/utils/jwt";
 
+jest.mock('services/logging', () => ({Logger: jest.fn()}));
 jest.mock('server/common/user/get-user-by-handle', () => ({getUserByHandle: jest.fn()}));
 jest.mock('server/common/user/get-user-by-address', () => ({getUserByAddress: jest.fn()}));
 

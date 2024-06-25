@@ -18,6 +18,8 @@ export interface User {
   totalPoints?: number;
   twitterLink: string;
   avatar?: string;
+  profileImage?: string;
+  profileImageUpdatedAt?: string | Date;
 }
 
 export interface PastEventsParams {
