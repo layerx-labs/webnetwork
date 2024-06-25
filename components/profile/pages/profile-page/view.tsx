@@ -5,8 +5,10 @@ import {useTranslation} from "next-i18next";
 import Badge from "components/badge";
 import { PointsBadge } from "components/common/points/points-badge.view";
 import CustomContainer from "components/custom-container";
+import { Divider } from "components/divider";
+import { AboutSocial } from "components/profile/about-social/about-social-controller";
 import AddressWithCopy from "components/profile/address-with-copy/controller";
-import {AvatarForm} from "components/profile/avatar-form/avatar-form.controller";
+import { AvatarForm } from "components/profile/avatar-form/avatar-form.controller";
 import DashboardLayout from "components/profile/dashboard-layout";
 import LanguageForm from "components/profile/language-form/language-form.controller";
 import NotificationForm from "components/profile/notification-form/controller";
@@ -14,8 +16,6 @@ import UserNameForm from "components/profile/user-name-form/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
-
-import {AboutSocial} from "../../about-social/about-social-controller";
 
 interface ProfilePageViewProps { 
   walletAddress: string;
@@ -76,8 +76,15 @@ export default function ProfilePageView({
             </div>
           </div>
         </div>
+
         <AboutSocial />
+
+        <div className="py-3">
+          <Divider bg="gray-850" />
+        </div>
+
         <NotificationForm />
+
         <LanguageForm />
       </DashboardLayout>
     </>

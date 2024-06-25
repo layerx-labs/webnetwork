@@ -1,33 +1,32 @@
-import React, {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
-import {useSession} from "next-auth/react";
-import {useTranslation} from "next-i18next";
+import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 
-import { FullNameForm } from "components/profile/full-name-form/full-name-form.view";
+import { AboutSocialView } from "components/profile/about-social/about-social.view";
 
+import { QueryKeys } from "helpers/query-keys";
+
+import { User } from "interfaces/api";
+
+import { api } from "services/api";
+
+import { useGetUserByAddress } from "x-hooks/api/user";
 import { useUpdateFullName } from "x-hooks/api/user/use-update-full-name";
-
-import {QueryKeys} from "../../../helpers/query-keys";
-import {User} from "../../../interfaces/api";
-import {api} from "../../../services/api";
-import {useGetUserByAddress} from "../../../x-hooks/api/user";
-import {useUserStore} from "../../../x-hooks/stores/user/user.store";
-import useReactQuery from "../../../x-hooks/use-react-query";
-import useReactQueryMutation from "../../../x-hooks/use-react-query-mutation";
-import Button from "../../button";
-import {Divider} from "../../divider";
-import {AboutFormView} from "../about-form/about-form-view";
-import {SocialFormView} from "../socials-form/social-form-view";
+import { useUserStore } from "x-hooks/stores/user/user.store";
+import useReactQuery from "x-hooks/use-react-query";
+import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
 export function AboutSocial() {
+  const { t } = useTranslation(["profile"]);
+  const { data: sessionData, update: updateSession } = useSession();
+  
   const [about, setAbout] = useState<string>("");
   const [github, setGithub] = useState<string>("");
   const [xcom, setXCom] = useState<string>("");
   const [linkedin, setLinkedIn] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
 
-  const {t} = useTranslation(["profile"]);
-  const {data: sessionData, update: updateSession } = useSession();
   const {currentUser} = useUserStore()
 
   const onSaveSocials = () =>
@@ -92,7 +91,8 @@ export function AboutSocial() {
   const isFormValid = () =>
     (about !== defaultAbout) ||
     (
-      (replacer(socials?.githubLink) !== github || replacer(socials?.linkedInLink) !== linkedin || replacer(socials?.twitterLink) !== xcom) &&
+      (replacer(socials?.githubLink) !== github || replacer(socials?.linkedInLink) !== linkedin 
+      || replacer(socials?.twitterLink) !== xcom) &&
       (github && isInputValid(github) || true) &&
       (linkedin && isInputValid(linkedin) || true) &&
       (xcom && isInputValid(xcom) || true)
@@ -110,7 +110,8 @@ export function AboutSocial() {
   }
 
   const onSubmit = () => {
-    if (replacer(socials?.githubLink) !== github || replacer(socials?.linkedInLink) !== linkedin || replacer(socials?.twitterLink) !== xcom)
+    if (replacer(socials?.githubLink) !== github || replacer(socials?.linkedInLink) !== linkedin 
+    || replacer(socials?.twitterLink) !== xcom)
       saveSocials(null);
     if (about !== defaultAbout)
       saveAbout(null);
@@ -147,38 +148,30 @@ export function AboutSocial() {
     setFullName(currentUser?.fullName);
   }, [currentUser?.fullName]);
 
-  return <>
-    <FullNameForm
-      value={fullName}
-      onChange={e => setFullName(e.target.value)}
+  return(
+    <AboutSocialView
+      about={about}
+      defaultAbout={defaultAbout}
+      fullName={fullName}
+      github={{
+        displayValue: replacer(socials?.githubLink) || "",
+        value: github
+      }}
+      linkedin={{
+        displayValue: replacer(socials?.linkedInLink) || "",
+        value: linkedin
+      }}
+      twitter={{
+        displayValue: replacer(socials?.twitterLink) || "",
+        value: xcom
+      }}
+      isAboutOverLimit={about.length > 512}
+      isSubmitting={isSocialPending || isAboutPending || isFullNamePending}
+      isSubmitAble={isFormValid()}
+      onFullNameChange={setFullName}
+      onAboutChange={setAbout}
+      onSocialChange={onSocialChange}
+      onSubmit={onSubmit}
     />
-
-    <AboutFormView 
-      isBodyOverLimit={about.length > 512}
-      body={about}
-      defaultValue={defaultAbout}
-      onChange={(e) => setAbout(e.target.value)}
-      isSaving={isAboutPending}
-    />
-
-    <SocialFormView
-      githubLink={replacer(socials?.githubLink) || ""}
-      linkedInLink={replacer(socials?.linkedInLink) || ""}
-      twitterLink={replacer(socials?.twitterLink) || ""}
-      ghLink={github} liLink={linkedin} twitter={xcom}
-      onChange={onSocialChange}
-    />
-
-    <div className="row mt-3">
-      <div className="col">
-        <Button onClick={() => onSubmit()} disabled={!isFormValid()} isLoading={isSocialPending || isAboutPending || isFullNamePending}>
-          <span>{t("common:save")}</span>
-        </Button>
-      </div>
-    </div>
-
-    <div className="py-3">
-      <Divider bg="gray-850" />
-    </div>
-  </>
+  );
 }
