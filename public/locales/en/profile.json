@@ -116,5 +116,11 @@
   "goto": {
     "polygonscan": "Go to polygonscan",
     "tokenUrl": "Go to tokenURL"
+  },
+  "full-name-form": {
+    "title": "Full Name",
+    "placeholder": "Tell us your full name",
+    "error": "Error updating full name",
+    "success": "Successfully updated full name"
   }
 }
