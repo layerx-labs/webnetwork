@@ -20,6 +20,7 @@ export interface User {
   avatar?: string;
   profileImage?: string;
   profileImageUpdatedAt?: string | Date;
+  fullName?: string;
 }
 
 export interface PastEventsParams {
