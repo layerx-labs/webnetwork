@@ -97,6 +97,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             github: user?.githubLink,
             linkedIn: user?.linkedInLink,
             avatar: user?.avatar,
+            fullName: user?.fullName,
           },
         };
       },

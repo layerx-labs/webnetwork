@@ -168,6 +168,9 @@ export function useAuthentication() {
     if (user.avatar !== currentUser?.avatar)
       updateCurrentUser({avatar: user.avatar})
 
+    if (user.fullName !== currentUser?.fullName)
+      updateCurrentUser({ fullName: user.fullName })
+
     if (user.accountsMatch !== currentUser?.match)
       updateCurrentUser({match: user.accountsMatch})
 
