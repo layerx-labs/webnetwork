@@ -27,7 +27,7 @@ export function AboutSocial() {
   const [linkedin, setLinkedIn] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
 
-  const {currentUser} = useUserStore()
+  const { currentUser } = useUserStore();
 
   const onSaveSocials = () =>
     api.put(`/user/${(sessionData?.user as User)?.address}/socials`, {
@@ -57,7 +57,7 @@ export function AboutSocial() {
   const {data: defaultAbout, refetch: refetchAbout} =
     useReactQuery(QueryKeys.about(), getUserAbout, {enabled: !!currentUser?.walletAddress})
 
-  const {mutateAsync: saveSocials, isPending: isSocialPending} = useReactQueryMutation({
+  const {mutate: saveSocials, isPending: isSocialPending} = useReactQueryMutation({
     mutationFn: onSaveSocials,
     toastError: t("social.error"),
     toastSuccess: t("social.success"),
@@ -66,7 +66,7 @@ export function AboutSocial() {
     },
   });
 
-  const {mutateAsync: saveAbout, isPending: isAboutPending} = useReactQueryMutation({
+  const {mutate: saveAbout, isPending: isAboutPending} = useReactQueryMutation({
     mutationFn: onSaveSetAbout,
     toastError: t("social.about.saving.error"),
     toastSuccess: t("social.about.saving.success"),
@@ -75,7 +75,7 @@ export function AboutSocial() {
     },
   });
 
-  const { mutateAsync: saveFullName, isPending: isFullNamePending } = useReactQueryMutation({
+  const { mutate: saveFullName, isPending: isFullNamePending } = useReactQueryMutation({
     mutationFn: onSaveFullName,
     toastError: t("full-name-form.error"),
     toastSuccess: t("full-name-form.success"),
