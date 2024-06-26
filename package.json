@@ -50,6 +50,7 @@
     "@taikai/dappkit": "^2.3.4",
     "@taikai/scribal": "^1.0.3",
     "@tanstack/react-query": "^5.20.5",
+    "@uiw/react-markdown-editor": "^6.1.2",
     "@vlsergey/react-bootstrap-pagination": "^3.2.1",
     "@web3-react/core": "^8.2.3",
     "@web3-react/metamask": "^8.2.4",
