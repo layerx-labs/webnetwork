@@ -80,6 +80,9 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
   const include = [{
     association: "user",
+    attributes: {
+      include: ["email", "id"]
+    },
     include: [{
       association: "settings"
     }]

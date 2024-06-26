@@ -20,7 +20,7 @@ export class EmailNotification {
 
     const {recipients, ids} = await getEventTargets(this.targets);
 
-    console.log(`RECIPIENTS`, recipients);
+    console.log(`RECIPIENTS`, recipients, "targets", this.targets);
 
     for (const [index, to] of recipients.filter(e => e).entries()) {
       const userId = ids[index];
