@@ -5,7 +5,7 @@ import {Collector} from "../collector";
 import {AnalyticEventName, AnalyticTypes, CollectEventPayload} from "../types";
 
 
-export class SendGridEmailNotification implements Collector<undefined, ClientResponse[]> {
+export class SendGridEmailNotification implements Collector<undefined, void[]> {
   readonly type = AnalyticTypes.EmailNotification;
   readonly collector: undefined;
 

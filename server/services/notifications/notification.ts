@@ -3,16 +3,17 @@ import {v4 as uuidv4} from "uuid";
 import models from "db/models";
 
 import {error, info} from "../../../services/logging";
-import {EmailTemplate} from "../../templates/email-template";
+import {getTemplateCompiler} from "../../templates/compilers/get-template-compiler";
+import {AnalyticEventName} from "../push/types";
 import {getEventTargets} from "./get-event-targets";
 
 
 export class Notification {
-  static async create(type: string, payload: any) {
+  static async create(type: AnalyticEventName, payload: any) {
 
     const {ids,} = await getEventTargets(payload?.targets);
     const template =
-      new EmailTemplate().compile({type, payload});
+      getTemplateCompiler({name: type}).compile({type, payload});
 
     for (const userId of ids) {
       const uuid = uuidv4();

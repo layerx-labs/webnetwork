@@ -1,11 +1,11 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {WhereOptions} from "sequelize";
+import {Op, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import {error as LogError} from "services/logging";
-
 import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../errors/http-errors";
+import {Push} from "../../services/push/push";
+import {AnalyticEventName, CommentPushProps} from "../../services/push/types";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
@@ -74,6 +74,37 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     ...(deliverableId || proposalId ? whereCondition : null),
     ...(replyId ? {replyId: +replyId} : null),
   });
+
+  let event: AnalyticEventName;
+  let origin;
+
+  if (type === "deliverable" || type === "review") {
+    event = AnalyticEventName.COMMENT_DELIVERABLE;
+    origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}});
+  }
+  else if (type === "proposal") {
+    event = AnalyticEventName.COMMENT_PROPOSAL;
+    origin = (await models.proposal.findOne({where: {id: {[Op.eq]: proposalId}}}))
+  }
+  else {
+    event = AnalyticEventName.COMMENT_TASK;
+    origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}}))
+  }
+
+  const target = [origin?.user];
+  const marketplace = origin?.network?.name;
+
+  Push.event(event, {
+    marketplace,
+    type,
+    target,
+    data: {
+      entryId: deliverableId || proposalId,
+      taskId: issueId,
+      comment,
+      madeBy: user.handle || user.address
+    }
+  } as CommentPushProps)
 
   return comments
 

@@ -1,31 +1,29 @@
-import {format} from "node:util";
 import {v4 as uuidv4} from "uuid";
 
+import models from "../../../../db/models";
 import {EmailNotificationSubjects} from "../../../templates";
 import {getTemplateCompiler} from "../../../templates/compilers/get-template-compiler";
 import {emailService} from "../../email";
 import {getEventTargets} from "../../notifications/get-event-targets";
 import {Templates} from "../../notifications/templates";
-import {AnalyticEventName} from "../types";
+import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps} from "../types";
 
-type EmailNotificationTarget = Pick<any, "email" | "id" | "user_settings">;
-type EmailNotificationTargets = EmailNotificationTarget[];
 
-export class EmailNotification<Payload = any> {
+export class EmailNotification {
   constructor(readonly templateName: keyof typeof Templates,
-              readonly payload: Payload,
+              readonly payload: PushProps|CommentPushProps,
               readonly targets?: EmailNotificationTargets) {
   }
 
   async send() {
 
-    const {recipients,} = await getEventTargets(this.targets);
+    const {recipients, ids} = await getEventTargets(this.targets);
 
-    for (const [,to] of recipients.filter(e => e).entries()) {
+    for (const [index, to] of recipients.filter(e => e).entries()) {
+      const userId = ids[index];
       const uuid = uuidv4();
 
-      const subject =
-        format(EmailNotificationSubjects[this.templateName], (this.payload as any)?.network?.name ?? "BEPRO");
+      const subject = `${this.payload.marketplace} @ BEPRO | ${EmailNotificationSubjects[this.payload.type]}`;
 
       const content =
         getTemplateCompiler({name: this.templateName as AnalyticEventName})
@@ -33,6 +31,8 @@ export class EmailNotification<Payload = any> {
 
       if (!content)
         return;
+
+      await models.notifications.create({uuid, type: this.templateName, read: false, userId, template: content})
 
       await emailService.sendEmail(subject, to, content);
     }

@@ -2,7 +2,7 @@ import {error} from "../../../services/logging";
 import {ErrorMessages} from "../../errors/error-messages";
 import {Collector} from "./collector";
 import {getCollector} from "./get-collector";
-import {AnalyticEventName, AnalyticEvents, AnalyticsEvents} from "./types";
+import {AnalyticEventName, AnalyticEvents, AnalyticsEvents, CommentPushProps, PushProps} from "./types";
 
 export class Push {
 
@@ -10,7 +10,7 @@ export class Push {
     return (name in AnalyticsEvents) ? (AnalyticsEvents[name] || []).map(getCollector) : [];
   }
 
-  static async event(name: AnalyticEventName, params: any) {
+  static async event<T = CommentPushProps|any>(name: AnalyticEventName, params: PushProps<T>) {
     return Push.events([{name, params}]);
   }
 

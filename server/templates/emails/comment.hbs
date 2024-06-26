@@ -10,11 +10,12 @@
     <tr>
         <td>
             {{> logo}}
-            <h1>{{notificationTitleHeading}}</h1>
+            <h1>You have a new comment on your {{type}}</h1>
             <table id="action-card" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                     <td>
-                        <p>{{taskTitleParagraph}}</p>
+                        <p>{{commentCreator}} Commented on your {{type}}:</p>
+                        <p>{{comment}}</p>
                         <a id="action-button" href="{{actionHref}}">View comment</a>
                     </td>
                 </tr>
