@@ -20,6 +20,8 @@ export class EmailNotification {
 
     const {recipients, ids} = await getEventTargets(this.targets);
 
+    console.log(`RECIPIENTS`, recipients);
+
     for (const [index, to] of recipients.filter(e => e).entries()) {
       const userId = ids[index];
       const uuid = uuidv4();
@@ -33,12 +35,18 @@ export class EmailNotification {
       if (!content)
         return;
 
-      await models.notifications.create({uuid, type: this.templateName, read: false, userId, template: content})
+      await models.notifications.create({uuid, type: "NOTIF_".concat(this.templateName), read: false, userId, template: content})
+        .then(() => {
+          info(`Created notification ${uuid} for ${userId}`)
+        })
         .catch(e => {
           info(`Failed to create a notification: ${e?.toString()}`);
         })
 
       await emailService.sendEmail(subject, to, content)
+        .then(() => {
+          info(`Sent email to ${to} of type ${this.templateName}`);
+        })
         .catch(e => {
           info(`Failed to send email notification: ${e?.toString()}`);
         });
