@@ -91,20 +91,22 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}}))
   }
 
-  const target = [origin?.user];
-  const marketplace = origin?.network?.name;
+  if (origin?.user.id !== user.id) {
+    const target = [origin?.user];
+    const marketplace = origin?.network?.name;
 
-  Push.event(event, {
-    marketplace,
-    type,
-    target,
-    data: {
-      entryId: deliverableId || proposalId,
-      taskId: issueId,
-      comment,
-      madeBy: user.handle || user.address
-    }
-  } as CommentPushProps)
+    Push.event(event, {
+      marketplace,
+      type,
+      target,
+      data: {
+        entryId: deliverableId || proposalId,
+        taskId: issueId,
+        comment,
+        madeBy: user.handle || user.address
+      }
+    } as CommentPushProps)
+  }
 
   return comments
 
