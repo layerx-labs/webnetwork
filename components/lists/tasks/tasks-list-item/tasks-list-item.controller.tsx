@@ -4,9 +4,6 @@ import TaskListItemDefault
   from "components/lists/tasks/tasks-list-item/task-list-item-default/task-list-item-default.view";
 import TaskListItemManagement
   from "components/lists/tasks/tasks-list-item/task-list-item-management/task-list-item-management.controller";
-import TaskListItemSmall from "components/lists/tasks/tasks-list-item/task-list-item-small/task-list-small.view";
-import TasksListItemTaskHall
-  from "components/lists/tasks/tasks-list-item/tasks-list-item-task-hall/tasks-list-item-task-hall.view";
 
 import { IssueBigNumberData } from "interfaces/issue-data";
 
@@ -37,18 +34,6 @@ export default function TasksListItem({
     }));
   }
 
-  if (variant === "small")
-    return <TaskListItemSmall
-              task={issue}
-              onClick={handleClickCard} 
-            />;
-
-  if (variant === "multi-network")
-    return <TasksListItemTaskHall
-              task={issue}
-              onClick={handleClickCard} 
-            />;
-
   if (variant === "management")
     return <TaskListItemManagement
               task={issue}
@@ -57,6 +42,7 @@ export default function TasksListItem({
 
   return <TaskListItemDefault
             task={issue}
+            isMarketplaceList={variant === "network"}
             onClick={handleClickCard} 
           />;
 }

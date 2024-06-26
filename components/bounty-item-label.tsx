@@ -11,7 +11,7 @@ export default function BountyItemLabel({
 }) {
   return (
     <div className={`${className ? className : null} d-flex text-white align-items-center`}>
-      <span className="text-gray-600 text-capitalize me-2">{label}</span>
+      <span className="text-gray-600 sm-regular me-2">{label}</span>
       {children}
     </div>
   );
