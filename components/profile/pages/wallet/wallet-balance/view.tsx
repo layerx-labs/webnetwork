@@ -142,6 +142,7 @@ export default function WalletBalanceView({
             type="voting"
             iconNetwork={token?.icon}
             networkName={token?.name}
+            subNetworkText={token?.chain?.chainName}
             amount={token?.balance?.toString()}
             symbol={token?.symbol}
           />
