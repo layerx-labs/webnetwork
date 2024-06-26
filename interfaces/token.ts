@@ -2,6 +2,8 @@ import { ReactElement } from "react";
 
 import BigNumber from "bignumber.js";
 
+import { SupportedChainData } from "interfaces/supported-chain-data";
+
 import { Network } from "../interfaces/network";
 
 export type TokenType = 'reward' | 'transactional';
@@ -26,6 +28,7 @@ export interface Token {
   isReward?: boolean;
   minimum?: string;
   icon?: string | ReactElement;
+  chain?: SupportedChainData;
 }
 
 export interface NetworkToken {
