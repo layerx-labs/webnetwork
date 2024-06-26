@@ -40,7 +40,7 @@ export default function NetworkItemTitleView({
         </FlexRow>
 
         {subNetworkText && (
-          <FlexRow className="d-none d-sm-block">
+          <FlexRow className="d-none d-sm-block text-capitalize">
             <span className="text-gray">{subNetworkText}</span>
           </FlexRow>
         )}
