@@ -29,13 +29,6 @@ export default function TasksListItem({
 
   const { getURLWithNetwork } = useMarketplace();
 
-  const itemComponent = {
-    small: TaskListItemSmall,
-    network: TaskListItemDefault,
-    "multi-network": TasksListItemTaskHall,
-    management: TaskListItemManagement
-  }[variant] || TaskListItemDefault;
-
   function handleClickCard() {
     if (xClick) return xClick();
     router.push(getURLWithNetwork("/task/[id]", {
@@ -44,8 +37,26 @@ export default function TasksListItem({
     }));
   }
 
-  return itemComponent({
-      task: issue,
-      onClick: handleClickCard
-  });
+  if (variant === "small")
+    return <TaskListItemSmall
+              task={issue}
+              onClick={handleClickCard} 
+            />;
+
+  if (variant === "multi-network")
+    return <TasksListItemTaskHall
+              task={issue}
+              onClick={handleClickCard} 
+            />;
+
+  if (variant === "management")
+    return <TaskListItemManagement
+              task={issue}
+              onClick={handleClickCard} 
+            />;
+
+  return <TaskListItemDefault
+            task={issue}
+            onClick={handleClickCard} 
+          />;
 }
