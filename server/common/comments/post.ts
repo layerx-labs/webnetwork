@@ -78,35 +78,42 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   let event: AnalyticEventName;
   let origin;
 
+  const include = [{
+    association: "user",
+    include: [{
+      association: "settings"
+    }]
+  }]
+
   if (type === "deliverable" || type === "review") {
     event = AnalyticEventName.COMMENT_DELIVERABLE;
-    origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}});
+    origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}, include});
   }
   else if (type === "proposal") {
     event = AnalyticEventName.COMMENT_PROPOSAL;
-    origin = (await models.proposal.findOne({where: {id: {[Op.eq]: proposalId}}}))
+    origin = (await models.proposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
   }
   else {
     event = AnalyticEventName.COMMENT_TASK;
-    origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}}))
+    origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
   }
 
-  if (origin?.user.id !== user.id) {
-    const target = [origin?.user];
-    const marketplace = origin?.network?.name;
+  // if (origin?.user.id !== user.id) {
+  const target = [origin?.user];
+  const marketplace = origin?.network?.name;
 
-    Push.event(event, {
-      marketplace,
-      type,
-      target,
-      data: {
-        entryId: deliverableId || proposalId,
-        taskId: issueId,
-        comment,
-        madeBy: user.handle || user.address
-      }
-    } as CommentPushProps)
-  }
+  Push.event(event, {
+    marketplace,
+    type,
+    target,
+    data: {
+      entryId: deliverableId || proposalId,
+      taskId: issueId,
+      comment,
+      madeBy: user.handle || user.address
+    }
+  } as CommentPushProps)
+  // }
 
   return comments
 
