@@ -1,6 +1,7 @@
 import {v4 as uuidv4} from "uuid";
 
 import models from "../../../../db/models";
+import {info} from "../../../../services/logging";
 import {EmailNotificationSubjects} from "../../../templates";
 import {getTemplateCompiler} from "../../../templates/compilers/get-template-compiler";
 import {emailService} from "../../email";
@@ -33,8 +34,14 @@ export class EmailNotification {
         return;
 
       await models.notifications.create({uuid, type: this.templateName, read: false, userId, template: content})
+        .catch(e => {
+          info(`Failed to create a notification: ${e?.toString()}`);
+        })
 
-      await emailService.sendEmail(subject, to, content);
+      await emailService.sendEmail(subject, to, content)
+        .catch(e => {
+          info(`Failed to send email notification: ${e?.toString()}`);
+        });
     }
   }
 }
