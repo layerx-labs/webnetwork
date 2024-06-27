@@ -69,6 +69,10 @@ class User extends Model {
       profileImageUpdatedAt: {
         type: DataTypes.DATE,
         allowNull: true
+      },
+      fullName: {
+        type: DataTypes.STRING,
+        allowNull: true
       }
     },
     {
