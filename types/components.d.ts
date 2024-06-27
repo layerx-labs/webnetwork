@@ -167,10 +167,11 @@ export interface PaymentInfoProps {
 
 export type DeliverableButtonType = "cancel" | "review" | "ready-review"
 
-export type TasksListItemVariant = "small" | "network" | "multi-network" | "management" | "submissions" | "proposals";
+export type TasksListItemVariant = "network" | "multi-network" | "management" | "submissions" | "proposals";
 
 export interface TaskListItemVariantProps {
   task: IssueBigNumberData;
+  isMarketplaceList?: boolean;
   onClick?: () => void;
 }
 

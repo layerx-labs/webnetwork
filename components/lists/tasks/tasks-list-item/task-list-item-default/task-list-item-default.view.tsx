@@ -2,137 +2,92 @@ import React from "react";
 
 import { useTranslation } from "next-i18next";
 
-import Badge from "components/badge";
 import BountyItemLabel from "components/bounty-item-label";
 import BountyAmount from "components/bounty/amount-info/controller";
-import BountyTagsView from "components/bounty/bounty-tags/view";
-import TaskIdTag from "components/bounty/task-id-tag/task-id-tag.view";
 import TaskMainInfo from "components/bounty/task-main-info/task-main-info.view";
+import TaskStatusBadge from "components/bounty/task-status-badge/task-status-badge.view";
 import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.view";
-import CardItem from "components/card-item";
 import ChainIcon from "components/chain-icon";
+import MarketplaceWithNetworkLogo 
+  from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
 import If from "components/If";
-import { ResponsiveEle } from "components/responsive-wrapper";
-import TaskStatusInfo from "components/task-status-info";
-import Translation from "components/translation";
 
 import { TaskListItemVariantProps } from "types/components";
 
 export default function TaskListItemDefault ({
   task,
+  isMarketplaceList,
   onClick,
 }: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
 
-  return (
-    <CardItem onClick={onClick} key="default-card">
-      <div className="row align-items-center">
-        <div className="col">
-          <div className="row align-items-center">
-            <div className="col-auto">
-              <TaskStatusInfo task={task} />
-            </div>
-
-            <div className="col px-0 text-truncate">
-              <span className="span">
-                {(task?.title !== null && task?.title) || (
-                  <Translation ns="bounty" label={"errors.fetching"} />
-                )}
-              </span>
-            </div>
-
-            <div className="col-auto">
-              <ChainIcon
-                src={task?.network?.chain?.icon}
-                label={task?.network?.chain?.chainName}
-              />
-            </div>
-          </div>
-
-          <ResponsiveEle
-            tabletView={
-              <div className="d-flex justify-content-md-start mt-2 mb-3">
-                <BountyTagsView tags={task?.tags}/>
-
-                <If condition={task?.isKyc}>
-                  <Badge
-                    className={`d-flex status caption-medium py-1 px-3 
-                  ms-2 bg-transparent border border-gray-700 text-gray-300`}
-                    label={t("bounty:kyc.label")}
-                  />
-                </If>
-              </div>
-            }
-          />
-
-          <div className="row align-items-center border-xl-top border-gray-850 pt-3">
-            <div className="col-12">
-              <div className="row">
-                <ResponsiveEle
-                  col={12}
-                  tabletView={
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="row align-items-center justify-content-md-start">
-                          <BountyItemLabel label="ID" className="mw-25 col-auto">
-                            <TaskIdTag
-                              taskId={task?.id}
-                              marketplaceName={task?.network?.name}
-                            />
-                          </BountyItemLabel>
-
-                          <ResponsiveEle
-                            col={"auto"}
-                            desktopView={
-                              <TaskMainInfo task={task}/>
-                            }
-                          />
-
-                          <BountyItemLabel
-                            label={t("info.opened-on")}
-                            className="col-auto"
-                          >
-                      <span className="text-gray text-truncate">
-                        {task?.createdAt?.toLocaleDateString("PT")}
-                      </span>
-                          </BountyItemLabel>
-
-                          <div className="col d-flex justify-content-end px-0">
-                            <TaskTypeBadge
-                              type={task?.type}
-                            />
-                          </div>
-
-                          <div className="col-auto d-flex justify-content-end">
-                            <BountyAmount bounty={task} size={"lg"}/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  }
+  return(
+    <div
+      className="row align-items-center mx-0 p-3 bg-gray-900 border border-gray-800 border-radius-8 cursor-pointer"
+      onClick={onClick}
+      role="link"
+    >
+      <div className="col p-0">
+        <div className="row gap-1 align-items-center mb-4 pb-2">
+          <div className="col-auto">
+            <If
+              condition={isMarketplaceList}
+              otherwise={
+                <MarketplaceWithNetworkLogo
+                  networkLogo={task?.network?.chain?.icon}
+                  marketplaceLogo={task?.network?.logoIcon}
+                />
+              }
+            >
+              <div className="rounded-circle border border-2 border-gray-800">
+                <ChainIcon
+                  src={task?.network?.chain?.icon}
+                  size="24"
                 />
               </div>
+            </If>
+            
+          </div>
 
-              <ResponsiveEle
-                tabletView={null}
-                mobileView={
-                  <div className="row align-items-center justify-content-between">
-                    <div className="col mw-50-auto network-name">
-                      <TaskTypeBadge
-                        type={task?.type}
-                      />
-                    </div>
+          <div className="col sm-regular text-white two-lines-text capitalize-first px-0">
+            {task?.title}
+          </div>
+        </div>
 
-                    <div className="col-auto">
-                      <BountyAmount bounty={task} size={"lg"}/>
-                    </div>
-                  </div>
-                }
-              />
-            </div>
+        <div className="row align-items-center border-sm-bottom border-gray-850 mx-0 gap-2 gap-sm-3 pb-sm-3">
+          <div className="col-auto px-0">
+            <TaskStatusBadge task={task} />
+          </div>
+
+          <div className="col col-sm-auto px-0">
+            <TaskTypeBadge
+              type={task?.type}
+            />
+          </div>
+
+          <div className="col-auto px-0 d-flex d-sm-none">
+            <BountyAmount bounty={task} size={"lg"} />
+          </div>
+        </div>
+
+        <div className="row align-items-center gap-2 mt-3 d-none d-sm-flex">
+          <TaskMainInfo task={task} />
+
+          <div className="col text-truncate">
+            <BountyItemLabel
+              label={t("info.opened-on")}
+            >
+              <span className="text-gray-200 sm-regular">
+                {task?.createdAt?.toLocaleDateString("PT")}
+              </span>
+            </BountyItemLabel>
+          </div>
+
+          <div className="col-auto">
+            <BountyAmount bounty={task} size={"lg"} />
           </div>
         </div>
       </div>
-    </CardItem>
+    </div>
   );
 }

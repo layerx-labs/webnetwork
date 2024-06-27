@@ -54,7 +54,7 @@ export default function TaskMainInfo ({
 
     return (
       <BountyItemLabel label={translation} key={task?.id} className="col-auto">
-          <span className={`${ isFunding ? 'text-light-warning': "text-gray"}`}>
+          <span className={`${ isFunding ? 'text-yellow-500': "text-gray-200"}`}>
             {value || 0}{isFunding && '%'}
           </span>
       </BountyItemLabel>
