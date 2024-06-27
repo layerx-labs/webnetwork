@@ -76,6 +76,7 @@
     "next": "12.2.5",
     "next-auth": "4.22.5",
     "next-i18next": "14.0.0",
+    "next-remove-imports": "^1.0.12",
     "next-seo": "^5.1.0",
     "nextjs-cors": "^2.1.1",
     "nextjs-google-analytics": "^2.2.2",
