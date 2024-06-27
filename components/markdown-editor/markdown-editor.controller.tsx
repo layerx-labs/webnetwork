@@ -1,5 +1,4 @@
-import { defaultCommands, ICommand, IMarkdownEditor } from '@uiw/react-markdown-editor';
-import { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar';
+import { IMarkdownEditor } from '@uiw/react-markdown-editor';
 import dynamic from 'next/dynamic';
 
 import { UploadCommand } from 'components/markdown-editor/upload-command/upload-command.controller';
@@ -9,10 +8,6 @@ import '@uiw/react-markdown-preview/markdown.css';
 
 const UIWMarkdownEditor = 
   dynamic(() => import("@uiw/react-markdown-editor").then((mod) => mod.default), { ssr: false });
-
-const { preview, fullscreen,...rest } = defaultCommands;
-const commands: Commands[] = Object.values(rest);
-const rightCommands: Commands[] = [preview, fullscreen];
 
 interface MarkdownEditorProps extends IMarkdownEditor {
   accept?: string;
@@ -38,13 +33,13 @@ export function MarkdownEditor({
     onChangeWithLimit(`${rest?.value}\n\n${value}`);
   }
 
-  const uploadCommand: ICommand = {
+  const uploadCommand = {
     name: 'upload',
     keyCommand: 'upload',
     button: () => <UploadCommand onUploaded={appendContent} accept={accept} />,
   };
 
-  const progress: ICommand = {
+  const progress = {
     name: 'progress',
     keyCommand: 'progress',
     button: () => maxCharacters ? 
@@ -56,14 +51,30 @@ export function MarkdownEditor({
     <UIWMarkdownEditor
       height={height}
       toolbars={[
-        ...commands,
+        "undo",
+        "redo",
+        "bold",
+        "italic",
+        "header",
+        "strike",
+        "underline",
+        "quote",
+        "olist",
+        "ulist",
+        "todo",
+        "link",
+        "image",
+        "code",
+        "codeBlock",
         uploadCommand,
       ]}
       toolbarsMode={[
         progress,
-        ...rightCommands,
+        "preview", 
+        "fullscreen"
       ]}
       onChange={onChangeWithLimit}
+      onDrag={console.log}
       {...rest}
     />
   );
