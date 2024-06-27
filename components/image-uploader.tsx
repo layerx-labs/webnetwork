@@ -4,6 +4,8 @@ import { useTranslation } from "next-i18next";
 
 import UploadIcon from "assets/icons/upload";
 
+import If from "components/If";
+
 export default function ImageUploader({
   name,
   description = undefined,
@@ -61,7 +63,9 @@ export default function ImageUploader({
         ) : (
           <>
             <UploadIcon />
-            <span className="caption-small mt-3">{description}</span>
+            <If condition={!!description}>
+              <span className="caption-small mt-3">{description}</span>
+            </If>
           </>
         )}
       </label>
