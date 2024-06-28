@@ -109,8 +109,8 @@ export default function CreateDeliverablePage() {
     validateDomainDebounced(e.target.value);
   }
 
-  function onChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
-    setDescription(e.target.value);
+  function onChangeDescription(value: string) {
+    setDescription(value);
   }
 
   function onHandleBack() {
