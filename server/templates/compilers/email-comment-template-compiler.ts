@@ -3,15 +3,15 @@ import {EmailNotificationSubjects} from "../index";
 import Handlebars from "handlebars";
 import {CommentPushProps} from "../../services/push/types";
 
-export class CommentTemplateCompiler extends Template {
+export class EmailCommentTemplateCompiler extends Template {
 
   constructor() {
-    super("server/templates/emails/");
+    super("server/templates/");
   }
 
   compile(payload: CommentPushProps) {
 
-    const title = `${payload.marketplace} @ BEPRO | ${EmailNotificationSubjects[payload.type]}`;
+    const title = `${payload.data.marketplace} @ BEPRO | ${EmailNotificationSubjects[payload.type]}`;
 
     const actionUrlEntryPart =
       payload.data.entryId
@@ -19,7 +19,7 @@ export class CommentTemplateCompiler extends Template {
         : ""
 
     const actionUrlPart =
-      `/${payload.marketplace}/task/${payload.data.taskId}/${actionUrlEntryPart}`;
+      `/${payload.data.marketplace}/task/${payload.data.taskId}/${actionUrlEntryPart}`;
 
     const type =
       payload.type === "COMMENT_DELIVERABLE"
@@ -37,7 +37,7 @@ export class CommentTemplateCompiler extends Template {
 
     super.registerPartials();
 
-    return Handlebars.compile(this.getHtmlOf("comments.hbs"))(templateData, {allowProtoPropertiesByDefault: true});
+    return Handlebars.compile(this.getHtmlOf("emails/comment.hbs"))(templateData, {allowProtoPropertiesByDefault: true});
   }
 
 }

@@ -5,7 +5,7 @@ import models from "db/models";
 
 import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../errors/http-errors";
 import {Push} from "../../services/push/push";
-import {AnalyticEventName, CommentPushProps} from "../../services/push/types";
+import {AnalyticEventName} from "../../services/push/types";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
@@ -86,7 +86,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     include: [{
       association: "settings"
     }]
-  }]
+  }, "network"]
 
   if (type === "deliverable" || type === "review") {
     event = AnalyticEventName.COMMENT_DELIVERABLE;
@@ -101,22 +101,29 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
   }
 
-  // if (origin?.user.id !== user.id) {
-  const target = [origin?.user];
-  const marketplace = origin?.network?.name;
+  if (origin?.user.id !== user.id) {
+    const target = [origin?.user];
+    const marketplace = origin?.network?.name;
 
-  Push.event(event, {
-    marketplace,
-    type,
-    target,
-    data: {
+    const data = {
       entryId: deliverableId || proposalId,
       taskId: issueId,
       comment,
-      madeBy: user.handle || user.address
+      madeBy: user.handle || user.address,
+      marketplace,
+    };
+
+    const params = {
+      type: event,
+      target,
+      data
     }
-  } as CommentPushProps)
-  // }
+
+    Push.events([
+      {name: event, params},
+      {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
+    ])
+  }
 
   return comments
 

@@ -32,6 +32,8 @@ export class Push {
         }
       }
 
+      console.log(`EVENTS`, collectedEvents, payload);
+
       await Promise.allSettled(Object.values(collectedEvents)
           .map(({collector, events}) =>
             collector.collect(JSON.parse(JSON.stringify(events)))))
