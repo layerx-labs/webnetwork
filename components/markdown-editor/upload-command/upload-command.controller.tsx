@@ -4,28 +4,28 @@ import FileUpload from "assets/icons/file-upload"
 
 import If from "components/If";
 
+import { getLinkMarkdown } from "helpers/string";
+
 import { useUploadToIPFS } from "x-hooks/use-upload-to-ipfs";
 
 type UploadCommandProps = {
   accept: string;
+  isUploading?: boolean;
   onUploaded: (url: string) => void;
 }
 
 export function UploadCommand({
   accept,
+  isUploading,
   onUploaded
 }: UploadCommandProps) {
   const inputRef = useRef<HTMLInputElement>();
 
-  const { mutate: uploadFiles, isPending: isUploading } = useUploadToIPFS({
+  const { mutate: uploadFiles, isPending } = useUploadToIPFS({
     accept,
     onSuccess: (files) =>  {
       const uploaded = files.at(0);
-      const isImage = /\.(gif|jpg|jpeg|tiff|png)$/i.test(uploaded.name);
-      let url = `[${uploaded.name}](${uploaded.url})`;
-      if (isImage)
-        url = "!" + url;
-      onUploaded(url);
+      onUploaded(getLinkMarkdown(uploaded.name, uploaded.url));
     },
   });
 
@@ -46,7 +46,7 @@ export function UploadCommand({
     <>
       <button onClick={onClick}>
         <If
-          condition={!isUploading}
+          condition={!isUploading && !isPending}
           otherwise={
             <span className="spinner-border spinner-border-sm"/>
           }
