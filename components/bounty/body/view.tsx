@@ -10,7 +10,6 @@ import { IssueBigNumberData } from "interfaces/issue-data";
 import BodyEditButtons from "./edit-buttons/view";
 interface BountyBodyProps {
   isEditIssue: boolean;
-  isSubmitting: boolean;
   body: string;
   handleBody: (v: string) => void;
   selectedTags: string[];
@@ -24,7 +23,6 @@ interface BountyBodyProps {
 
 export default function BountyBodyView({
   isEditIssue,
-  isSubmitting,
   body,
   handleBody,
   selectedTags,

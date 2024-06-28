@@ -24,7 +24,6 @@ import {MiniTabsItem, TasksListItemVariant} from "types/components";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 
-import {useToastStore} from "../../../x-hooks/stores/toasts/toasts.store";
 import CopyButton from "../../common/buttons/copy/controller";
 import {TaikaiPopView} from "../../lists/nfts/taikai-pop/taikai-pop.view";
 
@@ -74,7 +73,7 @@ export default function PublicProfileView({
                                             taikaiPops = [],
                                           }: PublicProfileViewProps) {
   const {isMobileView, isTabletView} = useBreakPoint();
-  const { addInfo } = useToastStore();
+
   const {t} = useTranslation("common");
 
   const isTabletOrMobile = isMobileView || isTabletView;

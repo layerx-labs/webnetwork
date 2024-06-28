@@ -9,7 +9,6 @@ import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
 import { ContextualSpan } from "components/contextual-span";
 import { Divider } from "components/divider";
-import { IFilesProps } from "components/drag-and-drop";
 import DropDown, { DropdownOption } from "components/dropdown";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";

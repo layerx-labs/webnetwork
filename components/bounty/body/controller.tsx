@@ -78,7 +78,6 @@ export default function BountyBody({
       isEditIssue={isEditIssue}
       selectedTags={selectedTags}
       handleSelectedTags={setSelectedTags}
-      isSubmitting={isEditing}
       bounty={currentBounty}
     />
   );

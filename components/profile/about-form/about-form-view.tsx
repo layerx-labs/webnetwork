@@ -2,7 +2,7 @@ import {FormControl, InputGroup} from "react-bootstrap";
 
 import {useTranslation} from "next-i18next";
 
-export function AboutFormView({onChange, isBodyOverLimit, defaultValue = "", body = "", isSaving}) {
+export function AboutFormView({onChange, isBodyOverLimit, defaultValue = "", body = ""}) {
   const {t} = useTranslation(["profile"]);
 
   return <div className="row py-3">
