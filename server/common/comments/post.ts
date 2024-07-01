@@ -94,7 +94,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   }
   else if (type === "proposal") {
     event = AnalyticEventName.COMMENT_PROPOSAL;
-    origin = (await models.proposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
+    origin = (await models.mergeProposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
   }
   else {
     event = AnalyticEventName.COMMENT_TASK;
