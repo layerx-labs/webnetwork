@@ -87,7 +87,7 @@ export function MarkdownEditor({
     name: 'progress',
     keyCommand: 'progress',
     button: () => maxCharacters ? 
-      <span className="xs-small">{rest?.value?.length} / {maxCharacters} |</span> : 
+      <span className="xs-small text-gray-200">{rest?.value?.length} / {maxCharacters} |</span> : 
       <></>,
   };
 
