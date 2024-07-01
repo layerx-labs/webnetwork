@@ -92,7 +92,7 @@ export function MarkdownEditor({
   };
 
   return(
-    <div {...getRootProps()}>
+    <div {...getRootProps({ style: { cursor: "inherit" } })}>
       <UIWMarkdownEditor
         height={height}
         toolbars={[
@@ -120,6 +120,7 @@ export function MarkdownEditor({
         ]}
         onChange={onChangeWithLimit}
         {...rest}
+        theme="dark"
       />
       <input {...getInputProps()} />
     </div>
