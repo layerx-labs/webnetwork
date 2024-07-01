@@ -242,7 +242,14 @@ export default async function get(query: ParsedUrlQuery) {
         ...result,
         rows
       }
-    }); 
+    });
+
+  const actionsNetworkAssociation = {
+    ...networkAssociation,
+    where: (networkName || network) ? {
+      name: caseInsensitiveEqual("issue->network.name", (networkName || network).toString())
+    } : networkAssociation.where
+  };
   
   const actions = {
     creator: async () => {
@@ -254,7 +261,7 @@ export default async function get(query: ParsedUrlQuery) {
             address: caseInsensitiveEqual("address", creator.toString())
           }: {}),
           getAssociation("issue", undefined, true, {}, [
-            networkAssociation
+            actionsNetworkAssociation
           ]),
         ]
       });
@@ -268,7 +275,7 @@ export default async function get(query: ParsedUrlQuery) {
             address: caseInsensitiveEqual("address", deliverabler.toString())
           }: {}),
           getAssociation("issue", undefined, true, {}, [
-            networkAssociation
+            actionsNetworkAssociation
           ])
         ]
       });
