@@ -93,6 +93,12 @@ export default function TasksListView({
 
   const sortOptions = [
     {
+      value: "state",
+      sortBy: "state",
+      order: "DESC",
+      label: t("sort.types.status")
+    },
+    {
       value: "newest",
       sortBy: "createdAt",
       order: "DESC",

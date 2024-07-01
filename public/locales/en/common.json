@@ -506,6 +506,7 @@
   "sort": {
     "label": "Sort by",
     "types": {
+      "status": "Status",
       "newest": "Newest",
       "oldest": "Oldest",
       "highest-bounty": "Highest Reward",

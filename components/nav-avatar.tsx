@@ -41,7 +41,7 @@ export default function NavAvatar() {
   function handleInternalLinkClick(profilePage: ProfilePages) {
     setVisible(false);
 
-    goToProfilePage(profilePage);
+    goToProfilePage(profilePage, { network: '', networkName: '', chain: '', networkChain: '' });
   }
 
   function handleDisconnectWallet() {
