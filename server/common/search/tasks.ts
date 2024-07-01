@@ -210,7 +210,7 @@ export default async function get(query: ParsedUrlQuery) {
 
     sort.push(...columns);
   } else
-    sort.push("createdAt");
+    sort.push("state");
 
   const useSubQuery = isMergeableState || isDisputableState || deliverabler ? false : undefined;
 
