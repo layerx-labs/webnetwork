@@ -417,7 +417,9 @@
     "something-went-wrong": "Something went wrong",
     "failed-load-dao": "failed to load Dao Service",
     "failed-load-network": "failed to load marketplace",
-    "file-size-exceeded": "Maximum file size exceeded"
+    "file-size-exceeded": "Maximum file size exceeded",
+    "file-not-supported": "File type not supported",
+    "accepted-types": "Accepted types are {{types}}"
   },
   "warnings": {
     "await-load-network": "await for a loading marketplace"

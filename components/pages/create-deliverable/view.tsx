@@ -24,7 +24,7 @@ interface CreateDeliverablePageViewProps {
   originLinkPlaceHolder: string;
   onChangeOriginLink: (v: ChangeEvent<HTMLInputElement>) => void;
   description: string;
-  onChangeDescription: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  onChangeDescription: (value: string) => void;
   title: string;
   onChangeTitle: (e: ChangeEvent<HTMLInputElement>) => void;
   onHandleBack: () => void;
@@ -170,7 +170,6 @@ export default function CreateDeliverablePageView({
               description={description}
               handleChangeDescription={onChangeDescription}
               borderColor="gray-800"
-              textAreaColor="gray-850"
             />
           </div>
 

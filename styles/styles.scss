@@ -35,6 +35,7 @@
 @import "components/swagger-ui";
 @import "components/points-hero";
 @import "components/gradient-badge";
+@import "components/md-editor.scss";
 
 @function toRGB($color) {
   @return "" + red($color) + ", " + green($color) + ", " + blue($color);

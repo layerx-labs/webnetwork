@@ -1,5 +1,3 @@
-import { IFilesProps } from "components/drag-and-drop";
-
 import { OriginLinkErrors } from "./enums/Errors";
 
 export interface BountyDetailsSectionProps {
@@ -7,8 +5,6 @@ export interface BountyDetailsSectionProps {
   updateTitle: (e: string) => void;
   description: string;
   updateDescription: (e: string) => void;
-  files: IFilesProps[];
-  updateFiles: (files: IFilesProps[]) => void;
   selectedTags: string[];
   updateSelectedTags: (e: string[]) => void;
   isKyc: boolean;
@@ -20,7 +16,6 @@ export interface BountyDetailsSectionProps {
   updateIsKyc: (e: boolean) => void;
   handlePrivateDeliverableChecked: (e: boolean) => void;
   updateTierList: (e: number[]) => void;
-  updateUploading: (e: boolean) => void;
   setDeliverableType: (type: string) => void;
 }
 export interface BountyPayload {

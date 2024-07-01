@@ -75,3 +75,13 @@ export const lowerCaseIncludes = (str: string, strToCompare: string|string[]) =>
   typeof strToCompare === "string"
     ? toLower(str).includes(toLower(strToCompare))
     : strToCompare.map(toLower).includes(toLower(str))
+
+export function getLinkMarkdown(fileName: string, url: string) {
+  const isImage = /\.(gif|jpg|jpeg|tiff|png)$/i.test(fileName);
+  let link = `[${fileName}](${url})`;
+
+  if (isImage)
+    link = "!" + link;
+
+  return link;
+}
