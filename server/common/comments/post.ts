@@ -105,30 +105,30 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
   }
 
-  // if (origin?.user.id !== user.id) {
-  const target = [origin?.user];
-  const marketplace = origin?.network?.name || origin?.issue?.network?.name;
+  if (origin?.user.id !== user.id) {
+    const target = [origin?.user];
+    const marketplace = origin?.network?.name || origin?.issue?.network?.name;
 
-  const data = {
-    entryId: deliverableId || proposalId,
-    taskId: issueId,
-    comment,
-    madeBy: user.handle || user.address,
-    creator: user.address,
-    marketplace,
-  };
+    const data = {
+      entryId: deliverableId || proposalId,
+      taskId: issueId,
+      comment,
+      madeBy: user.handle || user.address,
+      creator: user.address,
+      marketplace,
+    };
 
-  const params = {
-    type: event,
-    target,
-    data
+    const params = {
+      type: event,
+      target,
+      data
+    }
+
+    Push.events([
+      {name: event, params},
+      {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
+    ])
   }
-
-  Push.events([
-    {name: event, params},
-    {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
-  ])
-  // }
 
   return comments
 
