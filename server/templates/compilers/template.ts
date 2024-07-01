@@ -20,6 +20,7 @@ export class Template {
     Handlebars.registerPartial("logo", Handlebars.compile(this.getHtmlOf("partials/logo.hbs")));
     Handlebars.registerPartial("appLinks", Handlebars.compile(this.getHtmlOf("partials/links.hbs")));
     Handlebars.registerPartial("headLinks", Handlebars.compile(this.getHtmlOf("partials/head.hbs")));
+    Handlebars.registerPartial("avatar", Handlebars.compile(this.getHtmlOf("partials/avatar.hbs")));
   }
 
   compile(...args: any): string {

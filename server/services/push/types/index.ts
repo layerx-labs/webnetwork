@@ -17,6 +17,7 @@ export type CommentPushProps =
       madeBy: string;
       taskId: string;
       entryId?: string;
+      creator?: string;
     }
   >
 

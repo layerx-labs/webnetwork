@@ -16,7 +16,7 @@ export class NotifCommentTemplateCompiler extends Template {
         : ""
 
     const actionUrlPart =
-      `/${payload.data.marketplace}/task/${payload.data.taskId}/${actionUrlEntryPart}`;
+      `${payload.data.marketplace}/task/${payload.data.taskId}/${actionUrlEntryPart}`;
 
     const type =
       payload.type === "NOTIF_COMMENT_DELIVERABLE"
@@ -28,7 +28,8 @@ export class NotifCommentTemplateCompiler extends Template {
     const templateData = {
       comment: payload.data.comment,
       type,
-      actionHref: `https://app.bepro.network/${actionUrlPart}/`
+      actionHref: `${actionUrlPart}/`,
+      creator: payload.data.creator
     };
 
     super.registerPartials();

@@ -89,41 +89,46 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   }, "network"]
 
   if (type === "deliverable" || type === "review") {
+    include[1] = {
+      association: "issue",
+      include: [
+        {association: "network"}
+      ]
+    } as any;
     event = AnalyticEventName.COMMENT_DELIVERABLE;
     origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}, include});
-  }
-  else if (type === "proposal") {
+  } else if (type === "proposal") {
     event = AnalyticEventName.COMMENT_PROPOSAL;
     origin = (await models.mergeProposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
-  }
-  else {
+  } else {
     event = AnalyticEventName.COMMENT_TASK;
     origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
   }
 
-  if (origin?.user.id !== user.id) {
-    const target = [origin?.user];
-    const marketplace = origin?.network?.name;
+  // if (origin?.user.id !== user.id) {
+  const target = [origin?.user];
+  const marketplace = origin?.network?.name || origin?.issue?.network?.name;
 
-    const data = {
-      entryId: deliverableId || proposalId,
-      taskId: issueId,
-      comment,
-      madeBy: user.handle || user.address,
-      marketplace,
-    };
+  const data = {
+    entryId: deliverableId || proposalId,
+    taskId: issueId,
+    comment,
+    madeBy: user.handle || user.address,
+    creator: user.address,
+    marketplace,
+  };
 
-    const params = {
-      type: event,
-      target,
-      data
-    }
-
-    Push.events([
-      {name: event, params},
-      {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
-    ])
+  const params = {
+    type: event,
+    target,
+    data
   }
+
+  Push.events([
+    {name: event, params},
+    {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
+  ])
+  // }
 
   return comments
 

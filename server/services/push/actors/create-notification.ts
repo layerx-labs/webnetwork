@@ -29,7 +29,7 @@ export class CreateNotification {
       if (!content)
         return;
 
-      await models.notifications.create({uuid, type: "NOTIF_".concat(this.templateName), read: false, userId, template: content})
+      await models.notification.create({uuid, type: "NOTIF_".concat(this.templateName), read: false, userId, template: content})
         .then(() => {
           info(`Created notification ${uuid} for ${userId}`)
         })
