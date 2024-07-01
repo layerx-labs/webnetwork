@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{pageTitle}}</title>
+    {{> headLinks}}
+    {{> styles}}
+</head>
+<body id="body">
+<table id="container" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td>
+            {{> logo}}
+            <h1>{{notificationTitleHeading}}</h1>
+            <table id="action-card" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <td>
+                        <p>{{taskTitleParagraph}}</p>
+                        <a id="action-button" href="{{actionHref}}">View task</a>
+                    </td>
+                </tr>
+            </table>
+            {{> appLinks}}
+        </td>
+    </tr>
+</table>
+</body>
+</html>

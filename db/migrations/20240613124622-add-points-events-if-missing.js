@@ -47,7 +47,7 @@ module.exports = {
       type: QueryTypes.SELECT,
     });
 
-    const getPointsFromRules = rule => rules.find(({ actionName }) => actionName === rule).points;
+    const getPointsFromRules = rule => rules.find(({ actionName }) => actionName === rule)?.points;
     const createdProposalPoints = getPointsFromRules("created_proposal");
     const createdDeliverablePoints = getPointsFromRules("created_deliverable");
     const acceptedProposalPoints = getPointsFromRules("accepted_proposal");
