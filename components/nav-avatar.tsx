@@ -158,7 +158,9 @@ export default function NavAvatar() {
           <NextLink href={`/profile/${currentUser?.login || currentUser.walletAddress}`} className="mb-1 mx-0">
             <a href={`/profile/${currentUser?.login || currentUser.walletAddress}`}
                onClick={() => setVisible(false)}
-               className="p family-Regular p-0 text-capitalize font-weight-normal text-decoration-none p family-Regular btn-primary bg-transparent text-white">{t('main-nav.nav-avatar.public-profile')}</a>
+               className={`p family-Regular p-0 text-capitalize font-weight-normal text-decoration-none p 
+                family-Regular btn-primary bg-transparent text-white`}>
+                {t('main-nav.nav-avatar.public-profile')}</a>
           </NextLink>
 
           {getProfileLinks(t).map(ProfileInternalLink)}

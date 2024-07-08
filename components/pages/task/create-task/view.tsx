@@ -99,14 +99,11 @@ export default function CreateTaskPageView({
           updateTitle={rest.updateTitle}
           description={rest.description}
           updateDescription={rest.updateDescription}
-          files={rest.files}
-          updateFiles={rest.updateFiles}
           selectedTags={rest.selectedTags}
           updateSelectedTags={rest.updateSelectedTags}
           isKyc={rest.isKyc}
           updateIsKyc={rest.updateIsKyc}
           updateTierList={rest.updateTierList}
-          updateUploading={rest.updateUploading}
           originLink={rest.originLink}
           originLinkError={rest.originLinkError}
           deliverableType={rest.deliverableType}

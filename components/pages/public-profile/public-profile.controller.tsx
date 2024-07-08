@@ -44,8 +44,11 @@ export default function PublicProfilePage ({
   const isNftsList = type === "nfts";
   const isTaikaiPops = type === "taikai-pop";
   const hasHandle = !!user?.handle;
+  const hasFullName = !!user?.fullName;
   const truncatedAddress = truncateAddress(user?.address || "");
-  const [primaryText, secondaryText] = hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle];
+  const [primaryText, secondaryText] = hasFullName ? 
+    [`${user?.fullName} ${user?.handle ? `(${user?.handle})` : ""}`, truncatedAddress] 
+    : (hasHandle ? [user?.handle, truncatedAddress] : [truncatedAddress, user?.handle]);
 
   const getTab = (label: string, key: string) => ({
     label,

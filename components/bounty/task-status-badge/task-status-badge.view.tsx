@@ -25,8 +25,8 @@ export default function TaskStatusBadge ({ task }: TaskStatusBadgeProps) {
       <div>
         <Badge
           color="transparent"
-          className={`d-flex px-2 py-1 align-items-center gap-1 border border-gray-800 caption-medium 
-                      font-weight-normal text-capitalize border-radius-4`}
+          className={`d-flex px-2 py-1 align-items-center gap-2 border border-gray-800
+                      sm-regular text-gray-50 border-radius-4`}
         >
           <TaskStatusInfo task={task} />
           <span>{t(`status.${issueState}`)}</span>

@@ -35,6 +35,7 @@
 @import "components/swagger-ui";
 @import "components/points-hero";
 @import "components/gradient-badge";
+@import "components/md-editor.scss";
 
 @function toRGB($color) {
   @return "" + red($color) + ", " + green($color) + ", " + blue($color);
@@ -1386,6 +1387,10 @@ textarea.form-control {
   letter-spacing: 0 !important;
 }
 
+.ls-10 {
+  letter-spacing: 10% !important;
+}
+
 .list-actions {
   z-index: 1;
   border-radius: 0;
@@ -2085,4 +2090,8 @@ input[type="color"] {
   &-2 {
     z-index: 3;
   }
+}
+
+.capitalize-first::first-letter {
+  text-transform: capitalize;
 }

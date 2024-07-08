@@ -6,14 +6,12 @@ interface BountyEditTagProps {
   isEdit: boolean;
   selectedTags: string[];
   setSelectedTags: (v: string[]) => void;
-  preview?: boolean;
 }
 
 export default function BountyEditTag({
   selectedTags,
   setSelectedTags,
   isEdit = false,
-  preview = false,
 }: BountyEditTagProps) {
 
   function handleChangeTags(newTags) {
@@ -31,7 +29,6 @@ export default function BountyEditTag({
       }))}
       handleChangeTags={handleChangeTags}
       selectedTags={selectedTags}
-      preview={preview}
       isEdit={isEdit}
     />
   );

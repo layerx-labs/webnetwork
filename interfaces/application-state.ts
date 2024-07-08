@@ -43,6 +43,7 @@ export interface CurrentUserState {
   twitterLink?: string;
   avatar?: string;
   about?: string;
+  fullName?: string;
 }
 
 export interface CurrentBounty {

@@ -7,12 +7,10 @@ import {useTranslation} from "next-i18next";
 import router, {useRouter} from "next/router";
 import {useDebouncedCallback} from "use-debounce";
 
-import {IFilesProps} from "components/drag-and-drop";
 import CreateTaskPageView from "components/pages/task/create-task/view";
 
-import {BODY_CHARACTERES_LIMIT, DAY_IN_MILISECONDS} from "helpers/constants";
+import {DAY_IN_MILISECONDS} from "helpers/constants";
 import {formatStringToCurrency} from "helpers/formatNumber";
-import {addFilesToMarkdown} from "helpers/markdown";
 import {lowerCaseCompare} from "helpers/string";
 import {parseTransaction} from "helpers/transactions";
 import {isValidUrl} from "helpers/validateUrl";
@@ -70,7 +68,6 @@ export default function CreateTaskPage({
   const taskStorage = new WinStorage("task-creation", DAY_IN_MILISECONDS, "localStorage");
   const cachedTask = taskStorage.getItem();
 
-  const [files, setFiles] = useState<IFilesProps[]>(cachedTask?.files || []);
   const [rewardToken, setRewardToken] = useState<Token>();
   const [bountyTitle, setBountyTitle] = useState<string>(cachedTask?.bountyTitle || "");
   const [customTokens, setCustomTokens] = useState<Token[]>([]);
@@ -84,7 +81,6 @@ export default function CreateTaskPage({
   const [bountyDescription, setBountyDescription] = useState<string>(cachedTask?.bountyDescription || "");
   const [isLoadingApprove, setIsLoadingApprove] = useState<boolean>(false);
   const [isLoadingCreateBounty, setIsLoadingCreateBounty] = useState<boolean>(false);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [issueAmount, setIssueAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [rewardAmount, setRewardAmount] = useState<NumberFormatValues>(ZeroNumberFormatValues);
   const [selectedTags, setSelectedTags] = useState<string[]>(cachedTask?.selectedTags || []);
@@ -158,10 +154,6 @@ export default function CreateTaskPage({
     validateDomainDebounced(newLink);
   }
 
-  function onUpdateFiles(files: IFilesProps[]) {
-    return setFiles(files);
-  }
-
   function handlePrivateDeliverableChecked(checked: boolean) {
     setPrivateDeliverable(checked);
   }
@@ -173,7 +165,7 @@ export default function CreateTaskPage({
 
   function handleModalActionClick() {
     taskStorage.setItem({
-      bountyTitle, bountyDescription, selectedTags, deliverableType, privateDeliverable, originLink, files
+      bountyTitle, bountyDescription, selectedTags, deliverableType, privateDeliverable, originLink
     });
   }
 
@@ -211,9 +203,6 @@ export default function CreateTaskPage({
       (!bountyTitle ||
         !bountyDescription ||
         selectedTags?.length === 0 ||
-        isUploading ||
-        addFilesInDescription(bountyDescription).length >
-        BODY_CHARACTERES_LIMIT ||
         bountyTitle.length >= 131)
     )
       return true;
@@ -249,10 +238,6 @@ export default function CreateTaskPage({
     if (section === 3 && !isTokenApproved) return true;
 
     return section === 3 && isLoadingCreateBounty;
-  }
-
-  function addFilesInDescription(str) {
-    return addFilesToMarkdown(str, files, settings?.urls?.ipfs);
   }
 
   async function allowCreateIssue() {
@@ -321,7 +306,7 @@ export default function CreateTaskPage({
     try {
       const payload = {
         title: bountyTitle,
-        body: addFilesInDescription(bountyDescription),
+        body: bountyDescription,
         amount: issueAmount.formattedValue,
         creatorAddress: currentUser.walletAddress,
         githubUser: currentUser?.login,
@@ -443,7 +428,6 @@ export default function CreateTaskPage({
   }
 
   function cleanFields() {
-    setFiles([]);
     setSelectedTags([]);
     setBountyTitle("");
     setBountyDescription("");
@@ -649,14 +633,11 @@ export default function CreateTaskPage({
       updateTitle={setBountyTitle}
       description={bountyDescription}
       updateDescription={setBountyDescription}
-      files={files}
-      updateFiles={onUpdateFiles}
       selectedTags={selectedTags}
       updateSelectedTags={setSelectedTags}
       isKyc={isKyc}
       updateIsKyc={setIsKyc}
       updateTierList={setTierList}
-      updateUploading={setIsUploading}
       originLink={originLink}
       originLinkError={originLinkError}
       onOriginLinkChange={handleOriginLinkChange}
@@ -683,7 +664,7 @@ export default function CreateTaskPage({
       payload={{
         marketplace: currentNetwork?.name,
         title: bountyTitle,
-        description: addFilesInDescription(bountyDescription),
+        description: bountyDescription,
         tags: selectedTags && selectedTags,
         originLink: originLink,
         deliverableType: deliverableType,

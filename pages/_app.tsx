@@ -28,7 +28,6 @@ import "../styles/styles.scss";
 import "../node_modules/@primer/css/dist/markdown.css";
 import '@rainbow-me/rainbowkit/styles.css';
 
-
 const { publicRuntimeConfig } = getConfig();
 
 function App({ Component, pageProps: { session, seoData, ...pageProps } }) {

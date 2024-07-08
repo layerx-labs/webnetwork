@@ -3,6 +3,7 @@ const path = require("path");
 require("dotenv").config();
 
 const { i18n } = require("./next-i18next.config");
+const removeImports = require('next-remove-imports')();
 
 const publicRuntimeConfig = {
   locales: i18n?.locales || ["en"],
@@ -88,99 +89,98 @@ const serverRuntimeConfig = {
     active: process.env.NEXT_ELASTIC_APM_ACTIVE === "true"
   },
   ankrKey: process.env.NEXT_ANKR_KEY,
+  internalApiKey: process.env.NEXT_INTERNAL_API_KEY
 }
 
-module.exports = () => {
-  return {
-    i18n,
-    sassOptions: {
-      includePaths: [path.join(__dirname, "styles"), path.join(__dirname, "node_modules/@primer/css/markdown")]
-    },
-    images: {
-      domains: ["ipfs.infura.io"]
-    },
-    publicRuntimeConfig,
-    serverRuntimeConfig,
-    // webpack5: true,
-    compiler: {
-      removeConsole: process.env.NODE_ENV === "production",
-      reactRemoveProperties: process.env.NODE_ENV === "production"
-    },
-    async headers() {
-      return [
-        {
-          source: "/(.*)",
-          headers: [
-            {
-              key: "X-Frame-Options",
-              value: "DENY"
-            },
-            // {
-            //   key: 'Content-Security-Policy',
-            //   value: "default-src 'none'; img-src 'self';",
-            // },
-            // {
-            //   key: 'X-Content-Type-Options',
-            //   value: 'nosniff',
-            // },
-          ]
-        },
-        {
-          source: "/api/(.*)",
-          headers: [
-            { key: "Access-Control-Allow-Credentials", value: "true" },
-            { key: "Access-Control-Allow-Origin", value: `${process.env.NEXT_PUBLIC_HOME_URL || 'https://app.bepro.network'}` },
-            {
-              key: "Access-Control-Allow-Headers",
-              value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-            }
-          ]
-        }
-      ];
-    },
-    async redirects() {
-      return [
-        {
-          source: '/:network/:chain/bounties',
-          destination: '/:network/tasks',
-          permanent: true,
-        },
-        {
-          source: '/:network/:chain/profile/my-network',
-          destination: '/dashboard/my-marketplace',
-          permanent: true,
-        },
-        {
-          source: '/new-network',
-          destination: '/new-marketplace',
-          permanent: true,
-        },
-        {
-          source: '/create-bounty',
-          destination: '/create-task',
-          permanent: true,
-        },
-        {
-          source: '/:network/:chain/bounty/:id',
-          destination: '/:network/task/:id',
-          permanent: true,
-        },
-        {
-          source: '/:network/:chain/bounty/:id/deliverable/:deliverableId',
-          destination: '/:network/task/:id/deliverable/:deliverableId',
-          permanent: true,
-        },
-        {
-          source: '/:network/:chain/bounty/:id/proposal/:proposalId',
-          destination: '/:network/task/:id/proposal/:proposalId',
-          permanent: true,
-        },
-        {
-          source: '/:network/:chain/bounty/:id/create-deliverable',
-          destination: '/:network/task/:id/create-deliverable',
-          permanent: true,
-        },
-      ]
-    }
-  };
-};
+module.exports = removeImports({
+  i18n,
+  sassOptions: {
+    includePaths: [path.join(__dirname, "styles"), path.join(__dirname, "node_modules/@primer/css/markdown")]
+  },
+  images: {
+    domains: ["ipfs.infura.io"]
+  },
+  publicRuntimeConfig,
+  serverRuntimeConfig,
+  // webpack5: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+    reactRemoveProperties: process.env.NODE_ENV === "production"
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY"
+          },
+          // {
+          //   key: 'Content-Security-Policy',
+          //   value: "default-src 'none'; img-src 'self';",
+          // },
+          // {
+          //   key: 'X-Content-Type-Options',
+          //   value: 'nosniff',
+          // },
+        ]
+      },
+      {
+        source: "/api/(.*)",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: `${process.env.NEXT_PUBLIC_HOME_URL || 'https://app.bepro.network'}` },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+          }
+        ]
+      }
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: '/:network/:chain/bounties',
+        destination: '/:network/tasks',
+        permanent: true,
+      },
+      {
+        source: '/:network/:chain/profile/my-network',
+        destination: '/dashboard/my-marketplace',
+        permanent: true,
+      },
+      {
+        source: '/new-network',
+        destination: '/new-marketplace',
+        permanent: true,
+      },
+      {
+        source: '/create-bounty',
+        destination: '/create-task',
+        permanent: true,
+      },
+      {
+        source: '/:network/:chain/bounty/:id',
+        destination: '/:network/task/:id',
+        permanent: true,
+      },
+      {
+        source: '/:network/:chain/bounty/:id/deliverable/:deliverableId',
+        destination: '/:network/task/:id/deliverable/:deliverableId',
+        permanent: true,
+      },
+      {
+        source: '/:network/:chain/bounty/:id/proposal/:proposalId',
+        destination: '/:network/task/:id/proposal/:proposalId',
+        permanent: true,
+      },
+      {
+        source: '/:network/:chain/bounty/:id/create-deliverable',
+        destination: '/:network/task/:id/create-deliverable',
+        permanent: true,
+      },
+    ]
+  }
+});

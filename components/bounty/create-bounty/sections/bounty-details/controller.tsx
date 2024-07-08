@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
 import { useTranslation } from "next-i18next";
 
@@ -22,8 +22,6 @@ export default function BountyDetailsSection({
   updateTitle,
   description,
   updateDescription,
-  files,
-  updateFiles,
   selectedTags,
   updateSelectedTags,
   isKyc,
@@ -35,13 +33,9 @@ export default function BountyDetailsSection({
   onOriginLinkChange,
   updateIsKyc,
   updateTierList,
-  updateUploading,
   setDeliverableType
 }: BountyDetailsSectionProps) {
   const { t } = useTranslation("bounty");
-
-  const [strFiles, setStrFiles] = useState<string[]>([]);
-  const [bodyLength, setBodyLength] = useState<number>(0);
   
   const { settings } = useSettings();
 
@@ -68,8 +62,8 @@ export default function BountyDetailsSection({
     updateTitle(e.target.value);
   }
 
-  function handleChangeDescription(e: ChangeEvent<HTMLTextAreaElement>) {
-    updateDescription(e.target.value);
+  function handleChangeDescription(value: string) {
+    updateDescription(value);
   }
 
   function handleChangeTags(newTags) {
@@ -98,35 +92,10 @@ export default function BountyDetailsSection({
     updateTierList(Array.isArray(opt) ? opt.map((i) => +i.value) : [+opt.value]);
   }
 
-  useEffect(() => {
-    if (description.length > 0) {
-      const body = `${description}\n\n${strFiles
-        .toString()
-        .replace(",![", "![")
-        .replace(",[", "[")}`;
-
-      if (body?.length) setBodyLength(body.length);
-    }
-  }, [description, strFiles]);
-
-  useEffect(() => {
-    if (files.length > 0) {
-      const strFiles = files?.map((file) =>
-          file.uploaded &&
-          `${file?.type?.split("/")[0] === "image" ? "!" : ""}[${file.name}](${
-            settings?.urls?.ipfs
-          }/${file.hash}) \n\n`);
-
-      setStrFiles(strFiles);
-    }
-  }, [files]);
-
   return (
     <BountyDetailsSectionView
       title={title}
       description={description}
-      files={files}
-      bodyLength={bodyLength}
       tags={selectedTags.map((tag) => ({ label: tag, value: tag }))}
       tagsOptions={TAGS_OPTIONS}
       titleExceedsLimit={title?.length >= BOUNTY_TITLE_LIMIT}
@@ -140,8 +109,6 @@ export default function BountyDetailsSection({
       originLinkPlaceHolder={getOriginLinkPlaceholder(t, deliverableType)}
       onTitlechange={handleChangeTitle}
       onDescriptionchange={handleChangeDescription}
-      onFilesChange={updateFiles}
-      setIsUploadingFiles={updateUploading}
       onTagsChange={handleChangeTags}
       isTagsSelectDisabled={() => selectedTags.length >= MAX_TAGS}
       onKycCheckChange={handleIsKYCChecked}

@@ -9,7 +9,6 @@ import CheckButtons from "components/check-buttons/controller";
 import DescriptionAndPreview from "components/common/description-and-preview/controller";
 import { ContextualSpan } from "components/contextual-span";
 import { Divider } from "components/divider";
-import { IFilesProps } from "components/drag-and-drop";
 import DropDown, { DropdownOption } from "components/dropdown";
 import If from "components/If";
 import InfoTooltip from "components/info-tooltip";
@@ -22,8 +21,6 @@ import { GroupedSelectOption, SelectOption } from "types/utils";
 interface BountyDetailsSectionViewProps {
   title: string;
   description: string;
-  files: IFilesProps[];
-  bodyLength: number;
   tags: SelectOption[];
   tagsOptions: GroupedSelectOption[];
   titleExceedsLimit: boolean;
@@ -37,9 +34,7 @@ interface BountyDetailsSectionViewProps {
   originLinkError: OriginLinkErrors;
   originLinkPlaceHolder: string;
   onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onDescriptionchange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  onFilesChange: (files: IFilesProps[]) => void;
-  setIsUploadingFiles: (isUploading: boolean) => void;
+  onDescriptionchange: (value: string) => void;
   onTagsChange: (tags: SelectOption[]) => void;
   isTagsSelectDisabled: () => boolean;
   onKycCheckChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -52,8 +47,6 @@ interface BountyDetailsSectionViewProps {
 export default function BountyDetailsSectionView({
   title,
   description,
-  files,
-  bodyLength,
   tags,
   tagsOptions,
   titleExceedsLimit,
@@ -68,8 +61,6 @@ export default function BountyDetailsSectionView({
   privateDeliverable,
   onTitlechange,
   onDescriptionchange,
-  onFilesChange,
-  setIsUploadingFiles,
   onTagsChange,
   isTagsSelectDisabled,
   onKycCheckChange,
@@ -121,10 +112,6 @@ export default function BountyDetailsSectionView({
         <DescriptionAndPreview
           description={description}
           handleChangeDescription={onDescriptionchange}
-          bodyLength={bodyLength}
-          files={files}
-          updateFiles={onFilesChange}
-          updateUploading={setIsUploadingFiles}
         />
       </div>
 

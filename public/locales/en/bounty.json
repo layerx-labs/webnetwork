@@ -17,10 +17,10 @@
     "deliverable": "Deliverable",
     "deliverables_one": "Deliverable",
     "deliverables_other": "Deliverables",
-    "proposals_one": "proposal",
-    "proposals_other": "proposals",
-    "reviews_one": "review",
-    "reviews_other": "reviews",
+    "proposals_one": "Proposal",
+    "proposals_other": "Proposals",
+    "reviews_one": "Review",
+    "reviews_other": "Reviews",
     "opened-on": "Opened on",
     "submissions": "Submissions"
   },
@@ -48,21 +48,21 @@
     "review": "In this step you will view the main information and get a sense of how your task is doing"
   },
   "status": {
-    "ready": "ready",
-    "draft": "draft",
-    "opened": "opened",
-    "closed": "closed",
-    "completed": "completed",
-    "canceled": "canceled",
+    "ready": "Ready",
+    "draft": "Draft",
+    "opened": "Opened",
+    "closed": "Closed",
+    "completed": "Completed",
+    "canceled": "Canceled",
     "until-open": "{{distance}} until open",
     "started-time": "started {{distance}} ago",
     "opened-time": "opened {{distance}} ago",
     "end-time": "at {{data}}",
-    "pending": "pending",
-    "in-progress": "in progress",
-    "open": "open",
+    "pending": "Pending",
+    "in-progress": "In progress",
+    "open": "Open",
     "funding": "Seeking funding",
-    "proposal": "proposal"
+    "proposal": "Proposal"
   },
   "tips": {
     "status": {

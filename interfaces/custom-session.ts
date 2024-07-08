@@ -18,6 +18,7 @@ export interface CustomSession extends Record<string, unknown> {
     language?: string | null;
     notifications?: boolean;
     avatar: string | null;
+    fullName: string | null;
   };
   expires: ISODateString;
 }
