@@ -25,7 +25,7 @@ function decodeAndGetValue(connection, log, tokenDecimals) {
 
   return {
     address: result.to,
-    value: +fromSmartContractDecimals(result.value, tokenDecimals, 0)
+    value: +fromSmartContractDecimals(result.value, tokenDecimals)
   };
 }
 
