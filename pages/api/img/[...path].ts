@@ -1,7 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 
-import {LogAccess} from "../../../middleware/log-access";
-import {getImageProxyUrl} from "../../../server/common/img/get-image-proxy-url";
+import {withCORS} from "middleware";
+
+import {getImageProxyUrl} from "server/common/img/get-image-proxy-url";
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method.toLowerCase()) {
@@ -16,4 +17,4 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
   res.end();
 }
 
-export default LogAccess(handler)
+export default withCORS(handler)
