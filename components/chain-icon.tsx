@@ -1,9 +1,10 @@
-import { CSSProperties } from "react";
+import {CSSProperties} from "react";
 
 import getConfig from "next/config";
 
 import QuestionMarkIcon from "assets/icons/question-mark-icon";
 
+import {baseApiImgUrl} from "../services/api";
 import If from "./If";
 import ResponsiveWrapper from "./responsive-wrapper";
 
@@ -27,7 +28,7 @@ export default function ChainIcon({
 } : ChainIconProps) {
   const ipfsUrl = publicRuntimeConfig?.urls?.ipfs;
   const chainIcon = src && ipfsUrl ? 
-    <img className={`rounded-circle ${className}`} src={`${ipfsUrl}/${src}`} height={size} width={size} /> :
+    <img className={`rounded-circle ${className}`} src={`${baseApiImgUrl}/${ipfsUrl}/${src}?width=${size}&height=${size}`} height={size} width={size} /> :
     <QuestionMarkIcon height={size} width={size} />;
 
   return(

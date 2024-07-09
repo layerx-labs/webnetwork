@@ -1,7 +1,7 @@
-import { ReactNode, useState } from "react";
+import {ReactNode, useState} from "react";
 
 import getConfig from "next/config";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import MarketplaceFilterView from "components/lists/filters/marketplace/view";
 import NetworkLogo from "components/network-logo";
@@ -9,10 +9,12 @@ import NetworkLogo from "components/network-logo";
 import {Network} from "interfaces/network";
 
 import {MarketplaceFilterProps} from "types/components";
-import { SelectOption } from "types/utils";
+import {SelectOption} from "types/utils";
 
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useQueryFilter from "x-hooks/use-query-filter";
+
+import {baseApiImgUrl} from "../../../../services/api";
 
 const { publicRuntimeConfig } = getConfig();
 export default function MarketplaceFilter({
@@ -34,7 +36,7 @@ export default function MarketplaceFilter({
     value: marketplace?.name,
     label: marketplace?.name,
     preIcon: <NetworkLogo
-              src={`${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
+              src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
               alt={`${marketplace?.name} logo`}
               size="sm"
               noBg

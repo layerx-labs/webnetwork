@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+import {useTranslation} from "next-i18next";
+import {useRouter} from "next/router";
 
 import NativeSelectWrapper from "components/common/native-select-wrapper/view";
 import IconOption from "components/icon-option";
@@ -10,18 +10,20 @@ import If from "components/If";
 import NetworkLogo from "components/network-logo";
 import ReactSelect from "components/react-select";
 
-import { MINUTE_IN_MS } from "helpers/constants";
-import { isOnNetworkPath } from "helpers/network";
-import { QueryKeys } from "helpers/query-keys";
+import {MINUTE_IN_MS} from "helpers/constants";
+import {isOnNetworkPath} from "helpers/network";
+import {QueryKeys} from "helpers/query-keys";
 
-import { Network } from "interfaces/network";
+import {Network} from "interfaces/network";
 
-import { useSearchNetworks } from "x-hooks/api/marketplace";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
 import useChain from "x-hooks/use-chain";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQuery from "x-hooks/use-react-query";
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
+
+import {baseApiImgUrl} from "../../services/api";
 
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
@@ -68,7 +70,7 @@ export default function SelectNetwork({
       value: network,
       preIcon: (
         <NetworkLogo
-          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}`}
           alt={`${network?.name} logo`}
           isBepro={network?.name.toLowerCase() === 'bepro'}
           size="sm"

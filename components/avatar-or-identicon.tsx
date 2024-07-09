@@ -4,10 +4,12 @@ import Avatar from "components/avatar"
 import Identicon from "components/identicon"
 import If from "components/If";
 
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
-import { User } from "interfaces/api";
-import { SizeOptions } from "interfaces/utils";
+import {User} from "interfaces/api";
+import {SizeOptions} from "interfaces/utils";
+
+import {baseApiImgUrl} from "../services/api";
 
 export interface AvatarOrIdenticonProps {
   user: User | { address: string; handle?: string; avatar?: string; };
@@ -48,7 +50,7 @@ export default function AvatarOrIdenticon({
         <Avatar 
           userLogin={handle} 
           size={size} 
-          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatar}`}
+          src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${avatar}`}
           className="border-primary" 
         />
       </If>

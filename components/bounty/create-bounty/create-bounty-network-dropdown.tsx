@@ -1,14 +1,16 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import IconOption from "components/icon-option";
 import IconSingleValue from "components/icon-single-value";
 import ReactSelect from "components/react-select";
 
-import { Network } from "interfaces/network";
+import {Network} from "interfaces/network";
 
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
+
+import {baseApiImgUrl} from "../../../services/api";
 
 interface SelectNetworkDropdownProps {
   value?: Network;
@@ -49,7 +51,7 @@ export default function CreateBountyNetworkDropdown({
       label: network?.name,
       preIcon: (
         <img
-          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}?width=16&height=16`}
           alt={`${network?.name} logo`}
           width={16}
           height={16}
