@@ -94,7 +94,6 @@ export async function get(req: NextApiRequest): Promise<IssueData> {
   }
 
   const issue = await models.issue.findOne({
-    logging: console.log,
     where: {
       id,
       ... network_id ? { network_id } : {}
