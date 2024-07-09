@@ -92,7 +92,7 @@ const serverRuntimeConfig = {
   internalApiKey: process.env.NEXT_INTERNAL_API_KEY
 }
 
-module.exports = removeImports({
+module.exports = () => removeImports({
   i18n,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles"), path.join(__dirname, "node_modules/@primer/css/markdown")]
