@@ -40,7 +40,14 @@ const publicRuntimeConfig = {
     decimals: process.env.NEXT_PUBLIC_CHAIN_DECIMALS,
   },
   isProduction: process.env.NODE_ENV === "production",
-  gasFactor: +(process.env.NEXT_PUBLIC_GAS_FEE_MULTIPLIER || 2)
+  gasFactor: +(process.env.NEXT_PUBLIC_GAS_FEE_MULTIPLIER || 2),
+  newFeatureModal: {
+    isVisible: process.env.NEXT_PUBLIC_MODAL_FEATURE === "true",
+    title: process.env.NEXT_PUBLIC_MODAL_FEATURE_TITLE,
+    description: process.env.NEXT_PUBLIC_MODAL_FEATURE_DESCRIPTION,
+    image: process.env.NEXT_PUBLIC_MODAL_FEATURE_IMG,
+    link: process.env.NEXT_PUBLIC_MODAL_FEATURE_LINK,
+  }
 }
 
 // Will only be available on the server-side
@@ -92,7 +99,7 @@ const serverRuntimeConfig = {
   internalApiKey: process.env.NEXT_INTERNAL_API_KEY
 }
 
-module.exports = removeImports({
+module.exports = () => removeImports({
   i18n,
   sassOptions: {
     includePaths: [path.join(__dirname, "styles"), path.join(__dirname, "node_modules/@primer/css/markdown")]
