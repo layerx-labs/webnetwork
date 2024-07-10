@@ -1,11 +1,11 @@
 import { ReactNode, useState } from "react";
 
+import getConfig from "next/config";
 import { useRouter } from "next/router";
 
 import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
-import { useSettings } from "x-hooks/use-settings";
 
 import NetworkItemView from "./view";
 interface NetworkItemProps {
@@ -24,6 +24,8 @@ interface NetworkItemProps {
   handleToggleTabletAndMobile?: () => void;
 }
 
+const { publicRuntimeConfig } = getConfig();
+
 export default function NetworkItem({
   key,
   children,
@@ -41,8 +43,6 @@ export default function NetworkItem({
 }: NetworkItemProps) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
-
-  const { settings } = useSettings();
   const { currentUser } = useUserStore();
   const { query } = useRouter();
   const { goToProfilePage } = useMarketplace();
@@ -74,7 +74,7 @@ export default function NetworkItem({
       isNetworkType={isNetworkType}
       isCollapsed={isCollapsed}
       handleToggleCollapse={toggleCollapse}
-      srcLogo={`${settings?.urls?.ipfs}/${iconNetwork}`}
+      srcLogo={`${publicRuntimeConfig?.urls?.ipfs}/${iconNetwork}`}
       type={type}
       subNetworkText={subNetworkText}
       primaryColor={primaryColor}

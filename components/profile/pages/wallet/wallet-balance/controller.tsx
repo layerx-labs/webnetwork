@@ -55,7 +55,7 @@ export default function WalletBalance({
     return {
       ...token,
       balance: token?.balance || BigNumber(0),
-      icon: token?.icon || <TokenIcon src={null} />
+      icon: <TokenIcon src={token?.icon} />
     };
   }
 
@@ -177,7 +177,7 @@ export default function WalletBalance({
       push({ pathname: pathname, query: newQuery }, asPath);
     }
   }, [query?.network]);
-
+  console.log("tokensWithBalance", tokensWithBalance)
   return (
     <WalletBalanceView
       totalAmount={totalAmount}
