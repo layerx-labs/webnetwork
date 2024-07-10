@@ -1,10 +1,10 @@
 import {useEffect} from "react";
 
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import {CollectedPointsView} from "components/points-system/collected-points/collected-points.view";
 
-import {PointsEvents, PointsBase} from "interfaces/points";
+import {PointsBase, PointsEvents} from "interfaces/points";
 
 import useMarketplace from "x-hooks/use-marketplace";
 import {userPointsOfUser} from "x-hooks/use-points-of-user";
@@ -41,6 +41,7 @@ export function CollectedPoints() {
     "connect_email": () => push("/dashboard"),
     "add_about": () => push("/dashboard"),
     "add_twitter": () => push("/dashboard"),
+    "add_avatar": () => push("/dashboard"),
   };
 
   const { recurring, available, collected } = pointsBase.reduce((acc, curr) => {

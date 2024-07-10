@@ -114,8 +114,8 @@ export default function PublicProfileView({
           </div>
 
           <If condition={!!secondaryText}>
-            <div className="row mb-2">
-              <h2 className="sm-regular font-weight-normal text-gray-300 d-flex">
+            <div className="row my-2">
+              <h2 className="sm-regular font-weight-normal text-gray-300 d-flex align-items-center">
                 <div>{secondaryText}</div>
                 <div className="ml-1">
                   <CopyButton value={userAddress}

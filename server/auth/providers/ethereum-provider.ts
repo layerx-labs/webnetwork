@@ -1,19 +1,19 @@
-import { NextApiRequest } from "next";
-import { JWT } from "next-auth/jwt";
+import {NextApiRequest} from "next";
+import {JWT} from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCsrfToken } from "next-auth/react";
+import {getCsrfToken} from "next-auth/react";
 
 import models from "db/models";
 
-import { caseInsensitiveEqual } from "helpers/db/conditionals";
-import { getSiweMessage, verifySiweSignature } from "helpers/siwe";
-import { lowerCaseCompare, lowerCaseIncludes } from "helpers/string";
-import { AddressValidator } from "helpers/validators/address";
+import {caseInsensitiveEqual} from "helpers/db/conditionals";
+import {getSiweMessage, verifySiweSignature} from "helpers/siwe";
+import {lowerCaseCompare, lowerCaseIncludes} from "helpers/string";
+import {AddressValidator} from "helpers/validators/address";
 
-import { UserRole } from "interfaces/enums/roles";
+import {UserRole} from "interfaces/enums/roles";
 
-import { AuthProvider } from "server/auth/providers";
-import { UserRoleUtils } from "server/utils/jwt";
+import {AuthProvider} from "server/auth/providers";
+import {UserRoleUtils} from "server/utils/jwt";
 
 export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthProvider => ({
   config: CredentialsProvider({

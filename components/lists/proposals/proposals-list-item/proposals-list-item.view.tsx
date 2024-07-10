@@ -105,7 +105,7 @@ export function ProposalsListItemView ({
             </div>
 
             <div className="col-auto">
-              <DisputeLabel percentage={75}/>
+              <DisputeLabel percentage={disputePercentage}/>
             </div>
           </div>
         }
