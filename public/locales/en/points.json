@@ -99,6 +99,12 @@
       "description": "Upload your custom avatar",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
+    },
+    "funded_funding_request": {
+      "title": "Fund Funding Request",
+      "description": "Fund a funding request on any marketplace",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
     }
   },
   "status": {
