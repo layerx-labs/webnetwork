@@ -132,7 +132,8 @@
       "add_about": "Add about section",
       "add_twitter": "Fill X link",
       "add_avatar": "Add avatar",
-      "connect_email": "Connect email"
+      "connect_email": "Connect email",
+      "funded_funding_request": "Fund Funding Request"
     },
     "state": {
       "counted": "Counted",

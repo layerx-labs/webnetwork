@@ -40,12 +40,15 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
         history.map((entry, i) =>
           <div className="row border-top p-3 text-gray-400 border-gray-800 align-items-center xs-medium" key={i}>
             <div className="col col-4 font-weight-500"><strong>{ph(`actionName.${entry.actionName}`)}</strong></div>
-            <div className="col col-3 d-flex justify-content-center"><PointsBadge size="sm" points={entry.pointsWon}/>
+            <div className="col col-3 d-flex justify-content-center">
+              <PointsBadge size="sm" points={entry.pointsWon}/>
             </div>
-            <div
-              className="col col-2 text-center font-weight-500">{ph(`state.${entry.pointsCounted ? "counted" : "pending"}`)}</div>
-            <div
-              className="col col-3 d-flex justify-content-end font-weight-400">{format(new Date(entry.createdAt), "dd/MM/yyyy")}</div>
+            <div className="col col-2 text-center font-weight-500">
+              {ph(`state.${entry.pointsCounted ? "counted" : "pending"}`)}
+            </div>
+            <div className="col col-3 d-flex justify-content-end font-weight-400">
+              {format(new Date(entry.createdAt), "dd/MM/yyyy")}
+            </div>
           </div>)
       }
     </div>

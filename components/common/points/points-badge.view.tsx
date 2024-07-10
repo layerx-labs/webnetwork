@@ -22,7 +22,7 @@ export function PointsBadge({
   const { t } = useTranslation("points");
 
   const pointsLabel = typeof points === "number" ? 
-    `${formatNumberToString(points, 0)} ${t("pointsWithoutCount", { count: points })}` :
+    `${formatNumberToString(points, points > 0 && points < 1 ? 2 : 0)} ${t("pointsWithoutCount", { count: points })}` :
     points;
   const styleBySize = {
     sm: {
