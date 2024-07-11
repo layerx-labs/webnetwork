@@ -44,7 +44,7 @@ export default function ResponsiveListItem({
       ])} 
       onClick={onClick}
     >
-      <div className="col-sm-12 col-md mw-md-25 px-0">
+      <div className="col-sm-12 col-md-2 mw-md-25 px-0">
         <div className="row align-items-center mb-3 mb-md-0">
           <div className="col-auto">
             {icon}

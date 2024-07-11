@@ -36,13 +36,13 @@ export function MarketplaceListItem({
   const columns = [
     {
       label: t("custom-network:networks"),
-      secondaryLabel: chainsIcons,
+      secondaryLabel: <div className="ml-2">{chainsIcons}</div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
       label: t("custom-network:open-bounties"),
-      secondaryLabel: marketplace?.totalOpenIssues,
+      secondaryLabel: <div className="ml-2">{marketplace?.totalOpenIssues}</div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
@@ -54,12 +54,12 @@ export function MarketplaceListItem({
     },
     {
       label: t("custom-network:tokens-locked"),
-      secondaryLabel: <div>
+      secondaryLabel: <div className="mr-3">
         {formatNumberToNScale(marketplace?.tokensLocked, 0, "")}{" "}
         <span className="text-purple">{marketplace?.networkToken?.symbol}</span>
       </div>,
       breakpoints: { xs: false, xl: true },
-      justify: "center"
+      justify: "end"
     },
     {
       secondaryLabel: 
