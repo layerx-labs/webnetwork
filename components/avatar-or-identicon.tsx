@@ -50,7 +50,7 @@ export default function AvatarOrIdenticon({
         <Avatar 
           userLogin={handle} 
           size={size} 
-          src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${avatar}`}
+          src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${avatar}?width=100&height=100`}
           className="border-primary" 
         />
       </If>
