@@ -173,7 +173,9 @@
     "warning": "Warning",
     "info": "Info",
     "view-on-explorer": "View on chain explorer",
-    "go-to-user-profile": "Go to user profile"
+    "go-to-user-profile": "Go to user profile",
+    "dismiss": "Dismiss",
+    "visit": "Visit"
   },
   "misc": {
     "by": "by",
