@@ -1,10 +1,10 @@
-const { Network_v2, Web3Connection, NetworkRegistry } = require("@taikai/dappkit");
+const { Network_v2, Web3Connection, NetworkRegistry, ERC20 } = require("@taikai/dappkit");
 
 
 async function loadContract(contractClass, web3Connection, contractAddress) {
   const contract = new contractClass(web3Connection, contractAddress);
 
-  await contract.loadContract();
+  await contract.start();
 
   return contract;
 }
@@ -15,6 +15,10 @@ async function loadNetworkV2(web3Connection, networkAddress) {
 
 async function loadNetworkRegistry(web3Connection, networkAddress) {
   return loadContract(NetworkRegistry, web3Connection, networkAddress);
+}
+
+async function loadERC20(web3Connection, networkAddress) {
+  return loadContract(ERC20, web3Connection, networkAddress);
 }
 
 async function getDAO({
@@ -43,5 +47,6 @@ async function getDAO({
 module.exports = {
   getDAO,
   loadNetworkV2,
-  loadNetworkRegistry
+  loadNetworkRegistry,
+  loadERC20,
 };
