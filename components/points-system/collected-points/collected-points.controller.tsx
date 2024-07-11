@@ -30,6 +30,7 @@ export function CollectedPoints() {
 
   const actions = {
     "created_task": () => push("/create-task"),
+    "give_funding_reward": () => push("/create-task"),
     "delegated": () => goToProfilePage("voting-power"),
     "locked": () => goToProfilePage("voting-power"),
     "created_marketplace": () => push("/new-marketplace"),
