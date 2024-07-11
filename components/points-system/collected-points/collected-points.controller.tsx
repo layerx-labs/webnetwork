@@ -34,6 +34,7 @@ export function CollectedPoints() {
     "locked": () => goToProfilePage("voting-power"),
     "created_marketplace": () => push("/new-marketplace"),
     "created_deliverable": () => push("/explore"),
+    "funded_funding_request": () => push("/explore"),
     "created_proposal": () => push("/explore"),
     "accepted_proposal": () => goToProfilePage("proposals"),
     "add_linkedin": () => push("/dashboard"),
