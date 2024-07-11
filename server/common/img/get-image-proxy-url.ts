@@ -16,7 +16,7 @@ export function getImageProxyUrl(req: NextApiRequest) {
   const imgProxy = new Imgproxy({
     salt: serverRuntimeConfig.imgProxy.salt,
     key: serverRuntimeConfig.imgProxy.key,
-    baseUrl: "http://cdn.bepro.network",
+    baseUrl: "https://cdn.bepro.network",
     encode: true,
   })
 
