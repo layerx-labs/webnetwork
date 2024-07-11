@@ -177,7 +177,7 @@ export default function WalletBalance({
       push({ pathname: pathname, query: newQuery }, asPath);
     }
   }, [query?.network]);
-  console.log("tokensWithBalance", tokensWithBalance)
+
   return (
     <WalletBalanceView
       totalAmount={totalAmount}
