@@ -8,6 +8,8 @@ import {useRouter} from "next/router";
 
 import {IssueData} from "interfaces/issue-data";
 
+import {baseApiImgUrl} from "../services/api";
+
 const { publicRuntimeConfig } = getConfig();
 
 interface ISeoProps {
@@ -24,7 +26,7 @@ const Seo: React.FC<ISeoProps> = ({ issueMeta }) => {
     const issueId = issueMeta?.id;
     const hash = issueMeta?.seoImage;
 
-    const imageUrl = hash ? `${publicRuntimeConfig.urls.ipfs}/${hash}` : `${homeUrl}/images/meta-thumbnail.jpeg`;
+    const imageUrl = hash ? `${baseApiImgUrl}/${publicRuntimeConfig.urls.ipfs}/${hash}` : `${homeUrl}/images/meta-thumbnail.jpeg`;
 
     const description = removeMarkdown(issueMeta?.body?.substring(0, 160).trimEnd());
 

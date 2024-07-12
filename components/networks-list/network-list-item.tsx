@@ -1,16 +1,18 @@
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 
 import ChainBadge from "components/chain-badge";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import PullRequestLabels from "components/deliverable/labels/controller";
 import NetworkLogo from "components/network-logo";
 
-import { formatNumberToNScale } from "helpers/formatNumber";
+import {formatNumberToNScale} from "helpers/formatNumber";
 
-import { Network } from "interfaces/network";
+import {Network} from "interfaces/network";
 
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
+
+import {baseApiImgUrl} from "../../services/api";
 
 interface NetworkListItemProps {
   network: Network;
@@ -60,7 +62,7 @@ export default function NetworkListItem({
       onClick={onClick}
       icon={
         <NetworkLogo
-          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}`}
           alt={`${network?.name} logo`}
           isBepro={network?.name.toLowerCase() === 'bepro'}
           noBg

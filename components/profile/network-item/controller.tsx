@@ -1,13 +1,15 @@
-import { ReactNode, useState } from "react";
+import {ReactNode, useState} from "react";
 
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
 
+import {baseApiImgUrl} from "../../../services/api";
 import NetworkItemView from "./view";
+
 interface NetworkItemProps {
   children?: ReactNode;
   key?: number | string;
@@ -74,7 +76,7 @@ export default function NetworkItem({
       isNetworkType={isNetworkType}
       isCollapsed={isCollapsed}
       handleToggleCollapse={toggleCollapse}
-      srcLogo={`${settings?.urls?.ipfs}/${iconNetwork}`}
+      srcLogo={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${iconNetwork}`}
       type={type}
       subNetworkText={subNetworkText}
       primaryColor={primaryColor}

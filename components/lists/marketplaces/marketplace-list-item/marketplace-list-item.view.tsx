@@ -1,15 +1,17 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 import Link from "next/link";
 
 import ChainIcon from "components/chain-icon";
-import { OverlappingIcons } from "components/common/overlapping-icons/overlapping-icons.view";
+import {OverlappingIcons} from "components/common/overlapping-icons/overlapping-icons.view";
 import ResponsiveListItem from "components/common/responsive-list-item/view";
-import { GroupedMarketplace } from "components/lists/marketplaces/marketplaces-list.view"
+import {GroupedMarketplace} from "components/lists/marketplaces/marketplaces-list.view"
 import NetworkLogo from "components/network-logo";
 
-import { formatNumberToNScale } from "helpers/formatNumber";
+import {formatNumberToNScale} from "helpers/formatNumber";
 
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
+
+import {baseApiImgUrl} from "../../../../services/api";
 
 type MarketplaceListItemProps = {
   marketplace: GroupedMarketplace
@@ -77,7 +79,7 @@ export function MarketplaceListItem({
       <ResponsiveListItem
         icon={
           <NetworkLogo 
-            src={`${settings?.urls?.ipfs}/${marketplace?.logoIcon}`}
+            src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${marketplace?.logoIcon}`}
             shape="square"
             size="lg"
             noBg 

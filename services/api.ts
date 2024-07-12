@@ -3,8 +3,11 @@ import getConfig from "next/config";
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 
+export const baseApiUrl = `${publicRuntimeConfig?.urls?.api}/api`;
+export const baseApiImgUrl = `${baseApiUrl}/img`;
+
 export const api = axios.create({
-  baseURL: `${publicRuntimeConfig?.urls?.api}/api`
+  baseURL: baseApiUrl
 });
 
 export const kycApi = axios.create({
