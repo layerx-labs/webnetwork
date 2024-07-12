@@ -2,17 +2,16 @@ import {useTranslation} from "next-i18next";
 import NextLink from "next/link";
 
 import HelpButton from "components/common/buttons/help/view";
+import {PointsBadge} from "components/common/points/points-badge.view";
 import {Tooltip} from "components/common/tooltip/tooltip.view";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 import CreateNetworkBountyButton from "components/create-network-bounty-button/controller";
+import If from "components/If";
 import NavAvatar from "components/nav-avatar";
 import HamburgerButton from "components/navigation/hamburger/controller";
 import Notifications from "components/notifications/controller";
 import ResponsiveWrapper from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
-
-import {PointsBadge} from "../../../common/points/points-badge.view";
-import If from "../../../If";
 
 export default function NavBarActions({userPoints = "0", connected = false}) {
   const { t } = useTranslation("common");
