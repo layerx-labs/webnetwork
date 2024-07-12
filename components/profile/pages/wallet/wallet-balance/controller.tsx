@@ -55,7 +55,7 @@ export default function WalletBalance({
     return {
       ...token,
       balance: token?.balance || BigNumber(0),
-      icon: token?.icon || <TokenIcon src={null} />
+      icon: <TokenIcon src={token?.icon} />
     };
   }
 
