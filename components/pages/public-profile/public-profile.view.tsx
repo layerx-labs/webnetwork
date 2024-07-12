@@ -72,11 +72,10 @@ export default function PublicProfileView({
                                             isTaikaiPoP,
                                             taikaiPops = [],
                                           }: PublicProfileViewProps) {
-  const {isMobileView, isTabletView} = useBreakPoint();
+  const { isMobileView } = useBreakPoint();
 
   const {t} = useTranslation("common");
 
-  const isTabletOrMobile = isMobileView || isTabletView;
   const listItemVariant = ({
     won: "network",
     opened: "network",
@@ -98,10 +97,10 @@ export default function PublicProfileView({
       className="mt-4 pt-2 mt-lg-5 pt-lg-2"
     >
       <div className="row align-items-center mb-5">
-        <div className="col-auto">
+        <div className="col-12 col-sm-auto mb-2 mb-sm-0">
           <AvatarOrIdenticon
             user={{ address: userAddress, avatar }}
-            size={isTabletOrMobile ? "lg" : "xl"}
+            size={isMobileView ? "lg" : "xl"}
             withBorder
           />
         </div>
