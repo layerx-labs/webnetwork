@@ -7,12 +7,15 @@ import NavBarActions from "components/navigation/navbar/actions/view";
 import NavBarLinks from "components/navigation/navbar/links/view";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
+import {formatNumberToString} from "../../../helpers/formatNumber";
+
 interface NavBarViewProps {
   isOnNetwork: boolean;
   isCurrentNetworkClosed: boolean;
   isConnected: boolean;
   brandHref: string | UrlObject;
   logos: { fullLogo: string; logoIcon: string; }
+  points: number;
 }
 
 export default function NavBarView({
@@ -21,6 +24,7 @@ export default function NavBarView({
   isConnected,
   brandHref,
   logos,
+  points,
 }: NavBarViewProps) {
   const isClosedAlertVisible = isOnNetwork && isCurrentNetworkClosed;
   const paddingY = isConnected ? "py-0" : "py-3";
@@ -59,7 +63,7 @@ export default function NavBarView({
             <NavBarLinks />
           </div>
 
-          <NavBarActions />
+          <NavBarActions userPoints={formatNumberToString(points, points > 0 && points < 1 ? 2 : 0)} connected={isConnected} />
         </div>
       </div>
     </div>

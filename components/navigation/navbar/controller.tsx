@@ -10,6 +10,7 @@ import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
 import {baseApiImgUrl} from "../../../services/api";
+import {userPointsOfUser} from "../../../x-hooks/use-points-of-user";
 
 export default function NavBar() {
   const { pathname } = useRouter();
@@ -29,6 +30,8 @@ export default function NavBar() {
     network: activeMarketplace?.name,
   });
 
+  const { totalPoints } = userPointsOfUser();
+
   useEffect(loadChainsDatabase, [])
 
   return (
@@ -38,6 +41,7 @@ export default function NavBar() {
       isConnected={!!currentUser?.walletAddress}
       brandHref={brandHref}
       logos={logos}
+      points={totalPoints}
     />
   );
 }
