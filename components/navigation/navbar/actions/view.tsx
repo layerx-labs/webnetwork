@@ -15,7 +15,7 @@ import {PointsBadge} from "../../../common/points/points-badge.view";
 import If from "../../../If";
 
 export default function NavBarActions({userPoints = "0", connected = false}) {
-  const { t } = useTranslation(["common", "points"]);
+  const { t } = useTranslation("common");
   
   return(
     <>
