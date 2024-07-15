@@ -11,7 +11,7 @@ export function getImageProxyUrl(req: NextApiRequest) {
   if (!path || !path.length)
     throw new HttpBadRequestError();
 
-  const {resize, width, height, gravity, enlarge} = req.query;
+  const {resize, width, height, gravity, enlarge, format} = req.query;
 
   const imgProxy = new Imgproxy({
     salt: serverRuntimeConfig.imgProxy.salt,
@@ -22,12 +22,13 @@ export function getImageProxyUrl(req: NextApiRequest) {
 
   const protocol = path[0];
   const rest = (path as string[]).slice(1).join("/");
+  const imgFormat = format ? format.toString() : "png";
 
   return imgProxy
     .builder()
     .resize(resize as any || "fit", width && +width || null, height && +height || null, !!enlarge)
     .gravity(gravity as any || "no")
-    .format("jpg")
+    .format(imgFormat)
     .generateUrl(`${protocol}//${rest}`);
 
 }
