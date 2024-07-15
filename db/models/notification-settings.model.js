@@ -68,4 +68,4 @@ class NotificationSettings extends Model {
   }
 }
 
-module.exports = UserSetting;
+module.exports = NotificationSettings;
