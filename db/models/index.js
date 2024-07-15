@@ -27,6 +27,7 @@ import Notification from './notification.model'
 import UserSetting from './user-settings.model'
 import PointsBase from './points-base'
 import PointsEvents from './points-events'
+import NotificationSettings from './notification-settings.model'
 
 const Database = { sequelize: null };
 
@@ -61,6 +62,7 @@ Database.notification = Notification;
 Database.userSetting = UserSetting;
 Database.pointsBase = PointsBase;
 Database.pointsEvents = PointsEvents;
+Database.notificationSettings = NotificationSettings;
 
 
 Object.values(Database).forEach((model) => {
