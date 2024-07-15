@@ -4,13 +4,13 @@ class NotificationSettings extends Model {
   static init(sequelize) {
     super.init({
       id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         unique: true
       },
       userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         unique: true,
         references: {
           model: "users",
@@ -18,37 +18,37 @@ class NotificationSettings extends Model {
         }
       },
       taskOpen: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       deliverableReady: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       proposalCreated: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       proposalDisputed: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       commentsOnTasks: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       commentsOnDeliverables: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       },
       commentsOnProposals: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
       }
