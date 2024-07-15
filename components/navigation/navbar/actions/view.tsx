@@ -10,7 +10,7 @@ import If from "components/If";
 import NavAvatar from "components/nav-avatar";
 import HamburgerButton from "components/navigation/hamburger/controller";
 import Notifications from "components/notifications/controller";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import ResponsiveWrapper, { ResponsiveEle } from "components/responsive-wrapper";
 import TransactionsStateIndicator from "components/transactions-state-indicator";
 
 export default function NavBarActions({userPoints = "0", connected = false}) {
@@ -19,9 +19,18 @@ export default function NavBarActions({userPoints = "0", connected = false}) {
   return(
     <>
       <div className="d-flex flex-row align-items-center gap-3">
-        <If condition={connected}>
-          <NextLink href="/points"><span className="cursor-pointer"><PointsBadge points={userPoints} size="sm" variant="filled"/></span></NextLink>
-        </If>
+        <ResponsiveEle
+          desktopView={
+            <If condition={connected}>
+              <NextLink href="/points">
+                <span className="cursor-pointer">
+                  <PointsBadge points={userPoints} size="sm" variant="filled"/>
+                </span>
+              </NextLink>
+            </If>
+          }
+        />
+
         <ResponsiveWrapper
           xs={false}
           md={true}>
