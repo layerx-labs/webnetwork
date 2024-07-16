@@ -27,3 +27,15 @@ export interface SearchNotificationsPaginated
   currentPage: number;
   pages: number;
 }
+
+export interface NotificationSettings {
+  id: number;
+  userId: number;
+  taskOpen: boolean;
+  deliverableReady: boolean;
+  proposalCreated: boolean;
+  proposalDisputed: boolean;
+  commentsOnTasks: boolean;
+  commentsOnProposals: boolean;
+  commentsOnDeliverables: boolean;
+}
