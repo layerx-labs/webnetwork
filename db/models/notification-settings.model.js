@@ -56,7 +56,7 @@ class NotificationSettings extends Model {
       sequelize,
       modelName: "notificationSettings",
       tableName: "notification_settings",
-      timestamps: true
+      timestamps: false
     })
   }
 
