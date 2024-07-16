@@ -72,11 +72,10 @@ export default function PublicProfileView({
                                             isTaikaiPoP,
                                             taikaiPops = [],
                                           }: PublicProfileViewProps) {
-  const {isMobileView, isTabletView} = useBreakPoint();
+  const { isMobileView } = useBreakPoint();
 
   const {t} = useTranslation("common");
 
-  const isTabletOrMobile = isMobileView || isTabletView;
   const listItemVariant = ({
     won: "network",
     opened: "network",
@@ -98,23 +97,23 @@ export default function PublicProfileView({
       className="mt-4 pt-2 mt-lg-5 pt-lg-2"
     >
       <div className="row align-items-center mb-5">
-        <div className="col-auto">
+        <div className="col-12 col-sm-auto mb-2 mb-sm-0">
           <AvatarOrIdenticon
             user={{ address: userAddress, avatar }}
-            size={isTabletOrMobile ? "lg" : "xl"}
+            size={isMobileView ? "lg" : "xl"}
             withBorder
           />
         </div>
 
         <div className="col">
-          <div className="row mb-1">
+          <div className="row mb-2">
             <h1 className="xl-semibold font-weight-medium text-white">
               {primaryText}
             </h1>
           </div>
 
           <If condition={!!secondaryText}>
-            <div className="row my-2">
+            <div className="row mb-3">
               <h2 className="sm-regular font-weight-normal text-gray-300 d-flex align-items-center">
                 <div>{secondaryText}</div>
                 <div className="ml-1">
@@ -126,18 +125,18 @@ export default function PublicProfileView({
             </div>
           </If>
 
-          <div className="row mb-2">
-            <div className="col sm-regular font-weight-normal text-gray-300">
-              {
-                socialEle.map(([value, link, icon], i) =>
-                  link && <a href={link as string} key={i}
-                             className="mr-2 text-decoration-none text-gray text-white-hover"
-                             target="_blank">
-                    <span className="mr-1">{icon}</span>
-                    {value}
-                  </a> || "")
-              }
-            </div>
+          <div className="row mb-2 gy-3 gx-2">
+            {
+              socialEle.map(([value, link, icon], i) =>
+                link && 
+              <div className="col-12 col-sm-auto sm-regular font-weight-normal text-gray-300">
+                <a href={link as string} key={i}
+                            className="mr-2 text-decoration-none text-gray text-white-hover"
+                            target="_blank">
+                  <span className="mr-1">{icon}</span>
+                  {value}
+                </a> </div> || "")
+            }
           </div>
 
           <div className="row">

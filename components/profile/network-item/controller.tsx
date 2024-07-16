@@ -1,13 +1,15 @@
-import { ReactNode, useState } from "react";
+import {ReactNode, useState} from "react";
 
 import getConfig from "next/config";
 import { useRouter } from "next/router";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
 
+import {baseApiImgUrl} from "../../../services/api";
 import NetworkItemView from "./view";
+
 interface NetworkItemProps {
   children?: ReactNode;
   key?: number | string;

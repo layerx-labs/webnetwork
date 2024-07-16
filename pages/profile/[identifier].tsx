@@ -7,7 +7,7 @@ import PublicProfilePage from "components/pages/public-profile/public-profile.co
 
 import {emptyPaginatedData} from "helpers/api";
 import {isAddress} from "helpers/is-address";
-import { truncateAddress } from "helpers/truncate-address";
+import {truncateAddress} from "helpers/truncate-address";
 
 import {User} from "interfaces/api";
 
@@ -26,6 +26,7 @@ import {useSearchProposals} from "x-hooks/api/proposal/use-search-proposals";
 import {getBountiesListData} from "x-hooks/api/task";
 import {useGetUserByAddress, useGetUserByLogin} from "x-hooks/api/user";
 
+import {baseApiImgUrl} from "../../services/api";
 import {AnkrNftAsset} from "../../types/ankr-nft-asset";
 import {getTaikaiPops} from "../../x-hooks/api/user/get-taikai-pops";
 
@@ -44,7 +45,7 @@ export default function PublicProfile(props: PublicProfileProps) {
   const { user } = props;
   const homeUrl = publicRuntimeConfig?.urls?.home;
   const imageUrl = user?.profileImage ? 
-    `${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` : 
+    `${baseApiImgUrl}/${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` :
     `${homeUrl}/images/meta-thumbnail.jpeg`;
   const about = removeMarkdown(user?.about?.substring(0, 160).trimEnd());
   let title = truncateAddress(user?.address);

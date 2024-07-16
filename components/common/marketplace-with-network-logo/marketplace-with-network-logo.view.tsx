@@ -3,6 +3,8 @@ import getConfig from "next/config";
 import ChainIcon from "components/chain-icon";
 import NetworkLogo from "components/network-logo";
 
+import {baseApiImgUrl} from "../../../services/api";
+
 const {publicRuntimeConfig} = getConfig();
 interface MarketplaceWithNetworkLogoProps {
   networkLogo: string;
@@ -15,7 +17,7 @@ export default function MarketplaceWithNetworkLogo ({
   return(
     <div className="position-relative">
       <NetworkLogo
-        src={`${publicRuntimeConfig?.urls?.ipfs}/${marketplaceLogo}`}
+        src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${marketplaceLogo}`}
         shape="square"
         size="lg"
         noBg

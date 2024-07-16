@@ -3,6 +3,8 @@ import getConfig from "next/config";
 
 import {WinStorage} from "services/win-storage";
 
+import {baseApiImgUrl} from "./api";
+
 const { publicRuntimeConfig } = getConfig();
 
 async function getChainIconsList() {
@@ -33,7 +35,7 @@ async function getChainIcon(iconName: string) {
   if (found && found.icons.length) {
     const urlWithoutProtocol = found.icons[0].url.replace("ipfs://", "");
 
-    return new URL(`/ipfs/${urlWithoutProtocol}`, ipfsUrl).href;
+    return new URL(`/ipfs/${urlWithoutProtocol}`, baseApiImgUrl.concat("/", ipfsUrl)).href;
   }
 
   return undefined;

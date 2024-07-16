@@ -99,6 +99,18 @@
       "description": "Upload your custom avatar",
       "pointsLabel_one": "{{count}}",
       "pointsLabel_other": "{{count}}"
+    },
+    "funded_funding_request": {
+      "title": "Fund Funding Request",
+      "description": "Fund a funding request on any marketplace",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
+    },
+    "give_funding_reward": {
+      "title": "Give Funding Reward",
+      "description": "Create a Funding Request with Rewards",
+      "pointsLabel_one": "{{count}} point per dollar",
+      "pointsLabel_other": "{{count}} points per dollar"
     }
   },
   "status": {
@@ -126,7 +138,9 @@
       "add_about": "Add about section",
       "add_twitter": "Fill X link",
       "add_avatar": "Add avatar",
-      "connect_email": "Connect email"
+      "connect_email": "Connect email",
+      "funded_funding_request": "Fund Funding Request",
+      "give_funding_reward": "Create a Funding Request with Rewards"
     },
     "state": {
       "counted": "Counted",

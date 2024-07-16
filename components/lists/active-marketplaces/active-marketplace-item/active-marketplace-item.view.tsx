@@ -1,18 +1,19 @@
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 import getConfig from "next/config";
 import Link from "next/link";
 
 import ChainIcon from "components/chain-icon";
-import { OverlappingIcons } from "components/common/overlapping-icons/overlapping-icons.view";
-import { 
-  ActiveMarketplaceChainsModal 
+import {OverlappingIcons} from "components/common/overlapping-icons/overlapping-icons.view";
+import {
+  ActiveMarketplaceChainsModal
 } from "components/lists/active-marketplaces/active-marketplaces-chains-modal/chains-modals.view";
 import NetworkLogo from "components/network-logo";
 
-import { formatNumberToNScale } from "helpers/formatNumber";
+import {formatNumberToNScale} from "helpers/formatNumber";
 
-import { ActiveMarketplace } from "types/api";
+import {ActiveMarketplace} from "types/api";
 
+import {baseApiImgUrl} from "../../../../services/api";
 import If from "../../../If";
 import InfoTooltip from "../../../info-tooltip";
 
@@ -47,7 +48,7 @@ export function ActiveMarketplaceItemView({
               <div className="row align-items-center">
                 <div className="col-auto">
                   <NetworkLogo
-                    src={`${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
+                    src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
                     size="sm"
                     shape="square"
                     bgColor="gray-850"

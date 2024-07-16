@@ -29,14 +29,16 @@ import {Token} from "interfaces/token";
 import DAO from "services/dao-service";
 import {WinStorage} from "services/win-storage";
 
-import { useSearchNetworks } from "x-hooks/api/marketplace/use-search-networks";
-import { useDaoStore } from "x-hooks/stores/dao/dao.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useSearchNetworks} from "x-hooks/api/marketplace/use-search-networks";
+import {useDaoStore} from "x-hooks/stores/dao/dao.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useMarketplace from "x-hooks/use-marketplace";
 import useNetworkTheme from "x-hooks/use-network-theme";
-import { useSettings } from "x-hooks/use-settings";
+import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
+
+import {baseApiImgUrl} from "../services/api";
 
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
@@ -70,7 +72,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const { service: daoService, serviceStarting, ...daoStore } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
-  const IPFS_URL = settings?.urls?.ipfs;
+  const IPFS_URL = baseApiImgUrl.concat("/", settings?.urls?.ipfs);
   const LIMITS = {
     percentageNeededForDispute: settings?.networkParametersLimits?.disputePercentage,
     draftTime: settings?.networkParametersLimits?.draftTime,

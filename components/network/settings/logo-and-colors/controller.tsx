@@ -1,20 +1,22 @@
-import { useState } from "react";
+import {useState} from "react";
 
-import { useTranslation } from "next-i18next";
+import {useTranslation} from "next-i18next";
 import getConfig from "next/config";
 
 import NetworkLogoAndColorsSettingsView from "components/network/settings/logo-and-colors/view";
 
-import { psReadAsText } from "helpers/file-reader";
-import { QueryKeys } from "helpers/query-keys";
-import { getQueryableText, urlWithoutProtocol } from "helpers/string";
+import {psReadAsText} from "helpers/file-reader";
+import {QueryKeys} from "helpers/query-keys";
+import {getQueryableText, urlWithoutProtocol} from "helpers/string";
 
-import { Color, Field, Icon, Network, Theme } from "interfaces/network";
+import {Color, Field, Icon, Network, Theme} from "interfaces/network";
 
-import { useUpdateNetwork } from "x-hooks/api/marketplace";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUpdateNetwork} from "x-hooks/api/marketplace";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+
+import {baseApiImgUrl} from "../../../../services/api";
 
 
 const { publicRuntimeConfig } = getConfig();
@@ -23,7 +25,7 @@ const MAX_LOGOS_SIZE_LIMIT_IN_MB = 1;
 
 const getDefaultIconValue = (hash: string) => ({
   value: {
-    preview: `${publicRuntimeConfig?.urls?.ipfs}/${hash}`,
+    preview: `${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${hash}`,
     raw: null,
   },
   validated: null,
