@@ -26,7 +26,7 @@ export async function unsubscribeOfTask(req: NextApiRequest) {
   if (!notificationSettings)
     throw new Error("Missing notification settings");
 
-  if (notificationSettings.subscriptions.include(id)) {
+  if (notificationSettings.subscriptions.includes(+id)) {
     notificationSettings.subscriptions = notificationSettings.subscriptions.filter(taskId => taskId !== +id);
 
     await notificationSettings.save();

@@ -26,8 +26,8 @@ export async function subscribeToTask(req: NextApiRequest) {
   if (!notificationSettings)
     throw new Error("Missing notification settings");
 
-  if (!notificationSettings.subscriptions.include(id)) {
-    notificationSettings.subscriptions = [...notificationSettings.subscriptions, id];
+  if (!notificationSettings.subscriptions.includes(+id)) {
+    notificationSettings.subscriptions = [...notificationSettings.subscriptions, +id];
 
     await notificationSettings.save();
   }
