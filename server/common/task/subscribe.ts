@@ -8,7 +8,7 @@ export async function subscribeToTask(req: NextApiRequest) {
   const { id } = req.query;
   const { context: { user } } = req.body;
 
-  const task = await models.issues.findOne({
+  const task = await models.issue.findOne({
     where: {
       id: +id
     }
