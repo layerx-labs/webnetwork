@@ -5,8 +5,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn("notification_settings", "subscriptions", {
       type: Sequelize.ARRAY(Sequelize.INTEGER),
-      allowNull: true,
-      defaultValue: []
+      allowNull: true
     });
   },
 
