@@ -210,7 +210,8 @@ export default async function get(query: ParsedUrlQuery) {
 
     sort.push(...columns);
   } else
-    sort.push("state");
+    sort.push(Sequelize
+      .literal(`case when "issue"."state" in ('ready', 'proposal') then 'open' else "issue"."state" end`));
 
   const useSubQuery = isMergeableState || isDisputableState || deliverabler ? false : undefined;
 
@@ -225,7 +226,7 @@ export default async function get(query: ParsedUrlQuery) {
       userAssociation,
       paymentsAssociation,
     ]
-  }, { page: PAGE }, [[...sort, order || "DESC"]], RESULTS_LIMIT))
+  }, { page: PAGE }, [[...sort, order || "DESC"], ["createdAt", "DESC"]], RESULTS_LIMIT))
     .then(result => {
       const rows = result.rows.map(issue => {
         const closeFee = issue.network.chain.closeFeePercentage;
