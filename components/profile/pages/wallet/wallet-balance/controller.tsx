@@ -51,11 +51,17 @@ export default function WalletBalance({
 
   const defaultFiat = settings?.currency?.defaultFiat?.toLowerCase();
 
+  function getIcon(icon) {
+    if (!icon || typeof icon === "string")
+      return <TokenIcon src={icon} />;
+    return icon;
+  }
+
   function toTokenWithBalance(token) {
     return {
       ...token,
       balance: token?.balance || BigNumber(0),
-      icon: <TokenIcon src={token?.icon} />
+      icon: getIcon(token?.icon),
     };
   }
 
@@ -69,7 +75,7 @@ export default function WalletBalance({
     return {
       ...token,
       balance,
-      icon: <TokenIcon src={token?.icon as string} />,
+      icon: getIcon(token?.icon),
     };
   }
 
