@@ -19,7 +19,7 @@ export default function DistributionBarItem({
       style={{ width: `${percentage || 25}%` }}
     >
       <If
-        condition={!!handle}
+        condition={!label}
         otherwise={
           <span className="text-gray-500 text-uppercase xs-medium mt-1">
             {label}
