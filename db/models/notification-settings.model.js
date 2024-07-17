@@ -51,6 +51,11 @@ class NotificationSettings extends Model {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: true
+      },
+      subscriptions: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: true,
+        defaultValue: []
       }
     }, {
       sequelize,
