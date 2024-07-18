@@ -1,3 +1,5 @@
+import { MouseEvent } from "react";
+
 import { useTranslation } from "next-i18next";
 
 import BellIcon from "assets/icons/bell-icon";
@@ -12,7 +14,7 @@ interface SubscriptionTaskButtonViewProps {
   isDisabled: boolean;
   isConnected: boolean;
   variant?: "icon" | "text";
-  onClick: () => void;
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function SubscriptionTaskButtonView({

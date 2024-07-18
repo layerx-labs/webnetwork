@@ -1,3 +1,5 @@
+import { MouseEvent } from "react";
+
 import { SubscriptionTaskButtonView } 
   from "components/notifications/subscription-task-button/subscription-task-button.view";
 
@@ -18,7 +20,9 @@ export function SubscriptionTaskButton({
 
   const isConnected = !!currentUser?.walletAddress;
 
-  function onClick() {
+  function onClick(e: MouseEvent<HTMLButtonElement>) {
+    e?.stopPropagation();
+
     if (isSubscribed(taskId))
       unsubscribe(taskId);
     else

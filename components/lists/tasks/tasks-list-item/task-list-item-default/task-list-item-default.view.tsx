@@ -11,10 +11,12 @@ import ChainIcon from "components/chain-icon";
 import MarketplaceWithNetworkLogo 
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
 import If from "components/If";
+import { SubscriptionTaskButton }
+  from "components/notifications/subscription-task-button/subscription-task-button.controller";
 
 import { TaskListItemVariantProps } from "types/components";
 
-export default function TaskListItemDefault ({
+export default function TaskListItemDefault({
   task,
   isMarketplaceList,
   onClick,
@@ -51,6 +53,13 @@ export default function TaskListItemDefault ({
 
           <div className="col sm-regular text-white two-lines-text capitalize-first px-0">
             {task?.title}
+          </div>
+
+          <div className="col-auto">
+            <SubscriptionTaskButton
+              taskId={+task?.id}
+              variant="icon"
+            />
           </div>
         </div>
 
