@@ -2,7 +2,7 @@ import { NotificationSettings } from "interfaces/user-notification";
 
 import { api } from "services/api";
 
-interface UseUpdateNotificationSettingsPayload extends Omit<NotificationSettings, "id" | "userId">{
+interface UseUpdateNotificationSettingsPayload extends Omit<NotificationSettings, "id" | "userId" | "subscriptions">{
   address: string;
 }
 

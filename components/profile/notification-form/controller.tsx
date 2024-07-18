@@ -52,7 +52,7 @@ export default function NotificationForm() {
                     if (!settings) 
                       return null;
 
-                    const { id, userId, ...rest } = settings;
+                    const { id, userId, subscriptions, ...rest } = settings;
 
                     return rest;
                   },
