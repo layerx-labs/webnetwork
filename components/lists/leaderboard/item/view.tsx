@@ -40,7 +40,7 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
       label: t("common:misc.networks"),
       secondaryLabel: <OverlappingIcons
         icons={leaderboard?.marketplacelogos?.map(icon => (
-          <ChainIcon src={icon} size="22" />
+          <ChainIcon src={icon} size="22" imgFormat="svg" />
         ))}
       />,
       breakpoints: { xs: false, md: true },
