@@ -17,7 +17,7 @@ export class EmailNotification {
 
   async send() {
 
-    const {recipients} = await getEventTargets(this.targets);
+    const {recipients} = await getEventTargets(this.payload, this.targets);
 
     for (const [, to] of recipients.filter(e => e).entries()) {
       const uuid = uuidv4();
