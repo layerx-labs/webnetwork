@@ -54,7 +54,7 @@ export default function BountyHeroView({
   }
 
   return (
-    <div className="mt-2 border-bottom border-gray-850 pb">
+    <div className="mt-3 border-bottom border-gray-850 pb">
       <CustomContainer>
         <div className="row d-flex flex-row justify-content-center">
           <div className="col-12 min-w-bounty-hero justify-content-center">
@@ -68,20 +68,18 @@ export default function BountyHeroView({
                 </span>
               </div>
 
-              <div className="col-auto">
-                <BountySettings
-                  currentBounty={bounty}
-                  updateBountyData={updateBountyData}
-                  isEditIssue={isEditIssue}
-                  onEditIssue={handleEditIssue}
-                />
-              </div>
-
-              <div className="col-auto">
+              <div className="col-auto px-0 px-md-1">
                 <SubscriptionTaskButton
                   taskId={+bounty?.id}
                 />
               </div>
+
+              <BountySettings
+                currentBounty={bounty}
+                updateBountyData={updateBountyData}
+                isEditIssue={isEditIssue}
+                onEditIssue={handleEditIssue}
+              />
             </div>
 
             <div 

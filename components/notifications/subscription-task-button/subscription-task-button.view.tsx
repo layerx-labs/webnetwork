@@ -41,13 +41,16 @@ export function SubscriptionTaskButtonView({
           onClick={onClick}
           disabled={isDisabled}
           color="gray-900"
-          className="border-radius-4 py-1 px-2 border-gray-700 not-svg d-flex align-items-center"
+          className="border-radius-4 py-1 px-2 border-gray-800 not-svg d-flex align-items-center font-weight-normal"
+          transparent
         >
-          {icon}
+          <span className="d-block m-1">
+            {icon}
+          </span>
 
           <If condition={isTextVariant}>
             <ResponsiveEle
-              tabletView={<span className="ml-1">{text}</span>}
+              tabletView={<span>{text}</span>}
             />
           </If>
         </Button>
