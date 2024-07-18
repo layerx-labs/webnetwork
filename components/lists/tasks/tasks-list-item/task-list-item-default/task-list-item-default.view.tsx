@@ -23,6 +23,8 @@ export default function TaskListItemDefault({
 }: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
 
+  const isSubscribable = !["closed", "canceled"].includes(task?.state);
+
   return(
     <div
       className="row align-items-center mx-0 p-3 bg-gray-900 border border-gray-800 border-radius-8 cursor-pointer"
@@ -55,12 +57,14 @@ export default function TaskListItemDefault({
             {task?.title}
           </div>
 
-          <div className="col-auto">
-            <SubscriptionTaskButton
-              taskId={+task?.id}
-              variant="icon"
-            />
-          </div>
+          <If condition={isSubscribable}>
+            <div className="col-auto">
+              <SubscriptionTaskButton
+                taskId={+task?.id}
+                variant="icon"
+              />
+            </div>
+          </If>
         </div>
 
         <div className="row align-items-center border-sm-bottom border-gray-850 mx-0 gap-2 gap-sm-3 pb-sm-3">
