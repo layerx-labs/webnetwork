@@ -3,7 +3,7 @@ import { UrlObject } from "url";
 import LogoPlaceholder from "assets/icons/logo-placeholder";
 
 import InternalLink from "components/internal-link";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import ResponsiveWrapper, { ResponsiveEle } from "components/responsive-wrapper";
 
 interface BrandLogoProps {
   href: string | UrlObject;
@@ -20,18 +20,18 @@ export default function BrandLogo({
 
   const icon =
     showDefaultBepro || logoUrl ? (
-      <>
-        <ResponsiveWrapper xs={false} xl={true}>
-          <img src={showDefaultBepro ? defaultLogo : logoUrl} height={32} />
-        </ResponsiveWrapper>
-        <ResponsiveWrapper xs={true} xl={false}>
+      <ResponsiveEle 
+        mobileView={
           <img
             src={showDefaultBepro ? defaultLogo : logoUrl}
-            height={32}
+            height={29}
             className="mw-45-vw"
           />
-        </ResponsiveWrapper>
-      </>
+        }
+        tabletView={
+          <img src={showDefaultBepro ? defaultLogo : logoUrl} height={29} />
+        }
+      />
     ) : (
       <LogoPlaceholder />
     );
