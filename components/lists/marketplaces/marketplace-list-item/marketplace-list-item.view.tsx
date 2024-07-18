@@ -79,7 +79,7 @@ export function MarketplaceListItem({
       <ResponsiveListItem
         icon={
           <NetworkLogo 
-            src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${marketplace?.logoIcon}`}
+            src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${marketplace?.logoIcon}?format=svg`}
             shape="square"
             size="lg"
             noBg 
