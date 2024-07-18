@@ -14,6 +14,7 @@ interface ChainIconProps {
   label?: string;
   responsiveLabel?: boolean;
   className?: string;
+  imgFormat?: "svg" | "png";
   style?: CSSProperties
 }
 
@@ -24,11 +25,17 @@ export default function ChainIcon({
   size = "18",
   label,
   responsiveLabel = true,
-  className
+  className,
+  imgFormat
 } : ChainIconProps) {
   const ipfsUrl = publicRuntimeConfig?.urls?.ipfs;
   const chainIcon = src && ipfsUrl ? 
-    <img className={`rounded-circle ${className}`} src={`${baseApiImgUrl}/${ipfsUrl}/${src}?width=${size}&height=${size}`} height={size} width={size} /> :
+    <img 
+      className={`rounded-circle ${className}`} 
+      src={`${baseApiImgUrl}/${ipfsUrl}/${src}?width=${size}&height=${size}${imgFormat ? `&format=${imgFormat}` : ""}`} 
+      height={size} 
+      width={size} 
+    /> :
     <QuestionMarkIcon height={size} width={size} />;
 
   return(
