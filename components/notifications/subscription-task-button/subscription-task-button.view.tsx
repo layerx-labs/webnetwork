@@ -6,6 +6,7 @@ import BellIcon from "assets/icons/bell-icon";
 import BellSlashIcon from "assets/icons/bell-slash-icon";
 
 import Button from "components/button";
+import { Tooltip } from "components/common/tooltip/tooltip.view";
 import If from "components/If";
 import { ResponsiveEle } from "components/responsive-wrapper";
 
@@ -34,19 +35,23 @@ export function SubscriptionTaskButtonView({
     return <></>;
 
   return(
-    <Button
-      onClick={onClick}
-      disabled={isDisabled}
-      color="gray-900"
-      className="border-radius-4 py-1 px-2 border-gray-700 not-svg d-flex align-items-center"
-    >
-      {icon}
+    <Tooltip tip={text}>
+      <div>
+        <Button
+          onClick={onClick}
+          disabled={isDisabled}
+          color="gray-900"
+          className="border-radius-4 py-1 px-2 border-gray-700 not-svg d-flex align-items-center"
+        >
+          {icon}
 
-      <If condition={isTextVariant}>
-        <ResponsiveEle
-          tabletView={<span className="ml-1">{text}</span>}
-        />
-      </If>
-    </Button>
+          <If condition={isTextVariant}>
+            <ResponsiveEle
+              tabletView={<span className="ml-1">{text}</span>}
+            />
+          </If>
+        </Button>
+      </div>
+    </Tooltip>
   );
 }
