@@ -24,6 +24,7 @@ import {useSearchDeliverables} from "x-hooks/api/deliverable/use-search-delivera
 import {useSearchPayments} from "x-hooks/api/payment/use-search-payments";
 import {useSearchProposals} from "x-hooks/api/proposal/use-search-proposals";
 import {getBountiesListData} from "x-hooks/api/task";
+import { getTasksWon } from "x-hooks/api/task/get-tasks-won";
 import {useGetUserByAddress, useGetUserByLogin} from "x-hooks/api/user";
 
 import {baseApiImgUrl} from "../../services/api";
@@ -111,10 +112,13 @@ export const getServerSideProps: GetServerSideProps = async ({req, query, locale
     pops: [],
   };
 
-  const getTasks = async (filter: "receiver" | "creator") =>
-    getBountiesListData({[filter]: user.address, ...query})
-      .then(({data}) => data)
-      .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+  const getTasks = async (filter: "receiver" | "creator") => {
+    const fn = filter === "receiver" ? getTasksWon : getBountiesListData;
+
+    return fn({[filter]: user.address, ...query})
+    .then(({data}) => data)
+    .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+  }
 
   switch (type) {
   case "won":
