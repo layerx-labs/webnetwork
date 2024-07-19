@@ -25,30 +25,30 @@ export default async function get(query: ParsedUrlQuery) {
       array_to_string(array_agg(DISTINCT "logoIcon"), ', ') AS networksLogos,
       array_to_string(array_agg(DISTINCT icon), ', ') AS chainsLogos
     FROM (
-      SELECT 
-        up.address,
-        u."handle" AS handle,
-        u."avatar" AS avatar,
-        i.id AS issue, 
-        n."logoIcon", 
-        c.icon
-      FROM 
-        users_payments up
-        INNER JOIN users u ON LOWER(u.address) = LOWER(up.address)
-        INNER JOIN issues i ON i.id = up."issueId"
-        INNER JOIN networks n ON n.id = i.network_id
-        INNER JOIN chains c ON c."chainId" = i.chain_id
-      WHERE 1 = 1
+      select	users."address",
+            users."handle",
+            users."avatar",
+            issue."id" "issue",
+            network."logoIcon",
+            chains."icon"
+      from	issues issue
+        inner join merge_proposals proposal on proposal."issueId" = issue."id" 
+          and proposal."contractId" = cast(issue."merged" as integer)
+        inner join proposal_distributions distribution on distribution."proposalId" = proposal."id"
+        inner join users on lower(users."address") = lower(distribution."recipient")
+        inner join networks network on network."id" = issue."network_id"
+        inner join chains on chains."chainId" = issue."chain_id"
+      where	issue."state" = 'closed'
       ${
         search
           ? `AND (
-              u.address ILIKE '%${search}%' OR
-              u."handle" ILIKE '%${search}%'
+              users."address" ILIKE '%${search}%' OR
+              users."handle" ILIKE '%${search}%'
             )`
           : ""
       }
-      ${networkName === 'all' ? '' : networkName ? `AND n.name = LOWER('${networkName}')` : ""}
-      ${address  ? `AND u.address = LOWER('${address}')` : ""}
+      ${networkName === 'all' ? '' : networkName ? `AND network."name" = LOWER('${networkName}')` : ""}
+      ${address  ? `AND users."address" = LOWER('${address}')` : ""}
     ) tbl
     GROUP BY address, handle, avatar
     ORDER BY COUNT(issue) ${order ? order : "DESC"}
