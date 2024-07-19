@@ -15,15 +15,14 @@ import customServerSideTranslations from "server/utils/custom-server-side-transl
 
 import {
   DeliverablePaginatedData,
-  PaymentPaginatedData,
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";
 
 import {useSearchDeliverables} from "x-hooks/api/deliverable/use-search-deliverables";
-import {useSearchPayments} from "x-hooks/api/payment/use-search-payments";
 import {useSearchProposals} from "x-hooks/api/proposal/use-search-proposals";
 import {getBountiesListData} from "x-hooks/api/task";
+import { getTasksWon } from "x-hooks/api/task/get-tasks-won";
 import {useGetUserByAddress, useGetUserByLogin} from "x-hooks/api/user";
 
 import {baseApiImgUrl} from "../../services/api";
@@ -35,7 +34,7 @@ export interface PublicProfileProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
-  payments?: PaymentPaginatedData;
+  nfts?: SearchBountiesPaginated;
   pops?: AnkrNftAsset[];
 }
 
@@ -107,14 +106,17 @@ export const getServerSideProps: GetServerSideProps = async ({req, query, locale
     tasks: emptyPaginatedData,
     deliverables: emptyPaginatedData,
     proposals: emptyPaginatedData,
-    payments: emptyPaginatedData,
+    nfts: emptyPaginatedData,
     pops: [],
   };
 
-  const getTasks = async (filter: "receiver" | "creator") =>
-    getBountiesListData({[filter]: user.address, ...query})
-      .then(({data}) => data)
-      .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+  const getTasks = async (filter: "receiver" | "creator") => {
+    const fn = filter === "receiver" ? getTasksWon : getBountiesListData;
+
+    return fn({[filter]: user.address, ...query})
+    .then(({data}) => data)
+    .catch(() => emptyPaginatedData as SearchBountiesPaginated);
+  }
 
   switch (type) {
   case "won":
@@ -130,7 +132,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, query, locale
     pageData.proposals = await useSearchProposals({creator: user.address, ...query});
     break;
   case "nfts":
-    pageData.payments = await useSearchPayments({wallet: user.address, ...query});
+    pageData.nfts = await getTasks("receiver");
     break;
   case "taikai-pop":
     pageData.pops = await getTaikaiPops(user.address);

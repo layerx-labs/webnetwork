@@ -11,7 +11,6 @@ import {User} from "interfaces/api";
 
 import {
   DeliverablePaginatedData,
-  PaymentPaginatedData,
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";
@@ -23,7 +22,7 @@ interface PublicProfilePageProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
-  payments?: PaymentPaginatedData;
+  nfts?: SearchBountiesPaginated;
   pops?: AnkrNftAsset[]
 }
 export default function PublicProfilePage ({
@@ -31,7 +30,7 @@ export default function PublicProfilePage ({
   tasks,
   deliverables,
   proposals,
-  payments,
+  nfts,
   pops,
 }: PublicProfilePageProps) {
   const { t } = useTranslation("profile");
@@ -85,7 +84,7 @@ export default function PublicProfilePage ({
       tasks={tasks}
       deliverables={deliverables}
       proposals={proposals}
-      payments={payments}
+      nfts={nfts}
       type={type}
       socials={{
         github: user?.githubLink,

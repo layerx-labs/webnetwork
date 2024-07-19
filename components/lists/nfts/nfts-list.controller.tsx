@@ -2,36 +2,36 @@ import { useEffect, useState } from "react";
 
 import NftsListView from "components/lists/nfts/nfts-list.view";
 
-import { PaymentPaginatedData } from "types/api";
+import { SearchBountiesPaginated } from "types/api";
 
 interface NftsListProps {
-  payments: PaymentPaginatedData;
+  nfts: SearchBountiesPaginated;
 }
 export default function NftsList ({
-  payments
+  nfts
 }: NftsListProps) {
-  const [list, setList] = useState<PaymentPaginatedData>();
+  const [list, setList] = useState<SearchBountiesPaginated>();
 
   const hasMorePages = !!list && list?.currentPage < list?.pages;
 
   useEffect(() => {
-    if (!payments) return;
+    if (!nfts) return;
 
     setList(previous => {
-      if (!previous || payments.currentPage === 1)
-        return payments;
+      if (!previous || nfts.currentPage === 1)
+        return nfts;
 
       return {
         ...previous,
-        ...payments,
-        rows: previous?.rows?.concat(payments?.rows)
+        ...nfts,
+        rows: previous?.rows?.concat(nfts?.rows)
       };
     });
-  }, [payments]);
+  }, [nfts]);
 
   return (
     <NftsListView
-      payments={list?.rows}
+      nfts={list?.rows}
       hasMorePages={hasMorePages}
     />
   );
