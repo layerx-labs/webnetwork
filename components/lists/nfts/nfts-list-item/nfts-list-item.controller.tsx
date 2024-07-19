@@ -1,23 +1,25 @@
 import NftsListItemView from "components/lists/nfts/nfts-list-item/nfts-list-item.view";
 
-import {Payment} from "interfaces/payments";
+import { IssueData } from "interfaces/issue-data";
 
 import {useSettings} from "x-hooks/use-settings";
 
 import {baseApiImgUrl} from "../../../../services/api";
 
 interface NftsListItemProps {
-  payment: Payment
+  nft: IssueData
 }
 
 export default function NftsListItem ({
-  payment
+  nft
 }: NftsListItemProps) {
   const { settings } = useSettings();
 
-  const imageUrl = payment?.issue?.nftImage ? `${baseApiImgUrl}/${settings?.urls?.ipfs}/${payment?.issue?.nftImage}` : null;
-  const transactionUrl = `${payment?.issue?.chain?.blockScanner}/${payment?.transactionHash}`;
-  const taskUrl = `/${payment?.issue?.network?.name?.toLowerCase()}/task/${payment?.issue?.id}`;
+  const transactionHash = nft?.payments?.at(0)?.transactionHash;
+  const imageUrl = 
+    nft?.nftImage ? `${baseApiImgUrl}/${settings?.urls?.ipfs}/${nft?.nftImage}` : null;
+  const transactionUrl = `${nft?.network?.chain?.blockScanner}/${transactionHash}`;
+  const taskUrl = `/${nft?.network?.name?.toLowerCase()}/task/${nft?.id}`;
 
   return (
     <NftsListItemView

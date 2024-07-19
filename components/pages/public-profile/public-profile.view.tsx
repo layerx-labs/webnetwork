@@ -40,7 +40,7 @@ interface PublicProfileViewProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
-  payments?: PaymentPaginatedData;
+  nfts?: SearchBountiesPaginated;
   type?: string;
   socials?: {
     github: string;
@@ -65,7 +65,7 @@ export default function PublicProfileView({
                                             tasks,
                                             deliverables,
                                             proposals,
-                                            payments,
+                                            nfts,
                                             type = "won",
                                             socials = null,
                                             about = null,
@@ -180,7 +180,7 @@ export default function PublicProfileView({
 
           <If condition={isNftsList}>
             <NftsList
-              payments={payments}
+              nfts={nfts}
             />
           </If>
 

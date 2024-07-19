@@ -102,7 +102,10 @@ export default async function searchTasksWon(query: ParsedUrlQuery) {
                       name: caseInsensitiveEqual("network.name", (networkName || network).toString())
                     } : {},
                     [getAssociation("chain", 
-                                    ["chainId", "chainName", "chainShortName", "color", "closeFeePercentage", "icon"], 
+                                    [
+                                      "chainId", "chainName", "chainShortName", "color", "closeFeePercentage", 
+                                      "icon", "blockScanner"
+                                    ], 
                                     true, 
                                     networkChain || chain ? {
                                       chainShortName: { [Op.iLike]: (networkChain || chain).toString()}
@@ -111,6 +114,11 @@ export default async function searchTasksWon(query: ParsedUrlQuery) {
   const transactionalTokenAssociation = 
     getAssociation( "transactionalToken", 
                   ["address", "name", "symbol"]);
+
+  const paymentAssociation = 
+    getAssociation( "payments", 
+                    ["transactionHash"],
+                    true);
 
   const COLS_TO_CAST = ["amount", "fundingAmount"];
   const RESULTS_LIMIT = count ? +count : undefined;
@@ -140,6 +148,7 @@ export default async function searchTasksWon(query: ParsedUrlQuery) {
       networkAssociation,
       proposalAssociation,
       transactionalTokenAssociation,
+      paymentAssociation,
     ]
   }, { page: PAGE }, [[...sort, order || "DESC"], ["createdAt", "DESC"]], RESULTS_LIMIT))
   .then(result => {

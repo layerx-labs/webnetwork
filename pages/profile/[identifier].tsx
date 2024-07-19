@@ -15,13 +15,11 @@ import customServerSideTranslations from "server/utils/custom-server-side-transl
 
 import {
   DeliverablePaginatedData,
-  PaymentPaginatedData,
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";
 
 import {useSearchDeliverables} from "x-hooks/api/deliverable/use-search-deliverables";
-import {useSearchPayments} from "x-hooks/api/payment/use-search-payments";
 import {useSearchProposals} from "x-hooks/api/proposal/use-search-proposals";
 import {getBountiesListData} from "x-hooks/api/task";
 import { getTasksWon } from "x-hooks/api/task/get-tasks-won";
@@ -36,7 +34,7 @@ export interface PublicProfileProps {
   tasks?: SearchBountiesPaginated;
   deliverables?: DeliverablePaginatedData;
   proposals?: ProposalPaginatedData;
-  payments?: PaymentPaginatedData;
+  nfts?: SearchBountiesPaginated;
   pops?: AnkrNftAsset[];
 }
 
@@ -108,7 +106,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, query, locale
     tasks: emptyPaginatedData,
     deliverables: emptyPaginatedData,
     proposals: emptyPaginatedData,
-    payments: emptyPaginatedData,
+    nfts: emptyPaginatedData,
     pops: [],
   };
 
@@ -134,7 +132,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, query, locale
     pageData.proposals = await useSearchProposals({creator: user.address, ...query});
     break;
   case "nfts":
-    pageData.payments = await useSearchPayments({wallet: user.address, ...query});
+    pageData.nfts = await getTasks("receiver");
     break;
   case "taikai-pop":
     pageData.pops = await getTaikaiPops(user.address);
