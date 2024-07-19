@@ -36,7 +36,6 @@ export default async function searchTasksWon(query: ParsedUrlQuery) {
   const whereCondition: WhereOptions = {};
 
   whereCondition.state = "closed";
-  whereCondition.visible = true;
 
   if (chainId) 
     whereCondition.chain_id = +chainId;
