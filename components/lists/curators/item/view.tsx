@@ -24,36 +24,37 @@ export default function CuratorListItemView({
   const columns = [
     {
       label: t("council:council-table.closed-proposals"),
-      secondaryLabel: `${curator?.acceptedProposals || 0}`,
+      secondaryLabel: <div className="ms-0 ms-md-3">{`${curator?.acceptedProposals || 0}`}</div>,
       breakpoints: { xs: false, lg: true },
-      justify: "center"
+      justify: "start"
     },
     {
       label: t("council:council-table.disputed-proposals"),
-      secondaryLabel: `${curator?.disputedProposals || 0}`,
+      secondaryLabel: <div className="ms-0 ms-md-4">{`${curator?.disputedProposals || 0}`}</div>,
       breakpoints: { xs: false, xl: true },
-      justify: "center"
+      justify: "start"
     },
     {
       label: t("council:council-table.disputes"),
-      secondaryLabel: `${curator?.disputes || 0}`,
+      secondaryLabel: <div className="ms-0 ms-md-4 ps-md-2">{`${curator?.disputes || 0}`}</div>,
       breakpoints: { xs: false, xl: true },
-      justify: "center"
+      justify: "start"
     },
     {
       label: t("council:council-table.total-votes"),
-      secondaryLabel: 
-        formatNumberToNScale(BigNumber(curator?.totalVotes).toFixed()),
+      secondaryLabel: <div className="ms-0 ms-md-3">
+        {formatNumberToNScale(BigNumber(curator?.totalVotes).toFixed())}
+      </div>,
       breakpoints: { xs: false, md: true },
-      justify: "center"
+      justify: "start"
     },
     {
       label: t("council:council-table.networks"),
       secondaryLabel: <OverlappingIcons
-        icons={curator?.marketplaces?.map(marketplace => (
-          <ChainIcon src={marketplace?.chain?.icon} size="22" />
-        ))}
-      />,
+      icons={curator?.marketplaces?.map(marketplace => (
+        <ChainIcon src={marketplace?.chain?.icon} size="22" />
+      ))}
+    />,
       breakpoints: { xs: false, md: true },
       justify: "center"
     }
