@@ -80,6 +80,9 @@ export default function NotificationForm() {
     queryKey: notificationSettingsKey,
     mutationFn: useUpdateNotificationSettings,
     toastError: t("profile:notifications-settings.failed-to-update"),
+    onSuccess: () => {
+      updateSession();
+    },
   });
 
   const sessionUser = (sessionData as CustomSession)?.user;
