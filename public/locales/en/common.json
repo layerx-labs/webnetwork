@@ -387,6 +387,14 @@
       "open-in-metamask": "Open in MetaMask",
       "install-coinbase": "Install CoinBase",
       "open-in-coinbase": "Open in CoinBase"
+    },
+    "turn-on-notifications": {
+      "title": "Turn on notifications",
+      "go-to-dashboard": "Go to dashboard",
+      "description": "In order to {{reason}} you need to fill in your email and turn on the notifications.",
+      "reasons": {
+        "task-subscription": "subscribe to a task"
+      }
     }
   },
   "forms": {
