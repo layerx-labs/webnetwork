@@ -15,13 +15,13 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
   const columns = [
     {
       label: t("nfts"),
-      secondaryLabel: <div className="ms-0 ms-md-4">{`${leaderboard?.numberNfts || 0}`}</div>,
+      secondaryLabel: <div className="ms-0 ms-md-5">{`${leaderboard?.numberNfts || 0}`}</div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
       label: t("council:council-table.networks"),
-      secondaryLabel: <div className="ms-0 mb-2 mb-md-0 ms-md-3">
+      secondaryLabel: <div className="ms-0 mb-2 mb-md-0 ms-md-5">
         <OverlappingIcons
           icons={leaderboard?.networkslogos?.map(icon => (
             <ChainIcon src={icon} size="22" />
@@ -33,11 +33,13 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
     },
     {
       label: t("common:misc.networks"),
-      secondaryLabel: <OverlappingIcons
-        icons={leaderboard?.marketplacelogos?.map(icon => (
-          <ChainIcon src={icon} size="22" imgFormat="svg" />
-        ))}
-      />,
+      secondaryLabel: <div className="ms-0 mb-2 mb-md-0 ms-md-4">
+        <OverlappingIcons
+          icons={leaderboard?.marketplacelogos?.map(icon => (
+            <ChainIcon src={icon} size="22" imgFormat="svg" />
+          ))}
+        />
+      </div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     }
