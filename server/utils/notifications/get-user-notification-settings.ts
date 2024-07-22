@@ -18,7 +18,7 @@ export async function getUserNotificationSettings(userId: number): Promise<GetUs
 
   const userSettings = await models.userSetting.findOne({ where });
 
-  const notificationSettings = await models.notificationSettings.findOne({ where });
+  const notificationSettings = await models.notificationSettings.findOne({ where, raw: true });
 
   const notifications = [];
 
