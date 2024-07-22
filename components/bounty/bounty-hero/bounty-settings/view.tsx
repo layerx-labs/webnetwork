@@ -137,16 +137,16 @@ export default function BountySettingsView({
   useEffect(loadOutsideClick, [show]);
   
   return (
-      <>
+      <div className="col-auto">
         <div className="position-relative d-flex justify-content-end" ref={node}>
           <div
-            className={`cursor-pointer hover-white border ${
-              (show && "border-primary") || "border-gray-850"
-            } border-radius-8 d-flex`}
+            className={`cursor-pointer hover-white px-2 border align-items-center ${
+              (show && "border-primary") || "border-gray-800"
+            } border-radius-4 d-flex`}
             onClick={() => setShow(!show)}
             data-testid="task-options"
           >
-            <span className="mx-2 my-1">{t("common:misc.options")}</span>
+            <span className="text-gray-400 mb-2">. . .</span>
           </div>
   
           <div
@@ -174,7 +174,7 @@ export default function BountySettingsView({
             <Translation ns="common" label="modals.hard-cancel.content" />
           </h5>
         </Modal>
-      </>
+      </div>
   );
 }
   

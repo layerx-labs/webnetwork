@@ -114,7 +114,9 @@
       "start-working": "As a worker, click here to show the community you're working on this task",
       "create-deliverable": "As a worker, show your deliverable to the task owner and community",
       "create-proposal": "As curator, propose a deliverable as acceptable for the task"
-    }
+    },
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe"
   },
   "management": {
     "label": "Management",
@@ -143,7 +145,9 @@
     "banned-domain": "This domain is banned and cannot be used to open tasks.",
     "failed-to-cancel": "Task could not be canceled",
     "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct.",
-    "failed-to-edit": "Failed to edit bounty"
+    "failed-to-edit": "Failed to edit bounty",
+    "failed-to-subscribe": "Failed to subscribe",
+    "failed-to-unsubscribe": "Failed to unsubscribe"
   },
   "title": "Create new Task",
   "fields": {

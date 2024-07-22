@@ -11,15 +11,19 @@ import ChainIcon from "components/chain-icon";
 import MarketplaceWithNetworkLogo 
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
 import If from "components/If";
+import { SubscriptionTaskButton }
+  from "components/notifications/subscription-task-button/subscription-task-button.controller";
 
 import { TaskListItemVariantProps } from "types/components";
 
-export default function TaskListItemDefault ({
+export default function TaskListItemDefault({
   task,
   isMarketplaceList,
   onClick,
 }: TaskListItemVariantProps) {
   const { t } = useTranslation(["bounty", "common", "custom-network"]);
+
+  const isSubscribable = !["closed", "canceled"].includes(task?.state);
 
   return(
     <div
@@ -52,6 +56,15 @@ export default function TaskListItemDefault ({
           <div className="col sm-regular text-white two-lines-text capitalize-first px-0">
             {task?.title}
           </div>
+
+          <If condition={isSubscribable}>
+            <div className="col-auto">
+              <SubscriptionTaskButton
+                taskId={+task?.id}
+                variant="icon"
+              />
+            </div>
+          </If>
         </div>
 
         <div className="row align-items-center border-sm-bottom border-gray-850 mx-0 gap-2 gap-sm-3 pb-sm-3">

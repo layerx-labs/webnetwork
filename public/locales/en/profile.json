@@ -51,7 +51,7 @@
   },
    "notifications-form": {
       "title": "Notifications",
-      "message": "Allow Bepro Marketplace to send you updates via email. These can include updates to tasks, app updates, etc.",
+      "message": "Allow Bepro Marketplace to send you updates in-app and via email. These can include updates to tasks, app updates, etc.",
       "invalid-email": "Invalid email",
       "re-send-email": "A confirmation email was sent, please check your inbox and spam box.",
       "re-send": "Re-send",
