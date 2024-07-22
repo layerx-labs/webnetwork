@@ -21,18 +21,17 @@ export async function getEventTargets(payload: CreateNotificationPayload, target
   if (!targets?.length)
     targets = await models.user.findAll();
 
-  const isTaskNotification = "taskId" in payload.data;
+  const taskId = "taskId" in payload.data ? +(payload as CommentPushProps).data.taskId : undefined;
 
-  if (isTaskNotification)
-    targets = (await Promise.all(targets.map(async (target) => {
-      const shouldSend = 
-          await shouldSendNotification(target.id, notificationType, +(payload as CommentPushProps).data.taskId);
+  targets = (await Promise.all(targets.map(async (target) => {
+    const shouldSend = 
+        await shouldSendNotification(target.id, notificationType, taskId);
 
-      if (!shouldSend)
-        return null;
+    if (!shouldSend)
+      return null;
 
-      return target;
-    }))).filter(target => !!target);
+    return target;
+  }))).filter(target => !!target);
 
   const reduceTargetToRecipientIds = (p: {
     recipients: string[],

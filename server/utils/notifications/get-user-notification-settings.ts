@@ -39,11 +39,11 @@ export async function getUserNotificationSettings(userId: number): Promise<GetUs
 
 export async function shouldSendNotification( userId: number,
                                               notificationType: NotificationType,
-                                              taskId: number): Promise<boolean> {
+                                              taskId?: number): Promise<boolean> {
   try {
     const { enabled, subscriptions, notifications } = await getUserNotificationSettings(userId);
 
-    const isSubscribedToTask = subscriptions.includes(taskId);
+    const isSubscribedToTask = taskId ? subscriptions.includes(taskId) : false;
     const isNotificationTypeEnabled = enabled && notifications.includes(notificationType);
   
     return isSubscribedToTask || isNotificationTypeEnabled;
