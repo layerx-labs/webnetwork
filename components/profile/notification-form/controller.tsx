@@ -42,7 +42,7 @@ export default function NotificationForm() {
     setIsEmailInvalid(email !== "" && !isValidEmail(email));
   }, 500);
 
-  const notificationSettingsKey = QueryKeys.userNotificationSettings(currentUser?.walletAddress);
+  const notificationSettingsKey = QueryKeys.dashboardNotificationSettings(currentUser?.walletAddress);
 
   const { data: userNotificationSettings } = 
     useReactQuery(notificationSettingsKey,
