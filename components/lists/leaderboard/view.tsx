@@ -33,8 +33,7 @@ export default function LeaderBoardListView({
   ];
   
   const header = [
-    { label: t("leaderboard:table.address") },
-    { label: t("leaderboard:table.github-handle") },
+    { label: t("leaderboard:table.user") },
     {
       label: t("leaderboard:table.nfts"),
       tip: t("leaderboard:tips.nfts")

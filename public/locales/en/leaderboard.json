@@ -11,6 +11,7 @@
   "nfts": "NFTs",
   "table": {
     "address": "Address",
+    "user": "user",
     "github-handle": "Github Handle",
     "nfts": "NFTS",
     "actions": "Actions"

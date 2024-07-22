@@ -351,6 +351,41 @@ $utilities: map-merge(
                 responsive: true
         )
       ),
+    "margin":
+      map-merge(
+        map-get($utilities, "margin"),
+        (
+          responsive: true
+        )
+      ),
+    "margin-x":
+      map-merge(
+        map-get($utilities, "margin-x"),
+        (
+          responsive: true
+        )
+      ),
+    "margin-y":
+      map-merge(
+        map-get($utilities, "margin-y"),
+        (
+          responsive: true
+        )
+      ),
+    "margin-start":
+      map-merge(
+        map-get($utilities, "margin-start"),
+        (
+          responsive: true
+        )
+      ),
+    "margin-end":
+      map-merge(
+        map-get($utilities, "margin-end"),
+        (
+          responsive: true
+        )
+      ),
     "border":
       map-merge(
         map-get($utilities, "border"),

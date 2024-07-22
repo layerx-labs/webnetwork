@@ -7,8 +7,6 @@ import { OverlappingIcons } from "components/common/overlapping-icons/overlappin
 import ResponsiveListItem from "components/common/responsive-list-item/view";
 import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
 
-import { truncateString } from "helpers/truncate-string";
-
 import {LeaderBoard} from "interfaces/leaderboard";
 
 export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
@@ -16,23 +14,20 @@ export default function LeaderBoardListItem(leaderboard: LeaderBoard) {
 
   const columns = [
     {
-      secondaryLabel: truncateString(leaderboard?.user?.handle, 15) || "-",
-      breakpoints: { xs: false, xl: true },
-      justify: "center",
-    },
-    {
       label: t("nfts"),
-      secondaryLabel: `${leaderboard?.numberNfts || 0}`,
+      secondaryLabel: <div className="ms-0 ms-md-4">{`${leaderboard?.numberNfts || 0}`}</div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
     {
       label: t("council:council-table.networks"),
-      secondaryLabel: <OverlappingIcons
-        icons={leaderboard?.networkslogos?.map(icon => (
-          <ChainIcon src={icon} size="22" />
-        ))}
-      />,
+      secondaryLabel: <div className="ms-0 mb-2 mb-md-0 ms-md-3">
+        <OverlappingIcons
+          icons={leaderboard?.networkslogos?.map(icon => (
+            <ChainIcon src={icon} size="22" />
+          ))}
+        />
+      </div>,
       breakpoints: { xs: false, md: true },
       justify: "center"
     },
