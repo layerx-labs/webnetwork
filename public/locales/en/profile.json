@@ -23,6 +23,7 @@
   "connections": "Connections",
   "voting-power": "Voting Power",
   "need-network-to-manage": "To manage your voting power you need to be in a especific marketplace",
+  "email": "Email",
   "network-columns": {
     "network-name": "Marketplace name",
     "total-votes": "Total votes",
@@ -122,5 +123,15 @@
     "placeholder": "Tell us your full name",
     "error": "Error updating full name",
     "success": "Successfully updated full name"
+  },
+  "notification-settings": {
+    "taskOpen": "Task Open",
+    "proposalCreated": "Proposal Created",
+    "deliverableReady": "Deliverable Ready",
+    "proposalDisputed": "Proposal Disputed",
+    "commentsOnProposals": "Comments on Proposals",
+    "commentsOnTasks": "Comments on Tasks",
+    "commentsOnDeliverables": "Comments on Deliverables",
+    "failed-to-update": "Failed to update notification settings"
   }
 }

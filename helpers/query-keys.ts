@@ -28,4 +28,5 @@ export const QueryKeys = {
   pointsLeaderboard: (address?: string) => ["points", "leaderboard", address],
   userSocials: () => ["user-socials"],
   taikaiPops:(address: string) => ["taikai-pops", address],
+  userNotificationSettings: (address: string) => ["user-notification-settings", address],
 };

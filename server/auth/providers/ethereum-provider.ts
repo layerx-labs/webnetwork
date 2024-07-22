@@ -63,12 +63,21 @@ export const EthereumProvider = (currentToken: JWT, req: NextApiRequest): AuthPr
       const accountAddress = account?.providerAccountId;
 
       if (accountAddress) {
-        await models.user.findOrCreate({
+        const [user] = await models.user.findOrCreate({
           where: {
             address: caseInsensitiveEqual("address", accountAddress.toLowerCase())
           },
           defaults: {
             address: accountAddress
+          }
+        });
+
+        await models.notificationSettings.findOrCreate({
+          where: {
+            userId: user.id
+          },
+          default: {
+            userId: user.id
           }
         });
 
