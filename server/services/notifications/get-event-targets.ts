@@ -19,7 +19,17 @@ export async function getEventTargets(payload: CreateNotificationPayload, target
   const notificationType = analyticToNotificationMap[payload.type] as NotificationType;
 
   if (!targets?.length)
-    targets = await models.user.findAll();
+    targets = await models.user.findAll({
+      include: [
+        {
+          association: "settings",
+          required: true,
+          where: {
+            notifications: true
+          }
+        }
+      ]
+    });
 
   const taskId = "taskId" in payload.data ? +(payload as CommentPushProps).data.taskId : undefined;
 
