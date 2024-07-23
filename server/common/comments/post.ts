@@ -1,14 +1,13 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Op, WhereOptions} from "sequelize";
+import {IncludeOptions, Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../errors/http-errors";
-import {Push} from "../../services/push/push";
-import {AnalyticEventName} from "../../services/push/types";
+import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "server/errors/http-errors";
+import {Push} from "server/services/push/push";
+import {AnalyticEventName} from "server/services/push/types";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
-
   const {
     comment,
     issueId,
@@ -78,15 +77,19 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   let event: AnalyticEventName;
   let origin;
 
-  const include = [{
-    association: "user",
-    attributes: {
-      include: ["email", "id"]
-    },
-    include: [{
-      association: "settings"
-    }]
-  }, "network"]
+  const include: IncludeOptions[] = [
+    {
+      association: "user",
+      attributes: {
+        include: ["email", "id"]
+      },
+      include: [{
+        association: "settings"
+      }]
+    }, {
+      association: "network"
+    }
+  ];
 
   if (type === "deliverable" || type === "review") {
     include[1] = {
@@ -98,6 +101,12 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     event = AnalyticEventName.COMMENT_DELIVERABLE;
     origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}, include});
   } else if (type === "proposal") {
+    include[0] = {
+      ...include[0],
+      on: Sequelize.where(Sequelize.fn("lower", Sequelize.col("creator")),
+                          "=",
+                          Sequelize.fn("lower", Sequelize.col("user.address")))
+    }
     event = AnalyticEventName.COMMENT_PROPOSAL;
     origin = (await models.mergeProposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
   } else {
@@ -122,14 +131,13 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       type: event,
       target,
       data
-    }
+    };
 
     Push.events([
       {name: event, params},
       {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
-    ])
+    ]);
   }
 
-  return comments
-
+  return comments;
 }
