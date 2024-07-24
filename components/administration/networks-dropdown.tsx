@@ -25,7 +25,11 @@ export default function NetworksDropDown({
     setOptions(networks.map(network => ({
       value: network.networkAddress,
       label: network.name,
-      preIcon: <img src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network.logoIcon}?width=30&height=30`} width={30} height={30} />,
+      preIcon: <img 
+                  src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network.logoIcon}?width=30&height=30`} 
+                  width={30} 
+                  height={30}
+              />,
       isSelected: selected === network.name
     })));
   }, [networks]);

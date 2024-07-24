@@ -63,7 +63,10 @@ export default function NavBarView({
             <NavBarLinks />
           </div>
 
-          <NavBarActions userPoints={formatNumberToString(points, points > 0 && points < 1 ? 2 : 0)} connected={isConnected} />
+          <NavBarActions 
+            userPoints={formatNumberToString(points, points > 0 && points < 1 ? 2 : 0)} 
+            connected={isConnected}
+          />
         </div>
       </div>
     </div>

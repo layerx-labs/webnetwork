@@ -16,11 +16,19 @@ export function SocialFormView({
   const selectInput = (id: string) =>
     (document.querySelector(`#${id}`) as HTMLInputElement)?.select();
 
-
   const rows = [
-    {text: t("profile:social.github"), onChange: (value: string) => onChange(value, "github"), value: ghLink, dvalue: githubLink, id: "github-link"},
-    {text: t("profile:social.linkedin"), onChange: (value: string) => onChange(value, "linkedin"), value: liLink, dvalue: linkedInLink, id: "linkedin-link"},
-    {text: t("profile:social.twitter"), onChange: (value: string) => onChange(value, "xcom"), value: twitter, dvalue: twitterLink, id: "xcom-link"},
+    {
+      text: t("profile:social.github"), 
+      onChange: (value: string) => onChange(value, "github"), value: ghLink, dvalue: githubLink, id: "github-link"
+    },
+    {
+      text: t("profile:social.linkedin"), 
+      onChange: (value: string) => onChange(value, "linkedin"), value: liLink, dvalue: linkedInLink, id: "linkedin-link"
+    },
+    {
+      text: t("profile:social.twitter"), 
+      onChange: (value: string) => onChange(value, "xcom"), value: twitter, dvalue: twitterLink, id: "xcom-link"
+    },
   ]
 
   return <div className="row py-3">

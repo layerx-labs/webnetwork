@@ -4,8 +4,6 @@ import {UserRoute} from "middleware";
 
 import {updateUserAvatar} from "server/common/user/update-user-avatar";
 
-const UPLOAD_LIMIT_MB = 5;
-
 export const config = {
   api: {
     bodyParser: false,
