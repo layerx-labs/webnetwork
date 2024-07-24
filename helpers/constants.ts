@@ -182,3 +182,5 @@ export const walletExtensionsLinks = {
 export const SPAM_TERMS = [
   /^\./, /\.\w{0,3}$/, /robots/
 ]
+
+export const UNSUBSCRIBE_EVENT = new CustomEvent("task-unsubscribe");

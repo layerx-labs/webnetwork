@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import {useEffect} from "react";
 
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import MyMarketplacePage from "components/pages/profile/my-marketplace/controller";
 import PaymentsPage from "components/pages/profile/payments/controller";
@@ -11,7 +11,9 @@ import TasksPage from "components/profile/pages/tasks";
 import VotingPowerPage from "components/profile/pages/voting-power/controller";
 import WalletPage from "components/profile/pages/wallet/view";
 
-import { DashboardPageProps } from "types/pages";
+import {DashboardPageProps} from "types/pages";
+
+import SubscriptionsPage from "./pages/subscriptions";
 
 export default function DashboardRouter(props: DashboardPageProps) {
   const { asPath, push } = useRouter();
@@ -26,8 +28,10 @@ export default function DashboardRouter(props: DashboardPageProps) {
     Route("/dashboard/tasks", TasksPage),
     Route("/dashboard/deliverables", DeliverablesPage),
     Route("/dashboard/proposals", ProposalsPage),
+    Route("/dashboard/subscriptions", SubscriptionsPage),
     Route("/dashboard/my-marketplace", MyMarketplacePage),
   ];
+
   const currentRoute = routes.find(({ path }) => asPath.split("?")[0].endsWith(path));
 
   useEffect(() => {

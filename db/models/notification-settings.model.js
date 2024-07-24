@@ -54,7 +54,7 @@ class NotificationSettings extends Model {
       },
       subscriptions: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
-        allowNull: true,
+        allowNull: false,
         defaultValue: []
       }
     }, {
