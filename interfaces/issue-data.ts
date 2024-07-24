@@ -128,6 +128,8 @@ export interface IssueDataComment {
   updatedAt: Date;
   createdAt: Date;
   user: User;
+  replies?: IssueDataComment[];
+  replied?: IssueDataComment;
 }
 
 export interface fundingBenefactor {

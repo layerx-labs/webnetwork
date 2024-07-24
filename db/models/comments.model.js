@@ -140,10 +140,16 @@ class Comments extends Model {
       as: "user",
     });
 
-    this.belongsTo(models.user, {
+    this.hasMany(this, {
       foreignKey: "replyId",
       sourceKey: "id",
-      as: "reply",
+      as: "replies",
+    });
+
+    this.belongsTo(this, {
+      foreignKey: "replyId",
+      sourceKey: "id",
+      as: "replied",
     });
   }
 }

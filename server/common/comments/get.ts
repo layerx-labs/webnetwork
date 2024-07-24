@@ -1,13 +1,13 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {WhereOptions} from "sequelize";
+import {NextApiRequest} from "next";
+import {Op, Order, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
 import {isGovernorSigned} from "helpers/handleIsGovernor";
 
-import {HttpBadRequestError, HttpConflictError} from "../../errors/http-errors";
+import {HttpBadRequestError, HttpConflictError} from "server/errors/http-errors";
 
-export default async function get(req: NextApiRequest, res: NextApiResponse) {
+export default async function get(req: NextApiRequest) {
 
   const {issueId, proposalId, deliverableId, userId, type, id} = req.query;
 
@@ -16,7 +16,11 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   if (type && !["issue", "deliverable", "proposal", "review"].includes(type?.toString()))
     throw new HttpConflictError("type already exists")
 
-  const filters: WhereOptions = {};
+  const filters: WhereOptions = {
+    replyId: {
+      [Op. is]: null
+    }
+  };
 
   if (!isGovernor) filters.hidden = false;
   if (issueId) filters.issueId = +issueId;
@@ -30,9 +34,22 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
   const include = [
     {
       association: "user",
-      attributes: ["handle", "avatar"]
+      attributes: ["handle", "avatar", "address"]
+    },
+    { 
+      association: "replies",
+      include: [
+        {
+          association: "user",
+          attributes: ["handle", "avatar", "address"]
+        }
+      ]
     }
-  ]
+  ];
+
+  const order: Order = [
+    ["createdAt", "ASC"]
+  ];
 
   if ((issueId || proposalId || deliverableId || userId || type) && !id) {
     /* When we only ask for deliverableId || proposalId || issueid,
@@ -41,7 +58,8 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
       where: {
         ...filters,
       },
-      include
+      include,
+      order
     });
   } else {
     comments = await models.comments.findOne({
@@ -49,13 +67,13 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
         id: +id,
         ...filters,
       },
-      include
+      include,
+      order
     });
   }
 
   if (!comments)
     throw new HttpBadRequestError("comments not found")
-
 
   return comments;
 }
