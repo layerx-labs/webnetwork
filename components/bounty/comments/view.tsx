@@ -1,6 +1,6 @@
 import {useTranslation} from "next-i18next";
 
-import Comment from "components/bounty/comments/comment/view";
+import { Comment } from "components/bounty/comments/comment/comment.controller";
 import InputComment from "components/bounty/comments/input-comment/controller";
 import ConnectWalletButton from "components/connections/connect-wallet-button/connect-wallet-button.controller";
 
@@ -31,8 +31,12 @@ export default function BountyCommentsView({
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="caption-medium mb-0">{t("misc.comments")}</h5>
             </div>
+
             {!!comments.length &&
-              comments?.map((data) => <Comment {...data} key={data?.id} />)}
+              comments
+                .filter(data => !data.replyId)
+                .map((data) => <Comment {...data} type={type} key={data?.id} />)}
+
             {currentUser?.walletAddress ? (
               !disableCreateComment ? (
                 <InputComment
