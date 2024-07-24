@@ -7,7 +7,7 @@ import {MyPointsPageView} from "components/profile/pages/my-points/my-points.vie
 import {userPointsOfUser} from "x-hooks/use-points-of-user";
 
 
-export function MyPointsPage({history,}) {
+export function MyPointsPage() {
   const { t } = useTranslation("profile");
 
   const [activeTab, setActiveTab] = useState("collected-points");
@@ -32,7 +32,6 @@ export function MyPointsPage({history,}) {
       tabs={tabs}
       activeTab={activeTab}
       userTotalPoints={totalPoints}
-      history={history}
     />
   );
 }
