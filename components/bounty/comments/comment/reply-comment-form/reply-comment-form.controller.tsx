@@ -38,10 +38,18 @@ export function ReplyCommentForm({
   const [replyText, setReplyText] = useState("");
 
   const { addError } = useToastStore();
+
+  const queryKey = {
+    issue: QueryKeys.bountyComments(taskId?.toString()),
+    proposal: QueryKeys.proposalComments(proposalId?.toString()),
+    deliverable: QueryKeys.deliverable(deliverableId?.toString())
+  }[type];
+
   const { mutate: onSubmitReply, isPending: isSubmittingReply } = useReactQueryMutation({
-    queryKey: QueryKeys.bountyComments(taskId.toString()),
+    queryKey: queryKey,
     mutationFn: useReplyComment,
     onSuccess: () => {
+      setReplyText("");
       onSubmittedCallback();
     },
     onError: (error: AxiosError<Error>) => addError(t("errors.failed-to-reply"), error.response.data.message),

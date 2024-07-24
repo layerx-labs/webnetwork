@@ -38,8 +38,25 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
         }
       ],
     },
-    {association: "user"},
-    {association: "comments"},
+    { association: "user" },
+    {
+      association: "comments",
+      include: [
+        { 
+          association: "user",
+          attributes: ["address", "handle", "avatar"]
+        },
+        { 
+          association: "replies",
+          include: [
+            { 
+              association: "user",
+              attributes: ["address", "handle", "avatar"]
+            }
+          ]
+        }
+      ]
+    },
   ];
 
   const deliverable = await models.deliverable.findOne({
