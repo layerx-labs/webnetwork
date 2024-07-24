@@ -69,7 +69,7 @@ class Comments extends Model {
           type: DataTypes.INTEGER,
           allowNull: true,
           references: {
-            model: "issues",
+            model: "comments",
             key: "id",
           },
         },
