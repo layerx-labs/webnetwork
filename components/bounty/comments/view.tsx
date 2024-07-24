@@ -32,7 +32,7 @@ export default function BountyCommentsView({
               <h5 className="caption-medium mb-0">{t("misc.comments")}</h5>
             </div>
 
-            {!!comments.length &&
+            {!!comments?.length &&
               comments
                 .filter(data => !data.replyId)
                 .map((data) => <Comment {...data} type={type} key={data?.id} />)}
