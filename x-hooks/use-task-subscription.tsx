@@ -1,13 +1,13 @@
-import { AxiosError } from "axios";
-import { useTranslation } from "next-i18next";
+import {AxiosError} from "axios";
+import {useTranslation} from "next-i18next";
 
-import { TEN_MINUTES_IN_MS } from "helpers/constants";
-import { QueryKeys } from "helpers/query-keys";
+import {TEN_MINUTES_IN_MS} from "helpers/constants";
+import {QueryKeys} from "helpers/query-keys";
 
-import { useSubscribeToTask, useUnsubscribeToTask } from "x-hooks/api/task";
-import { useGetUserNotificationSettings } from "x-hooks/api/user/use-get-notification-settings";
-import { useToastStore } from "x-hooks/stores/toasts/toasts.store";
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useSubscribeToTask, useUnsubscribeToTask} from "x-hooks/api/task";
+import {useGetUserNotificationSettings} from "x-hooks/api/user/use-get-notification-settings";
+import {useToastStore} from "x-hooks/stores/toasts/toasts.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useReactQuery from "x-hooks/use-react-query";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 

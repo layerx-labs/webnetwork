@@ -9,7 +9,7 @@ import customServerSideTranslations from "server/utils/custom-server-side-transl
 import {DashboardPageProps} from "types/pages";
 
 import {useGetChains} from "x-hooks/api/chain";
-import { useSearchNetworks } from "x-hooks/api/marketplace";
+import {useSearchNetworks} from "x-hooks/api/marketplace";
 import {useGetProfileBounties, useGetProfilePayments} from "x-hooks/api/pages/profile";
 import {useGetTokens} from "x-hooks/api/token";
 
@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, query, local
         .then(({ rows }) => rows)
         .catch(({ rows }) => rows),
     ])
-      .then(([bounties, marketplaces]) => ({ bounties, marketplaces })),
+      .then(([bounties, marketplaces]) => ({ bounties, marketplaces }))
   };
 
   const pageData = getDataFn[pageName] ? await getDataFn[pageName]() : {};

@@ -2,16 +2,16 @@ import React, {useEffect, useState} from "react";
 
 import {useRouter} from "next/router";
 import {UrlObject} from "url";
-import { useDebouncedCallback } from "use-debounce";
+import {useDebouncedCallback} from "use-debounce";
 
 import TasksListView from "components/lists/tasks/view";
 
-import { issueParser } from "helpers/issue";
+import {issueParser} from "helpers/issue";
 
-import { SearchBountiesPaginated } from "types/api";
-import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
+import {SearchBountiesPaginated} from "types/api";
+import {SearchBountiesPaginatedBigNumber, TasksListItemVariant} from "types/components";
 
-import { useUserStore } from "x-hooks/stores/user/user.store";
+import {useUserStore} from "x-hooks/stores/user/user.store";
 import useChain from "x-hooks/use-chain";
 import usePage from "x-hooks/use-page";
 import useSearch from "x-hooks/use-search";
@@ -28,6 +28,8 @@ interface TasksListProps {
   itemVariant?: TasksListItemVariant;
   hideFilter?: boolean;
   hideTitle?: boolean;
+  hideSearchFilter?: boolean;
+  countTitle?: string;
 }
 
 export default function TasksList({
@@ -40,7 +42,7 @@ export default function TasksList({
   hideFilter,
   hideTitle,
   filterType = "search",
-  itemVariant
+  itemVariant, hideSearchFilter = false, countTitle = ""
 }: TasksListProps) {
   const router = useRouter();
 
@@ -139,6 +141,8 @@ export default function TasksList({
       filterType={filterType}
       hideTitle={hideTitle}
       itemVariant={itemVariant}
+      hideSearchFilter={hideSearchFilter}
+      countTitle={countTitle}
     />
   );
 }

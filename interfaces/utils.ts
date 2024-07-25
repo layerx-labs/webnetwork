@@ -8,4 +8,5 @@ export type ProfilePages =
   "deliverables" |
   "proposals" | 
   "my-marketplace" |
-  "my-points";
+  "my-points" |
+  "subscriptions";

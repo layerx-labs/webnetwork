@@ -30,4 +30,5 @@ export const QueryKeys = {
   taikaiPops:(address: string) => ["taikai-pops", address],
   userNotificationSettings: (address: string) => ["user-notification-settings", address],
   dashboardNotificationSettings: (address: string) => ["dashboard-notification-settings", address],
+  taskSubscriptions: (id: number) => ["task-subscriptions", id]
 };

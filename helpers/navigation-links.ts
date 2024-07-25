@@ -13,6 +13,8 @@ import WalletIcon from "assets/icons/wallet-icon";
 
 import {ProfilePages} from "interfaces/utils";
 
+import BellIcon from "../assets/icons/bell-icon";
+
 export const NAVIGATION_LINKS = {
   network: [
     { label: "tasks", href: "/tasks" },
@@ -40,6 +42,7 @@ export function getProfileLinks(translation: TFunction) {
     { label: translation("common:main-nav.nav-avatar.bounties") , href: 'tasks', icon:BountiesIcon},
     { label: translation("common:main-nav.nav-avatar.deliverables") , href: 'deliverables', icon:DeliverableIcon},
     { label: translation("common:main-nav.nav-avatar.proposals") , href: 'proposals', icon:ProposalsIcon},
+    { label: translation("common:main-nav.nav-avatar.subscriptions") , href: 'subscriptions', icon:BellIcon},
     { label: translation("common:main-nav.nav-avatar.my-network") , href: 'my-marketplace', icon:CustomNetworkIcon},
   ]
 

@@ -133,5 +133,9 @@
     "commentsOnTasks": "Comments on Tasks",
     "commentsOnDeliverables": "Comments on Deliverables",
     "failed-to-update": "Failed to update notification settings"
+  },
+  "subscription": {
+    "noSubscriptionsFound": "No subscriptions found",
+    "title": "Subscriptions"
   }
 }
