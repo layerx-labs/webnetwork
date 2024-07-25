@@ -12,7 +12,6 @@ export default function useSearch() {
   }, [search]);
 
   function setSearch(newSearch: string) {
-    console.log(`NEW SEARCH`, newSearch, router.pathname, router.asPath);
     router.push({
         pathname: router.pathname,
         query: {
