@@ -48,7 +48,8 @@ export default async function get(req: NextApiRequest) {
   ];
 
   const order: Order = [
-    ["createdAt", "ASC"]
+    ["createdAt", "ASC"],
+    [{ model: models.comments, as: "replies" }, "createdAt", "ASC"],
   ];
 
   if ((issueId || proposalId || deliverableId || userId || type) && !id) {
