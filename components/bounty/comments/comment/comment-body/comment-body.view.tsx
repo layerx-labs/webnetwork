@@ -71,10 +71,8 @@ export function CommentBody({
         </div>
 
         <CommentSettings
-          handleHide={() => console.log}
           isGovernor={false}
-          hidden={false} 
-          updateBountyData={() => console.log}        
+          hidden={false}
         />
       </div>
       
