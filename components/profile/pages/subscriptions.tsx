@@ -12,10 +12,10 @@ export default function SubscriptionsPage() {
   return <DashboardLayout>
     <LoadingList loading={loadingSubscriptions} />
     <TasksList hideSearchFilter
-               emptyMessage={t('subscriptions.noSubscriptionsFound')}
+               emptyMessage={t('subscription.noSubscriptionsFound')}
                bounties={{rows: subscriptions, count: subscriptions.length, pages: 1, currentPage: 1}}
                variant="profile"
                itemVariant="multi-network"
-               countTitle={t('subscriptions.title')} />
+               countTitle={t('subscription.title')} />
   </DashboardLayout>
 }
