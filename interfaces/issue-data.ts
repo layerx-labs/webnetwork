@@ -73,6 +73,7 @@ export interface IssueData {
   userId: number;
   user?: User;
   privateDeliverables?: boolean;
+  multipleWinners?: boolean;
 }
 
 export interface Disputes {
