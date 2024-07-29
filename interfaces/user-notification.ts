@@ -38,5 +38,6 @@ export interface NotificationSettings {
   commentsOnTasks: boolean;
   commentsOnProposals: boolean;
   commentsOnDeliverables: boolean;
+  replyOnThreads: boolean;
   subscriptions: number[];
 }

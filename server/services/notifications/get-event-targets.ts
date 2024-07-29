@@ -12,7 +12,11 @@ const analyticToNotificationMap = {
   [AnalyticEventName.COMMENT_TASK]: "commentsOnTasks",
   [AnalyticEventName.NOTIF_COMMENT_PROPOSAL]: "commentsOnProposals",
   [AnalyticEventName.NOTIF_COMMENT_DELIVERABLE]: "commentsOnDeliverables",
-  [AnalyticEventName.NOTIF_COMMENT_TASK]: "commentsOnTasks"
+  [AnalyticEventName.NOTIF_COMMENT_TASK]: "commentsOnTasks",
+  [AnalyticEventName.REPLY_TO_THREAD_CREATOR]: "replyOnThreads",
+  [AnalyticEventName.NOTIF_REPLY_TO_THREAD_CREATOR]: "replyOnThreads",
+  [AnalyticEventName.REPLY_TO_THREAD_PARTICIPANT]: "replyOnThread",
+  [AnalyticEventName.NOTIF_REPLY_TO_THREAD_PARTICIPANT]: "replyOnThreads",
 };
 
 export async function getEventTargets(payload: CreateNotificationPayload, targets?: Target[]) {

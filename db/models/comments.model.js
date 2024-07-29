@@ -69,7 +69,7 @@ class Comments extends Model {
           type: DataTypes.INTEGER,
           allowNull: true,
           references: {
-            model: "issues",
+            model: "comments",
             key: "id",
           },
         },
@@ -140,10 +140,16 @@ class Comments extends Model {
       as: "user",
     });
 
-    this.belongsTo(models.user, {
+    this.hasMany(this, {
       foreignKey: "replyId",
       sourceKey: "id",
-      as: "reply",
+      as: "replies",
+    });
+
+    this.belongsTo(this, {
+      foreignKey: "replyId",
+      sourceKey: "id",
+      as: "replied",
     });
   }
 }

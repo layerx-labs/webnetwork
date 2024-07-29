@@ -21,6 +21,19 @@ export type CommentPushProps =
     }
   >
 
+export type ReplyThreadPushProps =
+  PushProps<
+    {
+      comment: string;
+      creator: string;
+      target: string;
+      type: "creator" | "participant";
+      taskId: string;
+      deliverableId?: string;
+      proposalId?: string;
+    }
+  >
+
 export type CollectEventPayload = { name: string; params: PushProps<any> };
 export type Analytic = { type: AnalyticTypes };
 export type AnalyticEvent = { name: AnalyticEventName, params: PushProps<any> }
@@ -33,7 +46,11 @@ export enum AnalyticEventName {
   COMMENT_DELIVERABLE = "COMMENT_DELIVERABLE",
   NOTIF_COMMENT_DELIVERABLE = "NOTIF_COMMENT_DELIVERABLE",
   COMMENT_TASK = "COMMENT_TASK",
-  NOTIF_COMMENT_TASK = "NOTIF_COMMENT_TASK"
+  NOTIF_COMMENT_TASK = "NOTIF_COMMENT_TASK",
+  REPLY_TO_THREAD_CREATOR = "REPLY_TO_THREAD_CREATOR",
+  NOTIF_REPLY_TO_THREAD_CREATOR = "NOTIF_REPLY_TO_THREAD_CREATOR",
+  REPLY_TO_THREAD_PARTICIPANT = "REPLY_TO_THREAD_PARTICIPANT",
+  NOTIF_REPLY_TO_THREAD_PARTICIPANT = "NOTIF_REPLY_TO_THREAD_PARTICIPANT",
 }
 
 export enum AnalyticTypes {
@@ -48,4 +65,8 @@ export const AnalyticsEvents: AnalyticEventPool = {
   [AnalyticEventName.NOTIF_COMMENT_DELIVERABLE]: [analytic(AnalyticTypes.CreateNotification)],
   [AnalyticEventName.COMMENT_TASK]: [analytic(AnalyticTypes.EmailNotification)],
   [AnalyticEventName.NOTIF_COMMENT_TASK]: [analytic(AnalyticTypes.CreateNotification)],
+  [AnalyticEventName.REPLY_TO_THREAD_CREATOR]: [analytic(AnalyticTypes.EmailNotification)],
+  [AnalyticEventName.NOTIF_REPLY_TO_THREAD_CREATOR]: [analytic(AnalyticTypes.CreateNotification)],
+  [AnalyticEventName.REPLY_TO_THREAD_PARTICIPANT]: [analytic(AnalyticTypes.EmailNotification)],
+  [AnalyticEventName.NOTIF_REPLY_TO_THREAD_PARTICIPANT]: [analytic(AnalyticTypes.CreateNotification)],
 }

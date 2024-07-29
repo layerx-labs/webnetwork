@@ -132,7 +132,8 @@
     "commentsOnProposals": "Comments on Proposals",
     "commentsOnTasks": "Comments on Tasks",
     "commentsOnDeliverables": "Comments on Deliverables",
-    "failed-to-update": "Failed to update notification settings"
+    "failed-to-update": "Failed to update notification settings",
+    "replyOnThreads": "Replies on threads I participate"
   },
   "subscription": {
     "noSubscriptionsFound": "No subscriptions found",

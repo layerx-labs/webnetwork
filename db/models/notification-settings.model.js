@@ -52,6 +52,11 @@ class NotificationSettings extends Model {
         allowNull: true,
         defaultValue: true
       },
+      replyOnThreads: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: true
+      },
       subscriptions: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: false,

@@ -31,7 +31,6 @@ export function MyPointsPageView({
   tabs,
   activeTab,
   userTotalPoints,
-  history
 }) {
   const { t } = useTranslation("profile");
 

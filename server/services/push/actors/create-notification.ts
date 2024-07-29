@@ -5,9 +5,9 @@ import {info} from "../../../../services/logging";
 import {getTemplateCompiler} from "../../../templates/compilers/get-template-compiler";
 import {getEventTargets} from "../../notifications/get-event-targets";
 import {Templates} from "../../notifications/templates";
-import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps} from "../types";
+import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps, ReplyThreadPushProps} from "../types";
 
-export type CreateNotificationPayload = PushProps | CommentPushProps;
+export type CreateNotificationPayload = PushProps | CommentPushProps | ReplyThreadPushProps;
 
 export class CreateNotification {
   constructor(readonly templateName: keyof typeof Templates,

@@ -7,7 +7,6 @@ import {useUserStore} from "x-hooks/stores/user/user.store";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useMarketplace from "x-hooks/use-marketplace";
 
-import {baseApiImgUrl} from "../../../services/api";
 import NetworkItemView from "./view";
 
 interface NetworkItemProps {

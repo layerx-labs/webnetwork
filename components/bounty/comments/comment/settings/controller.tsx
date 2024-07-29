@@ -6,15 +6,15 @@ export default function CommentSettings({
   hidden,
   updateBountyData,
 }: {
-  handleHide: () => void;
+  handleHide?: () => void;
   isGovernor: boolean;
   hidden: boolean;
-  updateBountyData: (updatePrData?: boolean) => void;
+  updateBountyData?: (updatePrData?: boolean) => void;
 }) {
 
   function handleHideComment() {
-    handleHide();
-    updateBountyData();
+    handleHide?.();
+    updateBountyData?.();
   }
 
   if(!isGovernor) return null;
