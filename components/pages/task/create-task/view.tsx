@@ -110,6 +110,8 @@ export default function CreateTaskPageView({
           onOriginLinkChange={rest.onOriginLinkChange}
           setDeliverableType={rest.setDeliverableType}
           privateDeliverable={rest.privateDeliverable}
+          multipleWinners={rest.multipleWinners}
+          onMultipleWinnersChange={rest.onMultipleWinnersChange}
           handlePrivateDeliverableChecked={rest.handlePrivateDeliverableChecked}
         />
       );

@@ -29,11 +29,13 @@ export default function BountyDetailsSection({
   originLinkError,
   deliverableType,
   privateDeliverable,
+  multipleWinners,
   handlePrivateDeliverableChecked,
   onOriginLinkChange,
   updateIsKyc,
   updateTierList,
-  setDeliverableType
+  setDeliverableType,
+  onMultipleWinnersChange
 }: BountyDetailsSectionProps) {
   const { t } = useTranslation("bounty");
   
@@ -77,6 +79,10 @@ export default function BountyDetailsSection({
   function onPrivateDeliverableChecked(e: ChangeEvent<HTMLInputElement>) {
     handlePrivateDeliverableChecked(e.target.checked);
   }
+
+  function onMultipleWinnersChecked(e: ChangeEvent<HTMLInputElement>) {
+    onMultipleWinnersChange(e.target.checked);
+  }
   
   function handleDeliverableTypeClick(selected: SelectOption | SelectOption[]) {
     const selectedType = Array.isArray(selected) ? selected.at(0) : selected;
@@ -116,7 +122,9 @@ export default function BountyDetailsSection({
       onDeliverableTypeClick={handleDeliverableTypeClick}
       onOriginLinkchange={handleOriginLinkChange}
       privateDeliverable={privateDeliverable}
+      multipleWinners={multipleWinners}
       onPrivateDeliverableChecked={onPrivateDeliverableChecked}
+      onMultipleWinnersChecked={onMultipleWinnersChecked}
     />
   );
 }

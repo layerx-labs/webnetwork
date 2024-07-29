@@ -12,11 +12,13 @@ export interface BountyDetailsSectionProps {
   originLink: string;
   deliverableType: string;
   originLinkError?: OriginLinkErrors;
+  multipleWinners: boolean;
   onOriginLinkChange: (link: string) => void;
   updateIsKyc: (e: boolean) => void;
   handlePrivateDeliverableChecked: (e: boolean) => void;
   updateTierList: (e: number[]) => void;
   setDeliverableType: (type: string) => void;
+  onMultipleWinnersChange: (value: boolean) => void;
 }
 export interface BountyPayload {
   title: string;

@@ -33,6 +33,7 @@ interface BountyDetailsSectionViewProps {
   deliverableType: string;
   originLinkError: OriginLinkErrors;
   originLinkPlaceHolder: string;
+  multipleWinners: boolean;
   onTitlechange: (e: ChangeEvent<HTMLInputElement>) => void;
   onDescriptionchange: (value: string) => void;
   onTagsChange: (tags: SelectOption[]) => void;
@@ -42,6 +43,7 @@ interface BountyDetailsSectionViewProps {
   onKycTierChange: (value: DropdownOption | DropdownOption[]) => void;
   onDeliverableTypeClick: (tags: SelectOption | SelectOption[]) => void;
   onOriginLinkchange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onMultipleWinnersChecked: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function BountyDetailsSectionView({
@@ -59,6 +61,7 @@ export default function BountyDetailsSectionView({
   deliverableType,
   originLinkError,
   privateDeliverable,
+  multipleWinners,
   onTitlechange,
   onDescriptionchange,
   onTagsChange,
@@ -68,6 +71,7 @@ export default function BountyDetailsSectionView({
   onDeliverableTypeClick,
   onOriginLinkchange,
   onPrivateDeliverableChecked,
+  onMultipleWinnersChecked,
 }: BountyDetailsSectionViewProps) {
   const { t } = useTranslation("bounty");
 
@@ -256,6 +260,37 @@ export default function BountyDetailsSectionView({
                   {t("errors.invalid-link")}
                 </ContextualSpan>
               </If>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Divider />
+
+      <div className="row">
+        <div className="col">
+          <h5>Proposal options</h5>
+
+          <div className="row mt-4">
+            <BountyLabel>
+              Multiple winners
+            </BountyLabel>
+          </div>
+
+          <div className="row mt-2">
+            <div className="d-flex align-items-center gap-2">
+              <Form.Check
+                className="form-control-md mb-1"
+                type="switch"
+                id="multiple-winners-switch"
+                data-testid="multiple-winners-switch"
+                onChange={onMultipleWinnersChecked}
+                checked={multipleWinners}
+              />
+
+              <span className="sm-regular text-gray-200">
+                [MULTIPLE WINNERS DESCRIPTION HERE]
+              </span>
             </div>
           </div>
         </div>
