@@ -26,6 +26,7 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     isKyc,
     amount,
     privateDeliverables,
+    multipleWinners,
     context,
   } = req.body;
 
@@ -79,7 +80,8 @@ export async function post(req: NextApiRequest): Promise<Issue> {
     isKyc: !!isKyc,
     kycTierList: tierList?.map(Number).filter(id=> !Number.isNaN(id)) || [],
     userId: user.id,
-    privateDeliverables
+    privateDeliverables,
+    multipleWinners,
   };
 
   const bountyJson = {
