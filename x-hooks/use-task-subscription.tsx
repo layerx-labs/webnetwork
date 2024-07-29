@@ -19,7 +19,7 @@ export function useTaskSubscription() {
 
   const queryKey = QueryKeys.userNotificationSettings(currentUser?.walletAddress);
 
-  const { data: notificationSettings } = 
+  const { data: notificationSettings, invalidate } = 
     useReactQuery(queryKey,
                   () => useGetUserNotificationSettings(currentUser?.walletAddress),
                   {
@@ -48,6 +48,7 @@ export function useTaskSubscription() {
     isSubscribed,
     subscribe,
     unsubscribe,
+    refresh: invalidate,
     isSubscribing, 
     isUnsubscribing
   };

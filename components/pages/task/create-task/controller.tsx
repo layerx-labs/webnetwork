@@ -47,6 +47,7 @@ import useERC20 from "x-hooks/use-erc20";
 import useMarketplace from "x-hooks/use-marketplace";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 import {useSettings} from "x-hooks/use-settings";
+import { useTaskSubscription } from "x-hooks/use-task-subscription";
 
 const ZeroNumberFormatValues = {
   value: "",
@@ -106,6 +107,7 @@ export default function CreateTaskPage({
   const {pushAnalytic} = useAnalyticEvents();
   const {service: daoService} = useDaoStore();
   const {addError, addWarning} = useToastStore();
+  const { refresh: refreshSubscriptions } = useTaskSubscription();
   const {updateParamsOfActive, getURLWithNetwork} = useMarketplace();
   const {add: addTx, update: updateTx, list: transactions} = transactionStore();
 
@@ -414,6 +416,7 @@ export default function CreateTaskPage({
         }
 
         if (createdBounty?.[savedIssue.id]) {
+          refreshSubscriptions();
           router.push(getURLWithNetwork("/task/[id]", {
               network: currentNetwork?.name,
               id: savedIssue.id

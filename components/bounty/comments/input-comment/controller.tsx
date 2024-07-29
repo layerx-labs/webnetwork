@@ -10,6 +10,7 @@ import {IdsComment, TypeComment} from "interfaces/comments";
 
 import {CreateComment} from "x-hooks/api/comments";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
+import { useTaskSubscription } from "x-hooks/use-task-subscription";
 
 export default function InputComment({
   handle,
@@ -34,6 +35,7 @@ export default function InputComment({
     proposal: QueryKeys.proposalComments(ids?.proposalId?.toString())
   }[type];
 
+  const { refresh: refreshSubscriptions } = useTaskSubscription();
   const { mutate: addComment } = useReactQueryMutation({
     queryKey: queryKey,
     mutationFn: () => CreateComment({
@@ -45,6 +47,7 @@ export default function InputComment({
     toastError: t("bounty:actions.comment.error"),
     onSuccess: () => {
       setComment("");
+      refreshSubscriptions();
     }
   });
 

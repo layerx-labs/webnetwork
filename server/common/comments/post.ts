@@ -6,6 +6,7 @@ import models from "db/models";
 import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "server/errors/http-errors";
 import {Push} from "server/services/push/push";
 import {AnalyticEventName, AnalyticEvents} from "server/services/push/types";
+import { subscribeUserToTask } from "server/utils/notifications/subscribe-user-to-task";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
   const {
@@ -75,6 +76,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   });
 
   const pushEvents: AnalyticEvents = [];
+  await subscribeUserToTask(+issueId, user.id);
 
   if (replyId) {
     const repliedComment = await models.comments.findOne({
