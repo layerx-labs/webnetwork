@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -66,7 +67,8 @@ export default function NotificationForm() {
     onSuccess: () => {
       updateSession();
     },
-    onError: error => addError(t("profile:email-errors.failed-to-update"), t(`profile:email-errors.${error}`)),
+    onError: (error: AxiosError<Error>) => 
+      addError(t("profile:email-errors.failed-to-update"), t(`profile:email-errors.${error.message}`)),
   });
   const { mutate: updateUserSettings, isPending: isUpdatingUserSettings } = useReactQueryMutation({
     mutationFn: useUpdateUserSettings,
