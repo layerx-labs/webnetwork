@@ -96,7 +96,7 @@ export default function CreateTaskPage({
   const [distributions, setDistributions] = useState<DistributionsProps>();
   const [currentChain, setCurrentChain] = useState<SupportedChainData>();
   const [privateDeliverable, setPrivateDeliverable] = useState(cachedTask?.privateDeliverable || false);
-  const [multipleWinners, setMultipleWinners] = useState(cachedTask?.multipleWinners || false);
+  const [multipleWinners, setMultipleWinners] = useState(cachedTask?.multipleWinners || true);
   const [isBecomeCuratorModalVisible, setIsBecomeCuratorModalVisible] = useState(false);
   const [hasAmountError, sethasAmountError] = useState(false);
 

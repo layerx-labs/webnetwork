@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.addColumn("issues", "multipleWinners", {
       type: Sequelize.BOOLEAN,
       allowNull: true,
-      defaultValue: false
+      defaultValue: true
     });
   },
 
