@@ -320,5 +320,7 @@
     "writing": "Writing"
   },
   "private-deliverable-warning": "This task has private deliverables, which means that only the task creator can see all proposals and deliverables, and deliverable creators can only  see their own deliverables.",
-  "leave-a-reply": "Leave a reply"
+  "leave-a-reply": "Leave a reply",
+  "single-winner": "Single winner",
+  "multiple-winners": "Multiple winners"
 }
