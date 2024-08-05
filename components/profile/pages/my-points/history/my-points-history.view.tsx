@@ -3,12 +3,40 @@ import {Spinner} from "react-bootstrap";
 import {format} from "date-fns";
 import {useTranslation} from "next-i18next";
 
+import CaretLeftIcon from "assets/icons/caret-left";
+import CaretRightIcon from "assets/icons/caret-right";
+
+import Button from "components/button";
+
 import {PointsEvents} from "../../../../../interfaces/points";
 import {PointsBadge} from "../../../../common/points/points-badge.view";
 import If from "../../../../If";
 import NothingFound from "../../../../nothing-found";
 
-export function MyPointsHistoryView({history, loading}: { history: PointsEvents[], loading: boolean }) {
+export interface PageElement {
+  label: number | string;
+  isSeparator?: boolean;
+  isActive?: boolean;
+  onClick?: () => void;
+}
+
+interface MyPointsHistoryViewProps { 
+  history: PointsEvents[];
+  loading: boolean;
+  page: number;
+  pages: PageElement[];
+  onPreviousClick: () => void;
+  onNextClick: () => void;
+}
+
+export function MyPointsHistoryView({
+  history, 
+  loading,
+  page,
+  pages,
+  onPreviousClick,
+  onNextClick,
+}: MyPointsHistoryViewProps) {
   const {t} = useTranslation("points");
   const ph = (path: string) => t(`points-history.${path}`);
 
@@ -20,6 +48,7 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
         <div className="col col-2 text-center">{ph("status")}</div>
         <div className="col col-3 d-flex justify-content-end">{ph("date")}</div>
       </div>
+
       {
         loading
           ? <div className="row border-top border-gray-800 pt-3 pb-2">
@@ -29,6 +58,7 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
           </div>
           : null
       }
+
       <If condition={!loading && !history?.length}>
         <div className="row border-top border-gray-800 pt-3 pb-2">
           <div className="mtn-3">
@@ -36,6 +66,7 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
           </div>
         </div>
       </If>
+
       {
         history.map((entry, i) =>
           <div className="row border-top p-3 text-gray-400 border-gray-800 align-items-center xs-medium" key={i}>
@@ -51,6 +82,48 @@ export function MyPointsHistoryView({history, loading}: { history: PointsEvents[
             </div>
           </div>)
       }
+
+      <div className="row justify-content-center align-items-center py-2 border-top border-gray-800">
+        <div className="col-auto">
+          <Button
+            transparent
+            className="p-2 bg-gray-950 border-radius-4 not-svg"
+            textClass="text-primary"
+            onClick={onPreviousClick}
+          >
+            <CaretLeftIcon height={14} width={14} />
+          </Button>
+        </div>
+
+        {
+          pages
+            .map((pageElement, i) => (
+              <div className="col-auto" key={`page-${pageElement.label}=${i}`}>
+                <Button
+                  transparent
+                  className={`p-2 border-radius-4 
+                    ${pageElement.isActive ? "text-white" : "text-gray-600 text-white-hover"}`}
+                  onClick={pageElement.onClick}
+                >
+                  <span className="xs-medium">
+                    {pageElement.label}
+                  </span>
+                </Button>
+              </div>
+            ))
+        }
+
+        <div className="col-auto">
+          <Button
+            transparent
+            className="p-2 bg-gray-950 border-radius-4 not-svg"
+            textClass="text-primary"
+            onClick={onNextClick}
+          >
+            <CaretRightIcon height={14} width={14} />
+          </Button>
+        </div>
+      </div>
     </div>
   </div>
 }
