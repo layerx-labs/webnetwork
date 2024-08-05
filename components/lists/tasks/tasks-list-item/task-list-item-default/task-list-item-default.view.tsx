@@ -10,9 +10,11 @@ import TaskTypeBadge from "components/bounty/task-type-badge/task-type-badge.vie
 import ChainIcon from "components/chain-icon";
 import MarketplaceWithNetworkLogo 
   from "components/common/marketplace-with-network-logo/marketplace-with-network-logo.view";
+import { WinnersBadge } from "components/common/winners-badge/winners-badge.view";
 import If from "components/If";
 import { SubscriptionTaskButton }
   from "components/notifications/subscription-task-button/subscription-task-button.controller";
+import { ResponsiveEle } from "components/responsive-wrapper";
 
 import { TaskListItemVariantProps } from "types/components";
 
@@ -78,6 +80,13 @@ export default function TaskListItemDefault({
             />
           </div>
 
+          <div className="col-auto px-0 d-block d-sm-none">
+            <WinnersBadge
+              isMultiple={task?.multipleWinners}
+              onlyIcon
+            />
+          </div>
+
           <div className="col-auto px-0 d-flex d-sm-none">
             <BountyAmount bounty={task} size={"lg"} />
           </div>
@@ -94,6 +103,13 @@ export default function TaskListItemDefault({
                 {task?.createdAt?.toLocaleDateString("PT")}
               </span>
             </BountyItemLabel>
+          </div>
+
+          <div className="col-auto px-0">
+            <WinnersBadge
+              isMultiple={task?.multipleWinners}
+              onlyIcon
+            />
           </div>
 
           <div className="col-auto">
