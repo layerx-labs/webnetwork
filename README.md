@@ -23,8 +23,6 @@
 - [NodeJS](https://nodejs.dev/) in v16.13 or newer.
 - [Docker](https://docs.docker.com/desktop/#download-and-install) or [PostgresSQL](https://www.postgresql.org/download/) in version 13.
 - [Metamask](https://metamask.io/download/)
-- [Github OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)
-- [Github Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 ## 2. Getting Started
 
