@@ -35,6 +35,7 @@ export default function RewardInformationSection({
   updateIsFundingType,
   setPreviewAmount,
   setDistributions,
+  sethasAmountError,
 }: RewardInformationSectionProps) {
   const { currentUser } = useUserStore();
 
@@ -76,6 +77,7 @@ export default function RewardInformationSection({
       updateIsFunding={handleIsFunding}
       setPreviewAmount={setPreviewAmount}
       setDistributions={setDistributions}
+      sethasAmountError={sethasAmountError}
     />
   );
 }

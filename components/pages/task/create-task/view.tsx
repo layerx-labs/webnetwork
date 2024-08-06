@@ -141,6 +141,7 @@ export default function CreateTaskPageView({
             updateIsFundingType={rest.updateIsFundingType}    
             setPreviewAmount={rest.setPreviewAmount}  
             setDistributions={rest.setDistributions}   
+            sethasAmountError={rest.sethasAmountError}
           />
       );
 

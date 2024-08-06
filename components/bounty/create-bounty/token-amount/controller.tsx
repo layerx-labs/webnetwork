@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import {useTranslation} from "next-i18next";
 import {useDebouncedCallback} from "use-debounce";
 
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
@@ -42,6 +41,7 @@ interface CreateBountyTokenAmountProps {
   currentNetwork: Network;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) =>void;
 }
 
 export default function CreateBountyTokenAmount({
@@ -64,9 +64,9 @@ export default function CreateBountyTokenAmount({
   previewAmount,
   distributions,
   setPreviewAmount,
-  setDistributions
+  setDistributions,
+  sethasAmountError,
 }: CreateBountyTokenAmountProps) {
-  const { t } = useTranslation(["bounty", "common", "proposal"]);
   const [show, setShow] = useState<boolean>(false);
   const [inputError, setInputError] = useState("");
 
@@ -168,13 +168,20 @@ export default function CreateBountyTokenAmount({
     if(type === 'reward'){
       const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
       updateIssueAmount(handleNumberFormat(total))
-      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding)
+      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding) {
         setInputError("bounty:errors.exceeds-allowance");
+        sethasAmountError(true);
+      }
     }
 
     if(type === 'total'){
       const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(value));
       setPreviewAmount(handleNumberFormat(rewardValue));
+
+      if (rewardValue.isLessThan(BigNumber(currentToken?.minimum))) {
+        setInputError("bounty:errors.exceeds-minimum-amount");
+        sethasAmountError(true);
+      }
     }
 
     setDistributions(_distributions);
@@ -188,6 +195,7 @@ export default function CreateBountyTokenAmount({
       setInputError("bounty:errors.exceeds-balance");
       setType(values);
       setOtherType(ZeroNumberFormatValues);
+      sethasAmountError(true);
       resetDistributions();
     }else if (
       needValueValidation &&
@@ -197,6 +205,7 @@ export default function CreateBountyTokenAmount({
       setOtherType(ZeroNumberFormatValues);
       resetDistributions();
       setInputError("bounty:errors.exceeds-allowance");
+      sethasAmountError(true);
     } else if (values.floatValue < 0) {
       setType(ZeroNumberFormatValues);
       setOtherType(ZeroNumberFormatValues);
@@ -208,21 +217,30 @@ export default function CreateBountyTokenAmount({
       setOtherType(ZeroNumberFormatValues);
       resetDistributions();
       setInputError("bounty:errors.exceeds-minimum-amount");
+      sethasAmountError(true);
     } else {
+      if (inputError) {
+        setInputError("");
+        sethasAmountError(false);
+      }
       debouncedDistributionsUpdater(values.value, type);
       setType(handleNumberFormat(BigNumber(values.value)));
-      if (inputError) setInputError("");
     }
   }
 
   function handleUpdateToken() {
-    if (issueAmount?.floatValue === 0) return;
+    if (issueAmount?.floatValue === 0 || previewAmount?.floatValue === 0) return;
 
     if (
-      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
+      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum)) ||
+      BigNumber(previewAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
       setInputError("bounty:errors.exceeds-minimum-amount");
-    } else setInputError("");
+      sethasAmountError(true);
+    } else {
+      setInputError("");
+      sethasAmountError(false);
+    }
   }
 
   useEffect(handleUpdateToken, [currentToken?.minimum]);
