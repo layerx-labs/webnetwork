@@ -323,5 +323,5 @@
   "leave-a-reply": "Leave a reply",
   "single-winner": "Single winner",
   "multiple-winners": "Multiple winners",
-  "multiple-winners-description": "By creating a multiple winners task you allow the curators to distribute the task reward to multiple participants on a single proposal"
+  "multiple-winners-description": "By creating a task with multiple winners you allow the curators to distribute the reward to multiple participants on a single proposal."
 }
