@@ -106,33 +106,36 @@ export default function CreateBountyTokenAmount({
     formattedValue: v.decimalPlaces(Math.min(10, decimals), 0).toFixed()
   });
 
+  function resetDistributions() {
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
+
+    setDistributions({
+      treasuryAmount: {
+        value: '0',
+        percentage: chain.closeFeePercentage.toFixed(),
+      },
+      mergerAmount: {
+        value: '0',
+        percentage: mergeCreatorFeeShare.toString(),
+      },
+      proposerAmount: {
+        value: '0',
+        percentage: proposerFeeShare.toString(),
+      },
+      proposals: [],
+      totalServiceFees: BigNumber(0)
+    });
+  }
+
   function handleDistributions(value, type) {
     if (!currentNetwork || !isFunders) return;
 
     const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
 
     if (!value || !(+value)) {
-      setDistributions({
-        treasuryAmount: {
-          value: '0',
-          percentage: chain.closeFeePercentage.toFixed(),
-        },
-        mergerAmount: {
-          value: '0',
-          percentage: mergeCreatorFeeShare.toString(),
-        },
-        proposerAmount: {
-          value: '0',
-          percentage: proposerFeeShare.toString(),
-        },
-        proposals: [],
-        totalServiceFees: BigNumber(0)
-      });
-
-      if (type === "reward")
-        updateIssueAmount(ZeroNumberFormatValues);
-      else
-        setPreviewAmount(ZeroNumberFormatValues);
+      resetDistributions();
+      updateIssueAmount(ZeroNumberFormatValues);
+      setPreviewAmount(ZeroNumberFormatValues);
       return;
     }
 
@@ -166,7 +169,7 @@ export default function CreateBountyTokenAmount({
       const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
       updateIssueAmount(handleNumberFormat(total))
       if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding)
-        setInputError(t("bounty:errors.exceeds-allowance"));
+        setInputError("bounty:errors.exceeds-allowance");
     }
 
     if(type === 'total'){
@@ -174,31 +177,37 @@ export default function CreateBountyTokenAmount({
       setPreviewAmount(handleNumberFormat(rewardValue));
     }
 
-    setDistributions(_distributions)
+    setDistributions(_distributions);
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
-    const setType = type === 'reward' ? setPreviewAmount : updateIssueAmount
+    const setType = type === 'reward' ? setPreviewAmount : updateIssueAmount;
+    const setOtherType = type === 'reward' ? updateIssueAmount : setPreviewAmount;
 
     if(needValueValidation && amountIsGtBalance(values.floatValue, tokenBalance)){
-      setInputError(t("bounty:errors.exceeds-balance"));
+      setInputError("bounty:errors.exceeds-balance");
       setType(values);
+      setOtherType(ZeroNumberFormatValues);
+      resetDistributions();
     }else if (
       needValueValidation &&
       +values.floatValue > +currentToken?.currentValue
     ) {
       setType(ZeroNumberFormatValues);
-      setInputError(t("bounty:errors.exceeds-allowance"));
+      setOtherType(ZeroNumberFormatValues);
+      resetDistributions();
+      setInputError("bounty:errors.exceeds-allowance");
     } else if (values.floatValue < 0) {
       setType(ZeroNumberFormatValues);
+      setOtherType(ZeroNumberFormatValues);
     } else if (
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
       setType(values); 
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
+      setOtherType(ZeroNumberFormatValues);
+      resetDistributions();
+      setInputError("bounty:errors.exceeds-minimum-amount");
     } else {
       debouncedDistributionsUpdater(values.value, type);
       setType(handleNumberFormat(BigNumber(values.value)));
@@ -212,9 +221,7 @@ export default function CreateBountyTokenAmount({
     if (
       BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
+      setInputError("bounty:errors.exceeds-minimum-amount");
     } else setInputError("");
   }
 
