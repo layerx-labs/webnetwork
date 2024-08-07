@@ -84,7 +84,7 @@ async function main(option = 0) {
   const connection = new Web3Connection({web3Host, privateKey});
   connection.start();
 
-  const isDevelopment = options.network[option] === "development";
+  const isDevelopment = ["development", "amoy-local"].includes(options.network[option]);
   const accounts = isDevelopment ? await connection.Web3.eth.getAccounts() : StagingAccounts;
 
   const treasury = options.treasury ? options.treasury[option] : await connection.getAddress();
@@ -257,6 +257,7 @@ async function main(option = 0) {
           networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE,
           closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE,
           cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE,
+          icon: "QmZ8dSeJp9pZn2TFy2gp7McfMj9HapqnPW3mwnnrDLKtZs",
         }
       });
 
@@ -305,7 +306,14 @@ async function main(option = 0) {
           mergeCreatorFeeShare: 0.05,
           percentageNeededForDispute: 3,
           cancelableTime: 180 * 86400,
-          proposerFeeShare: 10
+          proposerFeeShare: 10,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          banned_domains: [],
+          allow_list: [],
+          close_task_allow_list: [],
+          logoIcon: "QmNxvpvdwwv1Hb6177o3GdyFJ61jiSMNTW6X8mecvpFMmJ",
+          fullLogo: "QmNjrBx4W47ds64C6eQx3Q8CGPA8GJxQsbpQLt9JQqBpJB",
         }
       });
 
