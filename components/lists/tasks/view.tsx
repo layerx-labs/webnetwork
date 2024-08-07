@@ -14,9 +14,9 @@ import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
 import ResponsiveWrapper from "components/responsive-wrapper";
 
-import { SupportedChainData } from "interfaces/supported-chain-data";
+import {SupportedChainData} from "interfaces/supported-chain-data";
 
-import { SearchBountiesPaginatedBigNumber, TasksListItemVariant } from "types/components";
+import {SearchBountiesPaginatedBigNumber, TasksListItemVariant} from "types/components";
 
 interface TasksListViewProps {
   bounties?: SearchBountiesPaginatedBigNumber;
@@ -40,6 +40,8 @@ interface TasksListViewProps {
   onSearchInputChange: (event) => void;
   onSearchClick: () => void;
   onEnterPressed: (event) => void;
+  hideSearchFilter: boolean;
+  countTitle?: string;
 }
 
 export default function TasksListView({
@@ -63,7 +65,7 @@ export default function TasksListView({
   currentChain,
   chains,
   filterType,
-  hideTitle
+  hideTitle, hideSearchFilter = false, countTitle = ""
 }: TasksListViewProps) {
   const { t } = useTranslation(["common", "bounty", "deliverable", "proposal"]);
 
@@ -86,7 +88,7 @@ export default function TasksListView({
   ];
 
   const listTitleByType = {
-    "bounties": isBountyHall ? t("bounty:all-bounties") : t("bounty:label_other"),
+    "bounties": isBountyHall ? t("bounty:all-bounties") : countTitle || t("bounty:label_other"),
     "deliverables": t("deliverable:label_other"),
     "proposals": t("proposal:label_other")
   };
@@ -188,7 +190,7 @@ export default function TasksListView({
             </div>
           </If>
 
-          <If condition={showSearchFilter}>
+          <If condition={hideSearchFilter ? false : showSearchFilter}>
             <TasksListsSearchFilters
               isManagement={isManagement}
               isProfile={isProfile}
@@ -235,7 +237,7 @@ export default function TasksListView({
             otherwise={
               <div className="pt-4">
                 <NothingFound description={emptyMessage || t("filters.bounties.not-found")}>
-                  {(isConnected && !isBountyHall && !isManagement) && (
+                  {(isConnected && !isBountyHall && !isManagement && !hideSearchFilter) && (
                     <ReadOnlyButtonWrapper>
                       <Button onClick={onNotFoundClick} data-testid="create-one-btn">
                         {buttonMessage || String(t("actions.create-one"))}
@@ -249,7 +251,7 @@ export default function TasksListView({
             <InfiniteScroll
               handleNewPage={onNextPage}
               hasMore={hasMorePages}
-              className="row gy-3 gx-3"
+              className={`row gy-3 gx-3 ${hideSearchFilter ? "mt-3" : ""}`}
             >
               {bounties?.rows?.map((issue) => (
                 <div

@@ -114,7 +114,9 @@
       "start-working": "As a worker, click here to show the community you're working on this task",
       "create-deliverable": "As a worker, show your deliverable to the task owner and community",
       "create-proposal": "As curator, propose a deliverable as acceptable for the task"
-    }
+    },
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe"
   },
   "management": {
     "label": "Management",
@@ -143,7 +145,10 @@
     "banned-domain": "This domain is banned and cannot be used to open tasks.",
     "failed-to-cancel": "Task could not be canceled",
     "invalid-link": "Invalid link provided. Please check if the link has the protocol (http/https) or the link is correct.",
-    "failed-to-edit": "Failed to edit bounty"
+    "failed-to-edit": "Failed to edit bounty",
+    "failed-to-subscribe": "Failed to subscribe",
+    "failed-to-unsubscribe": "Failed to unsubscribe",
+    "failed-to-reply": "Failed to reply"
   },
   "title": "Create new Task",
   "fields": {
@@ -313,5 +318,6 @@
     "marketing": "Marketing",
     "writing": "Writing"
   },
-  "private-deliverable-warning": "This task has private deliverables, which means that only the task creator can see all proposals and deliverables, and deliverable creators can only  see their own deliverables."
+  "private-deliverable-warning": "This task has private deliverables, which means that only the task creator can see all proposals and deliverables, and deliverable creators can only  see their own deliverables.",
+  "leave-a-reply": "Leave a reply"
 }

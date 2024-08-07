@@ -22,6 +22,7 @@ import { useUserStore } from "x-hooks/stores/user/user.store";
 import useBepro from "x-hooks/use-bepro";
 import useContractTransaction from "x-hooks/use-contract-transaction";
 import useMarketplace from "x-hooks/use-marketplace";
+import { useTaskSubscription } from "x-hooks/use-task-subscription";
 
 interface ProposalModalProps {
   deliverables: Deliverable[];
@@ -55,6 +56,7 @@ export default function ProposalModal({
   const marketplace = useMarketplace();
   const { currentUser } = useUserStore();
   const { handleProposeMerge } = useBepro();
+  const { refresh: refreshSubscriptions } = useTaskSubscription();
   const [isExecuting, onCreateProposal] = useContractTransaction( NetworkEvents.ProposalCreated,
                                                                   handleProposeMerge,
                                                                   t("messages.proposal-created"),
@@ -117,6 +119,7 @@ export default function ProposalModal({
       .then(() => {
         handleClose();
         updateBountyData();
+        refreshSubscriptions();
       })
       .catch(console.debug);
   }

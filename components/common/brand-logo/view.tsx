@@ -3,7 +3,7 @@ import { UrlObject } from "url";
 import LogoPlaceholder from "assets/icons/logo-placeholder";
 
 import InternalLink from "components/internal-link";
-import ResponsiveWrapper, { ResponsiveEle } from "components/responsive-wrapper";
+import { ResponsiveEle } from "components/responsive-wrapper";
 
 interface BrandLogoProps {
   href: string | UrlObject;

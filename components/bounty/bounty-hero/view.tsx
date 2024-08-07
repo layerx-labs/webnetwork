@@ -13,6 +13,8 @@ import { UserProfileLink } from "components/common/user-profile-link/user-profil
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
+import { SubscriptionTaskButton } 
+  from "components/notifications/subscription-task-button/subscription-task-button.controller";
 import TaskStatusInfo from "components/task-status-info";
 
 import { IssueBigNumberData, IssueState } from "interfaces/issue-data";
@@ -52,7 +54,7 @@ export default function BountyHeroView({
   }
 
   return (
-    <div className="mt-2 border-bottom border-gray-850 pb">
+    <div className="mt-3 border-bottom border-gray-850 pb">
       <CustomContainer>
         <div className="row d-flex flex-row justify-content-center">
           <div className="col-12 min-w-bounty-hero justify-content-center">
@@ -66,14 +68,18 @@ export default function BountyHeroView({
                 </span>
               </div>
 
-              <div className="col-auto">
-                <BountySettings
-                  currentBounty={bounty}
-                  updateBountyData={updateBountyData}
-                  isEditIssue={isEditIssue}
-                  onEditIssue={handleEditIssue}
+              <div className="col-auto px-0 px-md-1">
+                <SubscriptionTaskButton
+                  taskId={+bounty?.id}
                 />
               </div>
+
+              <BountySettings
+                currentBounty={bounty}
+                updateBountyData={updateBountyData}
+                isEditIssue={isEditIssue}
+                onEditIssue={handleEditIssue}
+              />
             </div>
 
             <div 

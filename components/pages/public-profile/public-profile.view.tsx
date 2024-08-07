@@ -16,7 +16,6 @@ import ScrollableTabs from "components/navigation/scrollable-tabs/view";
 import {AnkrNftAsset} from "types/ankr-nft-asset";
 import {
   DeliverablePaginatedData,
-  PaymentPaginatedData,
   ProposalPaginatedData,
   SearchBountiesPaginated
 } from "types/api";

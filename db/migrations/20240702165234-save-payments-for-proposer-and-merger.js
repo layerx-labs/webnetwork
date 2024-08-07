@@ -79,7 +79,8 @@ module.exports = {
       paymentsToInsert.push(getPayment(proposer.address, proposer.value, payment.issueId, payment.transactionHash));
     }
 
-    await queryInterface.bulkInsert("users_payments", paymentsToInsert);
+    if (paymentsToInsert.length)
+      await queryInterface.bulkInsert("users_payments", paymentsToInsert);
   },
 
   async down (queryInterface, Sequelize) {

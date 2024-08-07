@@ -1,14 +1,14 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {Op, WhereOptions} from "sequelize";
+import {IncludeOptions, Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
-import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "../../errors/http-errors";
-import {Push} from "../../services/push/push";
-import {AnalyticEventName} from "../../services/push/types";
+import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "server/errors/http-errors";
+import {Push} from "server/services/push/push";
+import {AnalyticEventName, AnalyticEvents} from "server/services/push/types";
+import { subscribeUserToTask } from "server/utils/notifications/subscribe-user-to-task";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
-
   const {
     comment,
     issueId,
@@ -44,7 +44,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!user)
     throw new HttpNotFoundError("user not found");
 
-  const bounty = await models.issue.findOne({where: {id: issueId}})
+  const bounty = await models.issue.findOne({where: {id: issueId}, include: [{ association: "network" }]});
 
   if (!bounty)
     throw new HttpNotFoundError("task not found");
@@ -75,61 +75,135 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     ...(replyId ? {replyId: +replyId} : null),
   });
 
-  let event: AnalyticEventName;
-  let origin;
+  const pushEvents: AnalyticEvents = [];
+  await subscribeUserToTask(+issueId, user.id);
 
-  const include = [{
-    association: "user",
-    attributes: {
-      include: ["email", "id"]
-    },
-    include: [{
-      association: "settings"
-    }]
-  }, "network"]
-
-  if (type === "deliverable" || type === "review") {
-    include[1] = {
-      association: "issue",
+  if (replyId) {
+    const repliedComment = await models.comments.findOne({
+      where: {
+        id: +replyId
+      },
       include: [
-        {association: "network"}
+        { 
+          association: "user", 
+          scope: "ownerOrGovernor",
+          attributes: ["id", "email"]
+        }
       ]
-    } as any;
-    event = AnalyticEventName.COMMENT_DELIVERABLE;
-    origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}, include});
-  } else if (type === "proposal") {
-    event = AnalyticEventName.COMMENT_PROPOSAL;
-    origin = (await models.mergeProposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
-  } else {
-    event = AnalyticEventName.COMMENT_TASK;
-    origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
-  }
+    });
 
-  if (origin?.user.id !== user.id) {
-    const target = [origin?.user];
-    const marketplace = origin?.network?.name || origin?.issue?.network?.name;
+    const replyEvent = (name, type, target) => ({
+      name,
+      params: {
+        type: name,
+        data: {
+          comment,
+          creator: user.address,
+          taskId: issueId,
+          deliverableId: deliverableId,
+          proposalId: proposalId,
+          marketplace: bounty.network.name,
+          type
+        },
+        target
+      }
+    });
 
-    const data = {
-      entryId: deliverableId || proposalId,
-      taskId: issueId,
-      comment,
-      madeBy: user.handle || user.address,
-      creator: user.address,
-      marketplace,
-    };
-
-    const params = {
-      type: event,
-      target,
-      data
+    if (repliedComment.userId !== user.id) {
+      pushEvents.push(replyEvent(AnalyticEventName.REPLY_TO_THREAD_CREATOR, "creator", [repliedComment.user]));
+      pushEvents.push(replyEvent(AnalyticEventName.NOTIF_REPLY_TO_THREAD_CREATOR, "creator", [repliedComment.user]));
     }
 
-    Push.events([
-      {name: event, params},
-      {name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}},
-    ])
+    const participants = await models.user.findAll({
+      scope: "ownerOrGovernor",
+      attributes: ["id", "email"],
+      where: {
+        id: {
+          [Op.notIn]: [user.id, repliedComment.userId]
+        }
+      },
+      include: [
+        { 
+          association: "comments",
+          attributes: [],
+          where: {
+            replyId: +replyId,
+          }
+        }
+      ]
+    });
+
+    if (participants.length) {
+      pushEvents.push(replyEvent(AnalyticEventName.REPLY_TO_THREAD_PARTICIPANT, "participant", participants));
+      pushEvents.push(replyEvent(AnalyticEventName.NOTIF_REPLY_TO_THREAD_PARTICIPANT, "participant", participants));
+    }
+  } else { 
+    let event: AnalyticEventName;
+    let origin;
+  
+    const include: IncludeOptions[] = [
+      {
+        association: "user",
+        attributes: {
+          include: ["email", "id"]
+        },
+        include: [{
+          association: "settings"
+        }]
+      }, {
+        association: "network"
+      }
+    ];
+
+    if (type === "deliverable" || type === "review") {
+      include[1] = {
+        association: "issue",
+        include: [
+          {association: "network"}
+        ]
+      } as any;
+      event = AnalyticEventName.COMMENT_DELIVERABLE;
+      origin = await models.deliverable.findOne({where: {id: {[Op.eq]: deliverableId}}, include});
+    } else if (type === "proposal") {
+      include[0] = {
+        ...include[0],
+        on: Sequelize.where(Sequelize.fn("lower", Sequelize.col("creator")),
+                            "=",
+                            Sequelize.fn("lower", Sequelize.col("user.address")))
+      }
+      event = AnalyticEventName.COMMENT_PROPOSAL;
+      origin = (await models.mergeProposal.findOne({where: {id: {[Op.eq]: proposalId}}, include}))
+    } else {
+      event = AnalyticEventName.COMMENT_TASK;
+      origin = (await models.issue.findOne({where: {id: {[Op.eq]: +issueId}}, include}))
+    }
+    
+    if (origin?.user.id !== user.id) {
+      const target = [origin?.user];
+      const marketplace = origin?.network?.name || origin?.issue?.network?.name;
+  
+      const data = {
+        entryId: deliverableId || proposalId,
+        taskId: issueId,
+        comment,
+        madeBy: user.handle || user.address,
+        creator: user.address,
+        marketplace,
+      };
+  
+      const params = {
+        type: event,
+        target,
+        data
+      };
+
+      pushEvents.push({name: event, params});
+      pushEvents.push({name: "NOTIF_".concat(event) as any, params: {...params, type: "NOTIF_".concat(event) as any}});
+    }
   }
 
-  return comments
+  if (pushEvents.length)
+    Push.events(pushEvents);
 
+  return comments;
 }

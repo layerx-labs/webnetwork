@@ -163,16 +163,19 @@ export function useAuthentication() {
     const isSameWallet = AddressValidator.compare(user.address, currentUser?.walletAddress);
 
     if (user.language !== currentUser?.language)
-      updateCurrentUser({language: user.language})
+      updateCurrentUser({language: user.language});
 
     if (user.avatar !== currentUser?.avatar)
-      updateCurrentUser({avatar: user.avatar})
+      updateCurrentUser({avatar: user.avatar});
 
     if (user.fullName !== currentUser?.fullName)
-      updateCurrentUser({ fullName: user.fullName })
+      updateCurrentUser({ fullName: user.fullName });
 
     if (user.accountsMatch !== currentUser?.match)
-      updateCurrentUser({match: user.accountsMatch})
+      updateCurrentUser({match: user.accountsMatch});
+
+    if (user.notifications !== currentUser?.notifications)
+      updateCurrentUser({notifications: user.notifications});
 
     if (!user || isSameGithubAccount && isSameWallet)
       return;

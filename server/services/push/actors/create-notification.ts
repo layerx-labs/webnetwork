@@ -5,18 +5,18 @@ import {info} from "../../../../services/logging";
 import {getTemplateCompiler} from "../../../templates/compilers/get-template-compiler";
 import {getEventTargets} from "../../notifications/get-event-targets";
 import {Templates} from "../../notifications/templates";
-import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps} from "../types";
+import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps, ReplyThreadPushProps} from "../types";
 
+export type CreateNotificationPayload = PushProps | CommentPushProps | ReplyThreadPushProps;
 
 export class CreateNotification {
   constructor(readonly templateName: keyof typeof Templates,
-              readonly payload: PushProps|CommentPushProps,
+              readonly payload: CreateNotificationPayload,
               readonly targets?: EmailNotificationTargets) {
   }
 
   async send() {
-
-    const {recipients, ids} = await getEventTargets(this.targets);
+    const {recipients, ids} = await getEventTargets(this.payload, this.targets);
 
     for (const [index,] of recipients.filter(e => e).entries()) {
       const uuid = uuidv4();
@@ -29,7 +29,13 @@ export class CreateNotification {
       if (!content)
         return;
 
-      await models.notification.create({uuid, type: "NOTIF_".concat(this.templateName), read: false, userId, template: content})
+      await models.notification.create({
+        uuid, 
+        type: "NOTIF_".concat(this.templateName),
+        read: false, 
+        userId, 
+        template: content
+      })
         .then(() => {
           info(`Created notification ${uuid} for ${userId}`)
         })

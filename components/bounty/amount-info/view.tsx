@@ -18,7 +18,6 @@ interface BountyAmountViewProps {
 export default function BountyAmountView({
   bountyAmount,
   symbol,
-  isActive,
   size = "lg",
 }: BountyAmountViewProps) {
   const { t } = useTranslation(["bounty", "common"]);
