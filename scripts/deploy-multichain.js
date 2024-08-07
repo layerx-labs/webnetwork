@@ -26,6 +26,7 @@ const _xNetworks = {
   ... _xNetwork(`irene`, [`https://eth-irene.taikai.network:8080`], `TETH`, 1502, `Irene Test Chain`, `irene`, `https://eth-irene.taikai.network:8080`, `https://irene.taikai.network:2053`),
   ... _xNetwork(`apollodorus`, [`https://eth-apollodorus.taikai.network:8080`], `TETH`, 1506, `Apollodorus Test Chain`, `apollodorus`, `https://eth-apollodorus.taikai.network:8080`, `https://apollodorus.taikai.network:2053`),
   ... _xNetwork(`amoy`, [`https://polygon-amoy-bor-rpc.publicnode.com`], `MATIC`, 80002, `Amoy`, `amoy`, `https://www.oklink.com/amoy/tx`, `https://apollodorus.taikai.network:2053`),
+  ... _xNetwork(`amoy-local`, [`https://rpc-amoy.polygon.technology`], `MATIC`, 80002, `Amoy`, `amoy`, `https://www.oklink.com/amoy/tx`, `http://localhost:3334`),
 }
 
 const options = yargs(hideBin(process.argv))
