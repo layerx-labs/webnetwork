@@ -43,7 +43,7 @@ $ docker-compose up -d
 Create a new .env file based on the default example.
 
 ```console
-$ cp .env.exemple .env
+$ cp .env.example .env
 ```
 
 _`* These steps are mandatory`_
@@ -52,7 +52,10 @@ _`* These steps are mandatory`_
 - [Ganache](./docs/GANACHE.md)
 - `*` [Authentication Setup](./docs/AUTHENTICATION.md)
 - `*` [IPFS/Infura Host](./docs/IPFS.md)
-- `*` [Past Events MicroService](https://github.com/taikai/webnetwork-events)
+- `*` [Wallet Connect](./docs/WALLET-CONNECT.md)
+- `*` [Sendgrid Email](./docs/SENDGRID.md)
+- `*` [Img Proxy](./docs/IMG-PROXY.md)
+- `*` [Past Events MicroService](https://github.com/layerx-labs/webnetwork-events)
 - `*` [Deploy Smart Contract](./docs/DEPLOY-SMART-CONTRACT.md)
 
 ## 4. Running
