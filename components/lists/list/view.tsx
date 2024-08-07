@@ -14,7 +14,7 @@ import ListSearchBar from "components/lists/list/search-bar/view";
 import ListSort from "components/lists/sort/controller";
 import NothingFound from "components/nothing-found";
 import ReadOnlyButtonWrapper from "components/read-only-button-wrapper";
-import ResponsiveWrapper from "components/responsive-wrapper";
+import ResponsiveWrapper, { ResponsiveEle } from "components/responsive-wrapper";
 
 import { SupportedChainData } from "interfaces/supported-chain-data";
 
@@ -143,9 +143,9 @@ export default function ListView(props: ListViewProps) {
         }
       >
         <If condition={!!header}>
-          <ResponsiveWrapper xs={false} xl={true} className="row">
-            <ListHeader columns={header} />
-          </ResponsiveWrapper>
+          <ResponsiveEle
+            desktopView={<ListHeader columns={header} />}
+          />
         </If>
 
         <If condition={infinite} otherwise={<div className="d-flex flex-column gap-3">{children}</div>}>
