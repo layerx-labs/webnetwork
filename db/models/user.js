@@ -150,6 +150,12 @@ class User extends Model {
       sourceKey: "id",
       as: "comments"
     });
+
+    this.hasOne(models.notificationSettings, {
+      foreignKey: "userId",
+      sourceKey: "id",
+      as: "notificationSettings"
+    });
   }
 
   static findByAddress(address) {

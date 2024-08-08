@@ -202,6 +202,63 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
     }
   }
 
+
+  const subscribers = await models.user.findAll({
+    attributes: ["id", "email"],
+    where: {
+      [Op.and]: [
+        { email: { [Op.not]: null } },
+        { email: { [Op.not]: "" } },
+        { 
+          id: { 
+            [Op.notIn]: pushEvents.flatMap(event => event.params.target.map(target => target.id))
+          } 
+        },
+        { id: { [Op.ne]: bounty.userId } }
+      ]
+    },
+    include: [
+      {
+        association: "notificationSettings",
+        required: true,
+        attributes: [],
+        where: {
+          subscriptions: {
+            [Op.contains]: [bounty.id]
+          }
+        },
+      }
+    ]
+  });
+
+  if (subscribers.length) {
+    const data = {
+      type: deliverableId && "deliverable" || proposalId && "proposal" || "task",
+      entryId: deliverableId || proposalId,
+      taskId: issueId,
+      comment,
+      madeBy: user.handle || user.address,
+      creator: user.address,
+      marketplace: bounty.network.name,
+    };
+
+    const params = {
+      type: AnalyticEventName.SUBSCRIBER_COMMENT,
+      target: subscribers,
+      data
+    };
+
+
+    pushEvents.push({ name: AnalyticEventName.SUBSCRIBER_COMMENT, params });
+    pushEvents.push({ 
+      name: AnalyticEventName.NOTIF_SUBSCRIBER_COMMENT,
+      params: {
+        ...params,
+        type: AnalyticEventName.NOTIF_SUBSCRIBER_COMMENT
+      }
+    });
+  }
+
   if (pushEvents.length)
     Push.events(pushEvents);
 
