@@ -1,4 +1,4 @@
-## 1. Wallet Connect Project ID
+## 1. Sendgrid Email service
 
 Configure your Sendgrid Email service on [Sendgrid](https://sendgrid.com/).
 
