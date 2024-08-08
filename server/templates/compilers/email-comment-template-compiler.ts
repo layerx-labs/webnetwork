@@ -4,7 +4,7 @@ import Handlebars from "handlebars";
 import {CommentPushProps} from "../../services/push/types";
 import getConfig from "next/config";
 
-const { publicRuntimeconfig } = getConfig();
+const { publicRuntimeConfig } = getConfig();
 
 export class EmailCommentTemplateCompiler extends Template {
 
@@ -35,7 +35,7 @@ export class EmailCommentTemplateCompiler extends Template {
       pageTitle: title,
       comment: payload.data.comment,
       type,
-      actionHref: `${publicRuntimeconfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`
+      actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`
     };
 
     super.registerPartials();

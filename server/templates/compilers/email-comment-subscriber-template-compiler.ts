@@ -4,7 +4,7 @@ import Handlebars from "handlebars";
 import {CommentPushProps} from "../../services/push/types";
 import getConfig from "next/config";
 
-const { publicRuntimeconfig } = getConfig();
+const { publicRuntimeConfig } = getConfig();
 
 export class EmailCommentSubscriberTemplateCompiler extends Template {
   constructor() {
@@ -23,7 +23,7 @@ export class EmailCommentSubscriberTemplateCompiler extends Template {
       comment: payload.data.comment,
       type: payload.data.type,
       isTaskType: payload.data.type === "task",
-      actionHref: `${publicRuntimeconfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
+      actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
       commentCreator: payload.data.creator,
     };
 
