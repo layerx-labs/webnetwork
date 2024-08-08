@@ -14,6 +14,8 @@ const NetworkTokensModel = require("../db/models/network-tokens.model");
 
 const StagingAccounts = require('./staging-accounts');
 
+const DIVISOR = 1000000;
+
 const _xNetwork = (name, rpc, chainTokenName, chainId, chainName, shortName, chainScan, eventsUrl) =>
   ({[name]: {rpc, chainTokenName, chainId, chainName, shortName, chainScan, eventsUrl}})
 
@@ -68,14 +70,14 @@ async function main(option = 0) {
   const privateKey = options.privateKey;
 
   const {
-    DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION = 100,
-    DEPLOY_LOCK_FEE_PERCENTAGE = 10000,
-    DEPLOY_CLOSE_BOUNTY_FEE = 1000000,
-    DEPLOY_CANCEL_BOUNTY_FEE = 2000000,
+    DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION = 1000,
+    DEPLOY_LOCK_FEE_PERCENTAGE = 10,
+    DEPLOY_CLOSE_BOUNTY_FEE = 10,
+    DEPLOY_CANCEL_BOUNTY_FEE = 20,
     DEPLOY_TOKENS_CAP_AMOUNT = "300000000000000000000000000",
-    DEPLOY_DRAFT_TIME = 60 * 5, // 5 minutes
-    DEPLOY_DISPUTABLE_TIME = 60 * 10, // 10 minutes
-    DEPLOY_COUNCIL_AMOUNT = 105000,
+    DEPLOY_DRAFT_TIME = 60, // 1 minute
+    DEPLOY_DISPUTABLE_TIME = 60 * 3, // 3 minutes
+    DEPLOY_COUNCIL_AMOUNT = 100,
     DEPLOY_MERGER_FEE = 2,
     DEPLOY_PROPOSER_FEE = 2,
     NEXT_PUBLIC_HOME_URL
@@ -133,9 +135,9 @@ async function main(option = 0) {
                   governanceToken,
                   DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
                   treasury,
-                  DEPLOY_LOCK_FEE_PERCENTAGE,
-                  DEPLOY_CLOSE_BOUNTY_FEE,
-                  DEPLOY_CANCEL_BOUNTY_FEE,
+                  +DEPLOY_LOCK_FEE_PERCENTAGE * DIVISOR,
+                  +DEPLOY_CLOSE_BOUNTY_FEE * DIVISOR,
+                  +DEPLOY_CANCEL_BOUNTY_FEE * DIVISOR,
                   bountyToken);
   }
 
@@ -410,4 +412,3 @@ async function main(option = 0) {
 
   process.exit(0);
 })();
-
