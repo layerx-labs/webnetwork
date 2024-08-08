@@ -18,6 +18,7 @@ export type CommentPushProps =
       taskId: string;
       entryId?: string;
       creator?: string;
+      type?: "task" | "proposal" | "deliverable"
     }
   >
 
@@ -51,6 +52,8 @@ export enum AnalyticEventName {
   NOTIF_REPLY_TO_THREAD_CREATOR = "NOTIF_REPLY_TO_THREAD_CREATOR",
   REPLY_TO_THREAD_PARTICIPANT = "REPLY_TO_THREAD_PARTICIPANT",
   NOTIF_REPLY_TO_THREAD_PARTICIPANT = "NOTIF_REPLY_TO_THREAD_PARTICIPANT",
+  SUBSCRIBER_COMMENT = "SUBSCRIBER_COMMENT",
+  NOTIF_SUBSCRIBER_COMMENT = "NOTIF_SUBSCRIBER_COMMENT",
 }
 
 export enum AnalyticTypes {
@@ -69,4 +72,6 @@ export const AnalyticsEvents: AnalyticEventPool = {
   [AnalyticEventName.NOTIF_REPLY_TO_THREAD_CREATOR]: [analytic(AnalyticTypes.CreateNotification)],
   [AnalyticEventName.REPLY_TO_THREAD_PARTICIPANT]: [analytic(AnalyticTypes.EmailNotification)],
   [AnalyticEventName.NOTIF_REPLY_TO_THREAD_PARTICIPANT]: [analytic(AnalyticTypes.CreateNotification)],
+  [AnalyticEventName.SUBSCRIBER_COMMENT]: [analytic(AnalyticTypes.EmailNotification)],
+  [AnalyticEventName.NOTIF_SUBSCRIBER_COMMENT]: [analytic(AnalyticTypes.CreateNotification)],
 }

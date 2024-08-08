@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{pageTitle}}</title>
+    {{> headLinks}}
+    {{> styles}}
+</head>
+<body id="body">
+<table id="container" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td>
+            {{> logo}}
+            {{#if isTaskType}}
+                <h1>You have a new comment on a subscribed task</h1>
+            {{else}}
+                <h1>You have a new comment on a {{type}} of a subscribed task</h1>
+            {{/if}}
+
+            <table id="action-card" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <td>
+                        <p>{{commentCreator}} commented:</p>
+                        <p>{{comment}}</p>
+                        <a id="action-button" href="{{actionHref}}">View comment</a>
+                    </td>
+                </tr>
+            </table>
+            {{> appLinks}}
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{{> avatar}}
+<div id="link">{{actionHref}}</div>
+<div class="d-flex flex-column ms-3">
+    {{#if isTaskType}}
+        <span class="xs-medium title text-white mb-3">
+            Comment on a subscribed task
+        </span>
+    {{else}}
+        <span class="xs-medium title text-white mb-3">
+            Comment on a {{type}} of a subscribed task
+        </span>
+    {{/if}}
+    
+    {{#if comment}}
+    <span class="sm-regular mb-3 text-white-50">
+        {{comment}}
+    </span>
+    {{/if}}
+
+    <div class="d-flex gap-2 text-white-50">
+        <span class="sm-regular">{{marketplace}}</span>
+        <span>•</span>
+        <span class="sm-regular">%DATE%</span>
+    </div>
+</div>
