@@ -69,11 +69,15 @@ async function main(option = 0) {
   const env = require('dotenv').config({path: options.envFile[option]}).parsed;
   const privateKey = options.privateKey;
 
+  const DEFAULT_LOCK_FEE_PERCENTAGE = 10 * DIVISOR;
+  const DEFAULT_CLOSE_BOUNTY_FEE = 10 * DIVISOR;
+  const DEFAULT_CANCEL_BOUNTY_FEE = 10 * DIVISOR;
+
   const {
     DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION = 1000,
-    DEPLOY_LOCK_FEE_PERCENTAGE = 10,
-    DEPLOY_CLOSE_BOUNTY_FEE = 10,
-    DEPLOY_CANCEL_BOUNTY_FEE = 20,
+    DEPLOY_LOCK_FEE_PERCENTAGE,
+    DEPLOY_CLOSE_BOUNTY_FEE,
+    DEPLOY_CANCEL_BOUNTY_FEE,
     DEPLOY_TOKENS_CAP_AMOUNT = "300000000000000000000000000",
     DEPLOY_DRAFT_TIME = 60, // 1 minute
     DEPLOY_DISPUTABLE_TIME = 60 * 3, // 3 minutes
@@ -135,9 +139,9 @@ async function main(option = 0) {
                   governanceToken,
                   DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
                   treasury,
-                  +DEPLOY_LOCK_FEE_PERCENTAGE * DIVISOR,
-                  +DEPLOY_CLOSE_BOUNTY_FEE * DIVISOR,
-                  +DEPLOY_CANCEL_BOUNTY_FEE * DIVISOR,
+                  DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE,
+                  DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_CLOSE_BOUNTY_FEE,
+                  DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_CANCEL_BOUNTY_FEE,
                   bountyToken);
   }
 
@@ -256,9 +260,9 @@ async function main(option = 0) {
           isDefault: false,
           color: "#29b6af",
           lockAmountForNetworkCreation: DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
-          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE,
-          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE,
-          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE,
+          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
           icon: "QmZ8dSeJp9pZn2TFy2gp7McfMj9HapqnPW3mwnnrDLKtZs",
         }
       });
