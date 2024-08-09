@@ -33,7 +33,7 @@ export default function BountyDetailsSection({
   onOriginLinkChange,
   updateIsKyc,
   updateTierList,
-  setDeliverableType
+  setDeliverableType,
 }: BountyDetailsSectionProps) {
   const { t } = useTranslation("bounty");
   

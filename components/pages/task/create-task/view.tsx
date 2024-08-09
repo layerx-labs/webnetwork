@@ -132,6 +132,8 @@ export default function CreateTaskPageView({
             bountyBalance={rest.bountyBalance}
             previewAmount={rest.previewAmount}
             distributions={rest.distributions}
+            multipleWinners={rest.multipleWinners}
+            onMultipleWinnersChange={rest.onMultipleWinnersChange}
             updateRewardToken={rest.updateRewardToken} 
             updateTransactionalToken={rest.updateTransactionalToken} 
             addToken={rest.addToken} 

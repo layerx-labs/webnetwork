@@ -60,8 +60,8 @@ interface CreateTaskPageProps {
 }
 
 export default function CreateTaskPage({
-                                         networks: allNetworks
-                                       }: CreateTaskPageProps) {
+  networks: allNetworks
+}: CreateTaskPageProps) {
   const session = useSession();
   const {query} = useRouter();
   const {t} = useTranslation(["common", "bounty"]);
@@ -96,6 +96,7 @@ export default function CreateTaskPage({
   const [distributions, setDistributions] = useState<DistributionsProps>();
   const [currentChain, setCurrentChain] = useState<SupportedChainData>();
   const [privateDeliverable, setPrivateDeliverable] = useState(cachedTask?.privateDeliverable || false);
+  const [multipleWinners, setMultipleWinners] = useState(cachedTask?.multipleWinners || true);
   const [isBecomeCuratorModalVisible, setIsBecomeCuratorModalVisible] = useState(false);
   const [hasAmountError, sethasAmountError] = useState(false);
 
@@ -332,7 +333,8 @@ export default function CreateTaskPage({
         tierList: tierList?.length ? tierList : null,
         amount: issueAmount.value,
         networkName: currentNetwork?.name,
-        privateDeliverables: privateDeliverable
+        privateDeliverables: !!privateDeliverable,
+        multipleWinners: !!multipleWinners
       });
 
       if (!savedIssue) {
@@ -676,6 +678,7 @@ export default function CreateTaskPage({
         deliverableType: deliverableType,
         totalAmount: `${formatStringToCurrency(issueAmount.value)} ${transactionalToken?.symbol}`,
         privateDeliverables: privateDeliverable ? t("misc.yes") : t("misc.no"),
+        multipleWinners: multipleWinners ? t("misc.yes") : t("misc.no"),
         fundersReward:
           (rewardAmount.value && isFundingType) &&
           `${formatStringToCurrency(rewardAmount.value)} ${rewardToken?.symbol}`,
@@ -693,6 +696,8 @@ export default function CreateTaskPage({
       handleCloseBecomeCuratorModal={handleCloseBecomeCuratorModal}
       onActionButtonClick={handleModalActionClick}
       sethasAmountError={sethasAmountError}
+      multipleWinners={multipleWinners}
+      onMultipleWinnersChange={setMultipleWinners}
     />
   );
 }

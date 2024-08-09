@@ -297,7 +297,8 @@
     "deliverableType": "Deliverable Type",
     "totalAmount": "Total Amount",
     "fundersReward": "Funders Reward",
-    "privateDeliverables": "Private Deliverables"
+    "privateDeliverables": "Private Deliverables",
+    "multipleWinners": "Multiple Winners"
   },
   "approximated-values-warning": "Defining the Reward amount will result in approximate values in the contract. If you want exact values, set the Total Amount first.",
   "your-balance": "Your balance",
@@ -319,5 +320,8 @@
     "writing": "Writing"
   },
   "private-deliverable-warning": "This task has private deliverables, which means that only the task creator can see all proposals and deliverables, and deliverable creators can only  see their own deliverables.",
-  "leave-a-reply": "Leave a reply"
+  "leave-a-reply": "Leave a reply",
+  "single-winner": "Single winner",
+  "multiple-winners": "Multiple winners",
+  "multiple-winners-description": "By creating a task with multiple winners you allow the curators to distribute the reward to multiple participants on a single proposal."
 }

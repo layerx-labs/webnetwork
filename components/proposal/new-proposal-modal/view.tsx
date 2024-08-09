@@ -182,7 +182,7 @@ export default function NewProposalModalView({
               {t("create-modal.payment")}
             </span>
 
-            <If condition={!!selectedDeliverable && !isEditingDistribution}>
+            <If condition={!!selectedDeliverable && !isEditingDistribution && !!task?.multipleWinners}>
               <Tooltip tip={t("actions.edit-distribution")}>
                 <div>
                   <Button

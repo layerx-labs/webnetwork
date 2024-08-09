@@ -10,6 +10,7 @@ import Button from "components/button";
 import ChainIcon from "components/chain-icon";
 import { Tooltip } from "components/common/tooltip/tooltip.view";
 import { UserProfileLink } from "components/common/user-profile-link/user-profile-link.view";
+import { WinnersBadge } from "components/common/winners-badge/winners-badge.view";
 import CustomContainer from "components/custom-container";
 import If from "components/If";
 import OriginLinkWarningModal from "components/modals/origin-link-warning/view";
@@ -124,6 +125,12 @@ export default function BountyHeroView({
                     </div>
                   </Tooltip>
                 </div>
+              </div>
+
+              <div className="col-auto mt-2 mt-sm-0 px-md-1">
+                <WinnersBadge
+                  isMultiple={bounty?.multipleWinners}
+                />
               </div>
 
               <div className="col-auto mt-2 mt-sm-0">

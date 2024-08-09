@@ -14,6 +14,7 @@ interface CreatePreBounty {
   amount: string;
   networkName: string;
   privateDeliverables?: boolean;
+  multipleWinners?: boolean;
 }
 
 export function useCreatePreBounty(payload: CreatePreBounty): Promise<IssueData> {
