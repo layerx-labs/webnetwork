@@ -215,10 +215,13 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
         { email: { [Op.not]: "" } },
         { 
           id: { 
-            [Op.notIn]: pushEvents.flatMap(event => event.params.target.map(target => target.id))
+            [Op.notIn]: [
+              bounty.userId,
+              user.id,
+              ...pushEvents.flatMap(event => event.params.target.map(target => target.id))
+            ]
           } 
-        },
-        { id: { [Op.ne]: bounty.userId } }
+        }
       ]
     },
     include: [
