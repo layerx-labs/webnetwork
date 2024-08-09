@@ -27,6 +27,7 @@ interface UpdateBountyAmountModalViewProps {
   inputError: string;
   isSameValue?: boolean;
   distributions: DistributionsProps;
+  minimum: string;
   onIssueAmountValueChange: (
     values: NumberFormatValues,
     type: "reward" | "total"
@@ -48,6 +49,7 @@ export default function UpdateBountyAmountModalView({
   distributions,
   taskAmount,
   isSameValue,
+  minimum,
   onIssueAmountValueChange,
   handleSubmit,
   handleClose,
@@ -109,6 +111,7 @@ export default function UpdateBountyAmountModalView({
             name: transactionalERC20.name,
             symbol: transactionalERC20.symbol,
             address: transactionalERC20.address,
+            minimum
           }}
           rewardAmount={rewardAmount}
           issueAmount={issueAmount}

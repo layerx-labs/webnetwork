@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { NumberFormatValues } from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
 
 import calculateDistributedAmounts, { calculateTotalAmountFromGivenReward } from "helpers/calculateDistributedAmounts";
@@ -39,8 +38,6 @@ export default function UpdateBountyAmountModal({
   handleClose = undefined,
   updateBountyData,
 }: UpdateBountyAmountModalProps) {
-  const { t } = useTranslation(["common", "bounty"]);
-
   const [inputError, setInputError] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
   const [distributions, setDistributions] = useState<DistributionsProps>();
@@ -56,8 +53,8 @@ export default function UpdateBountyAmountModal({
   const { handleApproveToken, handleUpdateBountyAmount } = useBepro();
 
   const currentToken = {
-    currentValue: transactionalERC20.totalSupply.toNumber(),
-    minimum: transactionalERC20.minimum,
+    currentValue: transactionalERC20?.allowance?.toNumber(),
+    minimum: bounty?.transactionalToken?.minimum,
   };
 
   const debouncedDistributionsUpdater = useDebouncedCallback((value, type) => handleDistributions(value, type), 500);
@@ -181,44 +178,54 @@ export default function UpdateBountyAmountModal({
 
     const distributions = { totalServiceFees, ...initialDistributions };
 
+    setDistributions(distributions);
+
     if (type === "reward") {
       const total = totalServiceFees.plus(rewardAmount?.value);
       updateIssueAmount(handleNumberFormat(total));
-      amountIsGtBalance(total.toNumber(), walletBalanceWithTaskAmount) &&
-        setInputError(t("bounty:errors.exceeds-balance"));
+      
+      if(amountIsGtBalance(total.toNumber(), walletBalanceWithTaskAmount))
+        setInputError("bounty:errors.exceeds-balance");
+      else if (total.isLessThan(BigNumber(currentToken?.minimum))) {
+        setInputError("bounty:errors.exceeds-minimum-amount");
+        setDistributions(undefined);
+      }
     }
 
     if (type === "total") {
       const rewardValue = BigNumber(issueAmount?.value).minus(totalServiceFees);
       setRewardAmount(handleNumberFormat(rewardValue));
-    }
 
-    setDistributions(distributions);
+      if (rewardValue.isLessThan(BigNumber(currentToken?.minimum))) {
+        setInputError("bounty:errors.exceeds-minimum-amount");
+      }
+    }
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: "reward" | "total") {
     const setType = type === "reward" ? setRewardAmount : updateIssueAmount;
+    const setOtherType = type === 'reward' ? updateIssueAmount : setRewardAmount;
 
     if (amountIsGtBalance(values.floatValue, walletBalanceWithTaskAmount)) {
-      setInputError(t("bounty:errors.exceeds-available"));
+      setInputError("bounty:errors.exceeds-available");
       setType(values);
-    } else if (+values.floatValue > +currentToken?.currentValue) {
-      setType(ZeroNumberFormatValues);
-      setInputError(t("bounty:errors.exceeds-allowance"));
+      setOtherType(ZeroNumberFormatValues);
     } else if (values.floatValue < 0) {
       setType(ZeroNumberFormatValues);
+      setOtherType(ZeroNumberFormatValues);
     } else if (
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
       setType(handleNumberFormat(BigNumber(values.value)));
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
+      setOtherType(ZeroNumberFormatValues);
+      setInputError("bounty:errors.exceeds-minimum-amount");
+      setDistributions(undefined);
     } else {
-      debouncedDistributionsUpdater(values.value, type);
-      setType(handleNumberFormat(BigNumber(values.value)));
       if (inputError) setInputError("");
+      debouncedDistributionsUpdater(values.value, type);
+      setDistributions(undefined);
+      setType(handleNumberFormat(BigNumber(values.value)));
     }
   }
 
@@ -226,11 +233,10 @@ export default function UpdateBountyAmountModal({
     if (issueAmount?.floatValue === 0) return;
 
     if (
-      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
+      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum)) ||
+      BigNumber(rewardAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
+      setInputError("bounty:errors.exceeds-minimum-amount");
     } else setInputError("");
   }
 
@@ -271,7 +277,8 @@ export default function UpdateBountyAmountModal({
       distributions={distributions} 
       taskAmount={bounty?.amount}
       isSameValue={isSameValue}
-      onIssueAmountValueChange={handleIssueAmountOnValueChange}    
-      />
+      onIssueAmountValueChange={handleIssueAmountOnValueChange}
+      minimum={bounty?.transactionalToken?.minimum}
+    />
   );
 }

@@ -120,6 +120,7 @@ export interface RewardInformationViewProps {
   updateIsFunding: (v: boolean) => void;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) => void;
 }
 
 export interface RewardInformationSectionProps {
@@ -147,6 +148,7 @@ export interface RewardInformationSectionProps {
   updateIsFundingType: (v: boolean) => void;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) => void;
 }
 
 export interface LinkProps {

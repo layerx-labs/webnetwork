@@ -37,6 +37,7 @@ export default function RewardInformationSectionView({
   updateIsFunding,
   setPreviewAmount,
   setDistributions,
+  sethasAmountError,
 }: RewardInformationViewProps) {
   const { t } = useTranslation(["common", "bounty"]);
 
@@ -94,6 +95,7 @@ export default function RewardInformationSectionView({
           distributions={distributions}
           setPreviewAmount={setPreviewAmount}
           setDistributions={setDistributions}
+          sethasAmountError={sethasAmountError}
         />
       </>
     );

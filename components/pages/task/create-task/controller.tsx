@@ -97,6 +97,7 @@ export default function CreateTaskPage({
   const [currentChain, setCurrentChain] = useState<SupportedChainData>();
   const [privateDeliverable, setPrivateDeliverable] = useState(cachedTask?.privateDeliverable || false);
   const [isBecomeCuratorModalVisible, setIsBecomeCuratorModalVisible] = useState(false);
+  const [hasAmountError, sethasAmountError] = useState(false);
 
   const rewardERC20 = useERC20();
   const {settings} = useSettings();
@@ -190,13 +191,15 @@ export default function CreateTaskPage({
       issueAmount.floatValue <= 0 ||
       issueAmount.floatValue === undefined ||
       handleIsLessThan(issueAmount.floatValue, transactionalToken?.minimum) ||
-      (!isFundingType && BigNumber(issueAmount.floatValue).gt(transactionalERC20?.balance))
+      (!isFundingType && BigNumber(issueAmount.floatValue).gt(transactionalERC20?.balance)) ||
+      hasAmountError;
 
     const isRewardAmount =
       rewardAmount.floatValue <= 0 ||
       rewardAmount.floatValue === undefined ||
       handleIsLessThan(rewardAmount.floatValue, rewardToken?.minimum) ||
-      BigNumber(issueAmount.floatValue).gt(rewardERC20?.balance)
+      BigNumber(issueAmount.floatValue).gt(rewardERC20?.balance) ||
+      hasAmountError;
 
     if (section === 0 && !currentNetwork) return true;
 
@@ -689,6 +692,7 @@ export default function CreateTaskPage({
       isBecomeCuratorModalVisible={isBecomeCuratorModalVisible}
       handleCloseBecomeCuratorModal={handleCloseBecomeCuratorModal}
       onActionButtonClick={handleModalActionClick}
+      sethasAmountError={sethasAmountError}
     />
   );
 }
