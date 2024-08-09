@@ -47,7 +47,7 @@ export default function NotificationFormView({
   const { t } = useTranslation(["common", " profile"]);
 
   return (
-    <div className="row mb-4">
+    <div className="row mb-5">
       <div className="col-12">
         <div className="row align-items-end gap-2 gap-lg-0">
           <div className="col-12 col-lg-4">
@@ -129,7 +129,7 @@ export default function NotificationFormView({
         </If>
       </div>
 
-      <div className="row align-items-center mt-3">
+      <div className="row align-items-center mt-4">
         <div className="d-flex col justify-content-between align-items-center">
           <div className="mr-1">
             <div className="base-medium text-white mb-1">{t("profile:notifications-form.title")}</div>
@@ -148,9 +148,9 @@ export default function NotificationFormView({
       </div>
 
       <If condition={isNotificationEnabled}>
-        <div className="row mt-2">
+        <div className="row mt-4">
           <div className="col-12 col-md-6">
-            <div className="row align-items-center gy-3">
+            <div className="row align-items-center gy-4">
               {Object.keys(notificationSettings).map(key => (
                 <div className="col-12 col-md-6" key={key}>
                   <div className="d-flex align-items-center gap-1">

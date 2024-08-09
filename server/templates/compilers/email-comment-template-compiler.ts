@@ -2,6 +2,9 @@ import {Template} from "./template";
 import {EmailNotificationSubjects} from "../index";
 import Handlebars from "handlebars";
 import {CommentPushProps} from "../../services/push/types";
+import getConfig from "next/config";
+
+const { publicRuntimeConfig } = getConfig();
 
 export class EmailCommentTemplateCompiler extends Template {
 
@@ -32,7 +35,7 @@ export class EmailCommentTemplateCompiler extends Template {
       pageTitle: title,
       comment: payload.data.comment,
       type,
-      actionHref: `https://app.bepro.network/${actionUrlPart}/?fromEmail=${payload.uuid}`
+      actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`
     };
 
     super.registerPartials();
