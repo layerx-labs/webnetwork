@@ -3,6 +3,8 @@ import {IncludeOptions, Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { truncateAddress } from "helpers/truncate-address";
+
 import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "server/errors/http-errors";
 import {Push} from "server/services/push/push";
 import {AnalyticEventName, AnalyticEvents} from "server/services/push/types";
@@ -78,6 +80,8 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
   const pushEvents: AnalyticEvents = [];
   await subscribeUserToTask(+issueId, user.id);
 
+  const creatorLabel = user.handle ? `@${user.handle}` : truncateAddress(user.address);
+
   if (replyId) {
     const repliedComment = await models.comments.findOne({
       where: {
@@ -98,7 +102,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
         type: name,
         data: {
           comment,
-          creator: user.address,
+          creator: creatorLabel,
           taskId: issueId,
           deliverableId: deliverableId,
           proposalId: proposalId,
@@ -186,8 +190,8 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
         entryId: deliverableId || proposalId,
         taskId: issueId,
         comment,
-        madeBy: user.handle || user.address,
-        creator: user.address,
+        madeBy: creatorLabel,
+        creator: creatorLabel,
         marketplace,
       };
   
@@ -237,8 +241,8 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       entryId: deliverableId || proposalId,
       taskId: issueId,
       comment,
-      madeBy: user.handle || user.address,
-      creator: user.address,
+      madeBy: creatorLabel,
+      creator: creatorLabel,
       marketplace: bounty.network.name,
     };
 
