@@ -23,8 +23,6 @@
 - [NodeJS](https://nodejs.dev/) in v16.13 or newer.
 - [Docker](https://docs.docker.com/desktop/#download-and-install) or [PostgresSQL](https://www.postgresql.org/download/) in version 13.
 - [Metamask](https://metamask.io/download/)
-- [Github OAuth Apps](https://docs.github.com/en/developers/apps/building-oauth-apps)
-- [Github Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 ## 2. Getting Started
 
@@ -45,7 +43,7 @@ $ docker-compose up -d
 Create a new .env file based on the default example.
 
 ```console
-$ cp .env.exemple .env
+$ cp .env.example .env
 ```
 
 _`* These steps are mandatory`_
@@ -54,7 +52,10 @@ _`* These steps are mandatory`_
 - [Ganache](./docs/GANACHE.md)
 - `*` [Authentication Setup](./docs/AUTHENTICATION.md)
 - `*` [IPFS/Infura Host](./docs/IPFS.md)
-- `*` [Past Events MicroService](https://github.com/taikai/webnetwork-events)
+- `*` [Wallet Connect](./docs/WALLET-CONNECT.md)
+- `*` [Sendgrid Email](./docs/SENDGRID.md)
+- `*` [Img Proxy](./docs/IMG-PROXY.md)
+- `*` [Past Events MicroService](https://github.com/layerx-labs/webnetwork-events)
 - `*` [Deploy Smart Contract](./docs/DEPLOY-SMART-CONTRACT.md)
 
 ## 4. Running
@@ -79,5 +80,5 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for our guide to contributing to w
 
 - [Discord](https://discord.gg/layerx)
 - [Telegram](https://t.me/betprotocol)
-- [Medium](https://bepronetwork.medium.com)
+- [Blog](https://blog.bepro.network/)
 - [WebSite](https://www.bepro.network)

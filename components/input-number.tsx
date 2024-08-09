@@ -2,11 +2,12 @@ import { Fragment, useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 import clsx from "clsx";
-import { kebabCase } from "lodash";
 import { useTranslation } from "next-i18next";
 import { useDebouncedCallback } from "use-debounce";
 
 import InfoTooltip from "components/info-tooltip";
+
+import { kebabCase } from "helpers/string";
 
 import { InputNumber as InputNumberProps } from "types/input-number";
 

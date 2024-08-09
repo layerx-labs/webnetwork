@@ -40,16 +40,6 @@ export interface Proposal extends BaseModel {
   network?: Network;
 }
 
-export interface INetworkProposal {
-  _id: string;
-  disputes: number;
-  canUserDispute?: boolean;
-  prAddresses: string[];
-  prAmounts: number[];
-  proposalAddress: string;
-  votes: number;
-}
-
 type amount  = {
   value: string;
   percentage: string;
