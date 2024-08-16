@@ -35,7 +35,8 @@ export class EmailCommentTemplateCompiler extends Template {
       pageTitle: title,
       comment: payload.data.comment,
       type,
-      actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`
+      actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
+      commentCreator: payload.data.creator,
     };
 
     super.registerPartials();
