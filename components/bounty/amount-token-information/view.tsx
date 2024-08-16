@@ -44,6 +44,16 @@ export default function AmountTokenInformation({
 }: AmountTokenInformationProps) {
   const { t } = useTranslation(["bounty"]);
 
+  const { errorTranslation, isMinimumError } = {
+    "bounty:errors.exceeds-minimum-amount": {
+      errorTranslation: t(inputError, { amount: currentToken?.minimum }),
+      isMinimumError: true,
+    },
+  }[inputError] || {
+    errorTranslation: t(inputError),
+    isMinimumError: false,
+  };
+
   return (
     <>
       <RenderItemRow
@@ -75,6 +85,10 @@ export default function AmountTokenInformation({
               if (e.value !== rewardAmount.value && sourceInfo?.source === "event")
                 onIssueAmountValueChange(e, "reward");
             }
+          }
+          error={!!errorTranslation && isMinimumError}
+          helperText={
+            <>{(!!errorTranslation && isMinimumError) && <p className="p-small">{errorTranslation}</p>}</>
           }
         />
       </RenderItemRow>
@@ -115,9 +129,9 @@ export default function AmountTokenInformation({
                 onIssueAmountValueChange(e, "total");
             }
           }
-          error={!!inputError}
+          error={!!errorTranslation && !isMinimumError}
           helperText={
-            <>{inputError && <p className="p-small">{inputError}</p>}</>
+            <>{(!!errorTranslation && !isMinimumError) && <p className="p-small">{errorTranslation}</p>}</>
           }
         />
       </RenderItemRow>

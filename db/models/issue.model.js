@@ -103,6 +103,11 @@ class Issue extends Model {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: false
+      },
+      multipleWinners: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       }
     },
     {

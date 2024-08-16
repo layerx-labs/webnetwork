@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 import RewardInformationSectionView from "components/bounty/create-bounty/sections/reward-information/view";
 
 import { RewardInformationSectionProps } from "types/components";
@@ -26,6 +28,8 @@ export default function RewardInformationSection({
   bountyBalance,
   previewAmount,
   distributions,
+  multipleWinners,
+  onMultipleWinnersChange,
   updateRewardToken,
   updateTransactionalToken,
   addToken,
@@ -35,6 +39,7 @@ export default function RewardInformationSection({
   updateIsFundingType,
   setPreviewAmount,
   setDistributions,
+  sethasAmountError,
 }: RewardInformationSectionProps) {
   const { currentUser } = useUserStore();
 
@@ -46,6 +51,10 @@ export default function RewardInformationSection({
     }
 
     updateIsFundingType(e);
+  }
+
+  function onMultipleWinnersChecked(e: ChangeEvent<HTMLInputElement>) {
+    onMultipleWinnersChange(e.target.checked);
   }
 
   return (
@@ -67,6 +76,8 @@ export default function RewardInformationSection({
       bountyBalance={bountyBalance}
       previewAmount={previewAmount}
       distributions={distributions}
+      multipleWinners={multipleWinners}
+      onMultipleWinnersChecked={onMultipleWinnersChecked}
       updateRewardToken={updateRewardToken}
       updateTransactionalToken={updateTransactionalToken}
       addToken={addToken}
@@ -76,6 +87,7 @@ export default function RewardInformationSection({
       updateIsFunding={handleIsFunding}
       setPreviewAmount={setPreviewAmount}
       setDistributions={setDistributions}
+      sethasAmountError={sethasAmountError}
     />
   );
 }

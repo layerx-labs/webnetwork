@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import {NumberFormatValues} from "react-number-format";
 
 import BigNumber from "bignumber.js";
-import {useTranslation} from "next-i18next";
 import {useDebouncedCallback} from "use-debounce";
 
 import calculateDistributedAmounts, {calculateTotalAmountFromGivenReward} from "helpers/calculateDistributedAmounts";
@@ -42,6 +41,7 @@ interface CreateBountyTokenAmountProps {
   currentNetwork: Network;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) =>void;
 }
 
 export default function CreateBountyTokenAmount({
@@ -64,9 +64,9 @@ export default function CreateBountyTokenAmount({
   previewAmount,
   distributions,
   setPreviewAmount,
-  setDistributions
+  setDistributions,
+  sethasAmountError,
 }: CreateBountyTokenAmountProps) {
-  const { t } = useTranslation(["bounty", "common", "proposal"]);
   const [show, setShow] = useState<boolean>(false);
   const [inputError, setInputError] = useState("");
 
@@ -106,33 +106,36 @@ export default function CreateBountyTokenAmount({
     formattedValue: v.decimalPlaces(Math.min(10, decimals), 0).toFixed()
   });
 
+  function resetDistributions() {
+    const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
+
+    setDistributions({
+      treasuryAmount: {
+        value: '0',
+        percentage: chain.closeFeePercentage.toFixed(),
+      },
+      mergerAmount: {
+        value: '0',
+        percentage: mergeCreatorFeeShare.toString(),
+      },
+      proposerAmount: {
+        value: '0',
+        percentage: proposerFeeShare.toString(),
+      },
+      proposals: [],
+      totalServiceFees: BigNumber(0)
+    });
+  }
+
   function handleDistributions(value, type) {
     if (!currentNetwork || !isFunders) return;
 
     const { mergeCreatorFeeShare, proposerFeeShare, chain } = currentNetwork;
 
     if (!value || !(+value)) {
-      setDistributions({
-        treasuryAmount: {
-          value: '0',
-          percentage: chain.closeFeePercentage.toFixed(),
-        },
-        mergerAmount: {
-          value: '0',
-          percentage: mergeCreatorFeeShare.toString(),
-        },
-        proposerAmount: {
-          value: '0',
-          percentage: proposerFeeShare.toString(),
-        },
-        proposals: [],
-        totalServiceFees: BigNumber(0)
-      });
-
-      if (type === "reward")
-        updateIssueAmount(ZeroNumberFormatValues);
-      else
-        setPreviewAmount(ZeroNumberFormatValues);
+      resetDistributions();
+      updateIssueAmount(ZeroNumberFormatValues);
+      setPreviewAmount(ZeroNumberFormatValues);
       return;
     }
 
@@ -165,57 +168,79 @@ export default function CreateBountyTokenAmount({
     if(type === 'reward'){
       const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
       updateIssueAmount(handleNumberFormat(total))
-      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding)
-        setInputError(t("bounty:errors.exceeds-allowance"));
+      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding) {
+        setInputError("bounty:errors.exceeds-allowance");
+        sethasAmountError(true);
+      }
     }
 
     if(type === 'total'){
       const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(value));
       setPreviewAmount(handleNumberFormat(rewardValue));
+
+      if (rewardValue.isLessThan(BigNumber(currentToken?.minimum))) {
+        setInputError("bounty:errors.exceeds-minimum-amount");
+        sethasAmountError(true);
+      }
     }
 
-    setDistributions(_distributions)
+    setDistributions(_distributions);
   }
 
   function handleIssueAmountOnValueChange(values: NumberFormatValues, type: 'reward' | 'total') {
-    const setType = type === 'reward' ? setPreviewAmount : updateIssueAmount
+    const setType = type === 'reward' ? setPreviewAmount : updateIssueAmount;
+    const setOtherType = type === 'reward' ? updateIssueAmount : setPreviewAmount;
 
     if(needValueValidation && amountIsGtBalance(values.floatValue, tokenBalance)){
-      setInputError(t("bounty:errors.exceeds-balance"));
+      setInputError("bounty:errors.exceeds-balance");
       setType(values);
+      setOtherType(ZeroNumberFormatValues);
+      sethasAmountError(true);
+      resetDistributions();
     }else if (
       needValueValidation &&
       +values.floatValue > +currentToken?.currentValue
     ) {
       setType(ZeroNumberFormatValues);
-      setInputError(t("bounty:errors.exceeds-allowance"));
+      setOtherType(ZeroNumberFormatValues);
+      resetDistributions();
+      setInputError("bounty:errors.exceeds-allowance");
+      sethasAmountError(true);
     } else if (values.floatValue < 0) {
       setType(ZeroNumberFormatValues);
+      setOtherType(ZeroNumberFormatValues);
     } else if (
       values.floatValue !== 0 &&
       BigNumber(values.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
       setType(values); 
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
+      setOtherType(ZeroNumberFormatValues);
+      resetDistributions();
+      setInputError("bounty:errors.exceeds-minimum-amount");
+      sethasAmountError(true);
     } else {
+      if (inputError) {
+        setInputError("");
+        sethasAmountError(false);
+      }
       debouncedDistributionsUpdater(values.value, type);
       setType(handleNumberFormat(BigNumber(values.value)));
-      if (inputError) setInputError("");
     }
   }
 
   function handleUpdateToken() {
-    if (issueAmount?.floatValue === 0) return;
+    if (issueAmount?.floatValue === 0 || previewAmount?.floatValue === 0) return;
 
     if (
-      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
+      BigNumber(issueAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum)) ||
+      BigNumber(previewAmount?.floatValue).isLessThan(BigNumber(currentToken?.minimum))
     ) {
-      setInputError(t("bounty:errors.exceeds-minimum-amount", {
-          amount: currentToken?.minimum,
-      }));
-    } else setInputError("");
+      setInputError("bounty:errors.exceeds-minimum-amount");
+      sethasAmountError(true);
+    } else {
+      setInputError("");
+      sethasAmountError(false);
+    }
   }
 
   useEffect(handleUpdateToken, [currentToken?.minimum]);

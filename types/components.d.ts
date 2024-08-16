@@ -111,6 +111,7 @@ export interface RewardInformationViewProps {
   bountyBalance: BigNumber;
   previewAmount: NumberFormatValues;
   distributions: DistributionsProps;
+  multipleWinners: boolean;
   updateRewardToken: (v: Token) => void;
   updateTransactionalToken: (v: Token) => void;
   addToken: (newToken: Token) => Promise<void>;
@@ -120,6 +121,8 @@ export interface RewardInformationViewProps {
   updateIsFunding: (v: boolean) => void;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) => void;
+  onMultipleWinnersChecked: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface RewardInformationSectionProps {
@@ -138,6 +141,8 @@ export interface RewardInformationSectionProps {
   bountyBalance: BigNumber;
   previewAmount: NumberFormatValues;
   distributions: DistributionsProps;
+  multipleWinners: boolean;
+  onMultipleWinnersChange: (value: boolean) => void;
   updateRewardToken: (v: Token) => void;
   updateTransactionalToken: (v: Token) => void;
   addToken: (newToken: Token) => Promise<void>;
@@ -147,6 +152,7 @@ export interface RewardInformationSectionProps {
   updateIsFundingType: (v: boolean) => void;
   setPreviewAmount: (v: NumberFormatValues) => void;
   setDistributions: (v: DistributionsProps) => void;
+  sethasAmountError: (v: boolean) => void;
 }
 
 export interface LinkProps {

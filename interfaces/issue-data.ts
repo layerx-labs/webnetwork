@@ -22,8 +22,6 @@ export type IssueState =
   | "partial-funded"
   | "proposal";
 
-export type CID = `${string}/${string}`;
-
 export interface IssueData {
   id?: string; // database id
   amount?: string;
@@ -75,6 +73,7 @@ export interface IssueData {
   userId: number;
   user?: User;
   privateDeliverables?: boolean;
+  multipleWinners?: boolean;
 }
 
 export interface Disputes {

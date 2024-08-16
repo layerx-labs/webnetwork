@@ -14,6 +14,8 @@ const NetworkTokensModel = require("../db/models/network-tokens.model");
 
 const StagingAccounts = require('./staging-accounts');
 
+const DIVISOR = 1000000;
+
 const _xNetwork = (name, rpc, chainTokenName, chainId, chainName, shortName, chainScan, eventsUrl) =>
   ({[name]: {rpc, chainTokenName, chainId, chainName, shortName, chainScan, eventsUrl}})
 
@@ -26,6 +28,7 @@ const _xNetworks = {
   ... _xNetwork(`irene`, [`https://eth-irene.taikai.network:8080`], `TETH`, 1502, `Irene Test Chain`, `irene`, `https://eth-irene.taikai.network:8080`, `https://irene.taikai.network:2053`),
   ... _xNetwork(`apollodorus`, [`https://eth-apollodorus.taikai.network:8080`], `TETH`, 1506, `Apollodorus Test Chain`, `apollodorus`, `https://eth-apollodorus.taikai.network:8080`, `https://apollodorus.taikai.network:2053`),
   ... _xNetwork(`amoy`, [`https://polygon-amoy-bor-rpc.publicnode.com`], `MATIC`, 80002, `Amoy`, `amoy`, `https://www.oklink.com/amoy/tx`, `https://apollodorus.taikai.network:2053`),
+  ... _xNetwork(`amoy-local`, [`https://rpc-amoy.polygon.technology`], `MATIC`, 80002, `Amoy`, `amoy`, `https://www.oklink.com/amoy/tx`, `http://localhost:3334`),
 }
 
 const options = yargs(hideBin(process.argv))
@@ -66,15 +69,19 @@ async function main(option = 0) {
   const env = require('dotenv').config({path: options.envFile[option]}).parsed;
   const privateKey = options.privateKey;
 
+  const DEFAULT_LOCK_FEE_PERCENTAGE = 10 * DIVISOR;
+  const DEFAULT_CLOSE_BOUNTY_FEE = 10 * DIVISOR;
+  const DEFAULT_CANCEL_BOUNTY_FEE = 10 * DIVISOR;
+
   const {
-    DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION = 100,
-    DEPLOY_LOCK_FEE_PERCENTAGE = 10000,
-    DEPLOY_CLOSE_BOUNTY_FEE = 1000000,
-    DEPLOY_CANCEL_BOUNTY_FEE = 2000000,
+    DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION = 1000,
+    DEPLOY_LOCK_FEE_PERCENTAGE,
+    DEPLOY_CLOSE_BOUNTY_FEE,
+    DEPLOY_CANCEL_BOUNTY_FEE,
     DEPLOY_TOKENS_CAP_AMOUNT = "300000000000000000000000000",
-    DEPLOY_DRAFT_TIME = 60 * 5, // 5 minutes
-    DEPLOY_DISPUTABLE_TIME = 60 * 10, // 10 minutes
-    DEPLOY_COUNCIL_AMOUNT = 105000,
+    DEPLOY_DRAFT_TIME = 60, // 1 minute
+    DEPLOY_DISPUTABLE_TIME = 60 * 3, // 3 minutes
+    DEPLOY_COUNCIL_AMOUNT = 100,
     DEPLOY_MERGER_FEE = 2,
     DEPLOY_PROPOSER_FEE = 2,
     NEXT_PUBLIC_HOME_URL
@@ -83,7 +90,7 @@ async function main(option = 0) {
   const connection = new Web3Connection({web3Host, privateKey});
   connection.start();
 
-  const isDevelopment = options.network[option] === "development";
+  const isDevelopment = ["development", "amoy-local"].includes(options.network[option]);
   const accounts = isDevelopment ? await connection.Web3.eth.getAccounts() : StagingAccounts;
 
   const treasury = options.treasury ? options.treasury[option] : await connection.getAddress();
@@ -132,9 +139,9 @@ async function main(option = 0) {
                   governanceToken,
                   DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
                   treasury,
-                  DEPLOY_LOCK_FEE_PERCENTAGE,
-                  DEPLOY_CLOSE_BOUNTY_FEE,
-                  DEPLOY_CANCEL_BOUNTY_FEE,
+                  DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE,
+                  DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_CLOSE_BOUNTY_FEE,
+                  DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_CANCEL_BOUNTY_FEE,
                   bountyToken);
   }
 
@@ -253,9 +260,10 @@ async function main(option = 0) {
           isDefault: false,
           color: "#29b6af",
           lockAmountForNetworkCreation: DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
-          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE,
-          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE,
-          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE,
+          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          icon: "QmZ8dSeJp9pZn2TFy2gp7McfMj9HapqnPW3mwnnrDLKtZs",
         }
       });
 
@@ -304,7 +312,14 @@ async function main(option = 0) {
           mergeCreatorFeeShare: 0.05,
           percentageNeededForDispute: 3,
           cancelableTime: 180 * 86400,
-          proposerFeeShare: 10
+          proposerFeeShare: 10,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          banned_domains: [],
+          allow_list: [],
+          close_task_allow_list: [],
+          logoIcon: "QmNxvpvdwwv1Hb6177o3GdyFJ61jiSMNTW6X8mecvpFMmJ",
+          fullLogo: "QmNjrBx4W47ds64C6eQx3Q8CGPA8GJxQsbpQLt9JQqBpJB",
         }
       });
 
@@ -401,4 +416,3 @@ async function main(option = 0) {
 
   process.exit(0);
 })();
-

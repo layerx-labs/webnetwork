@@ -7,16 +7,6 @@ import BigNumber from "bignumber.js";
 import { Wallet } from "./authentication";
 import { TransactionTypes } from "./enums/transaction-types";
 
-export type OraclesActionLabel = "Lock" | "Unlock";
-export interface OraclesState {
-  oraclesDelegatedByOthers: number;
-  amounts: number[];
-  addresses: string[];
-  tokensLocked: number;
-  delegatedToOthers?: number;
-  delegatedEntries?: [string, number][];
-}
-
 export interface DelegationExtended extends Delegation {
   id: number;
   from: string;
@@ -35,16 +25,6 @@ export interface OracleToken {
   symbol: string;
   name: string;
   icon: ReactElement;
-}
-
-export interface TokensOracles {
-  symbol: string;
-  name: string;
-  networkName: string;
-  icon: string | ReactElement;
-  oraclesLocked: BigNumber;
-  address: string;
-  chainId?: number;
 }
 
 interface Info {
