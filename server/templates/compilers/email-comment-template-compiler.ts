@@ -34,6 +34,7 @@ export class EmailCommentTemplateCompiler extends Template {
     const templateData = {
       pageTitle: title,
       comment: payload.data.comment,
+      taskTitle: payload.data.taskTitle,
       type,
       actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
       commentCreator: payload.data.creator,

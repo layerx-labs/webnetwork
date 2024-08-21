@@ -22,6 +22,7 @@ export class EmailCommentSubscriberTemplateCompiler extends Template {
       pageTitle: title,
       comment: payload.data.comment,
       type: payload.data.type,
+      taskTitle: payload.data.taskTitle,
       isTaskType: payload.data.type === "task",
       actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
       commentCreator: payload.data.creator,

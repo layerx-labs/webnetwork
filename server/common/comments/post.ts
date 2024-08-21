@@ -103,6 +103,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
         data: {
           comment,
           creator: creatorLabel,
+          taskTitle: bounty.title,
           taskId: issueId,
           deliverableId: deliverableId,
           proposalId: proposalId,
@@ -189,6 +190,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       const data = {
         entryId: deliverableId || proposalId,
         taskId: issueId,
+        taskTitle: bounty.title,
         comment,
         madeBy: creatorLabel,
         creator: creatorLabel,
@@ -243,6 +245,7 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       type: deliverableId && "deliverable" || proposalId && "proposal" || "task",
       entryId: deliverableId || proposalId,
       taskId: issueId,
+      taskTitle: bounty.title,
       comment,
       madeBy: creatorLabel,
       creator: creatorLabel,

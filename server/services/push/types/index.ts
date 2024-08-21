@@ -16,6 +16,7 @@ export type CommentPushProps =
       comment: string;
       madeBy: string;
       taskId: string;
+      taskTitle: string;
       entryId?: string;
       creator?: string;
       type?: "task" | "proposal" | "deliverable"
