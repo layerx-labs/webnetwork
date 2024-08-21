@@ -28,8 +28,10 @@ export class NotifCommentTemplateCompiler extends Template {
     const templateData = {
       comment: payload.data.comment,
       type,
+      taskTitle: payload.data.taskTitle,
       actionHref: `${actionUrlPart}/`,
-      creator: payload.data.creator
+      creator: payload.data.creator,
+      marketplace: payload.data.marketplace,
     };
 
     super.registerPartials();
