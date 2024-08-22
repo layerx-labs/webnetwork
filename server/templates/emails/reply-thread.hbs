@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{pageTitle}}</title>
+    {{> headLinks}}
+    {{> styles}}
+</head>
+<body>
+    <div class="main">
+        <table id="container" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td>
+                    {{> logo}}
+                    <h1>You have a new reply on a thread you participate</h1>
+
+                    <table id="action-card" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td>
+                                <p>{{commentCreator}} commented:</p>
+                                <p>{{comment}}</p>
+                                <a id="action-button" href="{{actionHref}}">View Comment</a>
+                            </td>
+                        </tr>
+                    </table>
+                    {{> appLinks}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

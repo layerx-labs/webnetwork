@@ -7,6 +7,7 @@ import {NotifCommentTemplateCompiler} from "./notif-comment-template-compiler";
 import { NotifReplyThreadTemplateCompiler } from "server/templates/compilers/notif-reply-thread-template-compiler";
 import { NotifCommentSubscriberTemplateCompiler } from "server/templates/compilers/notif-comment-subscriber-template-compiler";
 import { EmailCommentSubscriberTemplateCompiler } from "server/templates/compilers/email-comment-subscriber-template-compiler";
+import { EmailReplyThreadTemplateCompiler } from "server/templates/compilers/email-reply-thread-template-compiler";
 
 export function getTemplateCompiler({name}: Pick<AnalyticEvent, "name">): Template {
   switch (name) {
@@ -21,6 +22,9 @@ export function getTemplateCompiler({name}: Pick<AnalyticEvent, "name">): Templa
   case AnalyticEventName.NOTIF_REPLY_TO_THREAD_CREATOR:
   case AnalyticEventName.NOTIF_REPLY_TO_THREAD_PARTICIPANT:
     return new NotifReplyThreadTemplateCompiler();
+  case AnalyticEventName.REPLY_TO_THREAD_PARTICIPANT:
+  case AnalyticEventName.REPLY_TO_THREAD_CREATOR:
+    return new EmailReplyThreadTemplateCompiler();
   case AnalyticEventName.SUBSCRIBER_COMMENT:
     return new EmailCommentSubscriberTemplateCompiler();
   case AnalyticEventName.NOTIF_SUBSCRIBER_COMMENT:
