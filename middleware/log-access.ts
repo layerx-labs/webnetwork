@@ -18,10 +18,20 @@ export const LogAccess = (handler: NextApiHandler) => {
 
     const pathname = url.split('/api')[1].replace(/\?.+/g, '');
 
-    const payload = (query || body) ? ({ ... query ? {query} : {}, ... body ? {body} : {}}) : {};
+    const payload = {
+      ... (query ? { query } : {}),
+      ... (body ? { body } : {})
+    };
 
     elasticLoggerMaker(`bepro-access-logs`)
-      .log(`debug`, ["Access", [{_type: "access", payload, method, pathname, headers: req?.headers, connection: {xForwarded, remoteAddress, cfConnectingIp}}]])
+      .log(`debug`, ["Access", [{
+        _type: "access",
+        payload: { data: JSON.stringify(payload) },
+        method,
+        pathname,
+        headers: { ...req?.headers, cookie: "removed" },
+        connection: { xForwarded, remoteAddress, cfConnectingIp }
+      }]])
 
     try {
       info(`access`, {pathname, payload, method,});
