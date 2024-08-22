@@ -34,6 +34,7 @@ export class NotifReplyThreadTemplateCompiler extends Template {
       comment: comment,
       actionHref: this.getActionHref(marketplace, taskId, deliverableId, proposalId),
       creator: creator,
+      taskTitle: payload.data.taskTitle,
       marketplace
     };
 

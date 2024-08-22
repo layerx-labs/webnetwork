@@ -16,11 +16,12 @@ export type CommentPushProps =
       comment: string;
       madeBy: string;
       taskId: string;
+      taskTitle: string;
       entryId?: string;
       creator?: string;
       type?: "task" | "proposal" | "deliverable"
     }
-  >
+    >
 
 export type ReplyThreadPushProps =
   PushProps<
@@ -28,6 +29,7 @@ export type ReplyThreadPushProps =
       comment: string;
       creator: string;
       target: string;
+      taskTitle: string;
       type: "creator" | "participant";
       taskId: string;
       deliverableId?: string;
