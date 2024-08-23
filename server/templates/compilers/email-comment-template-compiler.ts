@@ -13,8 +13,8 @@ export class EmailCommentTemplateCompiler extends Template {
   }
 
   compile(payload: CommentPushProps) {
-
-    const title = `${payload.data.marketplace} @ BEPRO | ${EmailNotificationSubjects[payload.type]}`;
+    const title = 
+      `${payload.data.marketplace?.toUpperCase()} @ BEPRO | ${EmailNotificationSubjects[payload.type]} "${payload.data.taskTitle}"`;
 
     const actionUrlEntryPart =
       payload.data.entryId
@@ -34,6 +34,7 @@ export class EmailCommentTemplateCompiler extends Template {
     const templateData = {
       pageTitle: title,
       comment: payload.data.comment,
+      taskTitle: payload.data.taskTitle,
       type,
       actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
       commentCreator: payload.data.creator,
