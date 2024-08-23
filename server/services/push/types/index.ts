@@ -5,7 +5,7 @@ export type EmailNotificationTargets = EmailNotificationTarget[];
 
 export type PushProps<D = object> = {
   type: AnalyticEventName;
-  data: { marketplace: string } & D;
+  data: { marketplace: string, taskTitle: string } & D;
   uuid?: string;
   target: EmailNotificationTargets;
 }

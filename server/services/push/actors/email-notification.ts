@@ -8,7 +8,6 @@ import {getEventTargets} from "../../notifications/get-event-targets";
 import {Templates} from "../../notifications/templates";
 import {AnalyticEventName, CommentPushProps, EmailNotificationTargets, PushProps} from "../types";
 
-
 export class EmailNotification {
   constructor(readonly templateName: keyof typeof Templates,
               readonly payload: PushProps|CommentPushProps,
@@ -22,7 +21,9 @@ export class EmailNotification {
     for (const [, to] of recipients.filter(e => e).entries()) {
       const uuid = uuidv4();
 
-      const subject = `${this.payload.data.marketplace} @ BEPRO | ${EmailNotificationSubjects[this.templateName]}`;
+      const marketplace = this.payload.data.marketplace?.toUpperCase();
+      const taskTitle = this.payload.data.taskTitle;
+      const subject = `${marketplace} @ BEPRO | ${EmailNotificationSubjects[this.templateName]} "${taskTitle}"`;
 
       const content =
         getTemplateCompiler({name: this.templateName as AnalyticEventName})
