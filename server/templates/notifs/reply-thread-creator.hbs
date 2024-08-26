@@ -4,13 +4,20 @@
     <span class="xs-medium title text-white mb-3">
         You have a new reply on your comment
     </span>
+    {{#if taskTitle }}
+        <span class="sm-regular mb-3 text-white capitalize-first">
+            {{taskTitle}}
+        </span>
+    {{/if}}
+
+
     {{#if comment}}
-        <span class="sm-regular mb-3 text-white-50">
+        <span class="sm-regular mb-3 text-white-50 capitalize-first">
             {{comment}}
         </span>
     {{/if}}
     <div class="d-flex gap-2 text-white-50">
-        <span class="sm-regular">{{marketplace}}</span>
+        <span class="sm-regular capitalize-first">{{marketplace}}</span>
         <span>•</span>
         <span class="sm-regular">%DATE%</span>
     </div>

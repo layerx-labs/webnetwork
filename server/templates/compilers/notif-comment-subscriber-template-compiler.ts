@@ -15,6 +15,7 @@ export class NotifCommentSubscriberTemplateCompiler extends Template {
     const templateData = {
       comment: payload.data.comment,
       type: payload.data.type,
+      taskTitle: payload.data.taskTitle,
       isTaskType: payload.data.type === "task",
       actionHref: `${actionUrlPart}/`,
       creator: payload.data.creator,

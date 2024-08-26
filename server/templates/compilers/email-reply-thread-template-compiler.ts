@@ -6,7 +6,7 @@ import getConfig from "next/config";
 
 const { publicRuntimeConfig } = getConfig();
 
-export class EmailCommentSubscriberTemplateCompiler extends Template {
+export class EmailReplyThreadTemplateCompiler extends Template {
   constructor() {
     super("server/templates/");
   }
@@ -22,7 +22,6 @@ export class EmailCommentSubscriberTemplateCompiler extends Template {
       pageTitle: title,
       comment: payload.data.comment,
       type: payload.data.type,
-      taskTitle: payload.data.taskTitle,
       isTaskType: payload.data.type === "task",
       actionHref: `${publicRuntimeConfig.urls.home}/${actionUrlPart}/?fromEmail=${payload.uuid}`,
       commentCreator: payload.data.creator,
@@ -30,7 +29,7 @@ export class EmailCommentSubscriberTemplateCompiler extends Template {
 
     super.registerPartials();
 
-    return Handlebars.compile(this.getHtmlOf("emails/comment-subscriber.hbs"))(templateData, {allowProtoPropertiesByDefault: true});
+    return Handlebars.compile(this.getHtmlOf("emails/reply-thread.hbs"))(templateData, {allowProtoPropertiesByDefault: true});
   }
 
 }
