@@ -11,18 +11,14 @@
             <tr>
                 <td>
                     {{> logo}}
-                    {{#if isTaskType}}
-                        <h1>You have a new comment on a task you are subscribed</h1>
-                    {{else}}
-                        <h1>You have a new comment on a {{type}} of task you are subscribed</h1>
-                    {{/if}}
+                    <h1>You have a new reply on a thread you participate</h1>
 
                     <table id="action-card" cellspacing="0" cellpadding="0" border="0">
                         <tr>
                             <td>
-                                <p class="capitalize-first">{{commentCreator}} commented:</p>
+                                <p>{{commentCreator}} commented:</p>
                                 <p>{{comment}}</p>
-                                <a id="action-button" href="{{actionHref}}">View comment</a>
+                                <a id="action-button" href="{{actionHref}}">View Comment</a>
                             </td>
                         </tr>
                     </table>
