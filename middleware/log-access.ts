@@ -22,17 +22,15 @@ export const LogAccess = (handler: NextApiHandler) => {
     const pathname = url.split('/api')[1].replace(/\?.+/g, '');
 
     const payload = {
-      data: JSON.stringify({
-        ... (query ? { query } : {}),
-        ... (body ? { body } : {})
-      })
+      ... (query ? { query } : {}),
+      ... (body ? { body } : {})
     };
   
     if (serverRuntimeConfig?.accessLogsEnabled)
       elasticLoggerMaker(`bepro-access-logs`)
         .log(`debug`, ["Access", [{
           _type: "access",
-          payload: { data: JSON.stringify(payload) },
+          payload,
           method,
           pathname,
           headers: { ...req?.headers, cookie: "removed" },
