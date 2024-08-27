@@ -100,7 +100,8 @@ const serverRuntimeConfig = {
   imgProxy: {
     salt: process.env.IMGPROXY_SALT,
     key: process.env.IMGPROXY_KEY,
-  }
+  },
+  accessLogsEnabled: process.env.ACCESS_LOGS_ENABLED === "true",
 }
 
 module.exports = () => removeImports({
