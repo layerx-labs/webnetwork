@@ -3,7 +3,7 @@ export function stringifyArrayValues(obj: object) {
 
   for (const key in result) {
     if (Array.isArray(result[key]))
-      result[key] = JSON.stringify(result[key]);
+      result[key] = { array_value: JSON.stringify(result[key]) };
     else if (typeof result[key] === "object")
       result[key] = stringifyArrayValues(result[key]);
   }
