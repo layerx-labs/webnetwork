@@ -22,19 +22,25 @@ async function post(req: NextApiRequest) {
     action: [action]
   } = req.query;
 
-  const { identifier } = req.body;
+  const { address, handle } = req.body;
+
+  const addressWhere = Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")),
+                                        Op.eq,
+                                        address?.toLowerCase());
+
+  const handleWhere = Sequelize.where(Sequelize.fn("lower", Sequelize.col("user.handle")),
+                                      Op.eq,
+                                      handle?.toLowerCase()); 
 
   const whereCondition = {
     all: {
       [Op.or]: [
-        {address: identifier?.toLowerCase()},
-        {handle: identifier}
+        addressWhere,
+        handleWhere,
       ]
     },
-    login: {handle: identifier},
-    address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")),
-                              Op.eq,
-                              identifier?.toLowerCase())
+    login: handleWhere,
+    address: addressWhere,
   };
 
   const queryOptions = {
@@ -51,8 +57,8 @@ async function post(req: NextApiRequest) {
 
   const isAdmin = UserRoleUtils.hasAdminRole(token);
   const isGovernor = UserRoleUtils.hasGovernorRole(token);
-  const isSameUser = !!token?.address && lowerCaseCompare(token?.address, identifier) ||
-    !!token?.login && lowerCaseCompare(token?.login, identifier);
+  const isSameUser = !!token?.address && lowerCaseCompare(token?.address, address) ||
+    !!token?.login && lowerCaseCompare(token?.login, handle);
 
   if (isAdmin)
     scope = UserTableScopes.admin;
