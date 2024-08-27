@@ -31,7 +31,7 @@ async function post(req: NextApiRequest) {
         {handle: identifier}
       ]
     },
-    login: {handle: {[Op.in]: req.body || []}},
+    login: {handle: identifier},
     address: Sequelize.where( Sequelize.fn("lower", Sequelize.col("user.address")),
                               Op.eq,
                               identifier?.toLowerCase())
