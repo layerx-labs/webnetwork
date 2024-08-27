@@ -1,8 +1,6 @@
 import {Client} from "@elastic/elasticsearch";
 import {LoggerPlugin} from "@taikai/scribal/dist/lib/types";
 
-import { stringifyArrayValues } from "helpers/object";
-
 const {
   NEXT_ELASTIC_SEARCH_URL: node,
   NEXT_ELASTIC_SEARCH_USERNAME: username,
@@ -22,7 +20,9 @@ export const elasticLoggerMaker = (index_name: any = `bepro-app-logs`): LoggerPl
     const params =
       (typeof _params === "string" || typeof _params === "number")
         ? {value: _params}
-        : stringifyArrayValues(_params);
+        : Array.isArray(_params)
+          ? {value_array: JSON.stringify(_params) }
+          : _params;
 
     new Client({node, auth: {username, password}})
       .index({
