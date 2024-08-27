@@ -22,8 +22,10 @@ export const LogAccess = (handler: NextApiHandler) => {
     const pathname = url.split('/api')[1].replace(/\?.+/g, '');
 
     const payload = {
-      ... (query ? { query } : {}),
-      ... (body ? { body } : {})
+      data: JSON.stringify({
+        ... (query ? { query } : {}),
+        ... (body ? { body } : {})
+      })
     };
   
     if (serverRuntimeConfig?.accessLogsEnabled)
