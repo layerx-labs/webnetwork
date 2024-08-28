@@ -30,7 +30,7 @@ export const LogAccess = (handler: NextApiHandler) => {
       elasticLoggerMaker(`bepro-access-logs`)
         .log(`debug`, ["Access", [{
           _type: "access",
-          payload: { data: JSON.stringify(payload) },
+          payload,
           method,
           pathname,
           headers: { ...req?.headers, cookie: "removed" },

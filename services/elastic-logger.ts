@@ -6,7 +6,6 @@ const {
   NEXT_ELASTIC_SEARCH_USERNAME: username,
   NEXT_ELASTIC_SEARCH_PASSWORD: password,
   NEXT_LOG_APP_NAME: index = "webnetwork-logs",
-  NEXT_LOG_TO_ELASTIC,
 } = process.env;
 
 export const elasticLoggerMaker = (index_name: any = `bepro-app-logs`): LoggerPlugin => ({
@@ -22,23 +21,22 @@ export const elasticLoggerMaker = (index_name: any = `bepro-app-logs`): LoggerPl
       (typeof _params === "string" || typeof _params === "number")
         ? {value: _params}
         : Array.isArray(_params)
-          ? {value_array: _params}
+          ? {value_array: JSON.stringify(_params) }
           : _params;
 
-    if (NEXT_LOG_TO_ELASTIC)
-      new Client({node, auth: {username, password}})
-        .index({
-          index: `${index_name}-${index}`,
-          document: {
-            level,
-            message: contents[0],
-            params,
-            createdAt: new Date().toISOString(),
-          }
-        })
-        .catch(e => {
-          console.log(`Failed to log on elastic`, e);
-        });
+    new Client({node, auth: {username, password}})
+      .index({
+        index: `${index_name}-${index}`,
+        document: {
+          level,
+          message: contents[0],
+          params,
+          createdAt: new Date().toISOString(),
+        }
+      })
+      .catch(e => {
+        console.log(`Failed to log on elastic`, e);
+      });
 
   }
 })
