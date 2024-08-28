@@ -4,6 +4,7 @@ import {useTranslation} from "next-i18next";
 
 import InputCommentView from "components/bounty/comments/input-comment/view";
 
+import { COMMENT_MAX_LENGTH } from "helpers/constants";
 import {QueryKeys} from "helpers/query-keys";
 
 import {IdsComment, TypeComment} from "interfaces/comments";
@@ -34,6 +35,8 @@ export default function InputComment({
     deliverable: QueryKeys.deliverable(ids?.deliverableId?.toString()),
     proposal: QueryKeys.proposalComments(ids?.proposalId?.toString())
   }[type];
+  const commentLength = comment?.length || 0;
+  const error = commentLength > COMMENT_MAX_LENGTH ? "max-length" : null;
 
   const { refresh: refreshSubscriptions } = useTaskSubscription();
   const { mutate: addComment } = useReactQueryMutation({
@@ -61,6 +64,9 @@ export default function InputComment({
       userAddress={userAddress}
       avatarHash={avatar}
       comment={comment}
+      commentLength={commentLength}
+      maxLength={COMMENT_MAX_LENGTH}
+      error={error}
       onCommentChange={onCommentChange}
       onCommentSubmit={addComment}
     />
