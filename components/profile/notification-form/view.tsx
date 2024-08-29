@@ -19,6 +19,8 @@ interface NotificationFormViewProps {
   isInvalid: boolean;
   isConfirmationPending: boolean;
   isExecuting: boolean;
+  isEmailConfirmed: boolean;
+  canResend: boolean;
   emailVerificationError: string;
   notificationSettings: Partial<NotificationSettings>;
   onChange: (e) => void;
@@ -36,6 +38,8 @@ export default function NotificationFormView({
   isInvalid,
   isConfirmationPending,
   isExecuting,
+  isEmailConfirmed,
+  canResend,
   emailVerificationError,
   notificationSettings,
   onChange,
@@ -78,7 +82,7 @@ export default function NotificationFormView({
               <Button
                 onClick={onSave}
                 disabled={isSaveButtonDisabled}
-                isLoading={isExecuting}
+                isLoading={!emailVerificationError && isExecuting}
                 data-testid="notification-save-btn">
                 {t("actions.save")}
               </Button>
@@ -99,22 +103,24 @@ export default function NotificationFormView({
 
         <If condition={!!emailVerificationError}>
           <div className="row align-items-center mt-2">
-            <div className="col-6">
+            <div className="col-6 col-lg-4">
               <small className="xs-medium text-danger">
                 {t(`profile:email-errors.${emailVerificationError}`)}
               </small>
             </div>
 
-            <div className="col-auto">
-              <Button
-                onClick={onResend}
-                disabled={isExecuting || !emailVerificationError}
-                isLoading={emailVerificationError && isExecuting}
-                data-testid="notification-re-send-btn"
-              >
-                {t("profile:notifications-form.re-send")}
-              </Button>
-            </div>
+            <If condition={!!canResend}>
+              <div className="col-auto">
+                <Button
+                  onClick={onResend}
+                  disabled={isExecuting || !emailVerificationError}
+                  isLoading={emailVerificationError && isExecuting}
+                  data-testid="notification-re-send-btn"
+                >
+                  {t("profile:notifications-form.re-send")}
+                </Button>
+              </div>
+            </If>
           </div>
         </If>
 
@@ -123,6 +129,16 @@ export default function NotificationFormView({
             <div className="col">
                 <span className="text-info xs-medium font-weight-normal">
                   {t("profile:notifications-form.re-send-email")}
+                </span>
+            </div>
+          </div>
+        </If>
+
+        <If condition={isEmailConfirmed && !emailVerificationError}>
+          <div className="row align-items-center mt-2">
+            <div className="col">
+                <span className="text-info xs-medium font-weight-normal">
+                  {t("profile:notifications-form.email-confirmed")}
                 </span>
             </div>
           </div>

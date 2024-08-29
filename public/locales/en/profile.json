@@ -49,12 +49,13 @@
       "update-handle": "Error update handle"
     }
   },
-   "notifications-form": {
+  "notifications-form": {
       "title": "Notifications",
       "message": "Allow Bepro Marketplace to send you updates in-app and via email. These can include updates to tasks, app updates, etc.",
       "invalid-email": "Invalid email",
       "re-send-email": "A confirmation email was sent, please check your inbox and spam box.",
       "re-send": "Re-send",
+      "email-confirmed": "This email was confirmed successfully.",
       "success-toast": {
         "title": "Success",
         "content": "Email confirmed",
@@ -65,14 +66,15 @@
       }
   },
   "email-errors": {
-    "invalid-link": "Invalid confirmation link",
-    "already-confirmed": "Email already confirmed",
+    "invalid-link": "Invalid confirmation link.",
+    "already-confirmed": "Email already confirmed.",
     "expired-link": "This confirmation link is expired. Try re-sending another email.",
-    "failed-to-update": "Failed to update email",
+    "failed-to-update": "Failed to update email.",
     "try-again-later": "Something went wrong, try again later",
-    "email-already-in-use": "Email already in use",
+    "email-already-in-use": "Email already in use.",
     "invalid-email": "Invalid email",
-    "nothing-to-change": "Nothing to change"
+    "nothing-to-change": "Nothing to change",
+    "server-error": "Something went wrong, please try re-send the email or send us a message on our discord."
   },
   "take-back-success": "Take back",
   "take-back-fail": "Failed to take back",
