@@ -8,8 +8,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   switch (req.method.toLowerCase()) {
   case "get":
-    await get(req)
-    res.redirect("/profile?emailVerification=success");
+    await get(req);
+    res.redirect("/dashboard?emailVerification=success");
     break;
 
   default:
