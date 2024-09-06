@@ -8,7 +8,6 @@ import {appWithTranslation} from "next-i18next";
 import getConfig from "next/config";
 import {useRouter} from "next/router";
 import {GoogleAnalytics} from "nextjs-google-analytics";
-import {polygon} from "viem/chains";
 
 import ConsentCookie from "components/consent-cokie";
 import Loading from "components/loading";
@@ -43,7 +42,7 @@ function App({ Component, pageProps: { session, seoData, ...pageProps } }) {
       <QueryClientProvider client={queryClient}>
         <GoogleAnalytics gaMeasurementId={publicRuntimeConfig.gaMeasureID} trackPageViews />
         <SessionProvider session={session}>
-            <RainbowKitProvider initialChain={polygon}>
+            <RainbowKitProvider initialChain={publicRuntimeConfig?.defaultChain?.id}>
               <AuthenticationProvider>
                 <RootProviders>
                   <HydrationBoundary state={pageProps.dehydratedState}>
