@@ -44,15 +44,17 @@ const config = getDefaultConfig({
     appName: "BEPRO",
     projectId: publicRuntimeConfig?.walletConnectProjectId || "bc2288336095f20ebf8653a1ab670566",
     chains: [
-      ganache,
       polygon,
-      polygonAmoy,
-      polygonMumbai,
       aurora,
-      auroraTestnet,
       moonbeam,
       coinEx,
       mainnet,
+      polygonAmoy,
+      polygonMumbai,
+      auroraTestnet,
+      ... (publicRuntimeConfig?.isProduction ? [] : [
+        ganache,
+      ])
     ],
     ssr: true,
     storage: createStorage({
