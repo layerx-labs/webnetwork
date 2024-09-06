@@ -55,7 +55,7 @@
       "invalid-email": "Invalid email",
       "re-send-email": "A confirmation email was sent, please check your inbox and spam box.",
       "re-send": "Re-send",
-      "email-confirmed": "This email was confirmed successfully.",
+      "email-confirmed": "Email verified",
       "success-toast": {
         "title": "Success",
         "content": "Email confirmed",

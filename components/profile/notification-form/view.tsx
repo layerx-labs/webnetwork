@@ -2,6 +2,7 @@ import React from "react";
 
 import {useTranslation} from "next-i18next";
 
+import DoneIcon from "assets/icons/done-icon";
 import InfoIconEmpty from "assets/icons/info-icon-empty";
 
 import Button from "components/button";
@@ -137,7 +138,10 @@ export default function NotificationFormView({
         <If condition={isEmailConfirmed && !emailVerificationError}>
           <div className="row align-items-center mt-2">
             <div className="col">
-                <span className="text-info xs-medium font-weight-normal">
+                <span className="text-green-500 xs-medium">
+                  <DoneIcon className="mr-1" />
+                </span>
+                <span className="text-green-500 xs-medium font-weight-normal">
                   {t("profile:notifications-form.email-confirmed")}
                 </span>
             </div>
