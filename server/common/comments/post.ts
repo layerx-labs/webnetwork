@@ -3,6 +3,7 @@ import {IncludeOptions, Op, Sequelize, WhereOptions} from "sequelize";
 
 import models from "db/models";
 
+import { COMMENT_MAX_LENGTH } from "helpers/constants";
 import { truncateAddress } from "helpers/truncate-address";
 
 import {HttpBadRequestError, HttpConflictError, HttpNotFoundError} from "server/errors/http-errors";
@@ -27,9 +28,11 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
   const foundOrValid = (v) => v ? 'found' : 'valid';
 
+  if (comment?.length > COMMENT_MAX_LENGTH)
+    throw new HttpBadRequestError(`Comment exceeds max length of ${COMMENT_MAX_LENGTH} characters`);
+
   if (!["issue", "deliverable", "proposal", "review"].includes(type))
     throw new HttpBadRequestError("type does not exist")
-
 
   if (!issueId || !isValidNumber(issueId))
     throw new HttpNotFoundError(`issueId not ${foundOrValid(!issueId)}`);
@@ -39,7 +42,6 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
 
   if (type === "proposal" && (!proposalId || !isValidNumber(proposalId)))
     throw new HttpNotFoundError(`proposalId not ${foundOrValid(!proposalId)}`)
-
 
   const user = context.user;
 
