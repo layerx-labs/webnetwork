@@ -430,7 +430,10 @@
     "failed-load-network": "failed to load marketplace",
     "file-size-exceeded": "Maximum file size exceeded",
     "file-not-supported": "File type not supported",
-    "accepted-types": "Accepted types are {{types}}"
+    "accepted-types": "Accepted types are {{types}}",
+    "comment": {
+      "max-length": "Comment must have a maximum of {{max}} characters."
+    }
   },
   "warnings": {
     "await-load-network": "await for a loading marketplace"
