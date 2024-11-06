@@ -32,7 +32,7 @@ const publicRuntimeConfig = {
   },
   walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
   defaultChain: {
-    id: process.env.NEXT_PUBLIC_NEEDS_CHAIN_ID,
+    id: +process.env.NEXT_PUBLIC_NEEDS_CHAIN_ID || 137,
     name: process.env.NEXT_PUBLIC_NEEDS_CHAIN_NAME,
     nativeToken: process.env.NEXT_PUBLIC_NATIVE_TOKEN_NAME,
     blockscan: process.env.NEXT_PUBLIC_BLOCKSCAN_LINK,
@@ -100,7 +100,8 @@ const serverRuntimeConfig = {
   imgProxy: {
     salt: process.env.IMGPROXY_SALT,
     key: process.env.IMGPROXY_KEY,
-  }
+  },
+  accessLogsEnabled: process.env.ACCESS_LOGS_ENABLED === "true",
 }
 
 module.exports = () => removeImports({

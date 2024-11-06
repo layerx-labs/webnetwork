@@ -200,3 +200,5 @@ export const SPAM_TERMS = [
 ]
 
 export const UNSUBSCRIBE_EVENT = typeof window === "undefined" ? null : new CustomEvent("task-unsubscribe");
+
+export const COMMENT_MAX_LENGTH = 1000;

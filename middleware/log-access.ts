@@ -1,8 +1,11 @@
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
+import getConfig from "next/config";
 
 import {error, info, warn} from "services/logging";
 
 import {elasticLoggerMaker} from "../services/elastic-logger";
+
+const { serverRuntimeConfig } = getConfig();
 
 export const LogAccess = (handler: NextApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
@@ -22,16 +25,17 @@ export const LogAccess = (handler: NextApiHandler) => {
       ... (query ? { query } : {}),
       ... (body ? { body } : {})
     };
-
-    elasticLoggerMaker(`bepro-access-logs`)
-      .log(`debug`, ["Access", [{
-        _type: "access",
-        payload: { data: JSON.stringify(payload) },
-        method,
-        pathname,
-        headers: { ...req?.headers, cookie: "removed" },
-        connection: { xForwarded, remoteAddress, cfConnectingIp }
-      }]])
+  
+    if (serverRuntimeConfig?.accessLogsEnabled)
+      elasticLoggerMaker(`bepro-access-logs`)
+        .log(`debug`, ["Access", [{
+          _type: "access",
+          payload,
+          method,
+          pathname,
+          headers: { ...req?.headers, cookie: "removed" },
+          connection: { xForwarded, remoteAddress, cfConnectingIp }
+        }]]);
 
     try {
       info(`access`, {pathname, payload, method,});

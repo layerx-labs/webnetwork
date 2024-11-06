@@ -11,6 +11,7 @@ import { lowerCaseCompare } from "helpers/string";
 import { isValidEmail } from "helpers/validators/email";
 
 import { CustomSession } from "interfaces/custom-session";
+import { EmailConfirmationErrors } from "interfaces/enums/Errors";
 import { NotificationSettings } from "interfaces/user-notification";
 
 import { useUpdateEmail } from "x-hooks/api/user";
@@ -90,8 +91,12 @@ export default function NotificationForm() {
   const sessionUser = (sessionData as CustomSession)?.user;
   const userEmail = sessionUser?.email || "";
   const isConfirmationPending = !!userEmail && !sessionUser?.isEmailConfirmed;
+  const isEmailConfirmed = !!userEmail && !!sessionUser?.isEmailConfirmed;
   const isSameEmail = lowerCaseCompare(userEmail, inputEmail);
-  const emailVerificationError = query?.emailVerificationError?.toString()?.replace("Error: ", "");
+  const emailVerification = query?.emailVerification?.toString();
+  const emailVerificationError = !isEmailConfirmed && emailVerification && emailVerification !== "success" ? 
+    emailVerification : null;
+  const canResend = !!emailVerificationError && emailVerification !== EmailConfirmationErrors.ALREADY_CONFIRMED;
 
   function handleEmailChange(e) {
     setInputEmail(e.target.value);
@@ -105,7 +110,7 @@ export default function NotificationForm() {
   function onResend() {
     updateEmail(userEmail, {
       onSuccess: () => {
-        goToProfilePage("dashboard", { emailVerificationError: "" });
+        goToProfilePage("dashboard", { emailVerification: "" });
       }
     });
   }
@@ -151,7 +156,9 @@ export default function NotificationForm() {
       isInvalid={isEmailInvalid}
       isConfirmationPending={isConfirmationPending}
       isExecuting={isExecutingEmail}
+      isEmailConfirmed={isEmailConfirmed}
       emailVerificationError={emailVerificationError}
+      canResend={canResend}
       notificationSettings={userNotificationSettings || {}}
       toggleNotificationItem={toggleNotificationItem}
       onChange={handleEmailChange}
