@@ -79,6 +79,36 @@ export const STATIC_URL_PATHS = [
 ];
 export const BOUNTY_TAGS = [
   {
+    type: "AI",
+    tags: [
+      "AI Agents",
+      "LLMs (Large Language Models)",
+      "Machine Learning Models",
+      "NLP (Natural Language Processing)",
+      "Computer Vision",
+      "Predictive Analytics",
+      "Data Labeling",
+      "Model Training",
+      "Model Optimization",
+      "Synthetic Data Generation",
+      "Speech Recognition",
+      "Image Processing",
+      "Reinforcement Learning",
+      "Recommendation Systems",
+      "Chatbots & Conversational AI",
+      "Model Fine-tuning",
+      "Data Preprocessing",
+      "Anomaly Detection",
+      "Edge AI",
+      "AI Infrastructure Setup",
+      "Model Deployment",
+      "Federated Learning",
+      "Explainable AI",
+      "Text-to-Image Generation",
+      "Automation & Workflow Orchestration",
+    ],
+  },
+  {
     type: "Technology",
     tags: [
       "Full Stack Development",
