@@ -31,7 +31,7 @@ export default function BountySettings({
 
   const isGovernor = currentUser?.isGovernor;
   const isDraftFunding = currentBounty?.isDraft || !currentBounty?.isFunded
-  const cancelableTime = currentBounty?.network?.cancelableTime;
+  const cancelableTime = +currentBounty?.network?.cancelableTime;
   const isCancelable = +new Date() >= +new Date(+currentBounty.createdAt + cancelableTime);
   const objViewProps = {
     onEditIssue,
