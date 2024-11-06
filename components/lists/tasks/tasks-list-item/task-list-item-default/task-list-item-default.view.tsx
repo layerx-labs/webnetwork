@@ -17,6 +17,7 @@ import { SubscriptionTaskButton }
 import { ResponsiveEle } from "components/responsive-wrapper";
 
 import { TaskListItemVariantProps } from "types/components";
+import BountyTagsView from "components/bounty/bounty-tags/view";
 
 export default function TaskListItemDefault({
   task,
@@ -79,6 +80,12 @@ export default function TaskListItemDefault({
               type={task?.type}
             />
           </div>
+
+          <If condition={!!task?.tags?.length && !isMarketplaceList}>
+            <div className="col-auto px-0 d-none d-lg-block">
+              <BountyTagsView tags={task?.tags} className="gap-3" />
+            </div>
+          </If>
 
           <div className="col-auto px-0 d-block d-sm-none">
             <WinnersBadge

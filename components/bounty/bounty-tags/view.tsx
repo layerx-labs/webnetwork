@@ -2,15 +2,17 @@ import Badge from "components/badge";
 
 interface BountyTagsProps {
   tags: string[];
+  className?: string
 }
 
 export default function BountyTagsView({
-  tags
+  tags,
+  className = ""
 }: BountyTagsProps) {
   if (!tags) return <></>;
 
   return (
-    <div className="d-flex flex-wrap gap-1">
+    <div className={`d-flex flex-wrap gap-1 ${className}`}>
       {tags.map((tag) => (
         <Badge
           key={tag}

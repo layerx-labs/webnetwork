@@ -42,7 +42,7 @@ export default function TasksListItem({
 
   return <TaskListItemDefault
             task={issue}
-            isMarketplaceList={variant === "network"}
+            isMarketplaceList={variant !== "network"}
             onClick={handleClickCard} 
           />;
 }
