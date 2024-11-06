@@ -4,7 +4,7 @@ import {getDefaultConfig} from "@rainbow-me/rainbowkit";
 import getConfig from "next/config";
 import {parseCookies} from "nookies";
 import {defineChain} from "viem";
-import {aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai} from "viem/chains";
+import {aurora, auroraTestnet, mainnet, moonbeam, polygon, polygonAmoy, polygonMumbai, base} from "viem/chains";
 import {cookieStorage, cookieToInitialState, createStorage, WagmiProvider} from "wagmi";
 
 interface WagmiProps {
@@ -42,6 +42,7 @@ const config = getDefaultConfig({
       moonbeam,
       coinEx,
       mainnet,
+      base,
     ],
     ssr: true,
     storage: createStorage({
