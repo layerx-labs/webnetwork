@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {NumberFormatValues} from "react-number-format";
 
+import { fromSmartContractDecimals, toSmartContractDecimals } from "@taikai/dappkit";
 import BigNumber from "bignumber.js";
 import {useDebouncedCallback} from "use-debounce";
 
@@ -139,15 +140,22 @@ export default function CreateBountyTokenAmount({
       return;
     }
 
-    const amountOfType =
+    let totalAmount =
       BigNumber(type === "reward"
         ? _calculateTotalAmountFromGivenReward(value)
         : value);
+
+    const contractTotalAmount = +toSmartContractDecimals(totalAmount.toString(), decimals);
+
+    if (contractTotalAmount % 100 !== 0) {
+      const adjustedContractTotalAmount = Math.ceil(contractTotalAmount / 100) * 100;
+      totalAmount = BigNumber(fromSmartContractDecimals(adjustedContractTotalAmount, decimals));
+    }
   
     const initialDistributions = calculateDistributedAmounts( chain.closeFeePercentage,
                                                               mergeCreatorFeeShare,
                                                               proposerFeeShare,
-                                                              amountOfType,
+                                                              totalAmount,
                                                               [
                                                                 {
                                                                   recipient: currentUser?.walletAddress,
@@ -166,16 +174,21 @@ export default function CreateBountyTokenAmount({
     const _distributions = { totalServiceFees, ...initialDistributions}
 
     if(type === 'reward'){
-      const total = BigNumber(_calculateTotalAmountFromGivenReward(value));
-      updateIssueAmount(handleNumberFormat(total))
-      if (amountIsGtBalance(total.toNumber(), tokenBalance) && !isFunding) {
+      updateIssueAmount(handleNumberFormat(totalAmount))
+      const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(totalAmount.toNumber()));
+
+      if (rewardValue !== value) {
+        setPreviewAmount(handleNumberFormat(rewardValue));
+      }
+      
+      if (amountIsGtBalance(totalAmount.toNumber(), tokenBalance) && !isFunding) {
         setInputError("bounty:errors.exceeds-allowance");
         sethasAmountError(true);
       }
     }
 
     if(type === 'total'){
-      const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(value));
+      const rewardValue = BigNumber(calculateRewardAmountGivenTotalAmount(totalAmount.toNumber()));
       setPreviewAmount(handleNumberFormat(rewardValue));
 
       if (rewardValue.isLessThan(BigNumber(currentToken?.minimum))) {
