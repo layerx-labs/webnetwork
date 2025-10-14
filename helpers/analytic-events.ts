@@ -11,4 +11,5 @@ export const analyticEvents: AnalyticEvents = {
   create_task_approve_amount: [analytic("ga4")],
   create_pre_task: [analytic("ga4")],
   created_task: [analytic("ga4")],
+  user_logged_in: [analytic("ga4")],
 }
