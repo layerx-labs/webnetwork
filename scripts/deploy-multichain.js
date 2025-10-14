@@ -260,9 +260,9 @@ async function main(option = 0) {
           isDefault: false,
           color: "#29b6af",
           lockAmountForNetworkCreation: DEPLOY_LOCK_AMOUNT_FOR_NETWORK_CREATION,
-          networkCreationFeePercentage: DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
-          closeFeePercentage: DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
-          cancelFeePercentage: DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_LOCK_FEE_PERCENTAGE / DIVISOR,
+          networkCreationFeePercentage: (+DEPLOY_LOCK_FEE_PERCENTAGE || DEFAULT_LOCK_FEE_PERCENTAGE) / DIVISOR,
+          closeFeePercentage: (+DEPLOY_CLOSE_BOUNTY_FEE || DEFAULT_CLOSE_BOUNTY_FEE) / DIVISOR,
+          cancelFeePercentage: (+DEPLOY_CANCEL_BOUNTY_FEE || DEFAULT_CANCEL_BOUNTY_FEE) / DIVISOR,
           icon: "QmZ8dSeJp9pZn2TFy2gp7McfMj9HapqnPW3mwnnrDLKtZs",
         }
       });
