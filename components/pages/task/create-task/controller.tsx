@@ -466,7 +466,11 @@ export default function CreateTaskPage({
   function handleUpdateToken(e: Token, type: 'transactional' | 'reward') {
     const ERC20 = type === 'transactional' ? transactionalERC20 : rewardERC20
     const setToken = type === 'transactional' ? setTransactionalToken : setRewardToken
-    setToken(e)
+    setToken(e);
+    setIssueAmount(ZeroNumberFormatValues);
+    setRewardAmount(ZeroNumberFormatValues);
+    setPreviewAmount(ZeroNumberFormatValues);
+    setDistributions(undefined);
     ERC20.setAddress(e.address)
   }
 
