@@ -14,8 +14,6 @@ import {SelectOption} from "types/utils";
 import useBreakPoint from "x-hooks/use-breakpoint";
 import useQueryFilter from "x-hooks/use-query-filter";
 
-import {baseApiImgUrl} from "../../../../services/api";
-
 const { publicRuntimeConfig } = getConfig();
 export default function MarketplaceFilter({
   marketplaces,
@@ -36,7 +34,7 @@ export default function MarketplaceFilter({
     value: marketplace?.name,
     label: marketplace?.name,
     preIcon: <NetworkLogo
-              src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
+              src={`${publicRuntimeConfig?.urls?.ipfs}/${marketplace?.logoIcon}`}
               alt={`${marketplace?.name} logo`}
               size="sm"
               noBg

@@ -11,8 +11,6 @@ import {formatNumberToNScale} from "helpers/formatNumber";
 
 import {useSettings} from "x-hooks/use-settings";
 
-import {baseApiImgUrl} from "../../../../services/api";
-
 type MarketplaceListItemProps = {
   marketplace: GroupedMarketplace
 };
@@ -79,7 +77,7 @@ export function MarketplaceListItem({
       <ResponsiveListItem
         icon={
           <NetworkLogo 
-            src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${marketplace?.logoIcon}?format=svg`}
+            src={`${settings?.urls?.ipfs}/${marketplace?.logoIcon}?format=svg`}
             shape="square"
             size="lg"
             noBg 

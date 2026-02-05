@@ -4,8 +4,6 @@ import { IssueData } from "interfaces/issue-data";
 
 import {useSettings} from "x-hooks/use-settings";
 
-import {baseApiImgUrl} from "../../../../services/api";
-
 interface NftsListItemProps {
   nft: IssueData
 }
@@ -17,7 +15,7 @@ export default function NftsListItem ({
 
   const transactionHash = nft?.payments?.at(0)?.transactionHash;
   const imageUrl = 
-    nft?.nftImage ? `${baseApiImgUrl}/${settings?.urls?.ipfs}/${nft?.nftImage}` : null;
+    nft?.nftImage ? `${settings?.urls?.ipfs}/${nft?.nftImage}` : null;
   const transactionUrl = `${nft?.network?.chain?.blockScanner}/${transactionHash}`;
   const taskUrl = `/${nft?.network?.name?.toLowerCase()}/task/${nft?.id}`;
 

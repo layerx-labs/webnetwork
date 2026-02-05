@@ -38,8 +38,6 @@ import useNetworkTheme from "x-hooks/use-network-theme";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import {baseApiImgUrl} from "../services/api";
-
 const NetworkSettingsContext = createContext<NetworkSettings | undefined>(undefined);
 
 const ALLOWED_PATHS = [
@@ -72,7 +70,7 @@ export const NetworkSettingsProvider = ({ children }) => {
   const { service: daoService, serviceStarting, ...daoStore } = useDaoStore();
   const { connectedChain } = useSupportedChain();
 
-  const IPFS_URL = baseApiImgUrl.concat("/", settings?.urls?.ipfs);
+  const IPFS_URL = settings?.urls?.ipfs;
   const LIMITS = {
     percentageNeededForDispute: settings?.networkParametersLimits?.disputePercentage,
     draftTime: settings?.networkParametersLimits?.draftTime,

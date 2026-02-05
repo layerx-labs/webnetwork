@@ -10,8 +10,6 @@ import {Network} from "interfaces/network";
 
 import {useSettings} from "x-hooks/use-settings";
 
-import {baseApiImgUrl} from "../../../services/api";
-
 interface SelectNetworkDropdownProps {
   value?: Network;
   onSelect: (network: Network) => void;
@@ -51,7 +49,7 @@ export default function CreateBountyNetworkDropdown({
       label: network?.name,
       preIcon: (
         <img
-          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}?width=16&height=16`}
+          src={`${settings?.urls?.ipfs}/${network?.logoIcon}?width=16&height=16`}
           alt={`${network?.name} logo`}
           width={16}
           height={16}

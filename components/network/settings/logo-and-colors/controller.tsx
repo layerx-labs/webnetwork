@@ -16,8 +16,6 @@ import {useUserStore} from "x-hooks/stores/user/user.store";
 import useNetworkTheme from "x-hooks/use-network-theme";
 import useReactQueryMutation from "x-hooks/use-react-query-mutation";
 
-import {baseApiImgUrl} from "../../../../services/api";
-
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -25,7 +23,7 @@ const MAX_LOGOS_SIZE_LIMIT_IN_MB = 1;
 
 const getDefaultIconValue = (hash: string) => ({
   value: {
-    preview: `${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${hash}`,
+    preview: `${publicRuntimeConfig?.urls?.ipfs}/${hash}`,
     raw: null,
   },
   validated: null,

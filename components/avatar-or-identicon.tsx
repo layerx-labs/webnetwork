@@ -9,8 +9,6 @@ import {truncateAddress} from "helpers/truncate-address";
 import {User} from "interfaces/api";
 import {SizeOptions} from "interfaces/utils";
 
-import {baseApiImgUrl} from "../services/api";
-
 export interface AvatarOrIdenticonProps {
   user: User | { address: string; handle?: string; avatar?: string; };
   size?: SizeOptions | number;
@@ -50,7 +48,7 @@ export default function AvatarOrIdenticon({
         <Avatar 
           userLogin={handle} 
           size={size} 
-          src={`${baseApiImgUrl}/${publicRuntimeConfig?.urls?.ipfs}/${avatar}?width=100&height=100`}
+          src={`${publicRuntimeConfig?.urls?.ipfs}/${avatar}?width=100&height=100`}
           className="border-primary" 
         />
       </If>

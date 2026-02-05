@@ -23,8 +23,6 @@ import useReactQuery from "x-hooks/use-react-query";
 import {useSettings} from "x-hooks/use-settings";
 import useSupportedChain from "x-hooks/use-supported-chain";
 
-import {baseApiImgUrl} from "../../services/api";
-
 interface SelectNetworkProps {
   isCurrentDefault?: boolean;
   onlyProfileFilters?: boolean;
@@ -70,7 +68,7 @@ export default function SelectNetwork({
       value: network,
       preIcon: (
         <NetworkLogo
-          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
           alt={`${network?.name} logo`}
           isBepro={network?.name.toLowerCase() === 'bepro'}
           size="sm"
