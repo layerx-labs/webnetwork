@@ -25,7 +25,6 @@ import {getBountiesListData} from "x-hooks/api/task";
 import { getTasksWon } from "x-hooks/api/task/get-tasks-won";
 import {useGetUserByAddress, useGetUserByLogin} from "x-hooks/api/user";
 
-import {baseApiImgUrl} from "../../services/api";
 import {AnkrNftAsset} from "../../types/ankr-nft-asset";
 import {getTaikaiPops} from "../../x-hooks/api/user/get-taikai-pops";
 
@@ -44,7 +43,7 @@ export default function PublicProfile(props: PublicProfileProps) {
   const { user } = props;
   const homeUrl = publicRuntimeConfig?.urls?.home;
   const imageUrl = user?.profileImage ? 
-    `${baseApiImgUrl}/${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` :
+    `${publicRuntimeConfig.urls.ipfs}/${user?.profileImage}` :
     `${homeUrl}/images/meta-thumbnail.jpeg`;
   const about = removeMarkdown(user?.about?.substring(0, 160).trimEnd());
   let title = truncateAddress(user?.address);

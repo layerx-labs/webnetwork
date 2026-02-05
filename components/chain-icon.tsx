@@ -4,7 +4,6 @@ import getConfig from "next/config";
 
 import QuestionMarkIcon from "assets/icons/question-mark-icon";
 
-import {baseApiImgUrl} from "../services/api";
 import If from "./If";
 import ResponsiveWrapper from "./responsive-wrapper";
 
@@ -32,7 +31,7 @@ export default function ChainIcon({
   const chainIcon = src && ipfsUrl ? 
     <img 
       className={`rounded-circle ${className}`} 
-      src={`${baseApiImgUrl}/${ipfsUrl}/${src}?width=${size}&height=${size}${imgFormat ? `&format=${imgFormat}` : ""}`} 
+      src={`${ipfsUrl}/${src}?width=${size}&height=${size}${imgFormat ? `&format=${imgFormat}` : ""}`} 
       height={size} 
       width={size} 
     /> :

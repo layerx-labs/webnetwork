@@ -12,8 +12,6 @@ import {Network} from "interfaces/network";
 
 import {useSettings} from "x-hooks/use-settings";
 
-import {baseApiImgUrl} from "../../services/api";
-
 interface NetworkListItemProps {
   network: Network;
   tokenSymbolDefault: string;
@@ -62,7 +60,7 @@ export default function NetworkListItem({
       onClick={onClick}
       icon={
         <NetworkLogo
-          src={`${baseApiImgUrl}/${settings?.urls?.ipfs}/${network?.logoIcon}`}
+          src={`${settings?.urls?.ipfs}/${network?.logoIcon}`}
           alt={`${network?.name} logo`}
           isBepro={network?.name.toLowerCase() === 'bepro'}
           noBg
